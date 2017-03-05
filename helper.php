@@ -24,3 +24,9 @@ use function view as plus_view;
 
 	    return $factory->make($view, $data, $mergeData);
 	}
+
+	function base_path($path = '')
+{
+    return dirname(__DIR__).$path;
+}
+

@@ -1,2 +1,9 @@
-/node_modules/
+.DS_Store
+node_modules/
+dist/
+npm-debug.log
+yarn-error.log
+vendor/
 yarn.lock
+yarn-error.log
+composer.lock
