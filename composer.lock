@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "ed9bef1cfc532d90c9703931434893a1",
+    "content-hash": "e8d79c4bba4592524ba5c31292b7634a",
     "packages": [
         {
             "name": "zhiyicx/plus-install-plugin",
-            "version": "v1.0.1",
+            "version": "v1.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zhiyicx/plus-install-plugin.git",
-                "reference": "c7ad096e584934bcde7bf273619a0edf4d94361c"
+                "reference": "a82f088a048bb07ad906b767ba1d7545b7871a3b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://packagist.phpcomposer.com/files/zhiyicx/plus-install-plugin/c7ad096e584934bcde7bf273619a0edf4d94361c.zip",
-                "reference": "c7ad096e584934bcde7bf273619a0edf4d94361c",
+                "url": "https://packagist.phpcomposer.com/files/zhiyicx/plus-install-plugin/a82f088a048bb07ad906b767ba1d7545b7871a3b.zip",
+                "reference": "a82f088a048bb07ad906b767ba1d7545b7871a3b",
                 "shasum": ""
             },
             "require": {
@@ -58,7 +58,7 @@
                 "thinksns",
                 "ts"
             ],
-            "time": "2017-02-09T02:43:00+00:00"
+            "time": "2017-02-20T08:51:38+00:00"
         }
     ],
     "packages-dev": [],
