@@ -2,10 +2,7 @@
 node_modules/
 npm-debug.log
 yarn-error.log
-<<<<<<< HEAD
-=======
 vendor/
 yarn.lock
 yarn-error.log
 composer.lock
->>>>>>> ae33f7bf2a6c9ab2082bd7cdd9cdd5db886274fd
