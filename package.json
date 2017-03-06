@@ -7,8 +7,12 @@
   "scripts": {
     "dev": "node build/dev-server.js",
     "build": "node build/build.js",
+<<<<<<< HEAD
     "lint": "eslint --ext .js,.vue src",
     "watch": "node build/watch.js"
+=======
+    "lint": "eslint --ext .js,.vue src"
+>>>>>>> ae33f7bf2a6c9ab2082bd7cdd9cdd5db886274fd
   },
   "dependencies": {
     "babel-plugin-component": "^0.9.0",
