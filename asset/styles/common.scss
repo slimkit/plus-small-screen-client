@@ -1,0 +1,100 @@
+$fontStack:	Helvetica, sans-serif;
+$themeColor: #59b6d7;
+$backgroundColor: #f4f5f5;
+$currentColor: #333;
+$noticeColor: #f4504d;
+$contentColor: #666;
+$secondaryColor: #999;
+$toolColor: #b2b2b2;
+$cut-off-line: #dedede;
+$sin-cut-off-line: #ededed;
+$font-size: 15px;
+$title-font-size: 18px;
+$bar-font-size: 15px;
+$buttonDisabledBackgroundColor: #ccc;
+
+html,
+body {
+	padding: 0;
+	margin: 0;
+	font-size: $font-size;
+  font-family: $fontStack;
+  background-color: $backgroundColor;
+  color: $currentColor;
+  &:focus, &:active {
+    background-color: $backgroundColor;
+  }
+}
+a {
+  color: $themeColor;
+  text-decoration: none;
+  &:active {
+    color: $currentColor;
+  }
+}
+
+:focus {
+  outline: none
+}
+:active {
+  background: none;
+}
+input {
+  border: none;
+  height: 34px;
+  padding: 5px;
+  width: calc(100% - 10px);
+  font-size: $font-size;
+  &:active, &:focus {
+    outline: none;
+  }
+}
+
+.el-button.is-disabled[disabled='disabled'] {
+  color: #fff;
+  background-color: $buttonDisabledBackgroundColor;
+}
+
+.operation button {
+  background-color: #59b6d7;
+  color: #fff;
+}
+.header {
+  height: 46px;
+  line-height: 46px;
+  border-bottom: 1px solid $cut-off-line;
+  background-color: #fff;
+}
+.header-children  {
+  display: inline-block;
+}
+.left-top-button {
+  text-align: center;
+  font-size: $bar-font-size;
+}
+.title {
+  font-size: $title-font-size;
+  text-align: center;
+}
+.right-top-button {
+  text-align: center;
+  font-size: $bar-font-size;
+}
+
+.back, .close {
+  text-align: center;
+}
+
+.bottom-border {
+  border-bottom: 1px solid $sin-cut-off-line;
+}
+
+.notice {
+  margin: 10px 0;
+  height: 22px;
+}
+
+.error {
+  color: red;
+}
+

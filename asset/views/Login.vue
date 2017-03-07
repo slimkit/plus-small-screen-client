@@ -1,0 +1,251 @@
+<template>
+  <div class="container">
+    <!-- <header class="header">
+      <el-row justify="start" type="flex" align="middle">
+        <el-col :span="3" class="close back">
+          <i class="el-icon-close"></i>
+        </el-col>
+        <el-col :span="17"><div class="grid-content bg-purple-light title ">登录</div></el-col>
+        <el-col :span="4">
+          <div class="grid-content bg-purple-light right-top-button">
+            <router-link to="/register">注册</router-link>
+          </div>
+        </el-col>
+      </el-row>
+    </header> -->
+    <div class="main-content">
+      <form role="form" @submit.prevent="submit">
+        <div :class="$style.loginForm">
+          <el-row :class="$style.formChildrenRow" class="bottom-border" justify="start" type="flex" align="middle">
+            <el-col :span="5" offset="1">
+              <label for="phone" :class="loginFormTitle">手机号</label>
+            </el-col>
+            <el-col :span="15">
+              <input type="tel" placeholder="请输入手机号" v-model.number.trim="phone" id="phone" name="phone" value="{{ phone }}" />
+            </el-col>
+            <el-col :span="1" offset="1">
+              <i v-on:click="cleanPhone" v-show="isShowClean" class="el-icon-circle-close"></i>
+            </el-col>
+          </el-row>
+          <el-row :class="$style.formChildrenRow" justify="start" type="flex" align="middle">
+            <el-col :span="5" offset="1">
+              <label for="password" :class="loginFormTitle">密码</label>
+            </el-col>
+            <el-col :span="15">
+              <input type="password" v-show="isShowPassword" v-model.trim="password" placeholder="请输入6位以上密码" id="password" name="password" />
+              <input type="text"  v-model.trim="passwordText" v-show="isShowPasswordText" value="" placeholder="请输入6位以上密码" />
+            </el-col>
+            <el-col :span="1" offset="1">
+              <i v-on:click="showPassword" :class="{ 'el-icon-arrow-up': isShowPasswordText, 'el-icon-arrow-down': isShowPassword }"></i>
+            </el-col>
+          </el-row>
+        </div>
+        <div id="notice">
+          <el-row justify="start" type="flex" align="middle">
+            <el-col :span="22" offset="1">
+              <p class="notice error">{{ error }}</p>
+            </el-col>
+          </el-row>
+        </div>
+        <div :class="operation">
+         <el-row justify="start" type="flex" align="middle">
+            <el-col :span="22" offset="1">
+              <el-button type="primary" native-type="submit" :disabled="isDisabled" :class="$style.loginButton" size="large">登录</el-button>
+            </el-col>
+          </el-row>
+        </div>
+      </form>
+      <div :class="$style.otherOperation">
+        <el-row justify="start" type="flex">
+          <el-col :span="12" offset="1">
+            <router-link to="/register">
+              注册账号
+            </router-link>
+          </el-col>
+          <el-col :span="10">
+            <router-link style="float: right" to="/findpassword">
+              找回密码
+            </router-link>
+          </el-col>
+        </el-row>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+  import request, { createAPI } from '../utils/request';
+  import localEvent from '../stores/localStorage';
+  import router from '../routers/index';
+  import detecdOS from '../utils/detecdOS';
+  const phoneReg = /^(((13[0-9]{1})|14[0-9]{1}|(15[0-9]{1})|17[0-9]{1}|(18[0-9]{1}))+\d{8})$/;
+  const login = {
+    data: () => ({
+      phone: '', // 手机号码 
+      password: '', // 密码
+      passwordText: '', // 明文密码
+      isDisabled: true, // 提交按钮disabled状态
+      isValidPhone: false, // 是否合法手机号
+      isValidPassword: false, // 是否合法密码
+      isShowClean: false, // 是否显示清除手机号按钮
+      isShowPasswordText: false, // 是否显示明文密码
+      isShowPassword: true, // 是否显示真实密码
+      errors: {} // 错误对象
+    }),
+    watch: {
+      phone: function (newPhone) {
+        this.isShowClean = (newPhone > 0) > 0 ? true : false;
+        let errors = this.errors;
+        delete errors['1000'];
+        delete errors['1005'];
+        delete errors['1006'];
+        if(!phoneReg.test(newPhone)) {
+          this.errors = Object.assign({}, errors, { phone: '请输入合法的手机号码'});
+          this.isValidPhone = false;
+        } else {
+          this.isValidPhone = true;
+
+          let errors = this.errors;
+          delete errors['phone'];
+          this.errors = Object.assign({}, errors);
+        }
+        this.isDisabled = this.checkIsDisabled()
+      },
+      password: function (newPassword) {
+        let errors = this.errors;
+        delete errors['1000'];
+        delete errors['1005'];
+        delete errors['1006'];
+        if(newPassword.length < 6) {
+          this.errors = Object.assign({}, errors, { password: '密码长度必须大于6位'})
+          this.isValidPassword = false;
+        } else {
+          this.isValidPassword = true;
+
+          let errors = this.errors;
+          delete errors['password'];
+          this.errors = Object.assign({}, errors);
+        }
+        this.passwordText = newPassword;
+        this.isDisabled = this.checkIsDisabled()
+      },
+      passwordText: function (newPasswordText) {
+        let errors = this.errors;
+        delete errors['1000'];
+        delete errors['1005'];
+        delete errors['1006'];
+        if(newPasswordText.length < 6) {
+          this.errors = Object.assign({}, errors, { password: '密码长度必须大于6位'})
+          this.isValidPassword = false;
+        } else {
+          this.isValidPassword = true;
+
+          let errors = this.errors;
+          delete errors['password'];
+          this.errors = Object.assign({}, errors);
+        }
+        this.password = newPasswordText;
+        this.isDisabled = this.checkIsDisabled()
+      }
+    },
+    computed: {
+      error: function () {
+        let errors = Object.values(this.errors);
+        return errors[0] || '';
+      }
+    },
+    methods: {
+      checkIsDisabled () {
+         return !(this.isValidPassword && this.isValidPhone);
+      },
+      cleanPhone () {
+        this.phone = '';
+      },
+      showPassword () {
+        if(this.isShowPassword) {
+          this.isShowPassword = false;
+          this.isShowPasswordText = true;
+        } else {
+          this.isShowPassword = true;
+          this.isShowPasswordText = false;
+        }
+      },
+      submit () {
+        let { phone, password } = this;
+        let device_code = detecdOS();
+        request.post(createAPI('auth'), {
+          phone,
+          password,
+          device_code
+        })
+        .then(response => {
+          let errors = {};
+          this.errors = Object.assign({}, errors);
+          localEvent.setLocalItem('UserLoginInfo', response.data.data);
+          router.push({ path: 'feeds' });
+        })
+        .catch(({ response: { data = {} } }) => {
+          switch(data.code) {
+            case 1000:
+              this.errors = Object.assign({}, this.errors, {'1000': '手机号码错误'});
+              break;
+            case 1005:
+              this.errors = Object.assign({}, this.errors, {'1005': '用户不存在'});
+              break;
+            case 1006:
+              this.errors = Object.assign({}, this.errors, {'1006': '密码错误'});
+              break;
+          }
+        });
+      }
+    }
+  };
+
+  export default login;
+
+</script>
+
+<style lang="scss" module>
+  .formChildrenRow {
+    height: 55px;
+    line-height: 55px;
+    position: relative;
+  }
+  .loginForm {
+    background-color: #fff;
+    &:focus, &:active {
+      background-color: #fff;
+    }
+  }
+  .loginButton {
+    width: 100%;
+    background-color: #59b6d7;
+    border: none;
+    &:focus, &:active {
+      background-color: #4ab2ce;
+      color: #fff;
+    }
+  }
+
+  .otherOperation {
+    height: 42px;
+    line-height: 42px;
+  }
+
+  .otherOperation a{
+    font-size: 14px;
+  }
+
+</style>
+<style lang="css">
+  .el-icon-circle-close {
+    /*right: 2.08333%;*/
+    font-size: 18px;
+    /*top: 17px;*/
+    /*position: absolute;*/
+    z-index: 2;
+  }
+  .el-icon-circle-close:before {
+    color: #999;
+  }
+</style>
