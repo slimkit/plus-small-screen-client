@@ -209,13 +209,15 @@
   .formChildrenRow {
     height: 55px;
     line-height: 55px;
-    position: relative;
   }
   .loginForm {
     background-color: #fff;
     &:focus, &:active {
       background-color: #fff;
     }
+  }
+  .loginForm {
+    background-color: #fff;
   }
   .loginButton {
     width: 100%;
@@ -239,10 +241,7 @@
 </style>
 <style lang="css">
   .el-icon-circle-close {
-    /*right: 2.08333%;*/
     font-size: 18px;
-    /*top: 17px;*/
-    /*position: absolute;*/
     z-index: 2;
   }
   .el-icon-circle-close:before {

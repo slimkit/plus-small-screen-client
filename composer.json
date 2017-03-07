@@ -3,7 +3,11 @@
     "description": "web fo ts+\u001b[D\u001b[D",
     "license": "MIT",
     "type": "plus-component",
+<<<<<<< HEAD
     "version": "1.0.4",
+=======
+    "version": "1.0.6",
+>>>>>>> 216e64cfae5301259d3e6ce8ec82a1171e651674
     "authors": [
         {
             "name": "Wayne John",
