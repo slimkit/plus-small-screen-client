@@ -17,10 +17,10 @@
       <form role="form" @submit.prevent="submit">
         <div :class="$style.loginForm">
           <el-row :class="$style.formChildrenRow" class="bottom-border" justify="start" type="flex" align="middle">
-            <el-col :span="5" offset="1">
+            <el-col :span="4" offset="1">
               <label for="phone" :class="loginFormTitle">手机号</label>
             </el-col>
-            <el-col :span="15">
+            <el-col :span="16">
               <input type="tel" placeholder="请输入手机号" v-model.number.trim="phone" id="phone" name="phone" value="{{ phone }}" />
             </el-col>
             <el-col :span="1" offset="1">
@@ -28,10 +28,10 @@
             </el-col>
           </el-row>
           <el-row :class="$style.formChildrenRow" justify="start" type="flex" align="middle">
-            <el-col :span="5" offset="1">
+            <el-col :span="4" offset="1">
               <label for="password" :class="loginFormTitle">密码</label>
             </el-col>
-            <el-col :span="15">
+            <el-col :span="16">
               <input type="password" v-show="isShowPassword" v-model.trim="password" placeholder="请输入6位以上密码" id="password" name="password" />
               <input type="text"  v-model.trim="passwordText" v-show="isShowPasswordText" value="" placeholder="请输入6位以上密码" />
             </el-col>
@@ -78,6 +78,7 @@
   import localEvent from '../stores/localStorage';
   import router from '../routers/index';
   import detecdOS from '../utils/detecdOS';
+
   const phoneReg = /^(((13[0-9]{1})|14[0-9]{1}|(15[0-9]{1})|17[0-9]{1}|(18[0-9]{1}))+\d{8})$/;
   const login = {
     data: () => ({
@@ -100,7 +101,7 @@
         delete errors['1005'];
         delete errors['1006'];
         if(!phoneReg.test(newPhone)) {
-          this.errors = Object.assign({}, errors, { phone: '请输入合法的手机号码'});
+          this.errors = Object.assign({}, errors, { phone: '请输入正确的手机号码'});
           this.isValidPhone = false;
         } else {
           this.isValidPhone = true;

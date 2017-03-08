@@ -55,6 +55,15 @@ input {
   background-color: $buttonDisabledBackgroundColor;
 }
 
+.el-button.is-disabled[disabled='disabled'][type='button'] {
+  color: $buttonDisabledBackgroundColor;
+  background-color: #fff;
+}
+
+.el-button--text {
+  color: $themeColor;
+}
+
 .operation button {
   background-color: #59b6d7;
   color: #fff;
@@ -97,3 +106,9 @@ input {
 .error {
   color: red;
 }
+
+.text-align-right{
+  text-align: right;
+}
+
+

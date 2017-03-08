@@ -11,8 +11,12 @@ export const createRequestURI = PATH => `${baseURL}/${PATH}`;
 // Created the request address of API.
 export const createAPI = PATH => `${api}/${PATH}`;
 
-axios.defaults.headers.common = {
-  'ACCESS-TOKEN': UserLoginInfo.accessToken
+// 注入access-token验证
+export const addAccessToken = () => {
+  axios.defaults.headers.common = {
+    'ACCESS-TOKEN': UserLoginInfo.accessToken
+  };
+  return axios;
 };
 
 export default axios;
