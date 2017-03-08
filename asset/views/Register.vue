@@ -1,84 +1,86 @@
 <template>
-  <div class="container">
-    <!-- <header class="header">
-      <el-row justify="start" type="flex" align="middle">
-        <el-col :span="3" class="close back">
-          <i class="el-icon-close"></i>
-        </el-col>
-        <el-col :span="17"><div class="grid-content bg-purple-light title ">登录</div></el-col>
-        <el-col :span="4">
-          <div class="grid-content bg-purple-light right-top-button">
-            <router-link to="/login">登录</router-link>
+  <transition name="slide-left">
+    <div class="container">
+      <!-- <header class="header">
+        <el-row justify="start" type="flex" align="middle">
+          <el-col :span="3" class="close back">
+            <i class="el-icon-close"></i>
+          </el-col>
+          <el-col :span="17"><div class="grid-content bg-purple-light title ">登录</div></el-col>
+          <el-col :span="4">
+            <div class="grid-content bg-purple-light right-top-button">
+              <router-link to="/login">登录</router-link>
+            </div>
+          </el-col>
+        </el-row>
+      </header> -->
+      <div class="main-content">
+        <form role="form" @submit.prevent="register">
+          <div :class="$style.loginForm">
+            <el-row :class="$style.formChildrenRow" class="bottom-border" justify="start" type="flex" align="middle">
+              <el-col :span="4" offset="1">
+                <label for="username" :class="loginFormTitle">用户名</label>
+              </el-col>
+              <el-col :span="16">
+                <input type="text" autocomplete="off" placeholder="不能以数字开头,不能有特殊字符" v-model.trim="username" id="username" name="username" value="{{ username }}" />
+              </el-col>
+              <el-col :span="1" offset="1">
+                <i v-on:click="cleanUsername" v-show="isShowUserClean" class="el-icon-circle-close"></i>
+              </el-col>
+            </el-row>
+            <el-row :class="$style.formChildrenRow" class="bottom-border" justify="start" type="flex" align="middle">
+              <el-col :span="4" offset="1">
+                <label for="phone" :class="loginFormTitle">手机号</label>
+              </el-col>
+              <el-col :span="10">
+                <input type="tel" autocomplete="off" placeholder="输入手机号码" v-model.trim.num="phone" id="phone" name="phone" value="{{ phone }}" />
+              </el-col>
+              <el-col :span="1" offset="1">
+                <i v-on:click="cleanPhone" v-show="isShowClean" class="el-icon-circle-close"></i>
+              </el-col>
+              <el-col class="text-align-right" :span="6" >
+                <el-button type="text" v-on:click="getCode" native-type="button" :disabled="!isCanGetCode" size="large">{{ getCodeText }}</el-button>
+              </el-col>
+            </el-row>
+            <el-row :class="$style.formChildrenRow" class="bottom-border" justify="start" type="flex" align="middle">
+              <el-col :span="4" offset="1">
+                <label for="code" :class="loginFormTitle">验证码</label>
+              </el-col>
+              <el-col :span="18">
+                <input type="tel" autocomplete="off" placeholder="输入验证码" v-model.trim.num="code" id="code" name="code" value="{{ code }}" />
+              </el-col>
+            </el-row>
+            <el-row :class="$style.formChildrenRow" justify="start" type="flex" align="middle">
+              <el-col :span="4" offset="1">
+                <label for="password" :class="loginFormTitle">密码</label>
+              </el-col>
+              <el-col :span="16">
+                <input type="password" autocomplete="off" v-show="isShowPassword" v-model.trim="password" placeholder="请输入6位以上密码" id="password" name="password" />
+                <input type="text" autocomplete="off" v-model.trim="passwordText" v-show="isShowPasswordText" value="" placeholder="请输入6位以上密码" />
+              </el-col>
+              <el-col :span="1" offset="1">
+                <i v-on:click="showPassword" :class="{ 'el-icon-arrow-up': isShowPasswordText, 'el-icon-arrow-down': isShowPassword }"></i>
+              </el-col>
+            </el-row>
           </div>
-        </el-col>
-      </el-row>
-    </header> -->
-    <div class="main-content">
-      <form role="form" @submit.prevent="register">
-        <div :class="$style.loginForm">
-          <el-row :class="$style.formChildrenRow" class="bottom-border" justify="start" type="flex" align="middle">
-            <el-col :span="4" offset="1">
-              <label for="username" :class="loginFormTitle">用户名</label>
-            </el-col>
-            <el-col :span="16">
-              <input type="text" placeholder="不能以数字开头,不能有特殊字符" v-model.trim="username" id="username" name="username" value="{{ username }}" />
-            </el-col>
-            <el-col :span="1" offset="1">
-              <i v-on:click="cleanUsername" v-show="isShowUserClean" class="el-icon-circle-close"></i>
-            </el-col>
-          </el-row>
-          <el-row :class="$style.formChildrenRow" class="bottom-border" justify="start" type="flex" align="middle">
-            <el-col :span="4" offset="1">
-              <label for="phone" :class="loginFormTitle">手机号</label>
-            </el-col>
-            <el-col :span="10">
-              <input type="tel" placeholder="输入手机号码" v-model.trim.num="phone" id="phone" name="phone" value="{{ phone }}" />
-            </el-col>
-            <el-col :span="1" offset="1">
-              <i v-on:click="cleanPhone" v-show="isShowClean" class="el-icon-circle-close"></i>
-            </el-col>
-            <el-col class="text-align-right" :span="6" >
-              <el-button type="text" v-on:click="getCode" native-type="button" :disabled="!isCanGetCode" size="large">{{ getCodeText }}</el-button>
-            </el-col>
-          </el-row>
-          <el-row :class="$style.formChildrenRow" class="bottom-border" justify="start" type="flex" align="middle">
-            <el-col :span="4" offset="1">
-              <label for="code" :class="loginFormTitle">验证码</label>
-            </el-col>
-            <el-col :span="18">
-              <input type="tel" placeholder="输入验证码" v-model.trim.num="code" id="code" name="code" value="{{ code }}" />
-            </el-col>
-          </el-row>
-          <el-row :class="$style.formChildrenRow" justify="start" type="flex" align="middle">
-            <el-col :span="4" offset="1">
-              <label for="password" :class="loginFormTitle">密码</label>
-            </el-col>
-            <el-col :span="16">
-              <input type="password" v-show="isShowPassword" v-model.trim="password" placeholder="请输入6位以上密码" id="password" name="password" />
-              <input type="text"  v-model.trim="passwordText" v-show="isShowPasswordText" value="" placeholder="请输入6位以上密码" />
-            </el-col>
-            <el-col :span="1" offset="1">
-              <i v-on:click="showPassword" :class="{ 'el-icon-arrow-up': isShowPasswordText, 'el-icon-arrow-down': isShowPassword }"></i>
-            </el-col>
-          </el-row>
-        </div>
-        <div id="notice">
-          <el-row justify="start" type="flex" align="middle">
-            <el-col :span="22" offset="1">
-              <p class="notice error">{{ error }}</p>
-            </el-col>
-          </el-row>
-        </div>
-        <div :class="operation">
-         <el-row justify="start" type="flex" align="middle">
-            <el-col :span="22" offset="1">
-              <el-button type="primary" :loading="isLoading" native-type="submit" :disabled="isDisabled" :class="$style.loginButton" size="large">注册</el-button>
-            </el-col>
-          </el-row>
-        </div>
-      </form>
+          <div id="notice">
+            <el-row justify="start" type="flex" align="middle">
+              <el-col :span="22" offset="1">
+                <p class="notice error">{{ error }}</p>
+              </el-col>
+            </el-row>
+          </div>
+          <div :class="operation">
+           <el-row justify="start" type="flex" align="middle">
+              <el-col :span="22" offset="1">
+                <el-button type="primary" :loading="isLoading" native-type="submit" :disabled="isDisabled" :class="$style.loginButton" size="large">注册</el-button>
+              </el-col>
+            </el-row>
+          </div>
+        </form>
+      </div>
     </div>
-  </div>
+  </transition>
 </template>
 
 <script>
@@ -128,19 +130,10 @@
       // 清理请求错误
       cleanErrors () {
         let errors = this.errors;
-        delete errors['1010']; // 手机号已被使用
-        delete errors['1008']; // 发送验证码频繁
-        delete errors['1009']; // 验证码发送失败
-        delete errors['1011']; // 获取验证码类型错误
-        delete errors['1014']; // 未传递设备号
         let newErrors = deleteObjectItems(errors, [
-          '1008',
-          '1009',
-          '1010',
-          '1011',
-          '1014'
+          'serverError'
         ]);
-        this.errors = newErrors;
+        this.errors = Object.assign({}, newErrors);
       },
       checkIsDisabled () {
          return !(this.isValidPassword && this.isValidPhone && this.isValidCode && this.isValidUsername);
@@ -186,6 +179,9 @@
         )
         .then(response => {
           if(response.data.code === 0 || response.data.status) {
+            // 删除网络问题
+            this.cleanErrors();
+            console.log(this.errors);
             this.time = 60;
             this.timer();
           }
@@ -193,7 +189,8 @@
         .catch(({ response: { data = {} } = {} }) => {
           this.isCanGetCode = true;
           const { code = 'xxxx' } = data;
-          this.errors = Object.assign({}, this.errors, { code: errorCodes[code]});
+          this.errors = Object.assign({}, this.errors, { serverError: errorCodes[code]});
+          console.log(this.errors);
         })
       },
       // 注册
@@ -222,7 +219,7 @@
           this.isDisabled = false;
           const { code = 'xxxx' } = data;
           this.isLoading = false;
-          this.errors = Object.assign({}, this.errors, { code: errorCodes[code]});
+          this.errors = Object.assign({}, this.errors, { serverError: errorCodes[code] });
         })
       }
     },
@@ -238,7 +235,6 @@
           this.errors = Object.assign({}, errors, { username: '请输入3-12位用户名'});
           this.isValidUsername = false;
         } else {
-          let errors = this.errors;
           delete errors['username'];
           this.errors = Object.assign({}, errors);
           this.isValidUsername = true;
@@ -256,7 +252,6 @@
         } else {
           this.isValidPhone = true;
           this.isCanGetCode = true;
-          let errors = this.errors;
           delete errors['phone'];
           this.errors = Object.assign({}, errors);
         }
@@ -271,8 +266,6 @@
           this.isValidPassword = false;
         } else {
           this.isValidPassword = true;
-
-          let errors = this.errors;
           delete errors['password'];
           this.errors = Object.assign({}, errors);
         }
@@ -287,8 +280,6 @@
           this.isValidPassword = false;
         } else {
           this.isValidPassword = true;
-
-          let errors = this.errors;
           delete errors['password'];
           this.errors = Object.assign({}, errors);
         }
@@ -303,8 +294,6 @@
           this.isValidCode = false;
         } else {
           this.isValidCode = true;
-
-          let errors = this.errors;
           delete errors['code'];
           this.errors = Object.assign({}, errors);
         }

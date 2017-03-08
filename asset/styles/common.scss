@@ -12,6 +12,7 @@ $font-size: 15px;
 $title-font-size: 18px;
 $bar-font-size: 15px;
 $buttonDisabledBackgroundColor: #ccc;
+$buttonActiveBackgroundColor: #4db3ff;
 
 html,
 body {
@@ -50,6 +51,10 @@ input {
   }
 }
 
+.el-button {
+  line-height: normal!important;
+}
+
 .el-button.is-disabled[disabled='disabled'] {
   color: #fff;
   background-color: $buttonDisabledBackgroundColor;
@@ -60,8 +65,25 @@ input {
   background-color: #fff;
 }
 
+.el-button--primary.is-active, .el-button--primary:active {
+    background: $buttonActiveBackgroundColor;
+    border: none;
+    color: #fff;
+}
+
+.el-button--primary:focus, .el-button--primary:hover {
+    background: $buttonActiveBackgroundColor;
+    border: none;
+    color: #fff;
+}
+
 .el-button--text {
   color: $themeColor;
+  &:focus, &:active {
+    background-color: #fff;
+    color: #ccc;
+    border: none;
+  }
 }
 
 .operation button {
