@@ -15,8 +15,8 @@
     </header> -->
     <div class="main-content">
       <form role="form" @submit.prevent="submit">
-        <div :class="$style.loginForm">
-          <el-row :class="$style.formChildrenRow" class="bottom-border" justify="start" type="flex" align="middle">
+        <div class="loginForm">
+          <el-row class="bottom-border formChildrenRow" justify="start" type="flex" align="middle">
             <el-col :span="4" offset="1">
               <label for="phone" :class="loginFormTitle">手机号</label>
             </el-col>
@@ -27,7 +27,7 @@
               <i v-on:click="cleanPhone" v-show="isShowClean" class="el-icon-circle-close"></i>
             </el-col>
           </el-row>
-          <el-row :class="$style.formChildrenRow" justify="start" type="flex" align="middle">
+          <el-row class="formChildrenRow" justify="start" type="flex" align="middle">
             <el-col :span="4" offset="1">
               <label for="password" :class="loginFormTitle">密码</label>
             </el-col>
@@ -50,12 +50,12 @@
         <div :class="operation">
          <el-row justify="start" type="flex" align="middle">
             <el-col :span="22" offset="1">
-              <el-button type="primary" native-type="submit" :loading="isLoading" :disabled="isDisabled" :class="$style.loginButton" size="large">登录</el-button>
+              <el-button type="primary" native-type="submit" :loading="isLoading" :disabled="isDisabled" class="loginButton" size="large">登录</el-button>
             </el-col>
           </el-row>
         </div>
       </form>
-      <div :class="$style.otherOperation">
+      <div class="otherOperation">
         <el-row justify="start" type="flex">
           <el-col :span="12" offset="1">
             <router-link to="/register">
@@ -205,47 +205,3 @@
   export default login;
 
 </script>
-
-<style lang="scss" module>
-  .formChildrenRow {
-    height: 55px;
-    line-height: 55px;
-  }
-  .loginForm {
-    background-color: #fff;
-    &:focus, &:active {
-      background-color: #fff;
-    }
-  }
-  .loginForm {
-    background-color: #fff;
-  }
-  .loginButton {
-    width: 100%;
-    background-color: #59b6d7;
-    border: none;
-    &:focus, &:active {
-      background-color: #4ab2ce;
-      color: #fff;
-    }
-  }
-
-  .otherOperation {
-    height: 42px;
-    line-height: 42px;
-  }
-
-  .otherOperation a{
-    font-size: 14px;
-  }
-
-</style>
-<style lang="css">
-  .el-icon-circle-close {
-    font-size: 18px;
-    z-index: 2;
-  }
-  .el-icon-circle-close:before {
-    color: #999;
-  }
-</style>

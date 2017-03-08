@@ -86,10 +86,6 @@ input {
   }
 }
 
-.operation button {
-  background-color: #59b6d7;
-  color: #fff;
-}
 .header {
   height: 46px;
   line-height: 46px;
@@ -131,6 +127,49 @@ input {
 
 .text-align-right{
   text-align: right;
+}
+
+.formChildrenRow {
+  height: 55px;
+  line-height: 55px;
+}
+
+.loginForm {
+  background-color: #fff;
+  &:focus, &:active {
+    background-color: #fff;
+  }
+}
+
+.loginForm {
+  background-color: #fff;
+}
+
+.loginButton {
+  width: 100%;
+  background-color: #59b6d7;
+  border: none;
+  &:focus, &:active {
+    background-color: #4ab2ce;
+    color: #fff;
+  }
+}
+
+.otherOperation {
+  height: 42px;
+  line-height: 42px;
+}
+
+.otherOperation a{
+  font-size: 14px;
+}
+
+.el-icon-circle-close {
+  font-size: 16px;
+  z-index: 2;
+}
+.el-icon-circle-close:before {
+  color: #999;
 }
 
 

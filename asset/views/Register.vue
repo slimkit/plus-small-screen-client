@@ -16,8 +16,8 @@
       </header> -->
       <div class="main-content">
         <form role="form" @submit.prevent="register">
-          <div :class="$style.loginForm">
-            <el-row :class="$style.formChildrenRow" class="bottom-border" justify="start" type="flex" align="middle">
+          <div class="loginForm">
+            <el-row class="formChildrenRow bottom-border" justify="start" type="flex" align="middle">
               <el-col :span="4" offset="1">
                 <label for="username" :class="loginFormTitle">用户名</label>
               </el-col>
@@ -28,7 +28,7 @@
                 <i v-on:click="cleanUsername" v-show="isShowUserClean" class="el-icon-circle-close"></i>
               </el-col>
             </el-row>
-            <el-row :class="$style.formChildrenRow" class="bottom-border" justify="start" type="flex" align="middle">
+            <el-row class="formChildrenRow bottom-border" justify="start" type="flex" align="middle">
               <el-col :span="4" offset="1">
                 <label for="phone" :class="loginFormTitle">手机号</label>
               </el-col>
@@ -42,7 +42,7 @@
                 <el-button type="text" v-on:click="getCode" native-type="button" :disabled="!isCanGetCode" size="large">{{ getCodeText }}</el-button>
               </el-col>
             </el-row>
-            <el-row :class="$style.formChildrenRow" class="bottom-border" justify="start" type="flex" align="middle">
+            <el-row class="bottom-border formChildrenRow" justify="start" type="flex" align="middle">
               <el-col :span="4" offset="1">
                 <label for="code" :class="loginFormTitle">验证码</label>
               </el-col>
@@ -50,7 +50,7 @@
                 <input type="tel" autocomplete="off" placeholder="输入验证码" v-model.trim.num="code" id="code" name="code" value="{{ code }}" />
               </el-col>
             </el-row>
-            <el-row :class="$style.formChildrenRow" justify="start" type="flex" align="middle">
+            <el-row class="formChildrenRow" justify="start" type="flex" align="middle">
               <el-col :span="4" offset="1">
                 <label for="password" :class="loginFormTitle">密码</label>
               </el-col>
@@ -73,7 +73,7 @@
           <div :class="operation">
            <el-row justify="start" type="flex" align="middle">
               <el-col :span="22" offset="1">
-                <el-button type="primary" :loading="isLoading" native-type="submit" :disabled="isDisabled" :class="$style.loginButton" size="large">注册</el-button>
+                <el-button type="primary" :loading="isLoading" native-type="submit" :disabled="isDisabled" class="loginButton" size="large">注册</el-button>
               </el-col>
             </el-row>
           </div>
@@ -181,7 +181,6 @@
           if(response.data.code === 0 || response.data.status) {
             // 删除网络问题
             this.cleanErrors();
-            console.log(this.errors);
             this.time = 60;
             this.timer();
           }
@@ -190,7 +189,6 @@
           this.isCanGetCode = true;
           const { code = 'xxxx' } = data;
           this.errors = Object.assign({}, this.errors, { serverError: errorCodes[code]});
-          console.log(this.errors);
         })
       },
       // 注册
@@ -306,44 +304,6 @@
 
 </script>
 
-<style lang="scss" module>
-  .formChildrenRow {
-    height: 55px;
-    line-height: 55px;
-    position: relative;
-  }
-  .loginForm {
-    background-color: #fff;
-    &:focus, &:active {
-      background-color: #fff;
-    }
-  }
-  .loginButton {
-    width: 100%;
-    background-color: #59b6d7;
-    border: none;
-    &:focus, &:active {
-      background-color: #4ab2ce;
-      color: #fff;
-    }
-  }
-
-  .otherOperation {
-    height: 42px;
-    line-height: 42px;
-  }
-
-  .otherOperation a{
-    font-size: 14px;
-  }
-
-</style>
 <style lang="css">
-  .el-icon-circle-close {
-    font-size: 16px;
-    z-index: 2;
-  }
-  .el-icon-circle-close:before {
-    color: #999;
-  }
+  
 </style>
