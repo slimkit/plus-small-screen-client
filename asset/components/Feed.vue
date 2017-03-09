@@ -13,14 +13,14 @@
               你的名字
             </el-col>
             <el-col :span="5" :class="$style.timer">
-              29天前
+              <timeago :since="timer"></timeago>
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="24">
-              <router-link v-if="feed.title" to="/feeds/{feed.id}/detail/" class="feedTitle">{{ feedInfo.title }}</router-link>
+              <router-link v-if="feedInfo.feed_title" :to="{ path: '/feeds/detail/' + feed_id }" class="feedTitle">{{ feedInfo.feed_title }}</router-link>
               <div :class="$style.content">
-                {{ feedInfo.content }}
+                {{ feedInfo.feed_content }}
               </div>
             </el-col>
           </el-row>
@@ -31,16 +31,35 @@
 </template>
 
 <script>
+  import request, { createAPI, addAccessToken } from '../utils/request';
+  import errorCodes from '../stores/errorCodes';
+  import localEvent from '../stores/localStorage';
   const feedinfo = {
     props: [
       'feed'
     ],
     data: () => ({
       feedInfo: {},
-      feedIndex: 0
+      toolInfo: {},
+      commentInfo: {},
+      timer: 0,
+      feed_id: 0,
+      user: {}
     }),
-    created () {
-      this.feedInfo = Object.assign({}, this.feedInfo, this.$props.feed);
+    methods: {
+      // 获取用户信息
+      getUser () {
+
+      }
+    },
+    beforeMount () {
+      this.timer = new Date(this.feed.feed.created_at);
+      this.feed_id = this.feed.feed.feed_id;
+      this.user = localEvent.getLocalItem('user' + this.feed.user_id);
+      if(!this.user) {
+        this.getUser;
+      }
+      this.feedInfo = Object.assign({}, this.feedInfo, this.feed.feed);
     }
   }
 

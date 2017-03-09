@@ -12,8 +12,8 @@
       <el-col :span="2" offset="2">
       </el-col>
       <el-col :span="4" offset="2">
-        <!-- <router-link :class="$style.navLink" to="/feeds/new">最新</router-link> -->
-        <el-button v-on:click="clean">缓存</el-button>
+        <router-link :class="$style.navLink" to="/feeds/new">最新</router-link>
+        <!-- <el-button v-on:click="clean">缓存</el-button> -->
       </el-col>
     </el-row>
   </div>
@@ -46,10 +46,11 @@
     margin-bottom: 3px;
     position: fixed;
     width: 100%;
+    z-index: 2;
   }
   .navLink {
     color: #999;
-    height: calc(100% - 6px);
+    height: 44px;
     display: block;
     text-align: center;
   }

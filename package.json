@@ -16,6 +16,7 @@
     "svgo": "^0.7.2",
     "vue": "^2.2.1",
     "vue-router": "^2.2.0",
+    "vue-timeago": "^3.3.0",
     "vue-wechat-title": "^2.0.0"
   },
   "devDependencies": {

@@ -209,9 +209,11 @@
           }
         )
         .then(response => {
-          this.isLoading = false;
           localEvent.setLocalItem('UserLoginInfo', response.data.data);
-          router.push({ path: 'feeds' });
+          this.isLoading = false;
+          setTimeout( () => {
+            router.push({ path: 'feeds' });
+          }, 500);
         })
         .catch(({ response: { data = {} } = {} } ) => {
           this.isDisabled = false;

@@ -7,6 +7,7 @@ import Home from '../views/Home.vue';
 import FeedFollowing from '../views/FeedFollowing';
 import FeedAll from '../views/FeedAll';
 import FeedNew from '../views/FeedNew';
+import FeedDetail from '../views/FeedDetail';
 import { requestAuth, CanNotGetInWhenLogged } from '../utils/auth';
 
 const routes = [
@@ -77,6 +78,13 @@ const routes = [
         component: FeedNew,
         meta: {
           title: '最新动态'
+        }
+      },
+      {
+        path: 'detail/:feed_id',
+        compoenet: FeedDetail,
+        meta: {
+          title: '动态详情'
         }
       }
     ]
