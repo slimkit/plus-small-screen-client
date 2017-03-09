@@ -150,7 +150,6 @@
       // 清理服务端错误信息
       cleanErrors () {
         let errors = this.errors;
-        console.log(errors);
         let newErrors = deleteObjectItems(errors, [
           'code'
         ]);
@@ -189,13 +188,14 @@
           let errors = {};
           this.errors = Object.assign({}, errors);
           localEvent.setLocalItem('UserLoginInfo', response.data.data);
-          router.push({ path: 'feeds' });
+          setTimeout(() => {
+            router.push({ path: 'feeds' })
+          }, 500);
         })
-        .catch(({ response: { data = {} } = {} } ) =>{
+        .catch(({ response: { data = {} } = {} } ) => {
           this.isDisabled = false;
           const { code = 'xxxx' } = data;
           this.isLoading = false;
-          console.log({ code: errorCodes[code] });
           this.errors = Object.assign({}, this.errors, { code: errorCodes[code] });
         });
       }

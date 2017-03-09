@@ -172,4 +172,16 @@ input {
   color: #999;
 }
 
+.router-link-active {
+  color: #333;
+  border-bottom: 2px $themeColor solid
+}
+
+.feed .feedTitle {
+  color: #59b6d7;
+  font-size: 16px;
+  border-bottom: none;
+  display: flex;
+}
+
 

@@ -1,6 +1,6 @@
-import webpack from 'webpack';
-import path from 'path';
-// import ExtractTextPlugin from 'extract-text-webpack-plugin';
+var webpack = require('webpack');
+var path = require('path');
+var ExtractTextPlugin = ('extract-text-webpack-plugin');
 // import autoprefixer from 'autoprefixer';
 // import { StatsWriterPlugin } from 'webpack-stats-plugin';
 // import lodash from 'lodash';
@@ -59,13 +59,13 @@ const webpackConfig = {
           }
         }
       },
-      // {
-      //   test: /\.(scss|css)$/,
-      //   loader: 'style-loader!css-loader!postcss-loader!sass-loader',
-      //   query: {
-      //     name: 'css/[name].css'
-      //   }
-      // },
+      {
+        test: /\.(scss|css)$/,
+        loader: 'style-loader!css-loader!postcss-loader!sass-loader',
+        query: {
+          name: 'css/[name].css'
+        }
+      },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
         loader: 'url-loader',
@@ -84,13 +84,13 @@ const webpackConfig = {
       }
     ]
   }
-  // ,
-  // plugins: [
-  //   // extract css into its own file
-  //   new ExtractTextPlugin({
-  //     filename: isProd ? 'css/[name].css' : 'css/[name].css'
-  //   })
-  // ]
+  ,
+  plugins: [
+    // extract css into its own file
+    new ExtractTextPlugin({
+      filename: isProd ? 'css/[name].css' : 'css/[name].css'
+    })
+  ]
 };
 
-export default webpackConfig;
+// export default webpackConfig;
