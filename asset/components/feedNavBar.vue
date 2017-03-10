@@ -12,8 +12,8 @@
       <el-col :span="2" offset="2">
       </el-col>
       <el-col :span="4" offset="2">
-        <router-link :class="$style.navLink" to="/feeds/new">最新</router-link>
-        <!-- <el-button v-on:click="clean">缓存</el-button> -->
+        <!-- <router-link :class="$style.navLink" to="/feeds/new">最新</router-link> -->
+        <el-button v-on:click="clean">缓存</el-button>
       </el-col>
     </el-row>
   </div>
@@ -26,8 +26,7 @@
   const navBar = {
     methods: {
       clean () {
-        console.log(localEvent.getLocalItem('UserLoginInfo'))
-        localEvent.clearLocalItem('UserLoginInfo');
+        localEvent.clearLocalAll();
         router.push({ path: '/login' });
       }
     }
@@ -43,10 +42,13 @@
     line-height: 46px;
     border-bottom: 1px #dedede solid;
     background-color: #fff;
-    margin-bottom: 3px;
+    margin-bottom: 4px;
     position: fixed;
     width: 100%;
     z-index: 2;
+    &:active {
+      background-color: #fff;
+    }
   }
   .navLink {
     color: #999;

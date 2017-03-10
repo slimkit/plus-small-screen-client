@@ -9,8 +9,8 @@
       <el-col :span="18" offset="1">
         <div class="grid-content bg-purple">
           <el-row :class="$style.usernameLine">
-            <el-col :span="19" :class="$style.username">
-              你的名字
+            <el-col :span="19">
+              <router-link :class="$style.username" :to="{ path: '/users/profile' }">{{ user.name }}</router-link>
             </el-col>
             <el-col :span="5" :class="$style.timer">
               <timeago :since="timer"></timeago>
@@ -18,9 +18,12 @@
           </el-row>
           <el-row>
             <el-col :span="24">
-              <router-link v-if="feedInfo.feed_title" :to="{ path: '/feeds/detail/' + feed_id }" class="feedTitle">{{ feedInfo.feed_title }}</router-link>
+              <router-link v-if="feedInfo.feed_title" :to="{ path: `/feeds/detail/${feed_id}` }" class="feedTitle">{{ feedInfo.feed_title }}</router-link>
               <div :class="$style.content">
                 {{ feedInfo.feed_content }}
+              </div>
+              <div v-if="feedInfo.storages.length" v-for="storage in feedInfo.storages">
+                <img :src="getImg(storage.storage_id)" />
               </div>
             </el-col>
           </el-row>
@@ -31,9 +34,11 @@
 </template>
 
 <script>
-  import request, { createAPI, addAccessToken } from '../utils/request';
+  import { createRequestURI, createAPI, addAccessToken } from '../utils/request';
   import errorCodes from '../stores/errorCodes';
   import localEvent from '../stores/localStorage';
+  import { getUserInfo } from '../utils/user';
+
   const feedinfo = {
     props: [
       'feed'
@@ -47,19 +52,26 @@
       user: {}
     }),
     methods: {
-      // 获取用户信息
-      getUser () {
-
+      getImg (id, process = 50) {
+        return createRequestURI(`api/v1/storages/${id}/${process}`);
       }
     },
-    beforeMount () {
-      this.timer = new Date(this.feed.feed.created_at);
+    mounted () {
+      this.timer = new Date(this.feed.feed.created_at.replace(/-/g, "/"));
       this.feed_id = this.feed.feed.feed_id;
-      this.user = localEvent.getLocalItem('user' + this.feed.user_id);
-      if(!this.user) {
-        this.getUser;
+      this.user = localEvent.getLocalItem('user_' + this.feed.user_id);
+      if(this.user.length == 0) {
+        getUserInfo(this.feed.user_id, user => {
+          this.user = user;
+        });
       }
       this.feedInfo = Object.assign({}, this.feedInfo, this.feed.feed);
+    },
+    beforeUpdate () {
+      console.log(111);
+    },
+    updated () {
+      console.log(222);
     }
   }
 
@@ -69,7 +81,7 @@
 <style lang="scss" module>
   .detail {
     background-color: #fff;
-    margin-bottom: 3px;
+    margin-bottom: 4px;
     padding: 10px 0;
     border-bottom: 1px #dedede solid;
   }

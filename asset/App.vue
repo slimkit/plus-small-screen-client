@@ -6,6 +6,8 @@
 </template>
 
 <script>
+  import { createAPI, addAccessToken } from './utils/request';
+
   export default {};
 </script>
 

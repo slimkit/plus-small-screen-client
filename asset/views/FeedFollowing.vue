@@ -20,6 +20,6 @@
 
 <style lang="scss" module>
   .feedListContent {
-    padding-top: 49px;
+    padding-top: 51px;
   }
 </style>

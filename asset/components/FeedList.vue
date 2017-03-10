@@ -5,7 +5,7 @@
     </div>
     <div class="feed-list">
       <div class="feed" v-for="feed in feeds">
-        <Feed :feed="feed"></Feed>
+        <Feed :feed="feed" :key="feed.id"></Feed>
       </div>
     </div>
   </div>
@@ -16,6 +16,7 @@
   import errorCodes from '../stores/errorCodes';
   import localEvent from '../stores/localStorage';
   import Feed from './Feed';
+  import { getUserInfo } from '../utils/user';
 
   const FeedLists = {
     components: {
@@ -38,7 +39,7 @@
         return errors[0] || '';
       }
     },
-    beforeMount () {
+    created () {
       let max_id = this.maxId;
       let limit =  this.limit;
       addAccessToken().get(createAPI('feeds'), {
