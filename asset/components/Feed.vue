@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.detail" id="feed-{ feed.id }">
+  <div :class="$style.detail" :id="`feed-${feed_id}`">
     <el-row>
       <el-col :span="3" offset="1">
         <div class="grid-content bg-purple">
@@ -22,9 +22,10 @@
               <div :class="$style.content">
                 {{ feedInfo.feed_content }}
               </div>
-              <div v-if="feedInfo.storages.length" v-for="storage in feedInfo.storages">
-                <img :src="getImg(storage.storage_id)" />
+              <div v-if="feedInfo.storages.length">
+                <FeedImages :storages="feedInfo.storages"></FeedImages>
               </div>
+              <FeedTool/>
             </el-col>
           </el-row>
         </div>
@@ -38,24 +39,32 @@
   import errorCodes from '../stores/errorCodes';
   import localEvent from '../stores/localStorage';
   import { getUserInfo } from '../utils/user';
+  import FeedImages from './FeedImages';
+  import FeedTool from './FeedTool';
 
   const feedinfo = {
     props: [
       'feed'
     ],
+    components: {
+      FeedImages,
+      FeedTool
+    },
     data: () => ({
-      feedInfo: {},
+      feedInfo: {
+        created_at: '',
+        feed_content: '',
+        feed_from: 0,
+        feed_id: 0,
+        feed_title: '',
+        storages: []
+      },
       toolInfo: {},
       commentInfo: {},
       timer: 0,
       feed_id: 0,
       user: {}
     }),
-    methods: {
-      getImg (id, process = 50) {
-        return createRequestURI(`api/v1/storages/${id}/${process}`);
-      }
-    },
     mounted () {
       this.timer = new Date(this.feed.feed.created_at.replace(/-/g, "/"));
       this.feed_id = this.feed.feed.feed_id;
@@ -66,12 +75,6 @@
         });
       }
       this.feedInfo = Object.assign({}, this.feedInfo, this.feed.feed);
-    },
-    beforeUpdate () {
-      console.log(111);
-    },
-    updated () {
-      console.log(222);
     }
   }
 
@@ -81,9 +84,8 @@
 <style lang="scss" module>
   .detail {
     background-color: #fff;
-    margin-bottom: 4px;
+    margin-bottom: 6px;
     padding: 10px 0;
-    border-bottom: 1px #dedede solid;
   }
   .usernameLine {
     margin-bottom: 6px;

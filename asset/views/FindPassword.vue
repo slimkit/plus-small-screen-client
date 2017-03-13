@@ -8,7 +8,7 @@
               <label for="phone" :class="loginFormTitle">手机号</label>
             </el-col>
             <el-col :span="10">
-              <input type="tel" autocomplete="off" placeholder="输入手机号码" v-model.trim.num="phone" id="phone" name="phone" value="{{ phone }}" />
+              <input type="tel" autocomplete="off" placeholder="输入手机号码" v-model.trim.num="phone" id="phone" name="phone" />
             </el-col>
             <el-col :span="1" offset="1">
               <i v-on:click="cleanPhone" v-show="isShowClean" class="el-icon-circle-close"></i>
@@ -22,7 +22,7 @@
               <label for="code" :class="loginFormTitle">验证码</label>
             </el-col>
             <el-col :span="18">
-              <input type="tel" autocomplete="off" placeholder="请输入验证码" v-model.number.trim="code" id="code" name="code" value="{{ code }}" />
+              <input type="tel" autocomplete="off" placeholder="请输入验证码" v-model.number.trim="code" id="code" name="code" />
             </el-col>
           </el-row>
           <el-row class="formChildrenRow" justify="start" type="flex" align="middle">

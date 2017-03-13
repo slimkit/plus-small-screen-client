@@ -22,7 +22,7 @@
                 <label for="username" :class="loginFormTitle">用户名</label>
               </el-col>
               <el-col :span="16">
-                <input type="text" autocomplete="off" placeholder="不能以数字开头,不能有特殊字符" v-model.trim="username" id="username" name="username" value="{{ username }}" />
+                <input type="text" autocomplete="off" placeholder="不能以数字开头,不能有特殊字符" v-model.trim="username" id="username" name="username" />
               </el-col>
               <el-col :span="1" offset="1">
                 <i v-on:click="cleanUsername" v-show="isShowUserClean" class="el-icon-circle-close"></i>
@@ -33,7 +33,7 @@
                 <label for="phone" :class="loginFormTitle">手机号</label>
               </el-col>
               <el-col :span="10">
-                <input type="tel" autocomplete="off" placeholder="输入手机号码" v-model.trim.num="phone" id="phone" name="phone" value="{{ phone }}" />
+                <input type="tel" autocomplete="off" placeholder="输入手机号码" v-model.trim.num="phone" id="phone" name="phone" />
               </el-col>
               <el-col :span="1" offset="1">
                 <i v-on:click="cleanPhone" v-show="isShowClean" class="el-icon-circle-close"></i>
@@ -47,7 +47,7 @@
                 <label for="code" :class="loginFormTitle">验证码</label>
               </el-col>
               <el-col :span="18">
-                <input type="tel" autocomplete="off" placeholder="输入验证码" v-model.trim.num="code" id="code" name="code" value="{{ code }}" />
+                <input type="tel" autocomplete="off" placeholder="输入验证码" v-model.trim.num="code" id="code" name="code" />
               </el-col>
             </el-row>
             <el-row class="formChildrenRow" justify="start" type="flex" align="middle">

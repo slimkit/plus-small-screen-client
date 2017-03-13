@@ -21,7 +21,7 @@
               <label for="phone" :class="loginFormTitle">手机号</label>
             </el-col>
             <el-col :span="16">
-              <input type="tel" autocomplete="off" placeholder="请输入手机号" v-model.number.trim="phone" id="phone" name="phone" value="{{ phone }}" />
+              <input type="tel" autocomplete="off" placeholder="请输入手机号" v-model.number.trim="phone" id="phone" name="phone" />
             </el-col>
             <el-col :span="1" offset="1">
               <i v-on:click="cleanPhone" v-show="isShowClean" class="el-icon-circle-close"></i>

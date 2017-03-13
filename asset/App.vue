@@ -14,3 +14,6 @@
 <style lang="scss">
   @import './styles/common.scss';
 </style>
+<style lang="css">
+  @import './styles/font.css';
+</style>

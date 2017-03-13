@@ -42,7 +42,6 @@
     line-height: 46px;
     border-bottom: 1px #dedede solid;
     background-color: #fff;
-    margin-bottom: 4px;
     position: fixed;
     width: 100%;
     z-index: 2;
