@@ -8,21 +8,24 @@
 
 .iconfont {
   font-family:"iconfont" !important;
-  font-size:18px;
+  font-size:14px;
   color: #b2b2b2;
   font-style:normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   display: inline-flex;
+  font-weight: 200;
 }
 
 .iconfont:before {
-  font-size: 24px;
+  font-size: 20px;
 }
-
-.icon-view:before { content: "\e652"; }
 
 .icon-comment:before { content: "\e611"; }
 
 .icon-digg:before { content: "\e604"; }
+
+.icon-view:before { content: "\e65c"; }
+
+.icon-more:before { content: "\e629"; }
 

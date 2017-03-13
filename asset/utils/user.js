@@ -24,7 +24,6 @@ function getUserInfo (user_id, cb) {
     userLocal.phone = user.phone;
     user.counts.map(function (count, index) {
       let keyName = count.key;
-      console.log(keyName)
       let value = count.value;
       userLocal.counts = Object.assign({}, userLocal.counts, { [keyName]:  value });
     });
@@ -56,11 +55,9 @@ function getUsersInfo (user_ids) {
     }
   )
   .then(response => {
-    console.log(response);
   })
   .catch(({ response: { data = {} } = {} } ) => {
     const { code = 'xxxx' } = data;
-    console.log(code);
   })
 };
 

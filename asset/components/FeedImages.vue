@@ -57,7 +57,7 @@
     <el-row v-if="imageSize == 7">
       7张图片
     </el-row>
-    <div v-if="imageSize == 9" class="images">
+    <div v-if="imageSize == 8" class="images">
       <el-row>
         <el-col :span="7">
           <img :src="getImg(imageObject[0].storage_id)" />
@@ -138,8 +138,8 @@
       imageObject: []
     }),
     computed: {
-      imageSize () { 
-        return this.$props.storages.length;
+      imageSize () {
+        return this.storages.length;
       }
     },
     methods: {

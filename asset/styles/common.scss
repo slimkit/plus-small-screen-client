@@ -39,6 +39,7 @@ a {
 }
 :active {
   background: none;
+  background-color: #fff;
 }
 input {
   border: none;
@@ -182,4 +183,14 @@ input {
   font-size: 16px;
   border-bottom: none;
   display: flex;
+}
+
+i.iconfont {
+  .count {
+    text-indent: 5px;
+  }
+}
+
+i.iconfont.digg {
+  color: $noticeColor;
 }

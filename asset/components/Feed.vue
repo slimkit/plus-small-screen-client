@@ -25,10 +25,14 @@
               <div v-if="feedInfo.storages.length">
                 <FeedImages :storages="feedInfo.storages"></FeedImages>
               </div>
-              <FeedTool/>
             </el-col>
           </el-row>
         </div>
+      </el-col>
+    </el-row>
+    <el-row v-if="tools" :class="$style.toolTop">
+      <el-col offset="5" :span="19">
+        <FeedTool :feedId="feedInfo.feed_id" :toolDatas="toolInfo"></FeedTool>
       </el-col>
     </el-row>
   </div>
@@ -63,11 +67,14 @@
       commentInfo: {},
       timer: 0,
       feed_id: 0,
-      user: {}
+      user: {},
+      tools: 0
     }),
     mounted () {
       this.timer = new Date(this.feed.feed.created_at.replace(/-/g, "/"));
       this.feed_id = this.feed.feed.feed_id;
+      this.toolInfo = Object.assign({}, this.toolInfo, this.feed.tool);
+      this.tools = 1;
       this.user = localEvent.getLocalItem('user_' + this.feed.user_id);
       if(this.user.length == 0) {
         getUserInfo(this.feed.user_id, user => {
@@ -86,6 +93,14 @@
     background-color: #fff;
     margin-bottom: 6px;
     padding: 10px 0;
+    &:active, &:focus {
+      background-color: #fff;
+    }
+  }
+  .toolTop {
+    padding-top: 5px;
+    margin-top: 5px;
+    border-top: 1px #e2e2e2 solid;
   }
   .usernameLine {
     margin-bottom: 6px;
