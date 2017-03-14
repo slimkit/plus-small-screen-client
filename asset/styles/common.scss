@@ -26,6 +26,16 @@ body {
     background-color: $backgroundColor;
   }
 }
+ul, li {
+  padding: 0;
+  margin: 0;
+}
+li {
+  list-style-type: none;
+  p {
+    margin: 5px 0;
+  }
+}
 a {
   color: $themeColor;
   text-decoration: none;
@@ -34,11 +44,19 @@ a {
   }
 }
 
+.el-button--primary {
+  background-color: $themeColor;
+}
+
 :focus {
-  outline: none
+  outline: none;
 }
 div#app:active, div#container:active{
   background-color: $backgroundColor;
+}
+.inputFull {
+  color: #f00;
+  font-size: 12px;
 }
 input {
   border: none;
@@ -48,6 +66,17 @@ input {
   font-size: $font-size;
   &:active, &:focus {
     outline: none;
+  }
+}
+
+.el-textarea {
+  textarea {
+    border: none;
+    border-bottom: 1px solid $themeColor;
+    padding-bottom: 4px;
+  }
+  textarea::-webkit-scrollba {
+    width: 2px;
   }
 }
 
