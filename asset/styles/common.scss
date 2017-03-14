@@ -37,9 +37,8 @@ a {
 :focus {
   outline: none
 }
-:active {
-  background: none;
-  background-color: #fff;
+div#app:active, div#container:active{
+  background-color: $backgroundColor;
 }
 input {
   border: none;

@@ -33,12 +33,13 @@ module.exports = {
           loaders: {
             scss: 'vue-style-loader!css-loader!sass-loader', // <style lang="scss">
           }
-        }
+        },
+        exclude: /node_modules/
       },
       {
         test: /\.js$/,
         loader: 'babel-loader',
-        include: [resolve('src'), resolve('test')]
+        include: [path.join(__dirname, '..', 'asset')]
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,

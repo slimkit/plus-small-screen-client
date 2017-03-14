@@ -1,8 +1,12 @@
 <template>
   <div>
-    <el-button @click="focusInput">点我</el-button>
-    <router-link to="/web"></router-link>
-    <el-input :class="$style.commentInput" v-model="input" v-show="CanInput" :autofocus="autoFocus" placeholder="请输入内容"></el-input>
+    <ul>
+      <li v-for="comment in commentInfo">
+        <p @click.stop="focusInput">{{ comment.comment_content }}</p>
+      </li>
+    </ul>
+    <router-link v-if="hasMore" to="/web"></router-link>
+    <el-input :class="$style.commentInput" v-model="input" v-if="CanInput" autofocus="{{ autoF }}" placeholder="请输入内容"></el-input>
   </div>
 </template>
 
@@ -13,24 +17,26 @@
       'commentsData'
     ],
     data: () => ({
-      commentInfo: [
-        1,
-        2
-      ],
-      more: 0,
+      commentInfo: [],
+      more: false,
       CanInput: false,
-      autoFocus: false
+      autoF: false
     }),
     methods: {
       focusInput () {
         this.CanInput = !this.CanInput,
         setTimeout(() => {
-          this.autoFocus = true;
+          this.autoF = true;
         }, 300)
       }
     },
     computed: {
-      
+      hasMore () {
+        return this.commentsData.length > 3;
+      }
+    },
+    beforeMount () {
+      this.commentInfo = this.commentsData;
     }
   };
 

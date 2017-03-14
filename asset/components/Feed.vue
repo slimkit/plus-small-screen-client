@@ -35,11 +35,11 @@
         <FeedTool :feedId="feedInfo.feed_id" :toolDatas="toolInfo"></FeedTool>
       </el-col>
     </el-row>
-    <el-rom>
+    <el-row v-if="comments.length">
       <el-col offset="5" :span="19">
         <CommentsTool :feedId="feedInfo.feed_id" :commentsData="comments"></CommentsTool>
       </el-col>
-    </el-rom>
+    </el-row>
   </div>
 </template>
 
@@ -76,17 +76,13 @@
       feed_id: 0,
       user: {},
       tools: 0,
-      comments: [
-        1,
-        2,
-        3
-      ]
+      comments: []
     }),
     mounted () {
       this.timer = new Date(this.feed.feed.created_at.replace(/-/g, "/"));
       this.feed_id = this.feed.feed.feed_id;
       this.toolInfo = Object.assign({}, this.toolInfo, this.feed.tool);
-      // this.comments = this.feed.comments;
+      this.comments = this.feed.comments;
       this.tools = 1;
       this.user = localEvent.getLocalItem('user_' + this.feed.user_id);
       if(this.user.length == 0) {

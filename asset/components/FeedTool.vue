@@ -57,7 +57,6 @@
         .catch(({ response: { data = {} } = {} } ) => {
           this.isDisabled = false;
           const { code = 'xxxx' } = data;
-          console.log(code);
           // this.isLoading = false;
           // this.errors = Object.assign({}, this.errors, { code: errorCodes[code] });
         });
@@ -80,7 +79,6 @@
     },
     computed: {
       isDigg () {
-        console.log(this.toolData.is_digg_feed);
         return this.toolData.is_digg_feed;
       }
     },
