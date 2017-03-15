@@ -1,21 +1,22 @@
 <template>
   <div :class="$style.feedNavBar" class="feed-nav-bar">
-    <el-row>
-      <el-col :span="4" offset="4">
+    <Row>
+      <i-col :span="4" offset="4">
           <router-link :class="$style.navLink" to="/feeds/following">关注</router-link>
-      </el-col>
-      <el-col :span="2" offset="2">
-      </el-col>
-      <el-col :span="4" offset="2">
+      </i-col>
+      <i-col :span="2" offset="2">
+      </i-col>
+      <i-col :span="4" offset="2">
         <router-link :class="$style.navLink" to="/feeds/all">全部</router-link>
-      </el-col>
-      <el-col :span="2" offset="2">
-      </el-col>
-      <el-col :span="4" offset="2">
+      </i-col>
+      <i-col :span="2" offset="2">
+      </i-col>
+      <i-col :span="4" offset="2">
         <!-- <router-link :class="$style.navLink" to="/feeds/new">最新</router-link> -->
-        <el-button v-on:click="clean">缓存</el-button>
-      </el-col>
-    </el-row>
+        <i-button @click.native="clean">缓存</i-button>
+        <!-- <a href="javascript:void(0)" @click.stop.prevent="clean">缓存</a> -->
+      </i-col>
+    </Row>
   </div>
 </template>
 
@@ -38,8 +39,8 @@
 <style lang="scss" module>
   .feedNavBar{
     font-size: 18px;
-    height: 46px;
-    line-height: 46px;
+    height: 45px;
+    line-height: 45px;
     border-bottom: 1px #dedede solid;
     background-color: #fff;
     position: fixed;

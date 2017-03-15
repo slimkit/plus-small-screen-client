@@ -1,25 +1,25 @@
 <template>
   <div :class="$style.tool">
-    <el-row>
-      <el-col :span="7">
+    <Row>
+      <i-col :span="7">
         <i class="iconfont icon-digg" :class="{ digg: isDigg }" @click.stop="!toolData.is_digg_feed ? sendDigg() : cannelDigg()">
           <span class="count">{{ friendnum(toolData.feed_digg_count) }}</span>
         </i>
-      </el-col>
-      <el-col :span="7">
+      </i-col>
+      <i-col :span="7">
         <i class="iconfont icon-comment">
           <span class="count">{{ friendnum(toolData.feed_comment_count) }}</span>
         </i>
-      </el-col>
-      <el-col :span="7">
+      </i-col>
+      <i-col :span="7">
         <i class="iconfont icon-view">
           <span class="count">{{ friendnum(toolData.feed_view_count) }}</span>
         </i>
-      </el-col>
-      <el-col :span="2" style="text-align: right">
+      </i-col>
+      <i-col :span="3" style="text-align: right">
         <i class="iconfont icon-more"></i>
-      </el-col>
-    </el-row>
+      </i-col>
+    </Row>
     {{ datas }}
   </div>
 </template>

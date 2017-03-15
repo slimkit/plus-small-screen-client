@@ -15,6 +15,7 @@
   -moz-osx-font-smoothing: grayscale;
   display: inline-flex;
   font-weight: 200;
+  line-height: 1;
 }
 
 .iconfont:before {

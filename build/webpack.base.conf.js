@@ -31,10 +31,14 @@ module.exports = {
         loader: 'vue-loader',
         options: {
           loaders: {
-            scss: 'vue-style-loader!css-loader!sass-loader', // <style lang="scss">
+            scss: 'vue-style-loader!css-loader!sass-loader!less-loader', // <style lang="scss">
           }
         },
         exclude: /node_modules/
+      },
+      { 
+        test: /iview.src.*?js$/, 
+        loader: 'babel-loader' 
       },
       {
         test: /\.js$/,
@@ -51,11 +55,7 @@ module.exports = {
       },
       {
         test: /\.(woff2?|eot|ttf|otf|svg|woff)(\?.*)?$/,
-        loader: 'url-loader',
-        query: {
-          limit: 10000,
-          name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
-        }
+        loader: 'url-loader'
       }
     ]
   }

@@ -1,23 +1,23 @@
 <template>
   <div :class="$style.detail" :id="`feed-${feed_id}`">
-    <el-row>
-      <el-col :span="3" offset="1">
+    <Row>
+      <i-col :span="3" offset="1">
         <div class="grid-content bg-purple">
           <img src="../statics/images/avatar.jpg" alt="" style="width:100%; border-radius:50%">
         </div>
-      </el-col>
-      <el-col :span="18" offset="1">
+      </i-col>
+      <i-col :span="18" offset="1">
         <div class="grid-content bg-purple">
-          <el-row :class="$style.usernameLine">
-            <el-col :span="19">
+          <Row :class="$style.usernameLine">
+            <i-col :span="19">
               <router-link :class="$style.username" :to="{ path: '/users/profile' }">{{ user.name }}</router-link>
-            </el-col>
-            <el-col :span="5" :class="$style.timer">
+            </i-col>
+            <i-col :span="5" :class="$style.timer">
               <timeago :since="timer"></timeago>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="24">
+            </i-col>
+          </Row>
+          <Row>
+            <i-col :span="24">
               <router-link v-if="feedInfo.feed_title" :to="{ path: `/feeds/detail/${feed_id}` }" class="feedTitle">{{ feedInfo.feed_title }}</router-link>
               <div :class="$style.content">
                 {{ feedInfo.feed_content }}
@@ -25,26 +25,26 @@
               <div v-if="feedInfo.storages.length">
                 <FeedImages :storages="feedInfo.storages"></FeedImages>
               </div>
-            </el-col>
-          </el-row>
+            </i-col>
+          </Row>
         </div>
-      </el-col>
-    </el-row>
-    <el-row v-if="tools" :class="$style.toolTop">
-      <el-col offset="5" :span="19">
+      </i-col>
+    </Row>
+    <Row v-if="tools" :class="$style.toolTop">
+      <i-col offset="5" :span="18">
         <FeedTool :feedId="feedInfo.feed_id" :toolDatas="toolInfo"></FeedTool>
-      </el-col>
-    </el-row>
-    <el-row v-if="comments.length">
-      <el-col offset="5" :span="19">
+      </i-col>
+    </Row>
+    <Row v-if="comments.length">
+      <i-col offset="5" :span="18">
         <CommentsTool :feedId="feedInfo.feed_id" :commentsData="comments"></CommentsTool>
-      </el-col>
-    </el-row>
+      </i-col>
+    </Row>
   </div>
 </template>
 
 <script>
-  import { createRequestURI, createAPI, addAccessToken } from '../utils/request';
+  import { createAPI, addAccessToken } from '../utils/request';
   import errorCodes from '../stores/errorCodes';
   import localEvent from '../stores/localStorage';
   import { getUserInfo } from '../utils/user';

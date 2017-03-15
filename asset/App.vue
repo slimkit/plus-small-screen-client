@@ -5,14 +5,8 @@
   </div>
 </template>
 
-<script>
-  import { createAPI, addAccessToken } from './utils/request';
-
-  export default {};
-</script>
-
-<style lang="scss">
-  @import './styles/common.scss';
+<style lang="less">
+  @import './styles/common.less';
 </style>
 <style lang="css">
   @import './styles/font.css';

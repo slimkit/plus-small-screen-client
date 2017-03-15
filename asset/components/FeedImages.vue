@@ -1,128 +1,128 @@
 <template>
   <div :class="FeedImages">
     <div v-if="imageSize == 1" class="images">
-      <el-row>
-        <el-col :span="24">
+      <Row>
+        <i-col :span="24">
           <img :src="getImg(imageObject[0].storage_id)" />
-        </el-col>
-      </el-row>
+        </i-col>
+      </Row>
     </div>
     <div v-if="imageSize == 2" class="images">
-      <el-row>
-        <el-col :span="11">
+      <Row>
+        <i-col :span="11">
           <img :src="getImg(imageObject[0].storage_id)" />
-        </el-col>
-        <el-col :span="11" offset="2">
+        </i-col>
+        <i-col :span="11" offset="2">
           <img :src="getImg(imageObject[1].storage_id)" />
-        </el-col>
-      </el-row>
+        </i-col>
+      </Row>
     </div>
     <div v-if="imageSize == 3" class="images">
-      <el-row>
-        <el-col :span="7">
+      <Row>
+        <i-col :span="7">
           <img :src="getImg(imageObject[0].storage_id)" />
-        </el-col>
-        <el-col :span="7" offset="1">
+        </i-col>
+        <i-col :span="7" offset="1">
           <img :src="getImg(imageObject[1].storage_id)" />
-        </el-col>
-        <el-col :span="7" offset="1">
+        </i-col>
+        <i-col :span="7" offset="1">
           <img :src="getImg(imageObject[2].storage_id)" />
-        </el-col>
-      </el-row>
+        </i-col>
+      </Row>
     </div>
     <div v-if="imageSize == 4" class="images">
-      <el-row>
-        <el-col :span="11">
+      <Row>
+        <i-col :span="11">
           <img :src="getImg(imageObject[0].storage_id)" />
-        </el-col>
-        <el-col :span="11" offset="2">
+        </i-col>
+        <i-col :span="11" offset="2">
           <img :src="getImg(imageObject[1].storage_id)" />
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="11">
+        </i-col>
+      </Row>
+      <Row>
+        <i-col :span="11">
           <img :src="getImg(imageObject[2].storage_id)" />
-        </el-col>
-        <el-col :span="11" offset="2">
+        </i-col>
+        <i-col :span="11" offset="2">
           <img :src="getImg(imageObject[3].storage_id)" />
-        </el-col>
-      </el-row>
+        </i-col>
+      </Row>
     </div>
-    <el-row v-if="imageSize == 5">
+    <Row v-if="imageSize == 5">
       5张图片
-    </el-row>
-    <el-row v-if="imageSize == 6">
+    </Row>
+    <Row v-if="imageSize == 6">
       6张图片
-    </el-row>
-    <el-row v-if="imageSize == 7">
+    </Row>
+    <Row v-if="imageSize == 7">
       7张图片
-    </el-row>
+    </Row>
     <div v-if="imageSize == 8" class="images">
-      <el-row>
-        <el-col :span="7">
+      <Row>
+        <i-col :span="7">
           <img :src="getImg(imageObject[0].storage_id)" />
-        </el-col>
-        <el-col :span="7" offset="1">
+        </i-col>
+        <i-col :span="7" offset="1">
           <img :src="getImg(imageObject[1].storage_id)" />
-        </el-col>
-        <el-col :span="7" offset="1">
+        </i-col>
+        <i-col :span="7" offset="1">
           <img :src="getImg(imageObject[2].storage_id)" />
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="11">
+        </i-col>
+      </Row>
+      <Row>
+        <i-col :span="11">
           <img :src="getImg(imageObject[3].storage_id)" />
-        </el-col>
-        <el-col :span="11" offset="2">
+        </i-col>
+        <i-col :span="11" offset="2">
           <img :src="getImg(imageObject[4].storage_id)" />
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="7">
+        </i-col>
+      </Row>
+      <Row>
+        <i-col :span="7">
           <img :src="getImg(imageObject[5].storage_id)" />
-        </el-col>
-        <el-col :span="7" offset="1">
+        </i-col>
+        <i-col :span="7" offset="1">
           <img :src="getImg(imageObject[6].storage_id)" />
-        </el-col>
-        <el-col :span="7" offset="1">
+        </i-col>
+        <i-col :span="7" offset="1">
           <img :src="getImg(imageObject[7].storage_id)" />
-        </el-col>
-      </el-row>
+        </i-col>
+      </Row>
     </div>
     <div v-if="imageSize == 9" class="images">
-      <el-row>
-        <el-col :span="7">
+      <Row>
+        <i-col :span="7">
           <img :src="getImg(imageObject[0].storage_id)" />
-        </el-col>
-        <el-col :span="7" offset="1">
+        </i-col>
+        <i-col :span="7" offset="1">
           <img :src="getImg(imageObject[1].storage_id)" />
-        </el-col>
-        <el-col :span="7" offset="1">
+        </i-col>
+        <i-col :span="7" offset="1">
           <img :src="getImg(imageObject[2].storage_id)" />
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="7">
+        </i-col>
+      </Row>
+      <Row>
+        <i-col :span="7">
           <img :src="getImg(imageObject[3].storage_id)" />
-        </el-col>
-        <el-col :span="7" offset="1">
+        </i-col>
+        <i-col :span="7" offset="1">
           <img :src="getImg(imageObject[4].storage_id)" />
-        </el-col>
-        <el-col :span="7" offset="1">
+        </i-col>
+        <i-col :span="7" offset="1">
           <img :src="getImg(imageObject[5].storage_id)" />
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="7">
+        </i-col>
+      </Row>
+      <Row>
+        <i-col :span="7">
           <img :src="getImg(imageObject[6].storage_id)" />
-        </el-col>
-        <el-col :span="7" offset="1">
+        </i-col>
+        <i-col :span="7" offset="1">
           <img :src="getImg(imageObject[7].storage_id)" />
-        </el-col>
-        <el-col :span="7" offset="1">
+        </i-col>
+        <i-col :span="7" offset="1">
           <img :src="getImg(imageObject[8].storage_id)" />
-        </el-col>
-      </el-row>
+        </i-col>
+      </Row>
     </div>
   </div>
 </template>

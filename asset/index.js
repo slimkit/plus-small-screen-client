@@ -7,14 +7,14 @@
 // require('bootstrap-sass');
 
 import Vue from 'vue';
-import ElementUI from 'element-ui';
-import 'element-ui/lib/theme-default/index.css';
 import VueWechatTitle from 'vue-wechat-title';
 import TimeAgo from 'vue-timeago';
 import router from './routers/index';
+import iView from 'iview';
+import 'iview/dist/styles/iview.css'; 
 import App from './App.vue';
 
-Vue.use(ElementUI);
+Vue.use(iView);
 Vue.use(VueWechatTitle);
 Vue.use(TimeAgo, {
   name: 'timeago',

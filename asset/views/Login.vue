@@ -1,76 +1,78 @@
 <template>
-  <div class="container">
-    <!-- <header class="header">
-      <el-row justify="start" type="flex" align="middle">
-        <el-col :span="3" class="close back">
-          <i class="el-icon-close"></i>
-        </el-col>
-        <el-col :span="17"><div class="grid-content bg-purple-light title ">登录</div></el-col>
-        <el-col :span="4">
-          <div class="grid-content bg-purple-light right-top-button">
-            <router-link to="/register">注册</router-link>
-          </div>
-        </el-col>
-      </el-row>
-    </header> -->
-    <div class="main-content">
-      <form role="form" @submit.prevent="submit">
-        <div class="loginForm">
-          <el-row class="bottom-border formChildrenRow" justify="start" type="flex" align="middle">
-            <el-col :span="4" offset="1">
-              <label for="phone" :class="loginFormTitle">手机号</label>
-            </el-col>
-            <el-col :span="16">
-              <input type="tel" autocomplete="off" placeholder="请输入手机号" v-model.number.trim="phone" id="phone" name="phone" />
-            </el-col>
-            <el-col :span="1" offset="1">
-              <i v-on:click="cleanPhone" v-show="isShowClean" class="el-icon-circle-close"></i>
-            </el-col>
-          </el-row>
-          <el-row class="formChildrenRow" justify="start" type="flex" align="middle">
-            <el-col :span="4" offset="1">
-              <label for="password" :class="loginFormTitle">密码</label>
-            </el-col>
-            <el-col :span="16">
-              <input type="password" v-show="isShowPassword" v-model.trim="password" placeholder="请输入6位以上密码" id="password" name="password" />
-              <input type="text"  v-model.trim="passwordText" v-show="isShowPasswordText" value="" placeholder="请输入6位以上密码" />
-            </el-col>
-            <el-col :span="1" offset="1">
-              <i v-on:click="showPassword" :class="{ 'el-icon-arrow-up': isShowPasswordText, 'el-icon-arrow-down': isShowPassword }"></i>
-            </el-col>
-          </el-row>
-        </div>
-        <div id="notice">
-          <el-row justify="start" type="flex" align="middle">
-            <el-col :span="22" offset="1">
-              <p class="notice error">{{ error }}</p>
-            </el-col>
-          </el-row>
-        </div>
-        <div :class="operation">
-         <el-row justify="start" type="flex" align="middle">
-            <el-col :span="22" offset="1">
-              <el-button type="primary" native-type="submit" :loading="isLoading" :disabled="isDisabled" class="loginButton" size="large">登录</el-button>
-            </el-col>
-          </el-row>
-        </div>
-      </form>
-      <div class="otherOperation">
-        <el-row justify="start" type="flex">
-          <el-col :span="12" offset="1">
-            <router-link to="/register">
-              注册账号
-            </router-link>
-          </el-col>
-          <el-col :span="10">
-            <router-link style="float: right" to="/findpassword">
-              找回密码
-            </router-link>
-          </el-col>
+  <transition name="slide-left">
+    <div class="container">
+      <!-- <header class="header">
+        <Row justify="start" type="flex" align="middle">
+          <i-col :span="3" class="close back">
+            <i class="el-icon-close"></i>
+          </i-col>
+          <i-col :span="17"><div class="grid-content bg-purple-light title ">登录</div></i-col>
+          <i-col :span="4">
+            <div class="grid-content bg-purple-light right-top-button">
+              <router-link to="/register">注册</router-link>
+            </div>
+          </i-col>
         </el-row>
+      </header> -->
+      <div class="main-content">
+        <form role="form" @submit.prevent="submit">
+          <div class="loginForm">
+            <Row  class="bottom-border formChildrenRow" justify="start" type="flex" align="middle">
+              <i-col :span="4" offset="1">
+                <label for="phone" :class="loginFormTitle">手机号</label>
+              </i-col>
+              <i-col :span="16">
+                <input type="tel" size="large" autocomplete="off" placeholder="请输入手机号" v-model.number.trim="phone" id="phone" name="phone" />
+              </i-col>
+              <i-col :span="1" offset="1">
+                <i v-on:click="cleanPhone" v-show="isShowClean" class="ivu-icon ivu-icon-close-circled"></i>
+              </i-col>
+            </Row>
+            <Row class="formChildrenRow" justify="start" type="flex" align="middle">
+              <i-col :span="4" offset="1">
+                <label for="password" :class="loginFormTitle">密码</label>
+              </i-col>
+              <i-col :span="16">
+                <input type="password"  size="large" v-show="isShowPassword" v-model.trim="password" placeholder="请输入6位以上密码" id="password" name="password" />
+                <input type="text"  v-model.trim="passwordText" v-show="isShowPasswordText" value="" placeholder="请输入6位以上密码" />
+              </i-col>
+              <i-col :span="1" offset="1">
+                <i v-on:click="showPassword" class="ivu-icon" :class="{ 'ivu-icon-eye-disabled': isShowPasswordText, 'ivu-icon-eye': isShowPassword }"></i>
+              </i-col>
+            </Row>
+          </div>
+          <div id="notice">
+            <Row justify="start" type="flex" align="middle">
+              <i-col :span="22" offset="1">
+                <p class="notice error">{{ error }}</p>
+              </i-col>
+            </Row>
+          </div>
+          <div :class="operation">
+           <Row justify="start" type="flex" align="middle">
+              <i-col :span="22" offset="1">
+                <i-button type="primary" htmlType="submit" :loading="isLoading" :disabled="isDisabled" class="loginButton" size="large">登录</i-button>
+              </i-col>
+            </Row>
+          </div>
+        </form>
+        <div class="otherOperation">
+          <Row justify="start" type="flex">
+            <i-col :span="12" offset="1">
+              <router-link to="/register">
+                注册账号
+              </router-link>
+            </i-col>
+            <i-col :span="10">
+              <router-link style="float: right" to="/findpassword">
+                找回密码
+              </router-link>
+            </i-col>
+          </Row>
+        </div>
       </div>
     </div>
-  </div>
+  </transition>
 </template>
 
 <script>

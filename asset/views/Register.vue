@@ -2,80 +2,88 @@
   <transition name="slide-left">
     <div class="container">
       <!-- <header class="header">
-        <el-row justify="start" type="flex" align="middle">
-          <el-col :span="3" class="close back">
+        <Row justify="start" type="flex" align="middle">
+          <i-col :span="3" class="close back">
             <i class="el-icon-close"></i>
-          </el-col>
-          <el-col :span="17"><div class="grid-content bg-purple-light title ">登录</div></el-col>
-          <el-col :span="4">
+          </i-col>
+          <i-col :span="17"><div class="grid-content bg-purple-light title ">登录</div></i-col>
+          <i-col :span="4">
             <div class="grid-content bg-purple-light right-top-button">
               <router-link to="/login">登录</router-link>
             </div>
-          </el-col>
-        </el-row>
+          </i-col>
+        </Row>
       </header> -->
       <div class="main-content">
         <form role="form" @submit.prevent="register">
           <div class="loginForm">
-            <el-row class="formChildrenRow bottom-border" justify="start" type="flex" align="middle">
-              <el-col :span="4" offset="1">
+            <Row class="formChildrenRow bottom-border" justify="start" type="flex" align="middle">
+              <i-col :span="4" offset="1">
                 <label for="username" :class="loginFormTitle">用户名</label>
-              </el-col>
-              <el-col :span="16">
+              </i-col>
+              <i-col :span="16">
                 <input type="text" autocomplete="off" placeholder="不能以数字开头,不能有特殊字符" v-model.trim="username" id="username" name="username" />
-              </el-col>
-              <el-col :span="1" offset="1">
-                <i v-on:click="cleanUsername" v-show="isShowUserClean" class="el-icon-circle-close"></i>
-              </el-col>
-            </el-row>
-            <el-row class="formChildrenRow bottom-border" justify="start" type="flex" align="middle">
-              <el-col :span="4" offset="1">
+              </i-col>
+              <i-col :span="1" offset="1">
+                <i v-on:click="cleanUsername" v-show="isShowUserClean" class="ivu-icon ivu-icon-close-circled"></i>
+              </i-col>
+            </Row>
+            <Row class="formChildrenRow bottom-border" justify="start" type="flex" align="middle">
+              <i-col :span="4" offset="1">
                 <label for="phone" :class="loginFormTitle">手机号</label>
-              </el-col>
-              <el-col :span="10">
+              </i-col>
+              <i-col :span="10">
                 <input type="tel" autocomplete="off" placeholder="输入手机号码" v-model.trim.num="phone" id="phone" name="phone" />
-              </el-col>
-              <el-col :span="1" offset="1">
-                <i v-on:click="cleanPhone" v-show="isShowClean" class="el-icon-circle-close"></i>
-              </el-col>
-              <el-col class="text-align-right" :span="6" >
-                <el-button type="text" v-on:click="getCode" native-type="button" :disabled="!isCanGetCode" size="large">{{ getCodeText }}</el-button>
-              </el-col>
-            </el-row>
-            <el-row class="bottom-border formChildrenRow" justify="start" type="flex" align="middle">
-              <el-col :span="4" offset="1">
+              </i-col>
+              <i-col :span="1" offset="1">
+                <i v-on:click="cleanPhone" v-show="isShowClean" class="ivu-icon ivu-icon-close-circled"></i>
+              </i-col>
+              <i-col class="text-align-right" :span="6" >
+                <i-button 
+                  type="text" 
+                  @click.native.stop.prevent="getCode" 
+                  htmlType="button"
+                  size="large"
+                  class="text-button"
+                >
+                  {{ getCodeText }}
+                </i-button>
+              </i-col>
+            </Row>
+            <Row class="bottom-border formChildrenRow" justify="start" type="flex" align="middle">
+              <i-col :span="4" offset="1">
                 <label for="code" :class="loginFormTitle">验证码</label>
-              </el-col>
-              <el-col :span="18">
+              </i-col>
+              <i-col :span="18">
                 <input type="tel" autocomplete="off" placeholder="输入验证码" v-model.trim.num="code" id="code" name="code" />
-              </el-col>
-            </el-row>
-            <el-row class="formChildrenRow" justify="start" type="flex" align="middle">
-              <el-col :span="4" offset="1">
+              </i-col>
+            </Row>
+            <Row class="formChildrenRow" justify="start" type="flex" align="middle">
+              <i-col :span="4" offset="1">
                 <label for="password" :class="loginFormTitle">密码</label>
-              </el-col>
-              <el-col :span="16">
+              </i-col>
+              <i-col :span="16">
                 <input type="password" autocomplete="off" v-show="isShowPassword" v-model.trim="password" placeholder="请输入6位以上密码" id="password" name="password" />
                 <input type="text" autocomplete="off" v-model.trim="passwordText" v-show="isShowPasswordText" value="" placeholder="请输入6位以上密码" />
-              </el-col>
-              <el-col :span="1" offset="1">
-                <i v-on:click="showPassword" :class="{ 'el-icon-arrow-up': isShowPasswordText, 'el-icon-arrow-down': isShowPassword }"></i>
-              </el-col>
-            </el-row>
+              </i-col>
+              <i-col :span="1" offset="1">
+                <i v-on:click="showPassword" class="ivu-icon" :class="{ 'ivu-icon-eye-disabled': isShowPasswordText, 'ivu-icon-eye': isShowPassword }"></i>
+              </i-col>
+            </Row>
           </div>
           <div id="notice">
-            <el-row justify="start" type="flex" align="middle">
-              <el-col :span="22" offset="1">
+            <Row justify="start" type="flex" align="middle">
+              <i-col :span="22" offset="1">
                 <p class="notice error">{{ error }}</p>
-              </el-col>
-            </el-row>
+              </i-col>
+            </Row>
           </div>
           <div :class="operation">
-           <el-row justify="start" type="flex" align="middle">
-              <el-col :span="22" offset="1">
-                <el-button type="primary" :loading="isLoading" native-type="submit" :disabled="isDisabled" class="loginButton" size="large">注册</el-button>
-              </el-col>
-            </el-row>
+           <Row justify="start" type="flex" align="middle">
+              <i-col :span="22" offset="1">
+                <i-button type="primary" :loading="isLoading" htmlType="submit" :disabled="isDisabled" class="loginButton" size="large">注册</i-button>
+              </i-col>
+            </Row>
           </div>
         </form>
       </div>
@@ -305,7 +313,3 @@
   export default register;
 
 </script>
-
-<style lang="css">
-  
-</style>

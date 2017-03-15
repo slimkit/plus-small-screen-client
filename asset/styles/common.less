@@ -1,29 +1,31 @@
-$fontStack:	Helvetica, sans-serif;
-$themeColor: #59b6d7;
-$backgroundColor: #f4f5f5;
-$currentColor: #333;
-$noticeColor: #f4504d;
-$contentColor: #666;
-$secondaryColor: #999;
-$toolColor: #b2b2b2;
-$cut-off-line: #dedede;
-$sin-cut-off-line: #ededed;
-$font-size: 15px;
-$title-font-size: 18px;
-$bar-font-size: 15px;
-$buttonDisabledBackgroundColor: #ccc;
-$buttonActiveBackgroundColor: #4db3ff;
+@import '~iview/src/styles/index.less';
+
+@fontStack:	Helvetica, sans-serif;
+@themeColor: #59b6d7;
+@backgroundColor: #f4f5f5;
+@currentColor: #333;
+@noticeColor: #f4504d;
+@contentColor: #666;
+@secondaryColor: #999;
+@toolColor: #b2b2b2;
+@cut-off-line: #dedede;
+@sin-cut-off-line: #ededed;
+@font-size: 15px;
+@title-font-size: 18px;
+@bar-font-size: 15px;
+@buttonDisabledBackgroundColor: #ccc;
+@buttonActiveBackgroundColor: #4db3ff;
 
 html,
 body {
 	padding: 0;
 	margin: 0;
-	font-size: $font-size;
-  font-family: $fontStack;
-  background-color: $backgroundColor;
-  color: $currentColor;
+	font-size: @font-size;
+  font-family: @fontStack;
+  background-color: @backgroundColor;
+  color: @currentColor;
   &:focus, &:active {
-    background-color: $backgroundColor;
+    background-color: @backgroundColor;
   }
 }
 ul, li {
@@ -37,22 +39,38 @@ li {
   }
 }
 a {
-  color: $themeColor;
+  color: @themeColor;
   text-decoration: none;
   &:active {
-    color: $currentColor;
+    color: @currentColor;
   }
 }
 
+.ivu-icon {
+  font-size: 16px;
+  color: #999;
+}
+
 .el-button--primary {
-  background-color: $themeColor;
+  background-color: @themeColor;
+}
+
+.commentInput {
+  textarea {
+    border: none;
+    border-bottom: 1px solid @themeColor;
+    &:focus {
+      box-shadow: none;
+      border-bottom-color: @themeColor;
+    }
+  }
 }
 
 :focus {
   outline: none;
 }
 div#app:active, div#container:active{
-  background-color: $backgroundColor;
+  background-color: @backgroundColor;
 }
 .inputFull {
   color: #f00;
@@ -63,7 +81,8 @@ input {
   height: 34px;
   padding: 5px;
   width: calc(100% - 10px);
-  font-size: $font-size;
+  font-size: @font-size;
+  line-height: 1;
   &:active, &:focus {
     outline: none;
   }
@@ -72,7 +91,7 @@ input {
 .el-textarea {
   textarea {
     border: none;
-    border-bottom: 1px solid $themeColor;
+    border-bottom: 1px solid @themeColor;
     padding-bottom: 4px;
   }
   textarea::-webkit-scrollba {
@@ -80,34 +99,24 @@ input {
   }
 }
 
-.el-button {
-  line-height: normal!important;
-}
-
-.el-button.is-disabled[disabled='disabled'] {
+.ivu-btn.ivu-btn-primary[disabled='disabled'] {
+  background-color: @buttonDisabledBackgroundColor;
   color: #fff;
-  background-color: $buttonDisabledBackgroundColor;
+  &:active {
+    background-color: @buttonActiveBackgroundColor;
+  }
 }
 
-.el-button.is-disabled[disabled='disabled'][type='button'] {
-  color: $buttonDisabledBackgroundColor;
+.ivu-btn.ivu-btn-text {
   background-color: #fff;
+  color: @themeColor
 }
-
-.el-button--primary.is-active, .el-button--primary:active {
-    background: $buttonActiveBackgroundColor;
-    border: none;
-    color: #fff;
-}
-
-.el-button--primary:focus, .el-button--primary:hover {
-    background: $buttonActiveBackgroundColor;
-    border: none;
-    color: #fff;
+.ivu-btn.ivu-btn-text[disabled='disabled'] {
+  color: #999;
 }
 
 .el-button--text {
-  color: $themeColor;
+  color: @themeColor;
   &:focus, &:active {
     background-color: #fff;
     color: #ccc;
@@ -118,7 +127,7 @@ input {
 .header {
   height: 46px;
   line-height: 46px;
-  border-bottom: 1px solid $cut-off-line;
+  border-bottom: 1px solid @cut-off-line;
   background-color: #fff;
 }
 .header-children  {
@@ -126,15 +135,15 @@ input {
 }
 .left-top-button {
   text-align: center;
-  font-size: $bar-font-size;
+  font-size: @bar-font-size;
 }
 .title {
-  font-size: $title-font-size;
+  font-size: @title-font-size;
   text-align: center;
 }
 .right-top-button {
   text-align: center;
-  font-size: $bar-font-size;
+  font-size: @bar-font-size;
 }
 
 .back, .close {
@@ -142,7 +151,7 @@ input {
 }
 
 .bottom-border {
-  border-bottom: 1px solid $sin-cut-off-line;
+  border-bottom: 1px solid @sin-cut-off-line;
 }
 
 .notice {
@@ -203,7 +212,7 @@ input {
 
 .router-link-active {
   color: #333;
-  border-bottom: 2px $themeColor solid
+  border-bottom: 2px @themeColor solid
 }
 
 .feed .feedTitle {
@@ -216,9 +225,11 @@ input {
 i.iconfont {
   .count {
     text-indent: 5px;
+    font-size: 16px;
+    line-height: 20px;
   }
 }
 
 i.iconfont.digg {
-  color: $noticeColor;
+  color: @noticeColor;
 }
