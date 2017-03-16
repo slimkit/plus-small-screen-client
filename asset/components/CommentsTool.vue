@@ -1,7 +1,8 @@
 <template>
   <div>
     <ul>
-      <li v-for="(comment, index) in commentInfo" :key="comment.id" v-if="index < 3">
+      <li v-for="(comment, index) in commentsData" :key="comment.id" v-if="index < 3">
+        {{ comment }}
         <p>
           <router-link v-if="comment.user" :class="$style.userName" :to="{ path: '/users/profile' }">{{ comment.user.name }}</router-link> 
           <span v-if="comment.reply_to_user" :class="$style.commentContent">
@@ -10,14 +11,14 @@
           <router-link v-if="comment.reply_to_user" :class="$style.userName" :to="{ path: '/users/profile' }">{{ comment.reply_to_user.name }}</router-link> 
           <span
             v-if="comment.user_id != currentUser.user_id"
-            @click.stop="focusInput(comment.id, comment.user_id, feed_id)"
+            @click.stop="focusInput(comment.id, comment.user_id, feedId)"
             :class="$style.commentContent"
           > 
            : {{ comment.comment_content }}
           </span>
           <span
             v-if="comment.user_id == currentUser.user_id"
-            @click.stop="showComfirm(comment.id, feed_id, index)"
+            @click.stop="showComfirm(comment.id, feedId, index)"
             :class="$style.commentContent"
           > 
            : {{ comment.comment_content }}
@@ -43,7 +44,7 @@
         </i-col>
       </Row>
     </div>
-    <Comfirm v-if="isShowComfirm" @cannel="cannel" @increment="deleteComment" :data="deleteData" :comfirmContent="删除这条评论"></Comfirm>
+    <Comfirm v-if="isShowComfirm" @cannel="cannel" @increment="deleteComment" :data="deleteData" comfirm-content="删除这条评论"></Comfirm>
     <div @click.stop="closeInput" :class="$style.wrapper" v-show="CanInput"></div>
   </div>
 </template>
@@ -56,18 +57,17 @@
   import Comfirm from '../utils/Comfirm';
 
   const localUser = localEvent.getLocalItem('UserLoginInfo');
-  console.log(localUser);
   const commentsTool = {
     props: [
-      'commentsData',
-      'feedId'
+      'commentsData', // 评论数据
+      'feedId' // 动态id
     ],
     components: {
       Comfirm
     },
     data: () => ({
       feed_id: 0,
-      commentInfo: [], //评论数据
+      // commentInfo: [], //评论数据
       more: false, // 查看全部
       CanInput: false, // 输入框显示
       autoF: false, // 输入框自动获取焦点
@@ -109,11 +109,11 @@
           validateStatus: status => status === 204
         })
         .then(response => {
-          let newComments = this.commentInfo;
+          let newComments = this.commentsData;
           this.isShowComfirm = false;
           this.deleteData = {};
           newComments.splice(data.index,1);
-          this.updateComments(newComments);
+          this.$emit('delComment', newComments);
         })
         .catch(error => {
           console.log(error)
@@ -130,15 +130,15 @@
         this.userComment = '';
       },
       updateComments (newComments) {
-        this.commentInfo = newComments.slice(0);
+        this.commentsData = newComments.slice(0);
       },
       sendComment () {
         let comment_content = this.userComment;
         let reply_to_user_id = this.replyToUserId;
         let user_id = localUser.user_id;
-        let oldCommentInfo = this.commentInfo;
+        let oldCommentInfo = this.commentsData;
         let newCommentInfo = [];
-        addAccessToken().post(createAPI(`feeds/${this.feed_id}/comment`), {
+        addAccessToken().post(createAPI(`feeds/${this.feedId}/comment`), {
             comment_content,
             reply_to_user_id
           },
@@ -163,7 +163,7 @@
             this.autoF = false;
             this.userComment = '';
             oldCommentInfo.unshift(newComment);
-            this.updateComments(oldCommentInfo);
+            this.$emit('addComment', oldCommentInfo);
           }
         })
         .catch(({ response: { data = {} } = {} } ) => {
@@ -180,34 +180,34 @@
       }
     },
     beforeMount () {
-      this.commentInfo = this.commentsData;
       this.feed_id = this.feedId;
       let comments = this.commentsData;
-        let author = {};
-        let reply_to_user = {};
-        let userObject = {};
-        this.commentInfo.forEach( (comment, index) => {
-          author = localEvent.getLocalItem(`user_${comment.user_id}`);
-          if (!author.user_id) {
-            getUserInfo(comment.user_id, user => {
-              userObject = { [index]: { user: user }};
-              comments[index] = Object.assign({}, this.commentInfo[index], { user: user });
+      let author = {};
+      let reply_to_user = {};
+      let userObject = {};
+      this.commentsData.forEach( (comment, index) => {
+        author = localEvent.getLocalItem(`user_${comment.user_id}`);
+        if (!author.user_id) {
+          getUserInfo(comment.user_id, user => {
+            userObject = { [index]: { user: user }};
+            comments[index] = Object.assign({}, comments[index], { user: user });
+          });
+        } else {
+          comments[index] = Object.assign({}, comments[index], { user: author });
+        }
+        if (comment.reply_to_user_id) {
+          reply_to_user = localEvent.getLocalItem(`user_${comment.reply_to_user_id}`);
+          if (!reply_to_user.user_id) {
+            getUserInfo(comment.reply_to_user_id, user => {
+              comments[index] = Object.assign({}, comments[index], { reply_to_user: user });
             });
           } else {
-            comments[index] = Object.assign({}, comments[index], { user: author });
+            comments[index] = Object.assign({}, comments[index], { reply_to_user: reply_to_user });
           }
-          if (comment.reply_to_user_id) {
-            reply_to_user = localEvent.getLocalItem(`user_${comment.reply_to_user_id}`);
-            if (!reply_to_user.user_id) {
-              getUserInfo(comment.reply_to_user_id, user => {
-                comments[index] = Object.assign({}, comments[index], { reply_to_user: user });
-              });
-            } else {
-              comments[index] = Object.assign({}, comments[index], { reply_to_user: reply_to_user });
-            }
-          }
-        });
-        this.updateComments(comments);
+        }
+      });
+      // this.updateComments(comments);
+      this.commentsData = comments.slice(0);
     }
   };
 

@@ -8,6 +8,7 @@ import FeedFollowing from '../views/FeedFollowing';
 import FeedAll from '../views/FeedAll';
 import FeedNew from '../views/FeedNew';
 import FeedDetail from '../views/FeedDetail';
+import XXX from '../components/xxx';
 import { requestAuth, CanNotGetInWhenLogged } from '../utils/auth';
 
 const routes = [
@@ -17,6 +18,10 @@ const routes = [
     meta: {
       title: '主页'
     }
+  },
+  {
+    path: '/xxx',
+    component: XXX
   },
   {
     path: '/login',

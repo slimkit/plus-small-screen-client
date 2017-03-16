@@ -32,12 +32,12 @@
     </Row>
     <Row v-if="tools" :class="$style.toolTop">
       <i-col offset="5" :span="18">
-        <FeedTool :feedId="feedInfo.feed_id" :toolDatas="toolInfo"></FeedTool>
+        <FeedTool @addNewCommentFoFeed="addNewCommentFoFeed" :user="user" :feedId="feedInfo.feed_id" @parentAddDigg="addDigg" @parentCannelDigg="cannelDigg" :toolDatas="toolInfo"></FeedTool>
       </i-col>
     </Row>
-    <Row v-if="comments.length">
+    <Row v-if="feed.comments.length">
       <i-col offset="5" :span="18">
-        <CommentsTool :feedId="feedInfo.feed_id" :commentsData="comments"></CommentsTool>
+        <CommentsTool v-if="feed.comments" @addComment="addNewComment" @delComment="delOldComment" :feedId="feedInfo.feed_id" :commentsData="feed.comments"></CommentsTool>
       </i-col>
     </Row>
   </div>
@@ -56,11 +56,6 @@
     props: [
       'feed'
     ],
-    components: {
-      FeedImages,
-      FeedTool,
-      CommentsTool
-    },
     data: () => ({
       feedInfo: {
         created_at: '',
@@ -71,18 +66,61 @@
         storages: []
       },
       toolInfo: {},
-      commentInfo: {},
       timer: 0,
       feed_id: 0,
       user: {},
-      tools: 0,
-      comments: []
+      tools: 0
+      // comments: []
     }),
+    methods: {
+      addNewCommentFoFeed (newComment) {
+        let oldComments = this.feed.comments;
+        console.log(oldComments);
+        let toolData = this.toolInfo;
+        toolData.feed_comment_count += 1;
+        this.toolInfo = Object.assign({}, this.toolInfo, toolData);
+        oldComments.unshift(newComment);
+        console.log(oldComments);
+        this.updateComments(oldComments);
+      },
+      addNewComment (newComments) {
+        let toolData = this.toolInfo;
+        toolData.feed_comment_count += 1;
+        this.toolInfo = Object.assign({}, this.toolInfo, toolData);
+        this.updateComments(newComments);
+      },
+      delOldComment (newComments) {
+        let toolData = this.toolInfo;
+        toolData.feed_comment_count -= 1;
+        this.toolInfo = Object.assign({}, this.toolInfo, toolData);
+        this.updateComments(newComments);
+      },
+      cannelDigg () {
+        let toolData = this.toolInfo;
+        toolData.feed_digg_count -= 1;
+        toolData.is_digg_feed = false;
+        this.toolInfo = Object.assign({}, this.toolInfo, toolData);
+      },
+      addDigg () {
+        let toolData = this.toolInfo;
+        toolData.feed_digg_count += 1;
+        toolData.is_digg_feed = true;
+        this.toolInfo = Object.assign({}, this.toolInfo, toolData);
+      },
+      updateComments (newComments) {
+        this.feed.comments = newComments.slice(0);
+      }
+    },
+    components: {
+      FeedImages,
+      FeedTool,
+      CommentsTool
+    },
     mounted () {
       this.timer = new Date(this.feed.feed.created_at.replace(/-/g, "/"));
       this.feed_id = this.feed.feed.feed_id;
       this.toolInfo = Object.assign({}, this.toolInfo, this.feed.tool);
-      this.comments = this.feed.comments;
+      // this.comments = this.feed.comments;
       this.tools = 1;
       this.user = localEvent.getLocalItem('user_' + this.feed.user_id);
       if(this.user.length == 0) {

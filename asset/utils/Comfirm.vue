@@ -1,10 +1,10 @@
 <template>
   <div :class="$style.comfirm">
-    <Row>
-      <i-col offset="1" :span="22">
-        <i-button :long="true" @click.native="doIt(rowData)">{{ comfirmText }}</i-button>
+    <Row :class="$style.comirmRow">
+      <i-col offset="1" :span="22" :class="$style.comfirmCol">
+        <i-button :long="true" @click.native="doIt(data)">{{ comfirmContent }}</i-button>
       </i-col>
-      <i-col offset="1" :span="22">
+      <i-col offset="1" :span="22" :class="$style.comfirmCol">
         <i-button :long="true" @click.native="cannelIt">取消</i-button>
       </i-col>
   </div>
@@ -14,18 +14,12 @@
   const comfirmUi = {
     props: {
       comfirmContent: {
-        type: [String, Number],
-        default: '确认'
+        type: [String]
       },
       data: {
         type: [Object]
       }
     },
-    data: () => ({
-      show: false,
-      comfirmText: '',
-      rowData: {}
-    }),
     methods: {
       doIt (data) {
         this.$emit('increment', data);
@@ -33,10 +27,6 @@
       cannelIt () {
         this.$emit('cannel');
       }
-    },
-    beforeMount () {
-      this.comfirmText = this.comfirmContent;
-      this.rowData = this.data;
     }
   }
 
@@ -53,7 +43,23 @@
     position: fixed;
     overflow: auto;
     margin: 0;
-    height: 110px;
-    width: 100%;
+    top: 0;
+    right: 0;
+    .comirmRow {
+      position: absolute;
+      width: 100%;
+      bottom: 0;
+      .comfirmCol {
+        margin-top: 0;
+        margin-bottom: 1vh;
+        button {
+          background-color: #fff;
+          font-size: 16px;
+          color: #333;
+          border-radius: 0;
+          border: none;
+        }
+      }
+    }
   }
 </style>
