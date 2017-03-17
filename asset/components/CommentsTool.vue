@@ -2,7 +2,6 @@
   <div>
     <ul>
       <li v-for="(comment, index) in commentsData" :key="comment.id" v-if="index < 3">
-        {{ comment }}
         <p>
           <router-link v-if="comment.user" :class="$style.userName" :to="{ path: '/users/profile' }">{{ comment.user.name }}</router-link> 
           <span v-if="comment.reply_to_user" :class="$style.commentContent">

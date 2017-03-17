@@ -2,9 +2,11 @@
   <div :class="$style.tool">
     <Row>
       <i-col :span="7">
-        <i class="iconfont icon-digg" :class="{ digg: isDigg }" @click.stop="!toolDatas.is_digg_feed ? sendDigg() : cannelDigg()">
+        <!-- <i class="iconfont icon-digg" :class="{ digg: isDigg }" @click.stop="!toolDatas.is_digg_feed ? sendDigg() : cannelDigg()">
           <span class="count">{{ friendnum(toolDatas.feed_digg_count) }}</span>
-        </i>
+        </i> -->
+        <i v-if="isDigg" :class="$style.fontIcon" @click="cannelDigg" class=" digg ivu-icon ivu-icon-android-favorite"><span class="count">{{ friendnum(toolDatas.feed_digg_count) }}</span></i>
+        <i v-if="!isDigg" @click="sendDigg" class="ivu-icon ivu-icon-android-favorite-outline"><span class="count">{{ friendnum(toolDatas.feed_digg_count) }}</span></i>
       </i-col>
       <i-col :span="7">
         <i class="iconfont icon-comment" @click.stop="commentFeed">
@@ -213,6 +215,8 @@
 <style lang="css">
   .commentInput {
     border: none;
-    
+  }
+  .ivu-icon {
+    font-size: 20px!important;
   }
 </style>
