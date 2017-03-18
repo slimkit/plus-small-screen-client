@@ -10,41 +10,59 @@
     <div v-if="imageSize == 2" class="images">
       <Row :gutter="6" :class="$style.imagesRow">
         <i-col :class="$style.imgParent" :span="12">
-          <img class="per-feed-img" :src="getImg(imageObject[0].storage_id, 40)" v-lazyload:opt.fadein="img">
+          <div :class="$style.showImgBox">
+            <img class="per-feed-img" :src="getImg(imageObject[0].storage_id, 40)" v-lazyload:opt.fadein="img">
+          </div>
         </i-col>
         <i-col :class="$style.imgParent" :span="12">
-          <img class="per-feed-img" :src="getImg(imageObject[1].storage_id, 40)" v-lazyload:opt.fadein="img">
+          <div :class="$style.showImgBox">
+            <img class="per-feed-img" :src="getImg(imageObject[1].storage_id, 40)" v-lazyload:opt.fadein="img">
+          </div>
         </i-col>
       </Row>
     </div>
     <div v-if="imageSize == 3" class="images">
       <Row :gutter="6" :class="$style.imagesRow">
         <i-col :class="$style.imgParent" :span="8">
-          <img class="per-feed-img" :src="getImg(imageObject[0].storage_id)" v-lazyload:opt.fadein="img" />
+          <div :class="$style.showImgBox">
+            <img class="per-feed-img" :src="getImg(imageObject[0].storage_id)" v-lazyload:opt.fadein="img" />
+          </div>
         </i-col>
         <i-col :class="$style.imgParent" :span="8" >
-          <img class="per-feed-img" :src="getImg(imageObject[1].storage_id)" v-lazyload:opt.fadein="img" />
+          <div :class="$style.showImgBox">
+            <img class="per-feed-img" :src="getImg(imageObject[1].storage_id)" v-lazyload:opt.fadein="img" />
+          </div>
         </i-col>
         <i-col :class="$style.imgParent" :span="8">
-          <img class="per-feed-img" :src="getImg(imageObject[2].storage_id)" v-lazyload:opt.fadein="img" />
+          <div :class="$style.showImgBox">
+            <img class="per-feed-img" :src="getImg(imageObject[2].storage_id)" v-lazyload:opt.fadein="img" />
+          </div>
         </i-col>
       </Row>
     </div>
     <div v-if="imageSize == 4" class="images">
       <Row :gutter="6" :class="$style.imagesRow">
         <i-col :class="$style.imgParent" :span="12">
-          <img class="per-feed-img" v-lazyload:opt.fadein="img" :src="getImg(imageObject[0].storage_id)" v-lazyload:opt.fadein="img" />
+          <div :class="$style.showImgBox">
+            <img class="per-feed-img" v-lazyload:opt.fadein="img" :src="getImg(imageObject[0].storage_id)" v-lazyload:opt.fadein="img" />
+          </div>
         </i-col>
         <i-col :class="$style.imgParent" :span="12" >
-          <img class="per-feed-img" :src="getImg(imageObject[1].storage_id)" v-lazyload:opt.fadein="img" />
+          <div :class="$style.showImgBox">
+            <img class="per-feed-img" :src="getImg(imageObject[1].storage_id)" v-lazyload:opt.fadein="img" />
+          </div>
         </i-col>
       </Row>
       <Row :gutter="6" :class="$style.imagesRow">
         <i-col :class="$style.imgParent" :span="12" >
-          <img class="per-feed-img" :src="getImg(imageObject[2].storage_id)" v-lazyload:opt.fadein="img" />
+          <div :class="$style.showImgBox">
+            <img class="per-feed-img" :src="getImg(imageObject[2].storage_id)" v-lazyload:opt.fadein="img" />
+          </div>
         </i-col>
         <i-col :class="$style.imgParent" :span="12" >
-          <img class="per-feed-img" :src="getImg(imageObject[3].storage_id)" v-lazyload:opt.fadein="img" />
+          <div :class="$style.showImgBox">
+            <img class="per-feed-img" :src="getImg(imageObject[3].storage_id)" v-lazyload:opt.fadein="img" />
+          </div>
         </i-col>
       </Row>
     </div>
@@ -60,67 +78,101 @@
     <div v-if="imageSize == 8" class="images">
       <Row :gutter="6" :class="$style.imagesRow">
         <i-col :class="$style.imgParent" :span="8">
-          <img class="per-feed-img" v-lazyload:opt.fadein="img" :src="getImg(imageObject[0].storage_id)" />
+          <div :class="$style.showImgBox">
+            <img class="per-feed-img" v-lazyload:opt.fadein="img" :src="getImg(imageObject[0].storage_id)" />
+          </div>
         </i-col>
         <i-col :class="$style.imgParent" :span="8">
-          <img class="per-feed-img" v-lazyload:opt.fadein="img" :src="getImg(imageObject[1].storage_id)" />
+          <div :class="$style.showImgBox">
+            <img class="per-feed-img" v-lazyload:opt.fadein="img" :src="getImg(imageObject[1].storage_id)" />
+          </div>
         </i-col>
         <i-col :class="$style.imgParent" :span="8">
-          <img class="per-feed-img" v-lazyload:opt.fadein="img" :src="getImg(imageObject[2].storage_id)" />
+          <div :class="$style.showImgBox">
+            <img class="per-feed-img" v-lazyload:opt.fadein="img" :src="getImg(imageObject[2].storage_id)" />
+          </div>
         </i-col>
       </Row>
       <Row :gutter="6" :class="$style.imagesRow">
         <i-col :class="$style.imgParent" :span="12">
-          <img class="per-feed-img" v-lazyload:opt.fadein="img" :src="getImg(imageObject[3].storage_id, 40)" />
+          <div :class="$style.showImgBox">
+            <img class="per-feed-img" v-lazyload:opt.fadein="img" :src="getImg(imageObject[3].storage_id, 40)" />
+          </div>
         </i-col>
         <i-col :class="$style.imgParent" :span="12">
-          <img class="per-feed-img" v-lazyload:opt.fadein="img" :src="getImg(imageObject[4].storage_id, 40)" />
+          <div :class="$style.showImgBox">
+            <img class="per-feed-img" v-lazyload:opt.fadein="img" :src="getImg(imageObject[4].storage_id, 40)" />
+          </div>
         </i-col>
       </Row>
       <Row :gutter="6" :class="$style.imagesRow">
         <i-col :class="$style.imgParent" :span="8">
-          <img class="per-feed-img" v-lazyload:opt.fadein="img" :src="getImg(imageObject[5].storage_id)" />
+          <div :class="$style.showImgBox">
+            <img class="per-feed-img" v-lazyload:opt.fadein="img" :src="getImg(imageObject[5].storage_id)" />
+          </div>
         </i-col>
         <i-col :class="$style.imgParent" :span="8">
-          <img class="per-feed-img" v-lazyload:opt.fadein="img" :src="getImg(imageObject[6].storage_id)" />
+          <div :class="$style.showImgBox">
+            <img class="per-feed-img" v-lazyload:opt.fadein="img" :src="getImg(imageObject[6].storage_id)" />
+          </div>
         </i-col>
         <i-col :class="$style.imgParent" :span="8">
-          <img class="per-feed-img" v-lazyload:opt.fadein="img" :src="getImg(imageObject[7].storage_id)" />
+          <div :class="$style.showImgBox">
+            <img class="per-feed-img" v-lazyload:opt.fadein="img" :src="getImg(imageObject[7].storage_id)" />
+          </div>
         </i-col>
       </Row>
     </div>
     <div v-if="imageSize == 9" class="images">
       <Row :gutter="6" :class="$style.imagesRow">
         <i-col :class="$style.imgParent" :span="8">
-          <img class="per-feed-img" v-lazyload:opt.fadein="img" :src="getImg(imageObject[0].storage_id)" />
+          <div :class="$style.showImgBox">
+            <img class="per-feed-img" v-lazyload:opt.fadein="img" :src="getImg(imageObject[0].storage_id)" />
+          </div>
         </i-col>
         <i-col :class="$style.imgParent" :span="8">
-          <img class="per-feed-img" v-lazyload:opt.fadein="img" :src="getImg(imageObject[1].storage_id)" />
+          <div :class="$style.showImgBox">
+            <img class="per-feed-img" v-lazyload:opt.fadein="img" :src="getImg(imageObject[1].storage_id)" />
+          </div>
         </i-col>
         <i-col :class="$style.imgParent" :span="8">
-          <img class="per-feed-img" v-lazyload:opt.fadein="img" :src="getImg(imageObject[2].storage_id)" />
-        </i-col>
-      </Row>
-      <Row :gutter="6" :class="$style.imagesRow">
-        <i-col :class="$style.imgParent" :span="8">
-          <img class="per-feed-img" v-lazyload:opt.fadein="img" :src="getImg(imageObject[3].storage_id)" />
-        </i-col>
-        <i-col :class="$style.imgParent" :span="8">
-          <img class="per-feed-img" v-lazyload:opt.fadein="img" :src="getImg(imageObject[4].storage_id)" />
-        </i-col>
-        <i-col :class="$style.imgParent" :span="8">
-          <img class="per-feed-img" v-lazyload:opt.fadein="img" :src="getImg(imageObject[5].storage_id)" />
+          <div :class="$style.showImgBox">
+            <img class="per-feed-img" v-lazyload:opt.fadein="img" :src="getImg(imageObject[2].storage_id)" />
+          </div>
         </i-col>
       </Row>
       <Row :gutter="6" :class="$style.imagesRow">
         <i-col :class="$style.imgParent" :span="8">
-          <img class="per-feed-img" v-lazyload:opt.fadein="img" :src="getImg(imageObject[6].storage_id)" />
+          <div :class="$style.showImgBox">
+            <img class="per-feed-img" v-lazyload:opt.fadein="img" :src="getImg(imageObject[3].storage_id)" />
+          </div>
         </i-col>
         <i-col :class="$style.imgParent" :span="8">
-          <img class="per-feed-img" v-lazyload:opt.fadein="img" :src="getImg(imageObject[7].storage_id)" />
+          <div :class="$style.showImgBox">
+            <img class="per-feed-img" v-lazyload:opt.fadein="img" :src="getImg(imageObject[4].storage_id)" />
+          </div>
         </i-col>
         <i-col :class="$style.imgParent" :span="8">
-          <img class="per-feed-img" v-lazyload:opt.fadein="img" :src="getImg(imageObject[8].storage_id)" />
+          <div :class="$style.showImgBox">
+            <img class="per-feed-img" v-lazyload:opt.fadein="img" :src="getImg(imageObject[5].storage_id)" />
+          </div>
+        </i-col>
+      </Row>
+      <Row :gutter="6" :class="$style.imagesRow">
+        <i-col :class="$style.imgParent" :span="8">
+          <div :class="$style.showImgBox">
+            <img class="per-feed-img" v-lazyload:opt.fadein="img" :src="getImg(imageObject[6].storage_id)" />
+          </div>
+        </i-col>
+        <i-col :class="$style.imgParent" :span="8">
+          <div :class="$style.showImgBox">
+            <img class="per-feed-img" v-lazyload:opt.fadein="img" :src="getImg(imageObject[7].storage_id)" />
+          </div>
+        </i-col>
+        <i-col :class="$style.imgParent" :span="8">
+          <div :class="$style.showImgBox">
+            <img class="per-feed-img" v-lazyload:opt.fadein="img" :src="getImg(imageObject[8].storage_id)" />
+          </div>
         </i-col>
       </Row>
     </div>
@@ -170,20 +222,27 @@
       padding-top: 100%;
     }
   }
+  .showImgBox {
+    position: absolute;
+    left: -3px;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    img {
+      position:  absolute;
+      top: 0;
+      left: 6px;
+      bottom: 0;
+      right: 0;
+      object-fit: cover;
+      height: 100%;
+      width: 100%;
+    }
+  }
   .imagesRow {
     margin-bottom: 6px;
-  }
-</style>
-
-<style lang="css">
-  img.per-feed-img {
-    position:  absolute;
-    top: 0;
-    left: 6px;
-    bottom: 0;
-    right: 0;
-    object-fit: cover;
-    height: 100%;
-    width: 100%;
   }
 </style>
