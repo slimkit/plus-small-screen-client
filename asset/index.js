@@ -12,10 +12,16 @@ import TimeAgo from 'vue-timeago';
 import router from './routers/index';
 import iView from 'iview';
 import 'iview/dist/styles/iview.css'; 
+import VueLazyloadImg from 'vue-lazyload-img';
 import App from './App.vue';
 
 Vue.use(iView);
 Vue.use(VueWechatTitle);
+Vue.use(VueLazyloadImg, {
+  fade: true,
+  nohori: true,
+  speed: 20
+});
 Vue.use(TimeAgo, {
   name: 'timeago',
   locale: 'zh-CN',

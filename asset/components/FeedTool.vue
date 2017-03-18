@@ -82,6 +82,7 @@
               comment_mark: null,
               created_at: "",
               reply_to_user_id: 0,
+              id: response.data.data,
               user_id: localUser.user_id,
               user: localEvent.getLocalItem(`user_${localUser.user_id}`)
             };
@@ -172,11 +173,11 @@
     bottom: 0;
     left: 0;
     width: 100%;
-    z-index: 4;
+    z-index: 6;
     background-color: #fff;
     border-bottom: 1px #59b6d7 solid;
     border: none;
-    padding: 5px 0;
+    padding: 10px 0;
   }
   .commentCount {
     margin-bottom: .5em;
@@ -184,7 +185,7 @@
   }
   .wrapper{
     background-color: rgba(0, 0, 0, .3);
-    z-index: 3;
+    z-index: 5;
     top: 0px;
     right: 0px;
     bottom: 0px;

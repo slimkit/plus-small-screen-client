@@ -151,7 +151,7 @@
               comment_content: comment_content,
               comment_mark: null,
               created_at: "",
-              id: 148,
+              id: response.data.data,
               reply_to_user_id: reply_to_user_id,
               user_id: user_id,
               reply_to_user: localEvent.getLocalItem(`user_${reply_to_user_id}`),
@@ -219,11 +219,11 @@
     bottom: 0;
     left: 0;
     width: 100%;
-    z-index: 4;
+    z-index: 6;
     background-color: #fff;
     border-bottom: 1px #59b6d7 solid;
     border: none;
-    padding: 5px 0;
+    padding: 10px 0;
   }
   .commentCount {
     margin-bottom: .5em;
@@ -231,7 +231,7 @@
   }
   .wrapper{
     background-color: rgba(0, 0, 0, .3);
-    z-index: 3;
+    z-index: 5;
     top: 0px;
     right: 0px;
     bottom: 0px;
