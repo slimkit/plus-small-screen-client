@@ -82,6 +82,8 @@
   import detecdOS from '../utils/detecdOS';
   import errorCodes from '../stores/errorCodes';
   import deleteObjectItems from '../utils/deleteObjectItems';
+  import { getUserInfo } from '../utils/user';
+  import { USERS_APPEND } from '../stores/types';
 
   const phoneReg = /^(((13[0-9]{1})|14[0-9]{1}|(15[0-9]{1})|17[0-9]{1}|(18[0-9]{1}))+\d{8})$/;
   const login = {
@@ -190,9 +192,10 @@
           let errors = {};
           this.errors = Object.assign({}, errors);
           localEvent.setLocalItem('UserLoginInfo', response.data.data);
-          setTimeout(() => {
-            router.push({ path: 'feeds' })
-          }, 500);
+          this.$store.dispatch(USERS_APPEND, cb => getUserInfo(response.data.data.user_id, user => {
+            cb(user);
+            router.push({ path: 'feeds' });
+          }));
         })
         .catch(({ response: { data = {} } = {} } ) => {
           this.isDisabled = false;

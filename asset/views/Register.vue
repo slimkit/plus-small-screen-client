@@ -98,6 +98,8 @@
   import localEvent from '../stores/localStorage';
   import errorCodes from '../stores/errorCodes';
   import deleteObjectItems from '../utils/deleteObjectItems';
+  import { getUserInfo } from '../utils/user';
+  import { USERS_APPEND } from '../stores/types';
 
   // 手机号码规则
   const phoneReg = /^(((13[0-9]{1})|14[0-9]{1}|(15[0-9]{1})|17[0-9]{1}|(18[0-9]{1}))+\d{8})$/;
@@ -219,9 +221,11 @@
         .then(response => {
           localEvent.setLocalItem('UserLoginInfo', response.data.data);
           this.isLoading = false;
-          setTimeout( () => {
+          this.$store.dispatch(USERS_APPEND, cb => getUserInfo(response.data.data.user_id, user => {
+            cb(user);
             router.push({ path: 'feeds' });
-          }, 500);
+          }));
+          
         })
         .catch(({ response: { data = {} } = {} } ) => {
           this.isDisabled = false;

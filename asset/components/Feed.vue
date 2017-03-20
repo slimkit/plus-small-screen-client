@@ -75,12 +75,10 @@
     methods: {
       addNewCommentFoFeed (newComment) {
         let oldComments = this.feed.comments;
-        console.log(oldComments);
         let toolData = this.toolInfo;
         toolData.feed_comment_count += 1;
         this.toolInfo = Object.assign({}, this.toolInfo, toolData);
         oldComments.unshift(newComment);
-        console.log(oldComments);
         this.updateComments(oldComments);
       },
       addNewComment (newComments) {

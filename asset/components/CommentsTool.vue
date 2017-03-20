@@ -3,13 +3,13 @@
     <ul>
       <li v-for="(comment, index) in commentsData" :key="comment.id" v-if="index < 3">
         <p>
-          <router-link v-if="comment.user" :class="$style.userName" :to="{ path: '/users/profile' }">{{ comment.user.name }}</router-link> 
+          <router-link v-if="comment.user_id" :class="$style.userName" :to="{ path: '/users/profile' }">{{ getUserName(comment.user_id) }}</router-link> 
           <span v-if="comment.reply_to_user" :class="$style.commentContent">
             回复
           </span>
-          <router-link v-if="comment.reply_to_user" :class="$style.userName" :to="{ path: '/users/profile' }">{{ comment.reply_to_user.name }}</router-link> 
+          <router-link v-if="comment.reply_to_user" :class="$style.userName" :to="{ path: '/users/profile' }">{{ getUserName(comment.reply_to_user_id) }}</router-link> 
           <span
-            v-if="comment.user_id != currentUser.user_id"
+            v-if="comment.user_id  != currentUser.user_id"
             @click.stop="focusInput(comment.id, comment.user_id, feedId)"
             :class="$style.commentContent"
           > 
@@ -50,12 +50,13 @@
 
 <script>
   import localEvent from '../stores/localStorage';
-  import { getUserInfo } from '../utils/user';
+  import { getUserInfo, getUsersInfo } from '../utils/user';
   import { createAPI, addAccessToken } from '../utils/request';
   import router from '../routers/index';
   import Comfirm from '../utils/Comfirm';
+  import { USERS, USERS_APPEND, USERS_ITEM_UPDATE } from '../stores/types';
+  import { NOTICE } from '../stores/types';
 
-  const localUser = localEvent.getLocalItem('UserLoginInfo');
   const commentsTool = {
     props: [
       'commentsData', // 评论数据
@@ -66,7 +67,6 @@
     },
     data: () => ({
       feed_id: 0,
-      // commentInfo: [], //评论数据
       more: false, // 查看全部
       CanInput: false, // 输入框显示
       autoF: false, // 输入框自动获取焦点
@@ -77,7 +77,6 @@
       sending: false, // 是否发送中
       isShowComfirm: false, // 是否显弹框
       deleteData: {}, // 删除评论时传递的数据对象
-      currentUser: localUser //当前登录用户
     }),
     methods: {
       focusInput (comment_id, comment_to_uid, feed_id) {
@@ -134,7 +133,7 @@
       sendComment () {
         let comment_content = this.userComment;
         let reply_to_user_id = this.replyToUserId;
-        let user_id = localUser.user_id;
+        let user_id = this.currentUser.user_id;
         let oldCommentInfo = this.commentsData;
         let newCommentInfo = [];
         addAccessToken().post(createAPI(`feeds/${this.feedId}/comment`), {
@@ -155,19 +154,30 @@
               reply_to_user_id: reply_to_user_id,
               user_id: user_id,
               reply_to_user: localEvent.getLocalItem(`user_${reply_to_user_id}`),
-              user: localEvent.getLocalItem(`user_${user_id}`)
+              user: this.users[user_id]
             };
             this.placeholder = '';
             this.CanInput = false;
             this.autoF = false;
             this.userComment = '';
             oldCommentInfo.unshift(newComment);
+            this.$store.dispatch(NOTICE, cb => {
+              cb({
+                text: '已发送',
+                time: 10000,
+                status: true
+              });
+            });
             this.$emit('addComment', oldCommentInfo);
           }
         })
         .catch(({ response: { data = {} } = {} } ) => {
           const { code = 'xxxx' } = data;
         })
+      },
+      getUserName (user_id) {
+        let { [user_id]: { name } = {} } = this.users;
+        return name;
       }
     },
     computed: {
@@ -176,37 +186,26 @@
       },
       commentCount () {
         return this.userComment.length;
+      },
+      users () {
+        return this.$store.getters[USERS];
+      },
+      currentUser () {
+        return localEvent.getLocalItem('UserLoginInfo');
       }
     },
-    beforeMount () {
+    created () {
       this.feed_id = this.feedId;
-      let comments = this.commentsData;
-      let author = {};
-      let reply_to_user = {};
-      let userObject = {};
+      let user_ids_obj = {};
       this.commentsData.forEach( (comment, index) => {
-        author = localEvent.getLocalItem(`user_${comment.user_id}`);
-        if (!author.user_id) {
-          getUserInfo(comment.user_id, user => {
-            userObject = { [index]: { user: user }};
-            comments[index] = Object.assign({}, comments[index], { user: user });
-          });
+        if(comment.reply_to_user_id) {
+          user_ids_obj = { ...user_ids_obj, [comment.user_id]: comment.user_id, [comment.reply_to_user_id]: comment.reply_to_user_id };
         } else {
-          comments[index] = Object.assign({}, comments[index], { user: author });
-        }
-        if (comment.reply_to_user_id) {
-          reply_to_user = localEvent.getLocalItem(`user_${comment.reply_to_user_id}`);
-          if (!reply_to_user.user_id) {
-            getUserInfo(comment.reply_to_user_id, user => {
-              comments[index] = Object.assign({}, comments[index], { reply_to_user: user });
-            });
-          } else {
-            comments[index] = Object.assign({}, comments[index], { reply_to_user: reply_to_user });
-          }
+          user_ids_obj = { ...user_ids_obj, [comment.user_id]: comment.user_id };
         }
       });
-      // this.updateComments(comments);
-      this.commentsData = comments.slice(0);
+      let user_ids = Object.values(user_ids_obj);
+      this.$store.dispatch(USERS, cb => getUsersInfo(user_ids, users => cb(users)));
     }
   };
 
