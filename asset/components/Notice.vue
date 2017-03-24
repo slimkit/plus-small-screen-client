@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.notice">
+  <div :class="$style.notice" v-show="show">
     <div :class="$style.content">
       <Icon v-if="status" type="ios-checkmark" :class="$style.success"></Icon>
       <Icon v-if="!status" type="android-alert" :class="$style.error"></Icon>
@@ -11,51 +11,15 @@
 
 <script>
   import { NOTICE } from '../stores/types';
+  import { mapState } from 'vuex';
+
   const noticeText = {
-    props: {
-      // 提示文字
-      text: {
-        type: [String],
-        default: ''
-      },
-      // 提示状态
-      status: {
-        type: [Boolean],
-        default: true
-      },
-      time: {
-        type: [Number],
-        default: 2000
-      },
-      show: {
-        type: [Boolean],
-        default: false
-      }
-    },
-    methods: {
-      timer () {
-        if (this.time > 0) {
-          this.show = true;
-          this.time -= 1000;
-          if(this.time == 0) {
-            this.show = false;
-            this.$store.dispatch(NOTICE, cb => {
-              cb({
-                text: '',
-                time: 1000,
-                status: true,
-                show: false
-              })
-            })
-            return;
-          }
-          setTimeout(this.timer(), 1000)
-        }
-      }
-    },
-    mounted () {
-      this.timer();
-    }
+    computed: mapState({
+      time: state => state.notice.notice.time,
+      text: state => state.notice.notice.text,
+      show: state => state.notice.notice.show,
+      status: state => state.notice.notice.status
+    })
   }
   export default noticeText;
 </script>

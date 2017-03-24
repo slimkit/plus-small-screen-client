@@ -1,12 +1,17 @@
 var path = require('path')
 var utils = require('./utils')
+
+var projectRoot = path.resolve(__dirname, '../')
+const vuxLoader = require('vux-loader')
+
 var config = require('../config')
 var vueLoaderConfig = require('./vue-loader.conf')
 
 function resolve (dir) {
   return path.join(__dirname, '..', dir)
 }
-module.exports = {
+
+let webpackConfig = {
   entry: {
     user: './asset/index.js'
   },
@@ -29,12 +34,13 @@ module.exports = {
       {
         test: /\.vue$/,
         loader: 'vue-loader',
-        options: {
-          loaders: {
-            scss: 'vue-style-loader!css-loader!sass-loader!less-loader', // <style lang="scss">
-          }
-        },
-        exclude: /node_modules/
+        // options: {
+        //   loaders: {
+        //     scss: 'vue-style-loader!css-loader!sass-loader!less-loader', // <style lang="scss">
+        //   }
+        // },
+        // exclude: /node_modules/
+        options: vueLoaderConfig
       },
       { 
         test: /iview.src.*?js$/, 
@@ -60,3 +66,10 @@ module.exports = {
     ]
   }
 }
+
+module.exports = vuxLoader.merge(webpackConfig, {
+  plugins: [
+    { name: 'vux-ui' },
+    { name: 'progress-bar' }
+  ]
+})

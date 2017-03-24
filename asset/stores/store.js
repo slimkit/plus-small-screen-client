@@ -6,9 +6,12 @@ Vue.use(Vuex);
 // modules
 import user from './module/user';
 import notice from './module/noticeText';
+import imageSwiper from './module/imageSwiper';
+
 const modules = {
   user,
-  notice
+  notice,
+  imageSwiper
 }
 
 const store = new Vuex.Store({

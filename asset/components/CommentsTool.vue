@@ -4,10 +4,10 @@
       <li v-for="(comment, index) in commentsData" :key="comment.id" v-if="index < 3">
         <p>
           <router-link v-if="comment.user_id" :class="$style.userName" :to="{ path: '/users/profile' }">{{ getUserName(comment.user_id) }}</router-link> 
-          <span v-if="comment.reply_to_user" :class="$style.commentContent">
+          <span v-if="comment.reply_to_user_id" :class="$style.commentContent">
             回复
           </span>
-          <router-link v-if="comment.reply_to_user" :class="$style.userName" :to="{ path: '/users/profile' }">{{ getUserName(comment.reply_to_user_id) }}</router-link> 
+          <router-link v-if="comment.reply_to_user_id" :class="$style.userName" :to="{ path: '/users/profile' }">{{ getUserName(comment.reply_to_user_id) }}</router-link> 
           <span
             v-if="comment.user_id  != currentUser.user_id"
             @click.stop="focusInput(comment.id, comment.user_id, feedId)"
@@ -164,7 +164,7 @@
             this.$store.dispatch(NOTICE, cb => {
               cb({
                 text: '已发送',
-                time: 10000,
+                time: 3000,
                 status: true
               });
             });

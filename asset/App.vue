@@ -2,36 +2,21 @@
   <div class="container-fluid" id="app">
     <div v-wechat-title="$route.meta.title + ' - ThinkSNS+'"></div>
     <router-view></router-view>
-    <NoticeText v-show="notice.show" :show="notice.show" :time="notice.time" :text="notice.text" :status="notice.status"></NoticeText>
+    <NoticeText/>
+    <ImageSwiper/>
   </div>
 </template>
 <script>
   import NoticeText from './components/Notice';
+  import ImageSwiper from './components/ImageSwiper';
   import { NOTICE } from './stores/types';
+  import { mapState } from 'vuex';
+  import store from './stores/store';
+
   const App = {
     components: {
-      NoticeText
-    },
-    data: () => ({
-      notice: {
-        time: 1000,
-        text: '',
-        show: false,
-        status: true
-      }
-    }),
-    // computed: {
-    //   notice () {
-    //     return this.$store.getters[NOTICE];
-    //   }
-    // },
-    // methods: {
-    //   getItem (item) {
-    //     return this.notice[item];
-    //   }
-    // },
-    beforeUpdate () {
-      this.notice = { ...this.notice, ...this.$store.getters[NOTICE] };
+      NoticeText,
+      ImageSwiper
     }
   }
 

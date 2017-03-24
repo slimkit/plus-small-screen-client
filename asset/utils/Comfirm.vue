@@ -1,12 +1,13 @@
 <template>
   <div :class="$style.comfirm">
     <Row :class="$style.comirmRow">
-      <i-col offset="1" :span="22" :class="$style.comfirmCol">
+      <i-col :span="24" :class="$style.comfirmCol">
         <i-button :long="true" @click.native="doIt(data)">{{ comfirmContent }}</i-button>
       </i-col>
-      <i-col offset="1" :span="22" :class="$style.comfirmCol">
+      <i-col :span="24" :class="$style.comfirmCol">
         <i-button :long="true" @click.native="cannelIt">取消</i-button>
       </i-col>
+    </Row>
   </div>
 </template>
 
@@ -51,7 +52,9 @@
       bottom: 0;
       .comfirmCol {
         margin-top: 0;
-        margin-bottom: 1vh;
+        &:first-child {
+          margin-bottom: 1vh;
+        }
         button {
           background-color: #fff;
           font-size: 16px;

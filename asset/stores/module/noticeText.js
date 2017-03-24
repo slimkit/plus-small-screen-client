@@ -1,16 +1,19 @@
 import { NOTICE } from '../types';
 
 const state = {
-  text: '',
-  status: true,
-  time: 1000,
-  show: false
+  notice: {
+    text: '',
+    status: true,
+    time: 1000,
+    show: false
+  }
+  
 };
 
 const mutations = {
   [NOTICE] (state, notice) {
     notice.show = notice.text.length ? true : false;
-    state = { ...state, ...notice };
+    state.notice = { ...state.notice, ...notice };
   }
 };
 
@@ -18,12 +21,23 @@ const actions = {
   [NOTICE]: (context, cb) => {
     cb( (notice) => {
       context.commit(NOTICE, notice);
+      if(notice.show && !(notice.time < 1000)) {
+        console.log('222');
+        setTimeout(() => {
+          context.commit(NOTICE, {
+            ...notice,
+            show: false,
+            time: 1000,
+            text: ''
+          });
+        }, notice.time)
+      }
     });
   }
 };
 
 const getters = {
-  [NOTICE]: (state) => state
+  [NOTICE]: (state) => state.notice
 };
 
 const store = {

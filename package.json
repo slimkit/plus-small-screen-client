@@ -61,6 +61,8 @@
     "vue-loader": "^11.0.0",
     "vue-style-loader": "^2.0.0",
     "vue-template-compiler": "^2.2.1",
+    "vux": "^2.1.1-rc.13",
+    "vux-loader": "^1.0.56",
     "webpack": "^2.2.1",
     "webpack-bundle-analyzer": "^2.2.1",
     "webpack-dev-middleware": "^1.10.0",
