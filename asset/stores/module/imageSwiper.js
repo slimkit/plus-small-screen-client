@@ -11,7 +11,6 @@ const state = {
 const mutations = {
   [IMGSWIPER] (state, images) {
     state.imageSwiper = { ...state.imageSwiper, ...images };
-    console.log(state);
   }
 };
 

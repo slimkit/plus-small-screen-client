@@ -1,8 +1,8 @@
 import axios from 'axios';
 import localEvent from '../stores/localStorage';
 
-const baseURL = `http://192.168.2.75`;
-const api = `http://192.168.2.75/api/v1`;
+const baseURL = `http://thinksns-plus`;
+const api = `http://thinksns-plus/api/v1`;
 
 // Export a method to create the requested address.
 export const createRequestURI = PATH => `${baseURL}/${PATH}`;

@@ -1,6 +1,6 @@
 <template>
   <div v-show="show" :class="$style.swiper">
-    <swiper :show-dots="true" dots-position="top" :show-desc-mask="false" :duration="200" v-model="value" style="width: 100%; height:100%" height="100%">
+    <swiper :show-dots="true" dots-position="top" :show-desc-mask="false" :duration="200" @on-index-change="onSwiperItemIndexChange" v-model="swiperItemIndex" v-model="value" style="width: 100%; height:100%" height="100%">
       <swiper-item class="swiper-demo-img" v-for="(item, index) in list" :key="index">
         <img @click="hideSwiper" :src="item">
       </swiper-item>
@@ -71,5 +71,8 @@
   }
   .vux-slider>.vux-swiper {
     overflow: auto!important;
+  }
+  .swiper-demo-img {
+    visibility: hidden;
   }
 </style>

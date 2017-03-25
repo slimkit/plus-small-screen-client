@@ -1,12 +1,14 @@
 <template>
-  <div :class="$style.notice" v-show="show">
-    <div :class="$style.content">
-      <Icon v-if="status" type="ios-checkmark" :class="$style.success"></Icon>
-      <Icon v-if="!status" type="android-alert" :class="$style.error"></Icon>
-      {{ text }}
+  <div class="notice-root" v-show="show">
+    <div :class="$style.notice">
+      <div :class="$style.content">
+        <Icon v-if="status" type="ios-checkmark" :class="$style.success"></Icon>
+        <Icon v-if="!status" type="android-alert" :class="$style.error"></Icon>
+        {{ text }}
+      </div>
     </div>
+    <div :class="$style.commonWrapper"></div>
   </div>
-  <div :class="$style.commonWrapper"></div>
 </template>
 
 <script>
