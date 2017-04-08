@@ -3,53 +3,67 @@
     <div class="main-content">
       <form role="form" @submit.prevent="submit">
         <div class="loginForm">
-          <Row class="formChildrenRow bottom-border" justify="start" type="flex" align="middle">
-            <i-col :span="4" offset="1">
-              <label for="phone" :class="loginFormTitle">手机号</label>
-            </i-col>
-            <i-col :span="10">
+          <Row :gutter="16" class="formChildrenRow bottom-border">
+            <Col span="4">
+              <label for="phone" class="loginFormTitle">手机号</label>
+            </Col>
+            <Col :span="11">
               <input type="tel" autocomplete="off" placeholder="输入手机号码" v-model.trim.num="phone" id="phone" name="phone" />
-            </i-col>
-            <i-col :span="1" offset="1">
-              <i v-on:click="cleanPhone" v-show="isShowClean" class="el-icon-circle-close"></i>
-            </i-col>
-            <i-col class="text-align-right" :span="6" >
-              <i-button type="text" @click.native="getCode" htmlType="button" :disabled="!isCanGetCode" size="large">{{ getCodeText }}</i-button>
-            </i-col>
+            </Col>
+            <Col span="3" class="flexend">
+              <i v-on:click="cleanPhone" v-show="isShowClean" class="ivu-icon ivu-icon-close-circled"></i>
+            </Col>
+            <Col class="text-align-right" span="6" >
+              <Button 
+                type="text" 
+                @click.native="getCode" 
+                htmlType="button" 
+                :disabled="!isCanGetCode" 
+                size="large"
+                class="text-button nopadding"
+              >
+                {{ getCodeText }}
+              </Button>
+            </Col>
           </Row>
-          <Row class="formChildrenRow bottom-border" justify="start" type="flex" align="middle">
-            <i-col :span="4" offset="1">
+          <Row :gutter="16" class="formChildrenRow bottom-border">
+            <Col span="4">
               <label for="code" :class="loginFormTitle">验证码</label>
-            </i-col>
-            <i-col :span="18">
+            </Col>
+            <Col span="20">
               <input type="tel" autocomplete="off" placeholder="请输入验证码" v-model.number.trim="code" id="code" name="code" />
-            </i-col>
+            </Col>
           </Row>
-          <Row class="formChildrenRow" justify="start" type="flex" align="middle">
-            <i-col :span="4" offset="1">
+          <Row :gutter="16" class="formChildrenRow">
+            <Col :span="4">
               <label for="password" :class="loginFormTitle">新密码</label>
-            </i-col>
-            <i-col :span="16">
+            </Col>
+            <Col span="17">
               <input type="password" v-show="isShowPassword" v-model.trim="password" placeholder="请输入6位以上登录密码" id="password" name="password" />
               <input type="text"  v-model.trim="passwordText" v-show="isShowPasswordText" value="" placeholder="请输入6位以上登录密码" />
-            </i-col>
-            <i-col :span="1" offset="1">
-              <i v-on:click="showPassword" :class="{ 'el-icon-arrow-up': isShowPasswordText, 'el-icon-arrow-down': isShowPassword }"></i>
-            </i-col>
+            </Col>
+            <Col span="3" class="flexend">
+              <i 
+                v-on:click="showPassword" 
+                class="ivu-icon" 
+                :class="{ 'ivu-icon-eye-disabled': isShowPasswordText, 'ivu-icon-eye': isShowPassword }"
+              >
+              </i>
+            </Col>
           </Row>
         </div>
         <div id="notice">
-          <Row justify="start" type="flex" align="middle">
-            <i-col :span="22" offset="1">
+          <Row :gutter="16">
+            <Col span="24">
               <p class="notice error">{{ error }}</p>
-            </i-col>
+            </Col>
           </Row>
         </div>
-        <div :class="operation">
-         <Row justify="start" type="flex" align="middle">
-            <i-col :span="22" offset="1">
-              <i-button type="primary" htmlType="submit" :loading="isLoading" :disabled="isDisabled" class="loginButton" size="large">确认</i-button>
-            </i-col>
+        <div class="operation">
+         <Row :gutter="16">
+            <Col span="24">
+              <Button type="primary" htmlType="submit" :loading="isLoading" :disabled="isDisabled" class="loginButton" size="large">确认</Button>
+            </Col>
           </Row>
         </div>
       </form>

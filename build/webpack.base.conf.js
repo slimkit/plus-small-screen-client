@@ -1,8 +1,8 @@
 var path = require('path')
 var utils = require('./utils')
-
+var merge = require('webpack-merge')
 var projectRoot = path.resolve(__dirname, '../')
-const vuxLoader = require('vux-loader')
+// const vuxLoader = require('vux-loader')
 
 var config = require('../config')
 var vueLoaderConfig = require('./vue-loader.conf')
@@ -11,7 +11,7 @@ function resolve (dir) {
   return path.join(__dirname, '..', dir)
 }
 
-let webpackConfig = {
+module.exports = {
   entry: {
     user: './asset/index.js'
   },
@@ -42,9 +42,9 @@ let webpackConfig = {
         // exclude: /node_modules/
         options: vueLoaderConfig
       },
-      { 
-        test: /iview.src.*?js$/, 
-        loader: 'babel-loader' 
+      {
+        test: /vue-scroller.src.*?js$/,
+        loader: 'babel'
       },
       {
         test: /\.js$/,
@@ -56,7 +56,7 @@ let webpackConfig = {
         loader: 'url-loader',
         query: {
           limit: 10000,
-          name: utils.assetsPath('img/[name].[hash:7].[ext]')
+          name: utils.assetsPath('img/[name].[ext]')
         }
       },
       {
@@ -67,9 +67,9 @@ let webpackConfig = {
   }
 }
 
-module.exports = vuxLoader.merge(webpackConfig, {
-  plugins: [
-    { name: 'vux-ui' },
-    { name: 'progress-bar' }
-  ]
-})
+// module.exports = merge(webpackConfig, {
+//   plugins: [
+//     // { name: 'vux-ui' },
+//     { name: 'progress-bar' }
+//   ]
+// })

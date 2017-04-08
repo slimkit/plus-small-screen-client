@@ -22,7 +22,6 @@ const actions = {
     cb( (notice) => {
       context.commit(NOTICE, notice);
       if(notice.show && !(notice.time < 1000)) {
-        console.log('222');
         setTimeout(() => {
           context.commit(NOTICE, {
             ...notice,

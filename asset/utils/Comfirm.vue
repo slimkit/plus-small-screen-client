@@ -1,12 +1,12 @@
 <template>
   <div :class="$style.comfirm">
     <Row :class="$style.comirmRow">
-      <i-col :span="24" :class="$style.comfirmCol">
-        <i-button :long="true" @click.native="doIt(data)">{{ comfirmContent }}</i-button>
-      </i-col>
-      <i-col :span="24" :class="$style.comfirmCol">
-        <i-button :long="true" @click.native="cannelIt">取消</i-button>
-      </i-col>
+      <Col :span="24" :class="$style.comfirmCol">
+        <Button :long="true" @click.native="doIt(data)">{{ comfirmContent }}</Button>
+      </Col>
+      <Col :span="24" :class="$style.comfirmCol">
+        <Button :long="true" @click.native="cannelIt">取消</Button>
+      </Col>
     </Row>
   </div>
 </template>
@@ -61,6 +61,8 @@
           color: #333;
           border-radius: 0;
           border: none;
+          padding: 15px 0;
+          font-weight: 500;
         }
       }
     }

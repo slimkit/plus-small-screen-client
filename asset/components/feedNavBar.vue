@@ -1,21 +1,20 @@
 <template>
   <div :class="$style.feedNavBar" class="feed-nav-bar">
     <Row>
-      <i-col :span="4" offset="4">
+      <Col :span="4" offset="4">
           <router-link :class="$style.navLink" to="/feeds/following">关注</router-link>
-      </i-col>
-      <i-col :span="2" offset="2">
-      </i-col>
-      <i-col :span="4" offset="2">
-        <router-link :class="$style.navLink" to="/feeds/all">全部</router-link>
-      </i-col>
-      <i-col :span="2" offset="2">
-      </i-col>
-      <i-col :span="4" offset="2">
+      </Col>
+      <Col :span="2" offset="2">
+      </Col>
+      <Col :span="4" offset="2">
+        <router-link :class="$style.navLink" to="/feeds/hot">热门</router-link>
+      </Col>
+      <Col :span="2" offset="2">
+      </Col>
+      <Col :span="4" offset="2">
         <!-- <router-link :class="$style.navLink" to="/feeds/new">最新</router-link> -->
-        <i-button @click.native="clean">缓存</i-button>
-        <!-- <a href="javascript:void(0)" @click.stop.prevent="clean">缓存</a> -->
-      </i-col>
+        <Button @click.native="clean">缓存</Button>
+      </Col>
     </Row>
   </div>
 </template>

@@ -10,7 +10,7 @@ const state = {
 
 const mutations = {
   [IMGSWIPER] (state, images) {
-    state.imageSwiper = { ...state.imageSwiper, ...images };
+      state.imageSwiper = { ...state.imageSwiper, ...images };
   }
 };
 

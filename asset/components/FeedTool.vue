@@ -1,43 +1,43 @@
 <template>
   <div :class="$style.tool">
     <Row>
-      <i-col :span="7">
+      <Col span="7">
         <!-- <i class="iconfont icon-digg" :class="{ digg: isDigg }" @click.stop="!toolDatas.is_digg_feed ? sendDigg() : cannelDigg()">
           <span class="count">{{ friendnum(toolDatas.feed_digg_count) }}</span>
         </i> -->
         <i v-if="isDigg" :class="$style.fontIcon" @click="cannelDigg" class=" digg ivu-icon ivu-icon-android-favorite"><span class="count">{{ friendnum(toolDatas.feed_digg_count) }}</span></i>
         <i v-if="!isDigg" @click="sendDigg" class="ivu-icon ivu-icon-android-favorite-outline"><span class="count">{{ friendnum(toolDatas.feed_digg_count) }}</span></i>
-      </i-col>
-      <i-col :span="7">
+      </Col>
+      <Col span="7">
         <i class="iconfont icon-comment" @click.stop="commentFeed">
           <span class="count">{{ friendnum(toolDatas.feed_comment_count) }}</span>
         </i>
-      </i-col>
-      <i-col :span="7">
+      </Col>
+      <Col span="7">
         <i class="iconfont icon-view">
           <span class="count">{{ friendnum(toolDatas.feed_view_count) }}</span>
         </i>
-      </i-col>
-      <i-col :span="3" style="text-align: right">
+      </Col>
+      <Col span="3" style="text-align: right">
         <i class="iconfont icon-more"></i>
-      </i-col>
+      </Col>
     </Row>
     <!-- 评论动态 -->
     <div v-if="CanInput" :class="$style.commentInput">
-      <Row type="flex" align="bottom">
-        <i-col :span="18" offset="1">
-          <i-input type="textarea" class="commentInput" v-if="CanInput" :autofocus="autoF" :placeholder="placeholder" :autosize="{ minRows: 1, maxRows: 4 }" minlength="1" :blur="inputBlur" maxlength="255" v-model="comment"></i-input>
-        </i-col>
-        <i-col :span="3" offset="1">
-          <Row v-if="commentCount > 200" :class="$style.commentCount">
-            <i-col :span="24" ><span :class="{ inputFull: commentCount > 100 }">{{ commentCount }}</span>/255</i-col>
+      <Row :gutter="16" align="bottom" type="flex" style="margin-left: 0; margin-right: 0;">
+        <Col span="20">
+          <Input type="textarea" class="commentInput" v-if="CanInput" autofocus="true" :placeholder="placeholder" :autosize="{minRows: 1,maxRows: 4}" :minlength='1' blur="inputBlur" :maxlength='255' v-model="comment"></Input>
+        </Col>
+        <Col span="4">
+          <Row :gutter="16" v-if="commentCount > 200" :class="$style.commentCount">
+            <Col span="24" ><span :class="{ inputFull: commentCount > 100 }">{{ commentCount }}</span>/255</Col>
           </Row>
           <Row>
-            <i-col :span="24">
-              <i-button :long="true" type="primary" :class="$style.sendComment" :disabled="commentCount == 0" size="mini" @click.native="sendComment()">发送</i-button>
-            </i-col>
+            <Col span="24">
+              <Button :long="true" type="primary" :class="$style.sendComment" :disabled="commentCount == 0" size="small" @click.native="sendComment()">发送</Button>
+            </Col>
           </Row>
-        </i-col>
+        </Col>
       </Row>
     </div>
     <div @click.stop="closeInput" :class="$style.wrapper" v-show="CanInput"></div>
@@ -50,6 +50,7 @@
   import { createAPI, addAccessToken } from '../utils/request';
   import localEvent from '../stores/localStorage';
   import { getUserInfo } from '../utils/user';
+  import { NOTICE } from '../stores/types';
 
   const localUser = localEvent.getLocalItem('UserLoginInfo');
   const FeedTool = {
@@ -91,6 +92,13 @@
             this.autoF = false;
             this.comment = '';
             this.$emit('addNewCommentFoFeed', newComment);
+            this.$store.dispatch(NOTICE, cb => {
+              cb({
+                text: '已发送',
+                time: 3000,
+                status: true
+              });
+            });
           }
         })
         .catch(({ response: { data = {} } = {} } ) => {
@@ -158,6 +166,9 @@
       commentCount () {
         return this.comment.length;
       },
+      currentUser () {
+        return localEvent.getLocalItem('UserLoginInfo');
+      }
     },
     beforeMount () {
       this.toolData = Object.assign({}, this.toolData, this.toolDatas);
@@ -178,6 +189,9 @@
     border-bottom: 1px #59b6d7 solid;
     border: none;
     padding: 10px 0;
+    textarea {
+      min-height: 34px!important;
+    }
   }
   .commentCount {
     margin-bottom: .5em;

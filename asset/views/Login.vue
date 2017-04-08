@@ -3,71 +3,71 @@
     <div class="container">
       <!-- <header class="header">
         <Row justify="start" type="flex" align="middle">
-          <i-col :span="3" class="close back">
+          <Col :span="3" class="close back">
             <i class="el-icon-close"></i>
-          </i-col>
-          <i-col :span="17"><div class="grid-content bg-purple-light title ">登录</div></i-col>
-          <i-col :span="4">
+          </Col>
+          <Col :span="17"><div class="grid-content bg-purple-light title ">登录</div></Col>
+          <Col :span="4">
             <div class="grid-content bg-purple-light right-top-button">
               <router-link to="/register">注册</router-link>
             </div>
-          </i-col>
-        </el-row>
+          </Col>
+        </Row>
       </header> -->
       <div class="main-content">
         <form role="form" @submit.prevent="submit">
           <div class="loginForm">
-            <Row  class="bottom-border formChildrenRow" justify="start" type="flex" align="middle">
-              <i-col :span="4" offset="1">
-                <label for="phone" :class="loginFormTitle">手机号</label>
-              </i-col>
-              <i-col :span="16">
+            <Row  class="bottom-border formChildrenRow" :gutter="16">
+              <Col span="4">
+                <label for="phone">手机号</label>
+              </Col>
+              <Col span="17">
                 <input type="tel" size="large" autocomplete="off" placeholder="请输入手机号" v-model.number.trim="phone" id="phone" name="phone" />
-              </i-col>
-              <i-col :span="1" offset="1">
-                <i v-on:click="cleanPhone" v-show="isShowClean" class="ivu-icon ivu-icon-close-circled"></i>
-              </i-col>
+              </Col>
+              <Col span="3" class="flexend">
+                <i @click="cleanPhone" v-show="isShowClean" class="ivu-icon ivu-icon-close-circled"></i>
+              </Col>
             </Row>
-            <Row class="formChildrenRow" justify="start" type="flex" align="middle">
-              <i-col :span="4" offset="1">
-                <label for="password" :class="loginFormTitle">密码</label>
-              </i-col>
-              <i-col :span="16">
+            <Row class="formChildrenRow" :gutter="16" >
+              <Col span="4">
+                <label for="password">密码</label>
+              </Col>
+              <Col span="17">
                 <input type="password"  size="large" v-show="isShowPassword" v-model.trim="password" placeholder="请输入6位以上密码" id="password" name="password" />
                 <input type="text"  v-model.trim="passwordText" v-show="isShowPasswordText" value="" placeholder="请输入6位以上密码" />
-              </i-col>
-              <i-col :span="1" offset="1">
-                <i v-on:click="showPassword" class="ivu-icon" :class="{ 'ivu-icon-eye-disabled': isShowPasswordText, 'ivu-icon-eye': isShowPassword }"></i>
-              </i-col>
+              </Col>
+              <Col span="3" class="flexend">
+                <i @click="showPassword" class="ivu-icon" :class="{ 'ivu-icon-eye-disabled': isShowPasswordText, 'ivu-icon-eye': isShowPassword }"></i>
+              </Col>
             </Row>
           </div>
           <div id="notice">
-            <Row justify="start" type="flex" align="middle">
-              <i-col :span="22" offset="1">
+            <Row :gutter="16">
+              <Col span="24">
                 <p class="notice error">{{ error }}</p>
-              </i-col>
+              </Col>
             </Row>
           </div>
-          <div :class="operation">
-           <Row justify="start" type="flex" align="middle">
-              <i-col :span="22" offset="1">
-                <i-button type="primary" htmlType="submit" :loading="isLoading" :disabled="isDisabled" class="loginButton" size="large">登录</i-button>
-              </i-col>
+          <div>
+           <Row :gutter="16" >
+              <Col span="24">
+                <Button type="primary" htmlType="submit" :loading="isLoading" :disabled="isDisabled" class="loginButton" size="large">登录</Button>
+              </Col>
             </Row>
           </div>
         </form>
         <div class="otherOperation">
-          <Row justify="start" type="flex">
-            <i-col :span="12" offset="1">
+          <Row :gutter="16" >
+            <Col span="12" >
               <router-link to="/register">
                 注册账号
               </router-link>
-            </i-col>
-            <i-col :span="10">
+            </Col>
+            <Col span="12">
               <router-link style="float: right" to="/findpassword">
                 找回密码
               </router-link>
-            </i-col>
+            </Col>
           </Row>
         </div>
       </div>
@@ -82,8 +82,9 @@
   import detecdOS from '../utils/detecdOS';
   import errorCodes from '../stores/errorCodes';
   import deleteObjectItems from '../utils/deleteObjectItems';
-  import { getUserInfo } from '../utils/user';
+  import { getUserInfo, getAvatar } from '../utils/user';
   import { USERS_APPEND } from '../stores/types';
+  import defaultAvatar from '../statics/images/common_ico_bottom_me_normal@3x.png';
 
   const phoneReg = /^(((13[0-9]{1})|14[0-9]{1}|(15[0-9]{1})|17[0-9]{1}|(18[0-9]{1}))+\d{8})$/;
   const login = {
@@ -193,7 +194,10 @@
           this.errors = Object.assign({}, errors);
           localEvent.setLocalItem('UserLoginInfo', response.data.data);
           this.$store.dispatch(USERS_APPEND, cb => getUserInfo(response.data.data.user_id, user => {
-            cb(user);
+            let currentUser = user;
+            console.log(user);
+            localEvent.setLocalItem('user_' + response.data.data.user_id, currentUser);
+            cb(currentUser);
             router.push({ path: 'feeds' });
           }));
         })

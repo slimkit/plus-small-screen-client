@@ -1,6 +1,73 @@
 import localEvent from '../stores/localStorage';
 import { createAPI, addAccessToken } from '../utils/request';
 import errorCodes from '../stores/errorCodes';
+import getImage from './getImage';
+import defaultAvatar from '../statics/images/msg_box_remind@3x.png';
+function followingUser(user_id, cb) {
+  addAccessToken().post(
+    createAPI('users/follow'),
+    {
+      user_id
+    },
+    {
+      validate: status => status === 200
+    }
+  )
+  .then(response => {
+    cb(response.data);
+  })
+  .catch(error => {
+    cb(error.response.data);
+  })
+};
+
+function unFollowingUser(user_id, cb) {
+  addAccessToken().delete(
+    createAPI(`users/unFollow?user_id=${user_id}`),
+    {},
+    {
+      validate: status => status === 204
+    }
+  )
+  .then(response => {
+    cb(response.data);
+  })
+  .catch(error => {
+    cb(error.response.data);
+  })
+};
+
+function getAvatar (userInfo, process, cb) {
+  // let localUser = localEvent.getLocalItem('user_' + user_id);
+  // 已有本地用户
+  userInfo.avatar = {};
+  if(userInfo.hasOwnProperty('datas')) { // 有datas属性
+    if(userInfo.datas.hasOwnProperty('avatar')) { // 有avatar属性
+      if(userInfo.datas.avatar.hasOwnProperty('value')) { // 有上传过avatar
+        if(userInfo.datas.avatar.hasOwnProperty('urls')) { // 没有本地图片
+          if(!userInfo.datas.avatar.urls.hasOwnProperty(process)) {
+            userInfo.datas.avatar.urls[process] = userInfo.avatar[process] = getImage(userInfo.datas.avatar.value, process);
+          }
+        } else {
+          userInfo.datas.avatar.urls = {};
+          userInfo.datas.avatar.urls[process] = userInfo.avatar[process] = getImage(userInfo.datas.avatar.value, process);
+        }
+      } else {
+        userInfo.datas.avatar.urls = {};
+        userInfo.datas.avatar.urls[process] = userInfo.avatar[process] = defaultAvatar;
+      }
+    } else {
+      userInfo.datas.avatar = {};
+      userInfo.datas.avatar.urls = {};
+      userInfo.datas.avatar.urls[process] = userInfo.avatar[process] = defaultAvatar;
+    }
+  } else { // 没有本地用户
+    userInfo.datas.avatar = {};
+    userInfo.datas.avatar.urls = {};
+    userInfo.datas.avatar.urls[process] = userInfo.avatar[process] = defaultAvatar;
+  }
+  cb(userInfo);
+};
 
 function getUserInfo (user_id, cb) {
   addAccessToken().post(createAPI('users'), {
@@ -27,10 +94,19 @@ function getUserInfo (user_id, cb) {
       let value = count.value;
       userLocal.counts = Object.assign({}, userLocal.counts, { [keyName]:  value });
     });
-    user.datas.map(function (data, index) {
-      let keyName = data.profile;
-      let valueName = data;
-      userLocal.datas = Object.assign({}, userLocal.datas, { [keyName]: valueName });
+    let newData = {};
+    user.datas.forEach(data => {
+      newData[data.profile] = {
+        display: data.profile_name,
+        value: data.pivot.user_profile_setting_data,
+        type: data.type,
+        options: data.default_options,
+        updated_at: data.updated_at
+      };
+    });
+    userLocal.datas = newData;
+    getAvatar(userLocal, 20, newUserLocal => {
+      userLocal = newUserLocal;
     });
     localEvent.setLocalItem('user_' + user_id, userLocal);
     cb(userLocal);
@@ -73,7 +149,8 @@ function getUsersInfo (user_ids, cb) {
         name: '',
         phone: '',
         counts: {},
-        datas: {}
+        datas: {},
+        avatar: ''
       };
       // 组装数据
       users_service.map((user) => {
@@ -89,12 +166,21 @@ function getUsersInfo (user_ids, cb) {
           });
         }
         if(user.datas.length) {
-          user.datas.map((data) => {
-            let keyName = data.profile;
-            let valueName = data;
-            current_local_user.datas = { ...current_local_user.datas, ...{ [keyName]:  valueName } };
+          let newData = {};
+          user.datas.forEach(data => {
+            newData[data.profile] = {
+              display: data.profile_name,
+              value: data.pivot.user_profile_setting_data,
+              type: data.type,
+              options: data.default_options,
+              updated_at: data.updated_at
+            };
           });
+          current_local_user.datas = newData;
         }
+        getAvatar(current_local_user, 20, newUserLocal => {
+          current_local_user = newUserLocal;
+        });
         localEvent.setLocalItem('user_' + current_local_user.user_id, current_local_user);
         users[user.id] = current_local_user;
       });
@@ -117,5 +203,8 @@ function getUsersInfo (user_ids, cb) {
 
 export {
   getUserInfo,
-  getUsersInfo
+  getUsersInfo,
+  getAvatar,
+  unFollowingUser,
+  followingUser
 };

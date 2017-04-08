@@ -1,44 +1,50 @@
 <template>
   <div :class="$style.detail" :id="`feed-${feed_id}`">
-    <Row>
-      <i-col :span="3" offset="1">
+    <Row :gutter="16">
+      <Col span="4">
         <div class="grid-content bg-purple">
-          <img src="../statics/images/avatar.jpg" alt="" style="width:100%; border-radius:50%">
+          <img :src="userInfo.avatar[20]" alt="" style="width:100%; border-radius:50%">
         </div>
-      </i-col>
-      <i-col :span="18" offset="1">
+      </Col>
+      <Col span="20">
         <div class="grid-content bg-purple">
           <Row :class="$style.usernameLine">
-            <i-col :span="19">
-              <router-link :class="$style.username" :to="{ path: '/users/profile' }">{{ user.name }}</router-link>
-            </i-col>
-            <i-col :span="5" :class="$style.timer">
+            <Col span="19">
+              <router-link :class="$style.username" :to="{ path: '/users/profile' }">{{ userInfo.name }}</router-link>
+            </Col>
+            <Col span="5" :class="$style.timer">
               <timeago :since="timer"></timeago>
-            </i-col>
+            </Col>
           </Row>
           <Row>
-            <i-col :span="24">
-              <router-link v-if="feedInfo.feed_title" :to="{ path: `/feeds/detail/${feed_id}` }" class="feedTitle">{{ feedInfo.feed_title }}</router-link>
+            <Col span="24">
+              <router-link v-if="feedInfo.feed_title" :to="{ path: `/feed/${feed_id}` }" class="feedTitle">{{ feedInfo.feed_title }}</router-link>
               <div :class="$style.content">
                 {{ feedInfo.feed_content }}
               </div>
               <div v-if="feedInfo.storages.length">
                 <FeedImages :storages="feedInfo.storages"></FeedImages>
               </div>
-            </i-col>
+            </Col>
           </Row>
         </div>
-      </i-col>
+      </Col>
     </Row>
-    <Row v-if="tools" :class="$style.toolTop">
-      <i-col offset="5" :span="18">
-        <FeedTool @addNewCommentFoFeed="addNewCommentFoFeed" :user="user" :feedId="feedInfo.feed_id" @parentAddDigg="addDigg" @parentCannelDigg="cannelDigg" :toolDatas="toolInfo"></FeedTool>
-      </i-col>
+    <Row v-if="tools" :gutter="16" :class="$style.toolTop">
+      <Col span="4" :class="$style.seat">
+        1
+      </Col>
+      <Col span="20">
+        <FeedTool @addNewCommentFoFeed="addNewCommentFoFeed" :user="userInfo" :feedId="feedInfo.feed_id" @parentAddDigg="addDigg" @parentCannelDigg="cannelDigg" :toolDatas="toolInfo"></FeedTool>
+      </Col>
     </Row>
-    <Row v-if="feed.comments.length">
-      <i-col offset="5" :span="18">
+    <Row v-if="feed.comments.length" :gutter="16">
+      <Col :class="$style.seat" span="4">
+        1
+      </Col>
+      <Col span="20">
         <CommentsTool v-if="feed.comments" @addComment="addNewComment" @delComment="delOldComment" :feedId="feedInfo.feed_id" :commentsData="feed.comments"></CommentsTool>
-      </i-col>
+      </Col>
     </Row>
   </div>
 </template>
@@ -70,7 +76,6 @@
       feed_id: 0,
       user: {},
       tools: 0
-      // comments: []
     }),
     methods: {
       addNewCommentFoFeed (newComment) {
@@ -107,6 +112,10 @@
       },
       updateComments (newComments) {
         this.feed.comments = newComments.slice(0);
+      },
+      // 获取单条图片
+      getImg (id, process = 30) {
+        return createRequestURI(`api/v1/storages/${id}/${process}`);
       }
     },
     components: {
@@ -114,17 +123,25 @@
       FeedTool,
       CommentsTool
     },
-    mounted () {
+    computed: {
+      userInfo () {
+        let user = this.user;
+        return user;
+      }
+    },
+    created () {
       this.timer = new Date(this.feed.feed.created_at.replace(/-/g, "/"));
       this.feed_id = this.feed.feed.feed_id;
       this.toolInfo = Object.assign({}, this.toolInfo, this.feed.tool);
-      // this.comments = this.feed.comments;
       this.tools = 1;
-      this.user = localEvent.getLocalItem('user_' + this.feed.user_id);
-      if(this.user.length == 0) {
+      let localUser = localEvent.getLocalItem('user_' + this.feed.user_id);
+      if(localUser.length == 0) {
         getUserInfo(this.feed.user_id, user => {
-          this.user = user;
+          localUser = user;
+          this.user = Object.assign({}, this.user, localUser);
         });
+      } else {
+        this.user = Object.assign({}, this.user, localUser);
       }
       this.feedInfo = Object.assign({}, this.feedInfo, this.feed.feed);
     }
@@ -168,5 +185,8 @@
     text-align: right;
     color: #ccc;
     font-size: 12px;
+  }
+  .seat {
+    visibility: hidden;
   }
 </style>

@@ -1,18 +1,22 @@
 <template>
   <div :class="$style.feedListContent">
-    <FeedList></FeedList>
+    <FeedList :option="option"></FeedList>
   </div>
 </template>
 
 <script>
   import FeedList from '../components/FeedList';
+  // import Feedslist from '../components/Feedslist';
 
   const FeedFollowing = {
     components: {
       FeedList
     },
-    date: () => ({
-
+    data: () => ({
+      option: {
+        uri: 'feeds/follows',
+        limiter: 'page'
+      }
     })
   }
   export default FeedFollowing;

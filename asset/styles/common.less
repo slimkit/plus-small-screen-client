@@ -51,6 +51,11 @@ a {
   color: #999;
 }
 
+.ivu-row {
+  margin-left: 0!important;
+  margin-right: 0!important;
+}
+
 .el-button--primary {
   background-color: @themeColor;
 }
@@ -170,12 +175,31 @@ input {
 .formChildrenRow {
   height: 55px;
   line-height: 55px;
+  display: flex;
+  display: -webkit-flex;
+  align-items: center;
+  -webkit-align-items: center;
 }
 
 .loginForm {
   background-color: #fff;
   &:focus, &:active {
     background-color: #fff;
+  }
+  .flexstart {
+    display: flex;
+    display: -webkit-flex;
+    justify-content: flex-start;
+    -webkit-justify-content: flex-start;
+  }
+  .flexend {
+    display: flex;
+    display: -webkit-flex;
+    justify-content: flex-end;
+    -webkit-justify-content: flex-end;
+  }
+  .nopadding {
+    padding: 6px 0;
   }
 }
 
@@ -187,7 +211,13 @@ input {
   width: 100%;
   background-color: #59b6d7;
   border: none;
-  &:focus, &:active {
+  display: flex;
+  display: -webkit-flex;
+  justify-content: center;
+  -webkit-justify-content: center;
+  align-items: center;
+  -webkit-align-items: center;
+  &:active {
     background-color: #4ab2ce;
     color: #fff;
   }

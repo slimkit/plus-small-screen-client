@@ -1,314 +1,315 @@
 <template>
   <Row>
-    <i-col :span="20">
+    <Col :span="20">
       <div :class="$style.FeedImages">
         <div v-if="imageSize == 1" class="images">
           <Row :class="$style.imagesRow">
-            <i-col :span="24">
-              <img @click="showSwiper(0)" :src="getImg(imageObject[0].storage_id, 60)" />
-            </i-col>
+            <Col :span="24">
+              <img @click="showSwiper(0)"  v-lazy="getImg(imageObject[0].storage_id, 60)" />
+            </Col>
           </Row>
         </div>
         <div v-if="imageSize == 2" class="images">
           <Row :gutter="6" :class="$style.imagesRow">
-            <i-col :class="$style.imgParent" :span="12">
+            <Col :class="$style.imgParent" :span="12">
               <div :class="$style.showImgBox">
-                <img class="per-feed-img" @click="showSwiper(0)" :src="getImg(imageObject[0].storage_id, 40)" />
+                <img class="per-feed-img" @click="showSwiper(0)"  v-lazy="getImg(imageObject[0].storage_id, 40)" />
               </div>
-            </i-col>
-            <i-col :class="$style.imgParent" :span="12">
+            </Col>
+            <Col :class="$style.imgParent" :span="12">
               <div :class="$style.showImgBox">
-                <img class="per-feed-img" @click="showSwiper(1)" :src="getImg(imageObject[1].storage_id, 40)" />
+                <img class="per-feed-img" @click="showSwiper(1)"  v-lazy="getImg(imageObject[1].storage_id, 40)" />
               </div>
-            </i-col>
+            </Col>
           </Row>
         </div>
         <div v-if="imageSize == 3" class="images">
           <Row :gutter="6" :class="$style.imagesRow">
-            <i-col :class="$style.imgParent" :span="8">
+            <Col :class="$style.imgParent" :span="8">
               <div :class="$style.showImgBox">
-                <img class="per-feed-img" @click="showSwiper(0)" :src="getImg(imageObject[0].storage_id)" />
+                <img v-lazy="getImg(imageObject[0].storage_id)" class="per-feed-img" @click="showSwiper(0)" />
               </div>
-            </i-col>
-            <i-col :class="$style.imgParent" :span="8" >
+            </Col>
+            <Col :class="$style.imgParent" :span="8" >
               <div :class="$style.showImgBox">
-                <img class="per-feed-img" @click="showSwiper(1)" :src="getImg(imageObject[1].storage_id)" />
+                <img v-lazy="getImg(imageObject[1].storage_id)" class="per-feed-img" @click="showSwiper(1)" />
               </div>
-            </i-col>
-            <i-col :class="$style.imgParent" :span="8">
+            </Col>
+            <Col :class="$style.imgParent" :span="8">
               <div :class="$style.showImgBox">
-                <img class="per-feed-img" @click="showSwiper(2)" :src="getImg(imageObject[2].storage_id)" />
+                <img v-lazy="getImg(imageObject[2].storage_id)" class="per-feed-img" @click="showSwiper(2)" />
               </div>
-            </i-col>
+            </Col>
           </Row>
         </div>
         <div v-if="imageSize == 4" class="images">
           <Row :gutter="6" :class="$style.imagesRow">
-            <i-col :class="$style.imgParent" :span="12">
+            <Col :class="$style.imgParent" :span="12">
               <div :class="$style.showImgBox">
-                <img class="per-feed-img" @click="showSwiper(0)" :src="getImg(imageObject[0].storage_id)" />
+                <img class="per-feed-img" @click="showSwiper(0)"  v-lazy="getImg(imageObject[0].storage_id)" />
               </div>
-            </i-col>
-            <i-col :class="$style.imgParent" :span="12" >
+            </Col>
+            <Col :class="$style.imgParent" :span="12" >
               <div :class="$style.showImgBox">
-                <img class="per-feed-img" @click="showSwiper(1)" :src="getImg(imageObject[1].storage_id)" />
+                <img class="per-feed-img" @click="showSwiper(1)"  v-lazy="getImg(imageObject[1].storage_id)" />
               </div>
-            </i-col>
+            </Col>
           </Row>
           <Row :gutter="6" :class="$style.imagesRow">
-            <i-col :class="$style.imgParent" :span="12" >
+            <Col :class="$style.imgParent" :span="12" >
               <div :class="$style.showImgBox">
-                <img class="per-feed-img" @click="showSwiper(2)" :src="getImg(imageObject[2].storage_id)" />
+                <img class="per-feed-img" @click="showSwiper(2)"  v-lazy="getImg(imageObject[2].storage_id)" />
               </div>
-            </i-col>
-            <i-col :class="$style.imgParent" :span="12" >
+            </Col>
+            <Col :class="$style.imgParent" :span="12" >
               <div :class="$style.showImgBox">
-                <img class="per-feed-img" @click="showSwiper(3)" :src="getImg(imageObject[3].storage_id)" />
+                <img class="per-feed-img" @click="showSwiper(3)"  v-lazy="getImg(imageObject[3].storage_id)" />
               </div>
-            </i-col>
+            </Col>
           </Row>
         </div>
         <div v-if="imageSize == 5" class="images">
           <Row :gutter="6" :class="$style.imagesRow">
-            <i-col :class="$style.imgParent" :span="16">
+            <Col :class="$style.imgParent" :span="16">
               <div :class="$style.showImgBox">
-                <img class="per-feed-img" @click="showSwiper(0)" :src="getImg(imageObject[0].storage_id, 40)" />
+                <img class="per-feed-img" @click="showSwiper(0)"  v-lazy="getImg(imageObject[0].storage_id, 40)" />
               </div>
-            </i-col>
-            <i-col :span="8">
+            </Col>
+            <Col :span="8">
               <Row :gutter="6" style="margin-bottom: 6px;">
-                <i-col :class="$style.imgParent" :span="24">
+                <Col :class="$style.imgParent" :span="24">
                   <div :class="$style.showImgBox">
-                    <img class="per-feed-img" @click="showSwiper(1)" :src="getImg(imageObject[1].storage_id, 40)" />
+                    <img class="per-feed-img" @click="showSwiper(1)"  v-lazy="getImg(imageObject[1].storage_id, 40)" />
                   </div>
-                </i-col>
+                </Col>
               </Row>
               <Row :gutter="6">
-                <i-col :class="$style.imgParent" :span="24">
+                <Col :class="$style.imgParent" :span="24">
                   <div :class="$style.showImgBox">
-                    <img class="per-feed-img" @click="showSwiper(2)" :src="getImg(imageObject[2].storage_id, 40)" />
+                    <img class="per-feed-img" @click="showSwiper(2)"  v-lazy="getImg(imageObject[2].storage_id, 40)" />
                   </div>
-                </i-col>
+                </Col>
               </Row>
-            </i-col>
+            </Col>
           </Row>
           <Row :gutter="6" :class="$style.imagesRow">
-            <i-col :class="$style.imgParent" :span="12" >
+            <Col :class="$style.imgParent" :span="12" >
               <div :class="$style.showImgBox">
-                <img class="per-feed-img" @click="showSwiper(3)" :src="getImg(imageObject[3].storage_id)" />
+                <img class="per-feed-img" @click="showSwiper(3)"  v-lazy="getImg(imageObject[3].storage_id)" />
               </div>
-            </i-col>
-            <i-col :class="$style.imgParent" :span="12" >
+            </Col>
+            <Col :class="$style.imgParent" :span="12" >
               <div :class="$style.showImgBox">
-                <img class="per-feed-img" @click="showSwiper(4)" :src="getImg(imageObject[4].storage_id)" />
+                <img class="per-feed-img" @click="showSwiper(4)"  v-lazy="getImg(imageObject[4].storage_id)" />
               </div>
-            </i-col>
+            </Col>
           </Row>
         </div>
         <div v-if="imageSize == 6" class="images">
           <Row :gutter="6" :class="$style.imagesRow">
-            <i-col :class="$style.imgParent" :span="12">
+            <Col :class="$style.imgParent" :span="12">
               <Row :gutter="6" :calss="$style.imagesRow">
-                <i-col :class="$style.imgParent" :span="24">
+                <Col :class="$style.imgParent" :span="24">
                   <div :class="$style.showImgBox">
-                    <img class="per-feed-img" @click="showSwiper(0)" :src="getImg(imageObject[0].storage_id, 40)" />
+                    <img class="per-feed-img" @click="showSwiper(0)"  v-lazy="getImg(imageObject[0].storage_id, 40)" />
                   </div>
-                </i-col>
+                </Col>
               </Row>
               <Row :gutter="6" :calss="$style.imagesRow">
-                <i-col :class="$style.imgParent" :span="24">
+                <Col :class="$style.imgParent" :span="24">
                   <div :class="$style.showImgBox">
-                    <img class="per-feed-img" @click="showSwiper(1)" :src="getImg(imageObject[1].storage_id, 40)" />
+                    <img class="per-feed-img" @click="showSwiper(1)"  v-lazy="getImg(imageObject[1].storage_id, 40)" />
                   </div>
-                </i-col>
+                </Col>
               </Row>
-            </i-col>
-            <i-col :class="$style.imgParent" :span="12">
+            </Col>
+            <Col :class="$style.imgParent" :span="12">
               <div :class="$style.showImgBox">
-                <img class="per-feed-img" @click="showSwiper(2)" :src="getImg(imageObject[2].storage_id, 40)" />
+                <img class="per-feed-img" @click="showSwiper(2)"  v-lazy="getImg(imageObject[2].storage_id, 40)" />
               </div>
-            </i-col>
+            </Col>
           </Row>
           <Row :gutter="6" :class="$style.imagesRow">
-            <i-col :class="$style.imgParent" :span="8" >
+            <Col :class="$style.imgParent" :span="8" >
               <div :class="$style.showImgBox">
-                <img class="per-feed-img" @click="showSwiper(3)" :src="getImg(imageObject[3].storage_id)" />
+                <img class="per-feed-img" @click="showSwiper(3)"  v-lazy="getImg(imageObject[3].storage_id)" />
               </div>
-            </i-col>
-            <i-col :class="$style.imgParent" :span="8" >
+            </Col>
+            <Col :class="$style.imgParent" :span="8" >
               <div :class="$style.showImgBox">
-                <img class="per-feed-img" @click="showSwiper(4)" :src="getImg(imageObject[4].storage_id)" />
+                <img class="per-feed-img" @click="showSwiper(4)"  v-lazy="getImg(imageObject[4].storage_id)" />
               </div>
-            </i-col>
-            <i-col :class="$style.imgParent" :span="8" >
+            </Col>
+            <Col :class="$style.imgParent" :span="8" >
               <div :class="$style.showImgBox">
-                <img class="per-feed-img" @click="showSwiper(5)" :src="getImg(imageObject[5].storage_id)" />
+                <img class="per-feed-img" @click="showSwiper(5)"  v-lazy="getImg(imageObject[5].storage_id)" />
               </div>
-            </i-col>
+            </Col>
           </Row>
         </div>
         <div v-if="imageSize == 7" class="images">
           <Row :gutter="6" :class="$style.imagesRow">
-            <i-col :class="$style.imgParent" :span="12">
-              <Row :gutter="6" :calss="$style.imagesRow">
-                <i-col :class="$style.imgParent" :span="24">
+            <Col :span="12">
+              <Row :gutter="6" :class="$style.imagesRow">
+                <Col :class="$style.imgParent" :span="24" >
                   <div :class="$style.showImgBox">
-                    <img class="per-feed-img" @click="showSwiper(0)" :src="getImg(imageObject[0].storage_id, 40)" />
+                    <img class="per-feed-img" @click="showSwiper(0)"  v-lazy="getImg(imageObject[0].storage_id)" />
                   </div>
-                </i-col>
+                </Col>
               </Row>
-              <Row :gutter="6" :calss="$style.imagesRow">
-                <i-col :class="$style.imgParent" :span="24">
+              <Row :gutter="6" :class="$style.imagesRow">
+                <Col :class="$style.imgParent" :span="24" >
                   <div :class="$style.showImgBox">
-                    <img class="per-feed-img" @click="showSwiper(1)" :src="getImg(imageObject[1].storage_id, 40)" />
+                    <img class="per-feed-img" @click="showSwiper(1)"  v-lazy="getImg(imageObject[1].storage_id)" />
                   </div>
-                </i-col>
+                </Col>
               </Row>
-            </i-col>
-            <i-col :class="$style.imgParent" :span="12">
-              <Row :gutter="6" :calss="$style.imagesRow">
-                <i-col :span="12">
+            </Col>
+            <Col :span="12">
+              <Row :gutter="6" :class="$style.imagesRow">
+                <Col :class="$style.imgParent" :span="12" >
                   <div :class="$style.showImgBox">
-                    <img class="per-feed-img" @click="showSwiper(2)" :src="getImg(imageObject[2].storage_id, 40)" />
+                    <img class="per-feed-img" @click="showSwiper(2)"  v-lazy="getImg(imageObject[2].storage_id)" />
                   </div>
-                </i-col>
-                <i-col :span="12">
+                </Col>
+                <Col :class="$style.imgParent" :span="12" >
                   <div :class="$style.showImgBox">
-                    <img class="per-feed-img" @click="showSwiper(3)" :src="getImg(imageObject[3].storage_id, 40)" />
+                    <img class="per-feed-img" @click="showSwiper(3)"  v-lazy="getImg(imageObject[3].storage_id)" />
                   </div>
-                </i-col>
+                </Col>
               </Row>
-              <Row :gutter="6">
-                <i-col :span="12">
+              <Row :gutter="6" :class="$style.imagesRow">
+                <Col :class="$style.imgParent" :span="24" >
                   <div :class="$style.showImgBox">
-                    <img class="per-feed-img" @click="showSwiper(4)" :src="getImg(imageObject[4].storage_id, 40)" />
+                    <img class="per-feed-img" @click="showSwiper(4)"  v-lazy="getImg(imageObject[4].storage_id)" />
                   </div>
-                </i-col>
+                </Col>
               </Row>
-              <Row :gutter="6" :calss="$style.imagesRow">
-                <i-col :span="12">
+              <Row :gutter="6" :class="$style.imagesRow">
+                <Col :class="$style.imgParent" :span="12" >
                   <div :class="$style.showImgBox">
-                    <img class="per-feed-img" @click="showSwiper(5)" :src="getImg(imageObject[5].storage_id, 40)" />
+                    <img class="per-feed-img" @click="showSwiper(5)"  v-lazy="getImg(imageObject[5].storage_id)" />
                   </div>
-                </i-col>
-                <i-col :span="12">
+                </Col>
+                <Col :class="$style.imgParent" :span="12" >
                   <div :class="$style.showImgBox">
-                    <img class="per-feed-img" @click="showSwiper(6)" :src="getImg(imageObject[6].storage_id, 40)" />
+                    <img class="per-feed-img" @click="showSwiper(6)"  v-lazy="getImg(imageObject[6].storage_id)" />
                   </div>
-                </i-col>
+                </Col>
               </Row>
-            </i-col>
+            </Col>
           </Row>
         </div>
         <div v-if="imageSize == 8" class="images">
           <Row :gutter="6" :class="$style.imagesRow">
-            <i-col :class="$style.imgParent" :span="8">
+            <Col :class="$style.imgParent" :span="8">
               <div :class="$style.showImgBox">
-                <img class="per-feed-img" @click="showSwiper(0)" :src="getImg(imageObject[0].storage_id)" />
+                <img class="per-feed-img" @click="showSwiper(0)"  v-lazy="getImg(imageObject[0].storage_id)" />
               </div>
-            </i-col>
-            <i-col :class="$style.imgParent" :span="8">
+            </Col>
+            <Col :class="$style.imgParent" :span="8">
               <div :class="$style.showImgBox">
-                <img class="per-feed-img" @click="showSwiper(1)" :src="getImg(imageObject[1].storage_id)" />
+                <img class="per-feed-img" @click="showSwiper(1)"  v-lazy="getImg(imageObject[1].storage_id)" />
               </div>
-            </i-col>
-            <i-col :class="$style.imgParent" :span="8">
+            </Col>
+            <Col :class="$style.imgParent" :span="8">
               <div :class="$style.showImgBox">
-                <img class="per-feed-img" @click="showSwiper(2)" :src="getImg(imageObject[2].storage_id)" />
+                <img class="per-feed-img" @click="showSwiper(2)"  v-lazy="getImg(imageObject[2].storage_id)" />
               </div>
-            </i-col>
+            </Col>
           </Row>
           <Row :gutter="6" :class="$style.imagesRow">
-            <i-col :class="$style.imgParent" :span="12">
+            <Col :class="$style.imgParent" :span="12">
               <div :class="$style.showImgBox">
-                <img class="per-feed-img" @click="showSwiper(3)" :src="getImg(imageObject[3].storage_id, 40)" />
+                <img class="per-feed-img" @click="showSwiper(3)"  v-lazy="getImg(imageObject[3].storage_id, 40)" />
               </div>
-            </i-col>
-            <i-col :class="$style.imgParent" :span="12">
+            </Col>
+            <Col :class="$style.imgParent" :span="12">
               <div :class="$style.showImgBox">
-                <img class="per-feed-img" @click="showSwiper(4)" :src="getImg(imageObject[4].storage_id, 40)" />
+                <img class="per-feed-img" @click="showSwiper(4)"  v-lazy="getImg(imageObject[4].storage_id, 40)" />
               </div>
-            </i-col>
+            </Col>
           </Row>
           <Row :gutter="6" :class="$style.imagesRow">
-            <i-col :class="$style.imgParent" :span="8">
+            <Col :class="$style.imgParent" :span="8">
               <div :class="$style.showImgBox">
-                <img class="per-feed-img" @click="showSwiper(5)" :src="getImg(imageObject[5].storage_id)" />
+                <img class="per-feed-img" @click="showSwiper(5)"  v-lazy="getImg(imageObject[5].storage_id)" />
               </div>
-            </i-col>
-            <i-col :class="$style.imgParent" :span="8">
+            </Col>
+            <Col :class="$style.imgParent" :span="8">
               <div :class="$style.showImgBox">
-                <img class="per-feed-img" @click="showSwiper(6)" :src="getImg(imageObject[6].storage_id)" />
+                <img class="per-feed-img" @click="showSwiper(6)"  v-lazy="getImg(imageObject[6].storage_id)" />
               </div>
-            </i-col>
-            <i-col :class="$style.imgParent" :span="8">
+            </Col>
+            <Col :class="$style.imgParent" :span="8">
               <div :class="$style.showImgBox">
-                <img class="per-feed-img" @click="showSwiper(7)" :src="getImg(imageObject[7].storage_id)" />
+                <img class="per-feed-img" @click="showSwiper(7)"  v-lazy="getImg(imageObject[7].storage_id)" />
               </div>
-            </i-col>
+            </Col>
           </Row>
         </div>
         <div v-if="imageSize == 9" class="images">
           <Row :gutter="6" :class="$style.imagesRow">
-            <i-col :class="$style.imgParent" :span="8">
+            <Col :class="$style.imgParent" :span="8">
               <div :class="$style.showImgBox">
-                <img class="per-feed-img" @click="showSwiper(0)" :src="getImg(imageObject[0].storage_id)" />
+                <img class="per-feed-img" @click="showSwiper(0)"  v-lazy="getImg(imageObject[0].storage_id)" />
               </div>
-            </i-col>
-            <i-col :class="$style.imgParent" :span="8">
+            </Col>
+            <Col :class="$style.imgParent" :span="8">
               <div :class="$style.showImgBox">
-                <img class="per-feed-img" @click="showSwiper(1)" :src="getImg(imageObject[1].storage_id)" />
+                <img class="per-feed-img" @click="showSwiper(1)"  v-lazy="getImg(imageObject[1].storage_id)" />
               </div>
-            </i-col>
-            <i-col :class="$style.imgParent" :span="8">
+            </Col>
+            <Col :class="$style.imgParent" :span="8">
               <div :class="$style.showImgBox">
-                <img class="per-feed-img" @click="showSwiper(2)" :src="getImg(imageObject[2].storage_id)" />
+                <img class="per-feed-img" @click="showSwiper(2)"  v-lazy="getImg(imageObject[2].storage_id)" />
               </div>
-            </i-col>
+            </Col>
           </Row>
           <Row :gutter="6" :class="$style.imagesRow">
-            <i-col :class="$style.imgParent" :span="8">
+            <Col :class="$style.imgParent" :span="8">
               <div :class="$style.showImgBox">
-                <img class="per-feed-img" @click="showSwiper(3)" :src="getImg(imageObject[3].storage_id)" />
+                <img class="per-feed-img" @click="showSwiper(3)"  v-lazy="getImg(imageObject[3].storage_id)" />
               </div>
-            </i-col>
-            <i-col :class="$style.imgParent" :span="8">
+            </Col>
+            <Col :class="$style.imgParent" :span="8">
               <div :class="$style.showImgBox">
-                <img class="per-feed-img" @click="showSwiper(4)" :src="getImg(imageObject[4].storage_id)" />
+                <img class="per-feed-img" @click="showSwiper(4)"  v-lazy="getImg(imageObject[4].storage_id)" />
               </div>
-            </i-col>
-            <i-col :class="$style.imgParent" :span="8">
+            </Col>
+            <Col :class="$style.imgParent" :span="8">
               <div :class="$style.showImgBox">
-                <img class="per-feed-img" @click="showSwiper(5)" :src="getImg(imageObject[5].storage_id)" />
+                <img class="per-feed-img" @click="showSwiper(5)"  v-lazy="getImg(imageObject[5].storage_id)" />
               </div>
-            </i-col>
+            </Col>
           </Row>
           <Row :gutter="6" :class="$style.imagesRow">
-            <i-col :class="$style.imgParent" :span="8">
+            <Col :class="$style.imgParent" :span="8">
               <div :class="$style.showImgBox">
-                <img class="per-feed-img" @click="showSwiper(6)" :src="getImg(imageObject[6].storage_id)" />
+                <img class="per-feed-img" @click="showSwiper(6)"  v-lazy="getImg(imageObject[6].storage_id)" />
               </div>
-            </i-col>
-            <i-col :class="$style.imgParent" :span="8">
+            </Col>
+            <Col :class="$style.imgParent" :span="8">
               <div :class="$style.showImgBox">
-                <img class="per-feed-img" @click="showSwiper(7)" :src="getImg(imageObject[7].storage_id)" />
+                <img class="per-feed-img" @click="showSwiper(7)"  v-lazy="getImg(imageObject[7].storage_id)" />
               </div>
-            </i-col>
-            <i-col :class="$style.imgParent" :span="8">
+            </Col>
+            <Col :class="$style.imgParent" :span="8">
               <div :class="$style.showImgBox">
-                <img class="per-feed-img" @click="showSwiper(8)" :src="getImg(imageObject[8].storage_id)" />
+                <img class="per-feed-img" @click="showSwiper(8)"  v-lazy="getImg(imageObject[8].storage_id)" />
               </div>
-            </i-col>
+            </Col>
           </Row>
         </div>
       </div>
-    </i-col>
+    </Col>
   </Row>
 </template>
 
 <script>
   import { createRequestURI } from '../utils/request';
   import { IMGSWIPER } from '../stores/types';
+  import getImg from '../utils/getImage';
 
   const feedImages = {
     props: [
@@ -323,10 +324,6 @@
       }
     },
     methods: {
-      // 获取单条图片
-      getImg (id, process = 30) {
-        return createRequestURI(`api/v1/storages/${id}/${process}`);
-      },
       // 展示走马灯
       showSwiper (index) {
         let images = [];
@@ -340,7 +337,8 @@
             show: true
           });
         });
-      }
+      },
+      getImg
     },
     beforeMount () {
       this.imageObject = this.storages;
@@ -355,6 +353,11 @@
     width: 100%;
     img {
       width: 100%;
+    }
+    .imagesRow {
+      margin-bottom: 6px!important;
+      margin-left: -3px!important;
+      margin-right: -3px!important;
     }
   }
   .imgParent {
@@ -384,8 +387,5 @@
       height: 100%;
       width: 100%;
     }
-  }
-  .imagesRow {
-    margin-bottom: 6px;
   }
 </style>

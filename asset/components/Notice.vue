@@ -32,6 +32,7 @@
     background: #fff;
     border-radius: 10px;
     font-size: 14px;
+
   }
   .success {
     color: #59b6d7;
@@ -58,5 +59,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 999;
   }
 </style>

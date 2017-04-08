@@ -1,11 +1,17 @@
 <template>
-  <div v-show="show" :class="$style.swiper">
-    <swiper :show-dots="true" dots-position="top" :show-desc-mask="false" :duration="200" @on-index-change="onSwiperItemIndexChange" v-model="swiperItemIndex" v-model="value" style="width: 100%; height:100%" height="100%">
-      <swiper-item class="swiper-demo-img" v-for="(item, index) in list" :key="index">
-        <img @click="hideSwiper" :src="item">
-      </swiper-item>
-    </swiper>
-  </div>
+  <transition
+    v-on:before-enter="beforeEnter"
+    v-on:enter="enter"
+    v-on:leave="leave"
+  >
+    <div v-show="show" :class="$style.swiper">
+      <swiper :show-dots="true" dots-position="left" style="width: 100%; height: 100%" :show-desc-mask="false" :duration="150" v-model="value" height="100%">
+        <swiper-item @click="hideSwiper" class="swiper-demo-img" v-for="(item, index) in list" :key="index">
+          <img @click="hideSwiper" class="big-img" v-lazy="item">
+        </swiper-item>
+      </swiper>
+    </div>
+  </transition>
 </template>
 
 <script>
@@ -24,6 +30,15 @@
       show: state => state.imageSwiper.imageSwiper.show
     }),
     methods: {
+      enter (el, done) {
+
+      },
+      beforeEnter (el) {
+
+      },
+      leave(el, done) {
+
+      },
       hideSwiper () {
         this.$store.dispatch(IMGSWIPER, cb => {
           cb({
@@ -53,6 +68,10 @@
     align-items: center;
     background-color: rgb(0, 0, 0);
     z-index: 9;
+    transition: transform .2s;
+    transform:scale(1);
+    height: 100%;
+    width: 100%;
   }
 </style>
 <style>
@@ -61,18 +80,30 @@
     justify-content: center;
     align-items: center;
   }
+  .v-enter-active.v-enter-to {
+    transform: scale(1,1);
+  }
   .vux-slider>.vux-swiper>.vux-swiper-item {
     display: flex;
     justify-content: center;
     align-items: center;
   }
   .vux-swiper-item img {
-    max-width: 100%;
+    width: 100%;
+    max-height: 100%;
   }
   .vux-slider>.vux-swiper {
     overflow: auto!important;
   }
-  .swiper-demo-img {
-    visibility: hidden;
+  img.big-img[lazy=loading] {
+    width: auto;
+    height: auto;
+    animation:change 1s linear infinite;
+  }
+  @-webkit-keyframes change
+  {
+　　0%{-webkit-transform:rotate(0deg);}
+　　50%{-webkit-transform:rotate(180deg);}
+　　100%{-webkit-transform:rotate(360deg);}
   }
 </style>

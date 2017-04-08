@@ -11,3 +11,8 @@ export const NOTICE = 'notice';
  图片轮播器
  */
 export const IMGSWIPER = 'imgswiper';
+
+/** 
+ * 展示动态发送框
+ */
+export const SHOWPOST = 'showpost';

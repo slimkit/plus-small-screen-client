@@ -27,20 +27,20 @@
     </ul>
     <router-link v-if="hasMore" :class="$style.userName" to="/web">查看全部评论</router-link>
     <div v-if="CanInput" :class="$style.commentInput">
-      <Row type="flex" align="bottom">
-        <i-col :span="18" offset="1">
-          <i-input type="textarea" class="commentInput" v-if="CanInput" :autofocus="autoF" :placeholder="placeholder" :autosize="{ minRows: 1, maxRows: 4 }" minlength="1" :blur="inputBlur" maxlength="255" v-model="userComment"></i-input>
-        </i-col>
-        <i-col :span="3" offset="1">
+      <Row :gutter="16" type="flex" align="bottom" style="margin-left: 0; margin-right: 0;">
+        <Col span="20">
+          <Input type="textarea" class="commentInput" v-if="CanInput" autofocus="autofocus" :placeholder="placeholder" :autosize="{ minRows: 1, maxRows: 4 }" :minlength='1' blur="inputBlur" :maxlength='255' v-model="userComment"></Input>
+        </Col>
+        <Col span="4">
           <Row v-if="commentCount > 200" :class="$style.commentCount">
-            <i-col :span="24" ><span :class="{ inputFull: commentCount > 100 }">{{ commentCount }}</span>/255</i-col>
+            <Col span="24" ><span :class="{ inputFull: commentCount > 100 }">{{ commentCount }}</span>/255</Col>
           </Row>
           <Row>
-            <i-col :span="24">
-              <i-button :long="true" type="primary" :class="$style.sendComment" :disabled="commentCount == 0" size="mini" @click.native="sendComment()">发送</i-button>
-            </i-col>
+            <Col span="24">
+              <Button :long="true" type="primary" :class="$style.sendComment" :disabled="commentCount == 0" size="small" @click.native="sendComment()">发送</Button>
+            </Col>
           </Row>
-        </i-col>
+        </Col>
       </Row>
     </div>
     <Comfirm v-if="isShowComfirm" @cannel="cannel" @increment="deleteComment" :data="deleteData" comfirm-content="删除这条评论"></Comfirm>
@@ -54,8 +54,7 @@
   import { createAPI, addAccessToken } from '../utils/request';
   import router from '../routers/index';
   import Comfirm from '../utils/Comfirm';
-  import { USERS, USERS_APPEND, USERS_ITEM_UPDATE } from '../stores/types';
-  import { NOTICE } from '../stores/types';
+  import { USERS, USERS_APPEND, USERS_ITEM_UPDATE, NOTICE } from '../stores/types';
 
   const commentsTool = {
     props: [
@@ -69,7 +68,6 @@
       feed_id: 0,
       more: false, // 查看全部
       CanInput: false, // 输入框显示
-      autoF: false, // 输入框自动获取焦点
       placeholder: '', // 占位文字
       userComment: '', // 用户评论内容
       replyToUserId: 0, // 回复谁
@@ -223,6 +221,9 @@
     border-bottom: 1px #59b6d7 solid;
     border: none;
     padding: 10px 0;
+    textarea {
+      min-height: 34px!important;
+    }
   }
   .commentCount {
     margin-bottom: .5em;

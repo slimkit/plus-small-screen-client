@@ -5,7 +5,7 @@ import FindPassword from '../views/FindPassword.vue';
 import Feeds from '../views/Feeds.vue';
 import Home from '../views/Home.vue';
 import FeedFollowing from '../views/FeedFollowing';
-import FeedAll from '../views/FeedAll';
+import FeedHot from '../views/FeedHot';
 import FeedNew from '../views/FeedNew';
 import FeedDetail from '../views/FeedDetail';
 import { requestAuth, CanNotGetInWhenLogged } from '../utils/auth';
@@ -49,6 +49,13 @@ const routes = [
     }
   },
   {
+    path: '/feed/:feed_id',
+    component: FeedDetail,
+    meta: {
+      title: '动态详情'
+    }
+  },
+  {
     path: '/feeds',
     component: Feeds,
     meta: {
@@ -67,10 +74,10 @@ const routes = [
         }
       },
       {
-        path: 'all',
-        compoenet: FeedAll,
+        path: 'hot',
+        component: FeedHot,
         meta: {
-          title: '全部动态'
+          title: '热门动态'
         }
       },
       {
@@ -78,13 +85,6 @@ const routes = [
         component: FeedNew,
         meta: {
           title: '最新动态'
-        }
-      },
-      {
-        path: 'detail/:feed_id',
-        compoenet: FeedDetail,
-        meta: {
-          title: '动态详情'
         }
       }
     ]

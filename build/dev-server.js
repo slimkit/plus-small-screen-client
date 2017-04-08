@@ -62,7 +62,7 @@ app.use(hotMiddleware)
 var staticPath = path.posix.join(config.dev.assetsPublicPath, config.dev.assetsSubDirectory)
 app.use(staticPath, express.static('./static'))
 
-var uri = 'http://thinksns-plus/web/';
+var uri = 'http://localhost:8080';
 
 devMiddleware.waitUntilValid(function () {
   console.log('> Listening at ' + uri + '\n')
