@@ -3,14 +3,14 @@
     <Row :gutter="16">
       <Col span="4">
         <div class="grid-content bg-purple">
-          <img :src="userInfo.avatar[20]" alt="" style="width:100%; border-radius:50%">
+          <img :src="avatar" alt="" style="width:100%; border-radius:50%">
         </div>
       </Col>
       <Col span="20">
         <div class="grid-content bg-purple">
           <Row :class="$style.usernameLine">
             <Col span="19">
-              <router-link :class="$style.username" :to="{ path: '/users/profile' }">{{ userInfo.name }}</router-link>
+              <router-link :class="$style.username" :to="{ path: '/users/profile' }">{{ user.name }}</router-link>
             </Col>
             <Col span="5" :class="$style.timer">
               <timeago :since="timer"></timeago>
@@ -35,7 +35,7 @@
         1
       </Col>
       <Col span="20">
-        <FeedTool @addNewCommentFoFeed="addNewCommentFoFeed" :user="userInfo" :feedId="feedInfo.feed_id" @parentAddDigg="addDigg" @parentCannelDigg="cannelDigg" :toolDatas="toolInfo"></FeedTool>
+        <FeedTool @addNewCommentFoFeed="addNewCommentFoFeed" :user="user" :feedId="feedInfo.feed_id" @parentAddDigg="addDigg" @parentCannelDigg="cannelDigg" :toolDatas="toolInfo"></FeedTool>
       </Col>
     </Row>
     <Row v-if="feed.comments.length" :gutter="16">
@@ -124,10 +124,10 @@
       CommentsTool
     },
     computed: {
-      userInfo () {
-        let user = this.user;
-        return user;
-      }
+      avatar () {
+        const { avatar: { 20: avatar = '' } = {} } = this.user;
+        return avatar;
+      },
     },
     created () {
       this.timer = new Date(this.feed.feed.created_at.replace(/-/g, "/"));
@@ -180,6 +180,7 @@
     display: -webkit-box;  
     -webkit-line-clamp: 3;  
     -webkit-box-orient: vertical;
+    word-break: break-all;
   }
   .timer {
     text-align: right;

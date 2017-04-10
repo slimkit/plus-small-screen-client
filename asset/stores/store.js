@@ -8,12 +8,14 @@ import user from './module/user';
 import notice from './module/noticeText';
 import imageSwiper from './module/imageSwiper';
 import showPost from './module/showPost';
+import feedDiggsList from './module/feedDiggsList';
 
 const modules = {
   user,
   notice,
   imageSwiper,
-  showPost
+  showPost,
+  feedDiggsList
 }
 
 const store = new Vuex.Store({

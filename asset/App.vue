@@ -5,32 +5,23 @@
     <NoticeText/>
     <IviewSwiper/>
     <PostFeed/>
+    <FeedDiggList/>
   </div>
 </template>
 <script>
   import NoticeText from './components/Notice';
   // import ImageSwiper from './components/ImageSwiper';
   import IviewSwiper from './components/IviewSwiper';
-  import { NOTICE } from './stores/types';
-  import { mapState } from 'vuex';
-  import store from './stores/store';
   import PostFeed from './components/PostFeed';
-  import { SHOWPOST } from './stores/types';
+  import FeedDiggList from './components/FeedDiggList';
+  import store from './stores/store';
 
   const App = {
     components: {
       NoticeText,
       IviewSwiper,
-      PostFeed
-    },
-    methods: {
-      closePost () {
-        this.$store.dispatch(SHOWPOST, cb => {
-          cb ({
-            show: false
-          });
-        });
-      }
+      PostFeed,
+      FeedDiggList
     }
   }
 

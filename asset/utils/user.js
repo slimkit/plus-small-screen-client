@@ -84,11 +84,15 @@ function getUserInfo (user_id, cb) {
       name: '',
       phone: '',
       counts: {},
-      datas: {}
+      datas: {},
+      is_following: 0,
+      is_followed: 0
     };
     userLocal.user_id = user.id;
     userLocal.name = user.name;
     userLocal.phone = user.phone;
+    userLocal.is_followed = user.is_followed;
+    userLocal.is_following = user.is_following;
     user.counts.map(function (count, index) {
       let keyName = count.key;
       let value = count.value;

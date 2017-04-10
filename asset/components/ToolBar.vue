@@ -9,8 +9,10 @@
       </Col>
       <Col :span="5" :class="$style.menuItem">
         <router-link class="router-link" to="/discover">
-          <Icon type="android-globe"></Icon>
-          <i>发现</i>
+          <Badge dot>
+            <Icon type="android-globe"></Icon>
+            <i>发现</i>
+          </Badge>
         </router-link>
       </Col>
       <Col :span="4" :class="$style.menuItem" class="plus-parent">
@@ -18,14 +20,18 @@
       </Col>
       <Col :span="5" :class="$style.menuItem">
         <router-link class="router-link" to="/message">
-          <Icon type="ios-chatboxes-outline"></Icon>
-          <i>消息</i>
+          <Badge dot>
+            <Icon type="ios-chatboxes-outline"></Icon>
+            <i>消息</i>
+          </Badge>
         </router-link>
       </Col>
       <Col :span="5" :class="$style.menuItem">
         <router-link class="router-link" to="/profile">
-          <Icon type="ios-person-outline"></Icon>
-          <i>我</i>
+          <Badge dot>
+            <Icon type="ios-person-outline"></Icon>
+            <i>我</i>
+          </Badge>
         </router-link>
       </Col>
     </Row>

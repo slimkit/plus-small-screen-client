@@ -19,15 +19,15 @@
                 <div>
                   <router-link :to="`/profile/${userInfo.user_id}`" class="avatar">
                     <div class="avatar-content">
-                      <img class="avatar" v-lazy="userInfo.avatar[20]" alt="">
+                      <img class="avatar" v-lazy="avatar" alt="">
                     </div>
                     <span style="font-size: 18px; padding: 0 5px">{{userInfo.name}}</span>
                   </router-link>
                 </div>
               </Col>
               <Col span="3" style="display: flex;">
-                <i @click="handleFollowingStatus" v-if="!followstatus.following" class="ivu-icon ivu-icon-android-person-add" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: flex-end"></i>
-                <i class="ivu-icon ivu-icon-person" @click="handleUnFollowingStatus" v-if="followstatus.following" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: flex-end"></i>
+                <i @click="handleFollowingStatus" v-if="!userInfo.following && (userInfo.user_id != currentUser)" class="ivu-icon ivu-icon-android-person-add" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: flex-end"></i>
+                <i class="ivu-icon ivu-icon-person" @click="handleUnFollowingStatus" v-if="userInfo.following && (userInfo.user_id != currentUser)" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: flex-end"></i>
               </Col>
             </Row>
           </div>
@@ -48,7 +48,7 @@
             <div class="feed-container-tool-digg">
               <Row :gutter="16" style="display: flex; align-items: center;">
                 <Col span="17">
-                  <div style="display: flex; align-items: center;">
+                  <div style="display: flex; align-items: center;" @click="handleShowDiggList">
                     <div :style="`width: ${digglistWidth}`">
                       <div class="digg-digg-list" v-if="diggList.length" >
                         <img v-lazy="digg.avatar" :style="`left: ${25 * (index) + 'px'}; z-index: ${5 - (1 * index)}`" :alt="digg.name" v-for="(digg, index) in diggList" :key="index" >
@@ -67,9 +67,6 @@
                 </Col>
               </Row>
             </div>
-            <div class="feed-container-tool-operation feed-background-color">
-              
-            </div>
           </div>
           <div class="feed-container-comments feed-background-color">
             <div class="noComment" v-if="!feedData.tool.feed_comment_count">
@@ -84,10 +81,10 @@
                 </Col>
               </Row>
               <div class="comments-content">
-                <Row :gutter="16" v-for="(comment, index) in formateComments" :key="comment.id"  :class="$style.perComment">
+                <Row :gutter="16" v-for="(comment, index) in comments" :key="comment.id"  :class="$style.perComment">
                   <Col span="4">
                     <div class="grid-content bg-purple">
-                      <img :src="comment.user.avatar[20]" alt="" style="width:100%; border-radius:50%">
+                      <img :src="selfAvatar" alt="" style="width:100%; border-radius:50%">
                     </div>
                   </Col>
                   <Col span="20">
@@ -133,6 +130,40 @@
           <span>没有更多了</span>
         </div>
       </mt-loadmore>
+      <div class="feed-container-tool-operation feed-background-color">
+        <Row :gutter="16" style="display: flex; justify-content: center; align-items: center; height: 100%;">
+          <Col span="6" :class="$style.operation">
+            <div v-if="!feedData.tool.is_digg_feed" @click="handleDiggFeed(feed_id)">
+              <i class="ivu-icon ivu-icon-android-favorite"></i>
+              <i>喜欢</i>
+            </div>
+            <div v-if="feedData.tool.is_digg_feed" @click="handleUnDiggFeed(feed_id)">
+              <i class="ivu-icon ivu-icon-android-favorite did"></i>
+              <i class="did">喜欢</i>
+            </div>
+          </Col>
+          <Col span="6" :class="$style.operation">
+            <div @click="handleCommentForFeed(feed_id)">
+              <i class="iconfont icon-comment"></i>
+              <i>评论</i>
+            </div>
+          </Col>
+          <Col span="6" :class="$style.operation">
+            <i class="ivu-icon ivu-icon-share"></i>
+            <i>分享</i>
+          </Col>
+          <Col span="6" :class="$style.operation">
+            <div v-if="!feedData.tool.is_collection_feed" @click="handleCollection(feed_id)">
+              <i class="ivu-icon ivu-icon-android-star"></i>
+              <i>收藏</i>
+            </div>
+            <div v-if="feedData.tool.is_collection_feed" @click="handleUnCollection(feed_id)">
+              <i class="ivu-icon ivu-icon-android-star did"></i>
+              <i class="did">收藏</i>
+            </div>
+          </Col>
+        </Row>
+      </div>
       <!-- 评论输入框 -->
       <div v-if="commentComponent.CanInput" :class="$style.commentInput">
         <Row :gutter="16" type="flex" align="bottom" style="margin-left: 0; margin-right: 0;">
@@ -170,11 +201,11 @@
             </Row>
           </Col>
         </Row>
-        <!-- 删除评论确认框 -->
-        <Comfirm v-if="commentComponent.isShowComfirm" @cannel="cannel" @increment="deleteComment" :data="commentComponent.deleteData" comfirm-content="删除这条评论"></Comfirm>
-        <!--wrapper-->
-        <div @click.stop="closeInput" :class="$style.wrapper" v-show="commentComponent.CanInput"></div>
       </div>
+      <!-- 删除评论确认框 -->
+      <Comfirm v-if="commentComponent.isShowComfirm" @cannel="cannel" @increment="deleteComment" :data="commentComponent.deleteData" comfirm-content="删除这条评论"></Comfirm>
+      <!--wrapper-->
+      <div @click.stop="closeInput" :class="$style.wrapper" v-show="commentComponent.CanInput"></div>
     </div>
   </transition>
 </template>
@@ -189,6 +220,7 @@
   import noCommentImage from '../statics/images/img_default_nothing@3x.png';
   import Comfirm from '../utils/Comfirm';
   import formateFeedComments from '../utils/formateFeedComments';
+  import { SHOWFEEDDIGGSLISTS } from '../stores/types';
 
   const currentUser = localEvent.getLocalItem('UserLoginInfo');
   const feedDetail = {
@@ -232,13 +264,17 @@
       // 上拉加载更多相关
       bottomAllLoaded: false,
       max_id: 0,
-      bottomStatus: '',
-      followstatus: { // 当前用户对作者的关注状态
-        following: 0, // 主动关注
-        followed: 0  // 被关注
-      }
+      bottomStatus: ''
     }),
     computed: {
+      avatar () {
+        const { avatar: { 20: avatar = '' } = {} } = this.userInfo;
+        return avatar;
+      },
+      selfAvatar () {
+        const { avatar: { 20: avatar = '' } = {} } = localEvent.getLocalItem(`user_${this.currentUser}`);
+        return avatar;
+      },
       // 计算图片跳转地址
       imagesList () {
         let urlList = [];
@@ -278,28 +314,167 @@
           if(index > 4) { break; }
           if(Object.keys(userLocal).length == 0) {
             getUserInfo(digg_list[index], user => {
-              userLocal = user;
+              // userLocal = user;
+              digg_users.push({
+                avatar: user.avatar[20],
+                user_id: user.user_id,
+                name: user.name
+              });
+            });
+          } else {
+            digg_users.push({
+              avatar: userLocal.avatar[20],
+              user_id: userLocal.user_id,
+              name: userLocal.name
             });
           }
-          digg_users.push({
-            avatar: userLocal.avatar[20],
-            user_id: userLocal.user_id,
-            name: userLocal.name
-          });
+          
           userLocal = {};
         };
         return digg_users;
       },
-      // 评论列表formate
-      formateComments () {
-        return this.comments; 
-      }
     },
     methods: {
+      handleShowDiggList () {
+        let digg_list = this.feedData.diggs;
+        let digg_users = {};
+        let userLocal = {};
+        let avatar = '';
+        digg_list.forEach((digg) => {
+          userLocal = localEvent.getLocalItem(`user_${digg}`);
+          if(Object.keys(userLocal).length == 0) {
+            getUserInfo(digg, user => {
+              userLocal = user;
+            });
+          }
+          let intro = '';
+          if(userLocal.hasOwnProperty('datas')) {
+            if(userLocal.datas.hasOwnProperty('intro')) {
+              intro = userLocal.datas.intro.value
+            }
+          }
+          let diggFormate = { 
+            [digg] : {
+              is_following: userLocal.is_following,
+              is_followed: userLocal.is_followed,
+              user_id: digg,
+              avatar: userLocal.avatar[20],
+              name: userLocal.name,
+              intro: intro
+            }
+          }
+          digg_users = { ...digg_users, ...diggFormate };
+        });
+          
+        // };
+        this.$store.dispatch(SHOWFEEDDIGGSLISTS, cb => {
+          cb({
+            show: true,
+            diggs: digg_users
+          })
+        })
+      },
+      removeByValue (arr, value) {
+        for(let i=0; i<arr.length; i++) {
+          if(arr[i] == value) {
+            arr.splice(i, 1);
+            break;
+          }
+        }
+      },
+      handleCollection (feed_id) {
+        addAccessToken().post(createAPI(`feeds/${feed_id}/collection`), {}, {
+          validateStatus: status => status === 201
+        })
+        .then(response => {
+          let data = response.data;
+          if(data.status || data.code == 0) {
+            this.feedData.tool.is_collection_feed = 1;
+          } else {
+            this.$store.dispatch(NOTICE, cb => {
+              cb({
+                text: data.message,
+                time: 2000,
+                status: false
+              });
+            });
+          }
+        })
+        .catch(error => {
+
+        })
+      },
+      handleUnCollection (feed_id) {
+        addAccessToken().delete(createAPI(`feeds/${feed_id}/collection`), {}, {
+          validateStatus: status => status === 204
+        })
+        .then(response => {
+          this.feedData.tool.is_collection_feed = 0;
+        })
+        .catch(error => {
+          this.$store.dispatch(NOTICE, cb => {
+            cb({
+              text: error.response.data.message,
+              time: 2000,
+              status: false
+            });
+          });
+        })
+      },
+      handleDiggFeed (feed_id) {
+        addAccessToken().post(createAPI(`feeds/${feed_id}/digg`), {}, {
+          validateStatus: status => status === 201
+        })
+        .then(response => {
+          let data = response.data;
+          if(data.status || data.code == 0) {
+            this.feedData.tool.is_digg_feed = 1;
+            this.feedData.diggs.push(this.currentUser);
+            this.feedData.tool.feed_digg_count++;
+          } else {
+            this.$store.dispatch(NOTICE, cb => {
+              cb({
+                text: data.message,
+                time: 2000,
+                status: false
+              });
+            });
+          }
+        })
+        .catch(error => {
+          this.$store.dispatch(NOTICE, cb => {
+            cb({
+              text: error.response.data.message,
+              time: 2000,
+              status: false
+            });
+          });
+        })
+      },
+      handleUnDiggFeed (feed_id) {
+        addAccessToken().delete(createAPI(`feeds/${feed_id}/digg`), {}, {
+          validateStatus: status => status === 204
+        })
+        .then(response => {
+          this.feedData.tool.is_digg_feed = 0;
+          this.feedData.tool.feed_digg_count--;
+          this.removeByValue(this.feedData.diggs, this.currentUser);
+        })
+        .catch(error => {
+          this.$store.dispatch(NOTICE, cb => {
+            cb({
+              text: error.response.data.message ? error.response.data.message : '发生了一些错误',
+              time: 2000,
+              status: false
+            });
+          });
+        })
+      },
       handleUnFollowingStatus () {
         unFollowingUser(this.feedData.user_id, status => {
           if(status.status || status.code == 0) {
-            this.followstatus.following = 0;
+            this.userInfo.is_following = 0;
+            localEvent.setLocalItem(`user_${this.feedData.user_id}`, this.userInfo);
           } else {
             this.$store.dispatch(NOTICE, cb => {
               cb({
@@ -314,7 +489,8 @@
       handleFollowingStatus () {
         followingUser(this.feedData.user_id, status => {
           if(status.status || status.code == 0) {
-            this.followstatus.following = 1;
+            this.userInfo.is_following = 1;
+            localEvent.setLocalItem(`user_${this.feedData.user_id}`, this.userInfo);
           } else {
             this.$store.dispatch(NOTICE, cb => {
               cb({
@@ -345,7 +521,7 @@
           let addComments = [];
           let formatedAddComments = [];
           let bottomAllLoaded = false;
-          if(data.data.length == 0) {
+          if(data.data.length < 15) {
             bottomAllLoaded = true;
           } else {
             formatedAddComments = formateFeedComments(data);
@@ -364,8 +540,13 @@
 
         });
       },
+      handleCommentForFeed(feed_id) {
+        this.commentComponent.placeholder = `回复: ${this.userInfo.name}`;
+        this.commentComponent.userComment = '';
+        this.commentComponent.CanInput = true;
+        this.commentComponent.replyToUserId = 0;
+      },
       focusInput (comment_id, comment_to_uid, feed_id) {
-        console.log(comment_id, comment_to_uid, feed_id);
         this.commentComponent.userComment = '';
         let to_user = localEvent.getLocalItem(`user_${comment_to_uid}`);
         if (!to_user.length) {
@@ -425,7 +606,7 @@
       sendComment () {
         let comment_content = this.commentComponent.userComment;
         let reply_to_user_id = this.commentComponent.replyToUserId;
-        let user_id = this.currentUser.user_id;
+        let user_id = this.currentUser;
         let oldCommentInfo = this.comments;
         let newCommentInfo = [];
         addAccessToken().post(createAPI(`feeds/${this.feed_id}/comment`), {
@@ -441,12 +622,12 @@
             let newComment = {
               comment_content: comment_content,
               comment_mark: null,
-              created_at:  parseInt(new Date().getTime()/1000),
+              created_at:  parseInt(new Date().getTime()),
               id: response.data.data,
               reply_to_user_id: reply_to_user_id,
               user_id: user_id,
               replyToUser: localEvent.getLocalItem(`user_${reply_to_user_id}`),
-              user: localEvent.getLocalItem(`user_${this.currentUser.user_id}`)
+              user: localEvent.getLocalItem(`user_${this.currentUser}`)
             };
             this.commentComponent.placeholder = '';
             this.commentComponent.CanInput = false;
@@ -474,26 +655,11 @@
         let userLocal = localEvent.getLocalItem(`user_${user_id}`);
         if (Object.keys(userLocal).lenght == 0) {
           getUserInfo(user_id, user => {
-            userLocal = user;
+            this.userInfo = Object.assign({}, this.userInfo, user);
           });
+        } else {
+          this.userInfo = Object.assign({}, this.userInfo, userLocal);
         }
-        // 获取对当前用户的关注状态
-        addAccessToken().get(
-          createAPI(`users/followstatus?user_ids=${user_id}`),
-          {},
-          {
-            validateStatus: status => status === 200
-          }
-        )
-        .then(response => {
-          let data = response.data.data[0];
-          this.followstatus.followed = data.follow_status;
-          this.followstatus.following = data.my_follow_status;
-        })
-        .catch(error => {
-          console.log(error);
-        });
-        this.userInfo = Object.assign({}, this.userInfo, userLocal);
       },
       getImg,
       friendNum,
@@ -587,6 +753,9 @@
     object-fit: cover;
     color: #333;
   }
+  i.did {
+    color: #f4504d;
+  }
   .feed-container-header {
     height: 45px;
     border-bottom: 1px #ddd solid;
@@ -644,6 +813,7 @@
     }
     .feedContainerContentTextNoPadding {
       padding: 0 8px 20px 8px;
+      word-break: break-all;
     }
   }
   .digg-digg-list {
@@ -670,14 +840,15 @@
     .feed-container-tool-digg {
       padding-bottom: 2vh;
     }
-    .feed-container-tool-operation {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 50px;
-        display: none;
-    }
+  }
+  .feed-container-tool-operation {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    // display: none;
+    z-index: 6;
   }
   .feed-container-comments {
     .noComment {
@@ -749,5 +920,16 @@
   .commentContent{
     font-size: 14px;
     color: #999;
+  }
+  .operation {
+    i {
+      display: flex;
+      display: -webkit-flex;
+      -webkit-justify-content: center;
+      -webkit-align-items: center;
+      justify-content: center;
+      align-items: center;
+      font-style: normal;
+    }
   }
 </style>

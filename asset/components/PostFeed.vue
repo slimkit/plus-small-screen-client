@@ -4,20 +4,20 @@
     <div class="post-feed" :class="$style.postRoot" v-if="show">
       <div :class="$style.postFeedNav">
         <Row :gutter="16" type="flex" :class="$style.navRow" justify="center" align="middle">
-          <Col :span="4">
+          <Col span="4">
             <Button :class="$style.actionBtn" type="text" @click="closePost">取消</Button>
           </Col>
-          <Col :span="15">
+          <Col span="15">
             <h4 style="font-weight: 400; font-size: 18px; text-align: center;">发布动态</h4>
           </Col>
-          <Col :span="5">
+          <Col span="5">
             <Button :class="$style.actionBtn" :disabled="isDisabled" type="text" @click="postFeed">发布</Button>
           </Col>
         </Row>
       </div>
       <div :class="$style.content">
         <Row :gutter="16">
-          <Col :span="24">
+          <Col span="24">
             <Input v-model="feedTitle" placeholder="有标题更吸引人" :class="$style.contentInput"></Input>
             <Input v-model="feedContent" :autosize="{minRows: 6, maxRows: 12}" type="textarea" :class="$style.contentInput" placeholder="输入要说的话,图文结合更精彩哦"></Input>
           </Col>
@@ -208,7 +208,7 @@ export default postFeed;
     width: 100%;
   }
   .contentInput {
-    padding: 6px 15px;
+    padding: 6px 0;
     input, textarea {
       border: none;
       padding: 5px 0;
