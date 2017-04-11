@@ -7,7 +7,6 @@
         ref="loadmore"
         bottomPullText="上拉加载更多评论"
         bottomDropText="释放加载更多评论"
-        :class="{'mint-loadmore-content-parent': !commentComponent.isShowComfirm, 'mint-loadmore-content-parent-no-trans': commentComponent.isShowComfirm, 'mint-loadmore-content-parent': !commentComponent.CanInput, 'mint-loadmore-content-parent-no-trans': commentComponent.CanInput}"
       >
         <div class="feed-container">
           <div class="feed-container-header feed-background-color">
@@ -32,7 +31,7 @@
             </Row>
           </div>
           <div class="feed-container-content feed-background-color">
-            <h3 v-if="feedData.feed.title.length" style="text-align: center; padding: 15px 8px 8px 8px; font-weight: 400; color: #59b6d7">{{ feedData.feed.title }}</h3>
+            <h3 v-if="feedData.feed.title" style="text-align: center; padding: 15px 8px 8px 8px; font-weight: 400; color: #59b6d7">{{ feedData.feed.title }}</h3>
             <div>
               <div v-if="imagesList.length" class="feed-container-content-images">
                 <div v-for="(item, index ) in imagesList" :key="index" :style="`height: ${item.height + 'px'}`">
@@ -591,6 +590,7 @@
           this.commentComponent.deleteData = {};
           newComments.splice(data.index,1);
           this.comments = newComments;
+          this.feedData.tool.feed_comment_count -- ;
           this.$store.dispatch(NOTICE, cb => {
             cb({
               text: '已删除',
@@ -642,6 +642,7 @@
               });
             });
             this.$nextTick(function () {
+              this.feedData.tool.feed_comment_count ++ ;
               this.comments = oldCommentInfo;
             });
           }
@@ -812,7 +813,7 @@
       padding: 20px 8px;
     }
     .feedContainerContentTextNoPadding {
-      padding: 0 8px 20px 8px;
+      padding: 16px 8px 20px 8px;
       word-break: break-all;
     }
   }

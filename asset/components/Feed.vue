@@ -10,16 +10,16 @@
         <div class="grid-content bg-purple">
           <Row :class="$style.usernameLine">
             <Col span="19">
-              <router-link :class="$style.username" :to="{ path: '/users/profile' }">{{ user.name }}</router-link>
+              <router-link :class="$style.username" to='/users/profile'>{{ user.name }}</router-link>
             </Col>
             <Col span="5" :class="$style.timer">
-              <timeago :since="timer"></timeago>
+              <timeago :since="timer" locale="zh-CN" :auto-update="60"></timeago>
             </Col>
           </Row>
           <Row>
             <Col span="24">
-              <router-link v-if="feedInfo.feed_title" :to="{ path: `/feed/${feed_id}` }" class="feedTitle">{{ feedInfo.feed_title }}</router-link>
-              <div :class="$style.content">
+              <router-link style="display: flex;" v-if="feedInfo.feed_title" to="`/feed/${feed_id}`" class="feedTitle">{{ feedInfo.feed_title }}</router-link>
+              <div :class="$style.content" @click="router(`/feed/${feed_id}`)">
                 {{ feedInfo.feed_content }}
               </div>
               <div v-if="feedInfo.storages.length">
@@ -42,7 +42,7 @@
       <Col :class="$style.seat" span="4">
         1
       </Col>
-      <Col span="20">
+      <Col span="20" style="padding-bottom: 8px;">
         <CommentsTool v-if="feed.comments" @addComment="addNewComment" @delComment="delOldComment" :feedId="feedInfo.feed_id" :commentsData="feed.comments"></CommentsTool>
       </Col>
     </Row>
@@ -57,6 +57,8 @@
   import FeedImages from './FeedImages';
   import FeedTool from './FeedTool';
   import CommentsTool from './CommentsTool';
+  import timers from '../utils/timer';
+  import router from '../routers/index';
 
   const feedinfo = {
     props: [
@@ -72,7 +74,6 @@
         storages: []
       },
       toolInfo: {},
-      timer: 0,
       feed_id: 0,
       user: {},
       tools: 0
@@ -116,6 +117,10 @@
       // 获取单条图片
       getImg (id, process = 30) {
         return createRequestURI(`api/v1/storages/${id}/${process}`);
+      },
+      timers,
+      router (link) {
+        router.replace(link);
       }
     },
     components: {
@@ -128,9 +133,11 @@
         const { avatar: { 20: avatar = '' } = {} } = this.user;
         return avatar;
       },
+      timer () {
+        return this.timers(this.feedInfo.created_at, 8, false);
+      }
     },
     created () {
-      this.timer = new Date(this.feed.feed.created_at.replace(/-/g, "/"));
       this.feed_id = this.feed.feed.feed_id;
       this.toolInfo = Object.assign({}, this.toolInfo, this.feed.tool);
       this.tools = 1;
@@ -154,15 +161,17 @@
   .detail {
     background-color: #fff;
     margin-bottom: 6px;
-    padding: 10px 0;
+    padding: 10px 0 0;
     &:active, &:focus {
       background-color: #fff;
     }
   }
   .toolTop {
-    padding-top: 5px;
     margin-top: 5px;
     border-top: 1px #e2e2e2 solid;
+    display: flex!important;
+    align-items: center;
+    height: 45px!important;
   }
   .usernameLine {
     margin-bottom: 6px;
@@ -181,6 +190,7 @@
     -webkit-line-clamp: 3;  
     -webkit-box-orient: vertical;
     word-break: break-all;
+    margin-bottom: 8px;
   }
   .timer {
     text-align: right;

@@ -5,10 +5,10 @@
         <form role="form" @submit.prevent="register">
           <div class="loginForm">
             <Row :gutter="16" class="formChildrenRow bottom-border">
-              <Col span="4">
+              <Col span="5">
                 <label for="username" class="loginFormTitle">用户名</label>
               </Col>
-              <Col span="17">
+              <Col span="16">
                 <input type="text" autocomplete="off" placeholder="不能以数字开头,不能有特殊字符" v-model.trim="username" id="username" name="username" />
               </Col>
               <Col span="3" class="flexend">
@@ -16,10 +16,10 @@
               </Col>
             </Row>
             <Row :gutter="16" class="formChildrenRow bottom-border">
-              <Col span="4">
+              <Col span="5">
                 <label for="phone" class="loginFormTitle">手机号</label>
               </Col>
-              <Col span="11">
+              <Col span="10">
                 <input type="tel" autocomplete="off" placeholder="输入手机号码" v-model.trim.num="phone" id="phone" name="phone" />
               </Col>
               <Col span="3" class="flexend">
@@ -38,18 +38,18 @@
               </Col>
             </Row>
             <Row :gutter="16" class="bottom-border formChildrenRow">
-              <Col span="4">
+              <Col span="5">
                 <label for="code" class="loginFormTitle">验证码</label>
               </Col>
-              <Col :span="20">
+              <Col :span="19">
                 <input type="tel" autocomplete="off" placeholder="输入验证码" v-model.trim.num="code" id="code" name="code" />
               </Col>
             </Row>
             <Row :gutter="16" class="formChildrenRow">
-              <Col span="4">
+              <Col span="5">
                 <label for="password" class="loginFormTitle">密码</label>
               </Col>
-              <Col span="17">
+              <Col span="16">
                 <input type="password" autocomplete="off" v-show="isShowPassword" v-model.trim="password" placeholder="请输入6位以上密码" id="password" name="password" />
                 <input type="text" autocomplete="off" v-model.trim="passwordText" v-show="isShowPasswordText" value="" placeholder="请输入6位以上密码" />
               </Col>

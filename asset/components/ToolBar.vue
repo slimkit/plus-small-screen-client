@@ -19,7 +19,7 @@
           <i @click="showPost" class="ivu-icon ivu-icon-ios-plus-empty" :class="$style.plus"></i>
       </Col>
       <Col :span="5" :class="$style.menuItem">
-        <router-link class="router-link" to="/message">
+        <router-link class="router-link" to="/users/message">
           <Badge dot>
             <Icon type="ios-chatboxes-outline"></Icon>
             <i>消息</i>
@@ -27,7 +27,7 @@
         </router-link>
       </Col>
       <Col :span="5" :class="$style.menuItem">
-        <router-link class="router-link" to="/profile">
+        <router-link class="router-link" to="/users/profile">
           <Badge dot>
             <Icon type="ios-person-outline"></Icon>
             <i>我</i>

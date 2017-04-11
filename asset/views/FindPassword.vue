@@ -4,10 +4,10 @@
       <form role="form" @submit.prevent="submit">
         <div class="loginForm">
           <Row :gutter="16" class="formChildrenRow bottom-border">
-            <Col span="4">
+            <Col span="5">
               <label for="phone" class="loginFormTitle">手机号</label>
             </Col>
-            <Col :span="11">
+            <Col span="10">
               <input type="tel" autocomplete="off" placeholder="输入手机号码" v-model.trim.num="phone" id="phone" name="phone" />
             </Col>
             <Col span="3" class="flexend">
@@ -27,18 +27,18 @@
             </Col>
           </Row>
           <Row :gutter="16" class="formChildrenRow bottom-border">
-            <Col span="4">
+            <Col span="5">
               <label for="code" :class="loginFormTitle">验证码</label>
             </Col>
-            <Col span="20">
+            <Col span="19">
               <input type="tel" autocomplete="off" placeholder="请输入验证码" v-model.number.trim="code" id="code" name="code" />
             </Col>
           </Row>
           <Row :gutter="16" class="formChildrenRow">
-            <Col :span="4">
+            <Col span="5">
               <label for="password" :class="loginFormTitle">新密码</label>
             </Col>
-            <Col span="17">
+            <Col span="16">
               <input type="password" v-show="isShowPassword" v-model.trim="password" placeholder="请输入6位以上登录密码" id="password" name="password" />
               <input type="text"  v-model.trim="passwordText" v-show="isShowPasswordText" value="" placeholder="请输入6位以上登录密码" />
             </Col>

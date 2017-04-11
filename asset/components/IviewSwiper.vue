@@ -100,5 +100,8 @@
       }
     }
   }
+  .swiper-lazy-loaded {
+    width: 100%!important;
+  }
 
 </style>

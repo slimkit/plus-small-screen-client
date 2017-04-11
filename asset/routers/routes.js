@@ -8,6 +8,9 @@ import FeedFollowing from '../views/FeedFollowing';
 import FeedHot from '../views/FeedHot';
 import FeedNew from '../views/FeedNew';
 import FeedDetail from '../views/FeedDetail';
+import Profile from '../views/Profile';
+import SystemSetting from '../views/SystemSetting';
+import ChangePassword from '../views/ChangePassword';
 import { requestAuth, CanNotGetInWhenLogged } from '../utils/auth';
 
 const routes = [
@@ -53,6 +56,36 @@ const routes = [
     component: FeedDetail,
     meta: {
       title: '动态详情'
+    }
+  },
+  {
+    path: '/users/profile',
+    component: Profile,
+    meta: {
+      title: '我'
+    },
+    beforeEnter: (to, from, next) => {
+      requestAuth(to, from, next)
+    }
+  },
+  {
+    path: '/users/systemSetting',
+    component: SystemSetting,
+    meta: {
+      title: '设置'
+    },
+    beforeEnter: (to, from, next) => {
+      requestAuth(to, from, next)
+    }
+  },
+  {
+    path: '/users/password',
+    component: ChangePassword,
+    meta: {
+      title: '修改密码'
+    },
+    beforeEnter: (to, from, next) => {
+      requestAuth(to, from, next);
     }
   },
   {

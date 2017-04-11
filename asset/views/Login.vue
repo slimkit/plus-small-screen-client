@@ -18,10 +18,10 @@
         <form role="form" @submit.prevent="submit">
           <div class="loginForm">
             <Row  class="bottom-border formChildrenRow" :gutter="16">
-              <Col span="4">
+              <Col span="5">
                 <label for="phone">手机号</label>
               </Col>
-              <Col span="17">
+              <Col span="16">
                 <input type="tel" size="large" autocomplete="off" placeholder="请输入手机号" v-model.number.trim="phone" id="phone" name="phone" />
               </Col>
               <Col span="3" class="flexend">
@@ -29,10 +29,10 @@
               </Col>
             </Row>
             <Row class="formChildrenRow" :gutter="16" >
-              <Col span="4">
+              <Col span="5">
                 <label for="password">密码</label>
               </Col>
-              <Col span="17">
+              <Col span="16">
                 <input type="password"  size="large" v-show="isShowPassword" v-model.trim="password" placeholder="请输入6位以上密码" id="password" name="password" />
                 <input type="text"  v-model.trim="passwordText" v-show="isShowPasswordText" value="" placeholder="请输入6位以上密码" />
               </Col>

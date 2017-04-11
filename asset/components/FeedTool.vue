@@ -2,9 +2,6 @@
   <div :class="$style.tool">
     <Row>
       <Col span="7">
-        <!-- <i class="iconfont icon-digg" :class="{ digg: isDigg }" @click.stop="!toolDatas.is_digg_feed ? sendDigg() : cannelDigg()">
-          <span class="count">{{ friendnum(toolDatas.feed_digg_count) }}</span>
-        </i> -->
         <i v-if="isDigg" :class="$style.fontIcon" @click="cannelDigg" class=" digg ivu-icon ivu-icon-android-favorite"><span class="count">{{ friendnum(toolDatas.feed_digg_count) }}</span></i>
         <i v-if="!isDigg" @click="sendDigg" class="ivu-icon ivu-icon-android-favorite-outline"><span class="count">{{ friendnum(toolDatas.feed_digg_count) }}</span></i>
       </Col>
@@ -14,7 +11,7 @@
         </i>
       </Col>
       <Col span="7">
-        <i class="iconfont icon-view">
+        <i class="iconfont icon-view" @click="router(`/feed/${feedId}`)">
           <span class="count">{{ friendnum(toolDatas.feed_view_count) }}</span>
         </i>
       </Col>
@@ -51,6 +48,7 @@
   import localEvent from '../stores/localStorage';
   import { getUserInfo } from '../utils/user';
   import { NOTICE } from '../stores/types';
+  import router from '../routers/index';
 
   const localUser = localEvent.getLocalItem('UserLoginInfo');
   const FeedTool = {
@@ -65,7 +63,10 @@
       comment: ''
     }),
     methods: {
-      // 发送动态
+      router (link) {
+        router.replace(link);
+      },
+      // 发送评论
       sendComment () {
         let comment_content = this.comment;
         let user_id = localUser.user_id;
