@@ -4,7 +4,7 @@
       我
     </div>
     <!-- 头像+昵称+简介-->
-    <div :class="$style.simpleInfo">
+    <div :class="$style.simpleInfo" @click="changeUrl('/users/setting')">
       <Row :gutter="16" :class="$style.rowCenter">
         <!-- 头像 -->
         <Col span="6" :class="$style.colCenter">

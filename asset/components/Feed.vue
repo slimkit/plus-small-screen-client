@@ -18,7 +18,7 @@
           </Row>
           <Row>
             <Col span="24">
-              <router-link style="display: flex;" v-if="feedInfo.feed_title" to="`/feed/${feed_id}`" class="feedTitle">{{ feedInfo.feed_title }}</router-link>
+              <router-link style="display: flex;" v-if="feedInfo.feed_title" :to="`/feed/${feed_id}`" class="feedTitle">{{ feedInfo.feed_title }}</router-link>
               <div :class="$style.content" @click="router(`/feed/${feed_id}`)">
                 {{ feedInfo.feed_content }}
               </div>

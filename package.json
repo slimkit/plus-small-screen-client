@@ -18,6 +18,7 @@
     "swiper": "^3.4.2",
     "vue": "^2.2.1",
     "vue-awesome-swiper": "^2.3.8",
+    "vue-cropperjs": "^2.1.0",
     "vue-router": "^2.2.0",
     "vue-timeago": "^3.3.0",
     "vue-wechat-title": "^2.0.0"

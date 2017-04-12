@@ -11,6 +11,7 @@ import FeedDetail from '../views/FeedDetail';
 import Profile from '../views/Profile';
 import SystemSetting from '../views/SystemSetting';
 import ChangePassword from '../views/ChangePassword';
+import UserSetting from '../views/UserSetting';
 import { requestAuth, CanNotGetInWhenLogged } from '../utils/auth';
 
 const routes = [
@@ -83,6 +84,17 @@ const routes = [
     component: ChangePassword,
     meta: {
       title: '修改密码'
+    },
+    beforeEnter: (to, from, next) => {
+      requestAuth(to, from, next);
+    }
+  },
+  {
+    path: '/users/setting',
+    component: UserSetting,
+    meta: {
+      title: '个人资料',
+      keywords: '个人资料'
     },
     beforeEnter: (to, from, next) => {
       requestAuth(to, from, next);

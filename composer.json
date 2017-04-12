@@ -22,5 +22,6 @@
         "classmap": [
             "Installer.php"
         ]
-    }
+    },
+    "version": "1.0.11"
 }

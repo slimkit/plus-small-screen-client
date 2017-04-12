@@ -82,7 +82,7 @@
   import detecdOS from '../utils/detecdOS';
   import errorCodes from '../stores/errorCodes';
   import deleteObjectItems from '../utils/deleteObjectItems';
-  import { getUserInfo, getAvatar } from '../utils/user';
+  import { getUserInfo } from '../utils/user';
   import { USERS_APPEND } from '../stores/types';
   import defaultAvatar from '../statics/images/common_ico_bottom_me_normal@3x.png';
 

@@ -12,8 +12,8 @@
       <Col :span="2" offset="2">
       </Col>
       <Col :span="4" offset="2">
-        <!-- <router-link :class="$style.navLink" to="/feeds/new">最新</router-link> -->
-        <Button @click.native="clean">缓存</Button>
+        <router-link :class="$style.navLink" to="/feeds/new">最新</router-link>
+        <!-- <Button @click.native="clean">缓存</Button> -->
       </Col>
     </Row>
   </div>
