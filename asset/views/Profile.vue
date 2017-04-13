@@ -140,7 +140,7 @@
         return name;
       },
       intro () {
-        const { datas: { intro = '大哥,你还没有填写简介哦' } = {} } = this.userInfo;
+        const { datas: { intro: { value: intro = '大哥,你还没有填写简介哦' } } = {} } = this.userInfo;
         return intro;
       },
       following () {

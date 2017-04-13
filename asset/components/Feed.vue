@@ -9,10 +9,10 @@
       <Col span="20">
         <div class="grid-content bg-purple">
           <Row :class="$style.usernameLine">
-            <Col span="19">
+            <Col span="17">
               <router-link :class="$style.username" to='/users/profile'>{{ user.name }}</router-link>
             </Col>
-            <Col span="5" :class="$style.timer">
+            <Col span="7" :class="$style.timer">
               <timeago :since="timer" locale="zh-CN" :auto-update="60"></timeago>
             </Col>
           </Row>

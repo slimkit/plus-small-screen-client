@@ -46,10 +46,8 @@
     methods: {
       loadBottom () {
         this.bottomStatus = 'loading';
-        console.log(this);
       },
       loadTop () {
-        console.log(this);
         setTimeout(() => {
           this.$refs.loadmore.onTopLoaded();
         }, 1500)
