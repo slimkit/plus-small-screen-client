@@ -21,8 +21,6 @@
   import errorCodes from '../stores/errorCodes';
   import localEvent from '../stores/localStorage';
   import Feed from './Feed';
-  import { getUserInfo } from '../utils/user';
-  // import Scroller from 'vue-scroller';
 
   const FeedLists = {
     components: {

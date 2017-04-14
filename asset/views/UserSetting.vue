@@ -28,7 +28,7 @@
             <Icon type="ios-arrow-right"></Icon>
           </Col>
         </div>
-        <input style="z-index: 2;position:absolute; width:100%; left:0; right:0; height:100%;opacity:0;" type="file" name="image" accept="image/*"
+        <input ref="avatarInput" style="position:absolute; width:100%; left:0; right:0; height:100%;opacity:0;" type="file" value="" name="image" accept="image/*"
           @change="setImage"
         />
       </Row>
@@ -112,11 +112,11 @@
           <vue-cropper
             :class="$style.canvasAvatar"
             ref='cropper'
-            aspect-ratio="1"
+            :aspect-ratio="1"
             :view-mode="2"
             :auto-crop="true"
-            :min-canvas-width="200"
-            :min-canvas-height="200"
+            :min-canvas-width="100"
+            :min-canvas-height="100"
             :minCropBoxWidth="100"
             :minCropBoxHeight="100"
             drag-mode="move"
@@ -153,6 +153,10 @@
   import { getUserInfo } from '../utils/user';
   import VueCropper from 'vue-cropperjs';
   import { NOTICE } from '../stores/types';
+  import md5 from 'js-md5';
+  import { createUploadTask, uploadFile, noticeTask } from '../utils/upload';
+  import { Base64 } from 'js-base64';
+  import getImage from '../utils/getImage';
 
   const currentUser = localEvent.getLocalItem('UserLoginInfo');
   // 昵称验证规则
@@ -164,14 +168,15 @@
     data: () => ({
       currentUser: currentUser.user_id,
       userInfo: {},
-      name: '',
-      sex: 0,
-      isShowSexPopup: false,
-      intro: '',
-      isShowCropper: false,
-      imgSrc: '',
-      cropImg: '',
-      areaAbout: {
+      name: '', // nickname
+      sex: 0, // sex
+      storage_task_id: 0, // storage_tast_id for avatar
+      isShowSexPopup: false, // is show sex select
+      intro: '', // intro
+      isShowCropper: false, // is show avatar cropper
+      imgSrc: '', // source image for cropper
+      cropImg: '', 
+      areaAbout: { // datas for area
         areas: [],
         province: 0,
         city: 0,
@@ -207,6 +212,7 @@
         let newSex = this.sex;
         let newIntro = this.intro;
         let oldName = this.userInfo.name;
+        let storage_task_id = this.storage_task_id;
         const { datas: { sex = 0 } = {} } = this.userInfo;
         let oldSex = sex;
         const { datas: { intro = '' } = {} } = this.userInfo;
@@ -221,6 +227,9 @@
         if(oldSex != newSex) {
           saveData.sex = newSex;
         }
+        if(storage_task_id != 0) {
+          saveData.storage_task_id = storage_task_id;
+        }
         addAccessToken().patch(
           createAPI('users'),
           {
@@ -231,7 +240,7 @@
           }
         )
         .then(response => {
-          getUserInfo(this.currentUser, user => {
+          getUserInfo(this.currentUser, 50, user => {
             this.userInfo = { ...this.userInfo, ...user };
           });
           this.$store.dispatch(NOTICE, cb => {
@@ -294,11 +303,61 @@
       },
       // 获取裁剪后的图片信息
       getCropData () {
-        console.log(this.$refs.cropper.getCroppedCanvas().toDataURL());
+        let reg = /data:(.*?);/;
+        let base64Reg = /^data:(.*?);base64,/;
+        let fileUpload = {};
+        let fileName = this.$refs.avatarInput.value;
+        // 获取本地文件名
+        fileUpload.origin_filename = fileName.replace('C:\\fakepath\\', '');
+        let fileData = this.$refs.cropper.getData();
+        // 截取高度
+        fileUpload.height = parseInt(fileData.height);
+        // 截取宽度
+        fileUpload.width = parseInt(fileData.width);
+        let fileStreamData = this.$refs.cropper.getCroppedCanvas().toDataURL();
+        let fileSource = Base64.decode(fileStreamData.replace(base64Reg, ''));
+
+        // 截取文件的mime_type
+        fileUpload.mime_type = fileStreamData.match(reg)[1];
+        // 被截取部分的hash
+        fileUpload.hash = md5(fileSource);
+        // create storage task
+        createUploadTask(fileUpload, data => {
+          if(data.hasOwnProperty('storage_id') && data.hasOwnProperty('storage_task_id')){
+            this.handleHideAvatarSelect();
+            this.storage_task_id = data.storage_task_id;
+            this.userInfo.avatar[50] = getImage(data.storage_id, 50);
+            this.$store.dispatch(NOTICE, cb => {
+              cb({
+                text: 'success',
+                time: 1500,
+                status: true
+              });
+            });
+            return;
+          }
+          // upload file
+          uploadFile(data, fileStreamData, uploadInfo => {
+            // notice server with uploaded-info
+            noticeTask(data.storage_task_id, uploadInfo, noticeInfo => {
+              this.handleHideAvatarSelect();
+              this.userInfo.avatar[50] = fileStreamData;
+              this.storage_task_id = data.storage_task_id;
+              this.$store.dispatch(NOTICE, cb => {
+                cb({
+                  text: 'success',
+                  time: 1500,
+                  status: true
+                });
+              });
+            });
+          })
+        });
       },
       handleHideAvatarSelect () {
         this.isShowCropper = false;
         this.imgSrc = '';
+        this.$refs.avatarInput.value = '';
       },
       showCropper () {
         this.isShowCropper = true;
@@ -346,7 +405,7 @@
     },
     computed: {
       avatar () {
-        const { avatar: { 20: avatar = '' } = {} } = this.userInfo;
+        const { avatar: { 30: avatar = '' } = {} } = this.userInfo;
         return avatar;
       },
       canClean () {
@@ -407,11 +466,12 @@
         let changeName = (newName != oldName) && usernameReg.test(newName) && newName.length > 2 && newName.length < 13;
         let changeSex = newSex != oldSex;
         let changeIntro = newIntro != oldIntro;
-        return (changeName || changeSex || changeIntro);
+        let changeAvatar = this.storage_task_id != 0;
+        return (changeName || changeSex || changeIntro || changeAvatar);
       }
     },
     mounted () {
-      getUserInfo(this.currentUser, user => {
+      getUserInfo(this.currentUser, 50, user => {
         this.userInfo = { ...this.userInfo, ...user };
         this.name = user.name;
         const { datas: { 
@@ -472,6 +532,10 @@
     display: flex;
     align-items: flex-end;
   }
+  .avatar {
+    border-radius: 50%;
+    width: 100%;
+  },
   .AvatarSelect {
     position: fixed;
     left: 0;

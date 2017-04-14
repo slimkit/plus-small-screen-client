@@ -267,11 +267,11 @@
     }),
     computed: {
       avatar () {
-        const { avatar: { 20: avatar = '' } = {} } = this.userInfo;
+        const { avatar: { 30: avatar = '' } = {} } = this.userInfo;
         return avatar;
       },
       selfAvatar () {
-        const { avatar: { 20: avatar = '' } = {} } = localEvent.getLocalItem(`user_${this.currentUser}`);
+        const { avatar: { 30: avatar = '' } = {} } = localEvent.getLocalItem(`user_${this.currentUser}`);
         return avatar;
       },
       // 计算图片跳转地址
@@ -312,17 +312,17 @@
           userLocal = localEvent.getLocalItem(`user_${digg_list[index]}`);
           if(index > 4) { break; }
           if(Object.keys(userLocal).length == 0) {
-            getUserInfo(digg_list[index], user => {
+            getUserInfo(digg_list[index], 30, user => {
               // userLocal = user;
               digg_users.push({
-                avatar: user.avatar[20],
+                avatar: user.avatar[30],
                 user_id: user.user_id,
                 name: user.name
               });
             });
           } else {
             digg_users.push({
-              avatar: userLocal.avatar[20],
+              avatar: userLocal.avatar[30],
               user_id: userLocal.user_id,
               name: userLocal.name
             });
@@ -342,7 +342,7 @@
         digg_list.forEach((digg) => {
           userLocal = localEvent.getLocalItem(`user_${digg}`);
           if(Object.keys(userLocal).length == 0) {
-            getUserInfo(digg, user => {
+            getUserInfo(digg, 30, user => {
               userLocal = user;
             });
           }
@@ -357,7 +357,7 @@
               is_following: userLocal.is_following,
               is_followed: userLocal.is_followed,
               user_id: digg,
-              avatar: userLocal.avatar[20],
+              avatar: userLocal.avatar[30],
               name: userLocal.name,
               intro: intro
             }
@@ -549,7 +549,7 @@
         this.commentComponent.userComment = '';
         let to_user = localEvent.getLocalItem(`user_${comment_to_uid}`);
         if (!to_user.length) {
-          getUserInfo(comment_to_uid, user => {
+          getUserInfo(comment_to_uid, 30, user => {
             to_user = user;
             this.commentComponent.placeholder = `回复: ${to_user.name}`;
           });
@@ -655,7 +655,7 @@
       getUser (user_id) {
         let userLocal = localEvent.getLocalItem(`user_${user_id}`);
         if (Object.keys(userLocal).lenght == 0) {
-          getUserInfo(user_id, user => {
+          getUserInfo(user_id, 30, user => {
             this.userInfo = Object.assign({}, this.userInfo, user);
           });
         } else {

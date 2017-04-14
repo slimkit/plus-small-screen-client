@@ -81,7 +81,7 @@
         this.userComment = '';
         let to_user = localEvent.getLocalItem(`user_${comment_to_uid}`);
         if (!to_user.length) {
-          getUserInfo(comment_to_uid, user => {
+          getUserInfo(comment_to_uid, 30, user => {
             to_user = user;
             this.placeholder = `回复: ${to_user.name}`;
           });

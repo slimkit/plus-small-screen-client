@@ -130,7 +130,7 @@
     },
     computed: {
       avatar () {
-        const { avatar: { 20: avatar = '' } = {} } = this.user;
+        const { avatar: { 30: avatar = '' } = {} } = this.user;
         return avatar;
       },
       timer () {
@@ -143,7 +143,7 @@
       this.tools = 1;
       let localUser = localEvent.getLocalItem('user_' + this.feed.user_id);
       if(localUser.length == 0) {
-        getUserInfo(this.feed.user_id, user => {
+        getUserInfo(this.feed.user_id, 30, user => {
           localUser = user;
           this.user = Object.assign({}, this.user, localUser);
         });

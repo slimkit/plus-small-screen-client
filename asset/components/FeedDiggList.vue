@@ -49,7 +49,7 @@
   import { SHOWFEEDDIGGSLISTS, DIGGLISTS } from '../stores/types';
   import { mapState } from 'vuex';
   import localEvent from '../stores/localStorage';
-  import { getUserInfo, followingUser, unFollowingUser } from '../utils/user';
+  import { followingUser, unFollowingUser } from '../utils/user';
   import { NOTICE } from '../stores/types';
 
   const currentUser = localEvent.getLocalItem('UserLoginInfo');

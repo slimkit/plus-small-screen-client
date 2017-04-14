@@ -69,7 +69,7 @@ function getAvatar (userInfo, process, cb) {
   cb(userInfo);
 };
 
-function getUserInfo (user_id, cb) {
+function getUserInfo (user_id, process = 30, cb) {
   addAccessToken().post(createAPI('users'), {
       user_ids: [ user_id ]
     },
@@ -109,7 +109,7 @@ function getUserInfo (user_id, cb) {
       };
     });
     userLocal.datas = newData;
-    getAvatar(userLocal, 20, newUserLocal => {
+    getAvatar(userLocal, process, newUserLocal => {
       userLocal = newUserLocal;
     });
     localEvent.setLocalItem('user_' + user_id, userLocal);

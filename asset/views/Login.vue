@@ -193,7 +193,7 @@
           let errors = {};
           this.errors = Object.assign({}, errors);
           localEvent.setLocalItem('UserLoginInfo', response.data.data);
-          this.$store.dispatch(USERS_APPEND, cb => getUserInfo(response.data.data.user_id, user => {
+          this.$store.dispatch(USERS_APPEND, cb => getUserInfo(response.data.data.user_id, 30, user => {
             localEvent.setLocalItem('user_' + response.data.data.user_id, user);
             cb(user);
             router.push({ path: 'feeds' });

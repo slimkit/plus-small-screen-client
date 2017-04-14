@@ -208,7 +208,7 @@
         .then(response => {
           localEvent.setLocalItem('UserLoginInfo', response.data.data);
           this.isLoading = false;
-          this.$store.dispatch(USERS_APPEND, cb => getUserInfo(response.data.data.user_id, user => {
+          this.$store.dispatch(USERS_APPEND, cb => getUserInfo(response.data.data.user_id, 30, user => {
             cb(user);
             router.push({ path: 'feeds' });
           }));

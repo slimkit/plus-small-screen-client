@@ -46,7 +46,6 @@
   import { friendNum } from '../utils/friendNum';
   import { createAPI, addAccessToken } from '../utils/request';
   import localEvent from '../stores/localStorage';
-  import { getUserInfo } from '../utils/user';
   import { NOTICE } from '../stores/types';
   import router from '../routers/index';
 

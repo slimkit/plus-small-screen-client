@@ -132,7 +132,7 @@
     },
     computed: {
       avatar () {
-        const { avatar: { 20: avatar = '' } = {} } = this.userInfo;
+        const { avatar: { 50: avatar = '' } = {} } = this.userInfo;
         return avatar;
       },
       name () {
@@ -175,6 +175,7 @@
     }
     .avatar {
       width: 100%;
+      border-radius: 50%;
     }
     .simpleInfo {
       padding-top: 16px;
