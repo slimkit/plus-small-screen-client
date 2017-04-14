@@ -93,23 +93,40 @@
         <Button @click="hideSexPopup" size="large" :class="$style.sexOptions" type="text" :long="true">取消</Button>
       </div>
     </mt-popup>
-    <vue-cropper
-      style="position: fixed; left:0; right: 0; top: 0; bottom: 0; width:100%; height: 100%;"
-      v-if="isShowCropper"
-      ref='cropper'
-      aspect-ratio="1"
-      :guides="true"
-      view-mode="2"
-      :auto-crop="true"
-      min-canvas-width="200"
-      min-canvas-height="200"
-      minCropBoxWidth="100"
-      minCropBoxHeight="100"
-      drag-mode="crop"
-      :background="true"
-      :src="imgSrc"
-      :cropmove="cropImage">
-    </vue-cropper>
+    <transition name="custom-classes-transition" enter-active-class="animated slideInUp" leave-active-class="animated slideOutDown">
+      <div :class="$style.AvatarSelect" v-show="isShowCropper">
+        <div class="avatarOp">
+          <Row :gutter="16" style="display: flex; align-items: center;">
+            <Col span="3">
+              <i class="ivu-icon ivu-icon-android-arrow-back" style="width: 100%; height: 100%; display: flex; align-items: center;" @click="handleHideAvatarSelect"></i>
+            </Col>
+            <Col span="18" style="font-size: 18px;">
+              更换头像
+            </Col>
+            <Col span="3">
+              <Button type="text" @click="getCropData">完成</Button>
+            </Col>
+          </Row>
+        </div>
+        <div :class="$style.cropper">
+          <vue-cropper
+            :class="$style.canvasAvatar"
+            ref='cropper'
+            aspect-ratio="1"
+            :view-mode="2"
+            :auto-crop="true"
+            :min-canvas-width="200"
+            :min-canvas-height="200"
+            :minCropBoxWidth="100"
+            :minCropBoxHeight="100"
+            drag-mode="move"
+            :background="true"
+            :src="imgSrc"
+            :cropmove="cropImage">
+          </vue-cropper>
+        </div>
+      </div>
+    </transition>
     <div :class="$style.areaSelect" v-show="areaAbout.showAreaSelectMask">
       <div
         style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 0;"
@@ -264,6 +281,7 @@
             // rebuild cropperjs with the updated source
             this.$refs.cropper.replace(event.target.result);
           };
+
           this.showCropper();
           reader.readAsDataURL(file);
         } else {
@@ -272,7 +290,15 @@
       },
       cropImage () {
         // get image data for post processing, e.g. upload or setting image src
-        this.cropImg = this.$refs.cropper.getCroppedCanvas().toDataURL();
+        // this.cropImg = this.$refs.cropper.getCroppedCanvas().toDataURL();
+      },
+      // 获取裁剪后的图片信息
+      getCropData () {
+        console.log(this.$refs.cropper.getCroppedCanvas().toDataURL());
+      },
+      handleHideAvatarSelect () {
+        this.isShowCropper = false;
+        this.imgSrc = '';
       },
       showCropper () {
         this.isShowCropper = true;
@@ -446,6 +472,29 @@
     display: flex;
     align-items: flex-end;
   }
+  .AvatarSelect {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    overflow: hidden;
+    margin: 0;
+    height: 100%;
+    width: 100%;
+    .avatarOp {
+      height: 45px;
+      border-bottom: 1px solid #e2e3e3;
+    },
+    .cropper {
+      height: calc(100% - 46px);
+      width: 100%;
+    }
+    .canvasAvatar {
+      height: 100%;
+      width: 100%;
+    }
+  }
   .userProfile {
     .userProfileAvatar {
       padding: 15px 0;
@@ -513,7 +562,7 @@
   
 </style>
 <style scope lang="scss">
-  .userProfile-header {
+  .userProfile-header, .avatarOp {
     height: 45px;
     border-bottom: 1px #ddd solid;
     .ivu-row {
@@ -527,14 +576,10 @@
       div {
         height: 100%;
       }
-      a {
-        display: flex;
-        height: 100%;
-        justify-content: center;
-        align-items: center;
-        padding: 5px 0;
-      }
     }
+  }
+  .avatarOp {
+    background: #fff;
   }
   span.operate {
     font-size: 12px;
