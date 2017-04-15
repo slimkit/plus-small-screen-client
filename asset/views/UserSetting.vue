@@ -8,7 +8,7 @@
         <Col span="18" style="font-size: 18px;">
           个人资料
         </Col>
-        <Col span="3" style="display: flex;">
+        <Col span="3" style="display: flex; justify-content: flex-end">
           <span @click="done(canSave)" class="operate" :class="{active: canSave, disabled: !canSave}">完成</span>
         </Col>
       </Row>
@@ -76,7 +76,14 @@
           简介
         </Col>
         <Col span="20" :class="$style.colBottom">
-          <Input :class="$style.intro" v-model="intro" type="textarea" :autosize="{minRows: 1, maxRows: 4}" placeholder="编辑简介"></Input>
+          <Input 
+            :class="$style.intro" 
+            v-model="intro" 
+            type="textarea" 
+            :autosize="{minRows: 1, maxRows: 4}" 
+            placeholder="编辑简介"
+          >
+          </Input>
         </Col>
       </Row>
     </div>
@@ -87,31 +94,73 @@
       :class="$style.SexPopup"
     >
       <div>
-        <Button @click="setSex(1)" size="large" :class="$style.sexOptions" type="text" :long="true">男</Button>
-        <Button @click="setSex(2)" size="large" :class="$style.sexOptions" type="text" :long="true">女</Button>
-        <Button @click="setSex(3)" size="large" :class="$style.sexOptions" type="text" :long="true">保密</Button>
-        <Button @click="hideSexPopup" size="large" :class="$style.sexOptions" type="text" :long="true">取消</Button>
+        <Button 
+          @click="setSex(1)" 
+          size="large" 
+          :class="$style.sexOptions" 
+          type="text" :long="true"
+        >
+          男
+        </Button>
+        <Button 
+          @click="setSex(2)" 
+          size="large" 
+          :class="$style.sexOptions" 
+          type="text" 
+          :long="true"
+        >
+          女
+        </Button>
+        <Button 
+          @click="setSex(3)" 
+          size="large" 
+          :class="$style.sexOptions" 
+          type="text" 
+          :long="true"
+        >
+          保密
+        </Button>
+        <Button 
+          @click="hideSexPopup" 
+          size="large" 
+          :class="$style.sexOptions" 
+          type="text" 
+          :long="true"
+        >
+          取消
+        </Button>
       </div>
     </mt-popup>
-    <transition name="custom-classes-transition" enter-active-class="animated slideInUp" leave-active-class="animated slideOutDown">
+    <transition 
+      name="custom-classes-transition" 
+      enter-active-class="animated slideInUp" 
+      leave-active-class="animated slideOutDown"
+    >
       <div :class="$style.AvatarSelect" v-show="isShowCropper">
         <div class="avatarOp">
-          <Row :gutter="16" style="display: flex; align-items: center;">
+          <Row 
+            :gutter="16"
+            style="display: flex; align-items: center;"
+          >
             <Col span="3">
-              <i class="ivu-icon ivu-icon-android-arrow-back" style="width: 100%; height: 100%; display: flex; align-items: center;" @click="handleHideAvatarSelect"></i>
+              <i 
+                class="ivu-icon ivu-icon-android-arrow-back" 
+                style="width: 100%; height: 100%; display: flex; align-items: center;" 
+                @click="handleHideAvatarSelect">
+              </i>
             </Col>
             <Col span="18" style="font-size: 18px;">
               更换头像
             </Col>
-            <Col span="3">
-              <Button type="text" @click="getCropData">完成</Button>
+            <Col span="3" style="display: flex; justify-content: flex-end">
+              <span @click="getCropData" class="operate avatarDone">完成</span>
             </Col>
           </Row>
         </div>
         <div :class="$style.cropper">
           <vue-cropper
             :class="$style.canvasAvatar"
-            ref='cropper'
+            ref="cropper"
             :aspect-ratio="1"
             :view-mode="2"
             :auto-crop="true"
@@ -122,23 +171,45 @@
             drag-mode="move"
             :background="true"
             :src="imgSrc"
-            :cropmove="cropImage">
+          >
           </vue-cropper>
         </div>
       </div>
     </transition>
     <div :class="$style.areaSelect" v-show="areaAbout.showAreaSelectMask">
       <div
+        v-if="areaAbout.showAreaSelectMask"
         style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 0;"
         @click="handleAreaSelect(false)"
       >
       </div>
       <transition name="custom-classes-transition" enter-active-class="animated slideInUp" leave-active-class="animated slideOutDown">
-        <mt-picker v-show="areaAbout.showAreaSelect" value-key="name" :slots="areaAbout.soltAreas" :showToolbar="true" @change="onValuesChange" style="width: 100%; padding: 8px; background: #fff; z-index: 1; position: fixed; bottom: 0;" ref="picker">
+        <mt-picker
+          v-if="areaAbout.showAreaSelect"
+          value-key="name" 
+          :slots="soltAreas" 
+          :showToolbar="true" 
+          @change="onValuesChange" 
+          style="width: 100%; padding: 8px; background: #fff; z-index: 1; position: fixed; bottom: 0;" 
+          ref="picker"
+        >
           <slot>
-            <div class="areaOption" style="display: flex; justify-content: space-between;">
-              <Button type="text" @click="handleAreaSelect(false)">取消</Button>
-              <Button type="text" @click="chooseArea">确定</Button>
+            <div 
+              class="areaOption" 
+              style="display: flex; justify-content: space-between;"
+            >
+              <Button 
+                type="text" 
+                @click="handleAreaSelect(false)"
+              >
+                取消
+              </Button>
+              <Button 
+                type="text"
+                @click="chooseArea"
+              >
+                确定
+              </Button>
             </div>
           </slot>
         </mt-picker>
@@ -157,6 +228,7 @@
   import { createUploadTask, uploadFile, noticeTask } from '../utils/upload';
   import { Base64 } from 'js-base64';
   import getImage from '../utils/getImage';
+  import contains from '../utils/contains';
 
   const currentUser = localEvent.getLocalItem('UserLoginInfo');
   // 昵称验证规则
@@ -166,20 +238,23 @@
       VueCropper
     },
     data: () => ({
-      currentUser: currentUser.user_id,
+      currentUser: currentUser.user_id, // 当前登录用户id
       userInfo: {},
       name: '', // nickname
       sex: 0, // sex
+      location: '', // 地区显示字符串
+      province: 0, // 省份
+      city: 0, // 城市
       storage_task_id: 0, // storage_tast_id for avatar
       isShowSexPopup: false, // is show sex select
       intro: '', // intro
       isShowCropper: false, // is show avatar cropper
       imgSrc: '', // source image for cropper
-      cropImg: '', 
       areaAbout: { // datas for area
         areas: [],
         province: 0,
         city: 0,
+        location: '',
         provinceText: "",
         cityText: "",
         formateAreas: {},
@@ -187,7 +262,9 @@
         showAreaSelect: false,
         showAreaSelectMask: false,
         preSelectedProvince: 0,
-        preSelectedCity: 0
+        preSelectedCity: 0,
+        provincesObject: {},
+        citysObjects: {}
       }
     }),
     methods: {
@@ -199,28 +276,58 @@
           this.areaAbout.showAreaSelectMask = true;
         } else {
           setTimeout(() => {
-            this.showAreaSelectMask = false;
+            this.areaAbout.showAreaSelectMask = false;
           }, 300);
         }
       },
       done (status) {
         status && this.save();
       },
+      cleanSetting () {
+        this.areaAbout.province = 0;
+        this.areaAbout.city = 0;
+        this.areaAbout.location = 0;
+        this.storage_task_id = 0;
+        this.imgSrc = '';
+      },
       save () {
-        let data
+        // 新数据
         let newName = this.name;
         let newSex = this.sex;
         let newIntro = this.intro;
-        let oldName = this.userInfo.name;
+        let newProvince = this.areaAbout.province;
+        let newCity = this.areaAbout.city;
+        let newLocation = this.areaAbout.location;
         let storage_task_id = this.storage_task_id;
+
+        // 旧数据
+        let oldName = this.userInfo.name;
+        let oldProvince = this.province;
+        let oldCity = this.city;
+        let oldLocation = this.location;
         const { datas: { sex = 0 } = {} } = this.userInfo;
         let oldSex = sex;
         const { datas: { intro = '' } = {} } = this.userInfo;
         let oldIntro =  intro;
+
         let saveData = {};
+
         if(newName != oldName) {
           saveData.name = newName;
         }
+        if(newProvince != oldProvince && newProvince != 0) {
+          saveData.province = newProvince;
+        }
+
+        if(newLocation != oldLocation && newLocation != '')
+        {
+          saveData.location = newLocation;
+        }
+
+        if(newCity != oldCity && newCity != 0) {
+          saveData.city = newCity;
+        }
+
         if(newIntro != oldIntro) {
           saveData.intro = newIntro;
         }
@@ -240,7 +347,7 @@
           }
         )
         .then(response => {
-          getUserInfo(this.currentUser, 50, user => {
+          getUserInfo(this.currentUser, 30, user => {
             this.userInfo = { ...this.userInfo, ...user };
           });
           this.$store.dispatch(NOTICE, cb => {
@@ -250,6 +357,7 @@
               status: true
             });
           });
+          this.cleanSetting();
         })
         .catch(({ response: { data: { message = "网络状况堪忧" } = {} } = {} }) => {
 
@@ -297,10 +405,6 @@
           alert('Sorry, FileReader API not supported');
         }
       },
-      cropImage () {
-        // get image data for post processing, e.g. upload or setting image src
-        // this.cropImg = this.$refs.cropper.getCroppedCanvas().toDataURL();
-      },
       // 获取裁剪后的图片信息
       getCropData () {
         let reg = /data:(.*?);/;
@@ -326,7 +430,8 @@
           if(data.hasOwnProperty('storage_id') && data.hasOwnProperty('storage_task_id')){
             this.handleHideAvatarSelect();
             this.storage_task_id = data.storage_task_id;
-            this.userInfo.avatar[50] = getImage(data.storage_id, 50);
+            // this.userInfo.avatar[50] = getImage(data.storage_id, 50);
+            this.$set(this.userInfo.avatar, '50', getImage(data.storage_id, 50));
             this.$store.dispatch(NOTICE, cb => {
               cb({
                 text: 'success',
@@ -341,7 +446,7 @@
             // notice server with uploaded-info
             noticeTask(data.storage_task_id, uploadInfo, noticeInfo => {
               this.handleHideAvatarSelect();
-              this.userInfo.avatar[50] = fileStreamData;
+              this.userInfo.avatar[30] = fileStreamData;
               this.storage_task_id = data.storage_task_id;
               this.$store.dispatch(NOTICE, cb => {
                 cb({
@@ -362,7 +467,7 @@
       showCropper () {
         this.isShowCropper = true;
       },
-      formate (data, pid) {
+      formateCitysArray (data, pid) {
         let newCitys = [];
         data.forEach((area) => {
             if(area.pid == pid) {
@@ -374,38 +479,45 @@
         });
         return newCitys;
       },
-      onValuesChange(picker, values) {
+      formateCitysObject (data, pid) {
+        let newCitys = {};
+        data.forEach((area) => {
+            if(area.pid == pid) {
+              newCitys[area.name] = {
+                name: area.name,
+                id: area.id
+              };
+            }
+        });
+        return newCitys;
+      },
+      onValuesChange(picker) {
         let areas = this.areaAbout.formateAreas;
-        let provinces = this.areaAbout.formateProvince;
+        let provinces = this.areaAbout.provincesObject;
+        // 当前选中数据
         let slot = picker.getValues();
-        if(this.contains(Object.keys(provinces), values[0].name)) {
-          picker.setSlotValues(1, areas[values[0].name]);
-          this.areaAbout.provinceText = values[0].name;
-          this.areaAbout.preSelectedProvince = slot[0].id;
-        } else {
-          this.areaAbout.cityText = values[0].name;
-          this.areaAbout.preSelectedCity = slot[0].id;
+        if(slot[0] instanceof Object) {
+          if(contains(Object.keys(provinces), slot[0].name)) {
+            picker.setSlotValues(1, areas[slot[0].name] ? areas[slot[0].name] : areas[北京市]);
+            this.areaAbout.provinceText = slot[0].name;
+            this.areaAbout.preSelectedProvince = slot[0].id;
+          } else {
+            this.areaAbout.cityText = slot[0].name;
+            this.areaAbout.preSelectedCity = slot[0].id;
+          }
         }
       },
-
-      // 计算元素是否在数组内
-      contains (arr, obj) {  
-        var i = arr.length;  
-        while (i--) {  
-          if (arr[i] === obj) {  
-            return true;  
-          }  
-        }  
-        return false;  
-      },
       chooseArea() {
-        this.areaAbout.province = this.areaAbout.preSelectedProvince;
+        this.areaAbout.province  = this.areaAbout.preSelectedProvince;
         this.areaAbout.city = this.areaAbout.preSelectedCity;
+        this.areaAbout.location = this.areaAbout.provinceText + ' ' + this.areaAbout.cityText;
+
       }
     },
     computed: {
       avatar () {
         const { avatar: { 30: avatar = '' } = {} } = this.userInfo;
+
         return avatar;
       },
       canClean () {
@@ -420,12 +532,12 @@
         return this.sex ? sexObj[this.sex] : '选择性别';
       },
       areaText () {
-        let text = '选择居住地';
-        const { [this.areaAbout.province]: { value: province = '' } = {}, [this.city]: { value: city = ''} = {} } = this.areaAbout.areas;
-        if(!this.areaAbout.province && !this.city) {
-          return text;
+        let text = this.location ? this.location : '选择居住地';
+        if(this.areaAbout.location) {
+          text = this.areaAbout.location;
         }
-        return (province + ' ' + city);
+        this.handleAreaSelect(false);
+        return text;
       },
 
       soltAreas () {
@@ -458,20 +570,30 @@
         let newName = this.name;
         let newSex = this.sex;
         let newIntro = this.intro;
+        let newProvince = this.areaAbout.province;
+        let newCity = this.areaAbout.city;
+        let newLocation = this.areaAbout.location;
+
+        let oldProvince = this.province;
+        let oldCity = this.city;
+        let oldLocation = this.location;
         let oldName = this.userInfo.name;
         const { datas: { sex: { value: sex = 0 } = {} } = {} } = this.userInfo;
         let oldSex = sex;
         const { datas: { intro: { value:  intro = '' } = {} } = {} } = this.userInfo;
         let oldIntro =  intro;
         let changeName = (newName != oldName) && usernameReg.test(newName) && newName.length > 2 && newName.length < 13;
-        let changeSex = newSex != oldSex;
-        let changeIntro = newIntro != oldIntro;
+        let changeSex = newSex != oldSex && newSex != 0;
+        let changeIntro = newIntro != oldIntro && newIntro != '';
         let changeAvatar = this.storage_task_id != 0;
-        return (changeName || changeSex || changeIntro || changeAvatar);
+        let changeProvince = newProvince != oldProvince && newProvince != 0;
+        let changeCity = newCity != oldCity && newCity != 0;
+        let changeLocation = newLocation != oldLocation && newLocation != '';
+        return (changeName || changeSex || changeIntro || changeAvatar || changeProvince || changeCity || changeLocation);
       }
     },
     mounted () {
-      getUserInfo(this.currentUser, 50, user => {
+      getUserInfo(this.currentUser, 30, user => {
         this.userInfo = { ...this.userInfo, ...user };
         this.name = user.name;
         const { datas: { 
@@ -479,11 +601,13 @@
                 intro: { value: intro = '' } = {},
                 province: { value: province = 0 } = {},
                 city: { value: city = 0 } = {},
+                location: { value: location = '' } = {}
               } = {} } = this.userInfo;
         this.sex = sex;
         this.intro = intro;
-        this.areaAbout.province = province;
-        this.areaAbout.city = city;
+        this.province = province;
+        this.city = city;
+        this.location = location;
 
       });
       // 获取地区列表
@@ -491,28 +615,46 @@
         validateStatus: status => status === 200
       })
       .then(response => {
-        let provinces = [];
+        // 格式化的地区省份 用于select展示
+        let provincesArray = [];
+        // 格式化的市级数据，用于select展示
         let areasObject = {};
+        // 格式化的省份对象，用于数据获取
+        let provincesObject = {};
+        // 格式化的市级对象，用于数据获取
+        let citysObjects = {};
         response.data.data.forEach((area) => {
           if(area.pid == 1) {
-            provinces[area.name] = {
+            // 格式化的地区省份 用于select展示
+            provincesArray.push({
+              name: area.name,
+              id: area.id
+            });
+            // 格式化的省份对象
+            provincesObject[area.name] = {
               name: area.name,
               id: area.id
             };
-            provinces.push({
-              name: area.name,
-              id: area.id
-            })
-            areasObject[area.name] = this.formate(response.data.data, area.id);
+            // 格式化的市级数据，用于select展示
+            areasObject[area.name] = this.formateCitysArray(response.data.data, area.id);
+            citysObjects[area.name] = this.formateCitysObject(response.data.data, area.id);
           }
           
         });
-        this.areaAbout.areas = response.data.data;
-        this.areaAbout.formateProvince = provinces;
+        // this.areaAbout.areas = response.data.data;
+        this.areaAbout.formateProvince = provincesArray;
         this.areaAbout.formateAreas = { ...this.foramteAreas, ...areasObject };
+        this.areaAbout.provincesObject = { ...this.provincesObject, ...provincesObject };
+        this.areaAbout.citysObjects = { ...this.citysObjects, ...citysObjects };
       })
       .catch(({ response: { data: { message = "网络状况堪忧" } = {} } = {} }) => {
-        console.log(message);
+        this.$store.dispatch(NOTICE, cb => {
+          cb({
+            text: message,
+            time: 1500,
+            status: true
+          });
+        });
       });
     }
   };
@@ -647,6 +789,9 @@
   }
   span.operate {
     font-size: 12px;
+  }
+  span.operate.avatarDone{
+    color: #59b6d7;
   }
   span.active {
     color: #59b6d7;

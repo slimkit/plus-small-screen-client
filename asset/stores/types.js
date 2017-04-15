@@ -31,3 +31,9 @@ export const APPENDDIGGS = 'appenddiggs';
  * 获取点赞用户列表
  */
 export const DIGGLISTS = 'digglists';
+
+export const USERFEEDS = 'userfeeds';
+
+export const APPENDUSERFEEDS = 'appenduserfeeds';
+
+export const CLEANUSERFEEDS = 'cleanuserfeeds';

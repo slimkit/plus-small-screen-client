@@ -1,51 +1,51 @@
 <template>
-  <div>
-    <ul>
-      <li v-for="(comment, index) in commentsData" :key="comment.id" v-if="index < 3">
-        <p>
-          <router-link v-if="comment.user_id" :class="$style.userName" :to="{ path: '/users/profile' }">{{ getUserName(comment.user_id) }}</router-link> 
-          <span v-if="comment.reply_to_user_id" :class="$style.commentContent">
-            回复
-          </span>
-          <router-link v-if="comment.reply_to_user_id" :class="$style.userName" :to="{ path: '/users/profile' }">{{ getUserName(comment.reply_to_user_id) }}</router-link> 
-          <span
-            v-if="comment.user_id  != currentUser.user_id"
-            @click.stop="focusInput(comment.id, comment.user_id, feedId)"
-            :class="$style.commentContent"
-          > 
-           : {{ comment.comment_content }}
-          </span>
-          <span
-            v-if="comment.user_id == currentUser.user_id"
-            @click.stop="showComfirm(comment.id, feedId, index)"
-            :class="$style.commentContent"
-          > 
-           : {{ comment.comment_content }}
-          </span>
-        </p>
-      </li>
-    </ul>
-    <router-link v-if="hasMore" :class="$style.userName" to="/web">查看全部评论</router-link>
-    <div v-if="CanInput" :class="$style.commentInput">
-      <Row :gutter="16" type="flex" align="bottom" style="margin-left: 0; margin-right: 0;">
-        <Col span="20">
-          <Input type="textarea" class="commentInput" v-if="CanInput" autofocus="autofocus" :placeholder="placeholder" :autosize="{ minRows: 1, maxRows: 4 }" :minlength='1' blur="inputBlur" :maxlength='255' v-model="userComment"></Input>
-        </Col>
-        <Col span="4">
-          <Row v-if="commentCount > 200" :class="$style.commentCount">
-            <Col span="24" ><span :class="{ inputFull: commentCount > 100 }">{{ commentCount }}</span>/255</Col>
-          </Row>
-          <Row>
-            <Col span="24">
-              <Button :long="true" type="primary" :class="$style.sendComment" :disabled="commentCount == 0" size="small" @click.native="sendComment()">发送</Button>
-            </Col>
-          </Row>
-        </Col>
-      </Row>
+    <div>
+      <ul>
+        <li v-for="(comment, index) in commentsData" :key="comment.id" v-if="index < 3">
+          <p>
+            <router-link v-if="comment.user_id" :class="$style.userName" :to="{ path: '/users/profile' }">{{ getUserName(comment.user_id) }}</router-link> 
+            <span v-if="comment.reply_to_user_id" :class="$style.commentContent">
+              回复
+            </span>
+            <router-link v-if="comment.reply_to_user_id" :class="$style.userName" :to="{ path: '/users/profile' }">{{ getUserName(comment.reply_to_user_id) }}</router-link> 
+            <span
+              v-if="comment.user_id  != currentUser.user_id"
+              @click.stop="focusInput(comment.id, comment.user_id, feedId)"
+              :class="$style.commentContent"
+            > 
+             : {{ comment.comment_content }}
+            </span>
+            <span
+              v-if="comment.user_id == currentUser.user_id"
+              @click.stop="showComfirm(comment.id, feedId, index)"
+              :class="$style.commentContent"
+            > 
+             : {{ comment.comment_content }}
+            </span>
+          </p>
+        </li>
+      </ul>
+      <router-link v-if="hasMore" :class="$style.userName" to="/web">查看全部评论</router-link>
+      <div v-if="CanInput" :class="$style.commentInput">
+        <Row :gutter="16" type="flex" align="bottom" style="margin-left: 0; margin-right: 0;">
+          <Col span="20">
+            <Input type="textarea" class="commentInput" v-if="CanInput" autofocus="autofocus" :placeholder="placeholder" :autosize="{ minRows: 1, maxRows: 4 }" :minlength='1' blur="inputBlur" :maxlength='255' v-model="userComment"></Input>
+          </Col>
+          <Col span="4">
+            <Row v-if="commentCount > 200" :class="$style.commentCount">
+              <Col span="24" ><span :class="{ inputFull: commentCount > 100 }">{{ commentCount }}</span>/255</Col>
+            </Row>
+            <Row>
+              <Col span="24">
+                <Button :long="true" type="primary" :class="$style.sendComment" :disabled="commentCount == 0" size="small" @click.native="sendComment()">发送</Button>
+              </Col>
+            </Row>
+          </Col>
+        </Row>
+      </div>
+      <Comfirm v-if="isShowComfirm" @cannel="cannel" @increment="deleteComment" :data="deleteData" comfirm-content="删除这条评论"></Comfirm>
+      <div @click.stop="closeInput" :class="$style.wrapper" v-show="CanInput"></div>
     </div>
-    <Comfirm v-if="isShowComfirm" @cannel="cannel" @increment="deleteComment" :data="deleteData" comfirm-content="删除这条评论"></Comfirm>
-    <div @click.stop="closeInput" :class="$style.wrapper" v-show="CanInput"></div>
-  </div>
 </template>
 
 <script>

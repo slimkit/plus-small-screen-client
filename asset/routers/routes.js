@@ -12,6 +12,7 @@ import Profile from '../views/Profile';
 import SystemSetting from '../views/SystemSetting';
 import ChangePassword from '../views/ChangePassword';
 import UserSetting from '../views/UserSetting';
+import UserFeeds from '../views/UserFeeds';
 import { requestAuth, CanNotGetInWhenLogged } from '../utils/auth';
 
 const routes = [
@@ -95,6 +96,16 @@ const routes = [
     meta: {
       title: '个人资料',
       keywords: '个人资料'
+    },
+    beforeEnter: (to, from, next) => {
+      requestAuth(to, from, next);
+    }
+  },
+  {
+    path: '/users/feeds/:user_id',
+    component: UserFeeds,
+    meta: {
+      title: '个人主页'
     },
     beforeEnter: (to, from, next) => {
       requestAuth(to, from, next);

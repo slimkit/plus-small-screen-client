@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.comfirm">
+  <div :class="$style.comfirm" @click="cannelIt">
     <Row :class="$style.comirmRow">
       <Col :span="24" :class="$style.comfirmCol">
         <Button :long="true" @click.native="doIt(data)">{{ comfirmContent }}</Button>

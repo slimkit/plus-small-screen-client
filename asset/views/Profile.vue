@@ -132,7 +132,7 @@
     },
     computed: {
       avatar () {
-        const { avatar: { 50: avatar = '' } = {} } = this.userInfo;
+        const { avatar: { 30: avatar = '' } = {} } = this.userInfo;
         return avatar;
       },
       name () {
@@ -140,7 +140,7 @@
         return name;
       },
       intro () {
-        const { datas: { intro: { value: intro = '大哥,你还没有填写简介哦' } } = {} } = this.userInfo;
+        const { datas: { intro: { value: intro = '还没有简介呢' } = {} } } = this.userInfo;
         return intro;
       },
       following () {

@@ -38,7 +38,6 @@ function unFollowingUser(user_id, cb) {
 };
 
 function getAvatar (userInfo, process, cb) {
-  // let localUser = localEvent.getLocalItem('user_' + user_id);
   // 已有本地用户
   userInfo.avatar = {};
   if(userInfo.hasOwnProperty('datas')) { // 有datas属性
