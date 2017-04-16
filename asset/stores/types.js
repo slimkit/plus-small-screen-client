@@ -32,8 +32,13 @@ export const APPENDDIGGS = 'appenddiggs';
  */
 export const DIGGLISTS = 'digglists';
 
+/**
+ *  用户个人主页动态列表
+ */
 export const USERFEEDS = 'userfeeds';
 
-export const APPENDUSERFEEDS = 'appenduserfeeds';
+export const APPENDUSERFEED = 'appenduserfeed';
 
 export const CLEANUSERFEEDS = 'cleanuserfeeds';
+
+export const DATES = 'dates';

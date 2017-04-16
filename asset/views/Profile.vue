@@ -42,7 +42,9 @@
           <Icon type="model-s"></Icon>
         </Col>
         <Col span="19" :class="$style.menuText">
-          个人主页
+          <div :class="$style.feedEnter" @click="changeUrl(`/users/feeds/${currentUser}`)">
+            个人主页
+          </div>
         </Col>
         <Col span="2" :class="$style.rightIcon">
           <Icon type="ios-arrow-right"></Icon>
@@ -140,7 +142,7 @@
         return name;
       },
       intro () {
-        const { datas: { intro: { value: intro = '还没有简介呢' } = {} } } = this.userInfo;
+        const { datas: { intro: { value: intro = '还没有简介呢' } = {} } = {} } = this.userInfo;
         return intro;
       },
       following () {
@@ -205,6 +207,9 @@
         }
         .menuText {
           padding-left: 0!important;
+          .feedEnter {
+            width: 100%;
+          }
         }
       }
     }
