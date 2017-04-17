@@ -39,7 +39,8 @@
     <div :class="$style.entry">
       <Row :gutter="16" :class="$style.entryMenu">
         <Col span="3">
-          <Icon type="model-s"></Icon>
+          <!-- <Icon type="model-s"></Icon> -->
+          <WeChatIcon height="21" width="21" color="#999" />
         </Col>
         <Col span="19" :class="$style.menuText">
           <div :class="$style.feedEnter" @click="changeUrl(`/users/feeds/${currentUser}`)">
@@ -118,11 +119,13 @@
   import localEvent from '../stores/localStorage';
   import ToolBar from '../components/ToolBar';
   import { changeUrl } from '../utils/changeUrl';
+  import WeChatIcon from '../icons/weChat';
 
   const currentUser = localEvent.getLocalItem('UserLoginInfo');
   const profile = {
     components: {
-      ToolBar
+      ToolBar,
+      WeChatIcon
     },
     data: () => ({
       currentUser: currentUser.user_id, // 当前登录用户id

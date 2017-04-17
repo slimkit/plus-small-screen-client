@@ -430,7 +430,7 @@
           if(data.hasOwnProperty('storage_id') && data.hasOwnProperty('storage_task_id')){
             this.handleHideAvatarSelect();
             this.storage_task_id = data.storage_task_id;
-            // this.userInfo.avatar[50] = getImage(data.storage_id, 50);
+            this.userInfo.avatar[30] = getImage(data.storage_id, 30);
             this.$set(this.userInfo.avatar, '50', getImage(data.storage_id, 50));
             this.$store.dispatch(NOTICE, cb => {
               cb({

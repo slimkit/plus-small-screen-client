@@ -7,6 +7,7 @@
         ref="loadmore"
         bottomPullText="上拉加载更多评论"
         bottomDropText="释放加载更多评论"
+        :bottomDistance="70"
       >
         <div class="feed-container">
           <div class="feed-container-header feed-background-color">
@@ -125,7 +126,7 @@
             </div>
           </div>
         </div>
-        <div v-show="bottomAllLoaded && bottomStatus !== 'loading' && comments.length > 15" style="display: flex; justify-content: center; align-items: center; padding: 10px 0">
+        <div v-show="bottomAllLoaded && bottomStatus !== 'loading' && comments.length > 15" style="display: flex; justify-content: center; align-items: center; padding: 10px 0; margin-bottom: 50px">
           <span>没有更多了</span>
         </div>
       </mt-loadmore>
@@ -281,6 +282,7 @@
           return [];
         }
         this.feedData.feed.feed_storages.forEach((value) => {
+          console.log(value);
           urlList.push(
             {
               url: getImg(value.storage_id, 100),
@@ -516,18 +518,17 @@
           }
         )
         .then(response => {
-          let data = response.data;
+          let data = response.data.data;
           let addComments = [];
           let formatedAddComments = [];
           let bottomAllLoaded = false;
-          if(data.data.length < 15) {
+          if(data.length < 15) {
             bottomAllLoaded = true;
-          } else {
-            formatedAddComments = formateFeedComments(data);
-            formatedAddComments.forEach((comment) => {
-              this.comments.push(comment);
-            });
           }
+          formatedAddComments = formateFeedComments(data);
+          formatedAddComments.comments.forEach((comment) => {
+            this.comments.push(comment);
+          });
           setTimeout(() => {
             // 若数据已全部获取完毕
             this.bottomStatus = '';
@@ -535,8 +536,14 @@
             this.$refs.loadmore.onBottomLoaded();
           }, 500);
         })
-        .catch(response => {
-
+        .catch(({ response: { data: { message = "网络状况堪忧" } = {} } = {} }) => {
+          this.$store.dispatch(NOTICE, cb => {
+            cb({
+              text: message,
+              time: 1500,
+              status: false
+            });
+          });
         });
       },
       handleCommentForFeed(feed_id) {
@@ -572,7 +579,6 @@
           feed_id: feedId,
           index: index
         };
-        console.log(this.commentComponent);
       },
       closeInput () {
         this.commentComponent.placeholder = '';
@@ -720,7 +726,7 @@
         this.$nextTick(function () {
           this.max_id = formatedComments.max_id;
           this.comments = formatedComments.comments;
-          if(!this.comments.length < 15) {
+          if(this.comments.length < 15) {
             this.bottomAllLoaded = true;
           }
         })

@@ -79,7 +79,7 @@ function noticeTask (taskId, data, cb) {
   addAccessToken().patch(createAPI(`storages/task/${taskId}`),
     { ...data },
     {
-      validateStatus: status => status === 200
+      validateStatus: status => status === 201
     }
   )
   .then(response => {

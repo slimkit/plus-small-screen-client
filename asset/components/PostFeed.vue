@@ -3,7 +3,7 @@
   <transition name="custom-classes-transition" enter-active-class="animated slideInUp" leave-active-class="animated slideOutDown">
     <div class="post-feed" :class="$style.postRoot" v-if="show">
       <div :class="$style.postFeedNav">
-        <Row :gutter="16" type="flex" :class="$style.navRow" justify="center" align="middle">
+        <Row :gutter="32" type="flex" :class="$style.navRow" justify="center" align="middle">
           <Col span="4">
             <Button :class="$style.actionBtn" type="text" @click="closePost">取消</Button>
           </Col>
@@ -11,34 +11,32 @@
             <h4 style="font-weight: 400; font-size: 18px; text-align: center;">发布动态</h4>
           </Col>
           <Col span="5">
-            <Button :class="$style.actionBtn" :disabled="isDisabled" type="text" @click="postFeed">发布</Button>
+            <span :class="$style.actionBtn" @click="postFeed">发布</span>
           </Col>
         </Row>
       </div>
       <div :class="$style.content">
         <Row :gutter="16">
-          <Col span="24">
-            <Input v-model="feedTitle" placeholder="有标题更吸引人" :class="$style.contentInput"></Input>
+          <Col span="24" style="padding-left: 8px; padding-right: 8px;">
+            <Input style="border-bottom: 1px #e2e3e3 solid;" v-model="feedTitle" placeholder="有标题更吸引人" :class="$style.contentInput"></Input>
             <Input v-model="feedContent" :autosize="{minRows: 6, maxRows: 12}" type="textarea" :class="$style.contentInput" placeholder="输入要说的话,图文结合更精彩哦"></Input>
           </Col>
         </Row>
       </div>
       <div :class="$style.upload">
         <template>
-          <div class="demo-upload-list" v-for="item in uploadList">
-            <template v-if="item.status === 'finished'">
-              <img :src="item.url">
-              <div class="demo-upload-list-cover">
-                <Icon type="ios-eye-outline" @click.native="handleView(item.name)"></Icon>
-                <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
-              </div>
-            </template>
-            <template v-else>
-              <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
-            </template>
+          <div style="padding: 0 4vw">
+            <div class="demo-upload-list" v-for="item in defaultList">
+                <img :src="item.url">
+                <div class="demo-upload-list-cover">
+                  <Icon type="ios-eye-outline" @click.native="handleView(item.name)"></Icon>
+                  <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
+                </div>
+            </div>
           </div>
-          <div style="padding: 0 15px;">
+          <div style="padding: 0 4vw">
             <Upload
+              v-if="show"
               ref="upload"
               :show-upload-list="false"
               :default-file-list="defaultList"
@@ -49,8 +47,9 @@
               :on-exceeded-size="handleMaxSize"
               :before-upload="handleBeforeUpload"
               multiple
+              :data="uploadData"
               type="drag"
-              action="//jsonplaceholder.typicode.com/posts/"
+              :action="uploadUri"
               style="display: inline-block;width:58px;">
               <div style="width: 58px;height:58px;line-height: 58px;">
                   <Icon type="camera" size="20"></Icon>
@@ -72,8 +71,14 @@ import { mapState } from 'vuex';
 import { SHOWPOST, NOTICE } from '../stores/types';
 import { createAPI, addAccessToken } from '../utils/request';
 import localEvent from '../stores/localStorage';
+import { Base64 } from 'js-base64';
+import md5 from 'js-md5';
+import { createUploadTask, uploadFile, noticeTask } from '../utils/upload';
+// import sizeOf from 'image-size';
 // import FileUpload from 'vue-upload-component';
 
+const base64Reg = /^data:(.*?);base64,/;
+let reg = /data:(.*?);/;
 const postFeed = {
   data: () => ({
     feedTitle: '',
@@ -83,6 +88,10 @@ const postFeed = {
     defaultList: [],
     imgName: '',
     visible: false,
+    uploadUri: 'xxx',
+    uploadData: {},
+    uploadHeaders: {},
+    storage_task_ids: []
   }),
   computed: {
     ...mapState({
@@ -101,11 +110,13 @@ const postFeed = {
       let feed_title = this.feedTitle;
       let feed_from = 2;
       let isatuser = this.isatuser;
+      let storage_task_ids = this.storage_task_ids;
       addAccessToken().post(createAPI('feeds'),{
           feed_content,
           feed_title,
           feed_from,
           isatuser,
+          storage_task_ids
         },
         {
           validateStatus: status => status === 201
@@ -167,22 +178,73 @@ const postFeed = {
         desc: '文件 ' + file.name + ' 太大，不能超过 2M。'
       });
     },
-    handleBeforeUpload () {
-      const check = this.uploadList.length < 9;
-      if (!check) {
-        this.$Notice.warning({
-          title: '最多只能上传 9 张图片。'
-        });
+    getSize (dataUrl) {
+      let img = new Image();
+      img.src = dataUrl;
+      img.onload = () => {
+        return [
+          img.width,
+          img.height
+        ];
+      };
+    },
+    // toInt32 (bytes) {
+    //   return (bytes[0] << 24) | (bytes[1] << 16) | (bytes[2] << 8) | bytes[3];
+    // },
+    // getDimensions (data) {
+    //   return {
+    //     width: this.toInt32(data.slice(16, 20)) / 7,
+    //     height: this.toInt32(data.slice(20, 24)) / 7
+    //   }
+    // },
+    handleBeforeUpload (file) {
+      let fileDataURL = '';
+      let fileBinaryString = '';
+      if(file.type.indexOf('image') !== -1) {
+        let reader = new FileReader();
+        let fileUpload = {};
+        fileUpload.origin_filename = file.name;
+        let sizes = [];
+        reader.onload = (e) => {
+          // 获取图片dataurl
+          let fileDataURL = reader.result;
+          // dataurl解码
+          let fileDecode = Base64.decode(fileDataURL.replace(base64Reg, ''));
+          // dataurl 获取文件hash
+          fileUpload.hash = md5(fileDecode);
+          // 截取文件的mime_type
+          fileUpload.mime_type = fileDataURL.match(reg)[1];
+          fileUpload.height = 100;
+          fileUpload.width = 100;
+
+          createUploadTask(fileUpload, data => {
+            if(data.hasOwnProperty('storage_id') && data.hasOwnProperty('storage_task_id')){
+              this.defaultList.push({
+                name: file.name,
+                url: fileDataURL
+              });
+              this.storage_task_ids.push(data.storage_task_id);
+              return false;
+            }
+            uploadFile(data, fileDataURL, uploadInfo => {
+              console.log(data);
+              // notice server with uploaded-info
+              noticeTask(data.storage_task_id, uploadInfo, noticeInfo => {
+                this.defaultList.push({
+                  name: file.name,
+                  url: fileDataURL
+                });
+                this.storage_task_ids.push(data.storage_task_id);
+              });
+            })
+            // return false;
+          });
+        }
+        reader.readAsDataURL(file);
+        return false;
       }
-      let filereader = new window.FileReader();
-      filereader.readAsDataURL(this.uploadList[0]);
-      console.log(filereader);
-      return check;
+      return false;
     }
-  },
-  updated () {
-    if(this.show)
-      this.uploadList = this.$refs.upload.fileList;
   }
 };
 
@@ -208,11 +270,12 @@ export default postFeed;
     padding: 6px 0;
     input, textarea {
       border: none;
-      padding: 5px 0;
+      padding: 5px 8px;
       transition: none;
       &:focus {
         border: none;
         outline: 0;
+        box-shadow: none;
       }
       &:hover {
         border: none;
@@ -222,6 +285,7 @@ export default postFeed;
   }
   .postFeedNav {
     height: 45px;
+    border-bottom: 1px #e2e3e3 solid;
     .actionBtn {
       font-size: 14px;
     }
@@ -256,8 +320,8 @@ export default postFeed;
   }
   .demo-upload-list{
         display: inline-block;
-        width: 60px;
-        height: 60px;
+        width: 22vw;
+        height: 22vw;
         text-align: center;
         line-height: 60px;
         border: 1px solid transparent;
@@ -266,11 +330,12 @@ export default postFeed;
         background: #fff;
         position: relative;
         box-shadow: 0 1px 1px rgba(0,0,0,.2);
-        margin-right: 4px;
+        margin: 0 .5vw;
     }
     .demo-upload-list img{
         width: 100%;
         height: 100%;
+        object-fit: cover;
     }
     .demo-upload-list-cover{
         display: none;
