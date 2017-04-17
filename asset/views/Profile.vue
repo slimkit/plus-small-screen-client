@@ -40,7 +40,7 @@
       <Row :gutter="16" :class="$style.entryMenu">
         <Col span="3">
           <!-- <Icon type="model-s"></Icon> -->
-          <WeChatIcon height="21" width="21" color="#999" />
+          <SapceIcon height="21" width="21" color="#59b6d7" />
         </Col>
         <Col span="19" :class="$style.menuText">
           <div :class="$style.feedEnter" @click="changeUrl(`/users/feeds/${currentUser}`)">
@@ -53,7 +53,7 @@
       </Row>
       <Row :gutter="16" :class="$style.entryMenu">
         <Col span="3">
-          <Icon type="ios-flower"></Icon>
+          <RankingIcon height="21" width="21" color="#59b6d7" />
         </Col>
         <Col span="19" :class="$style.menuText">
           排行榜
@@ -64,7 +64,7 @@
       </Row>
       <Row :gutter="16" :class="$style.entryMenu">
         <Col span="3">
-          <Icon type="ios-shuffle"></Icon>
+          <ConnectionIcon height="21" width="21" color="#59b6d7" />
         </Col>
         <Col span="19" :class="$style.menuText">
           收藏
@@ -77,7 +77,7 @@
     <div :class="$style.entry">
       <Row :gutter="16" :class="$style.entryMenu">
         <Col span="3">
-          <Icon type="compose"></Icon>
+          <FeedbackIcon height="21" width="21" color="#59b6d7" />
         </Col>
         <Col span="19" :class="$style.menuText">
           意见反馈
@@ -88,7 +88,7 @@
       </Row>
       <Row :gutter="16" :class="$style.entryMenu">
         <Col span="3">
-          <Icon type="ios-basketball-outline"></Icon>
+          <QuestionIcon height="21" width="21" color="#59b6d7" />
         </Col>
         <Col span="19" :class="$style.menuText">
           Q&A
@@ -100,7 +100,7 @@
       <Row :gutter="16" :class="$style.entryMenu">
         <div style="width: 100%;" @click="changeUrl('/users/systemSetting')">
           <Col span="3">
-            <Icon type="ios-star-outline"></Icon>
+            <SystemSettingIcon height="21" width="21" color="#59b6d7" />
           </Col>
           <Col span="19" :class="$style.menuText">
             设置
@@ -119,13 +119,23 @@
   import localEvent from '../stores/localStorage';
   import ToolBar from '../components/ToolBar';
   import { changeUrl } from '../utils/changeUrl';
-  import WeChatIcon from '../icons/weChat';
+  import FeedbackIcon from '../icons/Feedback';
+  import ConnectionIcon from '../icons/Connection';
+  import RankingIcon from '../icons/Ranking';
+  import QuestionIcon from '../icons/Question';
+  import SystemSettingIcon from '../icons/SystemSetting';
+  import SapceIcon from '../icons/Sapce';
 
   const currentUser = localEvent.getLocalItem('UserLoginInfo');
   const profile = {
     components: {
       ToolBar,
-      WeChatIcon
+      FeedbackIcon,
+      ConnectionIcon,
+      RankingIcon,
+      QuestionIcon,
+      SystemSettingIcon,
+      SapceIcon
     },
     data: () => ({
       currentUser: currentUser.user_id, // 当前登录用户id
