@@ -54,5 +54,8 @@
     height: 44px;
     display: block;
     text-align: center;
+    &:active, &:hover {
+      color: #333;
+    }
   }
 </style>

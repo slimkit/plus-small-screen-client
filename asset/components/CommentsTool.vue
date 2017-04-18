@@ -25,7 +25,7 @@
           </p>
         </li>
       </ul>
-      <router-link v-if="hasMore" :class="$style.userName" to="/web">查看全部评论</router-link>
+      <router-link v-if="hasMore" :class="$style.userName" :to="`/feed/${feed_id}`">查看全部评论</router-link>
       <div v-if="CanInput" :class="$style.commentInput">
         <Row :gutter="16" type="flex" align="bottom" style="margin-left: 0; margin-right: 0;">
           <Col span="20">

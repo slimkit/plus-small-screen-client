@@ -28,10 +28,8 @@ const actions = {
       context.commit(APPENDUSERFEEDS, addedFeed);
     });
   },
-  [CLEANUSERFEEDS]: (context, cb) => {
-    cb(() => {
-      context.commit(CLEANUSERFEEDS);
-    })
+  [CLEANUSERFEEDS]: (context) => {
+    context.commit(CLEANUSERFEEDS);
   }
 };
 

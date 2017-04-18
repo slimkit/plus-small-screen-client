@@ -2,7 +2,7 @@
   <Row>
     <Col :span="20">
       <div :class="$style.FeedImages">
-        <div v-if="imageSize == 1" class="images">
+        <div v-if="imageSize == 1" class="images" style="overflow: hidden;">
           <Row :class="$style.imagesRow">
             <Col :span="24">
               <img @click="showSwiper(0)"  v-lazy="getImg(imageObject[0].storage_id, 60)" />

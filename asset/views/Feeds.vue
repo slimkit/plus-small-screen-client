@@ -31,6 +31,6 @@
 
 <style lang="scss" module>
   .manContent {
-    padding:  0 0 60px 0;
+    padding:  0;
   }
 </style>

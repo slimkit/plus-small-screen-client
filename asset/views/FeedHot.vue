@@ -14,7 +14,7 @@
     data: () => ({
       option: {
         uri: 'feeds/hots',
-        limiter: 'max_id'
+        limiter: 'page'
       }
     })
   }
@@ -23,6 +23,6 @@
 
 <style lang="scss" module>
   .feedListContent {
-    padding-top: 53px;
+    // padding-top: 53px;
   }
 </style>

@@ -11,7 +11,9 @@
               <input type="tel" autocomplete="off" placeholder="输入手机号码" v-model.trim.num="phone" id="phone" name="phone" />
             </Col>
             <Col span="3" class="flexend">
-              <i v-on:click="cleanPhone" v-show="isShowClean" class="ivu-icon ivu-icon-close-circled"></i>
+              <div @click="cleanPhone" v-show="isShowClean">
+                <CloseIcon height="21" width="21" color="#999" />
+              </div>
             </Col>
             <Col class="text-align-right" span="6" >
               <Button 
@@ -43,12 +45,12 @@
               <input type="text"  v-model.trim="passwordText" v-show="isShowPasswordText" value="" placeholder="请输入6位以上登录密码" />
             </Col>
             <Col span="3" class="flexend">
-              <i 
-                v-on:click="showPassword" 
-                class="ivu-icon" 
-                :class="{ 'ivu-icon-eye-disabled': isShowPasswordText, 'ivu-icon-eye': isShowPassword }"
-              >
-              </i>
+              <div @click="showPassword" v-show="isShowPasswordText">
+                <EyeOpenIcon height="21" width="21" color="#999" />
+              </div>
+              <div @click="showPassword" v-show="isShowPassword">
+                <EyeCloseIcon height="21" width="21" color="#999" />
+              </div>
             </Col>
           </Row>
         </div>
@@ -78,11 +80,19 @@
   import localEvent from '../stores/localStorage';
   import errorCodes from '../stores/errorCodes';
   import deleteObjectItems from '../utils/deleteObjectItems';
+  import EyeCloseIcon from '../icons/EyeClose';
+  import EyeOpenIcon from '../icons/EyeOpen';
+  import CloseIcon from '../icons/Close';
 
   // 手机号码规则
   const phoneReg = /^(((13[0-9]{1})|14[0-9]{1}|(15[0-9]{1})|17[0-9]{1}|(18[0-9]{1}))+\d{8})$/;
   const codeReg = /^[0-9]{4}$/;
   const findPassword = {
+    components: {
+      EyeCloseIcon,
+      EyeOpenIcon,
+      CloseIcon
+    },
     data: () => ({
       phone: '', // 手机号码 
       password: '', // 密码

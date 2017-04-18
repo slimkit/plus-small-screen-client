@@ -40,7 +40,7 @@
       <Row :gutter="16" :class="$style.entryMenu">
         <Col span="3">
           <!-- <Icon type="model-s"></Icon> -->
-          <SapceIcon height="21" width="21" color="#59b6d7" />
+          <SapceIcon :height="21" :width="21" color="#59b6d7" />
         </Col>
         <Col span="19" :class="$style.menuText">
           <div :class="$style.feedEnter" @click="changeUrl(`/users/feeds/${currentUser}`)">
@@ -53,7 +53,7 @@
       </Row>
       <Row :gutter="16" :class="$style.entryMenu">
         <Col span="3">
-          <RankingIcon height="21" width="21" color="#59b6d7" />
+          <RankingIcon :height="21" :width="21" color="#59b6d7" />
         </Col>
         <Col span="19" :class="$style.menuText">
           排行榜
@@ -64,7 +64,7 @@
       </Row>
       <Row :gutter="16" :class="$style.entryMenu">
         <Col span="3">
-          <ConnectionIcon height="21" width="21" color="#59b6d7" />
+          <ConnectionIcon :height="21" :width="21" color="#59b6d7" />
         </Col>
         <Col span="19" :class="$style.menuText">
           收藏
@@ -77,7 +77,7 @@
     <div :class="$style.entry">
       <Row :gutter="16" :class="$style.entryMenu">
         <Col span="3">
-          <FeedbackIcon height="21" width="21" color="#59b6d7" />
+          <FeedbackIcon :height="21" :width="21" color="#59b6d7" />
         </Col>
         <Col span="19" :class="$style.menuText">
           意见反馈
@@ -88,7 +88,7 @@
       </Row>
       <Row :gutter="16" :class="$style.entryMenu">
         <Col span="3">
-          <QuestionIcon height="21" width="21" color="#59b6d7" />
+          <QuestionIcon :height="21" :width="21" color="#59b6d7" />
         </Col>
         <Col span="19" :class="$style.menuText">
           Q&A
@@ -100,7 +100,7 @@
       <Row :gutter="16" :class="$style.entryMenu">
         <div style="width: 100%;" @click="changeUrl('/users/systemSetting')">
           <Col span="3">
-            <SystemSettingIcon height="21" width="21" color="#59b6d7" />
+            <SystemSettingIcon :height="21" :width="21" color="#59b6d7" />
           </Col>
           <Col span="19" :class="$style.menuText">
             设置
@@ -124,7 +124,7 @@
   import RankingIcon from '../icons/Ranking';
   import QuestionIcon from '../icons/Question';
   import SystemSettingIcon from '../icons/SystemSetting';
-  import SapceIcon from '../icons/Sapce';
+  import SapceIcon from '../icons/Space';
 
   const currentUser = localEvent.getLocalItem('UserLoginInfo');
   const profile = {

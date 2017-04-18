@@ -5,19 +5,20 @@
         :bottom-method="loadBottom"
         :bottom-all-loaded="bottomAllLoaded"
         ref="loadmore"
-        bottomPullText="上拉加载更多评论"
-        bottomDropText="释放加载更多评论"
-        :bottomDistance="70"
+        @bottom-status-change="bottomStatusChange"
+        :bottomDistance="40"
       >
         <div class="feed-container">
           <div class="feed-container-header feed-background-color">
             <Row :gutter="16">
               <Col span="3" style="display: flex; justify-content: flex-start">
-                <i class="ivu-icon ivu-icon-android-arrow-back" @click="goBack" style="width: 100%; height: 100%; display: flex; align-items: center;"></i>
+                <div @click="goBack">
+                  <BackIcon height="21" width="21" color="#999" />
+                </div>
               </Col>
               <Col span="18">
                 <div>
-                  <router-link :to="`/profile/${userInfo.user_id}`" class="avatar">
+                  <router-link :to="`/users/feeds/${userInfo.user_id}`" class="avatar">
                     <div class="avatar-content">
                       <img class="avatar" v-lazy="avatar" alt="">
                     </div>
@@ -25,9 +26,31 @@
                   </router-link>
                 </div>
               </Col>
-              <Col span="3" style="display: flex;">
-                <i @click="handleFollowingStatus" v-if="!userInfo.following && (userInfo.user_id != currentUser)" class="ivu-icon ivu-icon-android-person-add" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: flex-end"></i>
-                <i class="ivu-icon ivu-icon-person" @click="handleUnFollowingStatus" v-if="userInfo.following && (userInfo.user_id != currentUser)" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: flex-end"></i>
+              <Col span="3" style="display: flex;" @click="alert(222);">
+                <!--未关注作者, 采用关注操作-->
+                <div 
+                  :class="$style.followAction" 
+                  @click="handleFollowingStatus" 
+                  v-if="!userInfo.is_following && (userInfo.user_id != currentUser)"
+                >
+                  <UnFollowingIcon v-if="!userInfo.is_following && (userInfo.user_id != currentUser)" height="24" width="24" color="#999" />
+                </div>
+                <!--已关注作者,但作者未关注我， 采用取消关注操作-->
+                <div 
+                  :class="$style.followAction" 
+                  @click="handleUnFollowingStatus"  
+                  v-if="userInfo.is_following && !userInfo.is_followed && (userInfo.user_id != currentUser)"
+                >
+                  <FollowingIcon height="24" width="24" color="#999" v-if="userInfo.is_following && !userInfo.is_followed && (userInfo.user_id != currentUser)" />
+                </div>
+                <!--相互关注， 采用取消关注操作-->
+                <div 
+                  :class="$style.followAction" 
+                  @click="handleUnFollowingStatus"  
+                  v-if="userInfo.is_following && userInfo.is_followed && (userInfo.user_id != currentUser)"
+                >
+                  <EachFollowingIcon height="24" width="24" color="#999" />
+                </div>
               </Col>
             </Row>
           </div>
@@ -126,39 +149,44 @@
             </div>
           </div>
         </div>
-        <div v-show="bottomAllLoaded && bottomStatus !== 'loading' && comments.length > 15" style="display: flex; justify-content: center; align-items: center; padding: 10px 0; margin-bottom: 50px">
-          <span>没有更多了</span>
+        <div slot="bottom" style="display: flex; justify-content: center; align-items: center; padding: 10px 0;">
+          <span v-show="bottomAllLoaded && bottomStatus !== 'loading' && comments.length > 15">没有更多了</span>
+          <span v-show="bottomStatus === 'loading'">加载中...</span>
+          <span v-show="bottomStatus === 'pull' && !bottomAllLoaded">上拉加载更多评论</span>
+          <span v-show="bottomStatus === 'drop'">释放加载更多评论</span>
         </div>
       </mt-loadmore>
       <div class="feed-container-tool-operation feed-background-color">
         <Row :gutter="16" style="display: flex; justify-content: center; align-items: center; height: 100%;">
-          <Col span="6" :class="$style.operation">
+          <Col span="6" class="operation">
             <div v-if="!feedData.tool.is_digg_feed" @click="handleDiggFeed(feed_id)">
-              <i class="ivu-icon ivu-icon-android-favorite"></i>
+              <UnDiggIcon height="24" width="24" color="#999" />
               <i>喜欢</i>
             </div>
             <div v-if="feedData.tool.is_digg_feed" @click="handleUnDiggFeed(feed_id)">
-              <i class="ivu-icon ivu-icon-android-favorite did"></i>
+              <DiggIcon height="24" width="24" color="#f4504d" />
               <i class="did">喜欢</i>
             </div>
           </Col>
-          <Col span="6" :class="$style.operation">
+          <Col span="6" class="operation">
             <div @click="handleCommentForFeed(feed_id)">
-              <i class="iconfont icon-comment"></i>
+              <CommentIcon height="24" width="24" color="#999" />
               <i>评论</i>
             </div>
           </Col>
-          <Col span="6" :class="$style.operation">
-            <i class="ivu-icon ivu-icon-share"></i>
-            <i>分享</i>
+          <Col span="6" class="operation">
+            <div>
+              <ShareIcon height="24" width="24" color="#999" />
+              <i>分享</i>
+            </div>
           </Col>
-          <Col span="6" :class="$style.operation">
+          <Col span="6" class="operation">
             <div v-if="!feedData.tool.is_collection_feed" @click="handleCollection(feed_id)">
-              <i class="ivu-icon ivu-icon-android-star"></i>
+              <ConnectionIcon height="24" width="24" color="#999" />
               <i>收藏</i>
             </div>
             <div v-if="feedData.tool.is_collection_feed" @click="handleUnCollection(feed_id)">
-              <i class="ivu-icon ivu-icon-android-star did"></i>
+              <ConnectionIcon height="24" width="24" color="#f4504d" />
               <i class="did">收藏</i>
             </div>
           </Col>
@@ -217,15 +245,33 @@
   import { NOTICE } from '../stores/types';
   import getImg from '../utils/getImage';
   import { friendNum } from '../utils/friendNum';
-  import noCommentImage from '../statics/images/img_default_nothing@3x.png';
+  import noCommentImage from '../statics/images/defaultNothingx2.png';
   import Comfirm from '../utils/Comfirm';
   import formateFeedComments from '../utils/formateFeedComments';
   import { SHOWFEEDDIGGSLISTS } from '../stores/types';
+  import UnFollowingIcon from '../icons/UnFollowing';
+  import FollowingIcon from '../icons/Following';
+  import EachFollowingIcon from '../icons/EachFollowing';
+  import DiggIcon from '../icons/Digg';
+  import UnDiggIcon from '../icons/UnDigg';
+  import CommentIcon from '../icons/Comment';
+  import ShareIcon from '../icons/Share';
+  import ConnectionIcon from '../icons/Connection';
+  import BackIcon from '../icons/Back';
 
   const currentUser = localEvent.getLocalItem('UserLoginInfo');
   const feedDetail = {
     components: {
-      Comfirm
+      Comfirm,
+      UnFollowingIcon,
+      FollowingIcon,
+      EachFollowingIcon,
+      DiggIcon,
+      UnDiggIcon,
+      CommentIcon,
+      ShareIcon,
+      ConnectionIcon,
+      BackIcon
     },
     data: () => ({
       feed_id: 0,
@@ -249,7 +295,10 @@
         diggs: []
       },
       comments: [],
-      userInfo: {},
+      userInfo: {
+        is_following: 0,
+        is_followed: 0
+      },
       defaultImage: noCommentImage,
       commentComponent: { // 评论相关
         CanInput: false, // 输入框显示
@@ -282,7 +331,6 @@
           return [];
         }
         this.feedData.feed.feed_storages.forEach((value) => {
-          console.log(value);
           urlList.push(
             {
               url: getImg(value.storage_id, 100),
@@ -336,6 +384,10 @@
       },
     },
     methods: {
+      // 检测底部loading的状态变化
+      bottomStatusChange (status) {
+        this.bottomStatus = status;
+      },
       handleShowDiggList () {
         let digg_list = this.feedData.diggs;
         let digg_users = {};
@@ -537,6 +589,11 @@
           }, 500);
         })
         .catch(({ response: { data: { message = "网络状况堪忧" } = {} } = {} }) => {
+          setTimeout(() => {
+            // 若数据已全部获取完毕
+            this.bottomStatus = '';
+            this.$refs.loadmore.onBottomLoaded();
+          }, 500);
           this.$store.dispatch(NOTICE, cb => {
             cb({
               text: message,
@@ -760,11 +817,11 @@
     object-fit: cover;
     color: #333;
   }
-  i.did {
-    color: #f4504d;
-  }
+  // i.did {
+  //   color: #f4504d;
+  // }
   .feed-container-header {
-    height: 45px;
+    height: 55px;
     border-bottom: 1px #ddd solid;
     .ivu-row {
       width: 100%;
@@ -776,6 +833,8 @@
       justify-content: center;
       div {
         height: 100%;
+        display: flex;
+        align-items: center;
       }
       a {
         display: flex;
@@ -846,6 +905,9 @@
   .feed-container-tool {
     .feed-container-tool-digg {
       padding-bottom: 2vh;
+      .digg_counter {
+        color: #59b6d7;
+      }
     }
   }
   .feed-container-tool-operation {
@@ -856,6 +918,20 @@
     height: 60px;
     // display: none;
     z-index: 6;
+    .operation {
+      div { 
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        svg {
+          width: 100%;
+        }
+        i {
+          font-style: normal;
+          color: #999;
+        }
+      }
+    }
   }
   .feed-container-comments {
     .noComment {
@@ -893,6 +969,11 @@
     textarea {
       min-height: 34px!important;
     }
+  }
+  .followAction {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
   }
   .perComment {
     padding: 10px 0;

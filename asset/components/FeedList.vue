@@ -1,26 +1,37 @@
 <template>
-  <mt-loadmore 
-    :bottom-method="loadBottom"
-    :top-method="loadTop"
-    :bottom-all-loaded="bottomAllLoaded"
-    :top-all-loaded="topAllLoaded"
-    ref="loadmore"
-    :key="1"
-    :bottom-distance="120"
-  >
-    <div class="feed-list">
-      <Feed v-for="feed in feeds" :feed="feed" :key="feed.id"></Feed>
+  <div class="feedParentContainer">
+    <div :class="$style.nothingDefault"> 
+      <img v-if="nothing" :src="`http://localhost:8080${nothing}`" />
     </div>
-    <div v-show="bottomAllLoaded && bottomStatus !== 'loading'" style="display: flex; justify-content: center; align-items: center; padding: 10px 0">
-      <span>没有更多了</span>
+    <div v-if="!nothing" :class="{fixed: !showTop, noFixed: showTop}">
+      
     </div>
-  </mt-loadmore>
+    <mt-loadmore
+      v-if="!nothing"
+      :bottom-method="loadBottom"
+      :top-method="loadTop"
+      :bottom-all-loaded="bottomAllLoaded"
+      :top-all-loaded="topAllLoaded"
+      ref="loadmore"
+      bottomPullText="上拉加载更多动态"
+      bottomDropText="释放加载更多动态"
+      topPullText="下拉更新动态"
+      topDropText="释放更新动态"
+      :bottomDistance="70"
+    >
+      <div class="feed-list" v-if="!nothing">
+        <Feed v-for="feed in feeds" :feed="feed" :key="feed.id"></Feed>
+      </div>
+    </mt-loadmore>
+    
+  </div>
 </template>
 <script>
   import request, { createAPI, addAccessToken } from '../utils/request';
   import errorCodes from '../stores/errorCodes';
   import localEvent from '../stores/localStorage';
   import Feed from './Feed';
+  import nothingImg from '../statics/images/defaultNothingx3.png';
 
   const FeedLists = {
     components: {
@@ -31,22 +42,55 @@
     },
     data: () => ({
       feeds: [],
-      maxId: 0,
+      maxId: 0, // 更新查询用 最新和关注用
+      page: 1, // 更新查询用 热门动态
       limit: 15,
       errors: {},
       limitCounter: 0,
       bottomAllLoaded: false,
-      topAllLoaded: true,
+      topAllLoaded: false,
       bottomStatus: '',
       isShowComfirm: false,
       CanInput: false,
+      showTop: true
     }),
     methods: {
+      // 加载更多
       loadBottom () {
-        this.bottomStatus = 'loading';
+        let limiterSend = '';
+        let api = this.option.uri; // 查询地址
+        let limiter = this.option.limiter; // 分页查询方式
+        let max_id = this.maxId; // 分页参数
+        if( max_id == 0) {
+          return ;
+        }
+        if(limiter == 'page') {
+          this.page += 1;
+          limiterSend = `?page=${max_id}`;
+        } else {
+          limiterSend = `?max_id=${max_id}`;
+        }
+        addAccessToken().get(createAPI(`${api}${limiterSend}`), {},
+          {
+            validate: status  => status === 200
+          }
+        )
+        .then(response => {
+          let data = response.data.data;
+          data.forEach((d) => {
+            this.feeds.push(d);
+          });
+          if(data.length < 15) {
+            this.bottomAllLoaded = true;
+          }
+          setTimeout(() => {
+            this.$refs.loadmore.onBottomLoaded();
+          }, 1500)
+        });
       },
       loadTop () {
         setTimeout(() => {
+          if(this.$refs.loadmore)
           this.$refs.loadmore.onTopLoaded();
         }, 1500)
       }
@@ -55,17 +99,18 @@
       error: function () {
         let errors = Object.values(this.errors);
         return errors[0] || '';
+      },
+      nothing () {
+        return this.feeds.length ? 0 : nothingImg;
       }
     },
     mounted () {
-      let limiterSend = {};
+      let limiterSend = '';
       let api = this.option.uri;
       let limiter = this.option.limiter;
       if (limiter == 'page') {
         this.limitCounter = 1;
         limiterSend = '?page=1';
-      } else {
-        limiterSend = '?'
       }
       addAccessToken().get(createAPI(`${api}${limiterSend}`), 
         {}, 
@@ -75,7 +120,11 @@
       )
       .then(response => {
         this.feeds = response.data.data;
-        this.$refs.loadmore.onBottomLoaded();
+        let lastFeed = this.feeds[this.feeds.length - 1];
+        this.maxId = lastFeed.feed.feed_id;
+        if(this.feeds.length < 15) {
+          this.bottomAllLoaded = true;
+        }
       })
       .catch(({ response: { data = {} } = {} } ) => {
         const { code = 'xxxx' } = data;
@@ -83,9 +132,13 @@
       });
     },
     updated () {
-      if (this.$refs.my_scroller)
-        this.$refs.my_scroller.resize();
-      }
+      this.showTop = false;
+      setTimeout(() => {
+        if(this.$refs.loadmore){
+          this.$refs.loadmore.onTopLoaded();
+        }
+      }, 500);
+    }
   };
 
   export default FeedLists;
@@ -100,9 +153,30 @@
     text-align: center;
     line-height: 18px;
   }
+  .nothingDefault {
+    display: flex; 
+    align-items: center;
+    position: fixed; 
+    top: 0; 
+    bottom: 0; 
+    left: 0; 
+    right: 0;
+    img {
+      width: 100%;
+    }
+  }
 </style>
 <style>
+  .mint-loadmore {padding-bottom: 60px;}
   .mint-loadmore-content-parent-no-trans .mint-loadmore-content {
     transform: inherit!important;
+  }
+  .noFixed {
+    height: 53px;
+    display: none;
+  }
+  .fixed {
+    height: 53px;
+    display: block;
   }
 </style>

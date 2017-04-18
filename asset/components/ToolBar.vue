@@ -3,14 +3,14 @@
     <Row :class="$style.toolBar" class="menu">
       <Col :span="5" :class="$style.menuItem">
         <router-link class="router-link" to="/feeds">
-          <Icon type="ios-home-outline"></Icon>
+          <HomeIcon :height="24" width="100%" color="#999" />
           <i>首页</i>
         </router-link>
       </Col>
       <Col :span="5" :class="$style.menuItem">
         <router-link class="router-link" to="/discover">
           <Badge dot>
-            <Icon type="android-globe"></Icon>
+            <DiscoverIcon :height="24" width="100%" color="#999" />
             <i>发现</i>
           </Badge>
         </router-link>
@@ -21,7 +21,7 @@
       <Col :span="5" :class="$style.menuItem">
         <router-link class="router-link" to="/users/message">
           <Badge dot>
-            <Icon type="ios-chatboxes-outline"></Icon>
+            <MessageIcon :height="24" width="100%" color="#999" />
             <i>消息</i>
           </Badge>
         </router-link>
@@ -29,7 +29,7 @@
       <Col :span="5" :class="$style.menuItem">
         <router-link class="router-link" to="/users/profile">
           <Badge dot>
-            <Icon type="ios-person-outline"></Icon>
+            <MeIcon :height="24" width="100%" color="#999" />
             <i>我</i>
           </Badge>
         </router-link>
@@ -39,20 +39,30 @@
 </template>
 
 <script>
-    import router from '../routers/index';
-    import { SHOWPOST } from '../stores/types';
+  import router from '../routers/index';
+  import { SHOWPOST } from '../stores/types';
+  import HomeIcon from '../icons/Home';
+  import DiscoverIcon from '../icons/Discover';
+  import MessageIcon from '../icons/Message';
+  import MeIcon from '../icons/Me';
 
-    export default {
-      methods: {
-        showPost () {
-          this.$store.dispatch(SHOWPOST, cb => {
-            cb({
-              show: true
-            })
+  export default {
+    components: {
+      HomeIcon,
+      DiscoverIcon,
+      MessageIcon,
+      MeIcon
+    },
+    methods: {
+      showPost () {
+        this.$store.dispatch(SHOWPOST, cb => {
+          cb({
+            show: true
           })
-        }
+        })
       }
     }
+  }
 </script>
 
 <style lang="scss" module>
@@ -66,6 +76,7 @@
       z-index: 4!important;
     }
     .plus {
+      line-height: 1!important;
       &:before {
         font-size: 50px!important;
         color: #fff;
@@ -86,6 +97,7 @@
         align-items: center;
         width: 100%;
         justify-content: center;
+        line-height: 1.5;
         &:before {
             font-size: 24px;
         }
@@ -103,8 +115,8 @@
   .router-link-active {
     border-bottom: none;
     color: #59b6d7;
-    i {
-      color: #59b6d7;
+    svg {
+      fill: #59b6d7;
       &:before {
         color: #59b6d7;
       }

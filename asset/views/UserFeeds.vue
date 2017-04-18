@@ -163,15 +163,15 @@
           cb(dayFeeds);
         })
       })
-      // .catch(({ response: { message = '网络状况堪忧啊' } = {} } ) => {
-      //   this.$store.dispatch(NOTICE, cb => {
-      //     cb({
-      //       text: message,
-      //       time: 1500,
-      //       status: true
-      //     });
-      //   });
-      // })
+      .catch(({ response: { message = '网络状况堪忧啊' } = {} } ) => {
+        this.$store.dispatch(NOTICE, cb => {
+          cb({
+            text: message,
+            time: 1500,
+            status: true
+          });
+        });
+      })
     }
   };
 

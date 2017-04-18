@@ -2,10 +2,10 @@ import axios from 'axios';
 import localEvent from '../stores/localStorage';
 // const baseURL = `http://192.168.2.222`;
 // const api = `http://192.168.2.222/api/v1`;
-// const baseURL = `http://192.168.2.118`;
-// const api = `http://192.168.2.118/api/v1`;
-const baseURL = `http://192.168.199.235`;
-const api = `http://192.168.199.235/api/v1`;
+const baseURL = `http://192.168.2.118`;
+const api = `http://192.168.2.118/api/v1`;
+// const baseURL = `http://192.168.199.235`;
+// const api = `http://192.168.199.235/api/v1`;
 // const baseURL = 'http://thinksns-plus';
 // const api = 'http://thinksns-plus/api/v1';
 

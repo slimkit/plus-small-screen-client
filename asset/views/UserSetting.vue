@@ -3,12 +3,14 @@
 		<div class="userProfile-header userProfile-background-color">
       <Row :gutter="16">
         <Col span="3" style="display: flex; justify-content: flex-start">
-          <i @click="goTo(-1)" class="ivu-icon ivu-icon-android-arrow-back" style="width: 100%; height: 100%; display: flex; align-items: center;"></i>
+          <div @click="" @click="goTo(-1)" style="display: flex; align-items: center;">
+            <BackIcon height="21" width="21" color="#999" />
+          </div>
         </Col>
-        <Col span="18" style="font-size: 18px;">
+        <Col span="17" style="font-size: 18px;">
           个人资料
         </Col>
-        <Col span="3" style="display: flex; justify-content: flex-end">
+        <Col span="4" style="display: flex; justify-content: flex-end">
           <span @click="done(canSave)" class="operate" :class="{active: canSave, disabled: !canSave}">完成</span>
         </Col>
       </Row>
@@ -42,7 +44,9 @@
           <input style="padding: 0;" type="text" v-model.trim="name" :value="name" placeholder="输入新昵称" />
         </Col>
         <Col span="3" :class="$style.rightIcon">
-          <i @click="clean('name')"  v-show="canClean" class="ivu-icon ivu-icon-close-circled"></i>
+          <div @click="clean('name')">
+            <CloseIcon height="21" width="21" color="#999" />
+          </div>
         </Col>
       </Row>
       <Row :gutter="16" :class="$style.rowCenter">
@@ -143,16 +147,14 @@
             style="display: flex; align-items: center;"
           >
             <Col span="3">
-              <i 
-                class="ivu-icon ivu-icon-android-arrow-back" 
-                style="width: 100%; height: 100%; display: flex; align-items: center;" 
-                @click="handleHideAvatarSelect">
-              </i>
+              <div style="display: flex; align-items: center;" @click="handleHideAvatarSelect">
+                <BackIcon height="21" width="21" color="#999" />
+              </div>
             </Col>
-            <Col span="18" style="font-size: 18px;">
+            <Col span="17" style="font-size: 18px;">
               更换头像
             </Col>
-            <Col span="3" style="display: flex; justify-content: flex-end">
+            <Col span="4" style="display: flex; justify-content: flex-end">
               <span @click="getCropData" class="operate avatarDone">完成</span>
             </Col>
           </Row>
@@ -229,13 +231,17 @@
   import { Base64 } from 'js-base64';
   import getImage from '../utils/getImage';
   import contains from '../utils/contains';
+  import BackIcon from '../icons/Back';
+  import CloseIcon from '../icons/Close';
 
   const currentUser = localEvent.getLocalItem('UserLoginInfo');
   // 昵称验证规则
   const usernameReg = /^[a-zA-Z_\u4E00-\u9FA5\uF900-\uFA2D][a-zA-Z0-9_\u4E00-\u9FA5\uF900-\uFA2D]*$/;
   const UserSetting = {
     components: {
-      VueCropper
+      VueCropper,
+      BackIcon,
+      CloseIcon
     },
     data: () => ({
       currentUser: currentUser.user_id, // 当前登录用户id
@@ -756,11 +762,11 @@
       padding-bottom: 5px;
       textarea {
         border: none;
-        &:hover {
+        padding-left: 0;
+        padding-right: 0;
+        &:hover, &:focus {
           border: none;
-        }
-        &:focus {
-          border: none;
+          box-shadow: none;
         }
       }
     }
@@ -788,7 +794,7 @@
     background: #fff;
   }
   span.operate {
-    font-size: 12px;
+    font-size: 14px;
   }
   span.operate.avatarDone{
     color: #59b6d7;

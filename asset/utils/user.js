@@ -2,7 +2,7 @@ import localEvent from '../stores/localStorage';
 import { createAPI, addAccessToken } from '../utils/request';
 import errorCodes from '../stores/errorCodes';
 import getImage from './getImage';
-import defaultAvatar from '../statics/images/msg_box_remind@3x.png';
+import defaultAvatar from '../statics/images/defaultAvatarx2.png';
 function followingUser(user_id, cb) {
   addAccessToken().post(
     createAPI('users/follow'),
@@ -90,8 +90,8 @@ function getUserInfo (user_id, process = 30, cb) {
     userLocal.user_id = user.id;
     userLocal.name = user.name;
     userLocal.phone = user.phone;
-    userLocal.is_followed = user.is_followed;
-    userLocal.is_following = user.is_following;
+    userLocal.is_followed = user.is_followed ? user.is_followed : 0;
+    userLocal.is_following = user.is_following ? user.is_following : 0;
     user.counts.map(function (count, index) {
       let keyName = count.key;
       let value = count.value;

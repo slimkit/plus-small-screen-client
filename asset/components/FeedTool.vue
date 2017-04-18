@@ -1,22 +1,31 @@
 <template>
   <div :class="$style.tool">
     <Row>
-      <Col span="7">
-        <i v-if="isDigg" :class="$style.fontIcon" @click="cannelDigg" class=" digg ivu-icon ivu-icon-android-favorite"><span class="count">{{ friendnum(toolDatas.feed_digg_count) }}</span></i>
-        <i v-if="!isDigg" @click="sendDigg" class="ivu-icon ivu-icon-android-favorite-outline"><span class="count">{{ friendnum(toolDatas.feed_digg_count) }}</span></i>
+      <Col span="7" :class="$style.parentCount">
+        <div v-show="isDigg" @click="cannelDigg">
+          <DiggIcon width="21" height="21" color="#f4504d" /></DiggIcon>
+        </div>
+        <div  v-show="!isDigg" @click="sendDigg">
+          <UnDiggIcon width="21" height="21" color="#999" /></UnDiggIcon>
+        </div>
+        <i :class="$style.count">{{ friendnum(toolDatas.feed_digg_count) }}</i>
       </Col>
-      <Col span="7">
-        <i class="iconfont icon-comment" @click.stop="commentFeed">
-          <span class="count">{{ friendnum(toolDatas.feed_comment_count) }}</span>
-        </i>
+      <Col span="7"  :class="$style.parentCount">
+        <div @click="commentFeed">
+          <CommentIcon width="21" height="21" color="#999" /></CommentIcon>
+        </div>
+        <i :class="$style.count">{{ friendnum(toolDatas.feed_comment_count) }}</i>
       </Col>
-      <Col span="7">
-        <i class="iconfont icon-view" @click="router(`/feed/${feedId}`)">
-          <span class="count">{{ friendnum(toolDatas.feed_view_count) }}</span>
-        </i>
+      <Col span="7"  :class="$style.parentCount">
+        <div @click="router(`/feed/${feedId}`)">
+          <ViewIcon width="21" height="21" color="#999" /></ViewIcon>
+        </div>
+        <i :class="$style.count">{{ friendnum(toolDatas.feed_view_count) }}</i>
       </Col>
-      <Col span="3" style="text-align: right">
-        <i class="iconfont icon-more"></i>
+      <Col span="3" :class="$style.parentCount">
+        <div>
+          <MoreIcon width="21" height="21" color="#999" />
+        </div>
       </Col>
     </Row>
     <!-- 评论动态 -->
@@ -48,9 +57,21 @@
   import localEvent from '../stores/localStorage';
   import { NOTICE } from '../stores/types';
   import router from '../routers/index';
+  import ViewIcon from '../icons/View';
+  import CommentIcon from '../icons/Comment';
+  import DiggIcon from '../icons/Digg';
+  import UnDiggIcon from '../icons/UnDigg';
+  import MoreIcon from '../icons/More';
 
   const localUser = localEvent.getLocalItem('UserLoginInfo');
   const FeedTool = {
+    components: {
+      CommentIcon,
+      ViewIcon,
+      DiggIcon,
+      UnDiggIcon,
+      MoreIcon
+    },
     props: [
       'toolDatas',
       'feedId',
@@ -179,51 +200,62 @@
 </script>
 
 <style lang="scss" module>
-  .commentInput{
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    z-index: 6;
-    background-color: #fff;
-    border-bottom: 1px #59b6d7 solid;
-    border: none;
-    padding: 10px 0;
-    textarea {
-      min-height: 34px!important;
+  .tool {
+    .commentInput{
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      z-index: 6;
+      background-color: #fff;
+      border-bottom: 1px #59b6d7 solid;
+      border: none;
+      padding: 10px 0;
+      textarea {
+        min-height: 34px!important;
+      }
     }
-  }
-  .commentCount {
-    margin-bottom: .5em;
-    font-size: 12px;
-  }
-  .wrapper{
-    background-color: rgba(0, 0, 0, .3);
-    z-index: 5;
-    top: 0px;
-    right: 0px;
-    bottom: 0px;
-    left: 0px;
-    position: fixed;
-    overflow: auto;
-    margin: 0;
-  }
-  .sendComment {
-    font-size: 14px;
-    padding: 3px!important;
-    background-color: #59b6d7;
-    &[disabled] {
-      background-color: #ccc!important;
-      color: #fff!important;
+    .commentCount {
+      margin-bottom: .5em;
+      font-size: 12px;
     }
-  }
-  .userName {
-    font-size: 13px;
-    color: #333;
-  }
-  .commentContent{
-    font-size: 14px;
-    color: #999;
+    .wrapper{
+      background-color: rgba(0, 0, 0, .3);
+      z-index: 5;
+      top: 0px;
+      right: 0px;
+      bottom: 0px;
+      left: 0px;
+      position: fixed;
+      overflow: auto;
+      margin: 0;
+    }
+    .sendComment {
+      font-size: 14px;
+      padding: 3px!important;
+      background-color: #59b6d7;
+      &[disabled] {
+        background-color: #ccc!important;
+        color: #fff!important;
+      }
+    }
+    .userName {
+      font-size: 13px;
+      color: #333;
+    }
+    .commentContent{
+      font-size: 14px;
+      color: #999;
+    }
+    .parentCount {
+      display: flex;
+      align-items: center;
+      .count {
+        padding-left: 4px;
+        color: #999;
+        font-style: normal
+      }
+    }
   }
 </style>
 

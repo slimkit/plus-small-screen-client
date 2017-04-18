@@ -23,11 +23,11 @@
 const Weibo = {
   props: {
     height: {
-      type: Number,
+      type: [String, Number],
       default: 24
     },
     width: {
-      type: Number,
+      type: [String, Number],
       default: 24
     },
     color: {

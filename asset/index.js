@@ -12,7 +12,6 @@ import loading_img from './statics/images/image-loading.png';
 import { Loadmore } from 'mint-ui';
 import { Popup } from 'mint-ui';
 import { Picker } from 'mint-ui';
-import svgWechat from './statics/images/wechat.svg';
 
 Vue.use(iView);
 Vue.use(VueWechatTitle);

@@ -3,15 +3,15 @@
   <transition name="custom-classes-transition" enter-active-class="animated slideInUp" leave-active-class="animated slideOutDown">
     <div class="post-feed" :class="$style.postRoot" v-if="show">
       <div :class="$style.postFeedNav">
-        <Row :gutter="32" type="flex" :class="$style.navRow" justify="center" align="middle">
+        <Row :gutter="16" type="flex" :class="$style.navRow" justify="center" align="middle">
           <Col span="4">
             <Button :class="$style.actionBtn" type="text" @click="closePost">取消</Button>
           </Col>
           <Col span="15">
             <h4 style="font-weight: 400; font-size: 18px; text-align: center;">发布动态</h4>
           </Col>
-          <Col span="5">
-            <span :class="$style.actionBtn" @click="postFeed">发布</span>
+          <Col span="5" :class="$style.sendAction">
+            <span :class="{ action: !isDisabled, notAction: isDisabled}" @click="postFeed">发布</span>
           </Col>
         </Row>
       </div>
@@ -272,25 +272,30 @@ export default postFeed;
       border: none;
       padding: 5px 8px;
       transition: none;
-      &:focus {
+      &:focus, &:hover{
         border: none;
         outline: 0;
         box-shadow: none;
-      }
-      &:hover {
-        border: none;
-        outline: 0;
       }
     }
   }
   .postFeedNav {
     height: 45px;
     border-bottom: 1px #e2e3e3 solid;
-    .actionBtn {
-      font-size: 14px;
-    }
     .navRow {
       height: 100%;
+      margin-left: 0!important;
+      margin-right: 0!important;
+      .actionBtn {
+        font-size: 14px;
+        display: flex;
+        justify-content: flex-start;
+        padding: 6px 0;
+      }
+      .sendAction {
+        display: flex;
+        justify-content: flex-end;
+      }
     }
   }
 </style>
@@ -316,6 +321,14 @@ export default postFeed;
     }
     .left-arrow {
       display: none;
+    }
+    .action {
+      color: #59b6d7;
+      font-size: 14px;
+    }
+    .notAction {
+      color: #999;
+      font-size: 14px;
     }
   }
   .demo-upload-list{
