@@ -85,15 +85,15 @@ function noticeTask (taskId, data, cb) {
   .then(response => {
     cb(response.data);
   })
-  .catch(({ response: { data: { message = "网络状况堪忧" } = {} } = {} }) => {
-    store.dispatch(NOTICE, cb => {
-      cb({
-        text: '网络状况堪忧3',
-        time: 1500,
-        status: false
-      });
-    });
-  })
+  // .catch(({ response: { data: { message = "网络状况堪忧" } = {} } = {} }) => {
+  //   store.dispatch(NOTICE, cb => {
+  //     cb({
+  //       text: '网络状况堪忧3',
+  //       time: 1500,
+  //       status: false
+  //     });
+  //   });
+  // })
 };
 
 export {

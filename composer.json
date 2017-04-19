@@ -20,8 +20,9 @@
             "helper.php"
         ],
         "classmap": [
-            "Installer.php"
+            "Installer.php",
+            "src/Controllers/WebController.php"
         ]
     },
-    "version": "1.0.11"
+    "version": "1.0.12"
 }

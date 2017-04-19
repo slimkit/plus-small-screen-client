@@ -13,6 +13,7 @@ import SystemSetting from '../views/SystemSetting';
 import ChangePassword from '../views/ChangePassword';
 import UserSetting from '../views/UserSetting';
 import UserFeeds from '../views/UserFeeds';
+import Message from '../views/Message';
 import { requestAuth, CanNotGetInWhenLogged } from '../utils/auth';
 
 const routes = [
@@ -42,6 +43,17 @@ const routes = [
     beforeEnter: (to, from, next) => {
       CanNotGetInWhenLogged(to, from, next)
     }
+  },
+  {
+    path: '/users/message',
+    component: Message,
+    meta: {
+      title: '消息'
+    },
+    beforeEnter: (to, from, next) => {
+      requestAuth(to, from, next)
+    }
+
   },
   {
     path: '/findpassword',

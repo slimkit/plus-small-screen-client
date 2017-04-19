@@ -74,8 +74,6 @@ import localEvent from '../stores/localStorage';
 import { Base64 } from 'js-base64';
 import md5 from 'js-md5';
 import { createUploadTask, uploadFile, noticeTask } from '../utils/upload';
-// import sizeOf from 'image-size';
-// import FileUpload from 'vue-upload-component';
 
 const base64Reg = /^data:(.*?);base64,/;
 let reg = /data:(.*?);/;
@@ -91,7 +89,7 @@ const postFeed = {
     uploadUri: 'xxx',
     uploadData: {},
     uploadHeaders: {},
-    storage_task_ids: []
+    storage_task_ids: [],
   }),
   computed: {
     ...mapState({
