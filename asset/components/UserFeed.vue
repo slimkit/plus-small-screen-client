@@ -128,7 +128,6 @@
       }
     },
     created () {
-      console.log(this.feed);
       this.feed_id = this.feed.feed.feed_id;
       this.toolInfo = Object.assign({}, this.toolInfo, this.feed.tool);
       this.tools = 1;

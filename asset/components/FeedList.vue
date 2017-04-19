@@ -77,12 +77,14 @@
         )
         .then(response => {
           let data = response.data.data;
+          let length = data.length;
           data.forEach((d) => {
             this.feeds.push(d);
           });
-          if(data.length < 15) {
+          if(length < 15) {
             this.bottomAllLoaded = true;
           }
+          this.maxId = data[length - 1].feed.feed_id;
           setTimeout(() => {
             this.$refs.loadmore.onBottomLoaded();
           }, 1500)
@@ -156,13 +158,14 @@
   .nothingDefault {
     display: flex; 
     align-items: center;
-    position: fixed; 
+    justify-content: center;
+    position: fixed;
     top: 0; 
     bottom: 0; 
     left: 0; 
     right: 0;
     img {
-      width: 100%;
+      width: 60%;
     }
   }
 </style>

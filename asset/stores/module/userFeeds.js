@@ -25,7 +25,7 @@ const actions = {
   },
   [APPENDUSERFEED]: (context, cb) => {
     cb( (addedFeed) => {
-      context.commit(APPENDUSERFEEDS, addedFeed);
+      context.commit(APPENDUSERFEED, addedFeed);
     });
   },
   [CLEANUSERFEEDS]: (context) => {
@@ -34,7 +34,9 @@ const actions = {
 };
 
 const getters = {
-  
+  [USERFEEDS]: (state) => {
+    return state.userFeeds.length;
+  }
 };
 
 const store = {

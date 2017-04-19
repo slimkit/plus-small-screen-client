@@ -181,7 +181,7 @@ function getUsersInfo (user_ids, cb) {
           });
           current_local_user.datas = newData;
         }
-        getAvatar(current_local_user, 20, newUserLocal => {
+        getAvatar(current_local_user, 30, newUserLocal => {
           current_local_user = newUserLocal;
         });
         localEvent.setLocalItem('user_' + current_local_user.user_id, current_local_user);

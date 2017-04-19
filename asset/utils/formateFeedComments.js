@@ -12,7 +12,7 @@ export default function (commentsSource) {
     // 评论用户
     comment.user = localEvent.getLocalItem(`user_${comment.user_id}`);
     if(Object.keys(comment.user).length == 0) {
-      getUserInfo(comment.user_id, localUser => {
+      getUserInfo(comment.user_id, 30, localUser => {
         comment.user = localUser;
       });
     }
