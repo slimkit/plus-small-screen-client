@@ -9,14 +9,14 @@
         :bottomDistance="40"
       >
         <div class="feed-container">
-          <div class="feed-container-header feed-background-color">
+          <div class="commonHeader">
             <Row :gutter="16">
               <Col span="3" style="display: flex; justify-content: flex-start">
                 <div @click="goBack">
                   <BackIcon height="21" width="21" color="#999" />
                 </div>
               </Col>
-              <Col span="18">
+              <Col span="18" class="title-col">
                 <div>
                   <router-link :to="`/users/feeds/${userInfo.user_id}`" class="avatar">
                     <div class="avatar-content">
@@ -810,52 +810,34 @@
   .feed-container {
     background-color: #f4f5f5;
   }
-  .feed-background-color {
-    background-color: #fff;
-  }
-  .avatar {
-    object-fit: cover;
-    color: #333;
-  }
-  // i.did {
-  //   color: #f4504d;
-  // }
-  .feed-container-header {
-    height: 55px;
-    border-bottom: 1px #ddd solid;
-    .ivu-row {
-      width: 100%;
-    }
-    .ivu-row, .ivu-col {
+
+  .commonHeader{
+    div {
       height: 100%;
       display: flex;
       align-items: center;
+    }
+    a {
+      display: flex;
+      height: 100%;
       justify-content: center;
-      div {
+      align-items: center;
+      padding: 5px 0;
+      .avatar-content {
         height: 100%;
         display: flex;
+        border-radius: 50%;
+        overflow: hidden;
         align-items: center;
-      }
-      a {
-        display: flex;
-        height: 100%;
-        justify-content: center;
-        align-items: center;
-        padding: 5px 0;
-        .avatar-content {
+        img.avatar {
+          object-fit: cover;
+          color: #333;
+          width: auto;
           height: 100%;
-          display: flex;
-          border-radius: 50%;
-          overflow: hidden;
-          align-items: center;
-          img {
-            height: 100%;
-            object-fit: cover;
-          }
         }
       }
     }
-  }
+  } 
   .feed-container-content { 
     .feed-container-content-images {
       div {
@@ -953,6 +935,9 @@
         border-bottom: 3px #59b6d7 solid;
       }
     }
+  }
+  .feed-background-color {
+    background-color: #fff;
   }
 </style>
 <style lang="scss" module>

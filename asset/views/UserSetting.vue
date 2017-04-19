@@ -1,13 +1,13 @@
 <template>
 	<div class="userProfile" :class="$style.userProfile">
-		<div class="userProfile-header userProfile-background-color">
+		<div class="commonHeader">
       <Row :gutter="16">
         <Col span="3" style="display: flex; justify-content: flex-start">
           <div @click="" @click="goTo(-1)" style="display: flex; align-items: center;">
             <BackIcon height="21" width="21" color="#999" />
           </div>
         </Col>
-        <Col span="17" style="font-size: 18px;">
+        <Col span="17" class="title-col">
           个人资料
         </Col>
         <Col span="4" style="display: flex; justify-content: flex-end">
@@ -695,11 +695,11 @@
     height: 100%;
     width: 100%;
     .avatarOp {
-      height: 45px;
+      height: 55px;
       border-bottom: 1px solid #e2e3e3;
     },
     .cropper {
-      height: calc(100% - 46px);
+      height: 100%;
       width: 100%;
     }
     .canvasAvatar {
@@ -774,8 +774,8 @@
   
 </style>
 <style scope lang="scss">
-  .userProfile-header, .avatarOp {
-    height: 45px;
+  .avatarOp {
+    height: 55px;
     border-bottom: 1px #ddd solid;
     .ivu-row {
       width: 100%;

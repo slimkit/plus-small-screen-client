@@ -52,15 +52,17 @@
         </Col>
       </Row>
       <Row :gutter="16" :class="$style.entryMenu">
-        <Col span="3">
-          <RankingIcon :height="21" :width="21" color="#59b6d7" />
-        </Col>
-        <Col span="19" :class="$style.menuText">
-          排行榜
-        </Col>
-        <Col span="2"  :class="$style.rightIcon">
-          <Icon type="ios-arrow-right"></Icon>
-        </Col>
+        <div style="width:100%;" @click="changeUrl('/users/ranking')">
+          <Col span="3">
+            <RankingIcon :height="21" :width="21" color="#59b6d7" />
+          </Col>
+          <Col span="19" :class="$style.menuText">
+            排行榜
+          </Col>
+          <Col span="2"  :class="$style.rightIcon">
+            <Icon type="ios-arrow-right"></Icon>
+          </Col>
+        </div>
       </Row>
       <Row :gutter="16" :class="$style.entryMenu">
         <Col span="3">
@@ -75,7 +77,7 @@
       </Row>
     </div>
     <div :class="$style.entry">
-      <Row :gutter="16" :class="$style.entryMenu">
+      <!-- <Row :gutter="16" :class="$style.entryMenu">
         <Col span="3">
           <FeedbackIcon :height="21" :width="21" color="#59b6d7" />
         </Col>
@@ -96,7 +98,7 @@
         <Col span="2" :class="$style.rightIcon">
           <Icon type="ios-arrow-right"></Icon>
         </Col>
-      </Row>
+      </Row> -->
       <Row :gutter="16" :class="$style.entryMenu">
         <div style="width: 100%;" @click="changeUrl('/users/systemSetting')">
           <Col span="3">
@@ -179,7 +181,7 @@
   .profile {
     padding-bottom: 60px;
     .header {
-      height: 45px;
+      height: 55px;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -227,6 +229,7 @@
       }
     }
     .followsContent {
+      width: 100%;
       background: #fff;
       display: flex;
       padding: 16px 0;

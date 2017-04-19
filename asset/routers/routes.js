@@ -14,6 +14,8 @@ import ChangePassword from '../views/ChangePassword';
 import UserSetting from '../views/UserSetting';
 import UserFeeds from '../views/UserFeeds';
 import Message from '../views/Message';
+import Ranking from '../views/Ranking';
+import Comments from '../views/Comments';
 import { requestAuth, CanNotGetInWhenLogged } from '../utils/auth';
 
 const routes = [
@@ -32,6 +34,36 @@ const routes = [
     },
     beforeEnter: (to, from, next) => {
       CanNotGetInWhenLogged(to, from, next)
+    }
+  },
+  {
+    path: '/users/diggs',
+    component: Ranking,
+    meta: {
+      title: '赞'
+    },
+    beforeEnter: (to, from, next) => {
+      requestAuth(to, from, next)
+    }
+  },
+  {
+    path: '/users/ranking',
+    component: Ranking,
+    meta: {
+      title: '排行榜'
+    },
+    beforeEnter: (to, from, next) => {
+      requestAuth(to, from, next)
+    }
+  },
+  {
+    path: '/users/mycomments',
+    component: Comments,
+    meta: {
+      title: '评论'
+    },
+    beforeEnter: (to, from, next) => {
+      requestAuth(to, from, next)
     }
   },
   {

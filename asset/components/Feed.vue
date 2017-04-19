@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.detail" :id="`feed-${feed_id}`">
-    <Row :gutter="16">
+    <Row :gutter="16" style="-webkit-align-items: flex-start; align-items: flex-start;">
       <Col span="4">
         <div class="grid-content bg-purple">
           <img :src="avatar" alt="" style="width:100%; border-radius:50%">

@@ -38,6 +38,12 @@ li {
     margin: 5px 0;
   }
 }
+.primary-color {
+  color: @themeColor;
+}
+.gray-color {
+  color: @secondaryColor;
+}
 a {
   color: @themeColor;
   text-decoration: none;
@@ -46,12 +52,44 @@ a {
   }
 }
 
+img.avatar {
+  border-radius: 50%;
+  width: 100%;
+}
+.commonHeader {
+  height: 55px;
+  background-color: #fff;
+  border-bottom: 1px #e2e3e3 solid;
+  .ivu-row {
+    height: 100%;
+    .title-col {
+      font-size: 18px;
+      display: flex;
+      justify-content: center;
+    }
+  }
+}
+.mint-loadmore-content .mint-loadmore-top {
+  height: 55px;
+  line-height: 55px;
+}
+.row-container {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  .avatar-parent-col {
+    display: flex;
+    align-items: center;
+  }
+}
 .ivu-icon {
   font-size: 16px;
   color: #999;
 }
 
-.ivu-row {
+.ivu-row, .ivu-row-flex {
+  display: flex;
+  align-items: center;
   margin-left: 0!important;
   margin-right: 0!important;
 }

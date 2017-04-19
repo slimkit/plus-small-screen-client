@@ -169,17 +169,17 @@
     }
   }
 </style>
-<style>
-  .mint-loadmore {padding-bottom: 60px;}
+<style scoped>
+  .mint-loadmore {padding-bottom: 60px}
   .mint-loadmore-content-parent-no-trans .mint-loadmore-content {
-    transform: inherit!important;
+    transform: inherit;
   }
   .noFixed {
-    height: 53px;
+    height: 55px;
     display: none;
   }
   .fixed {
-    height: 53px;
+    height: 55px;
     display: block;
   }
 </style>

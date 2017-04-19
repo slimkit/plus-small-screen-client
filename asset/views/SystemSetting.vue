@@ -1,11 +1,13 @@
 <template>
   <div class="systemSetting">
-    <div class="systemSetting-header systemSetting-background-color">
+    <div class="commonHeader">
       <Row :gutter="16">
         <Col span="3" style="display: flex; justify-content: flex-start">
-          <i @click="goTo(-1)" class="ivu-icon ivu-icon-android-arrow-back" style="width: 100%; height: 100%; display: flex; align-items: center;"></i>
+          <div @click="goTo(-1)">
+            <BackIcon height="21" width="21" color="#999" />
+          </div>
         </Col>
-        <Col span="18" style="font-size: 18px;">
+        <Col span="18" class="title-col">
           设置
         </Col>
         <Col span="3" style="display: flex;">
@@ -63,10 +65,12 @@
   import localEvent from '../stores/localStorage';
   import Comfirm from '../utils/Comfirm';
   import { NOTICE } from '../stores/types';
+  import BackIcon from '../icons/Back';
 
   const systemSetting = {
     components: {
-      Comfirm
+      Comfirm,
+      BackIcon
     },
     data: () => ({
       comfirm: {
