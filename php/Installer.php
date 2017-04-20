@@ -1,4 +1,5 @@
 <?php
+
 namespace Zhiyi\PlusComponentWeb;
 
 use Zhiyi\Component\Installer\PlusInstallPlugin\AbstractInstaller;
@@ -12,11 +13,11 @@ class Installer extends AbstractInstaller
 
     public function router()
     {
-        return dirname(__FILE__).'/routes.php';
+        return dirname(__DIR__).'/routes.php';
     }
 
     public function resource()
     {
-        return dirname(__FILE__) . '/dist/'; 
+        return dirname(__DIR__) . '/dist/'; 
     }
 }

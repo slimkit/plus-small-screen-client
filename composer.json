@@ -20,7 +20,7 @@
             "helper.php"
         ],
         "classmap": [
-            "Installer.php",
+            "php/Installer.php",
             "src/Controllers/WebController.php"
         ]
     },
