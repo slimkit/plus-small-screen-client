@@ -14,7 +14,8 @@
     data: () => ({
       option: {
         uri: 'feeds',
-        limiter: 'max_id'
+        limiter: 'max_id',
+        type: 'new'
       }
     })
   }

@@ -1,4 +1,4 @@
-import { FEEDSFOLLOWING, FEEDSFOLLWOINGADD, FEEDFOLLOWINGUPDATE } from '../types';
+import { FEEDSFOLLOWING, FEEDSFOLLWOINGADD, FEEDFOLLOWINGUPDATE, FEEDFOLLOWINGPREPEND } from '../types';
 
 const state = {
   feedsFollow: []
@@ -9,11 +9,13 @@ const mutations = {
     state.feedsFollow = feedFollow;
   },
   [FEEDSFOLLWOINGADD] (state, addFeed) {
-    state.feedsFollow.push(addFeed);
+    state.feedsFollow = [...state.feedsFollow, addFeed];
   },
   [FEEDFOLLOWINGUPDATE] (state, info) {
-    console.log(info);
     state.feedsFollow[info.index] = info.newFeed;
+  },
+  [FEEDFOLLOWINGPREPEND] (state, newfeed) {
+    state.feedsFollow = [newfeed, ...state.feedsFollow];
   }
 };
 
@@ -32,6 +34,11 @@ const actions = {
     cb( info => {
       context.commit(FEEDFOLLOWINGUPDATE, info);
     });
+  },
+  [FEEDFOLLOWINGPREPEND]: (context, cb) => {
+    cb( newfeed => {
+      context.commit(FEEDFOLLOWINGPREPEND, newfeed);
+    })
   }
 };
 

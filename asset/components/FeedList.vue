@@ -31,7 +31,7 @@
   import localEvent from '../stores/localStorage';
   import Feed from './Feed';
   import nothingImg from '../statics/images/defaultNothingx3.png';
-  import { NOTICE, FEEDSFOLLOWING, FEEDSFOLLWOINGADD, FEEDFOLLOWINGUPDATE } from '../stores/types';
+  import { NOTICE, FEEDSFOLLOWING, FEEDSFOLLWOINGADD, FEEDFOLLOWINGUPDATE, FEEDSHOT, FEEDSHOTADD, FEEDHOTUPDATE, FEEDSNEW, FEEDSNEWADD, FEEDNEWUPDATE, FEEDFOLLOWINGPREPEND, FEEDNEWPREPEND, FEEDHOTPREPEND } from '../stores/types';
 
   const FeedLists = {
     components: {
@@ -51,13 +51,26 @@
       topAllLoaded: false,
       bottomStatus: '',
       isShowComfirm: false,
-      CanInput: false,
       showTop: true,
-      feedType: {
+      firstId: 0, // 下拉刷新过滤节点
+      feedType: { // vuex相关action
         'following': {
           list: FEEDSFOLLOWING,
           add: FEEDSFOLLWOINGADD,
-          update: FEEDFOLLOWINGUPDATE
+          update: FEEDFOLLOWINGUPDATE,
+          prepend: FEEDFOLLOWINGPREPEND
+        },
+        'hot': {
+          list: FEEDSHOT,
+          add: FEEDSHOTADD,
+          update: FEEDHOTUPDATE,
+          prepend: FEEDHOTPREPEND
+        },
+        'new': {
+          list: FEEDSNEW,
+          add: FEEDSNEWADD,
+          update: FEEDNEWUPDATE,
+          prepend: FEEDNEWPREPEND
         }
       }
     }),
@@ -67,15 +80,14 @@
         let limiterSend = '';
         let api = this.option.uri; // 查询地址
         let limiter = this.option.limiter; // 分页查询方式
-        let max_id = this.maxId; // 分页参数
-        if( max_id == 0) {
+        if( this.maxId == 0) {
           return ;
         }
         if(limiter == 'page') {
           this.page += 1;
-          limiterSend = `?page=${max_id}`;
+          limiterSend = `?page=${this.page}`;
         } else {
-          limiterSend = `?max_id=${max_id}`;
+          limiterSend = `?max_id=${this.maxId}`;
         }
         addAccessToken().get(createAPI(`${api}${limiterSend}`), {},
           {
@@ -87,7 +99,6 @@
           let data = response.data.data;
           let length = data.length;
           data.forEach((d) => {
-            // this.feeds.push(d);
             this.$store.dispatch(type.add, cb => {
               cb(d);
             })
@@ -102,6 +113,38 @@
         });
       },
       loadTop () {
+        let limiterSend = '';
+        let api = this.option.uri;
+        let limiter = this.option.limiter;
+        let type = this.feedType[this.option.type];
+        let currentType = this.option.type; // 区分当前为哪种列表分类
+        if (limiter == 'page') {
+          this.limitCounter = 1;
+          limiterSend = '?page=1';
+        }
+        addAccessToken().get(createAPI(`${api}${limiterSend}`), {}, 
+          {
+
+          }
+        )
+        .then( response => {
+          let feeds = response.data.data;
+          if(currentType != 'hot') {
+            feeds.forEach( feed => {
+              if(feed.feed.feed_id > this.firstId) {
+                this.$store.dispatch(type.prepend, cb => {
+                  cb(feed);
+                })
+              }
+            });
+          } else {
+            this.$store.dispatch(type.list, cb => {
+              cb(feeds);
+            })
+          }
+          feeds = [];
+        })
+        .catch();
         setTimeout(() => {
           if(this.$refs.loadmore)
           this.$refs.loadmore.onTopLoaded();
@@ -120,10 +163,25 @@
       },
       feedsList() {
         let type = this.feedType[this.option.type];
+        console.log(this.$store.getters[type.list][0]);
         return this.$store.getters[type.list];
       }
     },
     mounted () {
+      let type = this.feedType[this.option.type];
+      let storeFeeds = this.$store.getters[type.list];
+      if(storeFeeds.length) {
+        this.firstId = storeFeeds[0].feed.feed_id;
+        this.maxId = storeFeeds[storeFeeds.length -1].feed.feed_id;
+        this.showTop = false;
+        setTimeout(() => {
+          if(this.$refs.loadmore){
+            this.$refs.loadmore.onTopLoaded();
+          }
+        }, 500);
+        storeFeeds = [];
+        return;
+      }
       let limiterSend = '';
       let api = this.option.uri;
       let limiter = this.option.limiter;
@@ -138,16 +196,18 @@
         }
       )
       .then(response => {
-        let type = this.feedType[this.option.type];
+        let feeds = response.data.data;
+        this.firstId = feeds[0].feed.feed_id;
         this.$store.dispatch(type.list, cb => {
-          cb(response.data.data);
+          cb(feeds);
         })
         // this.feeds = response.data.data;
-        let lastFeed = response.data.data[response.data.data.length.length - 1];
+        let lastFeed = feeds[feeds.length - 1];
         this.maxId = lastFeed.feed.feed_id;
-        if(response.data.data.length < 15) {
+        if(feeds.length < 15) {
           this.bottomAllLoaded = true;
         }
+        feeds = [];
       })
       .catch(({ response: { data = {} } = {} } ) => {
         const { code = 'xxxx' } = data;

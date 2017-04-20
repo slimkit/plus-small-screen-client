@@ -14,7 +14,8 @@
     data: () => ({
       option: {
         uri: 'feeds/hots',
-        limiter: 'page'
+        limiter: 'page',
+        type: 'hot'
       }
     })
   }

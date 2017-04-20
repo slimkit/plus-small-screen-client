@@ -55,14 +55,26 @@ export const COMMENTINPUT = 'commentinput';
 export const FEEDSFOLLOWING = 'feedsfollowing';
 export const FEEDSFOLLWOINGADD = 'feedsfollowingadd';
 export const FEEDFOLLOWINGUPDATE = 'feedfollowingupdate';
+export const FEEDFOLLOWINGPREPEND = 'feedfollowingprepend';
 /**
  * 动态
  * 热门的
  */
 export const FEEDSHOT = 'feedshot';
-
+export const FEEDSHOTADD = 'feedshotadd';
+export const FEEDHOTUPDATE = 'feedhotupdate';
+export const FEEDHOTPREPEND = 'feedhotprepend';
 /**
  * 动态
  * 最新的
  */
-export const FEEDsNEW = 'feedsnew';
+export const FEEDSNEW = 'feedsnew';
+export const FEEDSNEWADD = 'feedsnewadd';
+export const FEEDNEWUPDATE = 'feednewupdata';
+export const FEEDNEWPREPEND = 'feednewprepend';
+
+/**
+ * confirm组件相关
+ */
+export const 
+
