@@ -3,11 +3,11 @@
 namespace Zhiyi\Component\ZhiyiPlus\PlusComponentWeb\Controllers;
 
 use Zhiyi\Plus\Http\Controllers\Controller;
-use function Zhiyi\PlusComponentWeb\view;
+use function Zhiyi\Component\ZhiyiPlus\PlusComponentWeb\view;
 
-class WebController extends Controller
+class HomeController extends Controller
 {
-	public function index()
+    public function index()
     {
         $data = [
             'base_url'   => url('/'),

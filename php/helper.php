@@ -1,7 +1,6 @@
 <?php
 
-namespace Zhiyi\PlusComponentWeb;
-
+namespace Zhiyi\Component\ZhiyiPlus\PlusComponentWeb;
 
 /**
  * Get the evaluated view contents for the given view.

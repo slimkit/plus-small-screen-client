@@ -19,9 +19,6 @@
         "files" : [
             "php/helper.php"
         ],
-        "classmap": [
-            "src/Controllers/WebController.php"
-        ],
         "psr-4": {
             "Zhiyi\\Component\\ZhiyiPlus\\PlusComponentWeb\\": "php/"
         }
