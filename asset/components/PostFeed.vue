@@ -68,7 +68,7 @@
 
 <script>
 import { mapState } from 'vuex';
-import { SHOWPOST, NOTICE } from '../stores/types';
+import { SHOWPOST, NOTICE, ADDFOLLOWINGIDS, ADDNEWIDS, FEEDSLIST } from '../stores/types';
 import { createAPI, addAccessToken } from '../utils/request';
 import localEvent from '../stores/localStorage';
 import { Base64 } from 'js-base64';
@@ -121,20 +121,46 @@ const postFeed = {
         }
       )
       .then(response => {
+        let feed_id = response.data.data;
         this.closePost();
         this.$store.dispatch(NOTICE, cb => {
           cb({
             text: '已发送',
-            time: 3000,
+            time: 1500,
             status: true
           });
         });
+        addAccessToken().get(
+          createAPI(`feeds/${response.data.data}`),
+          {},
+          {
+            validateStatus: status => status === 200
+          }
+        )
+        .then(({ data: { data = {} } = {} }) => {
+          this.$store.dispatch(FEEDSLIST, cb => {
+            cb({
+              [feed_id]: data
+            });
+          });
+          this.$store.dispatch(ADDNEWIDS, cb => {
+            cb([
+              feed_id
+            ]);
+          });
+          this.$store.dispatch(ADDFOLLOWINGIDS, cb => {
+            cb([
+              feed_id
+            ]);
+          })
+        })
+        .cache();
       })
       .catch(({ response: { data = {} } = {} } ) => {
         this.$store.dispatch(NOTICE, cb => {
           cb({
             text: data.message,
-            time: 2000,
+            time: 1500,
             status: false
           });
         });

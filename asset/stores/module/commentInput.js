@@ -4,7 +4,6 @@ const state = {
   commentInput: {
     show: false,
     reply_to_user_id: 0,
-    feedIndex: -1,
     to_user_name: '',
     feed: {}
   }

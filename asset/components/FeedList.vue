@@ -20,7 +20,7 @@
       :bottomDistance="70"
     >
       <div class="feed-list" v-if="!nothing">
-        <Feed v-for="(feed, index) in feedsList" :feed="feed" :index="index" :key="feed.id"></Feed>
+        <Feed v-for="(feed, index) in feedsList" :feed="feed" :key="feed.feed.feed_id"></Feed>
       </div>
     </mt-loadmore>
   </div>
@@ -31,7 +31,7 @@
   import localEvent from '../stores/localStorage';
   import Feed from './Feed';
   import nothingImg from '../statics/images/defaultNothingx3.png';
-  import { NOTICE, FEEDSFOLLOWING, FEEDSFOLLWOINGADD, FEEDFOLLOWINGUPDATE, FEEDSHOT, FEEDSHOTADD, FEEDHOTUPDATE, FEEDSNEW, FEEDSNEWADD, FEEDNEWUPDATE, FEEDFOLLOWINGPREPEND, FEEDNEWPREPEND, FEEDHOTPREPEND } from '../stores/types';
+  import { NOTICE, FEEDSLIST, FOLLOWINGFEEDS, FOLLOWINGIDS, HOTIDS, NEWIDS, HOTFEEDS, NEWFEEDS, ADDFOLLOWINGIDS, ADDHOTIDS, ADDNEWIDS } from '../stores/types';
 
   const FeedLists = {
     components: {
@@ -55,22 +55,31 @@
       firstId: 0, // 下拉刷新过滤节点
       feedType: { // vuex相关action
         'following': {
-          list: FEEDSFOLLOWING,
-          add: FEEDSFOLLWOINGADD,
-          update: FEEDFOLLOWINGUPDATE,
-          prepend: FEEDFOLLOWINGPREPEND
+          // list: FEEDSFOLLOWING,
+          // add: FEEDSFOLLWOINGADD,
+          // update: FEEDFOLLOWINGUPDATE,
+          // prepend: FEEDFOLLOWINGPREPEND,
+          ids: FOLLOWINGIDS,
+          feeds: FOLLOWINGFEEDS,
+          add: ADDFOLLOWINGIDS
         },
         'hot': {
-          list: FEEDSHOT,
-          add: FEEDSHOTADD,
-          update: FEEDHOTUPDATE,
-          prepend: FEEDHOTPREPEND
+          // list: FEEDSHOT,
+          // add: FEEDSHOTADD,
+          // update: FEEDHOTUPDATE,
+          // prepend: FEEDHOTPREPEND,
+          ids: HOTIDS,
+          feeds: HOTFEEDS,
+          add: ADDHOTIDS
         },
         'new': {
-          list: FEEDSNEW,
-          add: FEEDSNEWADD,
-          update: FEEDNEWUPDATE,
-          prepend: FEEDNEWPREPEND
+          // list: FEEDSNEW,
+          // add: FEEDSNEWADD,
+          // update: FEEDNEWUPDATE,
+          // prepend: FEEDNEWPREPEND,
+          ids: NEWIDS,
+          feeds: NEWFEEDS,
+          add: ADDNEWIDS
         }
       }
     }),
@@ -98,19 +107,27 @@
           let type = this.feedType[this.option.type];
           let data = response.data.data;
           let length = data.length;
+          let ids = [];
+          let feeds = {};
           data.forEach((d) => {
-            this.$store.dispatch(type.add, cb => {
-              cb(d);
-            })
+            ids.push(d.feed.feed_id);
+            feeds[d.feed.feed_id] = d;
           });
+          this.$store.dispatch(FEEDSLIST, cb => {
+            cb(feeds);
+          })
+          this.$store.dispatch(type.ids, cb => {
+            cb(ids);
+          })
           if(length < 15) {
             this.bottomAllLoaded = true;
           }
-          this.maxId = data[length - 1].feed.feed_id;
+          this.maxId = data[data.length - 1].feed.feed_id;
           setTimeout(() => {
             this.$refs.loadmore.onBottomLoaded();
           }, 1500)
-        });
+        })
+        .catch();
       },
       loadTop () {
         let limiterSend = '';
@@ -118,30 +135,36 @@
         let limiter = this.option.limiter;
         let type = this.feedType[this.option.type];
         let currentType = this.option.type; // 区分当前为哪种列表分类
+        let ids = this.$store.getters[type.ids];
         if (limiter == 'page') {
           this.limitCounter = 1;
           limiterSend = '?page=1';
         }
         addAccessToken().get(createAPI(`${api}${limiterSend}`), {}, 
           {
-
+            validate: status  => status === 200
           }
         )
         .then( response => {
           let feeds = response.data.data;
-          if(currentType != 'hot') {
-            feeds.forEach( feed => {
-              if(feed.feed.feed_id > this.firstId) {
-                this.$store.dispatch(type.prepend, cb => {
-                  cb(feed);
-                })
-              }
-            });
-          } else {
-            this.$store.dispatch(type.list, cb => {
-              cb(feeds);
-            })
-          }
+          let newIds = [];
+          let newFeeds = {};
+          feeds.forEach( feed => {
+            if(ids.findIndex(function(value, index, arr) {
+              return value == feed.feed.feed_id;
+            }) == -1) {
+              newIds.push(feed.feed.feed_id);
+            }
+            newFeeds[feed.feed.feed_id] = feed;
+          });
+          this.$store.dispatch(FEEDSLIST, cb => {
+            cb(newFeeds);
+          });
+          this.$store.dispatch(type.add, cb => {
+            cb(newIds);
+          });
+          newFeeds = {};
+          newIds = [];
           feeds = [];
         })
         .catch();
@@ -158,28 +181,28 @@
       },
       nothing () {
         let type = this.feedType[this.option.type];
-        let feedList = this.$store.getters[type.list];
+        let feedList = this.$store.getters[type.ids];
         return feedList.length ? 0 : nothingImg;
       },
       feedsList() {
         let type = this.feedType[this.option.type];
-        console.log(this.$store.getters[type.list][0]);
-        return this.$store.getters[type.list];
+        return this.$store.getters[type.feeds];
       }
     },
     mounted () {
       let type = this.feedType[this.option.type];
-      let storeFeeds = this.$store.getters[type.list];
-      if(storeFeeds.length) {
-        this.firstId = storeFeeds[0].feed.feed_id;
-        this.maxId = storeFeeds[storeFeeds.length -1].feed.feed_id;
+      // let storeFeeds = this.$store.getters[type.list];
+      let storeIds = this.$store.getters[type.ids];
+      if(storeIds.length) {
+        this.firstId = storeIds[0];
+        this.maxId = storeIds[storeIds.length -1];
         this.showTop = false;
         setTimeout(() => {
           if(this.$refs.loadmore){
             this.$refs.loadmore.onTopLoaded();
           }
         }, 500);
-        storeFeeds = [];
+        storeIds = [];
         return;
       }
       let limiterSend = '';
@@ -197,11 +220,19 @@
       )
       .then(response => {
         let feeds = response.data.data;
+        let storeFeeds = {};
+        let ids = [];
         this.firstId = feeds[0].feed.feed_id;
-        this.$store.dispatch(type.list, cb => {
-          cb(feeds);
+        feeds.forEach( feed => {
+          ids.push(feed.feed.feed_id);
+          storeFeeds[feed.feed.feed_id] = feed;
+        });
+        this.$store.dispatch(FEEDSLIST, cb => {
+          cb(storeFeeds);
         })
-        // this.feeds = response.data.data;
+        this.$store.dispatch(type.ids, cb => {
+          cb(ids);
+        })
         let lastFeed = feeds[feeds.length - 1];
         this.maxId = lastFeed.feed.feed_id;
         if(feeds.length < 15) {

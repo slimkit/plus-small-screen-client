@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.detail" :id="`feed-${feed_id}`">
+  <div :class="$style.detail" :id="`feed-${feed.feed.feed_id}`">
     <Row :gutter="16" style="-webkit-align-items: flex-start; align-items: flex-start;">
       <Col span="4">
         <div class="grid-content bg-purple">
@@ -18,8 +18,8 @@
           </Row>
           <Row>
             <Col span="24">
-              <router-link style="display: flex;" v-if="feedInfo.feed_title" :to="`/feed/${feed_id}`" class="feedTitle">{{ feedInfo.feed_title }}</router-link>
-              <div :class="$style.content" @click="router(`/feed/${feed_id}`)">
+              <router-link style="display: flex;" v-if="feedInfo.feed_title" :to="`/feed/${feed.feed.feed_id}`" class="feedTitle">{{ feedInfo.feed_title }}</router-link>
+              <div :class="$style.content" @click="router(`/feed/${feed.feed.feed_id}`)">
                 {{ feedInfo.feed_content }}
               </div>
               <div v-if="feedInfo.storages.length">
@@ -35,7 +35,8 @@
         1
       </Col>
       <Col span="20">
-        <FeedTool @addNewCommentFoFeed="addNewCommentFoFeed" :user="user" :feedId="feedInfo.feed_id" @parentAddDigg="addDigg" @parentCannelDigg="cannelDigg" :toolDatas="toolInfo"></FeedTool>
+        <FeedTool @addNewCommentFoFeed="addNewCommentFoFeed"
+         :user="user" :feed="feed" :toolDatas="feed.tool"></FeedTool>
       </Col>
     </Row>
     <Row v-if="feed.comments.length" :gutter="16">
@@ -43,7 +44,7 @@
         1
       </Col>
       <Col span="20" style="padding-bottom: 8px;">
-        <CommentsTool v-if="feed.comments" :index="index" @addComment="addNewComment" @delComment="delOldComment" :feedId="feedInfo.feed_id" :commentsData="feed.comments" :feed="feed"></CommentsTool>
+        <CommentsTool v-if="feed.comments" :user="user" :feed="feed"></CommentsTool>
       </Col>
     </Row>
   </div>
@@ -62,8 +63,7 @@
 
   const feedinfo = {
     props: [
-      'feed',
-      'index'
+      'feed'
     ],
     data: () => ({
       feedInfo: {
@@ -100,18 +100,6 @@
         this.toolInfo = Object.assign({}, this.toolInfo, toolData);
         this.updateComments(newComments);
       },
-      cannelDigg () {
-        let toolData = this.toolInfo;
-        toolData.feed_digg_count -= 1;
-        toolData.is_digg_feed = false;
-        this.toolInfo = Object.assign({}, this.toolInfo, toolData);
-      },
-      addDigg () {
-        let toolData = this.toolInfo;
-        toolData.feed_digg_count += 1;
-        toolData.is_digg_feed = true;
-        this.toolInfo = Object.assign({}, this.toolInfo, toolData);
-      },
       updateComments (newComments) {
         this.feed.comments = newComments.slice(0);
       },
@@ -139,19 +127,17 @@
       }
     },
     created () {
-      this.feed_id = this.feed.feed.feed_id;
-      this.toolInfo = Object.assign({}, this.toolInfo, this.feed.tool);
       this.tools = 1;
       let localUser = localEvent.getLocalItem('user_' + this.feed.user_id);
       if(localUser.length == 0) {
         getUserInfo(this.feed.user_id, 30, user => {
           localUser = user;
-          this.user = Object.assign({}, this.user, localUser);
+          this.user = { ...this.user, ...localUser };
         });
       } else {
-        this.user = Object.assign({}, this.user, localUser);
+        this.user = { ...this.user, ...localUser };
       }
-      this.feedInfo = Object.assign({}, this.feedInfo, this.feed.feed);
+      this.feedInfo = { ...this.feedInfo, ...this.feed.feed };
     }
   }
 

@@ -7,6 +7,7 @@
     <PostFeed/>
     <FeedDiggList/>
     <CommentInput/>
+    <Confirm />
   </div>
 </template>
 <script>
@@ -16,6 +17,7 @@
   import PostFeed from './components/PostFeed';
   import FeedDiggList from './components/FeedDiggList';
   import CommentInput from './components/CommentInput';
+  import Confirm from './components/Confirm';
   import store from './stores/store';
 
   const App = {
@@ -24,7 +26,8 @@
       IviewSwiper,
       PostFeed,
       FeedDiggList,
-      CommentInput
+      CommentInput,
+      Confirm
     }
   }
 

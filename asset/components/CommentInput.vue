@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div :class="$style.commentRoot" v-show="show">
     <transition name="">
-      <div v-if="show" :class="$style.commentInput">
+      <div :class="$style.commentInput" v-show="show">
         <Row :gutter="16" type="flex" align="bottom" style="margin-left: 0; margin-right: 0;">
           <Col span="20">
             <Input type="textarea" class="commentInput" v-if="show" autofocus="autofocus" :placeholder="`回复: ${to_user_name}`" :autosize="{ minRows: 1, maxRows: 4 }" :minlength='1' blur="inputBlur" :maxlength='255' v-model="comment_content"></Input>
@@ -23,7 +23,7 @@
   </div>
 </template>
 <script>
-  import { COMMENTINPUT, USERS, NOTICE } from '../stores/types';
+  import { COMMENTINPUT, USERS, NOTICE, UPDATEFEED } from '../stores/types';
   import { mapState } from 'vuex';
   import localEvent from '../stores/localStorage';
   import { createAPI, addAccessToken } from '../utils/request';
@@ -38,7 +38,6 @@
         let info = {
           show: false,
           reply_to_user_id: 0,
-          feedIndex: -1,
           to_user_name: '',
           feed: {}
         };
@@ -51,7 +50,6 @@
         let comment_content = this.comment_content;
         let reply_to_user_id = commentStore.reply_to_user_id;
         let user_id = currentUser.user_id;
-        let feedIndex = commentStore.feedIndex;
         let feed = commentStore.feed;
         let feed_id = feed.feed.feed_id;
         let newCommentInfo = [];
@@ -79,7 +77,6 @@
             let info = {
               show: false,
               reply_to_user_id: 0,
-              feedIndex: -1,
               to_user_name: '',
               feed: {}
             }
@@ -89,19 +86,15 @@
             this.$store.dispatch(NOTICE, cb => {
               cb({
                 text: '已发送',
-                time: 3000,
+                time: 1500,
                 status: true
               });
             });
             this.$store.dispatch(COMMENTINPUT, cb => {
               cb(info);
             });
-            this.$store.dispatch(FEEDFOLLOWINGUPDATE, cb => {
-              console.log(feed);
-              cb({
-                index: feedIndex,
-                newFeed: feed
-              })
+            this.$store.dispatch(UPDATEFEED, cb => {
+              cb(feed);
             });
           }
         })
@@ -131,42 +124,52 @@
   
 </script>
 <style lang="scss" module>
-  .wrapper{
-    background-color: rgba(0, 0, 0, .3);
-    z-index: 5;
-    top: 0px;
-    right: 0px;
-    bottom: 0px;
-    left: 0px;
-    position: fixed;
-    overflow: auto;
-    margin: 0;
-  }
   .commentCount {
     margin-bottom: .5em;
     font-size: 12px;
   }
-  .commentInput{
+  .commentRoot {
     position: fixed;
+    top: 0;
     bottom: 0;
     left: 0;
-    width: 100%;
-    z-index: 6;
-    background-color: #fff;
-    border-bottom: 1px #59b6d7 solid;
-    border: none;
-    padding: 10px 0;
-    textarea {
-      min-height: 34px!important;
+    right: 0;
+    margin: 0;
+    overflow: hidden;
+    z-index: 5;
+    .commentInput{
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      z-index: 6;
+      background-color: #fff;
+      border-bottom: 1px #59b6d7 solid;
+      border: none;
+      padding: 10px 0;
+      textarea {
+        min-height: 34px!important;
+      }
+      .sendComment {
+        font-size: 14px;
+        padding: 3px!important;
+        background-color: #59b6d7;
+        &[disabled] {
+          background-color: #ccc!important;
+          color: #fff!important;
+        }
+      }
     }
-  }
-  .sendComment {
-    font-size: 14px;
-    padding: 3px!important;
-    background-color: #59b6d7;
-    &[disabled] {
-      background-color: #ccc!important;
-      color: #fff!important;
+    .wrapper{
+      background-color: rgba(0, 0, 0, .3);
+      z-index: 5;
+      top: 0px;
+      right: 0px;
+      bottom: 0px;
+      left: 0px;
+      position: fixed;
+      overflow: auto;
+      margin: 0;
     }
   }
 </style>

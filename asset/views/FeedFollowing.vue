@@ -6,7 +6,6 @@
 
 <script>
   import FeedList from '../components/FeedList';
-  // import Feedslist from '../components/Feedslist';
 
   const FeedFollowing = {
     components: {

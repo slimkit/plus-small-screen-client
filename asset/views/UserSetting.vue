@@ -370,7 +370,7 @@
           this.$store.dispatch(NOTICE, cb => {
             cb({
               text: message,
-              time: 3000,
+              time: 1500,
               status: true
             });
           });

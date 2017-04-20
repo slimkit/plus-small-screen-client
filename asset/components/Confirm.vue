@@ -1,8 +1,8 @@
 <template>
-  <div :class="$style.comfirm" @click="cannelIt">
+  <div :class="$style.comfirm" @click="cannelIt" v-show="show">
     <Row :class="$style.comirmRow">
       <Col :span="24" :class="$style.comfirmCol">
-        <Button :long="true" @click.native="doIt(data)">{{ comfirmContent }}</Button>
+        <Button :long="true" @click.native="doIt(data)">{{ confirmContent }}</Button>
       </Col>
       <Col :span="24" :class="$style.comfirmCol">
         <Button :long="true" @click.native="cannelIt">取消</Button>
@@ -11,26 +11,30 @@
   </div>
 </template>
 <script>
-  const comfirmUi = {
-    props: {
-      comfirmContent: {
-        type: [String]
-      },
-      data: {
-        type: [Object]
-      }
-    },
+  import { mapState } from 'vuex';
+  import { CONFIRM } from '../stores/types';
+
+  const confirmUi = {
     methods: {
       doIt (data) {
-        this.$emit('increment', data);
+        this.confirm(this.cannelIt, data);
       },
       cannelIt () {
-        this.$emit('cannel');
+        this.close(this.$store.dispatch);
       }
+    },
+    computed: {
+      ...mapState({
+        show: state => state.confirm.confirm.show,
+        confirmContent: state => state.confirm.confirm.confirmContent,
+        data: state => state.confirm.confirm.data,
+        close: state=>state.confirm.confirm.close,
+        confirm: state => state.confirm.confirm.confirm
+      })
     }
   }
 
-  export default comfirmUi;
+  export default confirmUi;
 
 </script>
 

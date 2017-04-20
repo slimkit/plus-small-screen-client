@@ -447,7 +447,7 @@
             this.$store.dispatch(NOTICE, cb => {
               cb({
                 text: data.message,
-                time: 2000,
+                time: 1500,
                 status: false
               });
             });
@@ -468,7 +468,7 @@
           this.$store.dispatch(NOTICE, cb => {
             cb({
               text: error.response.data.message,
-              time: 2000,
+              time: 1500,
               status: false
             });
           });
@@ -488,7 +488,7 @@
             this.$store.dispatch(NOTICE, cb => {
               cb({
                 text: data.message,
-                time: 2000,
+                time: 1500,
                 status: false
               });
             });
@@ -498,7 +498,7 @@
           this.$store.dispatch(NOTICE, cb => {
             cb({
               text: error.response.data.message,
-              time: 2000,
+              time: 1500,
               status: false
             });
           });
@@ -517,7 +517,7 @@
           this.$store.dispatch(NOTICE, cb => {
             cb({
               text: error.response.data.message ? error.response.data.message : '发生了一些错误',
-              time: 2000,
+              time: 1500,
               status: false
             });
           });
@@ -532,7 +532,7 @@
             this.$store.dispatch(NOTICE, cb => {
               cb({
                 text: status.message,
-                time: 2000,
+                time: 1500,
                 status: true
               });
             });
@@ -548,7 +548,7 @@
             this.$store.dispatch(NOTICE, cb => {
               cb({
                 text: status.message,
-                time: 2000,
+                time: 1500,
                 status: true
               });
             });
@@ -657,7 +657,7 @@
           this.$store.dispatch(NOTICE, cb => {
             cb({
               text: '已删除',
-              time: 2000,
+              time: 1500,
               status: false
             });
           });
@@ -700,7 +700,7 @@
             this.$store.dispatch(NOTICE, cb => {
               cb({
                 text: '已发送',
-                time: 2000,
+                time: 1500,
                 status: true
               });
             });

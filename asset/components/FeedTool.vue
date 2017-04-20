@@ -8,19 +8,19 @@
         <div  v-show="!isDigg" @click="sendDigg">
           <UnDiggIcon width="21" height="21" color="#999" /></UnDiggIcon>
         </div>
-        <i :class="$style.count">{{ friendnum(toolDatas.feed_digg_count) }}</i>
+        <i :class="$style.count">{{ friendnum(feed.tool.feed_digg_count) }}</i>
       </Col>
       <Col span="7"  :class="$style.parentCount">
         <div @click="commentFeed">
           <CommentIcon width="21" height="21" color="#999" /></CommentIcon>
         </div>
-        <i :class="$style.count">{{ friendnum(toolDatas.feed_comment_count) }}</i>
+        <i :class="$style.count">{{ friendnum(feed.tool.feed_comment_count) }}</i>
       </Col>
       <Col span="7"  :class="$style.parentCount">
-        <div @click="router(`/feed/${feedId}`)">
+        <div @click="router(`/feed/${feed.feed.feed_id}`)">
           <ViewIcon width="21" height="21" color="#999" /></ViewIcon>
         </div>
-        <i :class="$style.count">{{ friendnum(toolDatas.feed_view_count) }}</i>
+        <i :class="$style.count">{{ friendnum(feed.tool.feed_view_count) }}</i>
       </Col>
       <Col span="3" :class="$style.parentCount">
         <div>
@@ -28,26 +28,6 @@
         </div>
       </Col>
     </Row>
-    <!-- 评论动态 -->
-    <div v-if="CanInput" :class="$style.commentInput">
-      <Row :gutter="16" align="bottom" type="flex" style="margin-left: 0; margin-right: 0;">
-        <Col span="20">
-          <Input type="textarea" class="commentInput" v-if="CanInput" autofocus="true" :placeholder="placeholder" :autosize="{minRows: 1,maxRows: 4}" :minlength='1' blur="inputBlur" :maxlength='255' v-model="comment"></Input>
-        </Col>
-        <Col span="4">
-          <Row :gutter="16" v-if="commentCount > 200" :class="$style.commentCount">
-            <Col span="24" ><span :class="{ inputFull: commentCount > 100 }">{{ commentCount }}</span>/255</Col>
-          </Row>
-          <Row>
-            <Col span="24">
-              <Button :long="true" type="primary" :class="$style.sendComment" :disabled="commentCount == 0" size="small" @click.native="sendComment()">发送</Button>
-            </Col>
-          </Row>
-        </Col>
-      </Row>
-    </div>
-    <div @click.stop="closeInput" :class="$style.wrapper" v-show="CanInput"></div>
-    <!--评论动态-->
   </div>
 </template>
 
@@ -55,7 +35,7 @@
   import { friendNum } from '../utils/friendNum';
   import { createAPI, addAccessToken } from '../utils/request';
   import localEvent from '../stores/localStorage';
-  import { NOTICE } from '../stores/types';
+  import { NOTICE, COMMENTINPUT, UPDATEFEED } from '../stores/types';
   import router from '../routers/index';
   import ViewIcon from '../icons/View';
   import CommentIcon from '../icons/Comment';
@@ -73,8 +53,7 @@
       MoreIcon
     },
     props: [
-      'toolDatas',
-      'feedId',
+      'feed',
       'user'
     ],
     data: () => ({
@@ -86,74 +65,41 @@
       router (link) {
         router.replace(link);
       },
-      // 发送评论
-      sendComment () {
-        let comment_content = this.comment;
-        let user_id = localUser.user_id;
-        addAccessToken().post(createAPI(`feeds/${this.feedId}/comment`), {
-            comment_content
-          },
-          {
-            validateStatus: status => status === 201
-          }
-        )
-        .then(response => {
-          if(response.data.code === 0 || response.data.status) {
-            let newComment = {
-              comment_content: comment_content,
-              comment_mark: null,
-              created_at: "",
-              reply_to_user_id: 0,
-              id: response.data.data,
-              user_id: localUser.user_id,
-              user: localEvent.getLocalItem(`user_${localUser.user_id}`)
-            };
-            this.placeholder = '';
-            this.CanInput = false;
-            this.autoF = false;
-            this.comment = '';
-            this.$emit('addNewCommentFoFeed', newComment);
-            this.$store.dispatch(NOTICE, cb => {
-              cb({
-                text: '已发送',
-                time: 3000,
-                status: true
-              });
-            });
-          }
-        })
-        .catch(({ response: { data = {} } = {} } ) => {
-          const { code = 'xxxx' } = data;
-        })
-      },
       // 评论动态输入框
       commentFeed () {
-        this.comment = '';
-        let to_user = this.user;
-        this.placeholder = `回复: ${to_user.name}`;
-        this.CanInput = true;
-        this.autoF = true;
+        let to_user_name = this.user.name; // 回复谁 用户名
+        let show = true; // 展示输入框
+        let feed = this.feed;
+        let reply_to_user_id = 0;
+        this.$store.dispatch(COMMENTINPUT, cb => {
+          cb({
+            show,
+            reply_to_user_id,
+            to_user_name,
+            feed
+          });
+        })
+
       },
       friendnum (num) { 
         return friendNum(num);
       },
-      closeInput () {
-        this.placeholder = '';
-        this.CanInput = false;
-        this.autoF = false;
-        this.userComment = '';
-      },
       sendDigg () {
-        let uri = `feeds/${this.feedId}/digg`;
+        let uri = `feeds/${this.feed.feed.feed_id}/digg`;
+        let feed = this.feed;
         (addAccessToken().post(createAPI (uri), {}, 
           {
             validateStatus: status => status === 201
           }
         ))
         .then(response => {
-          let isDigged = this.toolData.is_digg_feed;
+          // let isDigged = this.feed.tool.is_digg_feed;
           if (response.data.code === 0 || response.data.status) {
-            this.$emit('parentAddDigg');
+            feed.tool.is_digg_feed = 1;
+            feed.tool.feed_digg_count += 1;
+            this.$store.dispatch(UPDATEFEED, cb => {
+              cb(feed);
+            })
           }
         })
         .catch(({ response: { data = {} } = {} } ) => {
@@ -164,16 +110,19 @@
         });
       },
       cannelDigg () {
-        let uri = `feeds/${this.feedId}/digg`;
+        let feed = this.feed;
+        let uri = `feeds/${this.feed.feed.feed_id}/digg`;
         addAccessToken().delete(createAPI (uri), 
           {
             validateStatus: status => status === 204
           }
         )
         .then(response => {
-          // this.toolData.is_digg_feed = false;
-          // this.toolData.feed_digg_count -= 1;
-          this.$emit('parentCannelDigg');
+          feed.tool.is_digg_feed = 0;
+          feed.tool.feed_digg_count -= 1;
+          this.$store.dispatch(UPDATEFEED, cb => {
+            cb(feed);
+          })
         })
         .catch(error => {
           console.log(error)
@@ -182,7 +131,7 @@
     },
     computed: {
       isDigg () {
-        return this.toolDatas.is_digg_feed;
+        return this.feed.tool.is_digg_feed;
       },
       commentCount () {
         return this.comment.length;
