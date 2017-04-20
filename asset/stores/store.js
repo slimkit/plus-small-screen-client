@@ -11,6 +11,8 @@ import showPost from './module/showPost';
 import feedDiggsList from './module/feedDiggsList';
 import userFeeds from './module/userFeeds';
 import feedsFollowing from './module/feedsFollowing';
+import feedsHot from './module/feedsHot';
+import feedsNew from './module/feedsNew';
 import commentInput from './module/commentInput';
 
 const modules = {
@@ -21,6 +23,8 @@ const modules = {
   feedDiggsList,
   userFeeds,
   feedsFollowing,
+  feedsHot,
+  feedsNew,
   commentInput
 }
 
