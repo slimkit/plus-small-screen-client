@@ -29,6 +29,6 @@ function view($view = null, $data = [], $mergeData = [])
 
 function base_path($path = '')
 {
-    return dirname(__FILE__).$path;
+    return dirname(__DIR__).$path;
 }
 
