@@ -13,16 +13,18 @@
         "zhiyicx/plus-install-plugin": "^1.0"
     },
     "extra": {
-        "installer-class": "Zhiyi\\PlusComponentWeb\\Installer"
+        "installer-class": "Zhiyi\\Component\\ZhiyiPlus\\PlusComponentWeb\\Installer"
     },
     "autoload" : {
         "files" : [
             "php/helper.php"
         ],
         "classmap": [
-            "php/Installer.php",
             "src/Controllers/WebController.php"
-        ]
+        ],
+        "psr-4": {
+            "Zhiyi\\Component\\ZhiyiPlus\\PlusComponentWeb\\": "php/"
+        }
     },
     "version": "1.0.13"
 }

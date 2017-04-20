@@ -1,6 +1,6 @@
 <?php
 
-namespace Zhiyi\PlusComponentWeb;
+namespace Zhiyi\Component\ZhiyiPlus\PlusComponentWeb;
 
 use Zhiyi\Component\Installer\PlusInstallPlugin\AbstractInstaller;
 

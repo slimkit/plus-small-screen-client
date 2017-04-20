@@ -1,5 +1,4 @@
 <?php
-// use function Zhiyi\PlusComponentWeb\view as webview;
 
 Route::namespace('Zhiyi\\Component\\ZhiyiPlus\\PlusComponentWeb\\Controllers')
     ->prefix('/web')
