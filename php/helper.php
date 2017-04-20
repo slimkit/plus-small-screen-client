@@ -1,7 +1,7 @@
 <?php
+
 namespace Zhiyi\PlusComponentWeb;
 
-use function view as plus_view;
 
 /**
  * Get the evaluated view contents for the given view.

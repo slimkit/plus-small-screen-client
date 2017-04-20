@@ -17,7 +17,7 @@
     },
     "autoload" : {
         "files" : [
-            "helper.php"
+            "php/helper.php"
         ],
         "classmap": [
             "php/Installer.php",
