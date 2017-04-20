@@ -42,3 +42,27 @@ export const APPENDUSERFEED = 'appenduserfeed';
 export const CLEANUSERFEEDS = 'cleanuserfeeds';
 
 export const DATES = 'dates';
+
+/**
+ * 评论框控制
+ */
+export const COMMENTINPUT = 'commentinput';
+
+/**
+ * 动态
+ * 关注的
+ */
+export const FEEDSFOLLOWING = 'feedsfollowing';
+export const FEEDSFOLLWOINGADD = 'feedsfollowingadd';
+export const FEEDFOLLOWINGUPDATE = 'feedfollowingupdate';
+/**
+ * 动态
+ * 热门的
+ */
+export const FEEDSHOT = 'feedshot';
+
+/**
+ * 动态
+ * 最新的
+ */
+export const FEEDsNEW = 'feedsnew';

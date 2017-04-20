@@ -50,6 +50,7 @@
       position: absolute;
       width: 100%;
       bottom: 0;
+      display: block;
       .comfirmCol {
         margin-top: 0;
         &:first-child {

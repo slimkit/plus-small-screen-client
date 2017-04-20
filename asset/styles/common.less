@@ -67,6 +67,11 @@ img.avatar {
       display: flex;
       justify-content: center;
     }
+    .header-end-col {
+      font-size: 14px;
+      justify-content: flex-end;
+      display: flex;
+    }
   }
 }
 .mint-loadmore-content .mint-loadmore-top {
@@ -164,45 +169,22 @@ input {
 
 .ivu-btn.ivu-btn-text {
   background-color: #fff;
-  color: @themeColor
+  color: @themeColor;
+  padding: 6px 0;
+  font-size: 14px;
 }
 .ivu-btn.ivu-btn-text[disabled='disabled'] {
   color: #999;
+  font-size: 14px;
 }
 
-.el-button--text {
+.el-button-text {
   color: @themeColor;
   &:focus, &:active {
     background-color: #fff;
     color: #ccc;
     border: none;
   }
-}
-
-.header {
-  height: 46px;
-  line-height: 46px;
-  border-bottom: 1px solid @cut-off-line;
-  background-color: #fff;
-}
-.header-children  {
-  display: inline-block;
-}
-.left-top-button {
-  text-align: center;
-  font-size: @bar-font-size;
-}
-.title {
-  font-size: @title-font-size;
-  text-align: center;
-}
-.right-top-button {
-  text-align: center;
-  font-size: @bar-font-size;
-}
-
-.back, .close {
-  text-align: center;
 }
 
 .bottom-border {
@@ -218,11 +200,6 @@ input {
   color: red;
 }
 
-.text-align-right{
-  text-align: right;
-  display: flex;
-  justify-content: flex-end;
-}
 
 .formChildrenRow {
   height: 55px;
@@ -284,14 +261,6 @@ input {
   font-size: 14px;
 }
 
-.el-icon-circle-close {
-  font-size: 16px;
-  z-index: 2;
-}
-.el-icon-circle-close:before {
-  color: #999;
-}
-
 .router-link-active {
   color: #333;
   border-bottom: 2px @themeColor solid
@@ -304,7 +273,7 @@ input {
   display: flex;
 }
 
-.ivu-icon, .iconfont {
+.ivu-icon {
   .count {
     padding-left: 5px;
     font-size: 16px;

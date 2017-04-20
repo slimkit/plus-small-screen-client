@@ -2,15 +2,15 @@
   <!-- <transition-group name="fade" tag="div" :class="$style.postRoot"  v-show="show" enter-active-class="zoomInLeft" leave-active-class="zoomOutRight"> -->
   <transition name="custom-classes-transition" enter-active-class="animated slideInUp" leave-active-class="animated slideOutDown">
     <div class="post-feed" :class="$style.postRoot" v-if="show">
-      <div :class="$style.postFeedNav">
-        <Row :gutter="16" type="flex" :class="$style.navRow" justify="center" align="middle">
+      <div class="commonHeader">
+        <Row :gutter="16">
           <Col span="4">
             <Button :class="$style.actionBtn" type="text" @click="closePost">取消</Button>
           </Col>
-          <Col span="15">
-            <h4 style="font-weight: 400; font-size: 18px; text-align: center;">发布动态</h4>
+          <Col span="15" class="title-col">
+            发布动态
           </Col>
-          <Col span="5" :class="$style.sendAction">
+          <Col span="5" class="header-end-col">
             <span :class="{ action: !isDisabled, notAction: isDisabled}" @click="postFeed">发布</span>
           </Col>
         </Row>

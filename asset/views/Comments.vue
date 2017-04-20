@@ -169,11 +169,12 @@
       text-align: justify;
       overflow: hidden;
       text-overflow: ellipsis;
-      display: -webkit-box;
+      display: flex;
       -webkit-line-clamp: 3;
       -webkit-box-orient: vertical;
       word-break: break-all;
       color: #999;
+      align-items: center;
     }
   }
 </style>

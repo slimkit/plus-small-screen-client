@@ -43,7 +43,7 @@
         1
       </Col>
       <Col span="20" style="padding-bottom: 8px;">
-        <CommentsTool v-if="feed.comments" @addComment="addNewComment" @delComment="delOldComment" :feedId="feedInfo.feed_id" :commentsData="feed.comments"></CommentsTool>
+        <CommentsTool v-if="feed.comments" :index="index" @addComment="addNewComment" @delComment="delOldComment" :feedId="feedInfo.feed_id" :commentsData="feed.comments" :feed="feed"></CommentsTool>
       </Col>
     </Row>
   </div>
@@ -62,7 +62,8 @@
 
   const feedinfo = {
     props: [
-      'feed'
+      'feed',
+      'index'
     ],
     data: () => ({
       feedInfo: {
@@ -138,6 +139,7 @@
       }
     },
     created () {
+      console.log(this.$props);
       this.feed_id = this.feed.feed.feed_id;
       this.toolInfo = Object.assign({}, this.toolInfo, this.feed.tool);
       this.tools = 1;

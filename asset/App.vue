@@ -6,6 +6,7 @@
     <IviewSwiper/>
     <PostFeed/>
     <FeedDiggList/>
+    <CommentInput/>
   </div>
 </template>
 <script>
@@ -14,6 +15,7 @@
   import IviewSwiper from './components/IviewSwiper';
   import PostFeed from './components/PostFeed';
   import FeedDiggList from './components/FeedDiggList';
+  import CommentInput from './components/CommentInput';
   import store from './stores/store';
 
   const App = {
@@ -21,7 +23,8 @@
       NoticeText,
       IviewSwiper,
       PostFeed,
-      FeedDiggList
+      FeedDiggList,
+      CommentInput
     }
   }
 

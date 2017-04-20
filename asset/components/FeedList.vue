@@ -20,10 +20,9 @@
       :bottomDistance="70"
     >
       <div class="feed-list" v-if="!nothing">
-        <Feed v-for="feed in feeds" :feed="feed" :key="feed.id"></Feed>
+        <Feed v-for="(feed, index) in feedsList" :feed="feed" :index="index" :key="feed.id"></Feed>
       </div>
     </mt-loadmore>
-    
   </div>
 </template>
 <script>
@@ -32,6 +31,7 @@
   import localEvent from '../stores/localStorage';
   import Feed from './Feed';
   import nothingImg from '../statics/images/defaultNothingx3.png';
+  import { NOTICE, FEEDSFOLLOWING, FEEDSFOLLWOINGADD, FEEDFOLLOWINGUPDATE } from '../stores/types';
 
   const FeedLists = {
     components: {
@@ -52,7 +52,14 @@
       bottomStatus: '',
       isShowComfirm: false,
       CanInput: false,
-      showTop: true
+      showTop: true,
+      feedType: {
+        'following': {
+          list: FEEDSFOLLOWING,
+          add: FEEDSFOLLWOINGADD,
+          update: FEEDFOLLOWINGUPDATE
+        }
+      }
     }),
     methods: {
       // 加载更多
@@ -76,10 +83,14 @@
           }
         )
         .then(response => {
+          let type = this.feedType[this.option.type];
           let data = response.data.data;
           let length = data.length;
           data.forEach((d) => {
-            this.feeds.push(d);
+            // this.feeds.push(d);
+            this.$store.dispatch(type.add, cb => {
+              cb(d);
+            })
           });
           if(length < 15) {
             this.bottomAllLoaded = true;
@@ -103,7 +114,13 @@
         return errors[0] || '';
       },
       nothing () {
-        return this.feeds.length ? 0 : nothingImg;
+        let type = this.feedType[this.option.type];
+        let feedList = this.$store.getters[type.list];
+        return feedList.length ? 0 : nothingImg;
+      },
+      feedsList() {
+        let type = this.feedType[this.option.type];
+        return this.$store.getters[type.list];
       }
     },
     mounted () {
@@ -121,10 +138,14 @@
         }
       )
       .then(response => {
-        this.feeds = response.data.data;
-        let lastFeed = this.feeds[this.feeds.length - 1];
+        let type = this.feedType[this.option.type];
+        this.$store.dispatch(type.list, cb => {
+          cb(response.data.data);
+        })
+        // this.feeds = response.data.data;
+        let lastFeed = response.data.data[response.data.data.length.length - 1];
         this.maxId = lastFeed.feed.feed_id;
-        if(this.feeds.length < 15) {
+        if(response.data.data.length < 15) {
           this.bottomAllLoaded = true;
         }
       })
