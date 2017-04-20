@@ -13,7 +13,7 @@ class Installer extends AbstractInstaller
 
     public function router()
     {
-        return dirname(__DIR__).'/routes.php';
+        return dirname(__FILE__).'/routes.php';
     }
 
     public function resource()
