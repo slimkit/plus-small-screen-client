@@ -10,7 +10,6 @@
     </Row>
   </div>
 </template>
- 
 <script>
   const comfirmUi = {
     props: {
