@@ -1,7 +1,7 @@
 {
     "name": "zhiyicx/plus-component-web",
     "description": "🌝The SPA of ThinkSNS+",
-    "license": "MIT",
+    "license": "Apache-2",
     "type": "plus-component",
     "authors": [
         {
