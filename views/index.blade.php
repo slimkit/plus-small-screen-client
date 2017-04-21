@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <title>Demo</title>
+  <title>ThinkSNS+</title>
   <link rel="stylesheet" href="{{ \Zhiyi\Component\ZhiyiPlus\PlusComponentWeb\mix('css/app.css') }}" />
   <script>
   	window.TS_WEB = {!! json_encode([
