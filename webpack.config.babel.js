@@ -26,7 +26,7 @@ const isHot = process.argv.includes('--hot');
 const isProd = NODE_ENV === 'production';
 
 // 各项资源地址定义
-const assetsRoot = path.resolve(__dirname, /*'asset'*/ 'asset');
+const assetsRoot = path.resolve(__dirname, /*'asset'*/ 'src');
 const buildAssetsRoot = path.join(__dirname, 'dist');
 
 // 入口配置
@@ -153,7 +153,7 @@ const webpackConfig = {
         loader: 'url-loader',
         query: {
           limit: 10000,
-          name: isProd ? 'images/[hash].[ext]' : `images/[name].[ext]`
+          name: 'images/[name].[ext]'
         }
       },
       {
@@ -161,7 +161,7 @@ const webpackConfig = {
         loader: 'url-loader',
         query: {
           limit: 10000,
-          name: isProd ? 'fonts/[hash].[ext]' : `fonts/[name].[ext]`
+          name: isProd ? 'fonts/[hash].[ext]' : 'fonts/[name].[ext]'
         }
       }
     ]
