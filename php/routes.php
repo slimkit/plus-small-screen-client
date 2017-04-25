@@ -4,6 +4,7 @@ Route::namespace('Zhiyi\\Component\\ZhiyiPlus\\PlusComponentWeb\\Controllers')
     ->prefix('/web')
     ->middleware('web')
     ->group(function () {
-        Route::get('/', 'HomeController@index')
+        Route::get('/{route?}', 'HomeController@index')
+        	->where('route', '.*')
             ->name('H5');
     });

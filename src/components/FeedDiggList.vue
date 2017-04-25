@@ -1,19 +1,23 @@
 <template>
   <transition name="custom-classes-transition" enter-active-class="animated slideInUp" leave-active-class="animated slideOutDown">
     <div class="feed-diggs-container" :class="$style.diggListsRoot" v-if="show">
-      <div class="feed-diggs-container-header diggs-background-color">
+      <div class="commonHeader">
         <Row :gutter="16">
-          <Col span="3" style="display: flex; justify-content: flex-start">
-            <i class="ivu-icon ivu-icon-android-arrow-back" @click="handleShowDiggList" style="width: 100%; height: 100%; display: flex; align-items: center;"></i>
+          <Col span="3" style="display: flex; justify-content: flex-start" @click.native="handleShowDiggList">
+            <BackIcon height="21" width="21" color="#999" />
           </Col>
-          <Col span="18" style="font-size: 18px;">
+          <Col span="18" class="title-col">
             点赞榜
           </Col>
           <Col span="3" style="display: flex;">
           </Col>
         </Row>
       </div>
+      <div class="nothingDefault"> 
+        <img v-if="nothing" :src="nothing" />
+      </div>
       <mt-loadmore
+        v-show="!nothing"
         :top-method="loadTop"
         :bottom-method="loadBottom"
         :bottom-all-loaded="bottomAllLoaded"
@@ -24,25 +28,17 @@
         <div class="feed-diggs-container-list diggs-background-color">
           <li v-for="(digg, index) in diggList" :class="$style.perDiggParent" :key="index">
             <Row :gutter="16" :class="$style.perDigg">
-              <Col span="4">
+              <Col span="4" @click.native="rediredtUrl(`/users/feeds/${digg.user_id}`)">
                 <img :class="$style.diggAvatar" v-lazy="digg.avatar" :alt="digg.name" :title="digg.name">
               </Col>
               <Col span="17">
-                <h4>{{ digg.name }}</h4>
+                <h4 @click="rediredtUrl(`/users/feeds/${digg.user_id}`)">{{ digg.name }}</h4>
                 <p>{{ digg.intro ? digg.intro : '还没有简介...' }}</p>
               </Col>
               <Col span="3">
-                <!-- <i class="ivu-icon ivu-icon-android-person-add" @click="doFollowing(digg.user_id)" v-if="!digg.is_following && currentUser != digg.user_id" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: flex-end"></i>
-                <i class="ivu-icon ivu-icon-android-person" @click="doUnFollowing(digg.user_id)" v-if="digg.is_following && currentUser != digg.user_id" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: flex-end"></i> -->
-                <div @click="doFollowing(digg.user_id)">
-                  <UnFollowingIcon v-show="!digg.is_following && currentUser != digg.user_id" height="24" width="24" color="#999" />
-                </div>
-                <div @click="doUnFollowing(digg.user_id)">
-                  <FollowingIcon v-show="digg.is_following && !digg.is_followed && currentUser != digg.user_id" height="24" width="24" color="#999" />
-                </div>
-                <div @click="doUnFollowing(digg.user_id)">
-                  <EachFollowingIcon v-show="!digg.is_following && digg.is_followed && currentUser != digg.user_id" height="24" width="24" color="#999" />
-                </div>
+                <UnFollowingIcon @click.native="doFollowing(digg.user_id)" v-show="!digg.is_following && currentUser != digg.user_id" height="24" width="24" color="#999" />
+                <FollowingIcon @click.native="doUnFollowing(digg.user_id)" v-show="digg.is_following && !digg.is_followed && currentUser != digg.user_id" height="24" width="24" color="#999" />
+                <EachFollowingIcon @click.native="doUnFollowing(digg.user_id)" v-show="!digg.is_following && digg.is_followed && currentUser != digg.user_id" height="24" width="24" color="#999" />
               </Col>
             </Row>
           </li>
@@ -63,13 +59,18 @@
   import FollowingIcon from '../icons/Following';
   import UnFollowingIcon from '../icons/UnFollowing';
   import EachFollowingIcon from '../icons/EachFollowing';
+  import BackIcon from '../icons/Back';
+  import defaultNoBody from '../statics/images/img_default_nobody@2x.png';
+  import lodash from 'lodash';
+  import { changeUrl } from '../utils/changeUrl';
 
   const currentUser = localEvent.getLocalItem('UserLoginInfo');
   const FeedDiggsLists = {
     components: {
       FollowingIcon,
       UnFollowingIcon,
-      EachFollowingIcon
+      EachFollowingIcon,
+      BackIcon
     },
     data: () => ({
       // 加载更多相关
@@ -79,10 +80,18 @@
       currentUser: currentUser.user_id,
       localDiggs: {}
     }),
-    props: {
-
-    },
     methods: {
+      rediredtUrl (url) {
+        this.$store.dispatch(SHOWFEEDDIGGSLISTS, cb => {
+          cb({
+            show: false,
+            diggs: {}
+          })
+        });
+        setTimeout( () => {
+          changeUrl(url)
+        }, 300);
+      },
       handleShowDiggList () {
         this.$store.dispatch(SHOWFEEDDIGGSLISTS, cb => {
           cb({
@@ -158,13 +167,14 @@
         show: state => state.feedDiggsList.diggLists.show
       }),
       diggList () {
-        let diggs = this.$store.getters[DIGGLISTS];
-        this.localDiggs = diggs;
-        return diggs;
+        this.localDiggs = this.$store.getters[DIGGLISTS];
+        return this.localDiggs;
+      },
+      nothing () {
+        return lodash.keys(this.localDiggs).length > 0 ? 0 : defaultNoBody;
       }
     },
     created () {
-      console.log('c');
       setTimeout( () => {
         if(this.$refs.loadmoreDigglist)
           this.$refs.loadmoreDigglist.onTopLoaded();

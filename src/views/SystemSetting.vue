@@ -2,10 +2,8 @@
   <div class="systemSetting">
     <div class="commonHeader">
       <Row :gutter="16">
-        <Col span="3" style="display: flex; justify-content: flex-start">
-          <div @click="goTo(-1)">
-            <BackIcon height="21" width="21" color="#999" />
-          </div>
+        <Col span="3" style="display: flex; justify-content: flex-start" @click.native="goTo(-1)">
+          <BackIcon height="21" width="21" color="#999" />
         </Col>
         <Col span="18" class="title-col">
           设置
@@ -16,25 +14,21 @@
     </div>
     <!-- 入口菜单 -->
     <div :class="$style.entry">
-      <Row :gutter="16" :class="$style.entryMenu">
-        <div style="width: 100%" @click="changeUrl('/users/password')">
-          <Col span="22">
-            修改密码
-          </Col>
-          <Col span="2" :class="$style.rightIcon">
-            <RightArrowIcon height="18" width="18" color="#999" />
-          </Col>
-        </div>
+      <Row :gutter="16" :class="$style.entryMenu" @click.native="changeUrl('/users/password')">
+        <Col span="22">
+          修改密码
+        </Col>
+        <Col span="2" :class="$style.rightIcon">
+          <RightArrowIcon height="18" width="18" color="#999" />
+        </Col>
       </Row>
-      <Row :gutter="16" :class="$style.entryMenu">
-        <div style="width: 100%" @click="comfirmCleanCache">
-          <Col span="22" @click="comfirmCleanCache">
-            清理缓存
-          </Col>
-          <Col span="2" :class="$style.rightIcon">
-            <RightArrowIcon height="18" width="18" color="#999" />
-          </Col>
-        </div>
+      <Row :gutter="16" :class="$style.entryMenu" @click.native="comfirmCleanCache">
+        <Col span="22" @click="comfirmCleanCache">
+          清理缓存
+        </Col>
+        <Col span="2" :class="$style.rightIcon">
+          <RightArrowIcon height="18" width="18" color="#999" />
+        </Col>
       </Row>
       <Row :gutter="16" :class="$style.entryMenu">
         <Col span="22">
@@ -44,15 +38,13 @@
           <RightArrowIcon height="18" width="18" color="#999" />
         </Col>
       </Row>
-      <Row :gutter="16" :class="$style.entryMenu">
-        <div style="width: 100%" @click="comfirmLogout">
-          <Col span="22" style="color: #59b6d7;">
-            退出登录
-          </Col>
-          <Col span="2" :class="$style.rightIcon">
-            <RightArrowIcon height="18" width="18" color="#999" />
-          </Col>
-        </div>
+      <Row :gutter="16" :class="$style.entryMenu" @click.native="comfirmLogout">
+        <Col span="22" style="color: #59b6d7;">
+          退出登录
+        </Col>
+        <Col span="2" :class="$style.rightIcon">
+          <RightArrowIcon height="18" width="18" color="#999" />
+        </Col>
       </Row>
     </div>
     <!-- 弹出框 -->

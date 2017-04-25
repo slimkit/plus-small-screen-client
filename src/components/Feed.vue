@@ -87,7 +87,7 @@
     created () {
       let localUser = localEvent.getLocalItem('user_' + this.feed.user_id);
       if(!lodash.keys(localUser).length > 0) {
-        getUserInfo(this.feed.user_id, 30, user => {
+        getUserInfo(this.feed.user_id, 30).then( user => {
           this.user = { ...this.user, ...user };
         });
       } else {

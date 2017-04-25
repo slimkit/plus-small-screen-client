@@ -23,14 +23,14 @@ import { requestAuth, CanNotGetInWhenLogged } from '../utils/auth';
 const routes = [
   {
     path: '/',
-    component: Login,
     meta: {
-      title: '登录'
+      title: 'ThinkSNS+'
     }
   },
   {
     path: '/login',
     component: Login,
+    name: 'login',
     meta: {
       title: '登录'
     },
@@ -39,38 +39,9 @@ const routes = [
     }
   },
   {
-    path: '/users/diggs',
-    component: Diggs,
-    meta: {
-      title: '赞'
-    },
-    beforeEnter: (to, from, next) => {
-      requestAuth(to, from, next)
-    }
-  },
-  {
-    path: '/users/ranking',
-    component: Ranking,
-    meta: {
-      title: '排行榜'
-    },
-    beforeEnter: (to, from, next) => {
-      requestAuth(to, from, next)
-    }
-  },
-  {
-    path: '/users/mycomments',
-    component: Comments,
-    meta: {
-      title: '评论'
-    },
-    beforeEnter: (to, from, next) => {
-      requestAuth(to, from, next)
-    }
-  },
-  {
     path: '/register',
     component: Register,
+    name: 'register',
     meta: {
       title: '注册'
     },
@@ -79,19 +50,9 @@ const routes = [
     }
   },
   {
-    path: '/users/message',
-    component: Message,
-    meta: {
-      title: '消息'
-    },
-    beforeEnter: (to, from, next) => {
-      requestAuth(to, from, next)
-    }
-
-  },
-  {
     path: '/findpassword',
     component: FindPassword,
+    name: 'findPassword',
     meta: {
       title: '找回密码'
     },
@@ -100,76 +61,9 @@ const routes = [
     }
   },
   {
-    path: '/feed/:feed_id',
-    component: FeedDetail,
-    meta: {
-      title: '动态详情'
-    }
-  },
-  {
-    path: '/users/collections',
-    component: Collections,
-    meta: {
-      title: '收藏'
-    },
-    beforeEnter: (to, from, next) => {
-      requestAuth(to, from, next)
-    }
-  },
-  {
-    path: '/users/profile',
-    component: Profile,
-    meta: {
-      title: '我'
-    },
-    beforeEnter: (to, from, next) => {
-      requestAuth(to, from, next)
-    }
-  },
-  {
-    path: '/users/systemSetting',
-    component: SystemSetting,
-    meta: {
-      title: '设置'
-    },
-    beforeEnter: (to, from, next) => {
-      requestAuth(to, from, next)
-    }
-  },
-  {
-    path: '/users/password',
-    component: ChangePassword,
-    meta: {
-      title: '修改密码'
-    },
-    beforeEnter: (to, from, next) => {
-      requestAuth(to, from, next);
-    }
-  },
-  {
-    path: '/users/setting',
-    component: UserSetting,
-    meta: {
-      title: '个人资料',
-      keywords: '个人资料'
-    },
-    beforeEnter: (to, from, next) => {
-      requestAuth(to, from, next);
-    }
-  },
-  {
-    path: '/users/feeds/:user_id',
-    component: UserFeeds,
-    meta: {
-      title: '个人主页'
-    },
-    beforeEnter: (to, from, next) => {
-      requestAuth(to, from, next);
-    }
-  },
-  {
     path: '/feeds',
     component: Feeds,
+    name: 'feedsList',
     meta: {
       title: '动态'
     },
@@ -181,6 +75,7 @@ const routes = [
       {
         path: 'following',
         component: FeedFollowing,
+        name: 'followingFeeds',
         meta: {
           title: '关注的动态'
         }
@@ -188,6 +83,7 @@ const routes = [
       {
         path: 'hot',
         component: FeedHot,
+        name: 'hotFeeds',
         meta: {
           title: '热门动态'
         }
@@ -195,12 +91,132 @@ const routes = [
       {
         path: 'new',
         component: FeedNew,
+        name: 'newFeeds',
         meta: {
           title: '最新动态'
         }
       }
     ]
-  }
+  },
+  {
+    path: '/feed/:feed_id',
+    component: FeedDetail,
+    name: 'feedDetail',
+    meta: {
+      title: '动态详情'
+    }
+  },
+  {
+    path: '/users/feeds/:user_id',
+    component: UserFeeds,
+    name: 'userSpace',
+    meta: {
+      title: '个人主页'
+    },
+    beforeEnter: (to, from, next) => {
+      requestAuth(to, from, next);
+    }
+  },
+  {
+    path: '/users/message',
+    component: Message,
+    name: 'myMessage',
+    meta: {
+      title: '消息'
+    },
+    beforeEnter: (to, from, next) => {
+      requestAuth(to, from, next)
+    }
+  },
+  {
+    path: '/users/diggs',
+    component: Diggs,
+    name: 'myDiggs',
+    meta: {
+      title: '赞'
+    },
+    beforeEnter: (to, from, next) => {
+      requestAuth(to, from, next)
+    }
+  },
+  {
+    path: '/users/ranking',
+    component: Ranking,
+    name: 'diggRanking',
+    meta: {
+      title: '排行榜'
+    },
+    beforeEnter: (to, from, next) => {
+      requestAuth(to, from, next)
+    }
+  },
+  {
+    path: '/users/mycomments',
+    component: Comments,
+    name: 'myComments',
+    meta: {
+      title: '评论'
+    },
+    beforeEnter: (to, from, next) => {
+      requestAuth(to, from, next)
+    }
+  },
+  {
+    path: '/users/collections',
+    component: Collections,
+    name: 'myCollections',
+    meta: {
+      title: '收藏'
+    },
+    beforeEnter: (to, from, next) => {
+      requestAuth(to, from, next)
+    }
+  },
+  {
+    path: '/users/profile',
+    component: Profile,
+    name: 'myProfile',
+    meta: {
+      title: '我'
+    },
+    beforeEnter: (to, from, next) => {
+      requestAuth(to, from, next)
+    }
+  },
+  {
+    path: '/users/systemSetting',
+    component: SystemSetting,
+    name: 'systemSetting',
+    meta: {
+      title: '设置'
+    },
+    beforeEnter: (to, from, next) => {
+      requestAuth(to, from, next)
+    }
+  },
+  {
+    path: '/users/password',
+    component: ChangePassword,
+    name: 'changePassword',
+    meta: {
+      title: '修改密码'
+    },
+    beforeEnter: (to, from, next) => {
+      requestAuth(to, from, next);
+    }
+  },
+  {
+    path: '/users/setting',
+    component: UserSetting,
+    name: 'mySetting',
+    meta: {
+      title: '个人资料',
+      keywords: '个人资料'
+    },
+    beforeEnter: (to, from, next) => {
+      requestAuth(to, from, next);
+    }
+  },
 ];
 
 export default routes;

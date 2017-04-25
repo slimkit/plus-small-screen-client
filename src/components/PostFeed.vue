@@ -1,5 +1,4 @@
 <template>
-  <!-- <transition-group name="fade" tag="div" :class="$style.postRoot"  v-show="show" enter-active-class="zoomInLeft" leave-active-class="zoomOutRight"> -->
   <transition name="custom-classes-transition" enter-active-class="animated slideInUp" leave-active-class="animated slideOutDown">
     <div class="post-feed" :class="$style.postRoot" v-show="show">
       <div class="commonHeader">
@@ -56,8 +55,8 @@
               :action="uploadUri"
               accept="image/*"
               style="display: inline-block;width:22vw;height: 22vw">
-              <div style="width: 22vw;height: 22vw; line-height: 22vw;">
-                  <Icon type="camera" size="20"></Icon>
+              <div :class="$style.camera">
+                  <CameraIcon height="24" width="24" color="#999" />
               </div>
             </Upload>
             <Modal title="查看图片" v-model="visible">
@@ -79,10 +78,14 @@ import { Base64 } from 'js-base64';
 import md5 from 'js-md5';
 import { createUploadTask, uploadFile, noticeTask } from '../utils/upload';
 import lodash from 'lodash';
+import CameraIcon from '../icons/Camera';
 
 const base64Reg = /^data:(.*?);base64,/;
 let reg = /data:(.*?);/;
 const postFeed = {
+  components: {
+    CameraIcon
+  },
   data: () => ({
     feedTitle: '',
     feedContent: '',
@@ -415,6 +418,14 @@ export default postFeed;
         justify-content: flex-end;
       }
     }
+  }
+  .camera {
+    width: 22vw;
+    height: 22vw; 
+    line-height: 22vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 </style>
 <style lang="scss">

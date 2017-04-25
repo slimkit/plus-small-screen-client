@@ -92,7 +92,7 @@
           const { name = ''} = userLocalInfo;
           users += name + '、';
           if(!lodash.keys(userLocalInfo).lenght) {
-            getUserInfo(digg, user => {
+            getUserInfo(digg, 30).then(user => {
               const { name = '' } = user;
               users += name + '、';
             });
@@ -124,7 +124,7 @@
           const { name = '' } = userLocalInfo;
           users += name + '、';
           if(!lodash.keys(userLocalInfo).length > 0) {
-            getUserInfo(comment, user => {
+            getUserInfo(comment, 30).then(user => {
               const { name = '' } = user;
               users += name + '、';
             });
@@ -152,7 +152,6 @@
       let types = 'diggs,comments';
       let time = 0;
       time = localEvent.getLocalItem('messageFlushTime');
-      console.log(time);
       let nowtime = parseInt(new window.Date().getTime() / 1000);
       if(!time) {
         time = parseInt(new window.Date().getTime() / 1000) - 86400;

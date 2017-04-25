@@ -175,6 +175,9 @@
         color: #999;
         font-style: normal
       }
+      &:last-child {
+        justify-content: flex-end;
+      }
     }
   }
 </style>

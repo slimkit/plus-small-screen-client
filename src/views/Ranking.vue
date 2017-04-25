@@ -3,15 +3,16 @@
     <div class="commonHeader">
       <Row :gutter="16">
         <Col span="4">
-          <div @click="goTo(-1)">
-            <BackIcon height="21" width="21" color="#999" />
-          </div>
+          <BackIcon height="21" width="21" color="#999" @click.native="goTo(-1)" />
         </Col>
         <Col span="16" class="title-col">
           点赞排行榜
         </Col>
         <Col span="4"></Col>
       </Row>
+    </div>
+    <div class="nothingDefault"> 
+      <img v-if="nothing" :src="nothing" />
     </div>
     <mt-loadmore
       v-if="!nothing"
@@ -56,6 +57,7 @@
   import { changeUrl, goTo } from '../utils/changeUrl';
   import defaultAvatar from '../statics/images/defaultAvatarx2.png';
   import lodash from 'lodash';
+  import defaultNobody from '../statics/images/img_default_nobody@2x.png';
 
   const Ranking = {
     components: {
@@ -94,7 +96,7 @@
         this.bottomStatus = status;
       },
       loadBottom () {
-        addAccessToken().get(createAPI(`diggsrank?page=${this.page+1}&limit=1`),{},
+        addAccessToken().get(createAPI(`diggsrank?page=${this.page+1}&limit=15`),{},
           {
             validateStatus: status => status === 200
           }
@@ -132,7 +134,7 @@
           digg.value = friendNum(parseInt(list.value));
           digg.user_id = list.user_id;
           if(!lodash.keys(user).length) {
-            getUserInfo(list.user_id, gotUser => {
+            getUserInfo(list.user_id, 30).then(gotUser => {
               const { avatar: { 30: avatar = '' } = {} } = gotUser;
               const { name = '' } = gotUser;
               const { datas: { intro: { value: intro = '还没有简介呢' } = {} } } = gotUser;
@@ -146,11 +148,11 @@
         return newLists;
       },
       nothing () {
-        return !this.diggLists.length > 0;
+        return this.diggLists.length > 0 ? 0 : defaultNobody;
       }
     },
     created () {
-      addAccessToken().get(createAPI(`diggsrank?page=${this.page}&limit=1`),{},
+      addAccessToken().get(createAPI(`diggsrank?page=${this.page}&limit=15`),{},
         {
           validateStatus: status => status === 200
         }

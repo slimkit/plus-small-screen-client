@@ -61,10 +61,13 @@ axios.interceptors.response.use(
     // 跳转登录
     let redirect = app.$route.path;
     localEvent.setLocalItem('UserLoginInfo', {});
-    setTimeout( () => {
-      app.$router.push({ path: '/login', query: { redirect: redirect } });
-    }, 1500);
-   // return Promise.reject(error);
+    if(errorResponse.data.code === 1099) {
+      setTimeout( () => {
+        app.$router.push({ path: '/login', query: { redirect: redirect } });
+      }, 1500);
+    } else {
+      return Promise.reject(error);
+    }
  }
 );
 

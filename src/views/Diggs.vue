@@ -3,14 +3,15 @@
     <div class="commonHeader">
       <Row :gutter="16">
         <Col span="4">
-          <div class="" @click="goTo(-1)">
-            <BackIcon height="21" width="21" color="#999" />
-          </div>
+          <BackIcon @click.native="goTo(-1)" height="21" width="21" color="#999" />
         </Col>
         <Col span="16" class="title-col">
           赞
         </Col>
       </Row>
+    </div>
+    <div class="nothingDefault"> 
+      <img v-if="nothing" :src="nothing" />
     </div>
     <mt-loadmore
       v-if="!nothing"
@@ -25,28 +26,26 @@
       <div class="commentContent">
         <div :class="$style.comments">
           <Row :gutter="16" v-for="(digg, index) in formatedDiggs" :key="index" :class="$style.comment">
-            <div class="row-container" @click="changeUrl('')">
-              <Col span="4" class="avatar-parent-col">
-                <img @click="changeUrl(`/users/feeds/${digg.user_id}`)" class="avatar" :src="digg.avatar" :alt="digg.name" />
-              </Col>
-              <Col span="13">
-                <h4 @click="changeUrl(`/users/feeds/${comment.user_id}`)">{{digg.name}}</h4>
-                <timeago style="font-size: 14px; color: #999;" :since="digg.time" locale="zh-CN" :auto-update="60"></timeago>
-              </Col>
-              <Col span="2">
-                <DiggIcon height="21" width="21" color="#f4504d" />
-              </Col>
-              <Col span="5">
-                <div :class="$style.sourceContent">
-                  <img v-show="digg.cover" :src="digg.cover" />
-                  <div v-show="!digg.cover" :class="$style.source">
-                    <div :class="$style.content">
-                      {{digg.source_content}}
-                    </div>
+            <Col span="4" class="avatar-parent-col">
+              <img @click="changeUrl(`/users/feeds/${digg.user_id}`)" class="avatar" :src="digg.avatar" :alt="digg.name" />
+            </Col>
+            <Col span="13">
+              <h4 @click="changeUrl(`/users/feeds/${comment.user_id}`)">{{digg.name}}</h4>
+              <timeago style="font-size: 14px; color: #999;" :since="digg.time" locale="zh-CN" :auto-update="60"></timeago>
+            </Col>
+            <Col span="2">
+              <DiggIcon height="21" width="21" color="#f4504d" />
+            </Col>
+            <Col span="5">
+              <div :class="$style.sourceContent" @click="changeUrl(`/feed/${digg.source_id}`)">
+                <img v-show="digg.cover" :src="digg.cover" />
+                <div v-show="!digg.cover" :class="$style.source">
+                  <div :class="$style.content">
+                    {{digg.source_content}}
                   </div>
                 </div>
-              </Col>
-            </div>
+              </div>
+            </Col>
           </Row>
         </div>
       </div>
@@ -69,6 +68,7 @@
   import BackIcon from '../icons/Back';
   import DiggIcon from '../icons/Digg';
   import defaultAvatar from '../statics/images/defaultAvatarx2.png';
+  import defaultNobody from '../statics/images/img_default_nobody@2x.png';
 
   const Diggs = {
     components: {
@@ -95,6 +95,9 @@
         )
         .then(response => {
           let diggs = response.data.data;
+          if(diggs.length) {
+            this.max_id = diggs[0].id;
+          }
           let newdiggs = [];
           diggs.forEach( digg => {
             if( this.ids.findIndex(function(value, index, arr) {
@@ -121,14 +124,17 @@
         )
         .then(response => {
           let diggs = response.data.data;
-          this.diggs = [ ...this.diggs, ...diggs ];
-          if(diggs.length < 15) {
-            this.bottomAllLoaded = true;
-          };
-          setTimeout( () => {
-            if(this.$refs.loadmoreDiggs)
-              this.$refs.loadmoreDiggs.onBottomLoaded();
-          })
+          if(diggs.length) {
+            this.diggs = [ ...this.diggs, ...diggs ];
+            if(diggs.length < 15) {
+              this.bottomAllLoaded = true;
+            };
+            setTimeout( () => {
+              if(this.$refs.loadmoreDiggs)
+                this.$refs.loadmoreDiggs.onBottomLoaded();
+            });
+            this.max_id = diggs[diggs.length - 1].id;
+          }
         })
       }
     },
@@ -161,7 +167,7 @@
         return newdiggs;
       },
       nothing () {
-        return !this.diggs.length > 0;
+        return this.diggs.length > 0 ? 0 : defaultNobody;
       }
     },
     created () {

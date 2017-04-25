@@ -64,7 +64,7 @@
         let feed = this.feed;
         let reply_to_user_id = comment_to_uid;
         if (!lodash.keys(to_user).length) {
-          getUserInfo(comment_to_uid, 30, user => {
+          getUserInfo(comment_to_uid, 30).then( user => {
             to_user = user;
             to_user_name = to_user.name;
           });

@@ -2,10 +2,8 @@
 	<div class="userProfile" :class="$style.userProfile">
 		<div class="commonHeader">
       <Row :gutter="16">
-        <Col span="3" style="display: flex; justify-content: flex-start">
-          <div @click="" @click="goTo(-1)" style="display: flex; align-items: center;">
-            <BackIcon height="21" width="21" color="#999" />
-          </div>
+        <Col span="3" @click.native="goTo(-1)"  style="display: flex; justify-content: flex-start">
+          <BackIcon height="21" width="21" color="#999" />
         </Col>
         <Col span="17" class="title-col">
           个人资料
@@ -43,37 +41,31 @@
         <Col span="17">
           <input style="padding: 0;" type="text" v-model.trim="name" :value="name" placeholder="输入新昵称" />
         </Col>
-        <Col span="3" :class="$style.rightIcon">
-          <div @click="clean('name')">
-            <CloseIcon height="18" width="18" color="#999" />
-          </div>
+        <Col span="3" :class="$style.rightIcon"  @click.native="clean('name')">
+          <CloseIcon height="18" width="18" color="#999" />
         </Col>
       </Row>
-      <Row :gutter="16" :class="$style.rowCenter">
-        <div @click="showSexPopup" style="width: 100%;">
-          <Col span="4">
-            性别
-          </Col>
-          <Col span="17">
-            <span :class="{sexDefaultText: !sex}">{{ sexText }}</span>
-          </Col>
-          <Col span="3" :class="$style.rightIcon">
-            <RightArrowIcon height="18" width="18" color="#999" />
-          </Col>
-        </div>
+      <Row :gutter="16" :class="$style.rowCenter" @click.native="showSexPopup" >
+        <Col span="4">
+          性别
+        </Col>
+        <Col span="17">
+          <span :class="{sexDefaultText: !sex}">{{ sexText }}</span>
+        </Col>
+        <Col span="3" :class="$style.rightIcon">
+          <RightArrowIcon height="18" width="18" color="#999" />
+        </Col>
       </Row>
-      <Row :gutter="16" :class="$style.rowCenter">
-        <div @click="handleAreaSelect(true)" style="width: 100%;">
-          <Col span="4">
-            城市
-          </Col>
-          <Col span="17">
-            <span :class="{cityDefaultText: !areaAbout.city}">{{ areaText }}</span>
-          </Col>
-          <Col span="3" :class="$style.rightIcon">
-            <RightArrowIcon height="18" width="18" color="#999" />
-          </Col>
-        </div>
+      <Row :gutter="16" :class="$style.rowCenter" @click.native="handleAreaSelect(true)">
+        <Col span="4">
+          城市
+        </Col>
+        <Col span="17">
+          <span :class="{cityDefaultText: !areaAbout.city}">{{ areaText }}</span>
+        </Col>
+        <Col span="3" :class="$style.rightIcon">
+          <RightArrowIcon height="18" width="18" color="#999" />
+        </Col>
       </Row>
       <Row :gutter="16" :class="$style.rowCenter">
         <Col span="4">
@@ -173,6 +165,7 @@
             drag-mode="move"
             :background="true"
             :src="imgSrc"
+            :guides="false"
           >
           </vue-cropper>
         </div>
@@ -356,7 +349,7 @@
           }
         )
         .then(response => {
-          getUserInfo(this.currentUser, 30, user => {
+          getUserInfo(this.currentUser, 30).then(user => {
             this.userInfo = { ...this.userInfo, ...user };
           });
           this.$store.dispatch(NOTICE, cb => {
@@ -394,11 +387,9 @@
 
           reader.onload = (event) => {
             this.imgSrc = event.target.result;
-            // rebuild cropperjs with the updated source
             this.$refs.cropper.replace(event.target.result);
+            this.showCropper();
           };
-
-          this.showCropper();
           reader.readAsDataURL(file);
         } else {
           alert('Sorry, FileReader API not supported');
@@ -592,7 +583,7 @@
       }
     },
     mounted () {
-      getUserInfo(this.currentUser, 30, user => {
+      getUserInfo(this.currentUser, 30).then(user => {
         this.userInfo = { ...this.userInfo, ...user };
         this.name = user.name;
         const { datas: { 

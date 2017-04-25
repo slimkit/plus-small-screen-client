@@ -3,25 +3,25 @@
     <Row :class="$style.toolBar" class="menu">
       <Col :span="5" :class="$style.menuItem">
         <router-link class="router-link" to="/feeds">
-          <HomeIcon :height="24" width="24" color="#999" />
+          <HomeIcon height="26" width="26" color="#999" />
           <i>首页</i>
         </router-link>
       </Col>
       <Col :span="5" :class="$style.menuItem">
         <router-link class="router-link" to="/discover">
           <Badge dot>
-            <DiscoverIcon :height="24" width="24" color="#999" />
+            <DiscoverIcon height="26" width="26" color="#999" />
             <i>发现</i>
           </Badge>
         </router-link>
       </Col>
       <Col :span="4" :class="$style.menuItem" class="plus-parent">
-          <i @click="showPost" class="ivu-icon ivu-icon-ios-plus-empty" :class="$style.plus"></i>
+          <PlusIcon @click.native="showPost" height="34" width="34" color="#fff" />
       </Col>
       <Col :span="5" :class="$style.menuItem">
         <router-link class="router-link" to="/users/message">
           <Badge dot>
-            <MessageIcon :height="24" width="24" color="#999" />
+            <MessageIcon height="26" width="26" color="#999" />
             <i>消息</i>
           </Badge>
         </router-link>
@@ -29,7 +29,7 @@
       <Col :span="5" :class="$style.menuItem">
         <router-link class="router-link" to="/users/profile">
           <Badge dot>
-            <MeIcon :height="24" width="24" color="#999" />
+            <MeIcon height="26" width="26" color="#999" />
             <i>我</i>
           </Badge>
         </router-link>
@@ -45,13 +45,15 @@
   import DiscoverIcon from '../icons/Discover';
   import MessageIcon from '../icons/Message';
   import MeIcon from '../icons/Me';
+  import PlusIcon from '../icons/Plus';
 
   export default {
     components: {
       HomeIcon,
       DiscoverIcon,
       MessageIcon,
-      MeIcon
+      MeIcon,
+      PlusIcon
     },
     methods: {
       showPost () {
@@ -92,15 +94,12 @@
       padding: 2px 0;
       i {
         font-style: normal;
-        font-size: 16px;
+        font-size: 12px;
         display: flex;
         align-items: center;
         width: 100%;
         justify-content: center;
         line-height: 1.5;
-        &:before {
-            font-size: 24px;
-        }
       }
     }
 </style>

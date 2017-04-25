@@ -64,53 +64,53 @@ function getAvatar (userInfo, process, cb) {
   cb(userInfo);
 };
 
-function getUserInfo (user_id, process = 30, cb) {
-  addAccessToken().post(createAPI('users'), {
-      user_ids: [ user_id ]
-    },
-    {
-      validate: status => status === 200
-    }
-  )
-  .then(response => {
-    let user = response.data.data.pop();
-    let userLocal = {
-      user_id: 0,
-      name: '',
-      phone: '',
-      counts: {},
-      datas: {},
-      is_following: 0,
-      is_followed: 0
-    };
-    userLocal.user_id = user.id;
-    userLocal.name = user.name;
-    userLocal.phone = user.phone;
-    userLocal.is_followed = user.is_followed ? user.is_followed : 0;
-    userLocal.is_following = user.is_following ? user.is_following : 0;
-    user.counts.map(function (count, index) {
-      let keyName = count.key;
-      let value = count.value;
-      userLocal.counts = { ...userLocal.counts, [keyName]:  value };
-    });
-    let newData = {};
-    user.datas.forEach(data => {
-      newData[data.profile] = {
-        display: data.profile_name,
-        value: data.pivot.user_profile_setting_data,
-        type: data.type,
-        options: data.default_options,
-        updated_at: data.updated_at
+function getUserInfo (user_id, process = 30) {
+  return new Promise( (resolve, reject) => {
+    addAccessToken().post(createAPI('users'), {
+        user_ids: [ user_id ]
+      },
+      {
+        validate: status => status === 200
+      }
+    )
+    .then(response => {
+      let user = response.data.data.pop();
+      let userLocal = {
+        user_id: 0,
+        name: '',
+        phone: '',
+        counts: {},
+        datas: {},
+        is_following: 0,
+        is_followed: 0
       };
-    });
-    userLocal.datas = newData;
-    getAvatar(userLocal, process, newUserLocal => {
-      userLocal = newUserLocal;
-    });
-    localEvent.setLocalItem('user_' + user_id, userLocal);
-    if(cb instanceof Function ) {
-      cb(userLocal);
-    }
+      userLocal.user_id = user.id;
+      userLocal.name = user.name;
+      userLocal.phone = user.phone;
+      userLocal.is_followed = user.is_followed ? user.is_followed : 0;
+      userLocal.is_following = user.is_following ? user.is_following : 0;
+      user.counts.map(function (count, index) {
+        let keyName = count.key;
+        let value = count.value;
+        userLocal.counts = { ...userLocal.counts, [keyName]:  value };
+      });
+      let newData = {};
+      user.datas.forEach(data => {
+        newData[data.profile] = {
+          display: data.profile_name,
+          value: data.pivot.user_profile_setting_data,
+          type: data.type,
+          options: data.default_options,
+          updated_at: data.updated_at
+        };
+      });
+      userLocal.datas = newData;
+      getAvatar(userLocal, process, newUserLocal => {
+        userLocal = newUserLocal;
+      });
+      localEvent.setLocalItem('user_' + user_id, userLocal);
+      resolve(userLocal);
+    })
   })
 };
 

@@ -10,6 +10,9 @@
         </Col>
       </Row>
     </div>
+    <div class="nothingDefault"> 
+      <img v-if="nothing" :src="nothing" />
+    </div>
     <mt-loadmore
       v-if="!nothing"
       :bottom-method="loadBottom"
@@ -67,6 +70,7 @@
   import BackIcon from '../icons/Back';
   import defaultAvatar from '../statics/images/defaultAvatarx2.png';
   import lodash from 'lodash';
+  import defaultNoBody from '../statics/images/img_default_nobody@2x.png';
 
   const Comments = {
     components: {
@@ -154,7 +158,7 @@
           if(comment.reply_to_user_id) {
             reply_to_user = localEvent.getLocalItem(`user_${comment.reply_to_user_id}`);
             if(!lodash.keys(reply_to_user).length) {
-              getUserInfo(comment.reply_to_user_id, replyUser => {
+              getUserInfo(comment.reply_to_user_id, 30).then( replyUser => {
                 const { name = '' } = replyUser;
                 newcomment.reply_to_user_name = name;
               });
@@ -177,7 +181,7 @@
         return newcomments;
       },
       nothing () {
-        return !this.comments.length > 0;
+        return this.comments.length > 0 ? 0 : defaultNoBody;
       }
     },
     created () {

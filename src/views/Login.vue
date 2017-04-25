@@ -1,87 +1,72 @@
 <template>
-  <transition name="slide-left">
-    <div class="container">
-      <!-- <header class="header">
-        <Row justify="start" type="flex" align="middle">
-          <Col :span="3" class="close back">
-            <i class="el-icon-close"></i>
-          </Col>
-          <Col :span="17"><div class="grid-content bg-purple-light title ">登录</div></Col>
-          <Col :span="4">
-            <div class="grid-content bg-purple-light right-top-button">
-              <router-link to="/register">注册</router-link>
-            </div>
-          </Col>
-        </Row>
-      </header> -->
-      <div class="main-content">
-        <form role="form" @submit.prevent="submit">
-          <div class="loginForm">
-            <Row  class="bottom-border formChildrenRow" :gutter="16">
-              <Col span="5">
-                <label for="phone">手机号</label>
-              </Col>
-              <Col span="16">
-                <input type="tel" size="large" autocomplete="off" placeholder="请输入手机号" v-model.number.trim="phone" id="phone" name="phone" />
-              </Col>
-              <Col span="3" class="flexend">
-                <!-- <i @click="cleanPhone" v-show="isShowClean" class="ivu-icon ivu-icon-close-circled"></i> -->
-                <div @click="cleanPhone" v-show="isShowClean">
-                  <CloseIcon width="21" height="21" color="#999" />
-                </div>
-              </Col>
-            </Row>
-            <Row class="formChildrenRow" :gutter="16" >
-              <Col span="5">
-                <label for="password">密码</label>
-              </Col>
-              <Col span="16">
-                <input type="password"  size="large" v-show="isShowPassword" v-model.trim="password" placeholder="请输入6位以上密码" id="password" name="password" />
-                <input type="text"  v-model.trim="passwordText" v-show="isShowPasswordText" value="" placeholder="请输入6位以上密码" />
-              </Col>
-              <Col span="3" class="flexend">
-                <!-- i @click="showPassword" class="ivu-icon" :class="{ 'ivu-icon-eye-disabled': isShowPasswordText, 'ivu-icon-eye': isShowPassword }"></i> -->
-                <div @click="showPassword" v-show="isShowPasswordText">
-                  <EyeOpenIcon height="21" width="21" color="#999" />
-                </div>
-                <div @click="showPassword" v-show="isShowPassword">
-                  <EyeCloseIcon height="21" width="21" color="#999" />
-                </div>
-              </Col>
-            </Row>
-          </div>
-          <div id="notice">
-            <Row :gutter="16">
-              <Col span="24">
-                <p class="notice error">{{ error }}</p>
-              </Col>
-            </Row>
-          </div>
-          <div>
-           <Row :gutter="16" >
-              <Col span="24">
-                <Button type="primary" htmlType="submit" :loading="isLoading" :disabled="isDisabled" class="loginButton" size="large">登录</Button>
-              </Col>
-            </Row>
-          </div>
-        </form>
-        <div class="otherOperation">
-          <Row :gutter="16" >
-            <Col span="12" >
-              <router-link to="/register">
-                注册账号
-              </router-link>
+  <div class="container">
+    <div class="main-content">
+      <form role="form" @submit.prevent="submit">
+        <div class="loginForm">
+          <Row  class="bottom-border formChildrenRow" :gutter="16">
+            <Col span="5">
+              <label for="phone">手机号</label>
             </Col>
-            <Col span="12">
-              <router-link style="float: right" to="/findpassword">
-                找回密码
-              </router-link>
+            <Col span="16">
+              <input type="tel" size="large" autocomplete="off" placeholder="请输入手机号" v-model.number.trim="phone" id="phone" name="phone" />
+            </Col>
+            <Col span="3" class="flexend">
+              <!-- <i @click="cleanPhone" v-show="isShowClean" class="ivu-icon ivu-icon-close-circled"></i> -->
+              <div @click="cleanPhone" v-show="isShowClean">
+                <CloseIcon width="21" height="21" color="#999" />
+              </div>
+            </Col>
+          </Row>
+          <Row class="formChildrenRow" :gutter="16" >
+            <Col span="5">
+              <label for="password">密码</label>
+            </Col>
+            <Col span="16">
+              <input type="password"  size="large" v-show="isShowPassword" v-model.trim="password" placeholder="请输入6位以上密码" id="password" name="password" />
+              <input type="text"  v-model.trim="passwordText" v-show="isShowPasswordText" value="" placeholder="请输入6位以上密码" />
+            </Col>
+            <Col span="3" class="flexend">
+              <!-- i @click="showPassword" class="ivu-icon" :class="{ 'ivu-icon-eye-disabled': isShowPasswordText, 'ivu-icon-eye': isShowPassword }"></i> -->
+              <div @click="showPassword" v-show="isShowPasswordText">
+                <EyeOpenIcon height="21" width="21" color="#999" />
+              </div>
+              <div @click="showPassword" v-show="isShowPassword">
+                <EyeCloseIcon height="21" width="21" color="#999" />
+              </div>
             </Col>
           </Row>
         </div>
+        <div id="notice">
+          <Row :gutter="16">
+            <Col span="24">
+              <p class="notice error">{{ error }}</p>
+            </Col>
+          </Row>
+        </div>
+        <div>
+         <Row :gutter="16" >
+            <Col span="24">
+              <Button type="primary" htmlType="submit" :loading="isLoading" :disabled="isDisabled" class="loginButton" size="large">登录</Button>
+            </Col>
+          </Row>
+        </div>
+      </form>
+      <div class="otherOperation">
+        <Row :gutter="16" >
+          <Col span="12" >
+            <router-link to="/register">
+              注册账号
+            </router-link>
+          </Col>
+          <Col span="12">
+            <router-link style="float: right" to="/findpassword">
+              找回密码
+            </router-link>
+          </Col>
+        </Row>
       </div>
     </div>
-  </transition>
+  </div>
 </template>
 
 <script>
@@ -195,10 +180,7 @@
         }
       },
       submit () {
-        console.log(this.$route);
         let redirect = this.$route.query.redirect ? this.$route.query.redirect : 'feeds';
-        console.log(redirect);
-        // return;
         let { phone, password } = this;
         let device_code = detecdOS();
         this.isLoading = true;
@@ -215,7 +197,7 @@
         .then(response => {
           this.errors = {};
           localEvent.setLocalItem('UserLoginInfo', response.data.data);
-          getUserInfo(response.data.data.user_id, 30, user => {
+          getUserInfo(response.data.data.user_id, 30).then(user => {
             localEvent.setLocalItem('user_' + response.data.data.user_id, user);
             router.push({ path: redirect });
           });

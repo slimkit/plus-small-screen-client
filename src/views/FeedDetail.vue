@@ -1,5 +1,12 @@
 <template>
-  <transition name="custom-classes-transition" enter-active-class="animated slideInRight" leave-active-class="animated slideOutRight">
+  <!-- <transition name="custom-classes-transition" enter-active-class="animated slideInRight" leave-active-class="animated slideOutRight"> -->
+  <div>
+    <div id="spinner" v-show="showSpinner">
+      <div style="position: relative;">
+        <div class="spinner-double-bounce-bounce2" />
+        <div class="spinner-double-bounce-bounce1" />
+      </div>
+    </div>
     <div>
       <mt-loadmore 
         :bottom-method="loadBottom"
@@ -12,9 +19,7 @@
           <div class="commonHeader">
             <Row :gutter="16">
               <Col span="3" style="display: flex; justify-content: flex-start">
-                <div @click="goBack">
-                  <BackIcon height="21" width="21" color="#999" />
-                </div>
+                <BackIcon @click.native="goBack" height="21" width="21" color="#999" />
               </Col>
               <Col span="18" class="title-col">
                 <div>
@@ -70,8 +75,8 @@
           <div class="feed-container-tool feed-background-color">
             <div class="feed-container-tool-digg">
               <Row :gutter="16" style="display: flex; align-items: center;">
-                <Col span="17">
-                  <div style="display: flex; align-items: center;" @click="handleShowDiggList">
+                <Col span="17"  @click.native="handleShowDiggList">
+                  <div style="display: flex; align-items: center;">
                     <div :style="`width: ${digglistWidth}`">
                       <div class="digg-digg-list" v-if="diggList.length" >
                         <img v-lazy="digg.avatar" :style="`left: ${25 * (index) + 'px'}; z-index: ${5 - (1 * index)}`" :alt="digg.name" v-for="(digg, index) in diggList" :key="index" >
@@ -193,7 +198,8 @@
         </Row>
       </div>
     </div>
-  </transition>
+  </div>
+  <!-- </transition> -->
 </template>
 <script>
   import { createAPI, addAccessToken } from '../utils/request';
@@ -263,9 +269,25 @@
       // 上拉加载更多相关
       bottomAllLoaded: false,
       max_id: 0,
-      bottomStatus: ''
+      bottomStatus: '',
+      showSpinner: true
     }),
     computed: {
+      // 获取动态作者信息
+      // userInfo () {
+      //   this.feedData.user_id || return;
+      //   let userLocal = localEvent.getLocalItem(`user_${this.feedData.user_id}`);
+      //   if (!lodash.keys(userLocal).lenght > 0) {
+      //     getUserInfo(2, 30).then(user => {
+      //       // this.userInfo = { ...this.userInfo, ...user };
+      //       console.log(user);
+      //       return user;
+      //     });
+      //   } else {
+      //     // this.userInfo = { ...this.userInfo, ...userLocal };
+      //     return user;
+      //   }
+      // },
       feedTimer () {
         return this.timers(this.feedData.feed.created_at, 8, false);
       },
@@ -306,7 +328,7 @@
           userLocal = localEvent.getLocalItem(`user_${digg_list[index]}`);
           if(index > 4) { break; }
           if(!lodash.keys(userLocal).length > 0) {
-            getUserInfo(digg_list[index], 30, user => {
+            getUserInfo(digg_list[index], 30).then(user => {
               // userLocal = user;
               digg_users.push({
                 avatar: user.avatar[30],
@@ -346,7 +368,7 @@
         digg_list.forEach((digg) => {
           userLocal = localEvent.getLocalItem(`user_${digg}`);
           if(!lodash.keys(userLocal).length > 0) {
-            getUserInfo(digg, 30, user => {
+            getUserInfo(digg, 30).then(user => {
               userLocal = user;
             });
           }
@@ -516,7 +538,7 @@
         let show = true; // 展示输入框
         let feed = this.feedData;
         if (!lodash.keys(to_user).length > 0) {
-          getUserInfo(comment_to_uid, 30, user => {
+          getUserInfo(comment_to_uid, 30).then(user => {
             to_user = user;
             to_user_name = to_user.name;
           });
@@ -537,7 +559,7 @@
       },
       updateComments (close, data) {
         if(data.user === undefined) {
-          getUserInfo(data.user_id, user => {
+          getUserInfo(data.user_id, 30).then(user => {
             data.user = { ...data.user, ...user };
             this.$nextTick(function () {
               this.comments.unshift(data);
@@ -582,23 +604,25 @@
           });
         })
       },
-      // 获取动态作者信息
-      getUser (user_id) {
-        let userLocal = localEvent.getLocalItem(`user_${user_id}`);
-        if (!lodash.keys(userLocal).lenght > 0) {
-          getUserInfo(user_id, 30, user => {
-            this.userInfo = { ...this.userInfo, ...user };
-          });
-        } else {
-          this.userInfo = { ...this.userInfo, ...userLocal };
-        }
-      },
       getImg,
       friendNum,
       unFollowingUser,
       followingUser,
       goBack () {
         this.$router.back();
+      },
+      getUser (user_id) {
+        let userLocal = localEvent.getLocalItem(`user_${user_id}`);
+        if (!lodash.keys(userLocal).lenght > 0) {
+          getUserInfo(user_id, 30).then(user => {
+            this.userInfo = { ...this.userInfo, ...user };
+            // console.log(user);
+            // return user;
+          });
+        } else {
+          this.userInfo = { ...this.userInfo, ...userLocal };
+          // return user;
+        }
       }
     },
     created () {
@@ -650,6 +674,9 @@
         if(this.comments.length < 15) {
           this.bottomAllLoaded = true;
         }
+        setTimeout( () => {
+          this.showSpinner = false;
+        }, 1200);
       })
     }
   }; 
@@ -725,6 +752,9 @@
       height: 100%;
       border: 2px #fff solid;
       border-radius: 50%;
+      &[lazy="loading"] {
+        width: 100%;
+      }
     }
   }
   .detail-data {

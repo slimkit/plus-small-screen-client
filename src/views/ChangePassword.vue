@@ -1,11 +1,11 @@
 <template>
   <div class="changePassword">
-    <div class="changePassword-header changePassword-background-color">
+    <div class="commonHeader">
       <Row :gutter="16">
-        <Col span="3" style="display: flex; justify-content: flex-start">
-          <i @click="goTo(-1)" class="ivu-icon ivu-icon-android-arrow-back" style="width: 100%; height: 100%; display: flex; align-items: center;"></i>
+        <Col span="3" style="display: flex; justify-content: flex-start" @click.native="goTo(-1)">
+          <BackIcon height="21" width="21" color="#999" />
         </Col>
-        <Col span="18" style="font-size: 18px;">
+        <Col span="18" class="title-col">
           修改密码
         </Col>
         <Col span="3" style="display: flex;">
@@ -65,7 +65,11 @@
   import errorCodes from '../stores/errorCodes';
   import { NOTICE } from '../stores/types';
   import { goTo } from '../utils/changeUrl';
+  import BackIcon from '../icons/Back';
   const changePassword = {
+    components: {
+      BackIcon
+    },
     data: () => ({
       oldPassword: '',
       newPassword: '',

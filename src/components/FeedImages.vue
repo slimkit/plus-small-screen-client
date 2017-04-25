@@ -358,8 +358,6 @@
     }
     .imagesRow {
       margin-bottom: 2px!important;
-      margin-left: -1px!important;
-      margin-right: -1px!important;
     }
   }
   .imgParent {

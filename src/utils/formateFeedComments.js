@@ -11,7 +11,7 @@ export default function (commentsSource) {
     // 评论用户
     comment.user = localEvent.getLocalItem(`user_${comment.user_id}`);
     if(!lodash.keys(comment.user).length > 0) {
-      getUserInfo(comment.user_id, 30, localUser => {
+      getUserInfo(comment.user_id, 30).then( localUser => {
         comment.user = localUser;
       });
     }
@@ -19,7 +19,7 @@ export default function (commentsSource) {
     if(comment.reply_to_user_id) {
       comment.replyToUser = localEvent.getLocalItem(`user_${comment.reply_to_user_id}`);
       if(!lodash.keys(comment.replyToUser).lenght > 0) {
-        getUserInfo(comment.reply_to_user_id, localUser => {
+        getUserInfo(comment.reply_to_user_id, 30).then( localUser => {
           comment.replyToUser = localUser;
         });
       }

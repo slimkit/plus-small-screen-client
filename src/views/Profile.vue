@@ -37,45 +37,38 @@
     </div>
     <!-- 入口菜单 -->
     <div :class="$style.entry">
-      <Row :gutter="16" :class="$style.entryMenu">
+      <Row :gutter="16" :class="$style.entryMenu" @click.native="changeUrl(`/users/feeds/${currentUser}`)">
         <Col span="3">
-          <!-- <Icon type="model-s"></Icon> -->
           <SapceIcon :height="21" :width="21" color="#59b6d7" />
         </Col>
         <Col span="19" :class="$style.menuText">
-          <div :class="$style.feedEnter" @click="changeUrl(`/users/feeds/${currentUser}`)">
-            个人主页
-          </div>
+          个人主页
         </Col>
         <Col span="2" :class="$style.rightIcon">
           <RightArrowIcon height="18" width="18" color="#999" />
         </Col>
       </Row>
-      <Row :gutter="16" :class="$style.entryMenu">
-        <div style="width:100%;" @click="changeUrl('/users/ranking')">
-          <Col span="3">
-            <RankingIcon :height="21" :width="21" color="#59b6d7" />
-          </Col>
-          <Col span="19" :class="$style.menuText">
-            排行榜
-          </Col>
-          <Col span="2"  :class="$style.rightIcon">
-            <RightArrowIcon height="18" width="18" color="#999" />
-          </Col>
-        </div>
+      <Row :gutter="16" :class="$style.entryMenu"  @click.native="changeUrl('/users/ranking')">
+        <Col span="3">
+          <RankingIcon :height="21" :width="21" color="#59b6d7" />
+        </Col>
+        <Col span="19" :class="$style.menuText">
+          排行榜
+        </Col>
+        <Col span="2"  :class="$style.rightIcon">
+          <RightArrowIcon height="18" width="18" color="#999" />
+        </Col>
       </Row>
-      <Row :gutter="16" :class="$style.entryMenu">
-        <div style="width:100%;" @click="changeUrl('/users/collections')">
-          <Col span="3">
-            <ConnectionIcon :height="21" :width="21" color="#59b6d7" />
-          </Col>
-          <Col span="19" :class="$style.menuText">
-            收藏
-          </Col>
-          <Col span="2"  :class="$style.rightIcon">
-            <RightArrowIcon height="18" width="18" color="#999" />
-          </Col>
-        </div>
+      <Row :gutter="16" :class="$style.entryMenu" @click.native="changeUrl('/users/collections')">
+        <Col span="3">
+          <ConnectionIcon :height="21" :width="21" color="#59b6d7" />
+        </Col>
+        <Col span="19" :class="$style.menuText">
+          收藏
+        </Col>
+        <Col span="2"  :class="$style.rightIcon">
+          <RightArrowIcon height="18" width="18" color="#999" />
+        </Col>
       </Row>
     </div>
     <div :class="$style.entry">
@@ -101,18 +94,16 @@
           <Icon type="ios-arrow-right"></Icon>
         </Col>
       </Row> -->
-      <Row :gutter="16" :class="$style.entryMenu">
-        <div style="width: 100%;" @click="changeUrl('/users/systemSetting')">
-          <Col span="3">
-            <SystemSettingIcon height="21" width="21" color="#59b6d7" />
-          </Col>
-          <Col span="19" :class="$style.menuText">
-            设置
-          </Col>
-          <Col span="2" :class="$style.rightIcon">
-            <RightArrowIcon height="18" width="18" color="#999" />
-          </Col>
-        </div>
+      <Row :gutter="16" :class="$style.entryMenu" @click.native="changeUrl('/users/systemSetting')">
+        <Col span="3">
+          <SystemSettingIcon height="21" width="21" color="#59b6d7" />
+        </Col>
+        <Col span="19" :class="$style.menuText">
+          设置
+        </Col>
+        <Col span="2" :class="$style.rightIcon">
+          <RightArrowIcon height="18" width="18" color="#999" />
+        </Col>
       </Row>
     </div>
     <ToolBar/>
@@ -227,9 +218,6 @@
         }
         .menuText {
           padding-left: 0!important;
-          .feedEnter {
-            width: 100%;
-          }
         }
       }
     }

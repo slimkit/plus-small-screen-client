@@ -13,12 +13,19 @@ import { Loadmore } from 'mint-ui';
 import { Popup } from 'mint-ui';
 import { Picker } from 'mint-ui';
 
+// iview ui
 Vue.use(iView);
+
+// html title
 Vue.use(VueWechatTitle);
+
+// lazyload for images
 Vue.use(VueLazyload, {
   loading: loading_img,
   try: 3
 });
+
+// timeago component
 Vue.use(TimeAgo, {
   name: 'timeago',
   locale: 'zh-CN',
@@ -26,9 +33,11 @@ Vue.use(TimeAgo, {
     'zh-CN': require('vue-timeago/locales/zh-CN.json')
   }
 });
+// mint ui组件的3个块
 Vue.component(Loadmore.name, Loadmore);
 Vue.component(Popup.name, Popup);
 Vue.component(Picker.name, Picker);
+
 const app = new Vue({
   router,
   store,

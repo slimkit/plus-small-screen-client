@@ -1,6 +1,6 @@
 <template>
   <div class="feedParentContainer">
-    <div :class="$style.nothingDefault"> 
+    <div class="nothingDefault"> 
       <img v-if="nothing" :src="nothing" />
     </div>
     <div v-if="!nothing" :class="{fixed: !showTop, noFixed: showTop}"/>
@@ -279,19 +279,6 @@
     color: #fff;
     text-align: center;
     line-height: 18px;
-  }
-  .nothingDefault {
-    display: flex; 
-    align-items: center;
-    justify-content: center;
-    position: fixed;
-    top: 0; 
-    bottom: 0; 
-    left: 0; 
-    right: 0;
-    img {
-      width: 60%;
-    }
   }
 </style>
 <style scoped>
