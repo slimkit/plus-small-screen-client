@@ -1,4 +1,4 @@
-import { USERFEEDS, APPENDUSERFEED, CLEANUSERFEEDS, DATES } from '../types';
+import { USERFEEDS, APPENDUSERFEED, CLEANUSERFEEDS, DATES, PREPENDUSERFEED } from '../types';
 
 const state = {
   userFeeds: []
@@ -6,36 +6,44 @@ const state = {
 
 const mutations = {
   // 根据日期分组的动态列
-  [USERFEEDS] (state, feeds) {
-    state.userFeeds = feeds;
+  [USERFEEDS] (state, ids) {
+    state.userFeeds = [ ...state.userFeeds, ...ids ];
   },
-  [APPENDUSERFEED] (state, addedFeed) {
-    state.userFeeds.push(addedFeed);
+  [APPENDUSERFEED] (state, id) {
+    state.userFeeds = [ ...state.userFeeds, id ];
   },
   [CLEANUSERFEEDS] (state) {
-    state.userFeeds = state.dates = {};
+    state.userFeeds = [];
+  },
+  [PREPENDUSERFEED] (state, id) {
+    state.userFeeds = [ feed, ...state.userFeeds ];
   }
 };
 
 const actions = {
   [USERFEEDS]: (context, cb) => {
-    cb( (feeds) => {
-      context.commit(USERFEEDS, feeds);
+    cb( (ids) => {
+      context.commit(USERFEEDS, ids);
     });
   },
   [APPENDUSERFEED]: (context, cb) => {
-    cb( (addedFeed) => {
-      context.commit(APPENDUSERFEED, addedFeed);
+    cb( (id) => {
+      context.commit(APPENDUSERFEED, id);
     });
   },
   [CLEANUSERFEEDS]: (context) => {
     context.commit(CLEANUSERFEEDS);
+  },
+  [PREPENDUSERFEED] : (context, cb) => {
+    cb( id => {
+      context.commit(PREPENDUSERFEED, id);
+    })
   }
 };
 
 const getters = {
-  [USERFEEDS]: (state) => {
-    return state.userFeeds.length;
+  [USERFEEDS]: state => {
+    return state.userFeeds;
   }
 };
 

@@ -1,7 +1,5 @@
 <template>
-  <div :class="$style.feedListContent">
-    <FeedList :option="option"></FeedList>
-  </div>
+  <FeedList :option="option"></FeedList>
 </template>
 
 <script>
@@ -21,9 +19,3 @@
   }
   export default FeedFollowing;
 </script>
-
-<style lang="scss" module>
-  .feedListContent {
-    // padding-top: 53px;
-  }
-</style>

@@ -1,6 +1,6 @@
 <template>
-  <div :class="$style.detail" :id="`feed-${feed_id}`">
-    <Row :gutter="16">
+  <div :class="$style.detail" :id="`feed-${feed.feed.feed_id}`">
+    <Row :gutter="16" :class="$style.userFeed">
       <Col span="3">
         <div class="grid-content bg-purple" style="line-height: 100%;">
           <span 
@@ -14,21 +14,21 @@
         </div>
       </Col>
       <Col span="21">
-        <router-link style="display: flex; line-height: 100%; padding-bottom: 8px;" v-if="feedInfo.feed_title" :to="`/feed/${feed_id}`" class="feedTitle">{{ feedInfo.feed_title }}</router-link>
-        <div :class="$style.content" @click="router(`/feed/${feed_id}`)">
-          {{ feedInfo.feed_content }}
+        <router-link style="display: flex; line-height: 100%; padding-bottom: 8px;" v-if="feed.feed.feed_title" :to="`/feed/${feed.feed.feed_id}`" class="feedTitle">{{ feed.feed.feed_title }}</router-link>
+        <div :class="$style.content" @click="router(`/feed/${feed.feed.feed_id}`)">
+          {{ feed.feed.feed_content }}
         </div>
-        <div v-if="feedInfo.storages.length">
-          <FeedImages :storages="feedInfo.storages"></FeedImages>
+        <div v-if="feed.feed.storages.length">
+          <FeedImages :storages="feed.feed.storages"></FeedImages>
         </div>
       </Col>
     </Row>
-    <Row v-if="tools" :gutter="16" :class="$style.toolTop">
+    <Row :gutter="16" :class="$style.toolTop">
       <Col span="3" :class="$style.seat">
         1
       </Col>
       <Col span="21">
-        <FeedTool @addNewCommentFoFeed="addNewCommentFoFeed" :user="user" :feedId="feedInfo.feed_id" @parentAddDigg="addDigg" @parentCannelDigg="cannelDigg" :toolDatas="toolInfo"></FeedTool>
+        <FeedTool :feed="feed" />
       </Col>
     </Row>
     <Row v-if="feed.comments.length" :gutter="16">
@@ -36,7 +36,7 @@
         1
       </Col>
       <Col span="21" style="padding-bottom: 8px;">
-        <CommentsTool v-if="feed.comments" @addComment="addNewComment" @delComment="delOldComment" :feedId="feedInfo.feed_id" :commentsData="feed.comments"></CommentsTool>
+        <CommentsTool v-if="feed.comments" :feed="feed" />
       </Col>
     </Row>
   </div>
@@ -52,68 +52,23 @@
   import CommentsTool from './CommentsTool';
   import timers from '../utils/timer';
   import router from '../routers/index';
+  import lodash from 'lodash';
 
   const feedinfo = {
     props: [
       'feed'
     ],
     data: () => ({
-      feedInfo: {
-        created_at: '',
-        feed_content: '',
-        feed_from: 0,
-        feed_id: 0,
-        feed_title: '',
-        storages: []
-      },
-      toolInfo: {},
-      feed_id: 0,
-      user: {},
-      tools: 0
+      user: {}
     }),
     methods: {
-      addNewCommentFoFeed (newComment) {
-        let oldComments = this.feed.comments;
-        let toolData = this.toolInfo;
-        toolData.feed_comment_count += 1;
-        this.toolInfo = Object.assign({}, this.toolInfo, toolData);
-        oldComments.unshift(newComment);
-        this.updateComments(oldComments);
-      },
-      addNewComment (newComments) {
-        let toolData = this.toolInfo;
-        toolData.feed_comment_count += 1;
-        this.toolInfo = Object.assign({}, this.toolInfo, toolData);
-        this.updateComments(newComments);
-      },
-      delOldComment (newComments) {
-        let toolData = this.toolInfo;
-        toolData.feed_comment_count -= 1;
-        this.toolInfo = Object.assign({}, this.toolInfo, toolData);
-        this.updateComments(newComments);
-      },
-      cannelDigg () {
-        let toolData = this.toolInfo;
-        toolData.feed_digg_count -= 1;
-        toolData.is_digg_feed = false;
-        this.toolInfo = Object.assign({}, this.toolInfo, toolData);
-      },
-      addDigg () {
-        let toolData = this.toolInfo;
-        toolData.feed_digg_count += 1;
-        toolData.is_digg_feed = true;
-        this.toolInfo = Object.assign({}, this.toolInfo, toolData);
-      },
-      updateComments (newComments) {
-        this.feed.comments = newComments.slice(0);
-      },
       // 获取单条图片
       getImg (id, process = 30) {
         return createRequestURI(`api/v1/storages/${id}/${process}`);
       },
       timers,
       router (link) {
-        router.replace(link);
+        router.push(link);
       }
     },
     components: {
@@ -128,19 +83,15 @@
       }
     },
     created () {
-      this.feed_id = this.feed.feed.feed_id;
-      this.toolInfo = Object.assign({}, this.toolInfo, this.feed.tool);
-      this.tools = 1;
       let localUser = localEvent.getLocalItem('user_' + this.feed.user_id);
-      if(localUser.length == 0) {
+      if(!lodash.keys(localUser).length > 0) {
         getUserInfo(this.feed.user_id, 30, user => {
           localUser = user;
-          this.user = Object.assign({}, this.user, localUser);
+          this.user = { ...this.user, ...localUser };
         });
       } else {
-        this.user = Object.assign({}, this.user, localUser);
+        this.user = { ...this.user, ...localUser };
       }
-      this.feedInfo = Object.assign({}, this.feedInfo, this.feed.feed);
     }
   }
 
@@ -151,9 +102,12 @@
   .detail {
     background-color: #fff;
     margin-bottom: 6px;
-    padding: 10px 0 0;
+    padding: 16px 0 0;
     &:active, &:focus {
       background-color: #fff;
+    }
+    .userFeed {
+      display: block;
     }
   }
   .toolTop {

@@ -83,6 +83,7 @@
   import EyeCloseIcon from '../icons/EyeClose';
   import EyeOpenIcon from '../icons/EyeOpen';
   import CloseIcon from '../icons/Close';
+  import lodash from 'lodash';
 
   // 手机号码规则
   const phoneReg = /^(((13[0-9]{1})|14[0-9]{1}|(15[0-9]{1})|17[0-9]{1}|(18[0-9]{1}))+\d{8})$/;
@@ -118,7 +119,7 @@
         let newErrors = deleteObjectItems(errors, [
           'serverError'
         ]);
-        this.errors = Object.assign({}, newErrors);
+        this.errors = { ...this.errors, ...newErrors };
       },
       checkIsDisabled () {
          return !(this.isValidPassword && this.isValidPhone && this.isValidCode);
@@ -170,7 +171,7 @@
         .catch(({ response: { data = {} } = {} }) => {
           this.isCanGetCode = true;
           const { code = 'xxxx' } = data;
-          this.errors = Object.assign({}, this.errors, { serverError: errorCodes[code]});
+          this.errors = { ...this.errors, serverError: errorCodes[code] };
         })
       },
       submit () {
@@ -199,13 +200,13 @@
           this.isDisabled = false;
           const { code = 'xxxx' } = data;
           this.isLoading = false;
-          this.errors = Object.assign({}, this.errors, { serverError: errorCodes[code] });
+          this.errors = { ...this.errors, serverError: errorCodes[code] };
         })
       }
     },
     computed: {
       error: function () {
-        let errors = Object.values(this.errors);
+        let errors = lodash.values(this.errors);
         return errors[0] || '';
       },
       getCodeText () {
@@ -218,14 +219,14 @@
         this.isShowClean = (newPhone > 0) > 0 ? true : false;
         let errors = this.errors;
         if(!phoneReg.test(newPhone)) {
-          this.errors = Object.assign({}, errors, { phone: '请输入正确的手机号码'});
+          this.errors = { ...errors, phone: '请输入正确的手机号码' };
           this.isValidPhone = false;
           this.isCanGetCode = false;
         } else {
           this.isValidPhone = true;
           this.isCanGetCode = true;
           delete errors['phone'];
-          this.errors = Object.assign({}, errors);
+          this.errors = { ...errors };
         }
 
         this.isDisabled = this.checkIsDisabled();
@@ -234,12 +235,12 @@
         this.cleanErrors();
         let errors = this.errors;
         if(newPassword.length < 6) {
-          this.errors = Object.assign({}, errors, { password: '密码长度必须大于6位'})
+          this.errors = { ...errors, password: '密码长度必须大于6位' };
           this.isValidPassword = false;
         } else {
           this.isValidPassword = true;
           delete errors['password'];
-          this.errors = Object.assign({}, errors);
+          this.errors =  { ...errors };
         }
         this.passwordText = newPassword;
         this.isDisabled = this.checkIsDisabled();
@@ -248,12 +249,12 @@
         this.cleanErrors();
         let errors = this.errors;
         if(newPasswordText.length < 6) {
-          this.errors = Object.assign({}, errors, { password: '密码长度必须大于6位'})
+          this.errors = { ...errors, password: '密码长度必须大于6位' };
           this.isValidPassword = false;
         } else {
           this.isValidPassword = true;
           delete errors['password'];
-          this.errors = Object.assign({}, errors);
+          this.errors = { ...errors };
         }
         this.password = newPasswordText;
         this.isDisabled = this.checkIsDisabled();
@@ -262,12 +263,12 @@
         this.cleanErrors();
         let errors = this.errors;
         if(!codeReg.test(newCode)) {
-          this.errors = Object.assign({}, errors, { code: '验证码错误'});
+          this.errors = { ...errors, code: '验证码错误' };
           this.isValidCode = false;
         } else {
           this.isValidCode = true;
           delete errors['code'];
-          this.errors = Object.assign({}, errors);
+          this.errors = { ...errors };
         }
         this.isDisabled = this.checkIsDisabled();
       }

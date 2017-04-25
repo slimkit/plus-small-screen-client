@@ -37,7 +37,8 @@
   import Comfirm from '../utils/Comfirm';
   import { CONFIRM } from '../stores/types';
   // import { USERS, USERS_APPEND, USERS_ITEM_UPDATE, NOTICE, COMMENTINPUT } from '../stores/types';
-  import { USERS, USERS_APPEND, USERS_ITEM_UPDATE, COMMENTINPUT, NOTICE, FEEDSFOLLOWING, FEEDSFOLLWOINGADD, FEEDFOLLOWINGUPDATE, FEEDSHOT, FEEDSHOTADD, FEEDHOTUPDATE, FEEDSNEW, FEEDSNEWADD, FEEDNEWUPDATE, FEEDFOLLOWINGPREPEND, FEEDNEWPREPEND, FEEDHOTPREPEND, UPDATEFEED } from '../stores/types';
+  import { USERS, USERS_ITEM_UPDATE, COMMENTINPUT, CLOSECOMMENTINPUT, NOTICE, FEEDSFOLLOWING, FEEDSFOLLWOINGADD, FEEDFOLLOWINGUPDATE, FEEDSHOT, FEEDSHOTADD, FEEDHOTUPDATE, FEEDSNEW, FEEDSNEWADD, FEEDNEWUPDATE, FEEDFOLLOWINGPREPEND, FEEDNEWPREPEND, FEEDHOTPREPEND, UPDATEFEED } from '../stores/types';
+  import lodash from 'lodash';
 
   const commentsTool = {
     props: [
@@ -53,7 +54,6 @@
       replyToUserId: 0, // 回复谁
       toFeed: 0, // 评论哪条动态
       sending: false, // 是否发送中
-      isShowComfirm: false, // 是否显弹框
       deleteData: {} // 删除评论时传递的数据对象
     }),
     methods: {
@@ -63,7 +63,7 @@
         let show = true; // 展示输入框
         let feed = this.feed;
         let reply_to_user_id = comment_to_uid;
-        if (!Object.keys(to_user).length) {
+        if (!lodash.keys(to_user).length) {
           getUserInfo(comment_to_uid, 30, user => {
             to_user = user;
             to_user_name = to_user.name;
@@ -73,15 +73,18 @@
         }
         this.$store.dispatch(COMMENTINPUT, cb => {
           cb({
-            show,
-            reply_to_user_id,
-            to_user_name,
-            feed
+            data: {
+              show,
+              reply_to_user_id,
+              to_user_name,
+              feed
+            },
+            cb: this.commentCallback
           });
         })
       },
-      confirmDeleteComment (...obj) {
-        console.log(obj);
+      commentCallback (close) {
+        console.log(close);
       },
       /**
        * [showComfirm description]
@@ -116,17 +119,6 @@
             feed
           }));
         })
-        .catch(error => {
-          console.log(error)
-        })
-      },
-      // comfirm显示
-      cannel () {
-        this.isShowComfirm = false;
-      },
-      
-      updateComments (newComments) {
-        this.commentsData = newComments.slice(0);
       },
       getUserName (user_id) {
         let { [user_id]: { name } = {} } = this.users;
@@ -156,7 +148,7 @@
           user_ids_obj = { ...user_ids_obj, [comment.user_id]: comment.user_id };
         }
       });
-      let user_ids = Object.values(user_ids_obj);
+      let user_ids = lodash.values(user_ids_obj);
       this.$store.dispatch(USERS, cb => getUsersInfo(user_ids, users => cb(users)));
     }
   };

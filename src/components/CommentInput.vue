@@ -23,10 +23,11 @@
   </div>
 </template>
 <script>
-  import { COMMENTINPUT, USERS, NOTICE, UPDATEFEED } from '../stores/types';
+  import { COMMENTINPUT, CLOSECOMMENTINPUT, USERS, NOTICE, UPDATEFEED } from '../stores/types';
   import { mapState } from 'vuex';
   import localEvent from '../stores/localStorage';
   import { createAPI, addAccessToken } from '../utils/request';
+  import getLocalTime from '../utils/getLocalTime';
 
   const currentUser = localEvent.getLocalItem('UserLoginInfo');
   const commentInput = {
@@ -35,22 +36,14 @@
     }),
     methods: {
       closeInput () {
-        let info = {
-          show: false,
-          reply_to_user_id: 0,
-          to_user_name: '',
-          feed: {}
-        };
-        this.$store.dispatch(COMMENTINPUT, cb => {
-          cb(info);
-        });
+        this.$store.dispatch(CLOSECOMMENTINPUT);
       },
       sendComment () {
         let commentStore = this.$store.getters[COMMENTINPUT];
         let comment_content = this.comment_content;
-        let reply_to_user_id = commentStore.reply_to_user_id;
+        let reply_to_user_id = commentStore.data.reply_to_user_id;
         let user_id = currentUser.user_id;
-        let feed = commentStore.feed;
+        let feed = commentStore.data.feed;
         let feed_id = feed.feed.feed_id;
         let newCommentInfo = [];
         addAccessToken().post(createAPI(`feeds/${feed_id}/comment`), {
@@ -66,19 +59,21 @@
             let newComment = {
               comment_content: comment_content,
               comment_mark: null,
-              created_at: "",
+              created_at: getLocalTime(),
               id: response.data.data,
               reply_to_user_id: reply_to_user_id,
               user_id: user_id,
               reply_to_user: localEvent.getLocalItem(`user_${reply_to_user_id}`),
-              user: this.users[user_id]
+              user: localEvent.getLocalItem(`user_${user_id}`)
             };
             this.comment_content = '';
             let info = {
-              show: false,
-              reply_to_user_id: 0,
-              to_user_name: '',
-              feed: {}
+              data: {
+                show: false,
+                reply_to_user_id: 0,
+                to_user_name: '',
+                feed: {}
+              }
             }
             // 本地数据更新
             feed.comments.unshift(newComment);
@@ -96,19 +91,19 @@
             this.$store.dispatch(UPDATEFEED, cb => {
               cb(feed);
             });
+            this.callback(this.closeInput, newComment);
           }
         })
-        // .catch(({ response: { data = {} } = {} } ) => {
-        //   const { code = 'xxxx' } = data;
-        // })
       }
     },
     computed: {
       ...mapState({
-        show: state => state.commentInput.commentInput.show,
-        reply_to_user_id: state => state.commentInput.commentInput.reply_to_user_id,
-        feedIndex: state => state.commentInput.commentInput.feedIndex,
-        to_user_name: state => state.commentInput.commentInput.to_user_name
+        show: state => state.commentInput.commentInput.data.show,
+        reply_to_user_id: state => state.commentInput.commentInput.data.reply_to_user_id,
+        feedIndex: state => state.commentInput.commentInput.data.feedIndex,
+        to_user_name: state => state.commentInput.commentInput.data.to_user_name,
+        close: state => state.commentInput.commentInput.close,
+        callback: state => state.commentInput.commentInput.cb
       }),
       // 评论长短
       commentCount () {
@@ -136,13 +131,13 @@
     right: 0;
     margin: 0;
     overflow: hidden;
-    z-index: 5;
+    z-index: 7;
     .commentInput{
       position: absolute;
       bottom: 0;
       left: 0;
       width: 100%;
-      z-index: 6;
+      z-index: 7;
       background-color: #fff;
       border-bottom: 1px #59b6d7 solid;
       border: none;
@@ -162,7 +157,7 @@
     }
     .wrapper{
       background-color: rgba(0, 0, 0, .3);
-      z-index: 5;
+      z-index: 6;
       top: 0px;
       right: 0px;
       bottom: 0px;

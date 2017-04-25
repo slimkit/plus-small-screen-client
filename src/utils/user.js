@@ -3,6 +3,8 @@ import { createAPI, addAccessToken } from '../utils/request';
 import errorCodes from '../stores/errorCodes';
 import getImage from './getImage';
 import defaultAvatar from '../statics/images/defaultAvatarx2.png';
+import lodash from 'lodash';
+
 function followingUser(user_id, cb) {
   addAccessToken().post(
     createAPI('users/follow'),
@@ -16,9 +18,6 @@ function followingUser(user_id, cb) {
   .then(response => {
     cb(response.data);
   })
-  .catch(error => {
-    cb(error.response.data);
-  })
 };
 
 function unFollowingUser(user_id, cb) {
@@ -31,9 +30,6 @@ function unFollowingUser(user_id, cb) {
   )
   .then(response => {
     cb(response.data);
-  })
-  .catch(error => {
-    cb(error.response.data);
   })
 };
 
@@ -95,7 +91,7 @@ function getUserInfo (user_id, process = 30, cb) {
     user.counts.map(function (count, index) {
       let keyName = count.key;
       let value = count.value;
-      userLocal.counts = Object.assign({}, userLocal.counts, { [keyName]:  value });
+      userLocal.counts = { ...userLocal.counts, [keyName]:  value };
     });
     let newData = {};
     user.datas.forEach(data => {
@@ -112,16 +108,9 @@ function getUserInfo (user_id, process = 30, cb) {
       userLocal = newUserLocal;
     });
     localEvent.setLocalItem('user_' + user_id, userLocal);
-    cb(userLocal);
-  })
-  .catch(({ response: { data = {} } = {} } ) => {
-    const { code = 'xxxx' } = data;
-    let message = errorCodes[code]
-    return {
-      status: false,
-      user: null,
-      message: message
-    };
+    if(cb instanceof Function ) {
+      cb(userLocal);
+    }
   })
 };
 
@@ -132,7 +121,7 @@ function getUsersInfo (user_ids, cb) {
   // 检查已有的本地用户
   user_ids.map((user_id) => {
     let oldUserLocal = localEvent.getLocalItem(`user_${user_id}`);
-    if(!Object.keys(oldUserLocal).length) {
+    if(!lodash.keys(oldUserLocal).length) {
       user_ids_need_to_request.push(user_id);
     }
     users[user_id] = oldUserLocal;
@@ -187,20 +176,14 @@ function getUsersInfo (user_ids, cb) {
         localEvent.setLocalItem('user_' + current_local_user.user_id, current_local_user);
         users[user.id] = current_local_user;
       });
-      cb(users);
-    })
-    .catch(({ response: { data = {} } = {} } ) => {
-      const { code = 'xxxx' } = data;
-      let message = errorCodes[code]
-      return {
-        status: false,
-        user: null,
-        message: message
-      };
+      if(cb instanceof Function ) {
+        cb(users);
+      }
     })
   } else {
     // 返回本地数据
-    cb(users);
+    if(cb instanceof Function) 
+      cb(users);
   }
 };
 

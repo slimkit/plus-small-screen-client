@@ -97,6 +97,7 @@
   import EyeCloseIcon from '../icons/EyeClose';
   import EyeOpenIcon from '../icons/EyeOpen';
   import CloseIcon from '../icons/Close';
+  import lodash from 'lodash';
 
 
   const phoneReg = /^(((13[0-9]{1})|14[0-9]{1}|(15[0-9]{1})|17[0-9]{1}|(18[0-9]{1}))+\d{8})$/;
@@ -124,26 +125,26 @@
         this.isShowClean = (newPhone > 0) > 0 ? true : false;
         this.cleanErrors();
         if(!phoneReg.test(newPhone)) {
-          this.errors = Object.assign({}, this.errors, { phone: '请输入正确的手机号码' });
+          this.errors = { ...this.errors, phone: '请输入正确的手机号码' };
           this.isValidPhone = false;
         } else {
           let errors = this.errors;
           this.isValidPhone = true;
           delete errors['phone'];
-          this.errors = Object.assign({}, errors);
+          this.errors = { ...errors };
         }
         this.isDisabled = this.checkIsDisabled()
       },
       password: function (newPassword) {
         this.cleanErrors();
         if(newPassword.length < 6) {
-          this.errors = Object.assign({}, this.errors, { password: '密码长度必须大于6位' })
+          this.errors = { ...this.errors, password: '密码长度必须大于6位' };
           this.isValidPassword = false;
         } else {
           let errors = this.errors;
           this.isValidPassword = true;
           delete errors['password'];
-          this.errors = Object.assign({}, errors);
+          this.errors = { ...errors };
         }
         this.passwordText = newPassword;
         this.isDisabled = this.checkIsDisabled()
@@ -151,13 +152,13 @@
       passwordText: function (newPasswordText) {
         this.cleanErrors();
         if(newPasswordText.length < 6) {
-          this.errors = Object.assign({}, this.errors, { password: '密码长度必须大于6位' })
+          this.errors = { ...this.errors, password: '密码长度必须大于6位' };
           this.isValidPassword = false;
         } else {
           let errors = this.errors;
           this.isValidPassword = true;
           delete errors['password'];
-          this.errors = Object.assign({}, errors);
+          this.errors = { ...errors };
         }
         this.password = newPasswordText;
         this.isDisabled = this.checkIsDisabled();
@@ -165,7 +166,7 @@
     },
     computed: {
       error: function () {
-        let errors = Object.values(this.errors);
+        let errors = lodash.values(this.errors);
         return errors[0] || '';
       }
     },
@@ -176,7 +177,7 @@
         let newErrors = deleteObjectItems(errors, [
           'code'
         ]);
-        this.errors = Object.assign({}, newErrors);
+        this.errors = { ...newErrors };
       },
       checkIsDisabled () {
          return !(this.isValidPassword && this.isValidPhone);
@@ -194,6 +195,10 @@
         }
       },
       submit () {
+        console.log(this.$route);
+        let redirect = this.$route.query.redirect ? this.$route.query.redirect : 'feeds';
+        console.log(redirect);
+        // return;
         let { phone, password } = this;
         let device_code = detecdOS();
         this.isLoading = true;
@@ -208,20 +213,18 @@
           }
         )
         .then(response => {
-          let errors = {};
-          this.errors = Object.assign({}, errors);
+          this.errors = {};
           localEvent.setLocalItem('UserLoginInfo', response.data.data);
-          this.$store.dispatch(USERS_APPEND, cb => getUserInfo(response.data.data.user_id, 30, user => {
+          getUserInfo(response.data.data.user_id, 30, user => {
             localEvent.setLocalItem('user_' + response.data.data.user_id, user);
-            cb(user);
-            router.push({ path: 'feeds' });
-          }));
+            router.push({ path: redirect });
+          });
         })
         .catch(({ response: { data = {} } = {} } ) => {
           this.isDisabled = false;
           const { code = 'xxxx' } = data;
           this.isLoading = false;
-          this.errors = Object.assign({}, this.errors, { code: errorCodes[code] });
+          this.errors = { ...this.errors, code: errorCodes[code] };
         });
       }
     }

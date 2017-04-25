@@ -37,9 +37,12 @@ export const DIGGLISTS = 'digglists';
  */
 export const USERFEEDS = 'userfeeds';
 
+export const GETUSERFEEDS = 'getuserfeeds';
+
 export const APPENDUSERFEED = 'appenduserfeed';
 
 export const CLEANUSERFEEDS = 'cleanuserfeeds';
+export const PREPENDUSERFEED = 'prependuserfeed';
 
 export const DATES = 'dates';
 
@@ -47,31 +50,7 @@ export const DATES = 'dates';
  * 评论框控制
  */
 export const COMMENTINPUT = 'commentinput';
-
-/**
- * 动态
- * 关注的
- */
-// export const FEEDSFOLLOWING = 'feedsfollowing';
-// export const FEEDSFOLLWOINGADD = 'feedsfollowingadd';
-// export const FEEDFOLLOWINGUPDATE = 'feedfollowingupdate';
-// export const FEEDFOLLOWINGPREPEND = 'feedfollowingprepend';
-/**
- * 动态
- * 热门的
- */
-// export const FEEDSHOT = 'feedshot';
-// export const FEEDSHOTADD = 'feedshotadd';
-// export const FEEDHOTUPDATE = 'feedhotupdate';
-// export const FEEDHOTPREPEND = 'feedhotprepend';
-/**
- * 动态
- * 最新的
- */
-// export const FEEDSNEW = 'feedsnew';
-// export const FEEDSNEWADD = 'feedsnewadd';
-// export const FEEDNEWUPDATE = 'feednewupdata';
-// export const FEEDNEWPREPEND = 'feednewprepend';
+export const CLOSECOMMENTINPUT = 'closecommentinput';
 
 /**
  * 总的动态列表
@@ -91,6 +70,10 @@ export const NEWFEEDS = 'newfeeds';
 export const NEWIDS = 'newids';
 export const ADDNEWIDS = 'addnewids';
 
+// 收藏相关
+export const COLLECTIONIDS = 'collectionids';
+export const COLLECTIONFEEDS = 'collectionfeeds';
+export const ADDCOLLECTIONIDS = 'addcollectionsids';
 
 /**
  * confirm组件相关

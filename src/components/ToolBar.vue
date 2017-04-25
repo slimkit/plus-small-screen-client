@@ -3,14 +3,14 @@
     <Row :class="$style.toolBar" class="menu">
       <Col :span="5" :class="$style.menuItem">
         <router-link class="router-link" to="/feeds">
-          <HomeIcon :height="24" width="100%" color="#999" />
+          <HomeIcon :height="24" width="24" color="#999" />
           <i>首页</i>
         </router-link>
       </Col>
       <Col :span="5" :class="$style.menuItem">
         <router-link class="router-link" to="/discover">
           <Badge dot>
-            <DiscoverIcon :height="24" width="100%" color="#999" />
+            <DiscoverIcon :height="24" width="24" color="#999" />
             <i>发现</i>
           </Badge>
         </router-link>
@@ -21,7 +21,7 @@
       <Col :span="5" :class="$style.menuItem">
         <router-link class="router-link" to="/users/message">
           <Badge dot>
-            <MessageIcon :height="24" width="100%" color="#999" />
+            <MessageIcon :height="24" width="24" color="#999" />
             <i>消息</i>
           </Badge>
         </router-link>
@@ -29,7 +29,7 @@
       <Col :span="5" :class="$style.menuItem">
         <router-link class="router-link" to="/users/profile">
           <Badge dot>
-            <MeIcon :height="24" width="100%" color="#999" />
+            <MeIcon :height="24" width="24" color="#999" />
             <i>我</i>
           </Badge>
         </router-link>
@@ -111,6 +111,10 @@
   }
   .router-link {
     color: #999;
+    text-align: center;
+    svg {
+      margin: 0 auto;
+    }
   }
   .router-link-active {
     border-bottom: none;

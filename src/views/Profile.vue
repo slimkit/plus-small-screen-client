@@ -16,7 +16,7 @@
           <p>{{ intro }}</p>
         </Col>
         <Col span="2" :class="$style.rightIcon">
-          <Icon type="ios-arrow-right"></Icon>
+          <RightArrowIcon height="18" width="18" color="#999" />
         </Col>
       </Row>
     </div>
@@ -48,7 +48,7 @@
           </div>
         </Col>
         <Col span="2" :class="$style.rightIcon">
-          <Icon type="ios-arrow-right"></Icon>
+          <RightArrowIcon height="18" width="18" color="#999" />
         </Col>
       </Row>
       <Row :gutter="16" :class="$style.entryMenu">
@@ -60,20 +60,22 @@
             排行榜
           </Col>
           <Col span="2"  :class="$style.rightIcon">
-            <Icon type="ios-arrow-right"></Icon>
+            <RightArrowIcon height="18" width="18" color="#999" />
           </Col>
         </div>
       </Row>
       <Row :gutter="16" :class="$style.entryMenu">
-        <Col span="3">
-          <ConnectionIcon :height="21" :width="21" color="#59b6d7" />
-        </Col>
-        <Col span="19" :class="$style.menuText">
-          收藏
-        </Col>
-        <Col span="2"  :class="$style.rightIcon">
-          <Icon type="ios-arrow-right"></Icon>
-        </Col>
+        <div style="width:100%;" @click="changeUrl('/users/collections')">
+          <Col span="3">
+            <ConnectionIcon :height="21" :width="21" color="#59b6d7" />
+          </Col>
+          <Col span="19" :class="$style.menuText">
+            收藏
+          </Col>
+          <Col span="2"  :class="$style.rightIcon">
+            <RightArrowIcon height="18" width="18" color="#999" />
+          </Col>
+        </div>
       </Row>
     </div>
     <div :class="$style.entry">
@@ -102,13 +104,13 @@
       <Row :gutter="16" :class="$style.entryMenu">
         <div style="width: 100%;" @click="changeUrl('/users/systemSetting')">
           <Col span="3">
-            <SystemSettingIcon :height="21" :width="21" color="#59b6d7" />
+            <SystemSettingIcon height="21" width="21" color="#59b6d7" />
           </Col>
           <Col span="19" :class="$style.menuText">
             设置
           </Col>
           <Col span="2" :class="$style.rightIcon">
-            <Icon type="ios-arrow-right"></Icon>
+            <RightArrowIcon height="18" width="18" color="#999" />
           </Col>
         </div>
       </Row>
@@ -127,6 +129,8 @@
   import QuestionIcon from '../icons/Question';
   import SystemSettingIcon from '../icons/SystemSetting';
   import SapceIcon from '../icons/Space';
+  import RightArrowIcon from '../icons/RightArrow';
+  import defaultAvatar from '../statics/images/defaultAvatarx2.png';
 
   const currentUser = localEvent.getLocalItem('UserLoginInfo');
   const profile = {
@@ -137,7 +141,8 @@
       RankingIcon,
       QuestionIcon,
       SystemSettingIcon,
-      SapceIcon
+      SapceIcon,
+      RightArrowIcon
     },
     data: () => ({
       currentUser: currentUser.user_id, // 当前登录用户id
@@ -149,7 +154,7 @@
     },
     computed: {
       avatar () {
-        const { avatar: { 30: avatar = '' } = {} } = this.userInfo;
+        const { avatar: { 30: avatar = defaultAvatar } = {} } = this.userInfo;
         return avatar;
       },
       name () {
@@ -169,7 +174,7 @@
         return followed_count;
       }
     },
-    beforeMount () {
+    created () {
       let user = localEvent.getLocalItem(`user_${currentUser.user_id}`);
       this.userInfo = { ...this.userInfo, ...user };
     }

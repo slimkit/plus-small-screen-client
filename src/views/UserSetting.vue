@@ -27,7 +27,7 @@
             更换头像
           </Col>
           <Col span="3" :class="$style.rightIcon">
-            <Icon type="ios-arrow-right"></Icon>
+            <RightArrowIcon height="18" width="18" color="#999" />
           </Col>
         </div>
         <input ref="avatarInput" style="position:absolute; width:100%; left:0; right:0; height:100%;opacity:0;" type="file" value="" name="image" accept="image/*"
@@ -45,7 +45,7 @@
         </Col>
         <Col span="3" :class="$style.rightIcon">
           <div @click="clean('name')">
-            <CloseIcon height="21" width="21" color="#999" />
+            <CloseIcon height="18" width="18" color="#999" />
           </div>
         </Col>
       </Row>
@@ -58,7 +58,7 @@
             <span :class="{sexDefaultText: !sex}">{{ sexText }}</span>
           </Col>
           <Col span="3" :class="$style.rightIcon">
-            <Icon type="ios-arrow-right"></Icon>
+            <RightArrowIcon height="18" width="18" color="#999" />
           </Col>
         </div>
       </Row>
@@ -71,7 +71,7 @@
             <span :class="{cityDefaultText: !areaAbout.city}">{{ areaText }}</span>
           </Col>
           <Col span="3" :class="$style.rightIcon">
-            <Icon type="ios-arrow-right"></Icon>
+            <RightArrowIcon height="18" width="18" color="#999" />
           </Col>
         </div>
       </Row>
@@ -233,6 +233,8 @@
   import contains from '../utils/contains';
   import BackIcon from '../icons/Back';
   import CloseIcon from '../icons/Close';
+  import RightArrowIcon from '../icons/RightArrow';
+  import lodash from 'lodash';
 
   const currentUser = localEvent.getLocalItem('UserLoginInfo');
   // 昵称验证规则
@@ -241,7 +243,8 @@
     components: {
       VueCropper,
       BackIcon,
-      CloseIcon
+      CloseIcon,
+      RightArrowIcon
     },
     data: () => ({
       currentUser: currentUser.user_id, // 当前登录用户id
@@ -364,16 +367,6 @@
             });
           });
           this.cleanSetting();
-        })
-        .catch(({ response: { data: { message = "网络状况堪忧" } = {} } = {} }) => {
-
-          this.$store.dispatch(NOTICE, cb => {
-            cb({
-              text: message,
-              time: 1500,
-              status: true
-            });
-          });
         })
       },
       clean (param) {
@@ -503,7 +496,7 @@
         // 当前选中数据
         let slot = picker.getValues();
         if(slot[0] instanceof Object) {
-          if(contains(Object.keys(provinces), slot[0].name)) {
+          if(contains(lodash.keys(provinces), slot[0].name)) {
             picker.setSlotValues(1, areas[slot[0].name] ? areas[slot[0].name] : areas[北京市]);
             this.areaAbout.provinceText = slot[0].name;
             this.areaAbout.preSelectedProvince = slot[0].id;
@@ -616,20 +609,18 @@
         this.location = location;
 
       });
+      // 格式化的地区省份 用于select展示
+      let provincesArray = [];
+      // 格式化的市级数据，用于select展示
+      let areasObject = {};
+      // 格式化的省份对象，用于数据获取
+      let provincesObject = {};
+      // 格式化的市级对象，用于数据获取
+      let citysObjects = {};
       // 获取地区列表
-      addAccessToken().get(createAPI('areas'), {}, {
-        validateStatus: status => status === 200
-      })
-      .then(response => {
-        // 格式化的地区省份 用于select展示
-        let provincesArray = [];
-        // 格式化的市级数据，用于select展示
-        let areasObject = {};
-        // 格式化的省份对象，用于数据获取
-        let provincesObject = {};
-        // 格式化的市级对象，用于数据获取
-        let citysObjects = {};
-        response.data.data.forEach((area) => {
+      let areasLocal = localEvent.getLocalItem('areas');
+      if(areasLocal.length > 0) {
+        areasLocal.forEach((area) => {
           if(area.pid == 1) {
             // 格式化的地区省份 用于select展示
             provincesArray.push({
@@ -642,8 +633,8 @@
               id: area.id
             };
             // 格式化的市级数据，用于select展示
-            areasObject[area.name] = this.formateCitysArray(response.data.data, area.id);
-            citysObjects[area.name] = this.formateCitysObject(response.data.data, area.id);
+            areasObject[area.name] = this.formateCitysArray(areasLocal, area.id);
+            citysObjects[area.name] = this.formateCitysObject(areasLocal, area.id);
           }
           
         });
@@ -652,16 +643,37 @@
         this.areaAbout.formateAreas = { ...this.foramteAreas, ...areasObject };
         this.areaAbout.provincesObject = { ...this.provincesObject, ...provincesObject };
         this.areaAbout.citysObjects = { ...this.citysObjects, ...citysObjects };
-      })
-      .catch(({ response: { data: { message = "网络状况堪忧" } = {} } = {} }) => {
-        this.$store.dispatch(NOTICE, cb => {
-          cb({
-            text: message,
-            time: 1500,
-            status: true
+      } else {
+        addAccessToken().get(createAPI('areas'), {}, {
+          validateStatus: status => status === 200
+        })
+        .then(response => {
+          localEvent.setLocalItem('areas', response.data.data);
+          response.data.data.forEach((area) => {
+            if(area.pid == 1) {
+              // 格式化的地区省份 用于select展示
+              provincesArray.push({
+                name: area.name,
+                id: area.id
+              });
+              // 格式化的省份对象
+              provincesObject[area.name] = {
+                name: area.name,
+                id: area.id
+              };
+              // 格式化的市级数据，用于select展示
+              areasObject[area.name] = this.formateCitysArray(response.data.data, area.id);
+              citysObjects[area.name] = this.formateCitysObject(response.data.data, area.id);
+            }
+            
           });
-        });
-      });
+          // this.areaAbout.areas = response.data.data;
+          this.areaAbout.formateProvince = provincesArray;
+          this.areaAbout.formateAreas = { ...this.foramteAreas, ...areasObject };
+          this.areaAbout.provincesObject = { ...this.provincesObject, ...provincesObject };
+          this.areaAbout.citysObjects = { ...this.citysObjects, ...citysObjects };
+        })
+      }
     }
   };
 

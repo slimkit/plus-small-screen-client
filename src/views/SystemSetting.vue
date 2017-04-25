@@ -22,7 +22,7 @@
             修改密码
           </Col>
           <Col span="2" :class="$style.rightIcon">
-            <Icon type="ios-arrow-right"></Icon>
+            <RightArrowIcon height="18" width="18" color="#999" />
           </Col>
         </div>
       </Row>
@@ -32,7 +32,7 @@
             清理缓存
           </Col>
           <Col span="2" :class="$style.rightIcon">
-            <Icon type="ios-arrow-right"></Icon>
+            <RightArrowIcon height="18" width="18" color="#999" />
           </Col>
         </div>
       </Row>
@@ -41,7 +41,7 @@
           关于我们
         </Col>
         <Col span="2" :class="$style.rightIcon">
-          <Icon type="ios-arrow-right"></Icon>
+          <RightArrowIcon height="18" width="18" color="#999" />
         </Col>
       </Row>
       <Row :gutter="16" :class="$style.entryMenu">
@@ -50,7 +50,7 @@
             退出登录
           </Col>
           <Col span="2" :class="$style.rightIcon">
-            <Icon type="ios-arrow-right"></Icon>
+            <RightArrowIcon height="18" width="18" color="#999" />
           </Col>
         </div>
       </Row>
@@ -66,11 +66,13 @@
   import Comfirm from '../utils/Comfirm';
   import { NOTICE } from '../stores/types';
   import BackIcon from '../icons/Back';
+  import RightArrowIcon from '../icons/RightArrow';
 
   const systemSetting = {
     components: {
       Comfirm,
-      BackIcon
+      BackIcon,
+      RightArrowIcon
     },
     data: () => ({
       comfirm: {
@@ -120,7 +122,7 @@
       },
       logout () {
         this.cannel();
-        localEvent.clearLocalAll();
+        localEvent.setLocalItem('UserLoginInfo', {});
         this.changeUrl('/login');
       }
     }

@@ -1,7 +1,7 @@
 <template>
   <!-- <transition-group name="fade" tag="div" :class="$style.postRoot"  v-show="show" enter-active-class="zoomInLeft" leave-active-class="zoomOutRight"> -->
   <transition name="custom-classes-transition" enter-active-class="animated slideInUp" leave-active-class="animated slideOutDown">
-    <div class="post-feed" :class="$style.postRoot" v-if="show">
+    <div class="post-feed" :class="$style.postRoot" v-show="show">
       <div class="commonHeader">
         <Row :gutter="16">
           <Col span="4">
@@ -26,43 +26,47 @@
       <div :class="$style.upload">
         <template>
           <div style="padding: 0 4vw">
-            <div class="demo-upload-list" v-for="item in defaultList">
-                <img :src="item.url">
-                <div class="demo-upload-list-cover">
-                  <Icon type="ios-eye-outline" @click.native="handleView(item.name)"></Icon>
-                  <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
-                </div>
+            <div class="demo-upload-list" v-for="item in imageList">
+              <template v-if="item.status === 'finished'">
+                  <img :src="item.url" :alt="item.name" >
+                  {{item.url}}
+                  <!-- <div class="demo-upload-list-cover">
+                      <Icon type="ios-eye-outline" @click.native="handleView(item.name)"></Icon>
+                      <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
+                  </div> -->
+              </template>
+              <template v-else>
+                  <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+              </template>
             </div>
-          </div>
-          <div style="padding: 0 4vw">
             <Upload
-              v-if="show"
               ref="upload"
               :show-upload-list="false"
               :default-file-list="defaultList"
               :on-success="handleSuccess"
-              :format="['jpg','jpeg','png']"
-              :max-size="2048"
+              :format="format"
+              :max-size="maxSize"
               :on-format-error="handleFormatError"
               :on-exceeded-size="handleMaxSize"
               :before-upload="handleBeforeUpload"
               multiple
+              :headers="headers"
               :data="uploadData"
               type="drag"
               :action="uploadUri"
-              style="display: inline-block;width:58px;">
-              <div style="width: 58px;height:58px;line-height: 58px;">
+              accept="image/*"
+              style="display: inline-block;width:22vw;height: 22vw">
+              <div style="width: 22vw;height: 22vw; line-height: 22vw;">
                   <Icon type="camera" size="20"></Icon>
               </div>
-          </Upload>
+            </Upload>
             <Modal title="查看图片" v-model="visible">
-              <img :src="'https://o5wwk8baw.qnssl.com/' + imgName + '/large'" v-if="visible" style="width: 100%">
+                <img :src="'https://o5wwk8baw.qnssl.com/' + imgName + '/large'" v-if="visible" style="width: 100%">
             </Modal>
           </div>
         </template>
       </div>
     </div>
-  <!-- </transition-group> -->
   </transition>
 </template>
 
@@ -74,6 +78,7 @@ import localEvent from '../stores/localStorage';
 import { Base64 } from 'js-base64';
 import md5 from 'js-md5';
 import { createUploadTask, uploadFile, noticeTask } from '../utils/upload';
+import lodash from 'lodash';
 
 const base64Reg = /^data:(.*?);base64,/;
 let reg = /data:(.*?);/;
@@ -86,10 +91,14 @@ const postFeed = {
     defaultList: [],
     imgName: '',
     visible: false,
-    uploadUri: 'xxx',
-    uploadData: {},
     uploadHeaders: {},
     storage_task_ids: [],
+    uploadUri: '',
+    uploadData: {},
+    headers: {},
+    ids: {},
+    format: ['jpg','jpeg','png'],
+    maxSize: 10240
   }),
   computed: {
     ...mapState({
@@ -97,6 +106,17 @@ const postFeed = {
     }),
     isDisabled () {
       return !this.feedContent.length;
+    },
+    imageList () {
+      let imglist = [];
+      this.uploadList.forEach( img => {
+        imglist.push({
+          status: img.status,
+          name: img.name,
+          url: this.ids[img.name].url
+        })
+      });
+      return imglist;
     }
   },
   methods: {
@@ -130,6 +150,10 @@ const postFeed = {
             status: true
           });
         });
+        this.storage_task_ids = [];
+        this.uploadList = [];
+        this.$refs.upload.fileList = [];
+        this.$refs.upload.tempIndex = 1;
         addAccessToken().get(
           createAPI(`feeds/${response.data.data}`),
           {},
@@ -143,28 +167,20 @@ const postFeed = {
               [feed_id]: data
             });
           });
+          // 添加本地最新数据
           this.$store.dispatch(ADDNEWIDS, cb => {
             cb([
               feed_id
             ]);
           });
+          // 添加本地关注数据
           this.$store.dispatch(ADDFOLLOWINGIDS, cb => {
             cb([
               feed_id
             ]);
           })
         })
-        .cache();
       })
-      .catch(({ response: { data = {} } = {} } ) => {
-        this.$store.dispatch(NOTICE, cb => {
-          cb({
-            text: data.message,
-            time: 1500,
-            status: false
-          });
-        });
-      });
     },
     closePost () {
       this.feedTitle = '';
@@ -177,98 +193,176 @@ const postFeed = {
       });
     },
     handleView (name) {
-      this.imgName = name;
-      this.visible = true;
+        this.imgName = name;
+        this.visible = true;
     },
     handleRemove (file) {
-        // 从 upload 实例删除数据
-        const fileList = this.$refs.upload.fileList;
-        this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);
+      // 从 upload 实例删除数据
+      const fileList = this.$refs.upload.fileList;
+      this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);
+      this.storage_task_ids.splice(fileList.indexOf(file), 1);
     },
-    handleSuccess (res, file) {
-      // 因为上传过程为实例，这里模拟添加 url
-      file.url = 'https://o5wwk8baw.qnssl.com/7eb99afb9d5f317c912f08b5212fd69a/avatar';
-      file.name = '7eb99afb9d5f317c912f08b5212fd69a';
+    handleSuccess (res, file, fileList) {
+      if(this.ids[file.name].taskId) {
+        noticeTask(this.ids[file.name].taskId, res, data => {
+          if(data.status || data.code == 0) {
+            this.storage_task_ids.push(this.ids[file.name].taskId);
+          }
+        })
+      } else {
+        this.$store.dispatch(NOTICE, cb => {
+          cb({
+            show: true,
+            status: false,
+            text: '图片' + file.name + '上传出现异常',
+            time: 1500
+          })
+        })
+      }
     },
     handleFormatError (file) {
-      this.$Notice.warning({
-        title: '文件格式不正确',
-        desc: '文件 ' + file.name + ' 格式不正确，请上传 jpg 或 png 格式的图片。'
-      });
+      this.$store.dispatch(NOTICE, cb => {
+        cb({
+          show: true,
+          status: false,
+          time: 1500,
+          text: '图片' + file.name + ' 格式不正确，请上传 jpg 或 png 格式的图片。'
+        })
+      })
     },
     handleMaxSize (file) {
-      this.$Notice.warning({
-        title: '超出文件大小限制',
-        desc: '文件 ' + file.name + ' 太大，不能超过 2M。'
-      });
+      this.$store.dispatch(NOTICE, cb => {
+        cb({
+          show: true,
+          status: false,
+          time: 1500,
+          text: '图片 ' + file.name + ' 太大，不能超过 10M。'
+        });
+      })
     },
-    getSize (dataUrl) {
-      let img = new Image();
-      img.src = dataUrl;
-      img.onload = () => {
-        return [
-          img.width,
-          img.height
-        ];
-      };
-    },
-    // toInt32 (bytes) {
-    //   return (bytes[0] << 24) | (bytes[1] << 16) | (bytes[2] << 8) | bytes[3];
-    // },
-    // getDimensions (data) {
-    //   return {
-    //     width: this.toInt32(data.slice(16, 20)) / 7,
-    //     height: this.toInt32(data.slice(20, 24)) / 7
-    //   }
-    // },
     handleBeforeUpload (file) {
-      let fileDataURL = '';
-      let fileBinaryString = '';
-      if(file.type.indexOf('image') !== -1) {
-        let reader = new FileReader();
-        let fileUpload = {};
-        fileUpload.origin_filename = file.name;
-        let sizes = [];
-        reader.onload = (e) => {
-          // 获取图片dataurl
-          let fileDataURL = reader.result;
-          // dataurl解码
-          let fileDecode = Base64.decode(fileDataURL.replace(base64Reg, ''));
-          // dataurl 获取文件hash
-          fileUpload.hash = md5(fileDecode);
-          // 截取文件的mime_type
-          fileUpload.mime_type = fileDataURL.match(reg)[1];
-          fileUpload.height = 100;
-          fileUpload.width = 100;
-
-          createUploadTask(fileUpload, data => {
-            if(data.hasOwnProperty('storage_id') && data.hasOwnProperty('storage_task_id')){
-              this.defaultList.push({
-                name: file.name,
-                url: fileDataURL
-              });
-              this.storage_task_ids.push(data.storage_task_id);
-              return false;
-            }
-            uploadFile(data, fileDataURL, uploadInfo => {
-              console.log(data);
-              // notice server with uploaded-info
-              noticeTask(data.storage_task_id, uploadInfo, noticeInfo => {
-                this.defaultList.push({
-                  name: file.name,
-                  url: fileDataURL
-                });
-                this.storage_task_ids.push(data.storage_task_id);
-              });
-            })
-            // return false;
-          });
-        }
-        reader.readAsDataURL(file);
+      const _file_format = file.name.split('.').pop().toLocaleLowerCase();
+      const checked = this.format.some(item => item.toLocaleLowerCase() === _file_format);
+      if(!checked) {
+        this.handleFormatError(file);
         return false;
       }
-      return false;
+      if(file.size > this.maxSize * 1024) {
+        this.handleMaxSize(file);
+        return false;
+      }
+      return new Promise( (resolve, reject) => {
+        this.formateUploadFile(file).then( data => {
+          let newFile = {};
+          newFile.taskId = data.taskId;
+          newFile.url = data.url;
+          this.ids = { ...this.ids, [file.name]: newFile };
+          newFile = {};
+          if(data.status) {
+            resolve(file);
+          } else {
+            return false;
+            // resolve(false);
+          }
+        });
+      })
+    },
+    readFile (file) {
+      return new Promise( function (resolve, reject) {
+        let reader = new FileReader();
+        reader.onload = function () {
+          resolve(reader);
+        };
+        reader.readAsDataURL(file);
+      });
+    },
+    readImg (DataUri) {
+      return new Promise( function (resolve, reject) {
+        let img = new Image();
+        img.src = DataUri.result;
+        let info = {};
+        info.dataUri = DataUri.result;
+        img.onload = function () {
+          info.img = img;
+          resolve(info);
+        };
+      });
+    },
+    uploadFile (fileUpload) {
+      return new Promise(function(resolve, reject) {
+        createUploadTask(fileUpload, data => {
+          if(data.hasOwnProperty('storage_id') && data.hasOwnProperty('storage_task_id')){
+            resolve({
+              status: 'old',
+              data: {
+                taskId: data.storage_task_id
+              }
+            });
+          }
+          resolve({
+            status: 'new',
+            data: {
+              uploadUri: data.uri,
+              headers: data.headers,
+              uploadData: data.options,
+              taskId: data.storage_task_id
+            }
+          });
+        });
+      })
+    },
+    formateUploadFile (file) {
+      return new Promise((resolve, reject) => {
+        let fileDataURL = '';
+        let fileBinaryString = '';
+        let fileUpload = {};
+        if(file.type.indexOf('image') !== -1) {
+          this.readFile(file).then( dataUri => {
+            this.readImg(dataUri).then( info => {
+              fileUpload.width = info.img.width;
+              fileUpload.height = info.img.height;
+              fileUpload.origin_filename = file.name;
+              fileUpload.mime_type = info.dataUri.match(reg)[1];
+              let fileDecode = Base64.decode(info.dataUri.replace(base64Reg, ''));
+              fileUpload.hash = md5(fileDecode);
+              this.uploadFile(fileUpload).then( data => {
+                if(data.status == 'new') {
+                  this.uploadUri = data.data.uploadUri;
+                  this.headers = { ...this.headers, ...data.data.headers };
+                  this.uploadData = { ...this.uploadData, ...data.data.uploadData };
+                  resolve({
+                    status: true,
+                    taskId: data.data.taskId,
+                    url: info.dataUri
+                  })
+                } else {
+                  this.storage_task_ids.push(data.data.taskId);
+                  this.uploadList.push({
+                    name: file.name,
+                    url: info.dataUri,
+                    status: 'finished'
+                  });
+                  resolve({
+                    status: false,
+                    taskId: 0,
+                    url: info.dataUri
+                  });
+                }
+              });
+            });
+          })
+        } else {
+          resolve({
+            status: false,
+            taskId: 0,
+            url: ''
+          });
+        }
+      });
     }
+  },
+  mounted () {
+    this.uploadList = this.$refs.upload.fileList;
   }
 };
 
@@ -356,40 +450,44 @@ export default postFeed;
     }
   }
   .demo-upload-list{
-        display: inline-block;
-        width: 22vw;
-        height: 22vw;
-        text-align: center;
-        line-height: 60px;
-        border: 1px solid transparent;
-        border-radius: 4px;
-        overflow: hidden;
-        background: #fff;
-        position: relative;
-        box-shadow: 0 1px 1px rgba(0,0,0,.2);
-        margin: 0 .5vw;
+    display: inline-block;
+    width: 22vw;
+    height: 22vw;
+    text-align: center;
+    line-height: 22vw;
+    overflow: hidden;
+    background: #fff;
+    position: relative;
+    margin: 0 .5vw;
+  }
+  .ivu-upload-drag {
+    border-radius: 0;
+    border: 1px #e2e2e3 solid;
+    &:hover {
+      border: 1px #e2e3e3 solid;
     }
-    .demo-upload-list img{
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-    .demo-upload-list-cover{
-        display: none;
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background: rgba(0,0,0,.6);
-    }
-    .demo-upload-list:hover .demo-upload-list-cover{
-        display: block;
-    }
-    .demo-upload-list-cover i{
-        color: #fff;
-        font-size: 20px;
-        cursor: pointer;
-        margin: 0 2px;
-    }
+  }
+  .demo-upload-list img{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+  }
+  .demo-upload-list-cover{
+      display: none;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0,0,0,.6);
+  }
+  .demo-upload-list:hover .demo-upload-list-cover{
+      display: block;
+  }
+  .demo-upload-list-cover i{
+      color: #fff;
+      font-size: 20px;
+      cursor: pointer;
+      margin: 0 2px;
+  }
 </style>

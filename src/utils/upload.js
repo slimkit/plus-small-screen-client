@@ -27,15 +27,6 @@ function createUploadTask (data, cb) {
     let data = response.data.data;
     cb(response.data.data);
   })
-  .catch(({ response: { data: { message = "网络状况堪忧" } = {} } = {} }) => {
-    store.dispatch(NOTICE, cb => {
-      cb({
-        text: '网络状况堪忧1',
-        time: 1500,
-        status: false
-      });
-    });
-  })
 };
 
 // upload file
@@ -63,15 +54,6 @@ function uploadFile(data, dataUri, cb) {
       cb(data);
     }
   })
-  .catch(({ response: { data: { message = "网络状况堪忧" } = {} } = {} }) => {
-    store.dispatch(NOTICE, cb => {
-      cb({
-        text: '网络状况堪忧2',
-        time: 1500,
-        status: false
-      });
-    });
-  })
 }
 
 // 通知任务进度
@@ -85,15 +67,6 @@ function noticeTask (taskId, data, cb) {
   .then(response => {
     cb(response.data);
   })
-  // .catch(({ response: { data: { message = "网络状况堪忧" } = {} } = {} }) => {
-  //   store.dispatch(NOTICE, cb => {
-  //     cb({
-  //       text: '网络状况堪忧3',
-  //       time: 1500,
-  //       status: false
-  //     });
-  //   });
-  // })
 };
 
 export {

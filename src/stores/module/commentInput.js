@@ -1,11 +1,19 @@
-import { COMMENTINPUT } from '../types';
+import { COMMENTINPUT, CLOSECOMMENTINPUT } from '../types';
+// 关闭
+const close = dispatch => dispatch(CLOSECOMMENTINPUT);
+// 回调
+const cb = close;
 
 const state = {
   commentInput: {
-    show: false,
-    reply_to_user_id: 0,
-    to_user_name: '',
-    feed: {}
+    data: { 
+      show: false,
+      reply_to_user_id: 0,
+      to_user_name: '',
+      feed: {}
+    },
+    close,
+    cb
   }
 };
 
@@ -26,6 +34,18 @@ const actions = {
   [COMMENTINPUT]: (context, cb) => {
     cb( info => {
       context.commit(COMMENTINPUT, info);
+    })
+  },
+  [CLOSECOMMENTINPUT]: context => {
+    context.commit(COMMENTINPUT, {
+      data: {
+        show: false,
+        reply_to_user_id: 0,
+        to_user_name: '',
+        feed: {}
+      },
+      close,
+      cb
     })
   }
 };

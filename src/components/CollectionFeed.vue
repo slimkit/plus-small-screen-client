@@ -24,19 +24,6 @@
         </Row>
       </Col>
     </Row>
-    <Row :gutter="16" :class="$style.toolTop">
-      <Col span="4" :class="$style.seat">
-        1
-      </Col>
-      <Col span="20">
-        <FeedTool :user="user" :feed="feed" />
-      </Col>
-    </Row>
-    <Row v-if="feed.tool.feed_comment_count" :gutter="16">
-      <Col span="20" offset="4" style="padding-bottom: 8px;">
-        <CommentsTool v-if="feed.comments" :feed="feed" />
-      </Col>
-    </Row>
   </div>
 </template>
 
@@ -53,7 +40,7 @@
   import defaultAvatar from '../statics/images/defaultAvatarx2.png';
   import lodash from 'lodash';
 
-  const feedinfo = {
+  const CollectionFeed = {
     props: [
       'feed'
     ],
@@ -96,7 +83,7 @@
     }
   }
 
-  export default feedinfo;
+  export default CollectionFeed;
 </script>
 
 <style lang="scss" module>

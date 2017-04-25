@@ -2,24 +2,16 @@
   <div :class="$style.tool">
     <Row>
       <Col span="7" :class="$style.parentCount">
-        <div v-show="isDigg" @click="cannelDigg">
-          <DiggIcon width="21" height="21" color="#f4504d" /></DiggIcon>
-        </div>
-        <div  v-show="!isDigg" @click="sendDigg">
-          <UnDiggIcon width="21" height="21" color="#999" /></UnDiggIcon>
-        </div>
+        <DiggIcon v-show="isDigg" width="21" @click.native="cannelDigg" height="21" color="#f4504d" /></DiggIcon>
+        <UnDiggIcon  v-show="!isDigg" @click.native="sendDigg" width="21" height="21" color="#999" /></UnDiggIcon>
         <i :class="$style.count">{{ friendnum(feed.tool.feed_digg_count) }}</i>
       </Col>
       <Col span="7"  :class="$style.parentCount">
-        <div @click="commentFeed">
-          <CommentIcon width="21" height="21" color="#999" /></CommentIcon>
-        </div>
+        <CommentIcon @click.native="commentFeed" width="21" height="21" color="#999" /></CommentIcon>
         <i :class="$style.count">{{ friendnum(feed.tool.feed_comment_count) }}</i>
       </Col>
       <Col span="7"  :class="$style.parentCount">
-        <div @click="router(`/feed/${feed.feed.feed_id}`)">
-          <ViewIcon width="21" height="21" color="#999" /></ViewIcon>
-        </div>
+        <ViewIcon  @click.native="router(`/feed/${feed.feed.feed_id}`)" width="21" height="21" color="#999" /></ViewIcon>
         <i :class="$style.count">{{ friendnum(feed.tool.feed_view_count) }}</i>
       </Col>
       <Col span="3" :class="$style.parentCount">
@@ -57,13 +49,11 @@
       'user'
     ],
     data: () => ({
-      toolData: {},
-      CanInput: false,
       comment: ''
     }),
     methods: {
       router (link) {
-        router.replace(link);
+        router.push(link);
       },
       // 评论动态输入框
       commentFeed () {
@@ -73,13 +63,14 @@
         let reply_to_user_id = 0;
         this.$store.dispatch(COMMENTINPUT, cb => {
           cb({
-            show,
-            reply_to_user_id,
-            to_user_name,
-            feed
+            data: {
+              show,
+              reply_to_user_id,
+              to_user_name,
+              feed
+            }
           });
         })
-
       },
       friendnum (num) { 
         return friendNum(num);
@@ -93,7 +84,6 @@
           }
         ))
         .then(response => {
-          // let isDigged = this.feed.tool.is_digg_feed;
           if (response.data.code === 0 || response.data.status) {
             feed.tool.is_digg_feed = 1;
             feed.tool.feed_digg_count += 1;
@@ -102,12 +92,6 @@
             })
           }
         })
-        .catch(({ response: { data = {} } = {} } ) => {
-          this.isDisabled = false;
-          const { code = 'xxxx' } = data;
-          // this.isLoading = false;
-          // this.errors = Object.assign({}, this.errors, { code: errorCodes[code] });
-        });
       },
       cannelDigg () {
         let feed = this.feed;
@@ -124,24 +108,15 @@
             cb(feed);
           })
         })
-        .catch(error => {
-          console.log(error)
-        })
       }
     },
     computed: {
       isDigg () {
         return this.feed.tool.is_digg_feed;
       },
-      commentCount () {
-        return this.comment.length;
-      },
       currentUser () {
         return localEvent.getLocalItem('UserLoginInfo');
       }
-    },
-    beforeMount () {
-      this.toolData = Object.assign({}, this.toolData, this.toolDatas);
     }
   }
 
@@ -163,10 +138,6 @@
       textarea {
         min-height: 34px!important;
       }
-    }
-    .commentCount {
-      margin-bottom: .5em;
-      font-size: 12px;
     }
     .wrapper{
       background-color: rgba(0, 0, 0, .3);

@@ -32,6 +32,8 @@
     background: #fff;
     border-radius: 10px;
     font-size: 14px;
+    max-width: 70vw;
+    text-align: center;
 
   }
   .success {

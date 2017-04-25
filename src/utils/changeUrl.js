@@ -4,11 +4,10 @@
 import router from '../routers/index';
 
 function changeUrl (link) {
-  router.replace(link);
+  router.push(link);
 };
 
 function goTo (num) {
-  console.log(num);
   router.go(num);
 };
 

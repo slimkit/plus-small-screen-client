@@ -19,7 +19,7 @@
           </div>
         </div>
         <div :class="$style.userCover">
-          <img :class="$style.coverImg" :src="`http://localhost:8080/${coverImg}`" :alt="userInfo.name"/>
+          <img :class="$style.coverImg" :src="coverImg" :alt="userInfo.name"/>
         </div>
         <div :class="$style.userProfile">
           <div :class="$style.avatar">
@@ -45,18 +45,18 @@
         <div :class="$style.feeds" v-if="!nothing">
           <div style="padding: 8px; background: #e2e3e3; color: #999;">{{feedCounts}}条动态</div>
           <div :class="$style.feedContainer">
-            <UserFeed v-for="feed in feeds" :feed="feed" :key="feed.id"> </UserFeed>
+            <UserFeed v-for="feed in feedList" :feed="feed" :key="feed.feed_id"> </UserFeed>
           </div>
         </div>
         <div v-if="nothing" :class="$style.nothingDefault">
-          <img :src="`http://localhost:8080/${nothing}`" />
+          <img :src="nothing" />
         </div>
       </div>
       <div slot="bottom" style="display: flex; justify-content: center; align-items: center; padding: 10px 0;">
         <span v-show="bottomAllLoaded && bottomStatus !== 'loading' && !nothing">没有更多了</span>
-        <span v-show="bottomStatus === 'loading'">加载中...</span>
-        <span v-show="bottomStatus === 'pull' && !bottomAllLoaded">上拉加载更多评论</span>
-        <span v-show="bottomStatus === 'drop'">释放加载更多评论</span>
+        <span v-show="bottomStatus === 'loading' && !bottomAllLoaded">加载中...</span>
+        <span v-show="bottomStatus === 'pull' && !bottomAllLoaded">上拉加载更多</span>
+        <span v-show="bottomStatus === 'drop'">释放加载更多</span>
       </div>
     </mt-loadmore>
     <div v-if="currentUser != user_id" :class="$style.followStatus" @click="handleFollowingStaus(followAction.status ? true : false)">
@@ -74,7 +74,7 @@
   import errorCodes from '../stores/errorCodes';
   import localEvent from '../stores/localStorage';
   import { followingUser, unFollowingUser } from '../utils/user';
-  import { NOTICE, USERFEEDS, APPENDUSERFEED, CLEANUSERFEEDS, DATES } from '../stores/types';
+  import { NOTICE, FEEDSLIST, USERFEEDS, APPENDUSERFEED, CLEANUSERFEEDS, DATES, GETUSERFEEDS } from '../stores/types';
   import getImg from '../utils/getImage';
   import { friendNum } from '../utils/friendNum';
   import timers from '../utils/timer';
@@ -82,6 +82,7 @@
   import { mapState } from 'vuex';
   import UserFeed from '../components/UserFeed';
   import defaultNothing from '../statics/images/defaultNothingx3.png';
+  import defaultAvatar from '../statics/images/defaultAvatarx2.png';
   import FollowingIcon from '../icons/Following';
   import UnFollowingIcon from '../icons/UnFollowing';
   import EachFollowingIcon from '../icons/EachFollowing';
@@ -158,32 +159,6 @@
         this.bottomStatus = status;
       },
       timers,
-      // 组装单条数据
-      fomateFeed (feed) {
-        // 组装数据 
-        let today = new window.Date().toLocaleDateString();
-        let yesterday = new window.Date(new Date()-24*60*60*1000).toLocaleDateString();
-        // 获取动态生成日期
-        let timestamp = new window.Date(this.timers(feed.feed.created_at, 8, false));
-        let createDate = timestamp.toLocaleDateString();
-        feed.month = '';
-        feed.date = '';
-        feed.created_at = '';
-        if(createDate != yesterday && createDate != today) {
-           feed.month = timestamp.getMonth() + 1;
-           feed.date = timestamp.getDate();
-        }
-        if(createDate == yesterday) {
-          feed.created_at = '昨天';
-        }
-        if(createDate == today) {
-          feed.created_at = '今天';
-        }
-        return {
-          feed,
-          max_id: feed.feed.feed_id
-        }
-      },
       // 加载更多
       loadBottom () {
         if(this.max_id == 0) return;
@@ -195,31 +170,27 @@
         .then(response => {
           let data = response.data.data;
           let length = data.length;
+          let ids = [];
+          let feeds = {};
           if(length < 15) {
             this.bottomAllLoaded = true;
           }
           if(length) {
             data.forEach((feed) => {
-              let newFeed = this.fomateFeed(feed);
-              this.max_id = newFeed.feed.feed_id;
-              this.$store.dispatch(APPENDUSERFEED, cb => {
-                cb(newFeed.feed);
-              })
+              ids.push(feed.feed.feed_id);
+              feeds[feed.feed.feed_id] = feed;
+            });
+            this.$store.dispatch(USERFEEDS, cb => {
+              cb(ids);
+            });
+            this.$store.dispatch(FEEDSLIST, cb => {
+              cb(feeds);
             })
           }
           setTimeout(() => {
             this.$refs.loadmore.onTopLoaded();
           }, 200);
         })
-        // .catch(({ response: { message = '网络状况堪忧啊1' } = {} } ) => {
-        //   this.$store.dispatch(NOTICE, cb => {
-        //     cb({
-        //       text: message,
-        //       time: 1500,
-        //       status: false
-        //     });
-        //   });
-        // })
       },
       // 组装多条数据
       fomateFeeds (feeds) {
@@ -248,10 +219,7 @@
           dayFeeds.push(feed);
           max_id = feed.feed.feed_id;
         });
-        return {
-          dayFeeds,
-          max_id
-        }
+        return dayFeeds;
       }
     },
     computed: {
@@ -283,7 +251,7 @@
         return feedLength ? 0 : defaultNothing;
       },
       avatar () {
-        const { avatar: { 30: avatar = '' } = {} } = this.userInfo;
+        const { avatar: { 30: avatar = defaultAvatar } = {} } = this.userInfo;
         return avatar;
       },
       feedCounts () {
@@ -303,12 +271,17 @@
         return intro;
       },
       coverImg () {
+        console.log(this.userInfo);
         const { datas: { cover: { value: cover = 0 } = {} } } = this.userInfo;
         if(cover) {
           return getImg(cover, 100);
         } else {
           return defaultBackgroundPic;
         }
+      },
+      feedList () {
+        let feeds = this.$store.getters[GETUSERFEEDS];
+        return this.fomateFeeds(feeds);
       }
     },
     beforeCreate () {
@@ -338,26 +311,26 @@
       )
       .then(response => {
         let feeds = response.data.data;
-        let newFeeds = this.fomateFeeds(feeds);
-        if(newFeeds.dayFeeds.length < 15) {
+        // let newFeeds = this.fomateFeeds(feeds);
+        if(feeds.length < 15) {
           this.bottomAllLoaded = true;
         }
-        this.max_id = newFeeds.max_id;
+        let ids = [];
+        let storeFeeds = {};
+        this.max_id = feeds[feeds.length - 1].feed.feed_id;
+        feeds.forEach( feed => {
+          ids.push(feed.feed.feed_id);
+          storeFeeds[feed.feed.feed_id] = feed;
+        });
+        this.$store.dispatch(FEEDSLIST, cb => {
+          cb(storeFeeds);
+        })
         this.$store.dispatch(USERFEEDS, cb => {
-          cb(newFeeds.dayFeeds);
+          cb(ids);
         })
         setTimeout(() => {
           this.$refs.loadmore.onTopLoaded();
         }, 200);
-      })
-      .catch(({ response: { message = '网络状况堪忧啊2' } = {} } ) => {
-        this.$store.dispatch(NOTICE, cb => {
-          cb({
-            text: message,
-            time: 1500,
-            status: true
-          });
-        });
       })
     }
   };

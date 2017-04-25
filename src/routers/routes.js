@@ -16,14 +16,16 @@ import UserFeeds from '../views/UserFeeds';
 import Message from '../views/Message';
 import Ranking from '../views/Ranking';
 import Comments from '../views/Comments';
+import Diggs from '../views/Diggs';
+import Collections from '../views/Collections';
 import { requestAuth, CanNotGetInWhenLogged } from '../utils/auth';
 
 const routes = [
   {
     path: '/',
-    component: Home,
+    component: Login,
     meta: {
-      title: '主页'
+      title: '登录'
     }
   },
   {
@@ -38,7 +40,7 @@ const routes = [
   },
   {
     path: '/users/diggs',
-    component: Ranking,
+    component: Diggs,
     meta: {
       title: '赞'
     },
@@ -102,6 +104,16 @@ const routes = [
     component: FeedDetail,
     meta: {
       title: '动态详情'
+    }
+  },
+  {
+    path: '/users/collections',
+    component: Collections,
+    meta: {
+      title: '收藏'
+    },
+    beforeEnter: (to, from, next) => {
+      requestAuth(to, from, next)
     }
   },
   {

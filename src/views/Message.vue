@@ -23,9 +23,9 @@
             <div v-if="diggsCount" style="color: #999;">{{ diggLists }} <span v-show="diggsCount > 3">等人</span>赞了我</div>
             <div v-if="!diggsCount" style="color: #999">还没有人赞我</div>
           </Col>
-          <Col span="5" v-if="diggsCount" :class="$style.time">
-            <timeago style="font-size: 14px; color: #999;" :since="diggTime" locale="zh-CN" :auto-update="60"></timeago>
-            <span>{{diggsCount}}</span>
+          <Col span="5" v-if="diggsCount">
+            <timeago :class=$style.time :since="diggTime" locale="zh-CN" :auto-update="60"></timeago>
+            <i :class="$style.messageCount">{{diggsCount}}</i>
           </Col>
         </div>
       </Row>
@@ -38,12 +38,12 @@
           </Col>
           <Col span="15">
             <h4 style="font-weight: 400;">评论的</h4>
-            <div v-if="commentCount" style="color: #999;">{{ commentLists }} <span v-show="commentCount > 3">等人</span>评论了我</div>
+            <div v-if="commentCount" style="color: #999;">{{ commentLists }} <span v-show="userCount > 3">等人</span>评论了我</div>
             <div v-if="!commentCount" style="color: #999">还没有人评论我</div>
           </Col>
-          <Col span="5" v-if="commentCount" :class="$style.time">
-            <timeago style="font-size: 14px; color: #999;" :since="commentTime" locale="zh-CN" :auto-update="60"></timeago>
-            <span>{{commentCount}}</span>
+          <Col span="5" v-if="commentCount">
+            <timeago :class=$style.time :since="commentTime" locale="zh-CN" :auto-update="60"></timeago>
+            <i :class="$style.messageCount">{{commentCount}}</i>
           </Col>
         </div>
       </Row>
@@ -61,6 +61,7 @@
   import CommentIcon from '../icons/Comment';
   import timers from '../utils/timer';
   import { changeUrl } from '../utils/changeUrl';
+  import lodash from 'lodash';
 
   const currentUser = localEvent.getLocalItem('UserLoginInfo');
   const MessageList = {
@@ -90,7 +91,7 @@
           let userLocalInfo = localEvent.getLocalItem(`user_${digg}`);
           const { name = ''} = userLocalInfo;
           users += name + '、';
-          if(!Object.keys(userLocalInfo).lenght) {
+          if(!lodash.keys(userLocalInfo).lenght) {
             getUserInfo(digg, user => {
               const { name = '' } = user;
               users += name + '、';
@@ -105,9 +106,13 @@
         const { comments: { time = new window.Date().getTime() } = {} } = this.messages;
         return time;
       },
-      commentCount() {
+      commentCount () {
         const { comments: { count = 0 } = {} } = this.messages;
         return count;
+      },
+      userCount () {
+        const { comments: { userCount = 0 } = {} } = this.messages;
+        return userCount;
       },
       commentLists () {
         const { comments: { uids = [] } = {} } = this.messages;
@@ -118,7 +123,7 @@
           let userLocalInfo = localEvent.getLocalItem(`user_${comment}`);
           const { name = '' } = userLocalInfo;
           users += name + '、';
-          if(!Object.keys(userLocalInfo).length) {
+          if(!lodash.keys(userLocalInfo).length > 0) {
             getUserInfo(comment, user => {
               const { name = '' } = user;
               users += name + '、';
@@ -145,9 +150,16 @@
     },
     created () {
       let types = 'diggs,comments';
-      // let time = parseInt(new window.Date().getTime() / 1000) - 43200;
+      let time = 0;
+      time = localEvent.getLocalItem('messageFlushTime');
+      console.log(time);
+      let nowtime = parseInt(new window.Date().getTime() / 1000);
+      if(!time) {
+        time = parseInt(new window.Date().getTime() / 1000) - 86400;
+      }
+      localEvent.setLocalItem('messageFlushTime', nowtime);
       let messages = {};
-      addAccessToken().get(createAPI(`users/flushmessages?key=${types}`),{},
+      addAccessToken().get(createAPI(`users/flushmessages?key=${types}&time=${time+1}`),{},
         {
           validateStatus: status => status === 200
         }
@@ -157,26 +169,18 @@
         datas.forEach((data) => {
           let uids = new window.Array();
           if(data.uids.length) {
-            uids = data.uids.split(',').map( uid => parseInt(uid) );
+            uids = Array.from(new Set(data.uids.split(',').map( uid => parseInt(uid) )));
           }
           messages[data.key] = {
             count: data.count,
             max_id: data.max_id,
             uids: uids,
-            time: this.timers(data.time, 8, false)
+            time: this.timers(data.time, 8, false),
+            userCount: uids.length
           }
         });
         this.messages = { ...this.messages, ...messages };
       })
-      .catch(({ response: { data = {} } = {} } ) => {
-        this.$store.dispatch(NOTICE, cb => {
-          cb({
-            text: data.message,
-            time: 2000,
-            status: false
-          });
-        });
-      });
     }
   };
   export default MessageList;
@@ -194,6 +198,21 @@
         .time {
           display: flex;
           justify-content: flex-end;
+          width: 100%;
+          font-size: 12px;
+          color: #999;
+        }
+        .messageCount {
+          padding: 0px 6px;
+          border-radius: 50px;
+          background: #f00;
+          color: #fff;
+          text-align: center;
+          float: right;
+          font-style: normal;
+          font-size: 12px;
+          margin-right: 4px;
+          margin-top: 1vh;
         }
         .entryIcon {
           display: flex;

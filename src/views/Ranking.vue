@@ -13,21 +13,38 @@
         <Col span="4"></Col>
       </Row>
     </div>
-    <div :class="$style.rankingContent">
-      <div :class="$style.ranking" v-for="(digg, index) in formatedList" :key="index">
-        <Row :gutter="16" :class="$style.rankRow">
-          <Col span="4"  :class="$style.rankAvatar">
-            <img width="100%;" :src="digg.avatar" alt="digg.name" @click="changeUrl(`/users/feeds/${digg.user_id}`)" />
-            <span>{{index+1}}</span>
-          </Col>
-          <Col span="20">
-            <h4 :class="$style.name" @click="changeUrl(`/users/feeds/${digg.user_id}`)" >{{digg.name}}</h4>
-            <div :class="$style.intro">{{digg.intro}}</div>
-            <div :class="$style.gray">点赞<span :class="$style.diggCount">{{digg.value}}</span></div>
-          </Col>
-        </Row>
+    <mt-loadmore
+      v-if="!nothing"
+      :bottom-method="loadBottom"
+      :top-method="loadTop"
+      :bottom-all-loaded="bottomAllLoaded"
+      :top-all-loaded="topAllLoaded"
+      @bottom-status-change="bottomStatusChange"
+      ref="loadMoreLists"
+      :bottomDistance="70"
+    >
+      <div :class="$style.rankingContent">
+        <div :class="$style.ranking" v-for="(digg, index) in formatedList" :key="index">
+          <Row :gutter="16" :class="$style.rankRow">
+            <Col span="4"  :class="$style.rankAvatar">
+              <img width="100%;" :src="digg.avatar" alt="digg.name" @click="changeUrl(`/users/feeds/${digg.user_id}`)" />
+              <span>{{index+1}}</span>
+            </Col>
+            <Col span="20">
+              <h4 :class="$style.name" @click="changeUrl(`/users/feeds/${digg.user_id}`)" >{{digg.name}}</h4>
+              <div :class="$style.intro">{{digg.intro}}</div>
+              <div :class="$style.gray">点赞<span :class="$style.diggCount">{{digg.value}}</span></div>
+            </Col>
+          </Row>
+        </div>
       </div>
-    </div>
+      <div slot="bottom" class="mint-loadmore-bottom">
+        <span v-show="bottomAllLoaded">没有更多了</span>
+        <span v-show="bottomStatus === 'pull' && !bottomAllLoaded" :class="{ 'rotate': topStatus === 'drop' }">上拉加载更多</span>
+        <span v-show="bottomStatus === 'loading'">加载中...</span>
+        <span v-show="bottomStatus === 'drop' && !bottomAllLoaded">释放加载更多</span>
+      </div>
+    </mt-loadmore>
   </div>
 </template>
 <script>
@@ -37,18 +54,67 @@
   import { friendNum } from '../utils/friendNum';
   import localEvent from '../stores/localStorage';
   import { changeUrl, goTo } from '../utils/changeUrl';
+  import defaultAvatar from '../statics/images/defaultAvatarx2.png';
+  import lodash from 'lodash';
 
   const Ranking = {
     components: {
       BackIcon
     },
     data: () => ({
-      page: 0,
-      diggLists: []
+      page: 1,
+      diggLists: [],
+      ids: [],
+      bottomAllLoaded: false,
+      topAllLoaded: false,
+      bottomStatus: '',
+      topStatus: ''
     }),
     methods: {
       changeUrl,
-      goTo
+      goTo,
+      // 下拉刷新 直接更新列表
+      loadTop () {
+        addAccessToken().get(createAPI(`diggsrank?page=1`),{},
+          {
+            validateStatus: status => status === 200
+          }
+        )
+        .then(response => {
+          this.page = 1;
+          let diggs = response.data.data;
+          this.diggLists = diggs;
+          setTimeout( () => {
+            if(this.$refs.loadMoreLists)
+              this.$refs.loadMoreLists.onTopLoaded();
+          })
+        })
+      },
+      bottomStatusChange(status) {
+        this.bottomStatus = status;
+      },
+      loadBottom () {
+        addAccessToken().get(createAPI(`diggsrank?page=${this.page+1}&limit=1`),{},
+          {
+            validateStatus: status => status === 200
+          }
+        )
+        .then(response => {
+          this.page += 1;
+          let diggs = response.data.data;
+          this.diggLists = [ ...this.diggLists, ...diggs ];
+          diggs.forEach( digg => {
+            this.ids.push(digg.id);
+          });
+          if(diggs.length < 15) {
+            this.bottomAllLoaded = true;
+          };
+          setTimeout( () => {
+            if(this.$refs.loadMoreLists)
+              this.$refs.loadMoreLists.onBottomLoaded();
+          })
+        })
+      }
     },
     computed: {
       formatedList () {
@@ -57,7 +123,7 @@
         lists.forEach( list => {
           let digg = {};
           let user = localEvent.getLocalItem(`user_${list.user_id}`);
-          const { avatar: { 30: avatar = ''} = {} } = user;
+          const { avatar: { 30: avatar = defaultAvatar } = {} } = user;
           const { name = '' } = user;
           const { datas: { intro: { value: intro = '还没有简介呢' } = {} } } = user;
           digg.name = name,
@@ -65,7 +131,7 @@
           digg.intro = intro;
           digg.value = friendNum(parseInt(list.value));
           digg.user_id = list.user_id;
-          if(!Object.keys(user).length) {
+          if(!lodash.keys(user).length) {
             getUserInfo(list.user_id, gotUser => {
               const { avatar: { 30: avatar = '' } = {} } = gotUser;
               const { name = '' } = gotUser;
@@ -78,25 +144,29 @@
           newLists.push(digg);
         });
         return newLists;
+      },
+      nothing () {
+        return !this.diggLists.length > 0;
       }
     },
     created () {
-      addAccessToken().get(createAPI(`diggsrank?page=${this.page}`),{},
+      addAccessToken().get(createAPI(`diggsrank?page=${this.page}&limit=1`),{},
         {
           validateStatus: status => status === 200
         }
       )
       .then(response => {
         this.diggLists = response.data.data;
-      })
-      .catch(({ response: { message = '网络状况堪忧' } = {} } ) => {
-        this.$store.dispatch(NOTICE, cb => {
-          cb({
-            text: data.message,
-            time: 2000,
-            status: false
-          });
+        this.diggLists.forEach( digg => {
+          this.ids.push(digg.id);
         });
+        if(this.ids.length < 15 ) {
+          this.bottomAllLoaded = true;
+        };
+        setTimeout(() => {
+          if(this.$refs.loadMoreLists) 
+            this.$refs.loadMoreLists.onTopLoaded();
+        })
       })
     }
   };
@@ -152,5 +222,10 @@
         border-bottom: none;
       }
     }
+  }
+</style>
+<style scoped>
+  .mint-loadmore {
+    padding-bottom: 50px;
   }
 </style>

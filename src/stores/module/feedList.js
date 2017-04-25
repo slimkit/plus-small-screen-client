@@ -1,4 +1,4 @@
-import { FEEDSLIST, UPDATEFEED, FOLLOWINGFEEDS, HOTFEEDS, NEWFEEDS, FOLLOWINGIDS, HOTIDS, NEWIDS } from '../types';
+import { FEEDSLIST, UPDATEFEED, FOLLOWINGFEEDS, HOTFEEDS, NEWFEEDS, FOLLOWINGIDS, HOTIDS, NEWIDS, USERFEEDS, GETUSERFEEDS, COLLECTIONFEEDS, COLLECTIONIDS } from '../types';
 
 const state = {
   feedList: {}
@@ -9,7 +9,7 @@ const mutations = {
     state.feedList = { ...state.feedList, ...feedlist };
   },
   [UPDATEFEED] (state, feed) {
-    state[feed.feed_id] = { ...state[feed.feed_id], ...feed };
+    state.feedList[feed.feed.feed_id] = { ...state.feedList[feed.feed.feed_id], ...feed };
   }
 };
 
@@ -27,8 +27,10 @@ const actions = {
 };
 
 const getters = {
+  [FEEDSLIST]: state => {
+    return state.feedList;
+  },
   [FOLLOWINGFEEDS]: (state, getters) => {
-    console.log(getters);
     let followingFeeds = [];
     let followingIds = getters[FOLLOWINGIDS];
     followingIds.forEach( id => {
@@ -51,6 +53,22 @@ const getters = {
       newFeeds.push(state.feedList[id]);
     });
     return newFeeds;
+  },
+  [GETUSERFEEDS]: (state, getters) => {
+    let userFeeds = [];
+    let userIds = getters[USERFEEDS];
+    userIds.forEach( id => {
+      userFeeds.push(state.feedList[id]);
+    });
+    return userFeeds;
+  },
+  [COLLECTIONFEEDS]: (state, getters) => {
+    let collectionFeeds = [];
+    let collectionIds = getters[COLLECTIONIDS];
+    collectionIds.forEach( id => {
+      collectionFeeds.push(state.feedList[id]);
+    });
+    return collectionFeeds;
   }
 };
 

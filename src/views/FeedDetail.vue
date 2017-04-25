@@ -55,7 +55,7 @@
             </Row>
           </div>
           <div class="feed-container-content feed-background-color">
-            <h3 v-if="feedData.feed.title" style="text-align: center; padding: 15px 8px 8px 8px; font-weight: 400; color: #59b6d7">{{ feedData.feed.title }}</h3>
+            <h3 v-if="feedData.feed.title" style="text-align: center; padding: 15px 8px 8px 8px; font-weight: 400; color: #59b6d7">{{ feedData.feed.feed_title }}</h3>
             <div>
               <div v-if="imagesList.length" class="feed-container-content-images">
                 <div v-for="(item, index ) in imagesList" :key="index" :style="`height: ${item.height + 'px'}`">
@@ -63,7 +63,7 @@
                 </div>
               </div>
               <div :class="{ feedContainerContentText: imagesList.length, feedContainerContentTextNoPadding: !imagesList.length }">
-                {{ feedData.feed.content }}
+                {{ feedData.feed.feed_content }}
               </div>
             </div>
           </div>
@@ -84,7 +84,7 @@
                 </Col>
                 <Col span="7">
                   <div class="detail-data">
-                    <span>发布于<timeago :since="timer"></timeago></span>
+                    <span>发布于<timeago :since="feedTimer" locale="zh-CN" :auto-update="60"></timeago></span>
                     <span>{{ friendNum(feedData.tool.feed_view_count) }}人浏览</span>
                   </div>
                 </Col>
@@ -93,7 +93,7 @@
           </div>
           <div class="feed-container-comments feed-background-color">
             <div class="noComment" v-if="!feedData.tool.feed_comment_count">
-              <img :src="`http://localhost:8080${defaultImage}`" v-if="!feedData.tool.feed_comment_count" />
+              <img :src="defaultImage" v-if="!feedData.tool.feed_comment_count" />
             </div>
             <div class="comments" v-if="feedData.tool.feed_comment_count">
               <Row :gutter="16" class="comments_count" style="height: 45px; display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center;">
@@ -104,7 +104,7 @@
                 </Col>
               </Row>
               <div class="comments-content">
-                <Row :gutter="16" v-for="(comment, index) in comments" :key="comment.id"  :class="$style.perComment">
+                <Row :gutter="16" v-for="(comment, index) in formateComments" :key="comment.id"  :class="$style.perComment">
                   <Col span="4">
                     <div class="grid-content bg-purple">
                       <img :src="selfAvatar" alt="" style="width:100%; border-radius:50%">
@@ -117,7 +117,7 @@
                           <router-link :class="$style.profileLink" :to="{ path: `/profile/${comment.user.user_id}` }">{{ comment.user.name }}</router-link>
                         </Col>
                         <Col span="7" style="display: flex; justify-content: flex-end;">
-                          <timeago :since="comment.created_at" style="color: #ccc;"></timeago>
+                          <timeago style="color: #ccc; font-size: 12px;" :since="timers(comment.created_at, 8, false)" locale="zh-CN" :auto-update="60"></timeago>
                         </Col>
                       </Row>
                       <Row>
@@ -127,7 +127,7 @@
                             <router-link :class="$style.profileLink" :to="{ path: `/profile/${comment.reply_to_user_id}` }">{{ comment.replyToUser.name }} </router-link>
                             <span
                               v-if="comment.user_id  != currentUser"
-                              @click.stop="focusInput(comment.id, comment.user_id, feed_id)"
+                              @click.stop="focusInput(comment.user_id)"
                               :class="$style.commentContent"
                             > 
                              {{ comment.comment_content }}
@@ -160,80 +160,38 @@
         <Row :gutter="16" style="display: flex; justify-content: center; align-items: center; height: 100%;">
           <Col span="6" class="operation">
             <div v-if="!feedData.tool.is_digg_feed" @click="handleDiggFeed(feed_id)">
-              <UnDiggIcon height="24" width="24" color="#999" />
+              <UnDiggIcon height="20" width="20" color="#999" />
               <i>喜欢</i>
             </div>
             <div v-if="feedData.tool.is_digg_feed" @click="handleUnDiggFeed(feed_id)">
-              <DiggIcon height="24" width="24" color="#f4504d" />
+              <DiggIcon height="20" width="20" color="#f4504d" />
               <i class="did">喜欢</i>
             </div>
           </Col>
           <Col span="6" class="operation">
-            <div @click="handleCommentForFeed(feed_id)">
-              <CommentIcon height="24" width="24" color="#999" />
+            <div @click="focusInput(0)">
+              <CommentIcon height="20" width="20" color="#999" />
               <i>评论</i>
             </div>
           </Col>
           <Col span="6" class="operation">
             <div>
-              <ShareIcon height="24" width="24" color="#999" />
+              <ShareIcon height="20" width="20" color="#999" />
               <i>分享</i>
             </div>
           </Col>
           <Col span="6" class="operation">
             <div v-if="!feedData.tool.is_collection_feed" @click="handleCollection(feed_id)">
-              <ConnectionIcon height="24" width="24" color="#999" />
+              <ConnectionIcon height="20" width="20" color="#999" />
               <i>收藏</i>
             </div>
             <div v-if="feedData.tool.is_collection_feed" @click="handleUnCollection(feed_id)">
-              <ConnectionIcon height="24" width="24" color="#f4504d" />
+              <ConnectionIcon height="20" width="20" color="#f4504d" />
               <i class="did">收藏</i>
             </div>
           </Col>
         </Row>
       </div>
-      <!-- 评论输入框 -->
-      <div v-if="commentComponent.CanInput" :class="$style.commentInput">
-        <Row :gutter="16" type="flex" align="bottom" style="margin-left: 0; margin-right: 0;">
-          <Col span="20">
-            <Input
-              type="textarea"
-              class="commentInput"
-              v-if="commentComponent.CanInput"
-              :placeholder="commentComponent.placeholder"
-              :autosize="{ minRows: 1, maxRows: 4 }" 
-              :minlength="1"
-              :maxlength="255"
-              v-model="commentComponent.userComment"
-            >
-            </Input>
-          </Col>
-          <Col span="4">
-            <Row v-if="commentCount > 200" :class="$style.commentCount">
-              <Col span="24" ><span :class="{ inputFull: commentCount > 100 }">{{ commentCount }}</span>/255</Col>
-            </Row>
-            <Row>
-              <Col span="24">
-                <Button 
-                  :long="true" 
-                  type="primary" 
-                  :class="$style.sendComment" 
-                  :disabled="commentCount == 0" 
-                  size="small" 
-                  @click.native="sendComment()"
-                  html-type="button"
-                >
-                  发送
-                </Button>
-              </Col>
-            </Row>
-          </Col>
-        </Row>
-      </div>
-      <!-- 删除评论确认框 -->
-      <Comfirm v-if="commentComponent.isShowComfirm" @cannel="cannel" @increment="deleteComment" :data="commentComponent.deleteData" comfirm-content="删除这条评论"></Comfirm>
-      <!--wrapper-->
-      <div @click.stop="closeInput" :class="$style.wrapper" v-show="commentComponent.CanInput"></div>
     </div>
   </transition>
 </template>
@@ -242,13 +200,12 @@
   import errorCodes from '../stores/errorCodes';
   import localEvent from '../stores/localStorage';
   import { getUserInfo, followingUser, unFollowingUser } from '../utils/user';
-  import { NOTICE } from '../stores/types';
+  import { NOTICE, SHOWFEEDDIGGSLISTS, FEEDSLIST, UPDATEFEED, CONFIRM, COMMENTINPUT } from '../stores/types';
   import getImg from '../utils/getImage';
   import { friendNum } from '../utils/friendNum';
   import noCommentImage from '../statics/images/defaultNothingx2.png';
   import Comfirm from '../utils/Comfirm';
   import formateFeedComments from '../utils/formateFeedComments';
-  import { SHOWFEEDDIGGSLISTS } from '../stores/types';
   import UnFollowingIcon from '../icons/UnFollowing';
   import FollowingIcon from '../icons/Following';
   import EachFollowingIcon from '../icons/EachFollowing';
@@ -258,6 +215,8 @@
   import ShareIcon from '../icons/Share';
   import ConnectionIcon from '../icons/Connection';
   import BackIcon from '../icons/Back';
+  import timers from '../utils/timer';
+  import lodash from 'lodash';
 
   const currentUser = localEvent.getLocalItem('UserLoginInfo');
   const feedDetail = {
@@ -283,7 +242,7 @@
           content: "",
           created_at: "",
           feed_from: 2,
-          feed_storages: [],
+          storages: [],
         },
         tool: {
           feed_digg_count: 0,
@@ -300,15 +259,6 @@
         is_followed: 0
       },
       defaultImage: noCommentImage,
-      commentComponent: { // 评论相关
-        CanInput: false, // 输入框显示
-        isShowComfirm: false, // 是否显弹框
-        deleteData: {}, // 删除评论时传递的数据对象
-        sending: false, // 是否发送中
-        placeholder: '', // 占位文字
-        userComment: '', // 用户评论内容
-        replyToUserId: 0, // 回复谁
-      },
       currentUser: currentUser.user_id,
       // 上拉加载更多相关
       bottomAllLoaded: false,
@@ -316,6 +266,9 @@
       bottomStatus: ''
     }),
     computed: {
+      feedTimer () {
+        return this.timers(this.feedData.feed.created_at, 8, false);
+      },
       avatar () {
         const { avatar: { 30: avatar = '' } = {} } = this.userInfo;
         return avatar;
@@ -327,10 +280,10 @@
       // 计算图片跳转地址
       imagesList () {
         let urlList = [];
-        if(!this.feedData.feed.feed_storages.length > 0) {
+        if(!this.feedData.feed.storages.length > 0) {
           return [];
         }
-        this.feedData.feed.feed_storages.forEach((value) => {
+        this.feedData.feed.storages.forEach((value) => {
           urlList.push(
             {
               url: getImg(value.storage_id, 100),
@@ -344,15 +297,6 @@
       digglistWidth () {
         return this.feedData.diggs.length ? ((this.feedData.diggs.length-1)*25 + 45 + 'px') : '0px';
       },
-      // 检测用户输入的评论长度
-      commentCount () {
-        return this.commentComponent.userComment.length;
-      },
-      timer () {
-        let newDate = new Date();
-        newDate.setTime(this.feedData.feed.created_at * 1000);
-        return newDate;
-      },
       diggList () {
         let digg_list = this.feedData.diggs;
         let digg_users = [];
@@ -361,7 +305,7 @@
         for(let index in digg_list ){
           userLocal = localEvent.getLocalItem(`user_${digg_list[index]}`);
           if(index > 4) { break; }
-          if(Object.keys(userLocal).length == 0) {
+          if(!lodash.keys(userLocal).length > 0) {
             getUserInfo(digg_list[index], 30, user => {
               // userLocal = user;
               digg_users.push({
@@ -382,8 +326,14 @@
         };
         return digg_users;
       },
+      formateComments () {
+        let formated = formateFeedComments(this.comments);
+        this.max_id = formated.max_id;
+        return formated.comments;
+      }
     },
     methods: {
+      timers,
       // 检测底部loading的状态变化
       bottomStatusChange (status) {
         this.bottomStatus = status;
@@ -395,7 +345,7 @@
         let avatar = '';
         digg_list.forEach((digg) => {
           userLocal = localEvent.getLocalItem(`user_${digg}`);
-          if(Object.keys(userLocal).length == 0) {
+          if(!lodash.keys(userLocal).length > 0) {
             getUserInfo(digg, 30, user => {
               userLocal = user;
             });
@@ -453,9 +403,6 @@
             });
           }
         })
-        .catch(error => {
-
-        })
       },
       handleUnCollection (feed_id) {
         addAccessToken().delete(createAPI(`feeds/${feed_id}/collection`), {}, {
@@ -463,15 +410,6 @@
         })
         .then(response => {
           this.feedData.tool.is_collection_feed = 0;
-        })
-        .catch(error => {
-          this.$store.dispatch(NOTICE, cb => {
-            cb({
-              text: error.response.data.message,
-              time: 1500,
-              status: false
-            });
-          });
         })
       },
       handleDiggFeed (feed_id) {
@@ -494,15 +432,6 @@
             });
           }
         })
-        .catch(error => {
-          this.$store.dispatch(NOTICE, cb => {
-            cb({
-              text: error.response.data.message,
-              time: 1500,
-              status: false
-            });
-          });
-        })
       },
       handleUnDiggFeed (feed_id) {
         addAccessToken().delete(createAPI(`feeds/${feed_id}/digg`), {}, {
@@ -512,15 +441,6 @@
           this.feedData.tool.is_digg_feed = 0;
           this.feedData.tool.feed_digg_count--;
           this.removeByValue(this.feedData.diggs, this.currentUser);
-        })
-        .catch(error => {
-          this.$store.dispatch(NOTICE, cb => {
-            cb({
-              text: error.response.data.message ? error.response.data.message : '发生了一些错误',
-              time: 1500,
-              status: false
-            });
-          });
         })
       },
       handleUnFollowingStatus () {
@@ -555,9 +475,6 @@
           }
         })
       },
-      loadMore () {
-        console.log('loadMore');
-      },
       loadBottom() {
         let max_id = this.max_id;
         let limit = 15;
@@ -577,8 +494,8 @@
           if(data.length < 15) {
             bottomAllLoaded = true;
           }
-          formatedAddComments = formateFeedComments(data);
-          formatedAddComments.comments.forEach((comment) => {
+          // formatedAddComments = formateFeedComments(data);
+          data.forEach((comment) => {
             this.comments.push(comment);
           });
           setTimeout(() => {
@@ -588,69 +505,71 @@
             this.$refs.loadmore.onBottomLoaded();
           }, 500);
         })
-        .catch(({ response: { data: { message = "网络状况堪忧" } = {} } = {} }) => {
-          setTimeout(() => {
-            // 若数据已全部获取完毕
-            this.bottomStatus = '';
-            this.$refs.loadmore.onBottomLoaded();
-          }, 500);
-          this.$store.dispatch(NOTICE, cb => {
-            cb({
-              text: message,
-              time: 1500,
-              status: false
-            });
-          });
-        });
       },
-      handleCommentForFeed(feed_id) {
-        this.commentComponent.placeholder = `回复: ${this.userInfo.name}`;
-        this.commentComponent.userComment = '';
-        this.commentComponent.CanInput = true;
-        this.commentComponent.replyToUserId = 0;
-      },
-      focusInput (comment_id, comment_to_uid, feed_id) {
-        this.commentComponent.userComment = '';
-        let to_user = localEvent.getLocalItem(`user_${comment_to_uid}`);
-        if (!to_user.length) {
+      focusInput (comment_to_uid = 0) {
+        let reply_to_user_id = comment_to_uid ? comment_to_uid : 0;
+        let to_user = this.userInfo;
+        if(reply_to_user_id) {
+          to_user = localEvent.getLocalItem(`user_${comment_to_uid}`);
+        }
+        let to_user_name = ''; // 回复谁 用户名
+        let show = true; // 展示输入框
+        let feed = this.feedData;
+        if (!lodash.keys(to_user).length > 0) {
           getUserInfo(comment_to_uid, 30, user => {
             to_user = user;
-            this.commentComponent.placeholder = `回复: ${to_user.name}`;
+            to_user_name = to_user.name;
           });
         } else {
-          this.commentComponent.placeholder = `回复: ${to_user.name}`;
+          to_user_name = to_user.name;
         }
-        this.commentComponent.CanInput = true;
-        this.commentComponent.replyToUserId = comment_to_uid;
-
+        this.$store.dispatch(COMMENTINPUT, cb => {
+          cb({
+            data: {
+              show,
+              reply_to_user_id,
+              to_user_name,
+              feed
+            },
+            cb: this.updateComments
+          });
+        })
       },
-      // comfirm显示
-      cannel () {
-        this.commentComponent.isShowComfirm = false;
-        this.commentComponent.deleteData = {};
+      updateComments (close, data) {
+        if(data.user === undefined) {
+          getUserInfo(data.user_id, user => {
+            data.user = { ...data.user, ...user };
+            this.$nextTick(function () {
+              this.comments.unshift(data);
+            });
+          })
+        } else {
+          this.$nextTick(function () {
+            this.comments.unshift(data);
+          });
+        }
       },
+      // 新版删除确认提示
       showComfirm (commentId, feedId, index) {
-        this.commentComponent.isShowComfirm = true;
-        this.commentComponent.deleteData = {
-          comment_id: commentId,
-          feed_id: feedId,
-          index: index
-        };
+        this.$store.dispatch(CONFIRM, cb => {
+          cb({
+            show: true,
+            confirmContent: '删除动态',
+            data: {
+              comment_id: commentId,
+              feed_id: feedId,
+              index: index
+            },
+            confirm: this.deleteComment
+          })
+        })
       },
-      closeInput () {
-        this.commentComponent.placeholder = '';
-        this.commentComponent.CanInput = false;
-        this.commentComponent.userComment = '';
-        this.commentComponent.replyToUserId = 0;
-      },
-      deleteComment (data) {
+      deleteComment (close, data) {
         addAccessToken().delete(createAPI(`feeds/${data.feed_id}/comment/${data.comment_id}`), {}, {
           validateStatus: status => status === 204
         })
         .then(response => {
           let newComments = this.comments;
-          this.commentComponent.isShowComfirm = false;
-          this.commentComponent.deleteData = {};
           newComments.splice(data.index,1);
           this.comments = newComments;
           this.feedData.tool.feed_comment_count -- ;
@@ -662,67 +581,16 @@
             });
           });
         })
-        .catch(error => {
-          console.log(error)
-        })
-      },
-      sendComment () {
-        let comment_content = this.commentComponent.userComment;
-        let reply_to_user_id = this.commentComponent.replyToUserId;
-        let user_id = this.currentUser;
-        let oldCommentInfo = this.comments;
-        let newCommentInfo = [];
-        addAccessToken().post(createAPI(`feeds/${this.feed_id}/comment`), {
-            comment_content,
-            reply_to_user_id
-          },
-          {
-            validateStatus: status => status === 201
-          }
-        )
-        .then(response => {
-          if(response.data.code === 0 || response.data.status) {
-            let newComment = {
-              comment_content: comment_content,
-              comment_mark: null,
-              created_at:  parseInt(new Date().getTime()),
-              id: response.data.data,
-              reply_to_user_id: reply_to_user_id,
-              user_id: user_id,
-              replyToUser: localEvent.getLocalItem(`user_${reply_to_user_id}`),
-              user: localEvent.getLocalItem(`user_${this.currentUser}`)
-            };
-            this.commentComponent.placeholder = '';
-            this.commentComponent.CanInput = false;
-            this.commentComponent.userComment = '';
-            this.commentComponent.replyToUserId = 0;
-            oldCommentInfo.unshift(newComment);
-            this.$store.dispatch(NOTICE, cb => {
-              cb({
-                text: '已发送',
-                time: 1500,
-                status: true
-              });
-            });
-            this.$nextTick(function () {
-              this.feedData.tool.feed_comment_count ++ ;
-              this.comments = oldCommentInfo;
-            });
-          }
-        })
-        .catch(({ response: { data = {} } = {} } ) => {
-          const { code = 'xxxx' } = data;
-        })
       },
       // 获取动态作者信息
       getUser (user_id) {
         let userLocal = localEvent.getLocalItem(`user_${user_id}`);
-        if (Object.keys(userLocal).lenght == 0) {
+        if (!lodash.keys(userLocal).lenght > 0) {
           getUserInfo(user_id, 30, user => {
-            this.userInfo = Object.assign({}, this.userInfo, user);
+            this.userInfo = { ...this.userInfo, ...user };
           });
         } else {
-          this.userInfo = Object.assign({}, this.userInfo, userLocal);
+          this.userInfo = { ...this.userInfo, ...userLocal };
         }
       },
       getImg,
@@ -743,32 +611,30 @@
             status: false
           });
         });
-        this.goBack();
+        setTimeout(() => {
+          this.goBack();
+        }, 1500);
         return;
       }
-      // 获取动态详情
-      addAccessToken().get(
-        createAPI(`feeds/${feed_id}`),
-        {},
-        {
-          validateStatus: status => status === 200
-        }
-      )
-      .then(({ data: { data = {} } = {} }) => {
-        this.getUser(data.user_id);
-        this.feed_id = feed_id;
-        this.feedData = Object.assign({}, this.feedData, data);
-      })
-      .catch(({ data: { data = {} } = {} }) => {
-        this.$store.dispatch(NOTICE, cb => {
-          cb({
-            text: data.message,
-            time: 1500,
-            status: false
-          });
-          this.goBack();
-        });
-      });
+      // 先获取本地动态
+      let localFeed = this.$store.getters[FEEDSLIST][feed_id];
+        // 获取动态详情
+        addAccessToken().get(
+          createAPI(`feeds/${feed_id}`),
+          {},
+          {
+            validateStatus: status => status === 200
+          }
+        )
+        .then(({ data: { data = {} } = {} }) => {
+          this.getUser(data.user_id);
+          this.feed_id = feed_id;
+          this.feedData = { ...this.feedData, ...data };
+          this.$store.dispatch(UPDATEFEED, cb => {
+            cb(data);
+          })
+        })
+      // }
       // 获取动态评论 前15条
       addAccessToken().get(
         createAPI(`feeds/${feed_id}/comments`),
@@ -780,24 +646,11 @@
       .then(({ data: { data = {} } = {} }) => {
         // 格式化评论列表
         let formatedComments = formateFeedComments(data);
-        this.$nextTick(function () {
-          this.max_id = formatedComments.max_id;
-          this.comments = formatedComments.comments;
-          if(this.comments.length < 15) {
-            this.bottomAllLoaded = true;
-          }
-        })
+        this.comments = data;
+        if(this.comments.length < 15) {
+          this.bottomAllLoaded = true;
+        }
       })
-      .catch(({ data: { data = {} } = {} }) => {
-        this.$store.dispatch(NOTICE, cb => {
-          cb({
-            text: data.message,
-            time: 1500,
-            status: false
-          });
-          this.goBack();
-        });
-      });
     }
   }; 
 
@@ -897,8 +750,7 @@
     bottom: 0;
     left: 0;
     right: 0;
-    height: 60px;
-    // display: none;
+    height: 54px;
     z-index: 6;
     .operation {
       div { 
@@ -911,6 +763,9 @@
         i {
           font-style: normal;
           color: #999;
+        }
+        i.did {
+          color: #f4504d;
         }
       }
     }
@@ -965,10 +820,6 @@
     .profileLink {
       color: #333;
     }
-  }
-  .commentCount {
-    margin-bottom: .5em;
-    font-size: 12px;
   }
   .wrapper{
     background-color: rgba(0, 0, 0, .3);

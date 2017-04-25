@@ -147,15 +147,6 @@
             this.repeatNewPassword = '';
           }
         })
-        .catch(error => {
-          this.$store.dispatch(NOTICE, cb => {
-              cb({
-                time: 1500,
-                status: true,
-                text: errorCodes[error.response.data.code]
-              });
-            });
-        })
       }
     }
   };

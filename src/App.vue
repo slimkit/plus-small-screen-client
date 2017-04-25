@@ -1,6 +1,6 @@
 <template>
   <div class="container-fluid" id="app">
-    <div v-wechat-title="$route.meta.title + ' - ThinkSNS+'"></div>
+    <div v-wechat-title="$route.meta.title"></div>
     <router-view></router-view>
     <NoticeText/>
     <IviewSwiper/>
@@ -12,7 +12,6 @@
 </template>
 <script>
   import NoticeText from './components/Notice';
-  // import ImageSwiper from './components/ImageSwiper';
   import IviewSwiper from './components/IviewSwiper';
   import PostFeed from './components/PostFeed';
   import FeedDiggList from './components/FeedDiggList';

@@ -17,7 +17,7 @@
         :top-method="loadTop"
         :bottom-method="loadBottom"
         :bottom-all-loaded="bottomAllLoaded"
-        ref="loadmore"
+        ref="loadmoreDigglist"
         bottomPullText="上拉加载更多"
         bottomDropText="释放加载更多"
       >
@@ -32,8 +32,17 @@
                 <p>{{ digg.intro ? digg.intro : '还没有简介...' }}</p>
               </Col>
               <Col span="3">
-                <i class="ivu-icon ivu-icon-android-person-add" @click="doFollowing(digg.user_id)" v-if="!digg.is_following && currentUser != digg.user_id" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: flex-end"></i>
-                <i class="ivu-icon ivu-icon-android-person" @click="doUnFollowing(digg.user_id)" v-if="digg.is_following && currentUser != digg.user_id" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: flex-end"></i>
+                <!-- <i class="ivu-icon ivu-icon-android-person-add" @click="doFollowing(digg.user_id)" v-if="!digg.is_following && currentUser != digg.user_id" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: flex-end"></i>
+                <i class="ivu-icon ivu-icon-android-person" @click="doUnFollowing(digg.user_id)" v-if="digg.is_following && currentUser != digg.user_id" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: flex-end"></i> -->
+                <div @click="doFollowing(digg.user_id)">
+                  <UnFollowingIcon v-show="!digg.is_following && currentUser != digg.user_id" height="24" width="24" color="#999" />
+                </div>
+                <div @click="doUnFollowing(digg.user_id)">
+                  <FollowingIcon v-show="digg.is_following && !digg.is_followed && currentUser != digg.user_id" height="24" width="24" color="#999" />
+                </div>
+                <div @click="doUnFollowing(digg.user_id)">
+                  <EachFollowingIcon v-show="!digg.is_following && digg.is_followed && currentUser != digg.user_id" height="24" width="24" color="#999" />
+                </div>
               </Col>
             </Row>
           </li>
@@ -51,9 +60,17 @@
   import localEvent from '../stores/localStorage';
   import { followingUser, unFollowingUser } from '../utils/user';
   import { NOTICE } from '../stores/types';
+  import FollowingIcon from '../icons/Following';
+  import UnFollowingIcon from '../icons/UnFollowing';
+  import EachFollowingIcon from '../icons/EachFollowing';
 
   const currentUser = localEvent.getLocalItem('UserLoginInfo');
   const FeedDiggsLists = {
+    components: {
+      FollowingIcon,
+      UnFollowingIcon,
+      EachFollowingIcon
+    },
     data: () => ({
       // 加载更多相关
       bottomAllLoaded: true,
@@ -75,25 +92,22 @@
         })
       },
       loadBottom() {
-        console.log('loadmore');
         setTimeout(() => {
           // 若数据已全部获取完毕
           this.bottomStatus = '';
           this.bottomAllLoaded = false;
-          this.$refs.loadmore.onBottomLoaded();
+          this.$refs.loadmoreDigglist.onBottomLoaded();
         }, 500);
       },
       loadTop () {
-        console.log('refresh');
         setTimeout(() => {
           // 若数据已全部获取完毕
-          this.$refs.loadmore.onTopLoaded();
+          this.$refs.loadmoreDigglist.onTopLoaded();
         }, 500);
       },
       // 关注用户
       doFollowing (user) {
         followingUser(user, status => {
-          console.log(status);
           if(status.status || status.code == 0) {
             this.localDiggs[user].is_following = 1;
             localEvent.setLocalItem(`user_${user}`, this.localDiggs[user]);
@@ -145,10 +159,16 @@
       }),
       diggList () {
         let diggs = this.$store.getters[DIGGLISTS];
-        console.log(diggs);
         this.localDiggs = diggs;
         return diggs;
       }
+    },
+    created () {
+      console.log('c');
+      setTimeout( () => {
+        if(this.$refs.loadmoreDigglist)
+          this.$refs.loadmoreDigglist.onTopLoaded();
+      })
     }
   };
 
