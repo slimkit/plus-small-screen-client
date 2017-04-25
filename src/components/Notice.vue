@@ -2,8 +2,8 @@
   <div class="notice-root" v-show="show">
     <div :class="$style.notice">
       <div :class="$style.content">
-        <Icon v-if="status" type="ios-checkmark" :class="$style.success"></Icon>
-        <Icon v-if="!status" type="android-alert" :class="$style.error"></Icon>
+        <ErrorIcon style="margin-right: 8px;" v-if="status" height="18" width="18" />
+        <OkIcon style="margin-right: 8px;" v-if="!status" height="18" width="18" />
         {{ text }}
       </div>
     </div>
@@ -14,8 +14,14 @@
 <script>
   import { NOTICE } from '../stores/types';
   import { mapState } from 'vuex';
+  import OkIcon from '../icons/Ok';
+  import ErrorIcon from '../icons/Error';
 
   const noticeText = {
+    components: {
+      ErrorIcon,
+      OkIcon
+    },
     computed: mapState({
       time: state => state.notice.notice.time,
       text: state => state.notice.notice.text,
@@ -34,19 +40,8 @@
     font-size: 14px;
     max-width: 70vw;
     text-align: center;
+    display: flex;
 
-  }
-  .success {
-    color: #59b6d7;
-    &:before {
-      font-size: 18px;
-    }
-  }
-  .error {
-    color: red;
-    &:before {
-      font-size: 18px;
-    }
   }
   .notice {
     position: fixed;

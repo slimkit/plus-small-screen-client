@@ -24,18 +24,20 @@
       </div>
       <div :class="$style.upload">
         <template>
-          <div style="padding: 0 4vw">
+          <div :class="$style.uploadList">
             <div class="demo-upload-list" v-for="item in imageList">
               <template v-if="item.status === 'finished'">
                   <img :src="item.url" :alt="item.name" >
-                  {{item.url}}
                   <!-- <div class="demo-upload-list-cover">
                       <Icon type="ios-eye-outline" @click.native="handleView(item.name)"></Icon>
                       <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
                   </div> -->
               </template>
               <template v-else>
-                  <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+                <!-- <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress> -->
+                <i-circle v-if="item.showProgress" :percent="item.percentage">
+                  <span class="demo-i-circle-inner" style="font-size:24px">{{item.percentage}}%</span>
+                </i-circle>
               </template>
             </div>
             <Upload
@@ -54,7 +56,7 @@
               type="drag"
               :action="uploadUri"
               accept="image/*"
-              style="display: inline-block;width:22vw;height: 22vw">
+              style="display: inline-block;width:22vw;height: 22vw; margin: .5vw;">
               <div :class="$style.camera">
                   <CameraIcon height="24" width="24" color="#999" />
               </div>
@@ -113,11 +115,14 @@ const postFeed = {
     imageList () {
       let imglist = [];
       this.uploadList.forEach( img => {
-        imglist.push({
-          status: img.status,
-          name: img.name,
-          url: this.ids[img.name].url
-        })
+        if(this.ids[img.name])
+          imglist.push({
+            status: img.status,
+            name: img.name,
+            url: this.ids[img.name].url,
+            percentage: parseInt(img.percentage) || 0,
+            showProgress: img.showProgress
+          })
       });
       return imglist;
     }
@@ -348,7 +353,8 @@ const postFeed = {
                   resolve({
                     status: false,
                     taskId: 0,
-                    url: info.dataUri
+                    url: info.dataUri,
+                    percentage: 100
                   });
                 }
               });
@@ -386,6 +392,11 @@ export default postFeed;
     display: block;
     height: 100%;
     width: 100%;
+  }
+  .uploadList {
+    padding: 0 4vw;
+    display: flex;
+    flex-wrap: wrap;
   }
   .contentInput {
     padding: 6px 0;
@@ -461,7 +472,6 @@ export default postFeed;
     }
   }
   .demo-upload-list{
-    display: inline-block;
     width: 22vw;
     height: 22vw;
     text-align: center;
@@ -469,7 +479,7 @@ export default postFeed;
     overflow: hidden;
     background: #fff;
     position: relative;
-    margin: 0 .5vw;
+    margin:.5vw;
   }
   .ivu-upload-drag {
     border-radius: 0;
