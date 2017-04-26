@@ -37,18 +37,25 @@ function uploadFile(data, dataUri, cb) {
     formdata.append(index, data.options[index]);
   }
   let method = data.method.toLowerCase();
+  let headers = {
+
+  };
   addAccessToken()[method](data.uri,
     formdata,
     {
-      validateStatus: status => status === 200,
+      responseType: 'text',
+      transformResponse: [function (data) {
+        return data;
+      }],
       headers: {
-        ...data.headers,
-        'content-type': 'multipart/form-data'
-      }
+        ...data.headers
+      },
+      validateStatus: status => status === 200,
     }
   )
   .then(response => {
     let data = response.data;
+    console.log(data);
     if(data.status || !data.code)
     {
       cb(data);
@@ -59,9 +66,11 @@ function uploadFile(data, dataUri, cb) {
 // 通知任务进度
 function noticeTask (taskId, data, cb) {
   addAccessToken().patch(createAPI(`storages/task/${taskId}`),
-    { ...data },
     {
-      validateStatus: status => status === 201
+      message: data
+    },
+    {
+      validateStatus: status => status === 201,
     }
   )
   .then(response => {

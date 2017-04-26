@@ -1,5 +1,9 @@
 import { FOLLOWINGIDS, ADDFOLLOWINGIDS } from '../types';
 
+const sort = function(a, b) {
+  return b - a;
+}
+
 const state = {
   followingIds: []
 };
@@ -9,7 +13,8 @@ const mutations = {
     state.followingIds = [ ...state.followingIds, ...ids ];
   },
   [ADDFOLLOWINGIDS] (state, ids) {
-    state.followingIds = [ ...ids, ...state.followingIds ];
+    let followingIds = [ ...ids, ...state.followingIds ];
+    state.followingIds = followingIds.sort(sort);
   }
 };
 

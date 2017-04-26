@@ -25,13 +25,13 @@
       <div :class="$style.upload">
         <template>
           <div :class="$style.uploadList">
-            <div class="demo-upload-list" v-for="item in imageList">
+            <div class="demo-upload-list" v-for="(item, index) in imageList">
               <template v-if="item.status === 'finished'">
                   <img :src="item.url" :alt="item.name" >
-                  <!-- <div class="demo-upload-list-cover">
-                      <Icon type="ios-eye-outline" @click.native="handleView(item.name)"></Icon>
-                      <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
-                  </div> -->
+                  <div class="demo-upload-list-cover">
+                    <CloseIcon height="21" width="21" color="#f00" style="position: absolute; right:0; top: 0;" @click.native="handleRemove(index)" />
+                    <EyeOpenIcon height="21" width="21" color="#59b6d7" @click.native="handleView(index)" />
+                  </div>
               </template>
               <template v-else>
                 <!-- <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress> -->
@@ -62,7 +62,7 @@
               </div>
             </Upload>
             <Modal title="查看图片" v-model="visible">
-                <img :src="'https://o5wwk8baw.qnssl.com/' + imgName + '/large'" v-if="visible" style="width: 100%">
+                <img :src="uploadList[imgName].url" v-if="visible" style="width: 100%">
             </Modal>
           </div>
         </template>
@@ -81,12 +81,16 @@ import md5 from 'js-md5';
 import { createUploadTask, uploadFile, noticeTask } from '../utils/upload';
 import lodash from 'lodash';
 import CameraIcon from '../icons/Camera';
+import CloseIcon from '../icons/Close';
+import EyeOpenIcon from '../icons/EyeOpen';
 
 const base64Reg = /^data:(.*?);base64,/;
 let reg = /data:(.*?);/;
 const postFeed = {
   components: {
-    CameraIcon
+    CameraIcon,
+    CloseIcon,
+    EyeOpenIcon
   },
   data: () => ({
     feedTitle: '',
@@ -128,9 +132,6 @@ const postFeed = {
     }
   },
   methods: {
-    getTaskInfo () {
-
-    },
     postFeed () {
       let feed_content = this.feedContent;
       let feed_title = this.feedTitle;
@@ -186,7 +187,7 @@ const postFeed = {
             cb([
               feed_id
             ]);
-          })
+          });
         })
       })
     },
@@ -194,25 +195,28 @@ const postFeed = {
       this.feedTitle = '';
       this.feedContent = '';
       this.isatuser = 0;
+      this.storage_task_ids = [];
+      this.uploadList = [];
+      this.$refs.upload.fileList = [];
+      this.$refs.upload.tempIndex = 1;
       this.$store.dispatch(SHOWPOST, cb => {
         cb ({
           show: false
         });
       });
     },
-    handleView (name) {
-        this.imgName = name;
+    handleView (index) {
+        this.imgName = index;
         this.visible = true;
     },
-    handleRemove (file) {
+    handleRemove (index) {
       // 从 upload 实例删除数据
-      const fileList = this.$refs.upload.fileList;
-      this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);
-      this.storage_task_ids.splice(fileList.indexOf(file), 1);
+      this.$refs.upload.fileList.splice(index, 1);
+      this.storage_task_ids.splice(index, 1);
     },
     handleSuccess (res, file, fileList) {
       if(this.ids[file.name].taskId) {
-        noticeTask(this.ids[file.name].taskId, res, data => {
+        noticeTask(this.ids[file.name].taskId, res.message, data => {
           if(data.status || data.code == 0) {
             this.storage_task_ids.push(this.ids[file.name].taskId);
           }
@@ -228,23 +232,33 @@ const postFeed = {
         })
       }
     },
-    handleFormatError (file) {
+    handleFormatError (name) {
       this.$store.dispatch(NOTICE, cb => {
         cb({
           show: true,
           status: false,
           time: 1500,
-          text: '图片' + file.name + ' 格式不正确，请上传 jpg 或 png 格式的图片。'
+          text: '图片' + name + ' 格式不正确，请上传 jpg 或 png 格式的图片。'
         })
       })
     },
-    handleMaxSize (file) {
+    handleMaxSize (name) {
       this.$store.dispatch(NOTICE, cb => {
         cb({
           show: true,
           status: false,
           time: 1500,
-          text: '图片 ' + file.name + ' 太大，不能超过 10M。'
+          text: '图片 ' + name + ' 太大，不能超过 10M。'
+        });
+      })
+    },
+    handleMaxItems ( ) {
+      this.$store.dispatch(NOTICE, cb => {
+        cb({
+          show: true,
+          status: false,
+          time: 1500,
+          text: '不能超过9张图片'
         });
       })
     },
@@ -252,11 +266,15 @@ const postFeed = {
       const _file_format = file.name.split('.').pop().toLocaleLowerCase();
       const checked = this.format.some(item => item.toLocaleLowerCase() === _file_format);
       if(!checked) {
-        this.handleFormatError(file);
+        this.handleFormatError(file.name);
         return false;
       }
       if(file.size > this.maxSize * 1024) {
-        this.handleMaxSize(file);
+        this.handleMaxSize(file.name);
+        return false;
+      }
+      if(this.uploadList.length > 9) {
+        this.handleMaxItems();
         return false;
       }
       return new Promise( (resolve, reject) => {
@@ -270,7 +288,6 @@ const postFeed = {
             resolve(file);
           } else {
             return false;
-            // resolve(false);
           }
         });
       })

@@ -133,21 +133,20 @@
       leave-active-class="animated slideOutDown"
     >
       <div :class="$style.AvatarSelect" v-show="isShowCropper">
-        <div class="avatarOp">
+        <div class="avatarOp commonHeader">
           <Row 
             :gutter="16"
             style="display: flex; align-items: center;"
           >
-            <Col span="3">
-              <div style="display: flex; align-items: center;" @click="handleHideAvatarSelect">
+            <Col span="5" style="display: flex; justify-content: flex-start;" @click.native="handleHideAvatarSelect">
                 <BackIcon height="21" width="21" color="#999" />
-              </div>
             </Col>
-            <Col span="17" style="font-size: 18px;">
+            <Col span="14" class="title-col">
               更换头像
             </Col>
-            <Col span="4" style="display: flex; justify-content: flex-end">
-              <span @click="getCropData" class="operate avatarDone">完成</span>
+            <Col span="5" style="display: flex; justify-content: flex-end">
+              <LoadingWhiteIcon class="spinner-snake" height="18" style="margin-right: 4px;" width="18" v-if="loading" color="#59b6d7" />
+              <span v-if="!loading" @click="getCropData" class="operate avatarDone">完成</span>
             </Col>
           </Row>
         </div>
@@ -228,6 +227,7 @@
   import CloseIcon from '../icons/Close';
   import RightArrowIcon from '../icons/RightArrow';
   import lodash from 'lodash';
+  import LoadingWhiteIcon from '../icons/LoadingWhite';
 
   const currentUser = localEvent.getLocalItem('UserLoginInfo');
   // 昵称验证规则
@@ -237,7 +237,8 @@
       VueCropper,
       BackIcon,
       CloseIcon,
-      RightArrowIcon
+      RightArrowIcon,
+      LoadingWhiteIcon
     },
     data: () => ({
       currentUser: currentUser.user_id, // 当前登录用户id
@@ -252,6 +253,7 @@
       intro: '', // intro
       isShowCropper: false, // is show avatar cropper
       imgSrc: '', // source image for cropper
+      loading: false, // doing status
       areaAbout: { // datas for area
         areas: [],
         province: 0,
@@ -415,6 +417,7 @@
         fileUpload.mime_type = fileStreamData.match(reg)[1];
         // 被截取部分的hash
         fileUpload.hash = md5(fileSource);
+        this.loading = true;
         // create storage task
         createUploadTask(fileUpload, data => {
           if(data.hasOwnProperty('storage_id') && data.hasOwnProperty('storage_task_id')){
@@ -453,6 +456,7 @@
         this.isShowCropper = false;
         this.imgSrc = '';
         this.$refs.avatarInput.value = '';
+        this.loading = false;
       },
       showCropper () {
         this.isShowCropper = true;

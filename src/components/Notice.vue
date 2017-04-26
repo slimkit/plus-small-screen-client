@@ -2,8 +2,8 @@
   <div class="notice-root" v-show="show">
     <div :class="$style.notice">
       <div :class="$style.content">
-        <ErrorIcon style="margin-right: 8px;" v-if="status" height="18" width="18" />
-        <OkIcon style="margin-right: 8px;" v-if="!status" height="18" width="18" />
+        <ErrorIcon style="margin-right: 8px;" v-if="!status" height="20" width="20" color="#f00" />
+        <OkIcon style="margin-right: 8px;" v-if="status" height="20" width="20" color="#59b6d7" />
         {{ text }}
       </div>
     </div>

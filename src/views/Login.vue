@@ -46,7 +46,10 @@
         <div>
          <Row :gutter="16" >
             <Col span="24">
-              <Button type="primary" htmlType="submit" :loading="isLoading" :disabled="isDisabled" class="loginButton" size="large">登录</Button>
+              <Button type="primary" htmlType="submit" :disabled="isDisabled" class="loginButton" size="large">
+                <span style="margin-right: 4px;">登录</span>
+                <LoadingWhiteIcon v-show="isLoading" class="spinner-snake" height="20" width="20" />
+              </Button>
             </Col>
           </Row>
         </div>
@@ -83,6 +86,7 @@
   import EyeOpenIcon from '../icons/EyeOpen';
   import CloseIcon from '../icons/Close';
   import lodash from 'lodash';
+  import LoadingWhiteIcon from '../icons/LoadingWhite';
 
 
   const phoneReg = /^(((13[0-9]{1})|14[0-9]{1}|(15[0-9]{1})|17[0-9]{1}|(18[0-9]{1}))+\d{8})$/;
@@ -90,7 +94,8 @@
     components: {
       EyeCloseIcon,
       EyeOpenIcon,
-      CloseIcon
+      CloseIcon,
+      LoadingWhiteIcon
     },
     data: () => ({
       phone: '', // 手机号码 

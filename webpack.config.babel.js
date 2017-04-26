@@ -13,6 +13,7 @@
 import webpack from 'webpack';
 import path from 'path';
 import fs from 'fs';
+import 'babel-polyfill';
 
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import WebpackLaravelMixManifest from 'webpack-laravel-mix-manifest';

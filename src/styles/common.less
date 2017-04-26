@@ -307,6 +307,31 @@ input {
   background-color: #fff;
 }
 
+.spinner-snake {
+  -webkit-animation: spinner-rotate 1.4s infinite linear;
+          animation: spinner-rotate 1.4s infinite linear;
+}
+@-webkit-keyframes spinner-rotate {
+  0% {
+      -webkit-transform: rotate(0deg);
+              transform: rotate(0deg);
+  }
+  100% {
+      -webkit-transform: rotate(360deg);
+              transform: rotate(360deg);
+  }
+  }
+  @keyframes mint-spinner-rotate {
+  0% {
+      -webkit-transform: rotate(0deg);
+              transform: rotate(0deg);
+  }
+  100% {
+      -webkit-transform: rotate(360deg);
+              transform: rotate(360deg);
+  }
+}
+
 .loginButton {
   width: 100%;
   background-color: #59b6d7;
@@ -316,6 +341,12 @@ input {
   &:active {
     background-color: #4ab2ce;
     color: #fff;
+  }
+  span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
   }
 }
 

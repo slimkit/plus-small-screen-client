@@ -9,10 +9,10 @@
       </Col>
       <Col :span="5" :class="$style.menuItem">
         <router-link class="router-link" to="/discover">
-          <Badge dot>
+          <!-- <Badge dot> -->
             <DiscoverIcon height="26" width="26" color="#999" />
             <i>发现</i>
-          </Badge>
+          <!-- </Badge> -->
         </router-link>
       </Col>
       <Col :span="4" :class="$style.menuItem" class="plus-parent">

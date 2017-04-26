@@ -2,16 +2,16 @@
   <div :class="$style.tool">
     <Row>
       <Col span="7" :class="$style.parentCount">
-        <DiggIcon v-show="isDigg" width="21" @click.native="cannelDigg" height="21" color="#f4504d" /></DiggIcon>
-        <UnDiggIcon  v-show="!isDigg" @click.native="sendDigg" width="21" height="21" color="#999" /></UnDiggIcon>
+        <DiggIcon v-show="isDigg" width="21" @click.native="cannelDigg" height="21" color="#f4504d" />
+        <UnDiggIcon  v-show="!isDigg" @click.native="sendDigg" width="21" height="21" color="#999" />
         <i :class="$style.count">{{ friendnum(feed.tool.feed_digg_count) }}</i>
       </Col>
-      <Col span="7"  :class="$style.parentCount">
-        <CommentIcon @click.native="commentFeed" width="21" height="21" color="#999" /></CommentIcon>
+      <Col span="7"  @click.native="commentFeed" :class="$style.parentCount">
+        <CommentIcon width="21" height="21" color="#999" />
         <i :class="$style.count">{{ friendnum(feed.tool.feed_comment_count) }}</i>
       </Col>
-      <Col span="7"  :class="$style.parentCount">
-        <ViewIcon  @click.native="router(`/feed/${feed.feed.feed_id}`)" width="21" height="21" color="#999" /></ViewIcon>
+      <Col span="7" @click.native="router(`/feed/${feed.feed.feed_id}`)" :class="$style.parentCount">
+        <ViewIcon width="21" height="21" color="#999" />
         <i :class="$style.count">{{ friendnum(feed.tool.feed_view_count) }}</i>
       </Col>
       <Col span="3" :class="$style.parentCount">

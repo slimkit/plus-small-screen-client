@@ -18,6 +18,7 @@ import Ranking from '../views/Ranking';
 import Comments from '../views/Comments';
 import Diggs from '../views/Diggs';
 import Collections from '../views/Collections';
+import Discover from '../views/Discover';
 import { requestAuth, CanNotGetInWhenLogged } from '../utils/auth';
 
 const routes = [
@@ -115,6 +116,13 @@ const routes = [
     },
     beforeEnter: (to, from, next) => {
       requestAuth(to, from, next);
+    }
+  },
+  {
+    path: '/discover',
+    component: Discover,
+    meta: {
+      title: '发现'
     }
   },
   {

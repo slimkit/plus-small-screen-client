@@ -1,5 +1,9 @@
 import { USERFEEDS, APPENDUSERFEED, CLEANUSERFEEDS, DATES, PREPENDUSERFEED } from '../types';
 
+const sort = function(a, b) {
+  return b - a;
+}
+
 const state = {
   userFeeds: []
 };
@@ -10,7 +14,8 @@ const mutations = {
     state.userFeeds = [ ...state.userFeeds, ...ids ];
   },
   [APPENDUSERFEED] (state, id) {
-    state.userFeeds = [ ...state.userFeeds, id ];
+    let userFeeds = [ ...state.userFeeds, id ]
+    state.userFeeds = userFeeds.sort(sort);
   },
   [CLEANUSERFEEDS] (state) {
     state.userFeeds = [];

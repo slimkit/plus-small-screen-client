@@ -13,6 +13,7 @@ function resolve (dir) {
 
 module.exports = {
   entry: {
+    'babel-polyfill': 'babel-polyfill',
     user: './asset/index.js'
   },
   output: {
