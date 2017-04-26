@@ -27,6 +27,5 @@
         "psr-4": {
             "Zhiyi\\Component\\ZhiyiPlus\\PlusComponentWeb\\": "php/"
         }
-    },
-    "version": "1.0.14"
+    }
 }
