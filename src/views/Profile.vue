@@ -121,9 +121,12 @@
   import SystemSettingIcon from '../icons/SystemSetting';
   import SapceIcon from '../icons/Space';
   import RightArrowIcon from '../icons/RightArrow';
-  import defaultAvatar from '../statics/images/defaultAvatarx2.png';
+  import { resolveImage } from '../utils/resource';
+
+  const defaultAvatar = resolveImage(require('../statics/images/defaultAvatarx2.png'));
 
   const currentUser = localEvent.getLocalItem('UserLoginInfo');
+  
   const profile = {
     components: {
       ToolBar,

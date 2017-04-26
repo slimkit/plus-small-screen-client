@@ -68,10 +68,11 @@
   import timers from '../utils/timer';
   import getImage from '../utils/getImage';
   import BackIcon from '../icons/Back';
-  import defaultAvatar from '../statics/images/defaultAvatarx2.png';
   import lodash from 'lodash';
-  import defaultNoBody from '../statics/images/img_default_nobody@2x.png';
-
+  import { resolveImage } from '../utils/resource';
+  const defaultNoBody = resolveImage(require('../statics/images/img_default_nobody@2x.png'));
+  const defaultAvatar = resolveImage(require('../statics/images/defaultAvatarx2.png'));
+  
   const Comments = {
     components: {
       BackIcon

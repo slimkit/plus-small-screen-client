@@ -228,6 +228,9 @@
   import RightArrowIcon from '../icons/RightArrow';
   import lodash from 'lodash';
   import LoadingWhiteIcon from '../icons/LoadingWhite';
+  import { resolveImage } from '../utils/resource';
+
+  const defaultAvatar = resolveImage(require('../statics/images/defaultAvatarx2.png'));
 
   const currentUser = localEvent.getLocalItem('UserLoginInfo');
   // 昵称验证规则
@@ -510,7 +513,7 @@
     },
     computed: {
       avatar () {
-        const { avatar: { 30: avatar = '' } = {} } = this.userInfo;
+        const { avatar: { 30: avatar = defaultAvatar } = {} } = this.userInfo;
 
         return avatar;
       },

@@ -69,7 +69,6 @@
 </template>
 
 <script>
-  import defaultBackgroundPic from '../statics/images/default_cover.png';
   import { createAPI, addAccessToken } from '../utils/request';
   import errorCodes from '../stores/errorCodes';
   import localEvent from '../stores/localStorage';
@@ -81,16 +80,19 @@
   import contains from '../utils/contains';
   import { mapState } from 'vuex';
   import UserFeed from '../components/UserFeed';
-  import defaultNothing from '../statics/images/defaultNothingx3.png';
-  import defaultAvatar from '../statics/images/defaultAvatarx2.png';
   import FollowingIcon from '../icons/Following';
   import UnFollowingIcon from '../icons/UnFollowing';
   import EachFollowingIcon from '../icons/EachFollowing';
   import BackIcon from '../icons/Back';
   import ShareIcon from '../icons/Share';
   import { goTo } from '../utils/changeUrl';
+  import { resolveImage } from '../utils/resource';
 
   const currentUser = localEvent.getLocalItem('UserLoginInfo');
+  const defaultNothing =  resolveImage(require('../statics/images/defaultNothingx3.png'));
+  const defaultBackgroundPic = resolveImage(require('../statics/images/default_cover.png'));
+  const defaultAvatar = resolveImage(require('../statics/images/defaultAvatarx2.png'));
+
   const UserFeeds = {
     components: {
       UserFeed,
@@ -271,7 +273,6 @@
         return intro;
       },
       coverImg () {
-        console.log(this.userInfo);
         const { datas: { cover: { value: cover = 0 } = {} } } = this.userInfo;
         if(cover) {
           return getImg(cover, 100);

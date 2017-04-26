@@ -17,10 +17,11 @@
   </div>
 </template>
 <script>
-  import defaultNothing from '../statics/images/defaultNothingx2.png';
   import { goTo, changeUrl } from '../utils/changeUrl';
   import ToolBar from '../components/ToolBar';
   import BackIcon from '../icons/Back';
+  import { resolveImage } from '../utils/resource';
+  const defaultNothing = resolveImage('../statics/images/defaultNothingx2.png');
 
   const Discover = {
     components: {

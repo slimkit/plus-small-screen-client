@@ -67,8 +67,10 @@
   import getImage from '../utils/getImage';
   import BackIcon from '../icons/Back';
   import DiggIcon from '../icons/Digg';
-  import defaultAvatar from '../statics/images/defaultAvatarx2.png';
-  import defaultNobody from '../statics/images/img_default_nobody@2x.png';
+  import { resolveImage } from '../utils/resource';
+
+  const defaultNobody = resolveImage(require('../statics/images/img_default_nobody@2x.png'));
+  const defaultAvatar = resolveImage(require('../statics/images/defaultAvatarx2.png'));
 
   const Diggs = {
     components: {
