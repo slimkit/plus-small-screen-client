@@ -35,7 +35,7 @@ axios.interceptors.response.use(
       status: false,
       text: '登录信息失效，请重新登录'
     }
-    if(errorResponse.data.code > 1013 && errorResponse.data.code !== 1099) {
+    if(errorResponse.data.code < 1013 && errorResponse.data.code !== 1099) {
       notice = {
         show: true,
         time: 1500,

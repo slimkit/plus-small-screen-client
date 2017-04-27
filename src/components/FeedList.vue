@@ -102,16 +102,9 @@
           let type = this.feedType[this.option.type];
           let data = response.data.data;
           let length = data.length;
-          if(length == 0) {
-            setTimeout(() => {
-              if(this.$refs.loadmore)
-              this.$refs.loadmore.onBottomLoaded();
-              // this.$refs.loadmore.onTopLoaded();
-            }, 500)
-            return;
-          }
           let ids = [];
           let feeds = {};
+          if(!data.length > 0) return;
           data.forEach((d) => {
             ids.push(d.feed.feed_id);
             feeds[d.feed.feed_id] = d;
@@ -211,7 +204,7 @@
     mounted () {
       let type = this.feedType[this.option.type];
       let storeIds = this.$store.getters[type.ids];
-      if(storeIds.length) {
+      if(storeIds.length > 5) {
         this.firstId = storeIds[0];
         this.maxId = storeIds[storeIds.length -1];
         this.showTop = false;
@@ -241,6 +234,7 @@
         let feeds = response.data.data;
         let storeFeeds = {};
         let ids = [];
+        if(!feeds.length > 0) return;
         this.firstId = feeds[0].feed.feed_id;
         feeds.forEach( feed => {
           ids.push(feed.feed.feed_id);

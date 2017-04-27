@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div style="padding-top: 2wv;">
       <ul>
         <li v-for="(comment, commentIndex) in commentsData" :key="comment.id" v-if="commentIndex < 3">
           <p>

@@ -116,9 +116,6 @@
             // this.$refs.loadmore.onTopLoaded();
           }, 500)
         })
-        .catch(
-
-        );
       },
       loadTop () {
         let limiterSend = '';

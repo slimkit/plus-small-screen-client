@@ -1,15 +1,19 @@
 import { NEWIDS, ADDNEWIDS } from '../types';
 
+const sort = function(a, b) {
+  return b - a;
+}
+
 const state = {
   newIds: []
 };
 
 const mutations = {
   [NEWIDS] (state, ids) {
-    state.newIds = [ ...state.newIds, ...ids ];
+    state.newIds = Array.from(new Set([ ...state.newIds, ...ids ]));
   },
   [ADDNEWIDS] (state, ids) {
-    state.newIds = [ ...ids, ...state.newIds ];
+    state.newIds = Array.from(new Set([ ...ids, ...state.newIds ])).sort(sort);
   }
 };
 

@@ -48,7 +48,7 @@
             <Col span="24">
               <Button type="primary" htmlType="submit" :disabled="isDisabled" class="loginButton" size="large">
                 <span style="margin-right: 4px;">登录</span>
-                <LoadingWhiteIcon v-show="isLoading" class="spinner-snake" height="20" width="20" />
+                <LoadingWhiteIcon v-show="isLoading" height="20" width="20" />
               </Button>
             </Col>
           </Row>

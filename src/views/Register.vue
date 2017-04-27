@@ -77,7 +77,10 @@
         <div class="operation">
          <Row :gutter="16">
             <Col span="24">
-              <Button type="primary" :loading="isLoading" htmlType="submit" :disabled="isDisabled" class="loginButton" size="large">注册</Button>
+              <Button type="primary" htmlType="submit" :disabled="isDisabled" class="loginButton" size="large">
+                <span style="margin-right: 4px;">注册</span>
+                <LoadingWhiteIcon v-show="isLoading" height="20" width="20" />
+              </Button>
             </Col>
           </Row>
         </div>
@@ -99,6 +102,7 @@
   import EyeOpenIcon from '../icons/EyeOpen';
   import CloseIcon from '../icons/Close';
   import lodash from 'lodash';
+  import LoadingWhiteIcon from '../icons/LoadingWhite';
 
   // 手机号码规则
   const phoneReg = /^(((13[0-9]{1})|14[0-9]{1}|(15[0-9]{1})|17[0-9]{1}|(18[0-9]{1}))+\d{8})$/;
@@ -108,7 +112,8 @@
     components: {
       EyeCloseIcon,
       EyeOpenIcon,
-      CloseIcon
+      CloseIcon,
+      LoadingWhiteIcon
     },
     data: () => ({
       phone: '', // 手机号码 
@@ -199,6 +204,12 @@
             this.timer();
           }
         })
+        .catch(({ response: { data = {} } = {} } ) => {
+          this.isDisabled = false;
+          const { code = 'xxxx' } = data;
+          this.isLoading = false;
+          this.errors = { ...this.errors, code: errorCodes[code] };
+        })
       },
       // 注册
       register () {
@@ -223,7 +234,12 @@
           getUserInfo(response.data.data.user_id, 30).then(user => {
             router.push({ path: 'feeds' });
           });
-          
+        })
+        .catch(({ response: { data = {} } = {} } ) => {
+          this.isDisabled = false;
+          const { code = 'xxxx' } = data;
+          this.isLoading = false;
+          this.errors = { ...this.errors, code: errorCodes[code] };
         })
       }
     },

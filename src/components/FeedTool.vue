@@ -1,25 +1,21 @@
 <template>
   <div :class="$style.tool">
-    <Row>
-      <Col span="7" :class="$style.parentCount">
-        <DiggIcon v-show="isDigg" width="21" @click.native="cannelDigg" height="21" color="#f4504d" />
-        <UnDiggIcon  v-show="!isDigg" @click.native="sendDigg" width="21" height="21" color="#999" />
-        <i :class="$style.count">{{ friendnum(feed.tool.feed_digg_count) }}</i>
-      </Col>
-      <Col span="7"  @click.native="commentFeed" :class="$style.parentCount">
-        <CommentIcon width="21" height="21" color="#999" />
-        <i :class="$style.count">{{ friendnum(feed.tool.feed_comment_count) }}</i>
-      </Col>
-      <Col span="7" @click.native="router(`/feed/${feed.feed.feed_id}`)" :class="$style.parentCount">
-        <ViewIcon width="21" height="21" color="#999" />
-        <i :class="$style.count">{{ friendnum(feed.tool.feed_view_count) }}</i>
-      </Col>
-      <Col span="3" :class="$style.parentCount">
-        <div>
-          <MoreIcon width="21" height="21" color="#999" />
-        </div>
-      </Col>
-    </Row>
+    <div :class="$style.toolItem">
+      <DiggIcon v-show="isDigg" width="21" @click.native="cannelDigg" height="21" color="#f4504d" />
+      <UnDiggIcon  v-show="!isDigg" @click.native="sendDigg" width="21" height="21" color="#999" />
+      <i :class="$style.count">{{ friendnum(feed.tool.feed_digg_count) }}</i>
+    </div>
+    <div :class="$style.toolItem" @click="commentFeed">
+      <CommentIcon width="21" height="21" color="#999" />
+      <i :class="$style.count">{{ friendnum(feed.tool.feed_comment_count) }}</i>
+    </div>
+    <div :class="$style.toolItem" @click="router(`/feed/${feed.feed.feed_id}`)">
+      <ViewIcon width="21" height="21" color="#999" />
+      <i :class="$style.count">{{ friendnum(feed.tool.feed_view_count) }}</i>
+    </div>
+    <div :class="$style.toolItem">
+      <MoreIcon width="21" height="21" color="#999" />
+    </div>
   </div>
 </template>
 
@@ -125,50 +121,12 @@
 
 <style lang="scss" module>
   .tool {
-    .commentInput{
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      z-index: 6;
-      background-color: #fff;
-      border-bottom: 1px #59b6d7 solid;
-      border: none;
-      padding: 10px 0;
-      textarea {
-        min-height: 34px!important;
-      }
-    }
-    .wrapper{
-      background-color: rgba(0, 0, 0, .3);
-      z-index: 5;
-      top: 0px;
-      right: 0px;
-      bottom: 0px;
-      left: 0px;
-      position: fixed;
-      overflow: auto;
-      margin: 0;
-    }
-    .sendComment {
-      font-size: 14px;
-      padding: 3px!important;
-      background-color: #59b6d7;
-      &[disabled] {
-        background-color: #ccc!important;
-        color: #fff!important;
-      }
-    }
-    .userName {
-      font-size: 13px;
-      color: #333;
-    }
-    .commentContent{
-      font-size: 14px;
-      color: #999;
-    }
-    .parentCount {
-      display: flex;
+    display: flex;
+    align-items: center;
+    padding-bottom: 2vw;
+    .toolItem {
+      width: 30vw;
+      display: flex; 
       align-items: center;
       .count {
         padding-left: 4px;
@@ -176,17 +134,9 @@
         font-style: normal
       }
       &:last-child {
+        width: 10vw;
         justify-content: flex-end;
       }
     }
-  }
-</style>
-
-<style lang="css">
-  .commentInput {
-    border: none;
-  }
-  .ivu-icon {
-    font-size: 20px!important;
   }
 </style>

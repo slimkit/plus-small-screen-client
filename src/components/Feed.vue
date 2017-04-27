@@ -1,42 +1,25 @@
 <template>
   <div :class="$style.detail" :id="`feed-${feed.feed.feed_id}`">
-    <Row :gutter="16" style="-webkit-align-items: flex-start; align-items: flex-start;">
-      <Col span="4">
-        <img :src="avatar" alt="" style="width:100%; border-radius:50%">
-      </Col>
-      <Col span="20">
-        <Row :class="$style.usernameLine">
-          <Col span="17">
-            <router-link :class="$style.username" :to='`/users/feeds/${user.user_id}`'>{{ user.name }}</router-link>
-          </Col>
-          <Col span="7" :class="$style.timer">
-            <timeago :since="timer" locale="zh-CN" :auto-update="60"></timeago>
-          </Col>
-        </Row>
-        <Row>
-          <Col span="24">
-            <router-link style="display: flex;" v-if="feed.feed.feed_title" :to="`/feed/${feed.feed.feed_id}`" class="feedTitle">{{ feed.feed.feed_title }}</router-link>
+    <div style="display: flex; align-items: flex-start;">
+      <img :src="avatar" alt="" style="padding: 0 2vw; width: 16vw; border-radius: 50%;">
+      <div style="padding: 0 2vw; width: 84vw;">
+        <div :class="$style.contentBefore">
+          <router-link :class="$style.username" :to='`/users/feeds/${user.user_id}`'>{{ user.name }}</router-link>
+          <timeago :class="$style.timer" :since="timer" locale="zh-CN" :auto-update="60"></timeago>
+        </div>
+        <div :class="$style.feedContent">
+          <router-link v-if="feed.feed.feed_title" :to="`/feed/${feed.feed.feed_id}`" :class="$style.feedTitle">{{ feed.feed.feed_title }}</router-link>
             <div :class="$style.content" @click="router(`/feed/${feed.feed.feed_id}`)">
               {{ feed.feed.feed_content }}
             </div>
             <FeedImages v-show="feed.feed.storages.length" :storages="feed.feed.storages"></FeedImages>
-          </Col>
-        </Row>
-      </Col>
-    </Row>
-    <Row :gutter="16" :class="$style.toolTop">
-      <Col span="4" :class="$style.seat">
-        1
-      </Col>
-      <Col span="20">
-        <FeedTool :user="user" :feed="feed" />
-      </Col>
-    </Row>
-    <Row v-if="feed.tool.feed_comment_count" :gutter="16">
-      <Col span="20" offset="4" style="padding-bottom: 8px;">
-        <CommentsTool v-if="feed.comments" :feed="feed" />
-      </Col>
-    </Row>
+        </div>
+      </div>
+    </div>
+    <div style="padding-left: 18vw; width: 100vw; padding-right: 2vw; border-top: 1px #e2e3e3 solid; padding-top: 3vw; padding-bottom: 3vw;">
+      <FeedTool :user="user" :feed="feed" />
+      <CommentsTool v-if="feed.comments" :feed="feed" />
+    </div>
   </div>
 </template>
 
@@ -107,39 +90,45 @@
     &:active, &:focus {
       background-color: #fff;
     }
-  }
-  .toolTop {
-    margin-top: 5px;
-    border-top: 1px #e2e2e2 solid;
-    display: flex!important;
-    align-items: center;
-    height: 45px!important;
-  }
-  .usernameLine {
-    margin-bottom: 6px;
-  }
-  .username {
-    color: #333;
-    font-size: 16px;
-  }
-  .content {
-    font-size: 14px;
-    color: #666;
-    text-align: justify;
-    overflow: hidden;
-    text-overflow: ellipsis;  
-    display: -webkit-box;  
-    -webkit-line-clamp: 3;  
-    -webkit-box-orient: vertical;
-    word-break: break-all;
-    margin-bottom: 8px;
-  }
-  .timer {
-    text-align: right;
-    color: #ccc;
-    font-size: 12px;
-  }
-  .seat {
-    visibility: hidden;
+    .toolTop {
+      margin-top: 5px;
+      border-top: 1px #e2e2e2 solid;
+      display: flex!important;
+      align-items: center;
+      height: 45px!important;
+    }
+    .contentBefore {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      .username {
+        color: #333;
+        font-size: 16px;
+      }
+      .timer {
+        text-align: right;
+        color: #ccc;
+        font-size: 12px;
+      }
+    }
+    .feedContent {
+      .feedTitle {
+        display: flex;
+        padding: 0;
+        margin-top: 4px;
+      }
+      .content {
+        font-size: 14px;
+        color: #666;
+        text-align: justify;
+        overflow: hidden;
+        text-overflow: ellipsis;  
+        display: -webkit-box;  
+        -webkit-line-clamp: 3;  
+        -webkit-box-orient: vertical;
+        word-break: break-all;
+        margin: 4px 0 12px 0;
+      }
+    }
   }
 </style>

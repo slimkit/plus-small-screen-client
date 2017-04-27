@@ -160,9 +160,9 @@ const postFeed = {
           });
         });
         this.storage_task_ids = [];
-        this.uploadList = [];
-        this.$refs.upload.fileList = [];
-        this.$refs.upload.tempIndex = 1;
+        this.uploadList =[];
+        this.$refs.upload.clearFiles();
+        this.ids = {};
         addAccessToken().get(
           createAPI(`feeds/${response.data.data}`),
           {},
@@ -196,9 +196,9 @@ const postFeed = {
       this.feedContent = '';
       this.isatuser = 0;
       this.storage_task_ids = [];
-      this.uploadList = [];
-      this.$refs.upload.fileList = [];
-      this.$refs.upload.tempIndex = 1;
+      this.$refs.upload.clearFiles();
+      this.ids = {};
+      this.uploadList =[];
       this.$store.dispatch(SHOWPOST, cb => {
         cb ({
           show: false
@@ -215,12 +215,18 @@ const postFeed = {
       this.storage_task_ids.splice(index, 1);
     },
     handleSuccess (res, file, fileList) {
+      let message = '';
+      if(typeof(res) == 'string') {
+        message = res;
+      } else if(typeof(res) == 'object') {
+        message = window.JSON.stringify(res);
+      }
       if(this.ids[file.name].taskId) {
-        noticeTask(this.ids[file.name].taskId, res.message, data => {
+        noticeTask(this.ids[file.name].taskId, message).then(data => {
           if(data.status || data.code == 0) {
             this.storage_task_ids.push(this.ids[file.name].taskId);
           }
-        })
+        });
       } else {
         this.$store.dispatch(NOTICE, cb => {
           cb({
@@ -315,7 +321,7 @@ const postFeed = {
     },
     uploadFile (fileUpload) {
       return new Promise(function(resolve, reject) {
-        createUploadTask(fileUpload, data => {
+        createUploadTask(fileUpload).then(data => {
           if(data.hasOwnProperty('storage_id') && data.hasOwnProperty('storage_task_id')){
             resolve({
               status: 'old',

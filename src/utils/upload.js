@@ -15,66 +15,72 @@ function dataURItoBlob(dataURI) {
 }
 
 // 创建任务
-function createUploadTask (data, cb) {
-	addAccessToken().post(createAPI('storages/task'), {
-      ...data
-		},
-    {
-      validateStatus: status => status === 201
-    }
-	)
-  .then(response => {
-    let data = response.data.data;
-    cb(response.data.data);
+function createUploadTask (data) {
+  return new Promise((resolve, reject) => {
+    addAccessToken().post(createAPI('storages/task'), {
+        ...data
+      },
+      {
+        validateStatus: status => status === 201
+      }
+    )
+    .then(response => {
+      let data = response.data.data;
+      resolve(response.data.data);
+    })
   })
 };
 
 // upload file
-function uploadFile(data, dataUri, cb) {
-  const formdata = new FormData();
-  formdata.append('file', dataURItoBlob(dataUri));
-  for(let index in data.options) {
-    formdata.append(index, data.options[index]);
-  }
-  let method = data.method.toLowerCase();
-  let headers = {
+function uploadFile(data, dataUri) {
+  return new Promise( (resolve, reject) => {
+    const formdata = new FormData();
+    formdata.append('file', dataURItoBlob(dataUri));
+    for(let index in data.options) {
+      formdata.append(index, data.options[index]);
+    }
+    let method = data.method.toLowerCase();
+    let headers = {
 
-  };
-  addAccessToken()[method](data.uri,
-    formdata,
-    {
-      responseType: 'text',
-      transformResponse: [function (data) {
-        return data;
-      }],
-      headers: {
-        ...data.headers
-      },
-      validateStatus: status => status === 200,
-    }
-  )
-  .then(response => {
-    let data = response.data;
-    console.log(data);
-    if(data.status || !data.code)
-    {
-      cb(data);
-    }
+    };
+    addAccessToken()[method](data.uri,
+      formdata,
+      {
+        responseType: 'text',
+        transformResponse: [function (data) {
+          return data;
+        }],
+        headers: {
+          ...data.headers
+        },
+        validateStatus: status => status === 200,
+      }
+    )
+    .then(response => {
+      let data = response.data;
+      console.log(data);
+      if(data.status || !data.code)
+      {
+        resolve(data);
+      }
+    })
   })
 }
 
 // 通知任务进度
-function noticeTask (taskId, data, cb) {
-  addAccessToken().patch(createAPI(`storages/task/${taskId}`),
-    {
-      message: data
-    },
-    {
-      validateStatus: status => status === 201,
-    }
-  )
-  .then(response => {
-    cb(response.data);
+function noticeTask (taskId, data) {
+  return new Promise( (resolve, reject) => {
+    addAccessToken().patch(createAPI(`storages/task/${taskId}`),
+      {
+        message: data
+      },
+      {
+        validateStatus: status => status === 201,
+      }
+    )
+    .then(response => {
+      resolve(response.data);
+    })
   })
 };
 

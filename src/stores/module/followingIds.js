@@ -10,11 +10,12 @@ const state = {
 
 const mutations = {
   [FOLLOWINGIDS] (state, ids) {
-    state.followingIds = [ ...state.followingIds, ...ids ];
+    state.followingIds = Array.from(new Set([ ...state.followingIds, ...ids ])).sort(sort);
   },
   [ADDFOLLOWINGIDS] (state, ids) {
     let followingIds = [ ...ids, ...state.followingIds ];
-    state.followingIds = followingIds.sort(sort);
+    followingIds = new Set(followingIds);
+    state.followingIds = Array.from(followingIds).sort(sort);
   }
 };
 

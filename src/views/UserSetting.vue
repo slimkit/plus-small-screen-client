@@ -145,7 +145,7 @@
               更换头像
             </Col>
             <Col span="5" style="display: flex; justify-content: flex-end">
-              <LoadingWhiteIcon class="spinner-snake" height="18" style="margin-right: 4px;" width="18" v-if="loading" color="#59b6d7" />
+              <LoadingBlackIcon class="spinner-snake" height="18" style="margin-right: 4px;" width="18" v-if="loading" color="#59b6d7" />
               <span v-if="!loading" @click="getCropData" class="operate avatarDone">完成</span>
             </Col>
           </Row>
@@ -227,7 +227,7 @@
   import CloseIcon from '../icons/Close';
   import RightArrowIcon from '../icons/RightArrow';
   import lodash from 'lodash';
-  import LoadingWhiteIcon from '../icons/LoadingWhite';
+  import LoadingBlackIcon from '../icons/LoadingBlack';
   import { resolveImage } from '../utils/resource';
 
   const defaultAvatar = resolveImage(require('../statics/images/defaultAvatarx2.png'));
@@ -241,7 +241,7 @@
       BackIcon,
       CloseIcon,
       RightArrowIcon,
-      LoadingWhiteIcon
+      LoadingBlackIcon
     },
     data: () => ({
       currentUser: currentUser.user_id, // 当前登录用户id
@@ -422,7 +422,7 @@
         fileUpload.hash = md5(fileSource);
         this.loading = true;
         // create storage task
-        createUploadTask(fileUpload, data => {
+        createUploadTask(fileUpload).then(data => {
           if(data.hasOwnProperty('storage_id') && data.hasOwnProperty('storage_task_id')){
             this.handleHideAvatarSelect();
             this.storage_task_id = data.storage_task_id;
@@ -438,9 +438,9 @@
             return;
           }
           // upload file
-          uploadFile(data, fileStreamData, uploadInfo => {
+          uploadFile(data, fileStreamData).then(uploadInfo => {
             // notice server with uploaded-info
-            noticeTask(data.storage_task_id, uploadInfo, noticeInfo => {
+            noticeTask(data.storage_task_id, uploadInfo).then(noticeInfo => {
               this.handleHideAvatarSelect();
               this.userInfo.avatar[30] = fileStreamData;
               this.storage_task_id = data.storage_task_id;

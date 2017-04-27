@@ -209,7 +209,6 @@
   import { NOTICE, SHOWFEEDDIGGSLISTS, FEEDSLIST, UPDATEFEED, CONFIRM, COMMENTINPUT } from '../stores/types';
   import getImg from '../utils/getImage';
   import { friendNum } from '../utils/friendNum';
-  import noCommentImage from '../statics/images/defaultNothingx2.png';
   import Comfirm from '../utils/Comfirm';
   import formateFeedComments from '../utils/formateFeedComments';
   import UnFollowingIcon from '../icons/UnFollowing';
@@ -223,7 +222,9 @@
   import BackIcon from '../icons/Back';
   import timers from '../utils/timer';
   import lodash from 'lodash';
+  import { resolveImage } from '../utils/resource';
 
+  const noCommentImage = resolveImage(require('../statics/images/defaultNothingx2.png'));
   const currentUser = localEvent.getLocalItem('UserLoginInfo');
   const feedDetail = {
     components: {
@@ -324,12 +325,11 @@
         let digg_users = [];
         let userLocal = {};
         let avatar = '';
-        for(let index in digg_list ){
-          userLocal = localEvent.getLocalItem(`user_${digg_list[index]}`);
-          if(index > 4) { break; }
+        digg_list.forEach( (uid, index) => {
+          userLocal = localEvent.getLocalItem(`user_${uid}`);
+          if(index > 4) { return; }
           if(!lodash.keys(userLocal).length > 0) {
-            getUserInfo(digg_list[index], 30).then(user => {
-              // userLocal = user;
+            getUserInfo(uid, 30).then(user => {
               digg_users.push({
                 avatar: user.avatar[30],
                 user_id: user.user_id,
@@ -343,9 +343,8 @@
               name: userLocal.name
             });
           }
-          
           userLocal = {};
-        };
+        });
         return digg_users;
       },
       formateComments () {
