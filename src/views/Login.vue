@@ -3,59 +3,51 @@
     <div class="main-content">
       <form role="form" @submit.prevent="submit">
         <div class="loginForm">
-          <Row  class="bottom-border formChildrenRow" :gutter="16">
+          <Row  class="bottom-border formChildrenRow" :gutter="24">
             <Col span="5">
               <label for="phone">手机号</label>
             </Col>
-            <Col span="16">
+            <Col span="14">
               <input type="tel" size="large" autocomplete="off" placeholder="请输入手机号" v-model.number.trim="phone" id="phone" name="phone" />
             </Col>
-            <Col span="3" class="flexend">
-              <!-- <i @click="cleanPhone" v-show="isShowClean" class="ivu-icon ivu-icon-close-circled"></i> -->
-              <div @click="cleanPhone" v-show="isShowClean">
-                <CloseIcon width="21" height="21" color="#999" />
-              </div>
+            <Col span="5" class="flexend">
+              <CloseIcon v-show="isShowClean" @click.native="cleanPhone" width="21" height="21" color="#999" />
             </Col>
           </Row>
-          <Row class="formChildrenRow" :gutter="16" >
+          <Row class="formChildrenRow" :gutter="24" >
             <Col span="5">
               <label for="password">密码</label>
             </Col>
-            <Col span="16">
+            <Col span="14">
               <input type="password"  size="large" v-show="isShowPassword" v-model.trim="password" placeholder="请输入6位以上密码" id="password" name="password" />
               <input type="text"  v-model.trim="passwordText" v-show="isShowPasswordText" value="" placeholder="请输入6位以上密码" />
             </Col>
-            <Col span="3" class="flexend">
-              <!-- i @click="showPassword" class="ivu-icon" :class="{ 'ivu-icon-eye-disabled': isShowPasswordText, 'ivu-icon-eye': isShowPassword }"></i> -->
-              <div @click="showPassword" v-show="isShowPasswordText">
-                <EyeOpenIcon height="21" width="21" color="#999" />
-              </div>
-              <div @click="showPassword" v-show="isShowPassword">
-                <EyeCloseIcon height="21" width="21" color="#999" />
-              </div>
+            <Col span="5" class="flexend">
+              <EyeOpenIcon @click.native="showPassword" height="21" v-show="isShowPasswordText" width="21" color="#999" />
+              <EyeCloseIcon @click.native="showPassword" height="21" v-show="isShowPassword" width="21" color="#999" />
             </Col>
           </Row>
         </div>
         <div id="notice">
-          <Row :gutter="16">
+          <Row :gutter="24">
             <Col span="24">
               <p class="notice error">{{ error }}</p>
             </Col>
           </Row>
         </div>
         <div>
-         <Row :gutter="16" >
+         <Row :gutter="24" >
             <Col span="24">
               <Button type="primary" htmlType="submit" :disabled="isDisabled" class="loginButton" size="large">
                 <span style="margin-right: 4px;">登录</span>
-                <LoadingWhiteIcon v-show="isLoading" height="20" width="20" />
+                <LoadingBlackIcon v-show="isLoading" height="18" width="18" />
               </Button>
             </Col>
           </Row>
         </div>
       </form>
       <div class="otherOperation">
-        <Row :gutter="16" >
+        <Row :gutter="24" >
           <Col span="12" >
             <router-link to="/register">
               注册账号
@@ -86,7 +78,7 @@
   import EyeOpenIcon from '../icons/EyeOpen';
   import CloseIcon from '../icons/Close';
   import lodash from 'lodash';
-  import LoadingWhiteIcon from '../icons/LoadingWhite';
+  import LoadingBlackIcon from '../icons/LoadingBlack';
 
 
   const phoneReg = /^(((13[0-9]{1})|14[0-9]{1}|(15[0-9]{1})|17[0-9]{1}|(18[0-9]{1}))+\d{8})$/;
@@ -95,7 +87,7 @@
       EyeCloseIcon,
       EyeOpenIcon,
       CloseIcon,
-      LoadingWhiteIcon
+      LoadingBlackIcon
     },
     data: () => ({
       phone: '', // 手机号码 
@@ -201,9 +193,10 @@
         )
         .then(response => {
           this.errors = {};
-          localEvent.setLocalItem('UserLoginInfo', response.data.data);
-          getUserInfo(response.data.data.user_id, 30).then(user => {
-            localEvent.setLocalItem('user_' + response.data.data.user_id, user);
+          let data = response.data.data;
+          localEvent.setLocalItem('UserLoginInfo', data);
+          getUserInfo(data.user_id, 30).then(user => {
+            localEvent.setLocalItem(`user_${data.user_id}`, user);
             router.push({ path: redirect });
           });
         })

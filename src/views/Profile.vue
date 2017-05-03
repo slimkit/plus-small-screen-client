@@ -122,11 +122,11 @@
   import SapceIcon from '../icons/Space';
   import RightArrowIcon from '../icons/RightArrow';
   import { resolveImage } from '../utils/resource';
+  import lodash from 'lodash';
+  import { getUserInfo } from '../utils/user';
 
   const defaultAvatar = resolveImage(require('../statics/images/defaultAvatarx2.png'));
 
-  const currentUser = localEvent.getLocalItem('UserLoginInfo');
-  
   const profile = {
     components: {
       ToolBar,
@@ -139,7 +139,7 @@
       RightArrowIcon
     },
     data: () => ({
-      currentUser: currentUser.user_id, // 当前登录用户id
+      currentUser: 0, // 当前登录用户id
       userInfo: {} // 当前登录用户信息
     }),
     methods: {
@@ -169,8 +169,16 @@
       }
     },
     created () {
-      let user = localEvent.getLocalItem(`user_${currentUser.user_id}`);
-      this.userInfo = { ...this.userInfo, ...user };
+      let currentUser = localEvent.getLocalItem('UserLoginInfo');
+      this.currentUser = currentUser.user_id;
+      let userInfo = localEvent.getLocalItem(`user_${this.currentUser}`);
+      if(!lodash.keys(userInfo).length) {
+        getUserInfo(this.currentUser, 30).then( user => {
+          this.userInfo = { ...this.userInfo, ...user };
+        })
+      } else {
+        this.userInfo = { ...this.userInfo, ...userInfo };
+      }
     }
   };
   export default profile;

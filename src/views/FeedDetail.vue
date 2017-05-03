@@ -31,31 +31,13 @@
                   </router-link>
                 </div>
               </Col>
-              <Col span="3" style="display: flex;" @click="alert(222);">
+              <Col span="3" style="display: flex;">
                 <!--未关注作者, 采用关注操作-->
-                <div 
-                  :class="$style.followAction" 
-                  @click="handleFollowingStatus" 
-                  v-if="!userInfo.is_following && (userInfo.user_id != currentUser)"
-                >
-                  <UnFollowingIcon v-if="!userInfo.is_following && (userInfo.user_id != currentUser)" height="24" width="24" color="#999" />
-                </div>
+                  <UnFollowingIcon @click.native="handleFollowingStatus" v-if="!userInfo.is_following && (userInfo.user_id != currentUser)" height="21" width="21" color="#999" />
                 <!--已关注作者,但作者未关注我， 采用取消关注操作-->
-                <div 
-                  :class="$style.followAction" 
-                  @click="handleUnFollowingStatus"  
-                  v-if="userInfo.is_following && !userInfo.is_followed && (userInfo.user_id != currentUser)"
-                >
-                  <FollowingIcon height="24" width="24" color="#999" v-if="userInfo.is_following && !userInfo.is_followed && (userInfo.user_id != currentUser)" />
-                </div>
+                  <FollowingIcon  @click.native="handleUnFollowingStatus" height="21" width="21" color="#59b6d7" v-if="userInfo.is_following && !userInfo.is_followed && (userInfo.user_id != currentUser)" />
                 <!--相互关注， 采用取消关注操作-->
-                <div 
-                  :class="$style.followAction" 
-                  @click="handleUnFollowingStatus"  
-                  v-if="userInfo.is_following && userInfo.is_followed && (userInfo.user_id != currentUser)"
-                >
-                  <EachFollowingIcon height="24" width="24" color="#999" />
-                </div>
+                  <EachFollowingIcon v-if="userInfo.is_following && userInfo.is_followed && (userInfo.user_id != currentUser)" @click.native="handleUnFollowingStatus" height="24" width="24" color="#59b6d7" />
               </Col>
             </Row>
           </div>
@@ -75,7 +57,7 @@
           <div class="feed-container-tool feed-background-color">
             <div class="feed-container-tool-digg">
               <Row :gutter="16" style="display: flex; align-items: center;">
-                <Col span="17"  @click.native="handleShowDiggList">
+                <Col span="17"  @click.native="changeUrl(`/feed/${feed_id}/diggs`)">
                   <div style="display: flex; align-items: center;">
                     <div :style="`width: ${digglistWidth}`">
                       <div class="digg-digg-list" v-if="diggList.length" >
@@ -112,14 +94,14 @@
                 <Row :gutter="16" v-for="(comment, index) in formateComments" :key="comment.id"  :class="$style.perComment">
                   <Col span="4">
                     <div class="grid-content bg-purple">
-                      <img :src="selfAvatar" alt="" style="width:100%; border-radius:50%">
+                      <img @click="changeUrl(`/users/feeds/${comment.user.user_id}`)" :src="comment.user.avatar[30]" alt="" style="width:100%; border-radius:50%">
                     </div>
                   </Col>
                   <Col span="20">
                     <div class="grid-content bg-purple">
                       <Row style="padding-bottom: 5px">
                         <Col span="17">
-                          <router-link :class="$style.profileLink" :to="{ path: `/profile/${comment.user.user_id}` }">{{ comment.user.name }}</router-link>
+                          <router-link :class="$style.profileLink" :to="{ path: `/users/feeds/${comment.user.user_id}` }">{{ comment.user.name }}</router-link>
                         </Col>
                         <Col span="7" style="display: flex; justify-content: flex-end;">
                           <timeago style="color: #ccc; font-size: 12px;" :since="timers(comment.created_at, 8, false)" locale="zh-CN" :auto-update="60"></timeago>
@@ -223,9 +205,9 @@
   import timers from '../utils/timer';
   import lodash from 'lodash';
   import { resolveImage } from '../utils/resource';
+  import { changeUrl } from '../utils/changeUrl';
 
   const noCommentImage = resolveImage(require('../statics/images/defaultNothingx2.png'));
-  const currentUser = localEvent.getLocalItem('UserLoginInfo');
   const feedDetail = {
     components: {
       Comfirm,
@@ -266,7 +248,7 @@
         is_followed: 0
       },
       defaultImage: noCommentImage,
-      currentUser: currentUser.user_id,
+      currentUser: 0,
       // 上拉加载更多相关
       bottomAllLoaded: false,
       max_id: 0,
@@ -274,30 +256,11 @@
       showSpinner: true
     }),
     computed: {
-      // 获取动态作者信息
-      // userInfo () {
-      //   this.feedData.user_id || return;
-      //   let userLocal = localEvent.getLocalItem(`user_${this.feedData.user_id}`);
-      //   if (!lodash.keys(userLocal).lenght > 0) {
-      //     getUserInfo(2, 30).then(user => {
-      //       // this.userInfo = { ...this.userInfo, ...user };
-      //       console.log(user);
-      //       return user;
-      //     });
-      //   } else {
-      //     // this.userInfo = { ...this.userInfo, ...userLocal };
-      //     return user;
-      //   }
-      // },
       feedTimer () {
         return this.timers(this.feedData.feed.created_at, 8, false);
       },
       avatar () {
         const { avatar: { 30: avatar = '' } = {} } = this.userInfo;
-        return avatar;
-      },
-      selfAvatar () {
-        const { avatar: { 30: avatar = '' } = {} } = localEvent.getLocalItem(`user_${this.currentUser}`);
         return avatar;
       },
       // 计算图片跳转地址
@@ -328,7 +291,7 @@
         digg_list.forEach( (uid, index) => {
           userLocal = localEvent.getLocalItem(`user_${uid}`);
           if(index > 4) { return; }
-          if(!lodash.keys(userLocal).length > 0) {
+          if(!lodash.keys(userLocal)) {
             getUserInfo(uid, 30).then(user => {
               digg_users.push({
                 avatar: user.avatar[30],
@@ -354,49 +317,11 @@
       }
     },
     methods: {
+      changeUrl,
       timers,
       // 检测底部loading的状态变化
       bottomStatusChange (status) {
         this.bottomStatus = status;
-      },
-      handleShowDiggList () {
-        let digg_list = this.feedData.diggs;
-        let digg_users = {};
-        let userLocal = {};
-        let avatar = '';
-        digg_list.forEach((digg) => {
-          userLocal = localEvent.getLocalItem(`user_${digg}`);
-          if(!lodash.keys(userLocal).length > 0) {
-            getUserInfo(digg, 30).then(user => {
-              userLocal = user;
-            });
-          }
-          let intro = '';
-          if(userLocal.hasOwnProperty('datas')) {
-            if(userLocal.datas.hasOwnProperty('intro')) {
-              intro = userLocal.datas.intro.value
-            }
-          }
-          let diggFormate = { 
-            [digg] : {
-              is_following: userLocal.is_following,
-              is_followed: userLocal.is_followed,
-              user_id: digg,
-              avatar: userLocal.avatar[30],
-              name: userLocal.name,
-              intro: intro
-            }
-          }
-          digg_users = { ...digg_users, ...diggFormate };
-        });
-          
-        // };
-        this.$store.dispatch(SHOWFEEDDIGGSLISTS, cb => {
-          cb({
-            show: true,
-            diggs: digg_users
-          })
-        })
       },
       removeByValue (arr, value) {
         for(let i=0; i<arr.length; i++) {
@@ -465,25 +390,18 @@
         })
       },
       handleUnFollowingStatus () {
-        unFollowingUser(this.feedData.user_id, status => {
-          if(status.status || status.code == 0) {
-            this.userInfo.is_following = 0;
-            localEvent.setLocalItem(`user_${this.feedData.user_id}`, this.userInfo);
-          } else {
-            this.$store.dispatch(NOTICE, cb => {
-              cb({
-                text: status.message,
-                time: 1500,
-                status: true
-              });
-            });
-          }
+        unFollowingUser(this.feedData.user_id).then(() => {
+          this.userInfo = { ...this.userInfo, is_following: 0 };
+          localEvent.setLocalItem(`user_${this.feedData.user_id}`, this.userInfo);
         })
+        .catch(error => {
+        
+        });
       },
       handleFollowingStatus () {
-        followingUser(this.feedData.user_id, status => {
+        followingUser(this.feedData.user_id).then(status => {
           if(status.status || status.code == 0) {
-            this.userInfo.is_following = 1;
+            this.userInfo = { ...this.userInfo, is_following: 1 };
             localEvent.setLocalItem(`user_${this.feedData.user_id}`, this.userInfo);
           } else {
             this.$store.dispatch(NOTICE, cb => {
@@ -515,7 +433,6 @@
           if(data.length < 15) {
             bottomAllLoaded = true;
           }
-          // formatedAddComments = formateFeedComments(data);
           data.forEach((comment) => {
             this.comments.push(comment);
           });
@@ -612,19 +529,18 @@
       },
       getUser (user_id) {
         let userLocal = localEvent.getLocalItem(`user_${user_id}`);
-        if (!lodash.keys(userLocal).lenght > 0) {
+        if (!lodash.keys(userLocal).length) {
           getUserInfo(user_id, 30).then(user => {
             this.userInfo = { ...this.userInfo, ...user };
-            // console.log(user);
-            // return user;
           });
         } else {
           this.userInfo = { ...this.userInfo, ...userLocal };
-          // return user;
         }
       }
     },
     created () {
+      let currentUser = localEvent.getLocalItem('UserLoginInfo');
+      this.currentUser = currentUser.user_id;
       let feed_id = parseInt(this.$route.params.feed_id);
       if ( !feed_id ) {
         this.$store.dispatch(NOTICE, cb => {
@@ -727,7 +643,7 @@
         width: 100%;
         img[lazy='loading'] 
         {
-          width: auto;
+          width: 100%
         }
         img[lazy='loaded'] 
         {
@@ -752,7 +668,8 @@
       border: 2px #fff solid;
       border-radius: 50%;
       &[lazy="loading"] {
-        width: 100%;
+        height: 100%;
+        width: auto;
       }
     }
   }

@@ -3,11 +3,11 @@
       <ul>
         <li v-for="(comment, commentIndex) in commentsData" :key="comment.id" v-if="commentIndex < 3">
           <p>
-            <router-link v-if="comment.user_id" :class="$style.userName" :to="{ path: '/users/profile' }">{{ getUserName(comment.user_id) }}</router-link> 
+            <router-link v-if="comment.user_id" :class="$style.userName" :to="{ path: `/users/feeds/${comment.user_id}` }">{{ getUserName(comment.user_id) }}</router-link> 
             <span v-if="comment.reply_to_user_id" :class="$style.commentContent">
               回复
             </span>
-            <router-link v-if="comment.reply_to_user_id" :class="$style.userName" :to="{ path: '/users/profile' }">{{ getUserName(comment.reply_to_user_id) }}</router-link> 
+            <router-link v-if="comment.reply_to_user_id" :class="$style.userName" :to="{ path: `/users/feeds/${comment.reply_to_user_id}` }">{{ getUserName(comment.reply_to_user_id) }}</router-link> 
             <span
               v-if="comment.user_id  != currentUser.user_id"
               @click.stop="focusInput(comment.user_id)"
@@ -36,8 +36,7 @@
   import router from '../routers/index';
   import Comfirm from '../utils/Comfirm';
   import { CONFIRM } from '../stores/types';
-  // import { USERS, USERS_APPEND, USERS_ITEM_UPDATE, NOTICE, COMMENTINPUT } from '../stores/types';
-  import { USERS, USERS_ITEM_UPDATE, COMMENTINPUT, CLOSECOMMENTINPUT, NOTICE, FEEDSFOLLOWING, FEEDSFOLLWOINGADD, FEEDFOLLOWINGUPDATE, FEEDSHOT, FEEDSHOTADD, FEEDHOTUPDATE, FEEDSNEW, FEEDSNEWADD, FEEDNEWUPDATE, FEEDFOLLOWINGPREPEND, FEEDNEWPREPEND, FEEDHOTPREPEND, UPDATEFEED } from '../stores/types';
+  import { USERS, COMMENTINPUT, CLOSECOMMENTINPUT, NOTICE, FEEDSFOLLOWING, FEEDSFOLLWOINGADD, FEEDFOLLOWINGUPDATE, FEEDSHOT, FEEDSHOTADD, FEEDHOTUPDATE, FEEDSNEW, FEEDSNEWADD, FEEDNEWUPDATE, FEEDFOLLOWINGPREPEND, FEEDNEWPREPEND, FEEDHOTPREPEND, UPDATEFEED } from '../stores/types';
   import lodash from 'lodash';
 
   const commentsTool = {
@@ -149,7 +148,7 @@
         }
       });
       let user_ids = lodash.values(user_ids_obj);
-      this.$store.dispatch(USERS, cb => getUsersInfo(user_ids, users => cb(users)));
+      this.$store.dispatch(USERS, cb => getUsersInfo(user_ids).then(users => cb(users)));
     }
   };
 

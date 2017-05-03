@@ -123,7 +123,6 @@
   .tool {
     display: flex;
     align-items: center;
-    padding-bottom: 2vw;
     .toolItem {
       width: 30vw;
       display: flex; 

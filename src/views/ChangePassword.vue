@@ -20,10 +20,9 @@
         </Col>
         <Col span="15">
           <input type="password"  size="large" v-show="isShowOldPassword" v-model.trim="oldPassword" placeholder="请输入旧密码" id="password" name="password" />
-          <input type="text"  v-model.trim="oldPassword" v-show="!isShowOldPassword" value="" placeholder="请输入旧密码" />
         </Col>
         <Col span="3">
-          <i @click="handleShowOldPassword"  v-show="showOldIcon" class="ivu-icon" :class="{ 'ivu-icon-eye-disabled': !isShowOldPassword, 'ivu-icon-eye': isShowOldPassword }"></i>
+          <CloseIcon v-show="showOldIcon" height="21" width="21" color="#999" @click.native="cleanOldPassword" />
         </Col>
       </Row>
       <Row :gutter="16" :class="$style.entryMenu">
@@ -35,7 +34,8 @@
           <input type="text"  v-model.trim="newPassword" v-show="!isShowNewPassword" value="" placeholder="请输入6位以上新密码" />
         </Col>
         <Col span="3">
-          <i @click="handleShowNewPassword" v-show="showNewIcon" class="ivu-icon" :class="{ 'ivu-icon-eye-disabled': !isShowNewPassword, 'ivu-icon-eye': isShowNewPassword }"></i>
+          <EyeOpenIcon @click.native="handleShowNewPassword" v-show="!isShowNewPassword" height="21" width="21" color="#999" />
+          <EyeCloseIcon @click.native="handleShowNewPassword" v-show="isShowNewPassword" height="21" width="21" color="#999" />
         </Col>
       </Row>
       <Row :gutter="16" :class="$style.entryMenu">
@@ -47,7 +47,8 @@
           <input type="text"  v-model.trim="repeatNewPassword" v-show="!isShowRepeatPassword" value="" placeholder="确认新密码" />
         </Col>
         <Col span="3">
-          <i @click="handleShowRepeatPassword" v-show="showRepeatIcon" class="ivu-icon" :class="{ 'ivu-icon-eye-disabled': !isShowRepeatPassword, 'ivu-icon-eye': isShowRepeatPassword }"></i>
+          <EyeOpenIcon @click.native="handleShowRepeatPassword" v-show="!isShowRepeatPassword" height="21" width="21" color="#999" />
+          <EyeCloseIcon @click.native="handleShowRepeatPassword" v-show="isShowRepeatPassword" height="21" width="21" color="#999" />
         </Col>
       </Row>
     </div>
@@ -66,9 +67,16 @@
   import { NOTICE } from '../stores/types';
   import { goTo } from '../utils/changeUrl';
   import BackIcon from '../icons/Back';
+  import CloseIcon from '../icons/Close';
+  import EyeOpenIcon from '../icons/EyeOpen';
+  import EyeCloseIcon from '../icons/EyeClose';
+
   const changePassword = {
     components: {
-      BackIcon
+      BackIcon,
+      CloseIcon,
+      EyeOpenIcon,
+      EyeCloseIcon
     },
     data: () => ({
       oldPassword: '',
@@ -102,8 +110,8 @@
     },
     methods: {
       goTo,
-      handleShowOldPassword () {
-        this.isShowOldPassword =  !this.isShowOldPassword;
+      cleanOldPassword () {
+        this.oldPassword = '';
       },
       handleShowNewPassword () {
         this.isShowNewPassword = !this.isShowNewPassword;
@@ -141,9 +149,10 @@
           {
             this.$store.dispatch(NOTICE, cb => {
               cb({
+                show: true,
                 time: 1500,
                 status: true,
-                text: data.message
+                text: '密码修改成功'
               });
             });
             this.oldPassword = '';
@@ -151,6 +160,19 @@
             this.repeatNewPassword = '';
           }
         })
+        .catch( error => {
+          let data = error.response.data;
+          if(data.code === 1006) {
+            this.$store.dispatch(NOTICE, cb => {
+              cb({
+                show: true,
+                time: 1500,
+                status: false,
+                text: '原密码错误'
+              });
+            });
+          }
+        });
       }
     }
   };

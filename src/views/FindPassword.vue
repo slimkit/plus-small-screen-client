@@ -3,19 +3,27 @@
     <div class="main-content">
       <form role="form" @submit.prevent="submit">
         <div class="loginForm">
-          <Row :gutter="16" class="formChildrenRow bottom-border">
+          <Row :gutter="24" class="formChildrenRow bottom-border">
             <Col span="5">
               <label for="phone" class="loginFormTitle">手机号</label>
             </Col>
-            <Col span="10">
+            <Col span="14">
               <input type="tel" autocomplete="off" placeholder="输入手机号码" v-model.trim.num="phone" id="phone" name="phone" />
             </Col>
-            <Col span="3" class="flexend">
+            <Col span="5" class="flexend">
               <div @click="cleanPhone" v-show="isShowClean">
                 <CloseIcon height="21" width="21" color="#999" />
               </div>
             </Col>
-            <Col class="text-align-right" span="6" >
+          </Row>
+          <Row :gutter="24" class="formChildrenRow bottom-border">
+            <Col span="5">
+              <label for="code" class="loginFormTitle">验证码</label>
+            </Col>
+            <Col span="11">
+              <input type="tel" autocomplete="off" placeholder="请输入验证码" v-model.number.trim="code" id="code" name="code" />
+            </Col>
+            <Col class="flexend" span="8" >
               <Button 
                 type="text" 
                 @click.native="getCode" 
@@ -28,23 +36,15 @@
               </Button>
             </Col>
           </Row>
-          <Row :gutter="16" class="formChildrenRow bottom-border">
-            <Col span="5">
-              <label for="code" class="loginFormTitle">验证码</label>
-            </Col>
-            <Col span="19">
-              <input type="tel" autocomplete="off" placeholder="请输入验证码" v-model.number.trim="code" id="code" name="code" />
-            </Col>
-          </Row>
-          <Row :gutter="16" class="formChildrenRow">
+          <Row :gutter="24" class="formChildrenRow">
             <Col span="5">
               <label for="password" class="loginFormTitle">新密码</label>
             </Col>
-            <Col span="16">
+            <Col span="14">
               <input type="password" v-show="isShowPassword" v-model.trim="password" placeholder="请输入6位以上登录密码" id="password" name="password" />
               <input type="text"  v-model.trim="passwordText" v-show="isShowPasswordText" value="" placeholder="请输入6位以上登录密码" />
             </Col>
-            <Col span="3" class="flexend">
+            <Col span="5" class="flexend">
               <div @click="showPassword" v-show="isShowPasswordText">
                 <EyeOpenIcon height="21" width="21" color="#999" />
               </div>
@@ -55,14 +55,14 @@
           </Row>
         </div>
         <div id="notice">
-          <Row :gutter="16">
+          <Row :gutter="24">
             <Col span="24">
               <p class="notice error">{{ error }}</p>
             </Col>
           </Row>
         </div>
         <div class="operation">
-         <Row :gutter="16">
+         <Row :gutter="24">
             <Col span="24">
               <Button type="primary" htmlType="submit" :disabled="isDisabled" class="loginButton" size="large">
                 <span style="margin-right: 4px;">确认</span>
@@ -88,6 +88,7 @@
   import CloseIcon from '../icons/Close';
   import lodash from 'lodash';
   import LoadingWhiteIcon from '../icons/LoadingWhite';
+  import { NOTICE } from '../stores/types';
 
   // 手机号码规则
   const phoneReg = /^(((13[0-9]{1})|14[0-9]{1}|(15[0-9]{1})|17[0-9]{1}|(18[0-9]{1}))+\d{8})$/;
@@ -193,12 +194,13 @@
           }
         )
         .then(response => {
-          this.$message({
-            message: '密码重置成功',
-            type: 'success',
-            onClose: () => {
-              router.push({ path: 'login' });
-            }
+          this.$store.dispatch(NOTICE, cb => {
+            cb({
+              show: true,
+              status: true,
+              time: 1500,
+              message: '密码重置成功'
+            })
           });
         })
         .catch(({ response: { data = {} } ={} }) => {

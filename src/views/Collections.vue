@@ -2,8 +2,8 @@
   <div class="collections">
     <div class="commonHeader">
       <Row :gutter="16">
-        <Col span="4">
-          <BackIcon @click.native="goTo(-1)" height="21" width="21" color="#999" />
+        <Col span="4" @click.native="goTo(-1)">
+          <BackIcon height="21" width="21" color="#999" />
         </Col>
         <Col span="16" class="title-col">
           收藏
@@ -84,7 +84,7 @@
         .then(response => {
           let data = response.data.data;
           let length = data.length;
-          if(length == 0) {
+          if(!length > 0) {
             setTimeout(() => {
               if(this.$refs.loadmoreCollections)
               this.$refs.loadmoreCollections.onBottomLoaded();
@@ -126,7 +126,7 @@
         )
         .then( response => {
           let feeds = response.data.data;
-          if(feeds.length == 0) {
+          if(!feeds.length > 0) {
             setTimeout(() => {
               if(this.$refs.loadmoreCollections)
               {
@@ -183,7 +183,7 @@
     },
     mounted () {
       let storeIds = this.$store.getters[this.feedType.ids];
-      if(storeIds.length) {
+      if(storeIds.length > 5) {
         this.firstId = storeIds[0];
         this.maxId = storeIds[storeIds.length -1];
         this.showTop = false;
@@ -204,6 +204,7 @@
       )
       .then(response => {
         let feeds = response.data.data;
+        if(!feeds.length > 0) return;
         let storeFeeds = {};
         let ids = [];
         this.firstId = feeds[0].feed.feed_id;
@@ -252,7 +253,7 @@
     align-items: center;
     justify-content: center;
     position: fixed;
-    top: 0; 
+    top: 55px; 
     bottom: 0; 
     left: 0; 
     right: 0;

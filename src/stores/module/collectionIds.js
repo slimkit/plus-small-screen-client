@@ -6,10 +6,10 @@ const state = {
 
 const mutations = {
   [COLLECTIONIDS] (state, ids) {
-    state.collectionIds = [ ...state.collectionIds, ...ids ];
+    state.collectionIds = Array.from(new Set([ ...state.collectionIds, ...ids ]));
   },
   [ADDCOLLECTIONIDS] (state, ids) {
-    state.collectionIds = [ ...ids, ...state.collectionIds ];
+    state.collectionIds = Array.from(new Set([ ...ids, ...state.collectionIds ]));
   }
 };
 

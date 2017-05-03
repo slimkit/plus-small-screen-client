@@ -45,7 +45,7 @@
         <div :class="$style.feeds" v-if="!nothing">
           <div style="padding: 8px; background: #e2e3e3; color: #999;">{{feedCounts}}条动态</div>
           <div :class="$style.feedContainer">
-            <UserFeed v-for="feed in feedList" :feed="feed" :key="feed.feed_id"> </UserFeed>
+            <UserFeed v-for="feed in feedList" :feed="feed" :key="feed.feed_id" />
           </div>
         </div>
         <div v-if="nothing" :class="$style.nothingDefault">
@@ -88,7 +88,6 @@
   import { goTo } from '../utils/changeUrl';
   import { resolveImage } from '../utils/resource';
 
-  const currentUser = localEvent.getLocalItem('UserLoginInfo');
   const defaultNothing =  resolveImage(require('../statics/images/defaultNothingx3.png'));
   const defaultBackgroundPic = resolveImage(require('../statics/images/default_cover.png'));
   const defaultAvatar = resolveImage(require('../statics/images/defaultAvatarx2.png'));
@@ -103,7 +102,7 @@
       ShareIcon
     },
     data: () => ({
-      currentUser: currentUser.user_id, // 当前登录用户
+      currentUser: 0, // 当前登录用户
       userInfo: {}, // 当前被查看着用户信息
       user_id: 0,
       bottomAllLoaded: false,
@@ -124,9 +123,10 @@
       },
       // 关注操作
       handleFollowing() {
-        followingUser(this.user_id, status => {
+        followingUser(this.user_id)
+        .then(status => {
           if(status.status || status.code == 0) {
-            this.userInfo.is_following = 1;
+            this.userInfo = { ...this.userInfo, is_following: 1 };
             localEvent.setLocalItem(`user_${this.user_id}`, this.userInfo);
           } else {
             this.$store.dispatch(NOTICE, cb => {
@@ -141,20 +141,14 @@
       },
       // 取关操作
       handleUnfollowing () {
-        unFollowingUser(this.user_id, status => {
-          if(status.status || status.code == 0) {
-            this.userInfo.is_following = 0;
-            localEvent.setLocalItem(`user_${this.user_id}`, this.userInfo);
-          } else {
-            this.$store.dispatch(NOTICE, cb => {
-              cb({
-                text: status.message,
-                time: 1500,
-                status: true
-              });
-            });
-          }
+        unFollowingUser(this.user_id)
+        .then(() => {
+          this.userInfo = { ...this.userInfo, is_following: 0 };
+          localEvent.setLocalItem(`user_${this.user_id}`, this.userInfo);
         })
+        .catch( error => {
+
+        });
       },
       // 检测底部loading的状态变化
       bottomStatusChange (status) {
@@ -290,6 +284,8 @@
       this.$store.dispatch(CLEANUSERFEEDS);
     },
     created () {
+      let currentUser = localEvent.getLocalItem('UserLoginInfo');
+      this.currentUser = currentUser.user_id;
       let user_id = parseInt(this.$route.params.user_id);
       if ( !user_id && !this.currentUser ) {
         this.$store.dispatch(NOTICE, cb => {
@@ -312,6 +308,7 @@
       )
       .then(response => {
         let feeds = response.data.data;
+        if(!feeds.length) return;
         // let newFeeds = this.fomateFeeds(feeds);
         if(feeds.length < 15) {
           this.bottomAllLoaded = true;

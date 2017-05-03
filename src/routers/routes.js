@@ -19,6 +19,7 @@ import Comments from '../views/Comments';
 import Diggs from '../views/Diggs';
 import Collections from '../views/Collections';
 import Discover from '../views/Discover';
+import FeedDiggList from '../views/FeedDiggList';
 import { requestAuth, CanNotGetInWhenLogged } from '../utils/auth';
 
 const routes = [
@@ -106,6 +107,14 @@ const routes = [
     name: 'feedDetail',
     meta: {
       title: '动态详情'
+    }
+  },
+  {
+    path: '/feed/:feed_id/diggs',
+    component: FeedDiggList,
+    name: 'feedDiggs',
+    meta: {
+      title: '点赞列表'
     }
   },
   {

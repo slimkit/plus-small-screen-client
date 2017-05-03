@@ -63,7 +63,6 @@
   import { changeUrl } from '../utils/changeUrl';
   import lodash from 'lodash';
 
-  const currentUser = localEvent.getLocalItem('UserLoginInfo');
   const MessageList = {
     components: {
       ToolBar,
@@ -72,7 +71,7 @@
     },
     data: () => ({
       messages: {},
-      currentUser: currentUser.user_id
+      currentUser: 0
     }),
     computed: {
       diggsCount () {
@@ -91,7 +90,7 @@
           let userLocalInfo = localEvent.getLocalItem(`user_${digg}`);
           const { name = ''} = userLocalInfo;
           users += name + '、';
-          if(!lodash.keys(userLocalInfo).lenght) {
+          if(!lodash.keys(userLocalInfo).length) {
             getUserInfo(digg, 30).then(user => {
               const { name = '' } = user;
               users += name + '、';
@@ -149,6 +148,8 @@
       }
     },
     created () {
+      let currentUser = localEvent.getLocalItem('UserLoginInfo');
+      this.currentUser = currentUser.user_id;
       let types = 'diggs,comments';
       let time = 0;
       time = localEvent.getLocalItem('messageFlushTime');

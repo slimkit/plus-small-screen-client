@@ -155,7 +155,7 @@
             comment_content: digg.comment_content,
             cover: ''
           };
-          let user = localEvent.getLocalItem(`user_${digg.to_user_id}`);
+          let user = localEvent.getLocalItem(`user_${digg.user_id}`);
           const { avatar: { 30: avatar = defaultAvatar} = {} } = user;
           const { name = '' } = user;
           if(digg.source_cover) {

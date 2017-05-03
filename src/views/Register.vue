@@ -3,32 +3,40 @@
     <div class="main-content">
       <form role="form" @submit.prevent="register">
         <div class="loginForm">
-          <Row :gutter="16" class="formChildrenRow bottom-border">
+          <Row :gutter="24" class="formChildrenRow bottom-border">
             <Col span="5">
               <label for="username" class="loginFormTitle">用户名</label>
             </Col>
-            <Col span="16">
+            <Col span="14">
               <input type="text" autocomplete="off" placeholder="不能以数字开头,不能有特殊字符" v-model.trim="username" id="username" name="username" />
             </Col>
-            <Col span="3" class="flexend">
+            <Col span="5" class="flexend">
               <div @click="cleanUsername" v-show="isShowUserClean">
                 <CloseIcon height="21" width="21" color="#999" />
               </div>
             </Col>
           </Row>
-          <Row :gutter="16" class="formChildrenRow bottom-border">
+          <Row :gutter="24" class="formChildrenRow bottom-border">
             <Col span="5">
               <label for="phone" class="loginFormTitle">手机号</label>
             </Col>
-            <Col span="10">
+            <Col span="14">
               <input type="tel" autocomplete="off" placeholder="输入手机号码" v-model.trim.num="phone" id="phone" name="phone" />
             </Col>
-            <Col span="3" class="flexend">
+            <Col span="5" class="flexend">
               <div @click="cleanPhone" v-show="isShowClean">
                 <CloseIcon height="21" width="21" color="#999" />
               </div>
             </Col>
-            <Col class="text-align-right flexend" span="6">
+          </Row>
+          <Row :gutter="24" class="bottom-border formChildrenRow">
+            <Col span="5">
+              <label for="code" class="loginFormTitle">验证码</label>
+            </Col>
+            <Col :span="11">
+              <input type="tel" autocomplete="off" placeholder="输入验证码" v-model.trim.num="code" id="code" name="code" />
+            </Col>
+            <Col class="flexend" span="8">
               <Button 
                 type="text" 
                 @click.native.stop.prevent="getCode" 
@@ -41,23 +49,15 @@
               </Button>
             </Col>
           </Row>
-          <Row :gutter="16" class="bottom-border formChildrenRow">
-            <Col span="5">
-              <label for="code" class="loginFormTitle">验证码</label>
-            </Col>
-            <Col :span="19">
-              <input type="tel" autocomplete="off" placeholder="输入验证码" v-model.trim.num="code" id="code" name="code" />
-            </Col>
-          </Row>
-          <Row :gutter="16" class="formChildrenRow">
+          <Row :gutter="24" class="formChildrenRow">
             <Col span="5">
               <label for="password" class="loginFormTitle">密码</label>
             </Col>
-            <Col span="16">
+            <Col span="14">
               <input type="password" autocomplete="off" v-show="isShowPassword" v-model.trim="password" placeholder="请输入6位以上密码" id="password" name="password" />
               <input type="text" autocomplete="off" v-model.trim="passwordText" v-show="isShowPasswordText" value="" placeholder="请输入6位以上密码" />
             </Col>
-            <Col span="3" class="flexend">
+            <Col span="5" class="flexend">
               <div @click="showPassword" v-show="isShowPasswordText">
                 <EyeOpenIcon height="21" width="21" color="#999" />
               </div>
@@ -68,14 +68,14 @@
           </Row>
         </div>
         <div id="notice">
-          <Row :gutter="16">
+          <Row :gutter="24">
             <Col span="24">
               <p class="notice error">{{ error }}</p>
             </Col>
           </Row>
         </div>
         <div class="operation">
-         <Row :gutter="16">
+         <Row :gutter="24">
             <Col span="24">
               <Button type="primary" htmlType="submit" :disabled="isDisabled" class="loginButton" size="large">
                 <span style="margin-right: 4px;">注册</span>

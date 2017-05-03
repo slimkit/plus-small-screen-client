@@ -58,6 +58,7 @@
   import defaultAvatar from '../statics/images/defaultAvatarx2.png';
   import lodash from 'lodash';
   import { resolveImage } from '../utils/resource';
+  import { getUserInfo } from '../utils/user';
 
   const defaultNobody = resolveImage(require('../statics/images/img_default_nobody@2x.png'));
 
@@ -123,18 +124,13 @@
     computed: {
       formatedList () {
         let lists = this.diggLists;
+        if(!lists.length) {
+          return [];
+        }
         let newLists = [];
         lists.forEach( list => {
           let digg = {};
           let user = localEvent.getLocalItem(`user_${list.user_id}`);
-          const { avatar: { 30: avatar = defaultAvatar } = {} } = user;
-          const { name = '' } = user;
-          const { datas: { intro: { value: intro = '还没有简介呢' } = {} } } = user;
-          digg.name = name,
-          digg.avatar = avatar;
-          digg.intro = intro;
-          digg.value = friendNum(parseInt(list.value));
-          digg.user_id = list.user_id;
           if(!lodash.keys(user).length) {
             getUserInfo(list.user_id, 30).then(gotUser => {
               const { avatar: { 30: avatar = '' } = {} } = gotUser;
@@ -143,8 +139,17 @@
               digg.intro = intro;
               digg.name = name,
               digg.avatar = avatar;
-            })
+            });
+          } else {
+            const { avatar: { 30: avatar = defaultAvatar } = {} } = user;
+            const { name = '' } = user;
+            const { datas: { intro: { value: intro = '还没有简介呢' } = {} } } = user;
+            digg.name = name,
+            digg.avatar = avatar;
+            digg.intro = intro;
           }
+          digg.value = friendNum(parseInt(list.value));
+          digg.user_id = list.user_id;
           newLists.push(digg);
         });
         return newLists;

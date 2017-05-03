@@ -58,7 +58,6 @@ function uploadFile(data, dataUri) {
     )
     .then(response => {
       let data = response.data;
-      console.log(data);
       if(data.status || !data.code)
       {
         resolve(data);

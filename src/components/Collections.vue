@@ -2,10 +2,8 @@
   <div class="collections">
     <div class="commonHeader">
       <Row :gutter="16">
-        <Col span="4">
-          <div @click="goTo(-1)">
-            <BackIcon height="21" width="21" color="#999" />
-          </div>
+        <Col span="4"  @click.native="goTo(-1)">
+          <BackIcon height="21" width="21" color="#999" />
         </Col>
         <Col span="16" class="title-col">
           收藏
@@ -45,6 +43,7 @@
   import { NOTICE, FEEDSLIST, COLLECTIONIDS, COLLECTIONFEEDS, ADDCOLLECTIONIDS } from '../stores/types';
   import router from '../routers/index';
   import lodash from 'lodash';
+  import { goTo } from '../utils/changeUrl';
 
   const FeedLists = {
     components: {
@@ -70,6 +69,7 @@
       }
     }),
     methods: {
+      goTo,
       // 加载更多
       loadBottom () {
         let limiterSend = '';
@@ -86,7 +86,7 @@
         .then(response => {
           let data = response.data.data;
           let length = data.length;
-          if(length == 0) {
+          if(!length > 0) {
             setTimeout(() => {
               if(this.$refs.loadmore)
               this.$refs.loadmore.onBottomLoaded();
@@ -128,7 +128,7 @@
         )
         .then( response => {
           let feeds = response.data.data;
-          if(feeds.length == 0) {
+          if(!feeds.length > 0) {
             setTimeout(() => {
               if(this.$refs.loadmore)
               {
@@ -181,7 +181,7 @@
     },
     mounted () {
       let storeIds = this.$store.getters[feedType.ids];
-      if(storeIds.length) {
+      if(storeIds.length > 5) {
         this.firstId = storeIds[0];
         this.maxId = storeIds[storeIds.length -1];
         this.showTop = false;
@@ -203,6 +203,7 @@
       )
       .then(response => {
         let feeds = response.data.data;
+        if(!feeds.length > 1) return;
         let storeFeeds = {};
         let ids = [];
         this.firstId = feeds[0].feed.feed_id;

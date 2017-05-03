@@ -154,7 +154,7 @@
             comment_content: comment.comment_content,
             cover: ''
           };
-          let user = localEvent.getLocalItem(`user_${comment.to_user_id}`);
+          let user = localEvent.getLocalItem(`user_${comment.user_id}`);
           let reply_to_user = {};
           if(comment.reply_to_user_id) {
             reply_to_user = localEvent.getLocalItem(`user_${comment.reply_to_user_id}`);

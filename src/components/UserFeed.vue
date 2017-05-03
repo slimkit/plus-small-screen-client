@@ -28,7 +28,7 @@
         1
       </Col>
       <Col span="21">
-        <FeedTool :feed="feed" />
+        <FeedTool :feed="feed" :user="user" />
       </Col>
     </Row>
     <Row v-if="feed.comments.length" :gutter="16">

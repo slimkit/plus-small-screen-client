@@ -1,30 +1,30 @@
 <template>
 	<div class="userProfile" :class="$style.userProfile">
 		<div class="commonHeader">
-      <Row :gutter="16">
-        <Col span="3" @click.native="goTo(-1)"  style="display: flex; justify-content: flex-start">
+      <Row :gutter="24">
+        <Col span="5" @click.native="goTo(-1)"  style="display: flex; justify-content: flex-start">
           <BackIcon height="21" width="21" color="#999" />
         </Col>
-        <Col span="17" class="title-col">
+        <Col span="14" class="title-col">
           个人资料
         </Col>
-        <Col span="4" style="display: flex; justify-content: flex-end">
+        <Col span="5" style="display: flex; justify-content: flex-end">
           <span @click="done(canSave)" class="operate" :class="{active: canSave, disabled: !canSave}">完成</span>
         </Col>
       </Row>
     </div>
     <div class="userProfile-background-color" :class="$style.userProfileAvatar">
-      <Row :gutter="16" :class="$style.rowCenter" style="position: relative;">
+      <Row :gutter="24" :class="$style.rowCenter" style="position: relative;">
         <div style="width: 100%; display: flex; align-items: center;">
           <!-- 头像 -->
-          <Col span="4" :class="$style.colCenter">
+          <Col span="5" :class="$style.colCenter">
             <img v-lazy="avatar" :class="$style.avatar" alt="name">
           </Col>
           <!--昵称+简介-->
-          <Col span="17">
+          <Col span="14">
             更换头像
           </Col>
-          <Col span="3" :class="$style.rightIcon">
+          <Col span="5" :class="$style.rightIcon">
             <RightArrowIcon height="18" width="18" color="#999" />
           </Col>
         </div>
@@ -34,44 +34,44 @@
       </Row>
     </div>
     <div class="userProfile-background-color" :class="$style.userProfileSetting">
-      <Row :gutter="16" :class="$style.rowCenter">
-        <Col span="4">
-          昵称
+      <Row :gutter="24" :class="$style.rowCenter">
+        <Col span="5">
+          用户名
         </Col>
-        <Col span="17">
-          <input style="padding: 0;" type="text" v-model.trim="name" :value="name" placeholder="输入新昵称" />
+        <Col span="14">
+          <input style="padding: 0;" type="text" v-model.trim="name" :value="name" placeholder="输入新用户名" />
         </Col>
-        <Col span="3" :class="$style.rightIcon"  @click.native="clean('name')">
+        <Col span="5" :class="$style.rightIcon"  @click.native="clean('name')">
           <CloseIcon height="18" width="18" color="#999" />
         </Col>
       </Row>
-      <Row :gutter="16" :class="$style.rowCenter" @click.native="showSexPopup" >
-        <Col span="4">
+      <Row :gutter="24" :class="$style.rowCenter" @click.native="showSexPopup" >
+        <Col span="5">
           性别
         </Col>
-        <Col span="17">
+        <Col span="14">
           <span :class="{sexDefaultText: !sex}">{{ sexText }}</span>
         </Col>
-        <Col span="3" :class="$style.rightIcon">
+        <Col span="5" :class="$style.rightIcon">
           <RightArrowIcon height="18" width="18" color="#999" />
         </Col>
       </Row>
-      <Row :gutter="16" :class="$style.rowCenter" @click.native="handleAreaSelect(true)">
-        <Col span="4">
+      <Row :gutter="24" :class="$style.rowCenter" @click.native="handleAreaSelect(true)">
+        <Col span="5">
           城市
         </Col>
-        <Col span="17">
+        <Col span="14">
           <span :class="{cityDefaultText: !areaAbout.city}">{{ areaText }}</span>
         </Col>
-        <Col span="3" :class="$style.rightIcon">
+        <Col span="5" :class="$style.rightIcon">
           <RightArrowIcon height="18" width="18" color="#999" />
         </Col>
       </Row>
-      <Row :gutter="16" :class="$style.rowCenter">
-        <Col span="4">
+      <Row :gutter="24" :class="$style.rowCenter">
+        <Col span="5">
           简介
         </Col>
-        <Col span="20" :class="$style.colBottom">
+        <Col span="19" :class="$style.colBottom">
           <Input 
             :class="$style.intro" 
             v-model="intro" 
@@ -145,7 +145,7 @@
               更换头像
             </Col>
             <Col span="5" style="display: flex; justify-content: flex-end">
-              <LoadingBlackIcon class="spinner-snake" height="18" style="margin-right: 4px;" width="18" v-if="loading" color="#59b6d7" />
+              <LoadingBlackIcon height="18" width="18" v-if="loading" color="#59b6d7" />
               <span v-if="!loading" @click="getCropData" class="operate avatarDone">完成</span>
             </Col>
           </Row>
@@ -232,7 +232,6 @@
 
   const defaultAvatar = resolveImage(require('../statics/images/defaultAvatarx2.png'));
 
-  const currentUser = localEvent.getLocalItem('UserLoginInfo');
   // 昵称验证规则
   const usernameReg = /^[a-zA-Z_\u4E00-\u9FA5\uF900-\uFA2D][a-zA-Z0-9_\u4E00-\u9FA5\uF900-\uFA2D]*$/;
   const UserSetting = {
@@ -244,7 +243,7 @@
       LoadingBlackIcon
     },
     data: () => ({
-      currentUser: currentUser.user_id, // 当前登录用户id
+      currentUser: 0, // 当前登录用户id
       userInfo: {},
       name: '', // nickname
       sex: 0, // sex
@@ -293,7 +292,7 @@
       cleanSetting () {
         this.areaAbout.province = 0;
         this.areaAbout.city = 0;
-        this.areaAbout.location = 0;
+        // this.areaAbout.location = '';
         this.storage_task_id = 0;
         this.imgSrc = '';
       },
@@ -383,13 +382,19 @@
       setImage (e) {
         const file = e.target.files[0];
         if (!file.type.includes('image/')) {
-          alert('Please select an image file');
+          this.$store.dispatch(NOTICE, cb => {
+            cb({
+              show: true,
+              status: false,
+              text: '请选择图片',
+              time: 1500
+            })
+          });
           return;
         }
 
         if (typeof FileReader === 'function') {
-          const reader = new FileReader();
-
+          const reader = new window.FileReader();
           reader.onload = (event) => {
             this.imgSrc = event.target.result;
             this.$refs.cropper.replace(event.target.result);
@@ -397,7 +402,15 @@
           };
           reader.readAsDataURL(file);
         } else {
-          alert('Sorry, FileReader API not supported');
+          this.$store.dispatch(NOTICE, cb => {
+            cb({
+              show: true,
+              status: false,
+              text: '系统太老了...',
+              time: 1500
+            })
+          });
+          return;
         }
       },
       // 获取裁剪后的图片信息
@@ -407,6 +420,7 @@
         let fileUpload = {};
         let fileName = this.$refs.avatarInput.value;
         // 获取本地文件名
+        console.log(fileName);
         fileUpload.origin_filename = fileName.replace('C:\\fakepath\\', '');
         let fileData = this.$refs.cropper.getData();
         // 截取高度
@@ -532,6 +546,13 @@
         let text = this.location ? this.location : '选择居住地';
         if(this.areaAbout.location) {
           text = this.areaAbout.location;
+        } else {
+          const { datas: { 
+              location: { value: location = '' } = {}
+            } = {} } = this.userInfo;
+          if(location) {
+            text = location;
+          }
         }
         this.handleAreaSelect(false);
         return text;
@@ -590,6 +611,8 @@
       }
     },
     mounted () {
+      let currentUser = localEvent.getLocalItem('UserLoginInfo');
+      this.currentUser = currentUser.user_id;
       getUserInfo(this.currentUser, 30).then(user => {
         this.userInfo = { ...this.userInfo, ...user };
         this.name = user.name;
@@ -709,7 +732,7 @@
       border-bottom: 1px solid #e2e3e3;
     },
     .cropper {
-      height: 100%;
+      height: calc(100% - 55px);
       width: 100%;
     }
     .canvasAvatar {

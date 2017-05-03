@@ -23,22 +23,23 @@
   </div>
 </template>
 <script>
-  import { COMMENTINPUT, CLOSECOMMENTINPUT, USERS, NOTICE, UPDATEFEED } from '../stores/types';
+  import { COMMENTINPUT, CLOSECOMMENTINPUT, NOTICE, UPDATEFEED } from '../stores/types';
   import { mapState } from 'vuex';
   import localEvent from '../stores/localStorage';
   import { createAPI, addAccessToken } from '../utils/request';
   import getLocalTime from '../utils/getLocalTime';
 
-  const currentUser = localEvent.getLocalItem('UserLoginInfo');
   const commentInput = {
     data: () => ({
-      comment_content: ''
+      comment_content: '',
+      userInfo: {}
     }),
     methods: {
       closeInput () {
         this.$store.dispatch(CLOSECOMMENTINPUT);
       },
       sendComment () {
+        let currentUser = localEvent.getLocalItem(`UserLoginInfo`);
         let commentStore = this.$store.getters[COMMENTINPUT];
         let comment_content = this.comment_content;
         let reply_to_user_id = commentStore.data.reply_to_user_id;
@@ -108,9 +109,6 @@
       // 评论长短
       commentCount () {
         return this.comment_content.length;
-      },
-      users () {
-        return this.$store.getters[USERS];
       }
     }
   };

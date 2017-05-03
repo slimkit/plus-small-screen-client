@@ -2,14 +2,14 @@
   <transition name="custom-classes-transition" enter-active-class="animated slideInUp" leave-active-class="animated slideOutDown">
     <div class="feed-diggs-container" :class="$style.diggListsRoot" v-if="show">
       <div class="commonHeader">
-        <Row :gutter="16">
-          <Col span="3" style="display: flex; justify-content: flex-start" @click.native="handleShowDiggList">
+        <Row :gutter="24">
+          <Col span="5" style="display: flex; justify-content: flex-start" @click.native="handleShowDiggList">
             <BackIcon height="21" width="21" color="#999" />
           </Col>
-          <Col span="18" class="title-col">
+          <Col span="14" class="title-col">
             点赞榜
           </Col>
-          <Col span="3" style="display: flex;">
+          <Col span="5" style="display: flex;">
           </Col>
         </Row>
       </div>
@@ -27,18 +27,18 @@
       >
         <div class="feed-diggs-container-list diggs-background-color">
           <li v-for="(digg, index) in diggList" :class="$style.perDiggParent" :key="index">
-            <Row :gutter="16" :class="$style.perDigg">
+            <Row :gutter="24" :class="$style.perDigg">
               <Col span="4" @click.native="rediredtUrl(`/users/feeds/${digg.user_id}`)">
                 <img :class="$style.diggAvatar" v-lazy="digg.avatar" :alt="digg.name" :title="digg.name">
               </Col>
-              <Col span="17">
+              <Col span="15">
                 <h4 @click="rediredtUrl(`/users/feeds/${digg.user_id}`)">{{ digg.name }}</h4>
                 <p>{{ digg.intro ? digg.intro : '还没有简介...' }}</p>
               </Col>
-              <Col span="3">
-                <UnFollowingIcon @click.native="doFollowing(digg.user_id)" v-show="!digg.is_following && currentUser != digg.user_id" height="24" width="24" color="#999" />
-                <FollowingIcon @click.native="doUnFollowing(digg.user_id)" v-show="digg.is_following && !digg.is_followed && currentUser != digg.user_id" height="24" width="24" color="#999" />
-                <EachFollowingIcon @click.native="doUnFollowing(digg.user_id)" v-show="!digg.is_following && digg.is_followed && currentUser != digg.user_id" height="24" width="24" color="#999" />
+              <Col span="4">
+                <UnFollowingIcon @click.native="doFollowing(digg.user_id)" v-if="!digg.is_following && currentUser != digg.user_id" height="21" width="21" color="#999" />
+                <FollowingIcon @click.native="doUnFollowing(digg.user_id)" v-if="digg.is_following && !digg.is_followed && currentUser != digg.user_id" height="21" width="21" color="#999" />
+                <EachFollowingIcon @click.native="doUnFollowing(digg.user_id)" v-if="digg.is_following && digg.is_followed && currentUser != digg.user_id" height="21" width="21" color="#999" />
               </Col>
             </Row>
           </li>
@@ -60,11 +60,11 @@
   import UnFollowingIcon from '../icons/UnFollowing';
   import EachFollowingIcon from '../icons/EachFollowing';
   import BackIcon from '../icons/Back';
-  import defaultNoBody from '../statics/images/img_default_nobody@2x.png';
   import lodash from 'lodash';
   import { changeUrl } from '../utils/changeUrl';
+  import { resolveImage } from '../utils/resource';
 
-  const currentUser = localEvent.getLocalItem('UserLoginInfo');
+  const defaultNoBody = resolveImage(require('../statics/images/img_default_nobody@2x.png'));
   const FeedDiggsLists = {
     components: {
       FollowingIcon,
@@ -77,7 +77,7 @@
       bottomAllLoaded: true,
       page: 0,
       bottomStatus: '',
-      currentUser: currentUser.user_id,
+      currentUser: 0,
       localDiggs: {}
     }),
     methods: {
@@ -167,14 +167,15 @@
         show: state => state.feedDiggsList.diggLists.show
       }),
       diggList () {
-        this.localDiggs = this.$store.getters[DIGGLISTS];
-        return this.localDiggs;
+        return this.$store.getters[DIGGLISTS];
       },
       nothing () {
-        return lodash.keys(this.localDiggs).length > 0 ? 0 : defaultNoBody;
+        return lodash.keys(this.diggList).length > 0 ? 0 : defaultNoBody;
       }
     },
     created () {
+      let currentUser = localEvent.getLocalItem('UserLoginInfo');
+      this.currentUser = currentUser.user_id;
       setTimeout( () => {
         if(this.$refs.loadmoreDigglist)
           this.$refs.loadmoreDigglist.onTopLoaded();

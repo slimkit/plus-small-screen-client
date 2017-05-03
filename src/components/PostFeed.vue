@@ -2,21 +2,22 @@
   <transition name="custom-classes-transition" enter-active-class="animated slideInUp" leave-active-class="animated slideOutDown">
     <div class="post-feed" :class="$style.postRoot" v-show="show">
       <div class="commonHeader">
-        <Row :gutter="16">
-          <Col span="4">
+        <Row :gutter="24">
+          <Col span="5">
             <Button :class="$style.actionBtn" type="text" @click="closePost">取消</Button>
           </Col>
-          <Col span="15" class="title-col">
+          <Col span="14" class="title-col">
             发布动态
           </Col>
           <Col span="5" class="header-end-col">
-            <span :class="{ action: !isDisabled, notAction: isDisabled}" @click="postFeed">发布</span>
+            <LoadingBlackIcon height="18" width="18" v-if="loading" color="#59b6d7" />
+            <span :class="{ action: !isDisabled, notAction: isDisabled}"  v-show="!loading" @click="postFeed">发布</span>
           </Col>
         </Row>
       </div>
       <div :class="$style.content">
-        <Row :gutter="16">
-          <Col span="24" style="padding-left: 8px; padding-right: 8px;">
+        <Row :gutter="24">
+          <Col span="24">
             <Input style="border-bottom: 1px #e2e3e3 solid;" v-model="feedTitle" placeholder="有标题更吸引人" :class="$style.contentInput"></Input>
             <Input v-model="feedContent" :autosize="{minRows: 6, maxRows: 12}" type="textarea" :class="$style.contentInput" placeholder="输入要说的话,图文结合更精彩哦"></Input>
           </Col>
@@ -83,6 +84,7 @@ import lodash from 'lodash';
 import CameraIcon from '../icons/Camera';
 import CloseIcon from '../icons/Close';
 import EyeOpenIcon from '../icons/EyeOpen';
+import LoadingBlackIcon from '../icons/LoadingBlack';
 
 const base64Reg = /^data:(.*?);base64,/;
 let reg = /data:(.*?);/;
@@ -90,7 +92,8 @@ const postFeed = {
   components: {
     CameraIcon,
     CloseIcon,
-    EyeOpenIcon
+    EyeOpenIcon,
+    LoadingBlackIcon
   },
   data: () => ({
     feedTitle: '',
@@ -107,7 +110,8 @@ const postFeed = {
     headers: {},
     ids: {},
     format: ['jpg','jpeg','png'],
-    maxSize: 10240
+    maxSize: 10240,
+    loading: false
   }),
   computed: {
     ...mapState({
@@ -133,11 +137,13 @@ const postFeed = {
   },
   methods: {
     postFeed () {
+      if(this.isDisabled) return;
       let feed_content = this.feedContent;
       let feed_title = this.feedTitle;
       let feed_from = 2;
       let isatuser = this.isatuser;
       let storage_task_ids = this.storage_task_ids;
+      this.loading = true;
       addAccessToken().post(createAPI('feeds'),{
           feed_content,
           feed_title,
@@ -163,6 +169,7 @@ const postFeed = {
         this.uploadList =[];
         this.$refs.upload.clearFiles();
         this.ids = {};
+        this.loading = false;
         addAccessToken().get(
           createAPI(`feeds/${response.data.data}`),
           {},
