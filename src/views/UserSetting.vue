@@ -132,10 +132,10 @@
       enter-active-class="animated slideInUp" 
       leave-active-class="animated slideOutDown"
     >
-      <div :class="$style.AvatarSelect" v-show="isShowCropper">
+      <div :class="$style.avatarSelect" v-show="isShowCropper">
         <div class="avatarOp commonHeader">
           <Row 
-            :gutter="16"
+            :gutter="24"
             style="display: flex; align-items: center;"
           >
             <Col span="5" style="display: flex; justify-content: flex-start;" @click.native="handleHideAvatarSelect">
@@ -145,7 +145,7 @@
               更换头像
             </Col>
             <Col span="5" style="display: flex; justify-content: flex-end">
-              <LoadingBlackIcon height="18" width="18" v-if="loading" color="#59b6d7" />
+              <LoadingWhiteIcon height="21" width="21" v-if="loading" />
               <span v-if="!loading" @click="getCropData" class="operate avatarDone">完成</span>
             </Col>
           </Row>
@@ -155,7 +155,7 @@
             :class="$style.canvasAvatar"
             ref="cropper"
             :aspect-ratio="1"
-            :view-mode="2"
+            :view-mode="1"
             :auto-crop="true"
             :min-canvas-width="100"
             :min-canvas-height="100"
@@ -165,6 +165,7 @@
             :background="true"
             :src="imgSrc"
             :guides="false"
+            :rotatable="false"
           >
           </vue-cropper>
         </div>
@@ -227,7 +228,7 @@
   import CloseIcon from '../icons/Close';
   import RightArrowIcon from '../icons/RightArrow';
   import lodash from 'lodash';
-  import LoadingBlackIcon from '../icons/LoadingBlack';
+  import LoadingWhiteIcon from '../icons/LoadingWhite';
   import { resolveImage } from '../utils/resource';
 
   const defaultAvatar = resolveImage(require('../statics/images/defaultAvatarx2.png'));
@@ -240,7 +241,7 @@
       BackIcon,
       CloseIcon,
       RightArrowIcon,
-      LoadingBlackIcon
+      LoadingWhiteIcon
     },
     data: () => ({
       currentUser: 0, // 当前登录用户id
@@ -420,7 +421,6 @@
         let fileUpload = {};
         let fileName = this.$refs.avatarInput.value;
         // 获取本地文件名
-        console.log(fileName);
         fileUpload.origin_filename = fileName.replace('C:\\fakepath\\', '');
         let fileData = this.$refs.cropper.getData();
         // 截取高度
@@ -444,7 +444,7 @@
             this.$set(this.userInfo.avatar, '50', getImage(data.storage_id, 50));
             this.$store.dispatch(NOTICE, cb => {
               cb({
-                text: 'success',
+                text: '裁剪成功,记得保存资料哦',
                 time: 1500,
                 status: true
               });
@@ -716,8 +716,8 @@
   .avatar {
     border-radius: 50%;
     width: 100%;
-  },
-  .AvatarSelect {
+  }
+  .avatarSelect {
     position: fixed;
     left: 0;
     right: 0;
@@ -730,14 +730,14 @@
     .avatarOp {
       height: 55px;
       border-bottom: 1px solid #e2e3e3;
-    },
+    }
     .cropper {
       height: calc(100% - 55px);
       width: 100%;
-    }
-    .canvasAvatar {
-      height: 100%;
-      width: 100%;
+      .canvasAvatar {
+        height: 100%;
+        width: 100%;
+      }
     }
   }
   .userProfile {
@@ -806,7 +806,7 @@
   }
   
 </style>
-<style scope lang="scss">
+<style scoped lang="scss">
   .avatarOp {
     height: 55px;
     border-bottom: 1px #ddd solid;
@@ -827,7 +827,7 @@
     background: #fff;
   }
   span.operate {
-    font-size: 14px;
+    font-size: 16px;
   }
   span.operate.avatarDone{
     color: #59b6d7;

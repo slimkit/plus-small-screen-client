@@ -37,7 +37,7 @@
                 <!--已关注作者,但作者未关注我， 采用取消关注操作-->
                   <FollowingIcon  @click.native="handleUnFollowingStatus" height="21" width="21" color="#59b6d7" v-if="userInfo.is_following && !userInfo.is_followed && (userInfo.user_id != currentUser)" />
                 <!--相互关注， 采用取消关注操作-->
-                  <EachFollowingIcon v-if="userInfo.is_following && userInfo.is_followed && (userInfo.user_id != currentUser)" @click.native="handleUnFollowingStatus" height="24" width="24" color="#59b6d7" />
+                  <EachFollowingIcon v-if="userInfo.is_following && userInfo.is_followed && (userInfo.user_id != currentUser)" @click.native="handleUnFollowingStatus" height="21" width="21" color="#59b6d7" />
               </Col>
             </Row>
           </div>

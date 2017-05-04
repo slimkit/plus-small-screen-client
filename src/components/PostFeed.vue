@@ -10,7 +10,7 @@
             发布动态
           </Col>
           <Col span="5" class="header-end-col">
-            <LoadingBlackIcon height="18" width="18" v-if="loading" color="#59b6d7" />
+            <LoadingWhiteIcon height="21" width="21" v-if="loading" />
             <span :class="{ action: !isDisabled, notAction: isDisabled}"  v-show="!loading" @click="postFeed">发布</span>
           </Col>
         </Row>
@@ -84,7 +84,8 @@ import lodash from 'lodash';
 import CameraIcon from '../icons/Camera';
 import CloseIcon from '../icons/Close';
 import EyeOpenIcon from '../icons/EyeOpen';
-import LoadingBlackIcon from '../icons/LoadingBlack';
+import LoadingWhiteIcon from '../icons/LoadingWhite';
+import EXIF from 'exif-js';
 
 const base64Reg = /^data:(.*?);base64,/;
 let reg = /data:(.*?);/;
@@ -93,7 +94,7 @@ const postFeed = {
     CameraIcon,
     CloseIcon,
     EyeOpenIcon,
-    LoadingBlackIcon
+    LoadingWhiteIcon
   },
   data: () => ({
     feedTitle: '',
@@ -137,13 +138,13 @@ const postFeed = {
   },
   methods: {
     postFeed () {
-      if(this.isDisabled) return;
+      if(this.isDisabled || this.loading) return;
+      this.loading = true;
       let feed_content = this.feedContent;
       let feed_title = this.feedTitle;
       let feed_from = 2;
       let isatuser = this.isatuser;
       let storage_task_ids = this.storage_task_ids;
-      this.loading = true;
       addAccessToken().post(createAPI('feeds'),{
           feed_content,
           feed_title,
@@ -205,7 +206,8 @@ const postFeed = {
       this.storage_task_ids = [];
       this.$refs.upload.clearFiles();
       this.ids = {};
-      this.uploadList =[];
+      this.uploadList = [];
+      this.loading = false;
       this.$store.dispatch(SHOWPOST, cb => {
         cb ({
           show: false
@@ -276,6 +278,13 @@ const postFeed = {
       })
     },
     handleBeforeUpload (file) {
+      let Orientation = null;
+      EXIF.getData(file, function () {
+          EXIF.getAllTags(this);
+          Orientation = EXIF.getTag(this);
+          console.log(Orientation);
+          return ;
+      });
       const _file_format = file.name.split('.').pop().toLocaleLowerCase();
       const checked = this.format.some(item => item.toLocaleLowerCase() === _file_format);
       if(!checked) {
@@ -400,7 +409,7 @@ const postFeed = {
       });
     }
   },
-  mounted () {
+  updated () {
     this.uploadList = this.$refs.upload.fileList;
   }
 };
@@ -422,51 +431,43 @@ export default postFeed;
     display: block;
     height: 100%;
     width: 100%;
-  }
-  .uploadList {
-    padding: 0 4vw;
-    display: flex;
-    flex-wrap: wrap;
-  }
-  .contentInput {
-    padding: 6px 0;
-    input, textarea {
-      border: none;
-      padding: 5px 8px;
-      transition: none;
-      &:focus, &:hover{
+    .uploadList {
+      padding: 0 4vw;
+      display: flex;
+      flex-wrap: wrap;
+    }
+    .contentInput {
+      padding: 6px 0;
+      input, textarea {
         border: none;
-        outline: 0;
-        box-shadow: none;
-      }
-    }
-  }
-  .postFeedNav {
-    height: 45px;
-    border-bottom: 1px #e2e3e3 solid;
-    .navRow {
-      height: 100%;
-      margin-left: 0!important;
-      margin-right: 0!important;
-      .actionBtn {
+        padding: 4px 8px;
+        transition: none;
         font-size: 14px;
-        display: flex;
-        justify-content: flex-start;
-        padding: 6px 0;
-      }
-      .sendAction {
-        display: flex;
-        justify-content: flex-end;
+        &:focus, &:hover{
+          border: none;
+          outline: 0;
+          box-shadow: none;
+        }
       }
     }
-  }
-  .camera {
-    width: 22vw;
-    height: 22vw; 
-    line-height: 22vw;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    .actionBtn {
+      font-size: 16px;
+      display: flex;
+      justify-content: flex-start;
+      padding: 6px 0;
+    }
+    .sendAction {
+      display: flex;
+      justify-content: flex-end;
+    }
+    .camera {
+      width: 22vw;
+      height: 22vw; 
+      line-height: 22vw;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
   }
 </style>
 <style lang="scss">
@@ -494,11 +495,11 @@ export default postFeed;
     }
     .action {
       color: #59b6d7;
-      font-size: 14px;
+      font-size: 16px;
     }
     .notAction {
       color: #999;
-      font-size: 14px;
+      font-size: 16px;
     }
   }
   .demo-upload-list{

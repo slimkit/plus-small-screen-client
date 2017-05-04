@@ -33,15 +33,6 @@ const LoadingWhite = {
 export default LoadingWhite;
 </script>
 <style scoped>
-  .st0{opacity:0.9111;fill:#FFFFFF;}
-  .st1{fill:#FFFFFF;}
-  .st2{opacity:0.2727;fill:#FFFFFF;}
-  .st3{opacity:0.3778;fill:#FFFFFF;}
-  .st4{opacity:0.4667;fill:#FFFFFF;}
-  .st5{opacity:0.5556;fill:#FFFFFF;}
-  .st6{opacity:0.6444;fill:#FFFFFF;}
-  .st7{opacity:0.7333;fill:#FFFFFF;}
-  .st8{opacity:0.8222;fill:#FFFFFF;}
   .st9{opacity:0.9111;fill:#333333;}
   .st10{fill:#333333;}
   .st11{opacity:0.2727;fill:#333333;}
