@@ -10,8 +10,8 @@
         </Col>
       </Row>
     </div>
-    <div class="nothingDefault"> 
-      <img v-if="nothing" :src="nothing" />
+    <div v-if="nothing" class="nothingDefault"> 
+      <img :src="nothing" />
     </div>
     <mt-loadmore
       v-if="!nothing"
@@ -30,7 +30,7 @@
               <img @click="changeUrl(`/users/feeds/${digg.user_id}`)" class="avatar" :src="digg.avatar" :alt="digg.name" />
             </Col>
             <Col span="13">
-              <h4 @click="changeUrl(`/users/feeds/${comment.user_id}`)">{{digg.name}}</h4>
+              <h4 @click="changeUrl(`/users/feeds/${digg.user_id}`)">{{digg.name}}</h4>
               <timeago style="font-size: 14px; color: #999;" :since="digg.time" locale="zh-CN" :auto-update="60"></timeago>
             </Col>
             <Col span="2">
@@ -147,7 +147,7 @@
           let newDigg = {
             name: '',
             avatar: '',
-            user_id: digg.to_user_id,
+            user_id: digg.user_id,
             time: 0,
             source_id: digg.source_id,
             source_content: digg.source_content,
@@ -185,7 +185,7 @@
         this.diggs.forEach( digg => {
           this.ids.push(digg.id);
         });
-        if(length < 3) {
+        if(length < 15) {
           this.bottomAllLoaded = true;
           setTimeout( () => {
             if(this.$refs.loadmoreDiggs) {
@@ -251,7 +251,13 @@
     }
   }
 </style>
-<style scoped>
+<style scoped lang="scss">
+  .comments {
+    .commonHeader {
+      position: relative;
+      z-index: 2;
+    }
+  }
   .row-container {
     align-items: center;
   }

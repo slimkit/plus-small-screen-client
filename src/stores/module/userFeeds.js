@@ -11,17 +11,17 @@ const state = {
 const mutations = {
   // 根据日期分组的动态列
   [USERFEEDS] (state, ids) {
-    state.userFeeds = [ ...state.userFeeds, ...ids ];
+    state.userFeeds = Array.from(new Set([ ...state.userFeeds, ...ids ]));
   },
   [APPENDUSERFEED] (state, id) {
     let userFeeds = [ ...state.userFeeds, id ]
-    state.userFeeds = userFeeds.sort(sort);
+    state.userFeeds = Array.from(new Set(userFeeds.sort(sort)));
   },
   [CLEANUSERFEEDS] (state) {
     state.userFeeds = [];
   },
   [PREPENDUSERFEED] (state, id) {
-    state.userFeeds = [ feed, ...state.userFeeds ];
+    state.userFeeds = Array.from(new Set([ feed, ...state.userFeeds ]));
   }
 };
 

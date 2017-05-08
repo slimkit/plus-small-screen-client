@@ -21,7 +21,7 @@ function CanNotGetInWhenLogged (to, from, next) {
   let UserLoginInfo = localEvent.getLocalItem('UserLoginInfo');
   if(UserLoginInfo.token) {
     next({
-      path: '/feeds/following',
+      path: '/feeds/new',
       query: {
         redirect: to.fullPath
       }

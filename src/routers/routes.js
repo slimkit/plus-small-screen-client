@@ -73,7 +73,7 @@ const routes = [
     beforeEnter: (to, from, next) => {
       requestAuth(to, from, next)
     },
-    redirect: '/feeds/following',
+    redirect: '/feeds/new',
     children: [
       {
         path: 'following',

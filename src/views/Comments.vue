@@ -10,8 +10,8 @@
         </Col>
       </Row>
     </div>
-    <div class="nothingDefault"> 
-      <img v-if="nothing" :src="nothing" />
+    <div v-if="nothing" class="nothingDefault"> 
+      <img :src="nothing" />
     </div>
     <mt-loadmore
       v-if="!nothing"
@@ -144,7 +144,7 @@
           let newcomment = {
             name: '',
             avatar: '',
-            user_id: comment.to_user_id,
+            user_id: comment.user_id,
             reply_to_user_id: comment.reply_to_user_id,
             reply_to_user_name: '',
             time: 0,
@@ -263,6 +263,9 @@
   }
 </style>
 <style scoped>
+  .comments {
+    position: relative;
+  }
   .row-container {
     align-items: flex-start;
   }

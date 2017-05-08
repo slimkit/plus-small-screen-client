@@ -142,6 +142,9 @@
       padding: 10px 0;
       textarea {
         min-height: 34px!important;
+        position: relative;
+        bottom: 0;
+        left: 0;
       }
       .sendComment {
         font-size: 14px;

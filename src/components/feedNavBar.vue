@@ -1,15 +1,15 @@
 <template>
   <div :class="$style.feedNavBar" class="feed-nav-bar">
     <Row :gutter="32" :class="$style.NavRow">
+      <Col :span="6">
+        <router-link :class="$style.navLink" to="/feeds/new">最新</router-link>
+        <!-- <Button @click.native="clean">缓存</Button> -->
+      </Col>
       <Col :span="6" >
           <router-link :class="$style.navLink" to="/feeds/following">关注</router-link>
       </Col>
       <Col :span="6" >
         <router-link :class="$style.navLink" to="/feeds/hot">热门</router-link>
-      </Col>
-      <Col :span="6">
-        <router-link :class="$style.navLink" to="/feeds/new">最新</router-link>
-        <!-- <Button @click.native="clean">缓存</Button> -->
       </Col>
     </Row>
   </div>

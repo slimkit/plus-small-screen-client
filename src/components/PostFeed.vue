@@ -51,7 +51,6 @@
               :on-format-error="handleFormatError"
               :on-exceeded-size="handleMaxSize"
               :before-upload="handleBeforeUpload"
-              multiple
               :headers="headers"
               :data="uploadData"
               type="drag"
@@ -63,7 +62,7 @@
               </div>
             </Upload>
             <Modal title="查看图片" v-model="visible">
-                <img :src="uploadList[imgName].url" v-if="visible" style="width: 100%">
+                <img :src="ids[uploadList[imgName].name].url" v-if="visible" style="width: 100%">
             </Modal>
           </div>
         </template>
@@ -86,6 +85,7 @@ import CloseIcon from '../icons/Close';
 import EyeOpenIcon from '../icons/EyeOpen';
 import LoadingWhiteIcon from '../icons/LoadingWhite';
 import EXIF from 'exif-js';
+import exifOrient from 'exif-orient';
 
 const base64Reg = /^data:(.*?);base64,/;
 let reg = /data:(.*?);/;
@@ -252,7 +252,7 @@ const postFeed = {
         cb({
           show: true,
           status: false,
-          time: 1500,
+          time: 2500,
           text: '图片' + name + ' 格式不正确，请上传 jpg 或 png 格式的图片。'
         })
       })
@@ -267,6 +267,14 @@ const postFeed = {
         });
       })
     },
+    dataURLtoBlob (dataurl) {
+      var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+      bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+      while(n--){
+          u8arr[n] = bstr.charCodeAt(n);
+      }
+      return new Blob([u8arr], {type:mime});
+    },
     handleMaxItems ( ) {
       this.$store.dispatch(NOTICE, cb => {
         cb({
@@ -278,27 +286,25 @@ const postFeed = {
       })
     },
     handleBeforeUpload (file) {
-      let Orientation = null;
-      EXIF.getData(file, function () {
-          EXIF.getAllTags(this);
-          Orientation = EXIF.getTag(this);
-          console.log(Orientation);
-          return ;
-      });
       const _file_format = file.name.split('.').pop().toLocaleLowerCase();
       const checked = this.format.some(item => item.toLocaleLowerCase() === _file_format);
+      // 判断图片类型
       if(!checked) {
         this.handleFormatError(file.name);
         return false;
       }
+      // 判断图片大小
       if(file.size > this.maxSize * 1024) {
         this.handleMaxSize(file.name);
         return false;
       }
-      if(this.uploadList.length > 9) {
+      // 判断上传个数
+      const check = this.uploadList.length < 9;
+      if(!check) {
         this.handleMaxItems();
         return false;
       }
+
       return new Promise( (resolve, reject) => {
         this.formateUploadFile(file).then( data => {
           let newFile = {};
@@ -306,34 +312,121 @@ const postFeed = {
           newFile.url = data.url;
           this.ids = { ...this.ids, [file.name]: newFile };
           newFile = {};
+          let formateFile = this.dataURLtoBlob(data.url)
           if(data.status) {
-            resolve(file);
+            resolve(formateFile);
           } else {
             return false;
           }
         });
       })
     },
+
+
+    // 读取文件信息
     readFile (file) {
       return new Promise( function (resolve, reject) {
         let reader = new FileReader();
         reader.onload = function () {
-          resolve(reader);
+          resolve({
+            dataUri: reader.result,
+            file
+          });
         };
         reader.readAsDataURL(file);
       });
     },
-    readImg (DataUri) {
+    // 获取图像信息
+    readImg (data) {
       return new Promise( function (resolve, reject) {
-        let img = new Image();
-        img.src = DataUri.result;
-        let info = {};
-        info.dataUri = DataUri.result;
-        img.onload = function () {
-          info.img = img;
-          resolve(info);
-        };
-      });
+        let Orientation = null, height = 0, width = 0;
+        EXIF.getData(data.file, 
+          function () {
+            Orientation = EXIF.getTag(data.file, 'Orientation');
+            let img = new Image();
+            img.src = data.dataUri;
+            img.onload = () => {
+              switch(Orientation) {
+                case 6:
+                 height = img.naturalWidth;
+                 width = img.naturalHeight;
+                break;
+
+                case 3:
+                  height = img.naturalWidth;
+                  width = img.naturalHeight;
+                break;
+
+                case 8:
+                  height = img.naturalHeight;
+                  width = img.naturalWidth;
+                break;
+              }
+              if(Orientation !== null && Orientation !== 1 && Orientation !== undefined) {
+                exifOrient(data.dataUri, Orientation, function(err, canvas) {
+                  let dataUri = canvas.toDataURL(data.file.type);
+                  resolve({
+                    dataUri,
+                    img: {
+                      width,
+                      height
+                    }
+                  })
+                });
+              } else {
+                let img = new Image();
+                img.src = data.dataUri;
+                let info = {};
+                info.dataUri = data.dataUri;
+                img.onload = function () {
+                  info.img = img;
+                  resolve(info);
+                };
+              }
+            }
+            
+            return false;
+          }
+        );
+      }
+        // if(data.Orientation !== null && data.Orientation !== 1 && data.Orientation !== undefined) {
+        //   let img = new Image();
+        //   img.src = data.reader.result;
+        //   exifOrient(img, function(err, canvas) {
+        //     console.log(canvas);
+        //   })
+        //   return false;
+          // base64 = canvas.toDataURL(data.type);
+          // console.log(base64);
+          // resolve({
+          //   dataUri: base64,
+          //   img: {
+          //     width: width,
+          //     height: height
+          //   }
+          // })
+        // } else { // 图片无旋转
+        //   if((data.height !== 0 && data.height !== undefined) && (data.width !== 0 || data.width !== undefined) ) {
+        //     resolve({
+        //       dataUri: data.reader.result,
+        //       img: {
+        //         height: data.height,
+        //         width: data.width
+        //       }
+        //     });
+        //   } else {
+        //     let img = new Image();
+        //     img.src = data.reader.result;
+        //     let info = {};
+        //     info.dataUri = data.reader.result;
+        //     img.onload = function () {
+        //       info.img = img;
+        //       resolve(info);
+        //     };
+        //   }
+          
+        // }
+      );
     },
     uploadFile (fileUpload) {
       return new Promise(function(resolve, reject) {

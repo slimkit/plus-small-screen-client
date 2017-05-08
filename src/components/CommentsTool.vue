@@ -159,6 +159,7 @@
   .userName {
     font-size: 13px;
     color: #333;
+    border-bottom: none!important;
   }
   .commentContent{
     font-size: 14px;

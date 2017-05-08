@@ -4,12 +4,11 @@
       :bottom-method="loadBottom"
       :bottom-all-loaded="bottomAllLoaded"
       ref="loadmore"
-      bottomPullText="上拉加载更多动态"
-      bottomDropText="释放加载更多动态"
-      :bottomDistance="70"
+      :bottomDistance="50"
       @bottom-status-change="bottomStatusChange"
+      :class="{noBottom: mintPaddingBottomStyle == 0, hasBottom: mintPaddingBottomStyle == 1, myHasBottom: mintPaddingBottomStyle == 2, hasHalfBottom: mintPaddingBottomStyle == 3}"
     >
-      <div class="UserFeeds">
+      <div>
         <div :class="$style.navBar">
           <div :class="$style.back" @click="goBack">
             <BackIcon height="24" width="24" color="#fff" />
@@ -23,7 +22,7 @@
         </div>
         <div :class="$style.userProfile">
           <div :class="$style.avatar">
-            <img :src="avatar" :alt="userInfo.name">
+            <img v-lazy="avatar" :alt="userInfo.name">
           </div>
           <h4 :class="$style.name">{{userInfo.name}}</h4>
           <div :class="$style.intro">
@@ -49,11 +48,11 @@
           </div>
         </div>
         <div v-if="nothing" :class="$style.nothingDefault">
-          <img :src="nothing" />
+          <img style="padding-top: 6vh" :src="nothing" />
         </div>
       </div>
-      <div slot="bottom" style="display: flex; justify-content: center; align-items: center; padding: 10px 0;">
-        <span v-show="bottomAllLoaded && bottomStatus !== 'loading' && !nothing">没有更多了</span>
+      <div slot="bottom" v-if="!nothing" class="loadMoreBottom" :class="{hasNoMore: loadMoreBottomStyle == 0, noMore: loadMoreBottomStyle == 1, hasHalfMore: loadMoreBottomStyle == 2}">
+        <span v-show="bottomAllLoaded && bottomStatus !== 'loading' && !nothing && hasNoMore">没有更多了</span>
         <span v-show="bottomStatus === 'loading' && !bottomAllLoaded">加载中...</span>
         <span v-show="bottomStatus === 'pull' && !bottomAllLoaded">上拉加载更多</span>
         <span v-show="bottomStatus === 'drop'">释放加载更多</span>
@@ -107,7 +106,8 @@
       user_id: 0,
       bottomAllLoaded: false,
       bottomStatus: '',
-      max_id: 0
+      max_id: 0,
+      hasNoMore: false
 
     }),
     methods: {
@@ -175,6 +175,7 @@
             data.forEach((feed) => {
               ids.push(feed.feed.feed_id);
               feeds[feed.feed.feed_id] = feed;
+              this.max_id = feed.feed.feed_id;
             });
             this.$store.dispatch(USERFEEDS, cb => {
               cb(ids);
@@ -184,8 +185,8 @@
             })
           }
           setTimeout(() => {
-            this.$refs.loadmore.onTopLoaded();
-          }, 200);
+            this.$refs.loadmore.onBottomLoaded();
+          }, 500);
         })
       },
       // 组装多条数据
@@ -219,6 +220,40 @@
       }
     },
     computed: {
+      // 根据关注按钮来确认loadmore的样式
+      loadMoreBottomStyle () {
+        // loadmore 底部margin状态
+        let MarginLoadMoreBottom = 0;
+
+        if(this.currentUser != this.user_id) {
+          MarginLoadMoreBottom = 1;
+        } else {
+          // 第一次加载内容不足15条 没有margin值
+          if(!this.hasNoMore) {
+            MarginLoadMoreBottom = 2;
+          }
+        }
+        return MarginLoadMoreBottom
+      },
+      mintPaddingBottomStyle () {
+        let mintPaddingBottom = 0;
+        if(this.currentUser != this.user_id) {
+          if(this.bottomAllLoaded == true) {
+            mintPaddingBottom = 1;
+          } else {
+            mintPaddingBottom = 3;
+          }
+        } else {
+          if(this.bottomAllLoaded == true) {
+            if(!this.hasNoMore) {
+              mintPaddingBottom = 0;
+            } else {
+              mintPaddingBottom = 2;
+            }
+          }
+        }
+        return mintPaddingBottom;
+      },
       ...mapState({
         feeds: state => state.userFeeds.userFeeds
       }),
@@ -244,7 +279,7 @@
       },
       nothing () {
         let feedLength = this.$store.getters[USERFEEDS];
-        return feedLength ? 0 : defaultNothing;
+        return feedLength.length ? 0 : defaultNothing;
       },
       avatar () {
         const { avatar: { 30: avatar = defaultAvatar } = {} } = this.userInfo;
@@ -298,10 +333,10 @@
         this.goBack();
         return;
       }
-      user_id = this.user_id = user_id ? user_id : currentUser;
-      this.userInfo = { ...this.userInfo, ...localEvent.getLocalItem(`user_${user_id}`) };
+      this.user_id = this.currentUser != user_id ? user_id : this.currentUser;
+      this.userInfo = { ...this.userInfo, ...localEvent.getLocalItem(`user_${this.user_id}`) };
       // 获取动态列表
-      addAccessToken().get(createAPI(`feeds/users/${user_id}`), {},
+      addAccessToken().get(createAPI(`feeds/users/${this.user_id}`), {},
         {
           validateStatus: status => status === 200
         }
@@ -309,8 +344,9 @@
       .then(response => {
         let feeds = response.data.data;
         if(!feeds.length) return;
-        // let newFeeds = this.fomateFeeds(feeds);
+        this.hasNoMore = true;
         if(feeds.length < 15) {
+          this.hasNoMore = false;
           this.bottomAllLoaded = true;
         }
         let ids = [];
@@ -328,6 +364,7 @@
         })
         setTimeout(() => {
           this.$refs.loadmore.onTopLoaded();
+          this.$refs.loadmore.onBottomLoaded();
         }, 200);
       })
     }
@@ -368,12 +405,14 @@
   .userProfile {
     width: 100%;
     margin-top: -11vh;
+    background: #fff;
     .avatar {
       width: 100%;
       overflow: hidden;
       display: flex;
       justify-content: center;
       align-items: center;
+      min-height: 30vw;
       img {
         width: 25%;
         border-radius: 50%;
@@ -408,7 +447,7 @@
     }
   }
   .followStatus {
-    height: 60px;
+    height: 50px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -420,18 +459,43 @@
     right: 0;
   }
 </style>
-<style lang="css" scope>
-  .mint-loadmore {
-    padding-bottom: 20px;
+<style lang="scss" scope>
+  .loadMoreBottom {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 0;
+  }
+  .hasNoMore {
+    margin-bottom:  -40px;
+  }
+  .hasHalfMore {
+    margin-bottom: -30px;
+  }
+  .noMore {
+    margin-bottom: 0;
+    padding: 0;
+  }
+  .noBottom {
+    padding-bottom: 10px;
+  }
+  .hasBottom {
+    padding-bottom: 55px;
+  }
+  .myHasBottom {
+    padding-bottom: 45px;
+  }
+  .hasHalfBottom {
+    padding-bottom: 30px;
   }
   .noFollowing {
     color: #333;
-    font-size: 18px;
+    font-size: 16px;
     margin-left: 8px;
   }
   .following {
     color: #59b6d7;
-    font-size: 18px;
+    font-size: 16px;
     margin-left: 8px;
   }
 </style>
