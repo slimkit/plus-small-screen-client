@@ -227,7 +227,7 @@
       feedData: {
         user_id: 0,
         feed: {
-          id: 1,
+          feed_id: 1,
           title: "",
           content: "",
           created_at: "",
@@ -470,25 +470,25 @@
               reply_to_user_id,
               to_user_name,
               feed
-            },
-            cb: this.updateComments
+            }
+            // cb: this.updateComments
           });
         })
       },
-      updateComments (close, data) {
-        if(data.user === undefined) {
-          getUserInfo(data.user_id, 30).then(user => {
-            data.user = { ...data.user, ...user };
-            this.$nextTick(function () {
-              this.comments.unshift(data);
-            });
-          })
-        } else {
-          this.$nextTick(function () {
-            this.comments.unshift(data);
-          });
-        }
-      },
+      // updateComments (close, data) {
+      //   if(data.user === undefined) {
+      //     getUserInfo(data.user_id, 30).then(user => {
+      //       data.user = { ...data.user, ...user };
+      //       this.$nextTick(function () {
+      //         this.comments.unshift(data);
+      //       });
+      //     })
+      //   } else {
+      //     this.$nextTick(function () {
+      //       this.comments.unshift(data);
+      //     });
+      //   }
+      // },
       // 新版删除确认提示
       showComfirm (commentId, feedId, index) {
         this.$store.dispatch(CONFIRM, cb => {
@@ -592,34 +592,31 @@
           this.getUser(data.user_id);
           this.feed_id = feed_id;
           this.feedData = { ...this.feedData, ...data };
-          // this.$store.dispatch(UPDATEFEED, cb => {
-          //   cb(data);
-          // })
-        })
+          // 获取动态评论 前15条
+          addAccessToken().get(
+            createAPI(`feeds/${feed_id}/comments`),
+            {},
+            {
+              validateStatus: status => status === 200
+            }
+          )
+          .then(({ data: { data = {} } = {} }) => {
+            // 格式化评论列表
+            let formatedComments = formateFeedComments(data);
+            this.comments = data;
+            this.feedData = { ...this.feedData, comments: data };
+            if(this.comments.length < 15) {
+              this.bottomAllLoaded = true;
+            }
+            this.$store.dispatch(UPDATEFEED, cb => {
+              cb(this.feedData);
+            })
+            setTimeout( () => {
+              this.showSpinner = false;
+            }, 1200);
+          });
+        });
       // }
-      // 获取动态评论 前15条
-      addAccessToken().get(
-        createAPI(`feeds/${feed_id}/comments`),
-        {},
-        {
-          validateStatus: status => status === 200
-        }
-      )
-      .then(({ data: { data = {} } = {} }) => {
-        // 格式化评论列表
-        let formatedComments = formateFeedComments(data);
-        this.comments = data;
-        this.feedData = { ...this.feedData, comments: data };
-        if(this.comments.length < 15) {
-          this.bottomAllLoaded = true;
-        }
-        this.$store.dispatch(UPDATEFEED, cb => {
-          cb(this.feedData);
-        })
-        setTimeout( () => {
-          this.showSpinner = false;
-        }, 1200);
-      })
     },
     mounted () {
       window.addEventListener('scroll', this.menu);
