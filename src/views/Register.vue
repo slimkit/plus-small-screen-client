@@ -205,7 +205,7 @@
           }
         })
         .catch(({ response: { data = {} } = {} } ) => {
-          this.isDisabled = false;
+          this.isCanGetCode = true;
           const { code = 'xxxx' } = data;
           this.isLoading = false;
           this.errors = { ...this.errors, code: errorCodes[code] };
@@ -232,6 +232,9 @@
           localEvent.setLocalItem('UserLoginInfo', response.data.data);
           this.isLoading = false;
           getUserInfo(response.data.data.user_id, 30).then(user => {
+            this.$store.dispatch(USERS_APPEND, cb =>{
+              cb(user)
+            });
             router.push({ path: 'feeds' });
           });
         })

@@ -77,13 +77,9 @@
               reply_to_user_id,
               to_user_name,
               feed
-            },
-            cb: this.commentCallback
+            }
           });
         })
-      },
-      commentCallback (close) {
-        console.log(close);
       },
       /**
        * [showComfirm description]
@@ -120,7 +116,7 @@
         })
       },
       getUserName (user_id) {
-        let { [user_id]: { name } = {} } = this.users;
+        let { [user_id]: { name = '' } = {} } = this.users;
         return name;
       }
     },

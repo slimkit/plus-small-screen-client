@@ -241,7 +241,8 @@
           is_digg_feed: 0,
           is_collection_feed: 0
         },
-        diggs: []
+        diggs: [],
+        comments: [] // 更新列表使用
       },
       comments: [],
       userInfo: {
@@ -542,21 +543,24 @@
         // console.log(document);
         let header = document.getElementById('feed-header');
         let footer = document.getElementById('feed-footer');
-        if(this.scroll > 55) {
-          if(this.scroll > window.pageYOffset) {
-            header.style.top = 0;
-            footer.style.bottom = 0;
-          } else {
-            header.style.top = '-55px';
-            footer.style.bottom = '-55px';
+        if(header && footer) {
+          if(this.scroll > 55) {
+            if(this.scroll > window.pageYOffset) {
+              header.style.top = 0;
+              footer.style.bottom = 0;
+            } else {
+              header.style.top = '-55px';
+              footer.style.bottom = '-55px';
+            }
           }
+          this.scroll = window.pageYOffset;
         }
-        this.scroll = window.pageYOffset;
       }
     },
     created () {
       let currentUser = localEvent.getLocalItem('UserLoginInfo');
       this.currentUser = currentUser.user_id;
+      let serviceFeed = {};
       let feed_id = parseInt(this.$route.params.feed_id);
       if ( !feed_id ) {
         this.$store.dispatch(NOTICE, cb => {
@@ -572,7 +576,10 @@
         return;
       }
       // 先获取本地动态
-      let localFeed = this.$store.getters[FEEDSLIST][feed_id];
+      // let localFeed = this.$store.getters[FEEDSLIST][feed_id];
+      // if(lodash.keys(localFeed).length) {
+      //   this.feedData.comments = localFeed.comments;
+      // }
         // 获取动态详情
         addAccessToken().get(
           createAPI(`feeds/${feed_id}`),
@@ -585,9 +592,9 @@
           this.getUser(data.user_id);
           this.feed_id = feed_id;
           this.feedData = { ...this.feedData, ...data };
-          this.$store.dispatch(UPDATEFEED, cb => {
-            cb(data);
-          })
+          // this.$store.dispatch(UPDATEFEED, cb => {
+          //   cb(data);
+          // })
         })
       // }
       // 获取动态评论 前15条
@@ -602,9 +609,13 @@
         // 格式化评论列表
         let formatedComments = formateFeedComments(data);
         this.comments = data;
+        this.feedData = { ...this.feedData, comments: data };
         if(this.comments.length < 15) {
           this.bottomAllLoaded = true;
         }
+        this.$store.dispatch(UPDATEFEED, cb => {
+          cb(this.feedData);
+        })
         setTimeout( () => {
           this.showSpinner = false;
         }, 1200);

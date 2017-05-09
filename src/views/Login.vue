@@ -197,6 +197,9 @@
           localEvent.setLocalItem('UserLoginInfo', data);
           getUserInfo(data.user_id, 30).then(user => {
             localEvent.setLocalItem(`user_${data.user_id}`, user);
+            this.$store.dispatch(USERS_APPEND, cb =>{
+              cb(user)
+            });
             router.push({ path: redirect });
           });
         })

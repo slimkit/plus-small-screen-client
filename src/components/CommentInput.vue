@@ -44,6 +44,10 @@
         let comment_content = this.comment_content;
         let reply_to_user_id = commentStore.data.reply_to_user_id;
         let user_id = currentUser.user_id;
+        // 当前用户信息
+        let user_info = localEvent.getLocalItem(`user_${user_id}`);
+        // 被评论者用户信息
+        let reply_to_user = localEvent.getLocalItem(`user_${reply_to_user_id}`);
         let feed = commentStore.data.feed;
         let feed_id = feed.feed.feed_id;
         let newCommentInfo = [];
@@ -64,8 +68,8 @@
               id: response.data.data,
               reply_to_user_id: reply_to_user_id,
               user_id: user_id,
-              reply_to_user: localEvent.getLocalItem(`user_${reply_to_user_id}`),
-              user: localEvent.getLocalItem(`user_${user_id}`)
+              reply_to_user: reply_to_user,
+              user: user_info
             };
             this.comment_content = '';
             let info = {

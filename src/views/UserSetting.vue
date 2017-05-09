@@ -460,8 +460,8 @@
               this.storage_task_id = data.storage_task_id;
               this.$store.dispatch(NOTICE, cb => {
                 cb({
-                  text: 'success',
-                  time: 1500,
+                  text: '头像上传成功,请保存更改',
+                  time: 2500,
                   status: true
                 });
               });
@@ -727,6 +727,7 @@
     margin: 0;
     height: 100%;
     width: 100%;
+    z-index: 3;
     .avatarOp {
       height: 55px;
       border-bottom: 1px solid #e2e3e3;
