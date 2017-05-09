@@ -267,6 +267,7 @@ const postFeed = {
         });
       })
     },
+    // dataurl转blob对象
     dataURLtoBlob (dataurl) {
       var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
       bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
@@ -275,6 +276,7 @@ const postFeed = {
       }
       return new Blob([u8arr], {type:mime});
     },
+    // 检验上传图片数量
     handleMaxItems ( ) {
       this.$store.dispatch(NOTICE, cb => {
         cb({
@@ -285,6 +287,7 @@ const postFeed = {
         });
       })
     },
+    // 上传前置操作
     handleBeforeUpload (file) {
       const _file_format = file.name.split('.').pop().toLocaleLowerCase();
       const checked = this.format.some(item => item.toLocaleLowerCase() === _file_format);
@@ -322,7 +325,6 @@ const postFeed = {
       })
     },
 
-
     // 读取文件信息
     readFile (file) {
       return new Promise( function (resolve, reject) {
@@ -336,6 +338,7 @@ const postFeed = {
         reader.readAsDataURL(file);
       });
     },
+
     // 获取图像信息
     readImg (data) {
       return new Promise( function (resolve, reject) {
@@ -365,6 +368,7 @@ const postFeed = {
               if(Orientation !== null && Orientation !== 1 && Orientation !== undefined) {
                 exifOrient(data.dataUri, Orientation, function(err, canvas) {
                   let dataUri = canvas.toDataURL(data.file.type);
+                  console.log(data.dataUri == dataUri);
                   resolve({
                     dataUri,
                     img: {

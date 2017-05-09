@@ -7,7 +7,32 @@
         <div class="spinner-double-bounce-bounce1" />
       </div>
     </div>
-    <div>
+    <div class="commonHeader" id="feed-header">
+      <Row :gutter="16">
+        <Col span="3" style="display: flex; justify-content: flex-start">
+          <BackIcon @click.native="goBack" height="21" width="21" color="#999" />
+        </Col>
+        <Col span="18" class="title-col">
+          <div>
+            <router-link :to="`/users/feeds/${userInfo.user_id}`" class="avatar">
+              <div class="avatar-content">
+                <img class="avatar" v-lazy="avatar" alt="">
+              </div>
+              <span style="font-size: 18px; padding: 0 5px">{{userInfo.name}}</span>
+            </router-link>
+          </div>
+        </Col>
+        <Col span="3" style="display: flex;">
+          <!--未关注作者, 采用关注操作-->
+            <UnFollowingIcon @click.native="handleFollowingStatus" v-if="!userInfo.is_following && (userInfo.user_id != currentUser)" height="21" width="21" color="#999" />
+          <!--已关注作者,但作者未关注我， 采用取消关注操作-->
+            <FollowingIcon  @click.native="handleUnFollowingStatus" height="21" width="21" color="#59b6d7" v-if="userInfo.is_following && !userInfo.is_followed && (userInfo.user_id != currentUser)" />
+          <!--相互关注， 采用取消关注操作-->
+            <EachFollowingIcon v-if="userInfo.is_following && userInfo.is_followed && (userInfo.user_id != currentUser)" @click.native="handleUnFollowingStatus" height="21" width="21" color="#59b6d7" />
+        </Col>
+      </Row>
+    </div>
+    <div style="padding-top: 55px">
       <mt-loadmore 
         :bottom-method="loadBottom"
         :bottom-all-loaded="bottomAllLoaded"
@@ -16,31 +41,6 @@
         :bottomDistance="40"
       >
         <div class="feed-container">
-          <div class="commonHeader">
-            <Row :gutter="16">
-              <Col span="3" style="display: flex; justify-content: flex-start">
-                <BackIcon @click.native="goBack" height="21" width="21" color="#999" />
-              </Col>
-              <Col span="18" class="title-col">
-                <div>
-                  <router-link :to="`/users/feeds/${userInfo.user_id}`" class="avatar">
-                    <div class="avatar-content">
-                      <img class="avatar" v-lazy="avatar" alt="">
-                    </div>
-                    <span style="font-size: 18px; padding: 0 5px">{{userInfo.name}}</span>
-                  </router-link>
-                </div>
-              </Col>
-              <Col span="3" style="display: flex;">
-                <!--未关注作者, 采用关注操作-->
-                  <UnFollowingIcon @click.native="handleFollowingStatus" v-if="!userInfo.is_following && (userInfo.user_id != currentUser)" height="21" width="21" color="#999" />
-                <!--已关注作者,但作者未关注我， 采用取消关注操作-->
-                  <FollowingIcon  @click.native="handleUnFollowingStatus" height="21" width="21" color="#59b6d7" v-if="userInfo.is_following && !userInfo.is_followed && (userInfo.user_id != currentUser)" />
-                <!--相互关注， 采用取消关注操作-->
-                  <EachFollowingIcon v-if="userInfo.is_following && userInfo.is_followed && (userInfo.user_id != currentUser)" @click.native="handleUnFollowingStatus" height="21" width="21" color="#59b6d7" />
-              </Col>
-            </Row>
-          </div>
           <div class="feed-container-content feed-background-color">
             <h3 v-if="feedData.feed.title" style="text-align: center; padding: 15px 8px 8px 8px; font-weight: 400; color: #59b6d7">{{ feedData.feed.feed_title }}</h3>
             <div>
@@ -143,42 +143,42 @@
           <span v-show="bottomStatus === 'drop'">释放加载更多评论</span>
         </div>
       </mt-loadmore>
-      <div class="feed-container-tool-operation feed-background-color">
-        <Row :gutter="16" style="display: flex; justify-content: center; align-items: center; height: 100%;">
-          <Col span="6" class="operation">
-            <div v-if="!feedData.tool.is_digg_feed" @click="handleDiggFeed(feed_id)">
-              <UnDiggIcon height="20" width="20" color="#999" />
-              <i>喜欢</i>
-            </div>
-            <div v-if="feedData.tool.is_digg_feed" @click="handleUnDiggFeed(feed_id)">
-              <DiggIcon height="20" width="20" color="#f4504d" />
-              <i class="did">喜欢</i>
-            </div>
-          </Col>
-          <Col span="6" class="operation">
-            <div @click="focusInput(0)">
-              <CommentIcon height="20" width="20" color="#999" />
-              <i>评论</i>
-            </div>
-          </Col>
-          <Col span="6" class="operation">
-            <div>
-              <ShareIcon height="20" width="20" color="#999" />
-              <i>分享</i>
-            </div>
-          </Col>
-          <Col span="6" class="operation">
-            <div v-if="!feedData.tool.is_collection_feed" @click="handleCollection(feed_id)">
-              <ConnectionIcon height="20" width="20" color="#999" />
-              <i>收藏</i>
-            </div>
-            <div v-if="feedData.tool.is_collection_feed" @click="handleUnCollection(feed_id)">
-              <ConnectionIcon height="20" width="20" color="#f4504d" />
-              <i class="did">收藏</i>
-            </div>
-          </Col>
-        </Row>
-      </div>
+    </div>
+    <div id="feed-footer" class="feed-container-tool-operation feed-background-color">
+      <Row :gutter="16" style="display: flex; justify-content: center; align-items: center; height: 100%;">
+        <Col span="6" class="operation">
+          <div v-if="!feedData.tool.is_digg_feed" @click="handleDiggFeed(feed_id)">
+            <UnDiggIcon height="20" width="20" color="#999" />
+            <i>喜欢</i>
+          </div>
+          <div v-if="feedData.tool.is_digg_feed" @click="handleUnDiggFeed(feed_id)">
+            <DiggIcon height="20" width="20" color="#f4504d" />
+            <i class="did">喜欢</i>
+          </div>
+        </Col>
+        <Col span="6" class="operation">
+          <div @click="focusInput(0)">
+            <CommentIcon height="20" width="20" color="#999" />
+            <i>评论</i>
+          </div>
+        </Col>
+        <Col span="6" class="operation">
+          <div>
+            <ShareIcon height="20" width="20" color="#999" />
+            <i>分享</i>
+          </div>
+        </Col>
+        <Col span="6" class="operation">
+          <div v-if="!feedData.tool.is_collection_feed" @click="handleCollection(feed_id)">
+            <ConnectionIcon height="20" width="20" color="#999" />
+            <i>收藏</i>
+          </div>
+          <div v-if="feedData.tool.is_collection_feed" @click="handleUnCollection(feed_id)">
+            <ConnectionIcon height="20" width="20" color="#f4504d" />
+            <i class="did">收藏</i>
+          </div>
+        </Col>
+      </Row>
     </div>
   </div>
   <!-- </transition> -->
@@ -222,6 +222,7 @@
       BackIcon
     },
     data: () => ({
+      scroll: 0,
       feed_id: 0,
       feedData: {
         user_id: 0,
@@ -536,6 +537,21 @@
         } else {
           this.userInfo = { ...this.userInfo, ...userLocal };
         }
+      },
+      menu() {
+        // console.log(document);
+        let header = document.getElementById('feed-header');
+        let footer = document.getElementById('feed-footer');
+        if(this.scroll > 55) {
+          if(this.scroll > window.pageYOffset) {
+            header.style.top = 0;
+            footer.style.bottom = 0;
+          } else {
+            header.style.top = '-55px';
+            footer.style.bottom = '-55px';
+          }
+        }
+        this.scroll = window.pageYOffset;
       }
     },
     created () {
@@ -593,20 +609,30 @@
           this.showSpinner = false;
         }, 1200);
       })
+    },
+    mounted () {
+      window.addEventListener('scroll', this.menu);
     }
   }; 
 
   export default feedDetail;
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
   .mint-loadmore-content-parent-no-trans .mint-loadmore-content {
     transform: inherit!important;
   }
   .feed-container {
     background-color: #f4f5f5;
   }
-
+  #feed-footer {
+    transition: bottom .2s;
+  }
   .commonHeader{
+    position: fixed!important;
+    top: 0;
+    left: 0;
+    right: 0;
+    transition: top .2s;
     div {
       height: 100%;
       display: flex;
@@ -696,7 +722,7 @@
     bottom: 0;
     left: 0;
     right: 0;
-    height: 54px;
+    height: 55px;
     z-index: 6;
     .operation {
       div { 

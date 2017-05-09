@@ -89,7 +89,7 @@
         this.comfirm = {
           isShowComfirm: true,
           method: this.logout,
-          context: '确定退出登陆'
+          context: '确定退出登录'
         }
       },
       comfirmCleanCache () {
