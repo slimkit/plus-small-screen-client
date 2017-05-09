@@ -17,7 +17,12 @@
   import FeedDiggList from './components/FeedDiggList';
   import CommentInput from './components/CommentInput';
   import Confirm from './components/Confirm';
-  import store from './stores/store';
+
+  // im聊天相关
+  import localEvent from './stores/localStorage';
+  import lodash from 'lodash';
+  import { createAPI, addAccessToken } from './utils/request';
+  import errorCodes from './stores/errorCodes';
 
   const App = {
     components: {
@@ -27,6 +32,23 @@
       FeedDiggList,
       CommentInput,
       Confirm
+    },
+    created () {
+      let currentUser = localEvent.getLocalItem('UserLoginInfo');
+      if(lodash.keys(currentUser).length > 0) {
+        addAccessToken().get(createAPI('im/users'), {} , {
+          validateStatus: status => status === 200
+        })
+        .then( response => {
+          console.log(response.data);
+        })
+        .catch(error => {
+          console.log(error);
+        })
+      }
+    },
+    updated () {
+      console.log('ccc');
     }
   }
 

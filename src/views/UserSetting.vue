@@ -152,7 +152,7 @@
         </div>
         <div :class="$style.cropper">
           <vue-cropper
-            :class="$style.canvasAvatar"
+            class="canvasAvatar"
             ref="cropper"
             :aspect-ratio="1"
             :view-mode="1"
@@ -165,7 +165,6 @@
             :background="true"
             :src="imgSrc"
             :guides="false"
-            :rotatable="false"
           >
           </vue-cropper>
         </div>
@@ -728,17 +727,9 @@
     height: 100%;
     width: 100%;
     z-index: 3;
-    .avatarOp {
-      height: 55px;
-      border-bottom: 1px solid #e2e3e3;
-    }
     .cropper {
       height: calc(100% - 55px);
       width: 100%;
-      .canvasAvatar {
-        height: 100%;
-        width: 100%;
-      }
     }
   }
   .userProfile {
@@ -823,6 +814,10 @@
         height: 100%;
       }
     }
+  }
+  .canvasAvatar {
+    height: 100%;
+    width: 100%;
   }
   .avatarOp {
     background: #fff;

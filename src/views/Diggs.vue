@@ -119,6 +119,7 @@
         this.bottomStatus = status;
       },
       loadBottom () {
+        if(!this.max_id) return ;
         addAccessToken().get(createAPI(`users/mydiggs?max_id=${this.max_id}`),{},
           {
             validateStatus: status => status === 200
@@ -181,7 +182,9 @@
       .then(response => {
         this.diggs = response.data.data;
         let length = this.diggs.length;
-        this.max_id = this.diggs[length - 1].id;
+        if( length ) {
+          this.max_id = this.diggs[length - 1].id;
+        }
         this.diggs.forEach( digg => {
           this.ids.push(digg.id);
         });

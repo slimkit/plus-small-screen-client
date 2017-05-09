@@ -116,6 +116,7 @@
         this.bottomStatus = status;
       },
       loadBottom () {
+        if(!this.max_id) return;
         addAccessToken().get(createAPI(`users/mycomments?max_id=${this.max_id}`),{},
           {
             validateStatus: status => status === 200
@@ -204,7 +205,8 @@
               this.$refs.loadmoreComments.onTopLoaded();
           }, 500)
         };
-        this.max_id = this.comments[length - 1].id;
+        if(length)
+          this.max_id = this.comments[length - 1].id;
       })
     }
   };
