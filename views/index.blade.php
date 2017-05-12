@@ -10,7 +10,7 @@
   	window.TS_WEB = {!! json_encode([
       'api' => $api,
       'url' => $base_url,
-      'socketUrl' => '',
+      'socketUrl' => $webSocktUrl,
       'im_token' => '',
       'webSocket' => null
     ]) !!}

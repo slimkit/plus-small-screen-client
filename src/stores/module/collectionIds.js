@@ -1,4 +1,4 @@
-import { COLLECTIONIDS, ADDCOLLECTIONIDS } from '../types';
+import { COLLECTIONIDS, ADDCOLLECTIONIDS, UNCOLLECTIONID } from '../types';
 
 const state = {
   collectionIds: []

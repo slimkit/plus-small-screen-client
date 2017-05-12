@@ -25,8 +25,6 @@
   import errorCodes from './stores/errorCodes';
   import { connect } from './utils/webSocket';
 
-  const wsUrl = 'ws://192.168.2.150:9900';
-  window.TS_WEB.socketUrl = wsUrl;
   const App = {
     components: {
       NoticeText,
@@ -44,23 +42,24 @@
         })
         .then( response => {
           let data= response.data;
+          console.log(data);
           if(data.status || data.code === 0) {
-            // window.TS_WEB.im_token = data.data.im_password;
-            // let webSocket = new window.WebSocket(`${wsUrl}?token=${data.data.im_password}`);
-            // webSocket.onopen = (evt) => {
-            //   webSocket.send('2["convr.get"]');
-            // };
-            // webSocket.onmessage = (evt) => {
-            //   let data = evt.data;
-            //   console.log(data);
-            // }
-            connect(`${window.TS_WEB.socketUrl}?token=${data.data.im_password}`);
+            window.TS_WEB.im_token = data.data.im_password; // 保存im口令
+            if(window.TS_WEB.socketUrl) connect(`ws://${window.TS_WEB.socketUrl}?token=${data.data.im_password}`); // 如果后台设置了socket地址 链接websocket
           }
+        });
+
+        // 获取会话列表
+        addAccessToken().get(createAPI('im/conversations/list/all'), {}, {
+          validateStatus: status => status === 200
         })
+        .then( response => {
+          let data = response.data;
+          if(data.status || data.code === 0 ) {
+            if(!data.data.length) return;
+          }
+        });
       }
-    },
-    updated () {
-      console.log('ccc');
     }
   }
 

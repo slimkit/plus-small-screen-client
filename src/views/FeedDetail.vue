@@ -341,9 +341,9 @@
           let data = response.data;
           if(data.status || data.code == 0) {
             this.$store.dispatch(COLLECTIONIDS, cb => {
-              cb({
-                [feed_id]
-              })
+              cb([
+                feed_id
+              ])
             });
             this.feedData.tool.is_collection_feed = 1;
           } else {
