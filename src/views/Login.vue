@@ -7,10 +7,10 @@
             <Col span="5">
               <label for="phone">手机号</label>
             </Col>
-            <Col span="14">
-              <input type="tel" size="large" autocomplete="off" placeholder="请输入手机号" v-model.number.trim="phone" id="phone" name="phone" />
+            <Col span="15">
+              <input type="tel" size="large" autocomplete="off" placeholder="输入11位手机号" v-model.number.trim="phone" id="phone" name="phone" />
             </Col>
-            <Col span="5" class="flexend">
+            <Col span="4" class="flexend">
               <CloseIcon v-show="isShowClean" @click.native="cleanPhone" width="21" height="21" color="#999" />
             </Col>
           </Row>
@@ -18,11 +18,11 @@
             <Col span="5">
               <label for="password">密码</label>
             </Col>
-            <Col span="14">
-              <input type="password"  size="large" v-show="isShowPassword" v-model.trim="password" placeholder="请输入6位以上密码" id="password" name="password" />
-              <input type="text"  v-model.trim="passwordText" v-show="isShowPasswordText" value="" placeholder="请输入6位以上密码" />
+            <Col span="15">
+              <input type="password"  size="large" v-show="isShowPassword" v-model.trim="password" placeholder="输入6位以上登录密码" id="password" name="password" />
+              <input type="text"  v-model.trim="passwordText" v-show="isShowPasswordText" value="" placeholder="输入6位以上登录密码" />
             </Col>
-            <Col span="5" class="flexend">
+            <Col span="4" class="flexend">
               <EyeOpenIcon @click.native="showPassword" height="21" v-show="isShowPasswordText" width="21" color="#999" />
               <EyeCloseIcon @click.native="showPassword" height="21" v-show="isShowPassword" width="21" color="#999" />
             </Col>
@@ -55,7 +55,7 @@
           </Col>
           <Col span="12">
             <router-link style="float: right" to="/findpassword">
-              找回密码
+              忘记密码
             </router-link>
           </Col>
         </Row>

@@ -10,6 +10,11 @@ const mutations = {
   },
   [ADDCOLLECTIONIDS] (state, ids) {
     state.collectionIds = Array.from(new Set([ ...ids, ...state.collectionIds ]));
+  },
+  [UNCOLLECTIONID] (state, id) {
+    let collectionIds = state.collectionIds;
+    collectionIds.splice(collectionIds.indexOf(id), 1);
+    state.collectionIds = Array.from(new Set(collectionIds));
   }
 };
 
@@ -22,6 +27,11 @@ const actions = {
   [ADDCOLLECTIONIDS]: (context, cb) => {
     cb( ids => {
       context.commit(ADDCOLLECTIONIDS, ids);
+    })
+  },
+  [UNCOLLECTIONID]: (content, cb) => {
+    cb ( id => {
+      context.commit(UNCOLLECTIONID, id);
     })
   }
 };

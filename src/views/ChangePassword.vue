@@ -19,7 +19,7 @@
           旧密码
         </Col>
         <Col span="15">
-          <input type="password"  size="large" v-show="isShowOldPassword" v-model.trim="oldPassword" placeholder="请输入旧密码" id="password" name="password" />
+          <input type="password"  size="large" v-show="isShowOldPassword" v-model.trim="oldPassword" placeholder="旧密码" id="password" name="password" />
         </Col>
         <Col span="3">
           <CloseIcon v-show="showOldIcon" height="21" width="21" color="#999" @click.native="cleanOldPassword" />
@@ -30,8 +30,8 @@
           新密码
         </Col>
         <Col span="15">
-          <input type="password"  size="large" v-show="isShowNewPassword" v-model.trim="newPassword" placeholder="请输入6位以上新密码" id="password" name="password" />
-          <input type="text"  v-model.trim="newPassword" v-show="!isShowNewPassword" value="" placeholder="请输入6位以上新密码" />
+          <input type="password"  size="large" v-show="isShowNewPassword" v-model.trim="newPassword" placeholder="新密码" id="password" name="password" />
+          <input type="text"  v-model.trim="newPassword" v-show="!isShowNewPassword" value="" placeholder="确认新密码" />
         </Col>
         <Col span="3">
           <EyeOpenIcon @click.native="handleShowNewPassword" v-show="!isShowNewPassword" height="21" width="21" color="#999" />

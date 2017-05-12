@@ -23,7 +23,10 @@
   import lodash from 'lodash';
   import { createAPI, addAccessToken } from './utils/request';
   import errorCodes from './stores/errorCodes';
+  import { connect } from './utils/webSocket';
 
+  const wsUrl = 'ws://192.168.2.150:9900';
+  window.TS_WEB.socketUrl = wsUrl;
   const App = {
     components: {
       NoticeText,
@@ -40,10 +43,19 @@
           validateStatus: status => status === 200
         })
         .then( response => {
-          console.log(response.data);
-        })
-        .catch(error => {
-          console.log(error);
+          let data= response.data;
+          if(data.status || data.code === 0) {
+            // window.TS_WEB.im_token = data.data.im_password;
+            // let webSocket = new window.WebSocket(`${wsUrl}?token=${data.data.im_password}`);
+            // webSocket.onopen = (evt) => {
+            //   webSocket.send('2["convr.get"]');
+            // };
+            // webSocket.onmessage = (evt) => {
+            //   let data = evt.data;
+            //   console.log(data);
+            // }
+            connect(`${window.TS_WEB.socketUrl}?token=${data.data.im_password}`);
+          }
         })
       }
     },

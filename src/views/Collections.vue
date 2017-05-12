@@ -228,6 +228,19 @@
     },
     updated () {
       this.showTop = false;
+      let storeIds = this.$store.getters[this.feedType.ids];
+      if(storeIds.length > 5) {
+        this.firstId = storeIds[0];
+        this.maxId = storeIds[storeIds.length -1];
+        this.showTop = false;
+        setTimeout(() => {
+          if(this.$refs.loadmoreCollections){
+            this.$refs.loadmoreCollections.onTopLoaded();
+          }
+        }, 500);
+        storeIds = [];
+        return;
+      }
       setTimeout(() => {
         if(this.$refs.loadmoreCollections){
           this.$refs.loadmoreCollections.onTopLoaded();

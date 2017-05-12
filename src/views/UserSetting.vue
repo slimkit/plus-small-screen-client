@@ -292,7 +292,7 @@
       cleanSetting () {
         this.areaAbout.province = 0;
         this.areaAbout.city = 0;
-        // this.areaAbout.location = '';
+        this.areaAbout.location = '';
         this.storage_task_id = 0;
         this.imgSrc = '';
       },

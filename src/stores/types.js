@@ -74,6 +74,7 @@ export const ADDNEWIDS = 'addnewids';
 export const COLLECTIONIDS = 'collectionids';
 export const COLLECTIONFEEDS = 'collectionfeeds';
 export const ADDCOLLECTIONIDS = 'addcollectionsids';
+export const UNCOLLECTIONID = 'uncollectionid';
 
 /**
  * confirm组件相关

@@ -188,7 +188,7 @@
   import errorCodes from '../stores/errorCodes';
   import localEvent from '../stores/localStorage';
   import { getUserInfo, followingUser, unFollowingUser } from '../utils/user';
-  import { NOTICE, SHOWFEEDDIGGSLISTS, FEEDSLIST, UPDATEFEED, CONFIRM, COMMENTINPUT } from '../stores/types';
+  import { NOTICE, SHOWFEEDDIGGSLISTS, FEEDSLIST, UPDATEFEED, CONFIRM, COMMENTINPUT, COLLECTIONIDS, ADDCOLLECTIONIDS } from '../stores/types';
   import getImg from '../utils/getImage';
   import { friendNum } from '../utils/friendNum';
   import Comfirm from '../utils/Comfirm';
@@ -293,7 +293,7 @@
         digg_list.forEach( (uid, index) => {
           userLocal = localEvent.getLocalItem(`user_${uid}`);
           if(index > 4) { return; }
-          if(!lodash.keys(userLocal)) {
+          if(!lodash.keys(userLocal).length > 0) {
             getUserInfo(uid, 30).then(user => {
               digg_users.push({
                 avatar: user.avatar[30],
@@ -340,6 +340,11 @@
         .then(response => {
           let data = response.data;
           if(data.status || data.code == 0) {
+            this.$store.dispatch(COLLECTIONIDS, cb => {
+              cb({
+                [feed_id]
+              })
+            });
             this.feedData.tool.is_collection_feed = 1;
           } else {
             this.$store.dispatch(NOTICE, cb => {
@@ -358,6 +363,9 @@
         })
         .then(response => {
           this.feedData.tool.is_collection_feed = 0;
+          this.$store.dispatch(UNCOLLECTIONID, cb => {
+            cb(feed_id);
+          })
         })
       },
       handleDiggFeed (feed_id) {
