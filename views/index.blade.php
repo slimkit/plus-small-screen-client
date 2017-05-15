@@ -12,7 +12,8 @@
       'url' => $base_url,
       'socketUrl' => $webSocktUrl,
       'im_token' => '',
-      'webSocket' => null
+      'webSocket' => null,
+      'loaded' => false
     ]) !!}
   </script>
 </head>

@@ -83,3 +83,11 @@ export const CONFIRM = 'confirm';
 export const CONFIRMCB = 'confirmcb';
 export const CLOSECONFIRM = 'closeconfirm';
 
+/**
+ *	about immassage
+ */
+export const TOTALMESSAGELISTS = 'totalmessagelists';
+export const TOTALMESSAGELIST = 'totalmessagelist';
+export const SYNCIMMESSAGE = 'syncimmessage';
+export const MESSAGELISTS = 'messsagelists';
+

@@ -1,73 +1,110 @@
-import { TOTALMESSAGELISTS } from '../types';
+import { TOTALMESSAGELISTS,  TOTALMESSAGELIST, SYNCIMMESSAGE, MESSAGELISTS } from '../types';
 import localEvent from '../localStorage';
 import { getUserInfo } from '../../utils/user';
 import lodash from 'lodash';
+import { localDatabase } from '../../utils/localDatabase';
 
-/**
- * messageLists: {
- * 	room_cid: {
- *		name: 'xxx',
- * 		user_id: 0,
- *		cid: 111,
- *		avatar: '',
- *		lists: {
- *			[
- *				txt: 'content',
- *				user_id: 1
- *			]
- *		}	
- *	}
- * }
- */
 const state = {
 	messageLists: {}
 };
 
 const mutations = {
 	// signal user chat
-	[TOTALMESSAGELISTS] (state, list) {
+	[TOTALMESSAGELIST] (state, list) {
 		let oldState = state;
+		let hash = '';
 		if(!lodash.keys(oldState.messageLists[`room_${list[1].cid}`]).length > 0) {
 			let user = {};
 			let target_user_id = list[1].me ? list[1].ext.to_uid : list[1].uid;
-			oldState.messageLists[`room_${list[1].cid}`] = {
+			hash = list[1].me ? list[1].ext.hash : list[1].hash;
+			oldState.messageLists[`room_${list[1].cid}`] = { 
+				...oldState.messageLists[`room_${list[1].cid}`], 
+				...{
+					name: list[1].name,
+					user_id: target_user_id,
+					cid: list[1].cid,
+					avatar: list[1].avatar,
+					lists: []
+				}
+			};
+		} else {
+			hash = list[1].ext.hash;
+		}
+
+		oldState.messageLists[`room_${list[1].cid}`].lists = [ ...oldState.messageLists[`room_${list[1].cid}`].lists, { txt: list[1].txt, user_id: list[1].uid } ];
+		state.messageLists = { ...state.messageLists, ...oldState.messageLists };
+	},
+
+	[MESSAGELISTS] (state, lists) {
+		// let messageLists = state.messageLists;
+		// for( let index in lists ){
+		// 	messageLists[index] = {};
+		// 	messageLists[index] = { ...messageLists[index], ...lists[index] };
+		// }
+		// console.log(lists);
+		state.messageLists = { ...state.messageLists, ...lists };
+	},
+
+	[SYNCIMMESSAGE] (state, list) {
+		let oldState = state;
+		let hash = list.ext.hash;
+		if(!lodash.keys(oldState.messageLists[`room_${list.cid}`]).length > 0) {
+			let user = {};
+			oldState.messageLists[`room_${list.cid}`] = {
 				name: '',
-				user_id: target_user_id,
-				cid: list[1].cid,
+				user_id: list.uid,
+				cid: list.cid,
 				avatar: '',
 				lists: []
 			};
-			user = localEvent.getLocalItem(`user_${target_user_id}`);
+			user = localEvent.getLocalItem(`user_${list.uid}`);
 			if(!lodash.keys(user).length > 0) {
-				getUserInfo(target_user_id, 30).then( u => {
-					oldState.messageLists[`room_${list[1].cid}`].name = u.name;
-					oldState.messageLists[`room_${list[1].cid}`].avatar = u.avatar[30];
+				getUserInfo(list.uid, 30).then( u => {
+					oldState.messageLists[`room_${list.cid}`].name = u.name;
+					oldState.messageLists[`room_${list.cid}`].avatar = u.avatar[30];
 				});
 			} else {
-				oldState.messageLists[`room_${list[1].cid}`].name = user.name;
-				oldState.messageLists[`room_${list[1].cid}`].avatar = user.avatar[30];
+				oldState.messageLists[`room_${list.cid}`].name = user.name;
+				oldState.messageLists[`room_${list.cid}`].avatar = user.avatar[30];
 			}
 		}
-		// save localMessages
-		let localMsgs = localEvent.getLocalItem(`user_msg_room_${list[1].cid}`);
-		localMsgs = [ ...localMsgs, { user_id: list[1].uid, txt: list[1].txt } ];
-		localEvent.setLocalItem(`user_msg_room_${list[1].cid}`, localMsgs);
+		oldState.messageLists[`room_${list.cid}`].lists = [ ...oldState.messageLists[`room_${list.cid}`].lists, { txt: list.txt, user_id: list.uid } ];
+		oldState.messageLists[`room_${list.cid}`].lists = Array.from(new Set(oldState.messageLists[`room_${list.cid}`].lists));
+		state.messageLists = { ...state.messageLists, ...oldState.messageLists };
+	},
 
-		oldState.messageLists[`room_${list[1].cid}`].lists = [ ...oldState.messageLists[`room_${list[1].cid}`].lists, { txt: list[1].txt, user_id: list[1].uid } ];
-		state = { ...state, ...oldState };
+	[TOTALMESSAGELISTS] (state, lists) {
+		
 	}
 };
 
 const actions = {
-	[TOTALMESSAGELISTS]: (context, cb) => {
+	[TOTALMESSAGELIST]: (context, cb) => {
 		cb( list => {
-			context.commit(TOTALMESSAGELISTS, list);
+			context.commit(TOTALMESSAGELIST, list);
+		})
+	},
+	[TOTALMESSAGELISTS]: (context, cb) => {
+		cb( lists => {
+			context.commit(TOTALMESSAGELISTS, lists);
+		})
+	},
+	[SYNCIMMESSAGE]: (context, cb) => {
+		cb( list => {
+			context.commit(SYNCIMMESSAGE, list);
+		})
+	},
+	[MESSAGELISTS]: (context, cb) => {
+		cb (lists => {
+			context.commit(MESSAGELISTS, lists);
 		})
 	}
 };
 
 const getters = {
-
+	[TOTALMESSAGELISTS]: state => {
+		return state.messageLists;
+	}
 };
 
 const store = {
