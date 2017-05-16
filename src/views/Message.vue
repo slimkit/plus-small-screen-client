@@ -11,24 +11,6 @@
       </Row>
     </div>
     <div :class="$style.entryLists">
-      <Row :gutter="16" :class="$style.entry">
-        <div :class="$style.entryContainer" @click="changeUrl('/users/diggs')">
-          <Col span="4" :class="$style.entryIcon">
-            <div :class="$style.diggIcon">
-              <DiggIcon height="30" width="30" color="#fff" />
-            </div>
-          </Col>
-          <Col span="15">
-            <h4 style="font-weight: 400;">赞过的</h4>
-            <div v-if="diggsCount" style="color: #999;">{{ diggLists }} <span v-show="diggsCount > 3">等人</span>赞了我</div>
-            <div v-if="!diggsCount" style="color: #999">还没有人赞我</div>
-          </Col>
-          <Col span="5" v-if="diggsCount">
-            <timeago :class=$style.time :since="diggTime" locale="zh-CN" :auto-update="60"></timeago>
-            <i :class="$style.messageCount">{{diggsCount}}</i>
-          </Col>
-        </div>
-      </Row>
       <Row :gutter="16" :class="$style.entry" >
         <div :class="$style.entryContainer" @click="changeUrl('/users/mycomments')">
           <Col span="4" :class="$style.entryIcon">
@@ -44,6 +26,24 @@
           <Col span="5" v-if="commentCount">
             <timeago :class=$style.time :since="commentTime" locale="zh-CN" :auto-update="60"></timeago>
             <i :class="$style.messageCount">{{commentCount}}</i>
+          </Col>
+        </div>
+      </Row>
+      <Row :gutter="16" :class="$style.entry">
+        <div :class="$style.entryContainer" @click="changeUrl('/users/diggs')">
+          <Col span="4" :class="$style.entryIcon">
+            <div :class="$style.diggIcon">
+              <DiggIcon height="30" width="30" color="#fff" />
+            </div>
+          </Col>
+          <Col span="15">
+            <h4 style="font-weight: 400;">赞过的</h4>
+            <div v-if="diggsCount" style="color: #999;">{{ diggLists }} <span v-show="diggsCount > 3">等人</span>赞了我</div>
+            <div v-if="!diggsCount" style="color: #999">还没有人赞我</div>
+          </Col>
+          <Col span="5" v-if="diggsCount">
+            <timeago :class=$style.time :since="diggTime" locale="zh-CN" :auto-update="60"></timeago>
+            <i :class="$style.messageCount">{{diggsCount}}</i>
           </Col>
         </div>
       </Row>

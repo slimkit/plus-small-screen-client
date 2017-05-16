@@ -2,13 +2,13 @@
   <div class="changePassword">
     <div class="commonHeader">
       <Row :gutter="16">
-        <Col span="3" style="display: flex; justify-content: flex-start" @click.native="goTo(-1)">
+        <Col span="5" style="display: flex; justify-content: flex-start" @click.native="goTo(-1)">
           <BackIcon height="21" width="21" color="#999" />
         </Col>
-        <Col span="18" class="title-col">
+        <Col span="14" class="title-col">
           修改密码
         </Col>
-        <Col span="3" style="display: flex;">
+        <Col span="5" class="header-end-col">
           <Button type="text" @click="changePassword" :disabled="!isDisabled">更改</Button>
         </Col>
       </Row>

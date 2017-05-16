@@ -2,17 +2,17 @@
   <!-- <transition name="custom-classes-transition" enter-active-class="animated slideInRight" leave-active-class="animated slideOutRight"> -->
   <div>
     <div id="spinner" v-show="showSpinner">
-      <div style="position: relative;">
+      <div id="spinner-parent">
         <div class="spinner-double-bounce-bounce2" />
         <div class="spinner-double-bounce-bounce1" />
       </div>
     </div>
     <div class="commonHeader" id="feed-header">
       <Row :gutter="16">
-        <Col span="3" style="display: flex; justify-content: flex-start">
+        <Col span="5" style="display: flex; justify-content: flex-start">
           <BackIcon @click.native="goBack" height="21" width="21" color="#999" />
         </Col>
-        <Col span="18" class="title-col">
+        <Col span="14" class="title-col">
           <div>
             <router-link :to="`/users/feeds/${userInfo.user_id}`" class="avatar">
               <div class="avatar-content">
@@ -22,7 +22,7 @@
             </router-link>
           </div>
         </Col>
-        <Col span="3" style="display: flex;">
+        <Col span="5" class="header-end-col">
           <!--未关注作者, 采用关注操作-->
             <UnFollowingIcon @click.native="handleFollowingStatus" v-if="!userInfo.is_following && (userInfo.user_id != currentUser)" height="21" width="21" color="#999" />
           <!--已关注作者,但作者未关注我， 采用取消关注操作-->

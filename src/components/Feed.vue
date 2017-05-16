@@ -112,6 +112,7 @@
       }
     }
     .feedContent {
+      width: 80vw;
       .feedTitle {
         display: flex;
         padding: 0;
