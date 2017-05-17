@@ -208,7 +208,7 @@
           padding: 4px 0;
         }
         .intro {
-          text-align: justify;
+          text-align: inherit;
           overflow: hidden;
           text-overflow: ellipsis;
           display: -webkit-box;

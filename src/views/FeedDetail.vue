@@ -188,7 +188,7 @@
   import errorCodes from '../stores/errorCodes';
   import localEvent from '../stores/localStorage';
   import { getUserInfo, followingUser, unFollowingUser } from '../utils/user';
-  import { NOTICE, SHOWFEEDDIGGSLISTS, FEEDSLIST, UPDATEFEED, CONFIRM, COMMENTINPUT, COLLECTIONIDS, ADDCOLLECTIONIDS } from '../stores/types';
+  import { NOTICE, SHOWFEEDDIGGSLISTS, FEEDSLIST, UPDATEFEED, CONFIRM, COMMENTINPUT, COLLECTIONIDS, ADDCOLLECTIONIDS, UNCOLLECTIONID } from '../stores/types';
   import getImg from '../utils/getImage';
   import { friendNum } from '../utils/friendNum';
   import Comfirm from '../utils/Comfirm';

@@ -88,16 +88,18 @@
         uids.forEach( (digg, index) => {
           if(count == 3) return;
           let userLocalInfo = localEvent.getLocalItem(`user_${digg}`);
-          const { name = ''} = userLocalInfo;
-          users += name + '、';
           if(!lodash.keys(userLocalInfo).length) {
             getUserInfo(digg, 30).then(user => {
               const { name = '' } = user;
               users += name + '、';
             });
+          } else {
+            const { name = ''} = userLocalInfo;
+            users += name + '、';
           }
           count ++;
         });
+        // 删除最后一个 顿号
         users = users.substr(0, users.length - 1);
         return users;
       },
@@ -120,13 +122,14 @@
         uids.forEach((comment, index) => {
           if(count == 3) return;
           let userLocalInfo = localEvent.getLocalItem(`user_${comment}`);
-          const { name = '' } = userLocalInfo;
-          users += name + '、';
           if(!lodash.keys(userLocalInfo).length > 0) {
             getUserInfo(comment, 30).then(user => {
               const { name = '' } = user;
               users += name + '、';
             });
+          } else {
+            const { name = '' } = userLocalInfo;
+            users += name + '、';
           }
           count ++;
         })
@@ -169,7 +172,7 @@
         datas.forEach((data) => {
           let uids = new window.Array();
           if(data.uids.length) {
-            uids = Array.from(new Set(data.uids.split(',').map( uid => parseInt(uid) )));
+            uids = Array.from(new Set(data.uids.map( uid => parseInt(uid) )));
           }
           messages[data.key] = {
             count: data.count,

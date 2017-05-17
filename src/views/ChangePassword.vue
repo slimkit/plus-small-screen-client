@@ -31,7 +31,7 @@
         </Col>
         <Col span="15">
           <input type="password"  size="large" v-show="isShowNewPassword" v-model.trim="newPassword" placeholder="新密码" id="password" name="password" />
-          <input type="text"  v-model.trim="newPassword" v-show="!isShowNewPassword" value="" placeholder="确认新密码" />
+          <input type="text"  v-model.trim="newPassword" v-show="!isShowNewPassword" value="" placeholder="新密码" />
         </Col>
         <Col span="3">
           <EyeOpenIcon @click.native="handleShowNewPassword" v-show="!isShowNewPassword" height="21" width="21" color="#999" />

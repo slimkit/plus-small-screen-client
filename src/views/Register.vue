@@ -7,10 +7,10 @@
             <Col span="5">
               <label for="username" class="loginFormTitle">用户名</label>
             </Col>
-            <Col span="14">
-              <input type="text" autocomplete="off" placeholder="不能以数字开头,不能有特殊字符" v-model.trim="username" id="username" name="username" />
+            <Col span="16">
+              <input type="text" autocomplete="off" placeholder="输入您的用户名" v-model.trim="username" id="username" name="username" />
             </Col>
-            <Col span="5" class="flexend">
+            <Col span="3" class="flexend">
               <div @click="cleanUsername" v-show="isShowUserClean">
                 <CloseIcon height="21" width="21" color="#999" />
               </div>
@@ -328,3 +328,9 @@
   export default register;
 
 </script>
+
+<style scoped lang="scss">
+  input {
+    padding: 5px 0
+  }
+</style>
