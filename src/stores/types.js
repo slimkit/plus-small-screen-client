@@ -90,4 +90,5 @@ export const TOTALMESSAGELISTS = 'totalmessagelists';
 export const TOTALMESSAGELIST = 'totalmessagelist';
 export const SYNCIMMESSAGE = 'syncimmessage';
 export const MESSAGELISTS = 'messsagelists';
+export const IMSTATUS = 'imstatus'; // 监测im 链接状态
 

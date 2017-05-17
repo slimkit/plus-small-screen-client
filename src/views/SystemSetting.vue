@@ -113,6 +113,9 @@
         this.cannel();
       },
       logout () {
+        if(TS_WEB.webSocket){
+          TS_WEB.webSocket.close();
+        }
         this.cannel();
         localEvent.setLocalItem('UserLoginInfo', {});
         this.changeUrl('/login');

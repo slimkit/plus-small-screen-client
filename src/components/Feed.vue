@@ -112,7 +112,7 @@
       }
     }
     .feedContent {
-      width: 80vw;
+      width: 78vw;
       .feedTitle {
         display: flex;
         padding: 0;
@@ -121,7 +121,7 @@
       .content {
         font-size: 14px;
         color: #666;
-        text-align: justify;
+        text-align: initial;
         overflow: hidden;
         text-overflow: ellipsis;  
         display: -webkit-box;  

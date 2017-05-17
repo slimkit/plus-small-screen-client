@@ -236,5 +236,6 @@
 <style scoped>
   .mint-loadmore {
     padding-bottom: 50px;
+    overflow: initial;
   }
 </style>

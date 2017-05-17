@@ -58,11 +58,17 @@
         <span v-show="bottomStatus === 'drop'">释放加载更多</span>
       </div>
     </mt-loadmore>
-    <div v-if="currentUser != user_id" :class="$style.followStatus" @click="handleFollowingStaus(followAction.status ? true : false)">
-      <UnFollowingIcon v-if="followAction.text == '关注'" height="21" width="21" color="#333"/>
-      <FollowingIcon v-if="followAction.text == '已关注'" height="21" width="21" color="#59b6d7"/>
-      <EachFollowingIcon v-if="followAction.text == '相互关注'" height="21" width="21" color="#59b6d7"/>
-      <span :class="{ following: followAction.status, noFollowing: !followAction.status }"> {{ followAction.text }} </span>
+    <div v-if="currentUser != user_id" :class="$style.followStatus">
+      <div class="actionButton" @click="handleFollowingStaus(followAction.status ? true : false)">
+        <UnFollowingIcon v-if="followAction.text == '关注'" height="21" width="21" color="#333"/>
+        <FollowingIcon v-if="followAction.text == '已关注'" height="21" width="21" color="#59b6d7"/>
+        <EachFollowingIcon v-if="followAction.text == '相互关注'" height="21" width="21" color="#59b6d7"/>
+        <span :class="{ following: followAction.status, noFollowing: !followAction.status }"> {{ followAction.text }} </span>
+      </div>
+      <div class="actionButton" @click="imMessage">
+        <CommentIcon width="21" height="21" color="#333" />
+        <span class="noFollowing"> 聊天 </span>
+      </div>
     </div>
   </div>
 </template>
@@ -84,6 +90,7 @@
   import EachFollowingIcon from '../icons/EachFollowing';
   import BackIcon from '../icons/Back';
   import ShareIcon from '../icons/Share';
+  import CommentIcon from '../icons/Comment';
   import { goTo } from '../utils/changeUrl';
   import { resolveImage } from '../utils/resource';
 
@@ -98,7 +105,8 @@
       UnFollowingIcon,
       EachFollowingIcon,
       BackIcon,
-      ShareIcon
+      ShareIcon,
+      CommentIcon
     },
     data: () => ({
       currentUser: 0, // 当前登录用户
@@ -113,6 +121,35 @@
     methods: {
       goBack() {
         goTo(-1);
+      },
+      imMessage () {
+        addAccessToken().post(
+          createAPI('im/conversations'),
+          {
+            type: 0,
+            uids: [
+              this.user_id,
+              this.currentUser
+            ]
+          },
+          {
+            validateStatus: status => status === 200
+          }
+        )
+        .then( response => {
+          let data = response.data.data;
+          let uids = data.uids.split(',');
+          let uid = 0;
+          if(uids[0] == this.currentUser) {
+            uid = uids[1];
+          } else {
+            uid = uids[0];
+          }
+          this.$router.push(`/users/message/${uid}/${data.cid}`);
+        })
+        .catch( error => {
+          console.log(error);
+        });
       },
       handleFollowingStaus (status) {
         if(status) {
@@ -497,5 +534,11 @@
     color: #59b6d7;
     font-size: 16px;
     margin-left: 8px;
+  }
+  .actionButton {
+    width: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 </style>

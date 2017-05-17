@@ -1,4 +1,4 @@
-import { TOTALMESSAGELISTS, TOTALMESSAGELIST, SYNCIMMESSAGE } from '../stores/types';
+import { TOTALMESSAGELISTS, TOTALMESSAGELIST, SYNCIMMESSAGE, IMSTATUS } from '../stores/types';
 import { app } from '../index';
 import { getImMessageItem } from './localDatabase';
 import localEvent from '../stores/localStorage';
@@ -9,19 +9,19 @@ const url = window.TS_WEB.socketUrl;
 const im_token = window.TS_WEB.im_token;
 const reg = /^\[\"(.*?);\",/;
 const currentUser = localEvent.getLocalItem('UserLoginInfo');
-function connect (url) {
+function connect (url, operation = false) {
 	// let counter = 0;
 	try {
 		window.TS_WEB.webSocket = new window.WebSocket(url);
-		// window.TS_WEB.webSocket.onopen = evt => {
-		// 	onOpen(evt);
-		// }
+		window.TS_WEB.webSocket.onopen = evt => {
+			onOpen(evt);
+		}
 		window.TS_WEB.webSocket.onmessage = evt => {
 			onMessage(evt);
 		}
-		// window.TS_WEB.webSocket.onerror = evt => {
-		// 	onError(evt);
-		// }
+		window.TS_WEB.webSocket.onclose = evt => {
+			onClose(evt);
+		}
 	} catch (e) {
 		window.console.log(e);
 	}
@@ -68,8 +68,23 @@ function onError (error) {
 
 };
 
+// 关闭事件
+function onClose (evt) {
+	app.$store.dispatch(IMSTATUS, cb => {
+		cb({
+			open: false
+		})
+	});
+};
+
+// 开启事件
 function onOpen (evt) {
-	window.TS_WEB.webSocket.send('2["convr.get"]');
+	// window.TS_WEB.webSocket.send('2["convr.get"]');
+	app.$store.dispatch(IMSTATUS, cb => {
+		cb({
+			open: true
+		})
+	});
 };
 
 function sendMessage (message) {

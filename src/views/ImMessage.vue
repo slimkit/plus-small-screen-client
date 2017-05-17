@@ -199,10 +199,10 @@
 
 <style lang="less" scoped>
 	.commonHeader {
-		position: fixed;
-		top: 0;
-		left: 0;
-		right: 0;
+		// position: fixed;
+		// top: 0;
+		// left: 0;
+		// right: 0;
 	}
 	.message {
 		margin: 2vh 0;
@@ -262,7 +262,7 @@
 	  border-radius: 50%;
 	}
 	.sendBox {
-		position: fixed;
+		position: absolute;
 		bottom: 0;
 		left: 0;
 		right: 0;
@@ -270,9 +270,15 @@
 		align-items: center;
 		justify-content: center;
 		min-height: 40px;
+		max-height: calc(30vh);
 	}
 	.messageList {
-		padding-top: 56px;
-		padding-bottom: 40px;
+		// padding-top: 56px;
+		// padding-bottom: 40px;
+		// min-height: calc(100vh - 96px);
+		// max-height: calc(100vh - 96px);
+		height: calc(100vh - 96px);
+	    overflow-y: scroll;
+	    overflow-x: hidden;
 	}
 </style>
