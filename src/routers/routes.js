@@ -21,6 +21,7 @@ import Collections from '../views/Collections';
 import Discover from '../views/Discover';
 import FeedDiggList from '../views/FeedDiggList';
 import { requestAuth, CanNotGetInWhenLogged } from '../utils/auth';
+import ImMessage from '../views/ImMessage';
 
 const routes = [
   {
@@ -141,6 +142,17 @@ const routes = [
     name: 'myMessage',
     meta: {
       title: '消息'
+    },
+    beforeEnter: (to, from, next) => {
+      requestAuth(to, from, next)
+    }
+  },
+  {
+    path: '/users/message/:user_id/:cid',
+    component: ImMessage,
+    name: 'imMessage',
+    meta: {
+      title: 'Chat'
     },
     beforeEnter: (to, from, next) => {
       requestAuth(to, from, next)
