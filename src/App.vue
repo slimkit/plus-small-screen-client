@@ -5,9 +5,9 @@
     <NoticeText/>
     <IviewSwiper/>
     <PostFeed/>
-    <FeedDiggList/>
     <CommentInput/>
     <Confirm />
+    {{ imStatus }}
   </div>
 </template>
 <script>
@@ -25,7 +25,7 @@
   import errorCodes from './stores/errorCodes';
   import { connect } from './utils/webSocket';
   import { getUserInfo } from './utils/user';
-  import { MESSAGELISTS } from './stores/types';
+  import { MESSAGELISTS, IMSTATUS } from './stores/types';
 
   const App = {
     components: {
@@ -52,6 +52,16 @@
       //     }
       //   });
       // }
+    },
+    computed: {
+      imStatus () {
+        let imstatus = this.$store.getters[IMSTATUS];
+        let userLoginInfo = localEvent.getLocalItem('UserLoginInfo');
+        if(lodash.keys(userLoginInfo).length && !imstatus.open && TS_WEB.webSocket !== null && TS_WEB.webSocket.readyState != 1 && TS_WEB.readyState != 0) {
+          connect(TS_WEB.webSocket.url);
+        }
+        return '';
+      }
     },
     beforeMount() {
       if(TS_WEB.loaded) return;
