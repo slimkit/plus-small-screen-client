@@ -54,13 +54,13 @@ li {
   top: 55px;
   left: 0;
   bottom: 0;
-  right: 0;
+  right: 0; 
   z-index: 8;
   display: flex;
   justify-content: center;
   align-items: center;
   background: #fff;
-  .spinner-parent {
+  #spinner-parent {
     display: flex;
     justify-content: center;
     position: relative;
@@ -153,6 +153,19 @@ img.avatar {
       justify-content: flex-end;
       display: flex;
     }
+  }
+}
+.commentInput {
+  border: none;
+}
+.sendButton {
+  font-size: 14px;
+  padding: 3px!important;
+  background-color: #59b6d7;
+  border: none;
+  &[disabled] {
+    background-color: #ccc!important;
+    color: #fff!important;
   }
 }
 .mint-loadmore-content .mint-loadmore-top {
