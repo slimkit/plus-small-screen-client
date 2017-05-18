@@ -1,7 +1,7 @@
 <template>
   <div class="changePassword">
     <div class="commonHeader">
-      <Row :gutter="16">
+      <Row :gutter="24">
         <Col span="5" style="display: flex; justify-content: flex-start" @click.native="goTo(-1)">
           <BackIcon height="21" width="21" color="#999" />
         </Col>
@@ -14,7 +14,7 @@
       </Row>
     </div>
     <div class="changePassword-content changePassword-bakcground-color" :class="$style.entry">
-      <Row :gutter="16" :class="$style.entryMenu">
+      <Row :gutter="24" :class="$style.entryMenu">
         <Col span="6">
           旧密码
         </Col>
@@ -25,7 +25,7 @@
           <CloseIcon v-show="showOldIcon" height="21" width="21" color="#999" @click.native="cleanOldPassword" />
         </Col>
       </Row>
-      <Row :gutter="16" :class="$style.entryMenu">
+      <Row :gutter="24" :class="$style.entryMenu">
         <Col span="6">
           新密码
         </Col>
@@ -38,7 +38,7 @@
           <EyeCloseIcon @click.native="handleShowNewPassword" v-show="isShowNewPassword" height="21" width="21" color="#999" />
         </Col>
       </Row>
-      <Row :gutter="16" :class="$style.entryMenu">
+      <Row :gutter="24" :class="$style.entryMenu">
         <Col span="6">
           确认密码
         </Col>
@@ -53,7 +53,7 @@
       </Row>
     </div>
     <div id="notice">
-      <Row :gutter="16">
+      <Row :gutter="24">
         <Col span="24">
           <p class="notice error">{{ error }}</p>
         </Col>

@@ -1,11 +1,11 @@
 <template>
   <div class="comments">
     <div class="commonHeader">
-      <Row :gutter="16">
-        <Col span="4">
+      <Row :gutter="24">
+        <Col span="5">
           <BackIcon @click.native="goTo(-1)" height="21" width="21" color="#999" />
         </Col>
-        <Col span="16" class="title-col">
+        <Col span="14" class="title-col">
           赞
         </Col>
       </Row>

@@ -8,7 +8,7 @@
       </div>
     </div>
     <div class="commonHeader" id="feed-header">
-      <Row :gutter="16">
+      <Row :gutter="24">
         <Col span="5" style="display: flex; justify-content: flex-start">
           <BackIcon @click.native="goBack" height="21" width="21" color="#999" />
         </Col>
@@ -56,7 +56,7 @@
           </div>
           <div class="feed-container-tool feed-background-color">
             <div class="feed-container-tool-digg">
-              <Row :gutter="16" style="display: flex; align-items: center;">
+              <Row :gutter="24" style="display: flex; align-items: center;">
                 <Col span="17"  @click.native="changeUrl(`/feed/${feed_id}/diggs`)">
                   <div style="display: flex; align-items: center;">
                     <div :style="`width: ${digglistWidth}`">
@@ -83,7 +83,7 @@
               <img :src="defaultImage" v-if="!feedData.tool.feed_comment_count" />
             </div>
             <div class="comments" v-if="feedData.tool.feed_comment_count">
-              <Row :gutter="16" class="comments_count" style="height: 45px; display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center;">
+              <Row :gutter="24" class="comments_count" style="height: 45px; display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center;">
                 <Col span="24">
                     <span class="comments_counter">
                       {{feedData.tool.feed_comment_count}}人评论
@@ -91,7 +91,7 @@
                 </Col>
               </Row>
               <div class="comments-content">
-                <Row :gutter="16" v-for="(comment, index) in formateComments" :key="comment.id"  :class="$style.perComment">
+                <Row :gutter="24" v-for="(comment, index) in formateComments" :key="comment.id"  :class="$style.perComment">
                   <Col span="4">
                     <div class="grid-content bg-purple">
                       <img @click="changeUrl(`/users/feeds/${comment.user.user_id}`)" :src="comment.user.avatar[30]" alt="" style="width:100%; border-radius:50%">
@@ -145,7 +145,7 @@
       </mt-loadmore>
     </div>
     <div id="feed-footer" class="feed-container-tool-operation feed-background-color">
-      <Row :gutter="16" style="display: flex; justify-content: center; align-items: center; height: 100%;">
+      <Row :gutter="24" style="display: flex; justify-content: center; align-items: center; height: 100%;">
         <Col span="6" class="operation">
           <div v-if="!feedData.tool.is_digg_feed" @click="handleDiggFeed(feed_id)">
             <UnDiggIcon height="20" width="20" color="#999" />

@@ -1,14 +1,14 @@
 <template>
   <div class="Ranking">
     <div class="commonHeader">
-      <Row :gutter="16">
-        <Col span="4">
+      <Row :gutter="24">
+        <Col span="5">
           <BackIcon height="21" width="21" color="#999" @click.native="goTo(-1)" />
         </Col>
-        <Col span="16" class="title-col">
+        <Col span="14" class="title-col">
           点赞排行榜
         </Col>
-        <Col span="4"></Col>
+        <Col span="5"></Col>
       </Row>
     </div>
     <div class="nothingDefault"> 

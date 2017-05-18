@@ -1,14 +1,14 @@
 <template>
 	<div class="imMessage">
 		<div class="commonHeader">
-      <Row :gutter="16">
+      <Row :gutter="24">
         <Col span="5" style="display: flex; justify-content: flex-start" @click.native="goTo(-1)">
           <BackIcon height="21" width="21" color="#999" />
         </Col>
         <Col span="14" class="title-col">
           {{targetUser.name}}
         </Col>
-        <Col span="5" style="display: flex;">
+        <Col span="5" class="header-end-col">
           <MoreIcon width="21" height="21" color="#333" />
         </Col>
       </Row>
@@ -37,12 +37,12 @@
 		</div>
 		<div class="sendBox">
 			<Row :gutter="16" style="width: 100%;">
-				<Col span="19">
-					<Input type="textarea" v-model="message.content" placeholder="say anything" :autosize="{minRows: 1,maxRows: 4}" />
+				<Col span="20">
+					<Input :maxLength="255" type="textarea" class="commentInput" v-model="message.content" placeholder="say anything" :autosize="{minRows: 1,maxRows: 4}" />
 				</Col>
 
-				<Col span="5">
-					<Button :long="true" type="primary" size="small" @click.native="sendmsg()">发送</Button>
+				<Col span="4">
+					<Button size="small" class="sendButton" :long="true" :disabled="canSend" type="primary" @click.native="sendmsg()">发送</Button>
 				</Col>
 			</Row>
 		</div>
@@ -137,11 +137,29 @@
 			},
 			messagelists () {
 				const { lists = [] } = this.room;
+				this.$nextTick( function () {
+					// console.log(document.body.scrollHeight);
+					// let box = document.getElementById('messagelists');
+					// if(box) {
+					// 	console.log(box.style.height);
+					// }
+					window.scrollTo(0,document.body.scrollHeight)
+			});
 				return lists;
 			},
 			myAvatar () {
 				const { avatar: { 30: avatar = '' } = {} } = this.userInfo;
 				return avatar;
+			},
+			canSend () {
+				let message = this.message.content;
+				message = message.replace(/(^\s*)|(\s*$)/g,"");
+				message = message.replace(" ","");
+				if(!message.length) {
+					return true;
+				} else {
+					return false;
+				}
 			}
 		},
 		created () {
@@ -189,7 +207,7 @@
 			// scroll page
 			let box = document.getElementById('messagelists');
 			if(box) {
-				box.scrollIntoView(true)
+				box.__proto__;
 			}
 		}
 	}
@@ -199,10 +217,11 @@
 
 <style lang="less" scoped>
 	.commonHeader {
-		// position: fixed;
-		// top: 0;
-		// left: 0;
-		// right: 0;
+		height: 10vh;
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
 	}
 	.message {
 		margin: 2vh 0;
@@ -214,12 +233,12 @@
 	.hemessage {
 		.msg-content {
 			padding: 2vw;
-		  max-width: 60vw;
-		  background: #e2e3e3;
-		  color: #333;
-		  border-radius: 0 10px 10px 10px;
-		  float: left;
-		  word-break: break-all;
+		  	max-width: 60vw;
+		  	background: #e2e3e3;
+		  	color: #333;
+		  	border-radius: 0 10px 10px 10px;
+		  	float: left;
+		  	word-break: break-all;
 		}
 		.content {
 			text-align: left;
@@ -262,23 +281,21 @@
 	  border-radius: 50%;
 	}
 	.sendBox {
-		position: absolute;
+		position: fixed;
 		bottom: 0;
 		left: 0;
 		right: 0;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		min-height: 40px;
-		max-height: calc(30vh);
+		min-height: 7vh;
+		max-height: 30vh;
+		padding: 1vh 0;
+		background: #fff;
+
 	}
 	.messageList {
-		// padding-top: 56px;
-		// padding-bottom: 40px;
-		// min-height: calc(100vh - 96px);
-		// max-height: calc(100vh - 96px);
-		height: calc(100vh - 96px);
-	    overflow-y: scroll;
-	    overflow-x: hidden;
+		padding-top: 56px;
+		padding-bottom: 40px;
 	}
 </style>

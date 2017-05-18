@@ -1,20 +1,20 @@
 <template>
   <div class="systemSetting">
     <div class="commonHeader">
-      <Row :gutter="16">
-        <Col span="3" style="display: flex; justify-content: flex-start" @click.native="goTo(-1)">
+      <Row :gutter="24">
+        <Col span="5" style="display: flex; justify-content: flex-start" @click.native="goTo(-1)">
           <BackIcon height="21" width="21" color="#999" />
         </Col>
-        <Col span="18" class="title-col">
+        <Col span="14" class="title-col">
           设置
         </Col>
-        <Col span="3" style="display: flex;">
+        <Col span="5" style="display: flex;">
         </Col>
       </Row>
     </div>
     <!-- 入口菜单 -->
     <div :class="$style.entry">
-      <Row :gutter="16" :class="$style.entryMenu" @click.native="changeUrl('/users/password')">
+      <Row :gutter="24" :class="$style.entryMenu" @click.native="changeUrl('/users/password')">
         <Col span="22">
           修改密码
         </Col>
@@ -22,7 +22,7 @@
           <RightArrowIcon height="18" width="18" color="#999" />
         </Col>
       </Row>
-      <Row :gutter="16" :class="$style.entryMenu" @click.native="comfirmCleanCache">
+      <Row :gutter="24" :class="$style.entryMenu" @click.native="comfirmCleanCache">
         <Col span="22" @click="comfirmCleanCache">
           清理缓存
         </Col>
@@ -30,7 +30,7 @@
           <RightArrowIcon height="18" width="18" color="#999" />
         </Col>
       </Row>
-      <Row :gutter="16" :class="$style.entryMenu">
+      <Row :gutter="24" :class="$style.entryMenu">
         <Col span="22">
           关于我们
         </Col>
@@ -38,7 +38,7 @@
           <RightArrowIcon height="18" width="18" color="#999" />
         </Col>
       </Row>
-      <Row :gutter="16" :class="$style.entryMenu" @click.native="comfirmLogout">
+      <Row :gutter="24" :class="$style.entryMenu" @click.native="comfirmLogout">
         <Col span="22" style="color: #59b6d7;">
           退出登录
         </Col>

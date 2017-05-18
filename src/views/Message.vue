@@ -1,17 +1,17 @@
 <template>
   <div class="messageList">
     <div class="commonHeader">
-      <Row :gutter="16">
-        <Col span="16" offset="4" class="title-col">
+      <Row :gutter="24">
+        <Col span="14" offset="5" class="title-col">
           消息
         </Col>
-        <Col span="4">
+        <Col span="5">
           
         </Col>
       </Row>
     </div>
     <div :class="$style.entryLists">
-      <Row :gutter="16" :class="$style.entry" >
+      <Row :gutter="24" :class="$style.entry" >
         <div :class="$style.entryContainer" @click="changeUrl('/users/mycomments')">
           <Col span="4" :class="$style.entryIcon">
             <div :class="$style.commentIcon">
@@ -29,7 +29,7 @@
           </Col>
         </div>
       </Row>
-      <Row :gutter="16" :class="$style.entry">
+      <Row :gutter="24" :class="$style.entry">
         <div :class="$style.entryContainer" @click="changeUrl('/users/diggs')">
           <Col span="4" :class="$style.entryIcon">
             <div :class="$style.diggIcon">

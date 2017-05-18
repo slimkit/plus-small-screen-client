@@ -1,14 +1,14 @@
 <template>
   <div class="collections">
     <div class="commonHeader">
-      <Row :gutter="16">
-        <Col span="4" @click.native="goTo(-1)">
+      <Row :gutter="24">
+        <Col span="5" @click.native="goTo(-1)">
           <BackIcon height="21" width="21" color="#999" />
         </Col>
-        <Col span="16" class="title-col">
+        <Col span="14" class="title-col">
           收藏
         </Col>
-        <Col span="4"></Col>
+        <Col span="5"></Col>
       </Row>
     </div>
     <div v-if="nothing" :class="$style.nothingDefault"> 

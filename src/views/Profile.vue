@@ -5,7 +5,7 @@
     </div>
     <!-- 头像+昵称+简介-->
     <div :class="$style.simpleInfo" @click="changeUrl('/users/setting')">
-      <Row :gutter="16" :class="$style.rowCenter">
+      <Row :gutter="24" :class="$style.rowCenter">
         <!-- 头像 -->
         <Col span="6" :class="$style.colCenter">
           <img v-lazy="avatar" :class="$style.avatar" alt="name">
@@ -22,7 +22,7 @@
     </div>
     <!-- 粉丝+关注 -->
     <div :class="$style.follows">
-      <Row :gutter="16">
+      <Row :gutter="24">
         <div :class="$style.followsContent">
           <Col span="12" style="border-right: 1px #e2e3e3 solid">
             <p :class="$style.contentCenter" class="followsNum">{{followed}}</p>
@@ -37,7 +37,7 @@
     </div>
     <!-- 入口菜单 -->
     <div :class="$style.entry">
-      <Row :gutter="16" :class="$style.entryMenu" @click.native="changeUrl(`/users/feeds/${currentUser}`)">
+      <Row :gutter="24" :class="$style.entryMenu" @click.native="changeUrl(`/users/feeds/${currentUser}`)">
         <Col span="3">
           <SapceIcon :height="21" :width="21" color="#59b6d7" />
         </Col>
@@ -48,7 +48,7 @@
           <RightArrowIcon height="18" width="18" color="#999" />
         </Col>
       </Row>
-      <Row :gutter="16" :class="$style.entryMenu"  @click.native="changeUrl('/users/ranking')">
+      <Row :gutter="24" :class="$style.entryMenu"  @click.native="changeUrl('/users/ranking')">
         <Col span="3">
           <RankingIcon :height="21" :width="21" color="#59b6d7" />
         </Col>
@@ -59,7 +59,7 @@
           <RightArrowIcon height="18" width="18" color="#999" />
         </Col>
       </Row>
-      <Row :gutter="16" :class="$style.entryMenu" @click.native="changeUrl('/users/collections')">
+      <Row :gutter="24" :class="$style.entryMenu" @click.native="changeUrl('/users/collections')">
         <Col span="3">
           <ConnectionIcon :height="21" :width="21" color="#59b6d7" />
         </Col>
@@ -94,7 +94,7 @@
           <Icon type="ios-arrow-right"></Icon>
         </Col>
       </Row> -->
-      <Row :gutter="16" :class="$style.entryMenu" @click.native="changeUrl('/users/systemSetting')">
+      <Row :gutter="24" :class="$style.entryMenu" @click.native="changeUrl('/users/systemSetting')">
         <Col span="3">
           <SystemSettingIcon height="21" width="21" color="#59b6d7" />
         </Col>
