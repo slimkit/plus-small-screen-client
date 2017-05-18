@@ -9,7 +9,7 @@
           {{targetUser.name}}
         </Col>
         <Col span="5" class="header-end-col">
-          <MoreIcon width="21" height="21" color="#333" />
+          <!-- <MoreIcon width="21" height="21" color="#333" /> -->
         </Col>
       </Row>
     </div>
