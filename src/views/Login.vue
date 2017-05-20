@@ -65,20 +65,21 @@
 </template>
 
 <script>
-  import request, { createAPI } from '../utils/request';
+  import { createAPI, addAccessToken } from '../utils/request';
   import localEvent from '../stores/localStorage';
   import router from '../routers/index';
   import detecdOS from '../utils/detecdOS';
   import errorCodes from '../stores/errorCodes';
   import deleteObjectItems from '../utils/deleteObjectItems';
   import { getUserInfo } from '../utils/user';
-  import { USERS_APPEND } from '../stores/types';
+  import { USERS_APPEND, MESSAGELISTS } from '../stores/types';
   import defaultAvatar from '../statics/images/defaultAvatarx2.png';
   import EyeCloseIcon from '../icons/EyeClose';
   import EyeOpenIcon from '../icons/EyeOpen';
   import CloseIcon from '../icons/Close';
   import lodash from 'lodash';
   import LoadingBlackIcon from '../icons/LoadingBlack';
+  import { connect } from '../utils/webSocket';
 
 
   const phoneReg = /^(((13[0-9]{1})|14[0-9]{1}|(15[0-9]{1})|17[0-9]{1}|(18[0-9]{1}))+\d{8})$/;
@@ -177,12 +178,14 @@
         }
       },
       submit () {
+        // 跳转信息
         let redirect = this.$route.query.redirect ? this.$route.query.redirect : 'feeds';
         let { phone, password } = this;
+        // 设备号，只获取设备平台
         let device_code = detecdOS();
         this.isLoading = true;
         this.isDisabled = true;
-        request.post(createAPI('auth'), {
+        addAccessToken().post(createAPI('auth'), {
             phone,
             password,
             device_code
@@ -200,6 +203,57 @@
             this.$store.dispatch(USERS_APPEND, cb =>{
               cb(user)
             });
+            // 链接im信息
+            if(lodash.keys(TS_WEB.webSocket).length && TS_WEB.webSocket.readyState != 1) {
+              connect(TS_WEB.webSocket.url);
+            } else if(TS_WEB.webSocket == null) {
+              addAccessToken().get(createAPI('im/users'), {} , {
+                validateStatus: status => status === 200
+              })
+              .then( response => {
+                let data= response.data;
+                if(data.status || data.code === 0) {
+                  window.TS_WEB.im_token = data.data.im_password; // 保存im口令
+                  if(window.TS_WEB.socketUrl) {
+                    // 如果后台设置了socket地址 链接websocket
+                    connect(`ws://${window.TS_WEB.socketUrl}?token=${data.data.im_password}`); 
+                  }
+                }
+              });
+            }
+            // 获取会话列表im
+            addAccessToken().get(createAPI('im/conversations/list/all'), {}, {
+              validateStatus: status => status === 200
+            })
+            .then( response => {
+              let chatListData = response.data;
+              let lists = {};
+              if(chatListData.status || chatListData.code === 0 ) {
+                if(!chatListData.data.length) return;
+                chatListData.data.forEach( list => {
+                  lists[`room_${list.cid}`] = {};
+                  let li = {};
+                  let uids = list.uids.split(',');
+                  let user_id = 0;
+                  if(uids[0] == data.user_id) {
+                    user_id = uids[1];
+                  } else {
+                    user_id = uids[0];
+                  }
+                  getUserInfo(user_id, 30).then( user => {
+                    li.name = user.name;
+                    li.avatar = user.avatar[30];
+                    li.lists = [];
+                    li.cid = list.cid;
+                    li.user_id = user_id;
+                    this.$store.dispatch(MESSAGELISTS, cb => {
+                      cb(li);
+                    });
+                  });
+                });
+              }
+            });
+            // 跳转到动态页面
             router.push({ path: redirect });
           });
         })

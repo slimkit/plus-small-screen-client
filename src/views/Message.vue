@@ -5,9 +5,6 @@
         <Col span="14" offset="5" class="title-col">
           消息
         </Col>
-        <Col span="5">
-          
-        </Col>
       </Row>
     </div>
     <div :class="$style.entryLists">
@@ -47,12 +44,31 @@
           </Col>
         </div>
       </Row>
+      <Row :gutter="24" :class="$style.entry" v-for="(message, index) in imMessageList" :key="index">
+        <div :class="$style.entryContainer" @click="changeUrl( `/users/message/${message.user_id}/${message.cid}`)">
+          <Col span="4" :class="$style.entryIcon">
+            <div :class="$style.messageAvatar">
+              <img :class="$style.avatar" :src="message.avatar" />
+            </div>
+          </Col>
+          <Col span="15">
+            <h4 style="font-weight: 400;">{{ message.name }}</h4>
+            <div v-if="message.lists.length" style="color: #999;">
+              {{ message.lists.length ?  message.lists[message.lists.length - 1].txt  : '' }}
+            </div>
+          </Col>
+          <!-- <Col span="5" v-if="diggsCount">
+            <timeago :class=$style.time :since="diggTime" locale="zh-CN" :auto-update="60"></timeago>
+            <i :class="$style.messageCount">{{diggsCount}}</i>
+          </Col> -->
+        </div>
+      </Row>
     </div>
     <ToolBar/>
   </div>
 </template>
 <script>
-  import { NOTICE } from '../stores/types';
+  import { NOTICE, TOTALMESSAGELISTS } from '../stores/types';
   import { createAPI, addAccessToken } from '../utils/request';
   import ToolBar from '../components/ToolBar';
   import localEvent from '../stores/localStorage';
@@ -74,6 +90,10 @@
       currentUser: 0
     }),
     computed: {
+      imMessageList () {
+        let messageList = this.$store.getters[TOTALMESSAGELISTS];
+        return messageList;
+      },
       diggsCount () {
         const { diggs: { count = 0 } = {} } = this.messages;
         return count;
@@ -225,6 +245,12 @@
             padding: 2vw;
             border-radius: 50%;
             background-color: #fe8f90;
+          }
+          .messageAvatar {
+            .avatar {
+              width: 100%;
+              border-radius: 50%;
+            }
           }
           .commentIcon {
             background-color: rgb(89, 182, 215);

@@ -31,18 +31,18 @@
             </p>
           </div>
           <div :class="$style.follows">
-            <Row :gutter="32">
-              <Col span="12" :class="$style.following">
-                关注 <span :class="$style.counts">{{following}}</span>
-              </Col>
+            <Row :gutter="24">
               <Col span="12" :class="$style.followed">
                 粉丝 <span :class="$style.counts">{{followed}}</span>
+              </Col>
+              <Col span="12" :class="$style.following">
+                关注 <span :class="$style.counts">{{following}}</span>
               </Col>
             </Row>
           </div>
         </div>
         <div :class="$style.feeds" v-if="!nothing">
-          <div style="padding: 8px; background: #e2e3e3; color: #e2e3e3;">{{feedCounts}}条动态</div>
+          <div style="padding: 8px; background: #f4f5f5; color: #999;">{{feedCounts}}条动态</div>
           <div :class="$style.feedContainer">
             <UserFeed v-for="feed in feedList" :feed="feed" :key="feed.feed_id" />
           </div>

@@ -35,19 +35,28 @@ const mutations = {
 		state.messageLists = { ...state.messageLists, ...oldState.messageLists };
 	},
 
-	[MESSAGELISTS] (state, lists) {
-		// let messageLists = state.messageLists;
-		// for( let index in lists ){
-		// 	messageLists[index] = {};
-		// 	messageLists[index] = { ...messageLists[index], ...lists[index] };
-		// }
-		// console.log(lists);
-		state.messageLists = { ...state.messageLists, ...lists };
+	[MESSAGELISTS] (state, list) {
+		// state.messageLists = { ...state.messageLists, ...lists };
+	 	let oldState = state;
+	 	if(!lodash.keys(oldState.messageLists[`room_${list.cid}`]).length > 0) {
+	 		let user = {};
+			oldState.messageLists[`room_${list.cid}`] = { 
+				...oldState.messageLists[`room_${list.cid}`], 
+				...{
+					name: list.name,
+					user_id: list.user_id,
+					cid: list.cid,
+					avatar: list.avatar,
+					lists: []
+				}
+			};
+	 	}
+		state.messageLists = { ...state.messageLists, ...oldState.messageLists };
 	},
 
 	[SYNCIMMESSAGE] (state, list) {
+		console.log(list);
 		let oldState = state;
-		let hash = list.ext.hash;
 		if(!lodash.keys(oldState.messageLists[`room_${list.cid}`]).length > 0) {
 			let user = {};
 			oldState.messageLists[`room_${list.cid}`] = {
@@ -74,7 +83,7 @@ const mutations = {
 	},
 
 	[TOTALMESSAGELISTS] (state, lists) {
-		
+		return state.messageLists;
 	}
 };
 
@@ -95,8 +104,8 @@ const actions = {
 		})
 	},
 	[MESSAGELISTS]: (context, cb) => {
-		cb (lists => {
-			context.commit(MESSAGELISTS, lists);
+		cb (list => {
+			context.commit(MESSAGELISTS, list);
 		})
 	}
 };

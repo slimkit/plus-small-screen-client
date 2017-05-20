@@ -57,7 +57,7 @@
           <div class="feed-container-tool feed-background-color">
             <div class="feed-container-tool-digg">
               <Row :gutter="24" style="display: flex; align-items: center;">
-                <Col span="17"  @click.native="changeUrl(`/feed/${feed_id}/diggs`)">
+                <Col span="16"  @click.native="changeUrl(`/feed/${feed_id}/diggs`)">
                   <div style="display: flex; align-items: center;">
                     <div :style="`width: ${digglistWidth}`">
                       <div class="digg-digg-list" v-if="diggList.length" >
@@ -69,7 +69,7 @@
                     </div>
                   </div>
                 </Col>
-                <Col span="7">
+                <Col span="8">
                   <div class="detail-data">
                     <span>发布于<timeago :since="feedTimer" locale="zh-CN" :auto-update="60"></timeago></span>
                     <span>{{ friendNum(feedData.tool.feed_view_count) }}人浏览</span>

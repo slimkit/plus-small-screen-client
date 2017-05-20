@@ -97,6 +97,17 @@
 					hash
 				];
 				msg += JSON.stringify(message);
+				if(!TS_WEB.webSocket) {
+					this.$store.dispatch(NOTICE, cb => {
+						cb({
+							show: true,
+							time: 1500,
+							status: false,
+							text: '链接出错,可能是没有配置聊天服务器'
+						});
+					})
+					return false;
+				}
 				if(TS_WEB.webSocket.readyState != 1) {
 					connect(TS_WEB.webSocket.url);
 					setTimeout(() => {
@@ -138,13 +149,8 @@
 			messagelists () {
 				const { lists = [] } = this.room;
 				this.$nextTick( function () {
-					// console.log(document.body.scrollHeight);
-					// let box = document.getElementById('messagelists');
-					// if(box) {
-					// 	console.log(box.style.height);
-					// }
 					window.scrollTo(0,document.body.scrollHeight)
-			});
+				});
 				return lists;
 			},
 			myAvatar () {
@@ -217,7 +223,7 @@
 
 <style lang="less" scoped>
 	.commonHeader {
-		height: 10vh;
+		height: 7vh;
 		position: fixed;
 		top: 0;
 		left: 0;
@@ -295,7 +301,7 @@
 
 	}
 	.messageList {
-		padding-top: 56px;
-		padding-bottom: 40px;
+		padding-top: 7vh;
+		padding-bottom: 7vh;
 	}
 </style>
