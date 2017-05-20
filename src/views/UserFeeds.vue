@@ -75,6 +75,7 @@
 
 <script>
   import { createAPI, addAccessToken } from '../utils/request';
+  import { getUserInfo } from '../utils/user';
   import errorCodes from '../stores/errorCodes';
   import localEvent from '../stores/localStorage';
   import { followingUser, unFollowingUser } from '../utils/user';
@@ -371,7 +372,10 @@
         return;
       }
       this.user_id = this.currentUser != user_id ? user_id : this.currentUser;
-      this.userInfo = { ...this.userInfo, ...localEvent.getLocalItem(`user_${this.user_id}`) };
+      // this.userInfo = { ...this.userInfo, ...localEvent.getLocalItem(`user_${this.user_id}`) };
+      getUserInfo(this.user_id, 30).then( user => {
+        this.userInfo = { ...this.userInfo, ...user };
+      });
       // 获取动态列表
       addAccessToken().get(createAPI(`feeds/users/${this.user_id}`), {},
         {

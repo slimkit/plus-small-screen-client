@@ -9,7 +9,7 @@
           >
             {{feed.created_at}}
           </span>
-          <span style="text-align: center; font-weight: 400; font-size: 18px;display: flex; justify-content: center;" v-if="feed.date">{{feed.date}}</span>
+          <span style="text-align: center; font-weight: 400; font-size: 18px;display: flex; justify-content: center; padding-bottom: 8px;" v-if="feed.date">{{feed.date}}</span>
           <span style="text-align: center; font-size: 14px;display: flex; justify-content: center;" v-if="feed.month">{{feed.month}}月</span>
         </div>
       </Col>
@@ -108,6 +108,7 @@
     }
     .userFeed {
       display: block;
+      margin-bottom: 8px;
     }
   }
   .toolTop {

@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.detail" :id="`feed-${feed.feed.feed_id}`">
     <div style="display: flex; align-items: flex-start;">
-      <img :src="avatar" alt="" style="padding: 0 2vw; width: 16vw; border-radius: 50%;">
+      <img :src="avatar" alt="" style="padding: 0 2vw; width: 16vw; height: 12vw; border-radius: 50%;">
       <div style="padding: 0 2vw; width: 84vw;">
         <div :class="$style.contentBefore">
           <router-link :class="$style.username" :to='`/users/feeds/${user.user_id}`'>{{ user.name }}</router-link>
