@@ -51,16 +51,16 @@
               <img :class="$style.avatar" :src="message.avatar" />
             </div>
           </Col>
-          <Col span="15">
+          <Col span="14">
             <h4 style="font-weight: 400;">{{ message.name }}</h4>
             <div v-if="message.lists.length" style="color: #999;">
               {{ message.lists.length ?  message.lists[message.lists.length - 1].txt  : '' }}
             </div>
           </Col>
-          <!-- <Col span="5" v-if="diggsCount">
-            <timeago :class=$style.time :since="diggTime" locale="zh-CN" :auto-update="60"></timeago>
-            <i :class="$style.messageCount">{{diggsCount}}</i>
-          </Col> -->
+          <Col span="6" v-if="message.lists.length">
+            <timeago :class="$style.timer" :since="message.time" locale="zh-CN" :auto-update="60"></timeago>
+            <!-- <i :class="$style.messageCount">{{diggsCount}}</i> -->
+          </Col>
         </div>
       </Row>
     </div>

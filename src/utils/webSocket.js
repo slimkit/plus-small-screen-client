@@ -32,7 +32,6 @@ function onMessage (message) {
 	let messagetype = msg.data.substr(0, 1); // 获取消息第一位判断消息类型
 	let data = JSON.parse(msg.data.substr(1)); // 数据转换
 
-	// }
 	if(messagetype == 3) {
 		let user = localEvent.getLocalItem(`user_${currentUser.user_id}`);
 		if(data[0] === 'convr.msg.sync') {
@@ -57,10 +56,11 @@ function onMessage (message) {
 				data[1].avatar = user.avatar[30];
 				data[1].name = user.name;
 			}
+			console.log(data);
+			app.$store.dispatch(TOTALMESSAGELIST, cb => {
+				cb(data);
+			})
 		}
-		app.$store.dispatch(TOTALMESSAGELIST, cb => {
-			cb(data);
-		})
 	}
 };
 

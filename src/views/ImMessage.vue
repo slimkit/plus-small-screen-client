@@ -84,15 +84,16 @@
 			changeUrl,
 			sendmsg() {
 				let msg = '2';
-				let hash = (new Date()).getTime() + '_' +this.user_id;
+				let time = (new Date()).getTime();
+				let hash = time + '_' +this.user_id;
 				let message = [
 					'convr.msg',
 					{
-				    "cid": parseInt(this.cid), // 要发送到对话的ID， 无符号长整型，必填
-				    "type": 0, // 消息的类型，无符号整型，可选，默认0；范围0-255
+				    "cid": parseInt(this.cid), // 对话id
+				    "type": 0, // 消息的类型，私密消息
 				    "txt": this.message.content, // 消息的文本内容，字符串，可选，默认空字符串
-				    "ext": {to_uid: parseInt(this.user_id), hash}, // 消息的扩展，可以是字符串、集合、键值对，可选，默认空字符串
-				    "rt": false, // 是否实时消息，可选，默认false
+				    "ext": { to_uid: parseInt(this.user_id), hash, time }, // 消息的扩展，可以是字符串、集合、键值对，可选，默认空字符串
+				    "rt": false, // 非实时消息
 					},
 					hash
 				];
@@ -123,7 +124,7 @@
 							{
 								cid: this.cid,
 								uid: this.currentUser,
-								ext: { to_uid: parseInt(this.user_id), hash },
+								ext: { to_uid: parseInt(this.user_id), hash, time},
 								txt: this.message.content,
 								me: true,
 								hash,

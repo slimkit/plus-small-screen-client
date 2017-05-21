@@ -31,12 +31,11 @@ const mutations = {
 			hash = list[1].ext.hash;
 		}
 
-		oldState.messageLists[`room_${list[1].cid}`].lists = [ ...oldState.messageLists[`room_${list[1].cid}`].lists, { txt: list[1].txt, user_id: list[1].uid } ];
+		oldState.messageLists[`room_${list[1].cid}`].lists = [ ...oldState.messageLists[`room_${list[1].cid}`].lists, { txt: list[1].txt, user_id: list[1].uid, time: list[1].ext.time } ];
 		state.messageLists = { ...state.messageLists, ...oldState.messageLists };
 	},
-
+	// 通过接口增加聊天对话
 	[MESSAGELISTS] (state, list) {
-		// state.messageLists = { ...state.messageLists, ...lists };
 	 	let oldState = state;
 	 	if(!lodash.keys(oldState.messageLists[`room_${list.cid}`]).length > 0) {
 	 		let user = {};
