@@ -12,7 +12,7 @@
             </Row>
             <Row>
               <Col span="24">
-                <Button :long="true" type="primary" :class="$style.sendComment" :disabled="commentCount == 0" size="small" @click.native="sendComment()">发送</Button>
+                <Button :long="true" type="primary" class="sendButton" :disabled="commentCount == 0" size="small" @click.native="sendComment()">发送</Button>
               </Col>
             </Row>
           </Col>
@@ -150,15 +150,16 @@
         bottom: 0;
         left: 0;
       }
-      .sendComment {
-        font-size: 14px;
-        padding: 3px!important;
-        background-color: #59b6d7;
-        &[disabled] {
-          background-color: #ccc!important;
-          color: #fff!important;
-        }
-      }
+      // .sendComment {
+      //   font-size: 14px;
+      //   padding: 3px!important;
+      //   background-color: #59b6d7;
+      //   border: none;
+      //   &[disabled] {
+      //     background-color: #ccc!important;
+      //     color: #fff!important;
+      //   }
+      // }
     }
     .wrapper{
       background-color: rgba(0, 0, 0, .3);
@@ -171,10 +172,5 @@
       overflow: auto;
       margin: 0;
     }
-  }
-</style>
-<style lang="css">
-  .commentInput {
-    border: none;
   }
 </style>

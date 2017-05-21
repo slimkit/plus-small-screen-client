@@ -85,6 +85,11 @@
         let api = this.option.uri; // 查询地址
         let limiter = this.option.limiter; // 分页查询方式
         if( this.maxId == 0) {
+          setTimeout(() => {
+            this.bottomAllLoaded = true;
+            if(this.$refs.loadmore)
+              this.$refs.loadmore.onBottomLoaded();
+          }, 500)
           return ;
         }
         if(limiter == 'page') {
@@ -104,7 +109,14 @@
           let length = data.length;
           let ids = [];
           let feeds = {};
-          if(!data.length > 0) return;
+          if(!data.length > 0) {
+            this.bottomAllLoaded = true;
+            setTimeout(() => {
+              if(this.$refs.loadmore)
+                this.$refs.loadmore.onBottomLoaded();
+            }, 500)
+            return;
+          }
           data.forEach((d) => {
             ids.push(d.feed.feed_id);
             feeds[d.feed.feed_id] = d;
@@ -122,7 +134,6 @@
           setTimeout(() => {
             if(this.$refs.loadmore)
               this.$refs.loadmore.onBottomLoaded();
-            // this.$refs.loadmore.onTopLoaded();
           }, 500)
         })
       },
@@ -148,7 +159,6 @@
             setTimeout(() => {
               if(this.$refs.loadmore)
               {
-                // this.$refs.loadmore.onBottomLoaded();
                 this.$refs.loadmore.onTopLoaded();
               }
             }, 500)
@@ -211,7 +221,7 @@
         setTimeout(() => {
           if(this.$refs.loadmore){
             this.$refs.loadmore.onTopLoaded();
-            // this.$refs.loadmore.onBottomLoaded();
+            this.$refs.loadmore.onBottomLoaded();
           }
         }, 500);
         storeIds = [];
@@ -234,7 +244,10 @@
         let feeds = response.data.data;
         let storeFeeds = {};
         let ids = [];
-        if(!feeds.length > 0) return;
+        if(!feeds.length > 0) {
+          this.bottomAllLoaded = true;
+          return;
+        }
         this.firstId = feeds[0].feed.feed_id;
         feeds.forEach( feed => {
           ids.push(feed.feed.feed_id);

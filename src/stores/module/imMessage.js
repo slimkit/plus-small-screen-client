@@ -1,4 +1,4 @@
-import { TOTALMESSAGELISTS,  TOTALMESSAGELIST, SYNCIMMESSAGE, MESSAGELISTS } from '../types';
+import { TOTALMESSAGELISTS,  TOTALMESSAGELIST, SYNCIMMESSAGE, MESSAGELISTS, CLEANNEWMESSAGE } from '../types';
 import localEvent from '../localStorage';
 import { getUserInfo } from '../../utils/user';
 import lodash from 'lodash';
@@ -9,28 +9,38 @@ const state = {
 };
 
 const mutations = {
+	// 清除消息数量提示
+	[CLEANNEWMESSAGE] (state, cid) {
+		let oldState = state;
+		if(lodash.keys(oldState.messageLists[`room_${cid}`]).length) {
+			oldState.messageLists[`room_${cid}`].count = 0;
+			state.messageLists = { ...state.messageLists, ...oldState.messageLists };
+		}
+	},
 	// signal user chat
 	[TOTALMESSAGELIST] (state, list) {
 		let oldState = state;
-		let hash = '';
 		if(!lodash.keys(oldState.messageLists[`room_${list[1].cid}`]).length > 0) {
-			let user = {};
-			let target_user_id = list[1].me ? list[1].ext.to_uid : list[1].uid;
-			hash = list[1].me ? list[1].ext.hash : list[1].hash;
-			oldState.messageLists[`room_${list[1].cid}`] = { 
-				...oldState.messageLists[`room_${list[1].cid}`], 
-				...{
+			oldState.messageLists[`room_${list[1].cid}`]  = {};
+			let room = {};
+			let target_user_id = !list[1].me ? list[1].ext.to_uid : list[1].uid;
+			// hash = list[1].me ? list[1].ext.hash : list[1].hash;
+			room = {
 					name: list[1].name,
 					user_id: target_user_id,
 					cid: list[1].cid,
 					avatar: list[1].avatar,
-					lists: []
-				}
+					lists: [],
+					count: !list[1].me ? 1 : 0
+				};
+			oldState.messageLists[`room_${list[1].cid}`] = { 
+				...oldState.messageLists[`room_${list[1].cid}`], 
+				...room
 			};
 		} else {
-			hash = list[1].ext.hash;
+			if(!list[1].me) oldState.messageLists[`room_${list[1].cid}`].count += 1;
+			// hash = list[1].ext.hash;
 		}
-
 		oldState.messageLists[`room_${list[1].cid}`].lists = [ ...oldState.messageLists[`room_${list[1].cid}`].lists, { txt: list[1].txt, user_id: list[1].uid, time: list[1].ext.time } ];
 		state.messageLists = { ...state.messageLists, ...oldState.messageLists };
 	},
@@ -46,7 +56,8 @@ const mutations = {
 					user_id: list.user_id,
 					cid: list.cid,
 					avatar: list.avatar,
-					lists: []
+					lists: [],
+					count: 0
 				}
 			};
 	 	}
@@ -54,7 +65,6 @@ const mutations = {
 	},
 
 	[SYNCIMMESSAGE] (state, list) {
-		console.log(list);
 		let oldState = state;
 		if(!lodash.keys(oldState.messageLists[`room_${list.cid}`]).length > 0) {
 			let user = {};
@@ -87,6 +97,11 @@ const mutations = {
 };
 
 const actions = {
+	[CLEANNEWMESSAGE]: ( context, cb) => {
+		cb( cid => {
+			context.commit(CLEANNEWMESSAGE, cid);
+		});
+	},
 	[TOTALMESSAGELIST]: (context, cb) => {
 		cb( list => {
 			context.commit(TOTALMESSAGELIST, list);

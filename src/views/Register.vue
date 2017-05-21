@@ -91,7 +91,7 @@
 
 <script>
   import router from '../routers/index';
-  import request, { createAPI } from '../utils/request';
+  import { addAccessToken, createAPI } from '../utils/request';
   import detecdOS from '../utils/detecdOS';
   import localEvent from '../stores/localStorage';
   import errorCodes from '../stores/errorCodes';
@@ -103,6 +103,7 @@
   import CloseIcon from '../icons/Close';
   import lodash from 'lodash';
   import LoadingWhiteIcon from '../icons/LoadingWhite';
+  import { connect } from '../utils/webSocket';
 
   // 手机号码规则
   const phoneReg = /^(((13[0-9]{1})|14[0-9]{1}|(15[0-9]{1})|17[0-9]{1}|(18[0-9]{1}))+\d{8})$/;
@@ -188,7 +189,7 @@
         let phone = this.phone;
         let type = 'register';
         this.isCanGetCode = false;
-        request.post(createAPI('auth/phone/send-code'), {
+        addAccessToken().post(createAPI('auth/phone/send-code'), {
             phone,
             type
           },
@@ -217,7 +218,7 @@
         let device_code = detecdOS();
         this.isLoading = true;
         this.isDisabled = true;
-        request.post(createAPI('auth/register'), {
+        addAccessToken().post(createAPI('auth/register'), {
             name: username,
             phone,
             code,
@@ -235,6 +236,22 @@
             this.$store.dispatch(USERS_APPEND, cb =>{
               cb(user)
             });
+            // 注册im用户， 
+            if(TS_WEB.webSocket == null && TS_WEB.socketUrl) {
+              addAccessToken().get(createAPI('im/users'), {} , {
+                validateStatus: status => status === 200
+              })
+              .then( response => {
+                let data= response.data;
+                if(data.status || data.code === 0) {
+                  window.TS_WEB.im_token = data.data.im_password; // 保存im口令
+                  if(window.TS_WEB.socketUrl) {
+                    connect(`ws://${window.TS_WEB.socketUrl}?token=${data.data.im_password}`); // 如果后台设置了socket地址 链接websocket
+                  }
+                }
+              });
+            }
+
             router.push({ path: 'feeds' });
           });
         })

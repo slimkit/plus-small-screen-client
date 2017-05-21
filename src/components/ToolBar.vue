@@ -20,10 +20,12 @@
       </Col>
       <Col :span="5" :class="$style.menuItem">
         <router-link class="router-link" to="/users/message">
-          <Badge dot>
+          <Badge dot v-if="hasNewMessage">
             <MessageIcon height="26" width="26" color="#999" />
             <i>消息</i>
           </Badge>
+            <MessageIcon v-if="!hasNewMessage" height="26" width="26" color="#999" />
+            <i v-if="!hasNewMessage">消息</i>
         </router-link>
       </Col>
       <Col :span="5" :class="$style.menuItem">
@@ -40,7 +42,7 @@
 
 <script>
   import router from '../routers/index';
-  import { SHOWPOST } from '../stores/types';
+  import { SHOWPOST, TOTALMESSAGELISTS } from '../stores/types';
   import HomeIcon from '../icons/Home';
   import DiscoverIcon from '../icons/Discover';
   import MessageIcon from '../icons/Message';
@@ -62,6 +64,16 @@
             show: true
           })
         })
+      }
+    },
+    computed: {
+      hasNewMessage () {
+        let messageList = this.$store.getters[TOTALMESSAGELISTS];
+        let count = 0;
+        for( let index in messageList ) {
+          count += messageList[index].count;
+        }
+        return count > 0;
       }
     }
   }

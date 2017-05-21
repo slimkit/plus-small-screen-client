@@ -14,7 +14,7 @@
           </Col>
         </Row>
         <Row>
-          <Col span="24">
+          <Col span="23">
             <router-link style="display: flex;" v-if="feed.feed.feed_title" :to="`/feed/${feed.feed.feed_id}`" class="feedTitle">{{ feed.feed.feed_title }}</router-link>
             <div :class="$style.content" @click="router(`/feed/${feed.feed.feed_id}`)">
               {{ feed.feed.feed_content }}
@@ -112,7 +112,7 @@
   .content {
     font-size: 14px;
     color: #666;
-    text-align: justify;
+    text-align: initial;
     overflow: hidden;
     text-overflow: ellipsis;  
     display: -webkit-box;  
@@ -120,6 +120,7 @@
     -webkit-box-orient: vertical;
     word-break: break-all;
     margin-bottom: 8px;
+
   }
   .timer {
     text-align: right;

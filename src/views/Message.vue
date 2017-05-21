@@ -57,9 +57,9 @@
               {{ message.lists.length ?  message.lists[message.lists.length - 1].txt  : '' }}
             </div>
           </Col>
-          <Col span="6" v-if="message.lists.length">
-            <timeago :class="$style.timer" :since="message.time" locale="zh-CN" :auto-update="60"></timeago>
-            <!-- <i :class="$style.messageCount">{{diggsCount}}</i> -->
+          <Col span="6" v-if="message.lists.length" class="header-end-col">
+            <timeago :class="$style.timer" :since="message.lists[message.lists.length - 1].time" locale="zh-CN" :auto-update="60"></timeago>
+            <i v-if="message.count" :class="$style.messageCount">{{message.count || 0}}</i>
           </Col>
         </div>
       </Row>
@@ -209,7 +209,15 @@
   export default MessageList;
 </script>
 <style lang="scss" module>
+  .timer {
+    font-size: 12px;
+    float: right;
+    color: #999;
+    text-align: right;
+    width: 100%;
+  }
   .entryLists {
+    padding-bottom: 56px;
     .entry {
       height: 70px;
       display: flex;

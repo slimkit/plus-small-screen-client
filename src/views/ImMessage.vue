@@ -52,7 +52,7 @@
 <script>
 	import { getUserInfo } from '../utils/user';
 	import localEvent from '../stores/localStorage';
-	import { NOTICE, TOTALMESSAGELISTS, TOTALMESSAGELIST } from '../stores/types';
+	import { NOTICE, TOTALMESSAGELISTS, TOTALMESSAGELIST, CLEANNEWMESSAGE } from '../stores/types';
 	import MoreIcon from '../icons/More';
 	import BackIcon from '../icons/Back';
 	import lodash from 'lodash';
@@ -148,8 +148,14 @@
 				return room;
 			},
 			messagelists () {
-				const { lists = [] } = this.room;
+				const { lists = [], count = 0 } = this.room;
 				this.$nextTick( function () {
+					// 在当前会话时，清除当前会话的message提示数量
+					if(count != 0) {
+						this.$store.dispatch(CLEANNEWMESSAGE, cb => {
+							cb(this.cid);
+						})
+					}
 					window.scrollTo(0,document.body.scrollHeight)
 				});
 				return lists;
@@ -224,7 +230,7 @@
 
 <style lang="less" scoped>
 	.commonHeader {
-		height: 7vh;
+		height: 9vh;
 		position: fixed;
 		top: 0;
 		left: 0;
@@ -303,7 +309,7 @@
 
 	}
 	.messageList {
-		padding-top: 7vh;
+		padding-top: 9vh;
 		padding-bottom: 7vh;
 	}
 </style>

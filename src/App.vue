@@ -85,7 +85,7 @@
         // 链接IM
         if(lodash.keys(TS_WEB.webSocket).length && TS_WEB.webSocket.readyState != 1) {
           connect(TS_WEB.webSocket.url);
-        } else if(TS_WEB.webSocket == null) {
+        } else if(TS_WEB.webSocket == null && TS_WEB.socketUrl) {
           addAccessToken().get(createAPI('im/users'), {} , {
             validateStatus: status => status === 200
           })

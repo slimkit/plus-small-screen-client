@@ -336,11 +336,11 @@
         return followed_count;
       },
       introText () {
-        const { datas: { intro: { value: intro = '还没有简介呢' } = {} } } = this.userInfo;
+        const { datas: { intro: { value: intro = '还没有简介呢' } = {} } = {} } = this.userInfo;
         return intro;
       },
       coverImg () {
-        const { datas: { cover: { value: cover = 0 } = {} } } = this.userInfo;
+        const { datas: { cover: { value: cover = 0 } = {} } = {} } = this.userInfo;
         if(cover) {
           return getImg(cover, 100);
         } else {
