@@ -285,7 +285,7 @@
 		padding: 0px 2vw;
 	  	width: 16vw;
 	  	border-radius: 50%;
-	  	height: 14vw;
+	  	height: 12vw;
 	}
 	.sendBox {
 		position: fixed;
