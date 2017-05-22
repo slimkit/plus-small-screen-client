@@ -78,7 +78,7 @@
             type="textarea" 
             :autosize="{minRows: 1, maxRows: 4}" 
             placeholder="编辑简介"
-            :maxLength="50"
+            :maxlength="50"
           >
           </Input>
         </Col>
