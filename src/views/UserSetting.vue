@@ -736,7 +736,7 @@
   .userProfile {
     .userProfileAvatar {
       padding: 15px 0;
-      border-bottom: 1px #e2e3e3 solid;
+      border-bottom: 1px #ededed solid;
       .rowCenter {
         min-height: 50px;
         display: flex;
@@ -756,7 +756,7 @@
         min-height: 50px;
         display: flex;
         align-items: center;
-        border-bottom: 1px #e2e3e3 solid;
+        border-bottom: 1px #ededed solid;
         &:last-child {
           border: none;
         }
@@ -774,7 +774,7 @@
       width: 100%;
       background: rgba(0, 0, 0, 0);
       .sexOptions {
-        border-bottom: 1px solid #e2e3e3;
+        border-bottom: 1px solid #ededed;
         color: #333;
         border-radius: 0;
         font-size: 16px;

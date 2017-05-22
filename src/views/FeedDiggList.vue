@@ -1,6 +1,6 @@
 <template>
   <div class="feed-diggs-container" :class="$style.diggListsRoot">
-    <div class="commonHeader">
+    <div class="commonHeader" v-if="!isWeiXin">
       <Row :gutter="24">
         <Col span="6" style="display: flex; justify-content: flex-start" @click.native="goTo(-1)">
           <BackIcon height="21" width="21" color="#999" />
@@ -77,7 +77,8 @@
       page: 0,
       bottomStatus: '',
       currentUser: 0,
-      localDiggs: {}
+      localDiggs: {},
+      isWeiXin: TS_WEB.isWeiXin
     }),
     methods: {
       goTo,

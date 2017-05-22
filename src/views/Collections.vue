@@ -1,6 +1,6 @@
 <template>
   <div class="collections">
-    <div class="commonHeader">
+    <div class="commonHeader" v-if="!isWeiXin">
       <Row :gutter="24">
         <Col span="5" @click.native="goTo(-1)">
           <BackIcon height="21" width="21" color="#999" />
@@ -67,7 +67,8 @@
         ids: COLLECTIONIDS,
         feeds: COLLECTIONFEEDS,
         add: ADDCOLLECTIONIDS
-      }
+      },
+      isWeiXin: TS_WEB.isWeiXin
     }),
     methods: {
       goTo,

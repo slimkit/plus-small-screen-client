@@ -32,7 +32,7 @@
         </Col>
       </Row>
     </div>
-    <div style="padding-top: 55px">
+    <div style="padding-top: 46px">
       <mt-loadmore 
         :bottom-method="loadBottom"
         :bottom-all-loaded="bottomAllLoaded"

@@ -1,13 +1,13 @@
 <template>
   <div :class="$style.feedNavBar" class="feed-nav-bar">
     <Row :gutter="32" :class="$style.NavRow">
-      <Col :span="6">
+      <Col :span="6" :class="$style.NavCol">
         <router-link :class="$style.navLink" to="/feeds/new">最新</router-link>
       </Col>
-      <Col :span="6" >
+      <Col :span="6" :class="$style.NavCol">
         <router-link :class="$style.navLink" to="/feeds/hot">热门</router-link>
       </Col>
-      <Col :span="6" >
+      <Col :span="6" :class="$style.NavCol">
           <router-link :class="$style.navLink" to="/feeds/following">关注</router-link>
       </Col>
     </Row>
@@ -33,9 +33,9 @@
 <style lang="scss" module>
   .feedNavBar{
     font-size: 18px;
-    height: 55px;
+    height: 46px;
     line-height: 45px;
-    border-bottom: 1px #dedede solid;
+    border-bottom: 1px #ededed solid;
     background-color: #fff;
     position: fixed;
     width: 100%;
@@ -47,19 +47,20 @@
       height: 100%;
       justify-content: center;
       align-items: flex-end;
+      .NavCol {
+        position: relative;
+      }
     }
   }
   .navLink {
     color: #999;
-    height: 44px;
     display: block;
     text-align: center;
     height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-    &:active, &:hover {
-      color: #333;
-    }
+    position: relative;
+    bottom: -1px;
   }
 </style>

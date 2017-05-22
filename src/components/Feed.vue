@@ -1,8 +1,8 @@
 <template>
   <div :class="$style.detail" :id="`feed-${feed.feed.feed_id}`">
     <div style="display: flex; align-items: flex-start;">
-      <img :src="avatar" alt="" style="padding: 0 2vw; width: 16vw; height: 12vw; border-radius: 50%;">
-      <div style="padding: 0 2vw; width: 84vw;">
+      <img :src="avatar" alt="" style="padding: 0 2vw; width: 14vw; height: 10vw; border-radius: 100%;">
+      <div style="padding: 0 2vw; width: 86vw;">
         <div :class="$style.contentBefore">
           <router-link :class="$style.username" :to='`/users/feeds/${user.user_id}`'>{{ user.name }}</router-link>
           <timeago :class="$style.timer" :since="timer" locale="zh-CN" :auto-update="60"></timeago>
@@ -16,7 +16,7 @@
         </div>
       </div>
     </div>
-    <div style="padding-left: 18vw; width: 100vw; padding-right: 2vw; border-top: 1px #e2e3e3 solid; padding-top: 3vw; padding-bottom: 3vw;">
+    <div style="padding-left: 18vw; width: 100vw; padding-right: 2vw; border-top: 1px #ededed solid; padding-top: 3vw; padding-bottom: 3vw;">
       <FeedTool :user="user" :feed="feed" />
       <CommentsTool v-if="feed.comments" :feed="feed" />
     </div>
@@ -92,7 +92,7 @@
     }
     .toolTop {
       margin-top: 5px;
-      border-top: 1px #e2e2e2 solid;
+      border-top: 1px #ededed solid;
       display: flex!important;
       align-items: center;
       height: 45px!important;
@@ -112,7 +112,7 @@
       }
     }
     .feedContent {
-      width: 78vw;
+      width: 80vw;
       .feedTitle {
         display: flex;
         padding: 0;

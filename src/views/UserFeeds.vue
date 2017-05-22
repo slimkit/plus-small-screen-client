@@ -493,7 +493,7 @@
     justify-content: center;
     align-items: center;
     background: #fff;
-    border-top: 1px solid #e2e3e3;
+    border-top: 1px solid #ededed;
     position: fixed;
     bottom: 0;
     left: 0;

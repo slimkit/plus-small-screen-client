@@ -51,7 +51,7 @@ li {
 }
 #spinner {
   position: fixed;
-  top: 55px;
+  top: 46px;
   left: 0;
   bottom: 0;
   right: 0; 
@@ -60,16 +60,20 @@ li {
   justify-content: center;
   align-items: center;
   background: #fff;
-  #spinner-parent {
-    display: flex;
-    justify-content: center;
-    position: relative;
-  }
+  width: 100%; 
+}
+#spinner-parent {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  position: relative;
+  height: 100%;
+  align-items: center;
 }
 .spinner-double-bounce-bounce1, .spinner-double-bounce-bounce2 {
   width: 6vw;
   height: 6vw;
-  border-radius: 50%;
+  border-radius: 100px;
   opacity: 0.6;
   position: absolute;
   background-color: #59b6d7;
@@ -103,7 +107,7 @@ li {
 a {
   color: @themeColor;
   text-decoration: none;
-  &:active {
+  &:active, &:hover {
     color: @currentColor;
   }
 }
@@ -136,9 +140,9 @@ img.avatar {
   width: 100%;
 }
 .commonHeader {
-  height: 55px;
+  height: 46px;
   background-color: #fff;
-  border-bottom: 1px #e2e3e3 solid;
+  border-bottom: 1px #ededed solid;
   position: relative;
   z-index: 2;
   .ivu-row {
@@ -169,8 +173,8 @@ img.avatar {
   }
 }
 .mint-loadmore-content .mint-loadmore-top {
-  height: 55px;
-  line-height: 55px;
+  height: 48px;
+  line-height: 48px;
 }
 .row-container {
   width: 100%;
@@ -326,7 +330,6 @@ input {
 .loginForm {
   background-color: #fff;
 }
-
 .loginButton {
   width: 100%;
   background-color: #59b6d7;

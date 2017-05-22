@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.profile">
-    <div :class="$style.header">
+    <div :class="$style.header" v-if="!isWeiXin">
       我
     </div>
     <!-- 头像+昵称+简介-->
@@ -11,11 +11,11 @@
           <img v-lazy="avatar" :class="$style.avatar" alt="name">
         </Col>
         <!--昵称+简介-->
-        <Col span="16">
+        <Col span="15">
           <h4>{{ name }}</h4>
           <p>{{ intro }}</p>
         </Col>
-        <Col span="2" :class="$style.rightIcon">
+        <Col span="3" :class="$style.rightIcon">
           <RightArrowIcon height="18" width="18" color="#999" />
         </Col>
       </Row>
@@ -24,8 +24,10 @@
     <div :class="$style.follows">
       <Row :gutter="24">
         <div :class="$style.followsContent">
-          <Col span="12" style="border-right: 1px #e2e3e3 solid">
-            <p :class="$style.contentCenter" class="followsNum">{{followed}}</p>
+          <Col span="12" style="border-right: 1px #ededed solid">
+            <p  v-if="!messageCount.fans" :class="$style.contentCenter" class="followsNum">{{followed}}</p>
+            <p v-if="messageCount.fans" :class="$style.contentCenterHalf" class="followsNum">{{followed}}</p>
+            <p v-if="messageCount.fans" :class="$style.newFollowsHalf">{{messageCount.fans}}</p>
             <p :class="$style.contentCenter">粉丝</p>
           </Col>
           <Col span="12">
@@ -41,10 +43,10 @@
         <Col span="3">
           <SapceIcon :height="21" :width="21" color="#59b6d7" />
         </Col>
-        <Col span="19" :class="$style.menuText">
+        <Col span="16" :class="$style.menuText">
           个人主页
         </Col>
-        <Col span="2" :class="$style.rightIcon">
+        <Col span="5" :class="$style.rightIcon">
           <RightArrowIcon height="18" width="18" color="#999" />
         </Col>
       </Row>
@@ -52,10 +54,10 @@
         <Col span="3">
           <RankingIcon :height="21" :width="21" color="#59b6d7" />
         </Col>
-        <Col span="19" :class="$style.menuText">
+        <Col span="16" :class="$style.menuText">
           排行榜
         </Col>
-        <Col span="2"  :class="$style.rightIcon">
+        <Col span="5"  :class="$style.rightIcon">
           <RightArrowIcon height="18" width="18" color="#999" />
         </Col>
       </Row>
@@ -63,10 +65,10 @@
         <Col span="3">
           <ConnectionIcon :height="21" :width="21" color="#59b6d7" />
         </Col>
-        <Col span="19" :class="$style.menuText">
+        <Col span="16" :class="$style.menuText">
           收藏
         </Col>
-        <Col span="2"  :class="$style.rightIcon">
+        <Col span="5"  :class="$style.rightIcon">
           <RightArrowIcon height="18" width="18" color="#999" />
         </Col>
       </Row>
@@ -98,10 +100,10 @@
         <Col span="3">
           <SystemSettingIcon height="21" width="21" color="#59b6d7" />
         </Col>
-        <Col span="19" :class="$style.menuText">
+        <Col span="16" :class="$style.menuText">
           设置
         </Col>
-        <Col span="2" :class="$style.rightIcon">
+        <Col span="5" :class="$style.rightIcon">
           <RightArrowIcon height="18" width="18" color="#999" />
         </Col>
       </Row>
@@ -124,6 +126,7 @@
   import { resolveImage } from '../utils/resource';
   import lodash from 'lodash';
   import { getUserInfo } from '../utils/user';
+  import { mapState } from 'vuex';
 
   const defaultAvatar = resolveImage(require('../statics/images/defaultAvatarx2.png'));
 
@@ -140,13 +143,17 @@
     },
     data: () => ({
       currentUser: 0, // 当前登录用户id
-      userInfo: {} // 当前登录用户信息
+      userInfo: {}, // 当前登录用户信息
+      isWeiXin: TS_WEB.isWeiXin
     }),
     methods: {
       // 跳转方法，减少使用 router-link
       changeUrl
     },
     computed: {
+      ...mapState({
+        messageCount: state => state.messageCount.messageCount
+      }),
       avatar () {
         const { avatar: { 30: avatar = defaultAvatar } = {} } = this.userInfo;
         return avatar;
@@ -195,7 +202,7 @@
       font-size: 18px;
       font-weight: 400;
       background-color: #fff;
-      border-bottom: 1px solid #e2e3e3;
+      border-bottom: 1px solid #ededed;
     }
     .avatar {
       width: 100%;
@@ -205,7 +212,7 @@
       padding-top: 16px;
       padding-bottom: 16px;
       background-color: #fff;
-      border-bottom: 1px solid #e2e3e3;
+      border-bottom: 1px solid #ededed;
       .rowCenter {
         display: flex;
         align-items: center;
@@ -223,7 +230,7 @@
         height: 50px;
         display: flex;
         align-items: center;
-        border-bottom: 1px solid #e2e3e3;
+        border-bottom: 1px solid #ededed;
         &:last-child {
           border-bottom: none;
         }
@@ -241,6 +248,26 @@
       font-weight: 400;
       .contentCenter {
         text-align: center;
+      }
+      .contentCenterHalf {
+        width: 50%;
+        display: flex;
+        justify-content: flex-end;
+        float: left;
+      }
+      .newFollowsHalf {
+        display: inline-block;
+        border-radius: 100px;
+        color: #fff;
+        background: #f00;
+        min-width: 16px;
+        height: 16px;
+        padding: 0 2px;
+        margin-left: 8px;
+        text-align: center;
+        vertical-align: text-bottom;
+        font-size: 13px;
+        line-height: 1.5;
       }
     }
     

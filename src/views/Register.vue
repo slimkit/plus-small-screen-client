@@ -97,7 +97,7 @@
   import errorCodes from '../stores/errorCodes';
   import deleteObjectItems from '../utils/deleteObjectItems';
   import { getUserInfo } from '../utils/user';
-  import { USERS_APPEND } from '../stores/types';
+  import { USERS_APPEND, MESSAGENOTICE } from '../stores/types';
   import EyeCloseIcon from '../icons/EyeClose';
   import EyeOpenIcon from '../icons/EyeOpen';
   import CloseIcon from '../icons/Close';
@@ -235,6 +235,42 @@
           getUserInfo(response.data.data.user_id, 30).then(user => {
             this.$store.dispatch(USERS_APPEND, cb =>{
               cb(user)
+            });
+            // 设置消息提示查询时间
+            let time = 0;
+            time = localEvent.getLocalItem('messageFlushTime');
+            let nowtime = parseInt(new window.Date().getTime() / 1000);
+            if(!time) {
+              time = parseInt(new window.Date().getTime() / 1000) - 86400;
+            }
+            localEvent.setLocalItem('messageFlushTime', nowtime);
+            let types = 'diggs,comments,follows,notices';
+            // 查询新消息
+            addAccessToken().get(createAPI(`users/flushmessages?key=${types}&time=${time+1}`), {} , {
+                validateStatus: status => status === 200
+              })
+            .then( response => {
+              let count = {
+                fans: 0,
+                diggs: 0,
+                comments: 0,
+                notice: 0
+              }
+              let data = response.data.data;
+              for( let index in data ) {
+                if(data[index].key == "follows") {
+                  count.fans = data[index].count;
+                } else if( data[index].key == 'comments') {
+                  count.comments = data[index].count;
+                } else if( data[index].key == 'diggs') {
+                  count.diggs = data[index].count;
+                } else {
+                  count.notices = data[index].count;
+                }
+              }
+              this.$store.dispatch(MESSAGENOTICE, cb => {
+                cb(count)
+              })
             });
             // 注册im用户， 
             if(TS_WEB.webSocket == null && TS_WEB.socketUrl) {

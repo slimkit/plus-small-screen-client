@@ -1,6 +1,6 @@
 <template>
   <div class="Ranking">
-    <div class="commonHeader">
+    <div class="commonHeader" v-if="!isWeiXin">
       <Row :gutter="24">
         <Col span="5">
           <BackIcon height="21" width="21" color="#999" @click.native="goTo(-1)" />
@@ -73,7 +73,8 @@
       bottomAllLoaded: false,
       topAllLoaded: false,
       bottomStatus: '',
-      topStatus: ''
+      topStatus: '',
+      isWeiXin: TS_WEB.isWeiXin
     }),
     methods: {
       changeUrl,
@@ -185,7 +186,7 @@
   .rankingContent {
     background-color: #fff;
     .ranking {
-      border-bottom: 1px solid #e2e3e3;
+      border-bottom: 1px solid #ededed;
       padding: 8px 0;
       .rankRow {
         .rankAvatar {

@@ -1,6 +1,6 @@
 <template>
   <div class="discover">
-    <div class="commonHeader">
+    <div class="commonHeader" v-if="!isWeiXin">
       <Row :gutter="24">
         <Col span="5">
           
@@ -24,6 +24,9 @@
   const defaultNothing = resolveImage(require('../statics/images/defaultNothingx2.png'));
 
   const Discover = {
+    data: () => ({
+      isWeiXin: TS_WEB.isWeiXin
+    }),
     components: {
       BackIcon,
       ToolBar

@@ -217,7 +217,7 @@
       height: 50px;
       display: flex;
       align-items: center;
-      border-bottom: 1px solid #e2e3e3;
+      border-bottom: 1px solid #ededed;
       &:last-child {
         border-bottom: none;
       }

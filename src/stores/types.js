@@ -92,4 +92,5 @@ export const SYNCIMMESSAGE = 'syncimmessage';
 export const MESSAGELISTS = 'messsagelists';
 export const CLEANNEWMESSAGE = 'cleannewmessage';
 export const IMSTATUS = 'imstatus'; // 监测im 链接状态
-
+export const MESSAGENOTICE = 'messagenotice';
+export const CLEANMESSAGE = 'cleanmessage';

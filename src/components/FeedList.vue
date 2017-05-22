@@ -296,11 +296,11 @@
     transform: inherit;
   }
   .noFixed {
-    height: 55px;
+    height: 46px;
     display: none;
   }
   .fixed {
-    height: 55px;
+    height: 46px;
     display: block;
   }
 </style>

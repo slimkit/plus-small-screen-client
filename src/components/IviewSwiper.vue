@@ -13,7 +13,7 @@
           <div class="swiper-lazy-preloader"></div>
         </div>
       </swiper-slide>
-      <div class="swiper-pagination swiper-pagination-bullets" slot="pagination"></div>
+      <div v-if="list.length > 1" class="swiper-pagination swiper-pagination-bullets" slot="pagination"></div>
     </swiper>
   </transition>
 </template>

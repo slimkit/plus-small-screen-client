@@ -30,10 +30,12 @@
       </Col>
       <Col :span="5" :class="$style.menuItem">
         <router-link class="router-link" to="/users/profile">
-          <Badge dot>
+          <Badge dot v-if="messageCount.fans">
             <MeIcon height="26" width="26" color="#999" />
             <i>我</i>
           </Badge>
+          <MeIcon v-if="!messageCount.fans" height="26" width="26" color="#999" />
+          <i v-if="!messageCount.fans" >我</i>
         </router-link>
       </Col>
     </Row>
@@ -42,12 +44,13 @@
 
 <script>
   import router from '../routers/index';
-  import { SHOWPOST, TOTALMESSAGELISTS } from '../stores/types';
+  import { SHOWPOST, TOTALMESSAGELISTS, MESSAGENOTICE } from '../stores/types';
   import HomeIcon from '../icons/Home';
   import DiscoverIcon from '../icons/Discover';
   import MessageIcon from '../icons/Message';
   import MeIcon from '../icons/Me';
   import PlusIcon from '../icons/Plus';
+  import { mapState } from 'vuex';
 
   export default {
     components: {
@@ -67,13 +70,16 @@
       }
     },
     computed: {
+      ...mapState({
+        messageCount: state => state.messageCount.messageCount
+      }),
       hasNewMessage () {
         let messageList = this.$store.getters[TOTALMESSAGELISTS];
         let count = 0;
         for( let index in messageList ) {
           count += messageList[index].count;
         }
-        return count > 0;
+        return count + this.messageCount.comments + this.messageCount.diggs + this.messageCount.notices > 0;
       }
     }
   }

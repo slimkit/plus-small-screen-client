@@ -1,6 +1,6 @@
 <template>
   <div class="comments">
-    <div class="commonHeader">
+    <div class="commonHeader" v-if="!isWeiXin">
       <Row :gutter="24">
         <Col span="5">
           <BackIcon @click.native="goTo(-1)" height="21" width="21" color="#999" />
@@ -59,7 +59,7 @@
   </div>
 </template>
 <script>
-  import { NOTICE } from '../stores/types';
+  import { NOTICE, CLEANMESSAGE } from '../stores/types';
   import { createAPI, addAccessToken } from '../utils/request';
   import localEvent from '../stores/localStorage';
   import { changeUrl, goTo } from '../utils/changeUrl';
@@ -84,7 +84,8 @@
       bottomAllLoaded: false,
       topAllLoaded: false,
       bottomStatus: '',
-      topStatus: ''
+      topStatus: '',
+      isWeiXin: TS_WEB.isWeiXin
     }),
     methods: {
       changeUrl,
@@ -174,6 +175,9 @@
       }
     },
     created () {
+      this.$store.dispatch(CLEANMESSAGE, cb => {
+        cb('diggs');
+      });
       addAccessToken().get(createAPI(`users/mydiggs?max_id=${this.max_id}`),{},
         {
           validateStatus: status => status === 200
@@ -204,7 +208,7 @@
 <style lang="scss" module>
   .comments {
     .comment {
-      border-bottom: 1px #e2e3e3 solid;
+      border-bottom: 1px #ededed solid;
       padding: 8px 0;
       background-color: #fff;
       &:last-child {

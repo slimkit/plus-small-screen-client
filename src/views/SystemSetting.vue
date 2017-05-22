@@ -1,6 +1,6 @@
 <template>
   <div class="systemSetting">
-    <div class="commonHeader">
+    <div class="commonHeader" v-if="!isWeiXin" >
       <Row :gutter="24">
         <Col span="5" style="display: flex; justify-content: flex-start" @click.native="goTo(-1)">
           <BackIcon height="21" width="21" color="#999" />
@@ -71,7 +71,8 @@
         isShowComfirm: false,
         method: '',
         context: ''
-      }
+      },
+      isWeiXin: TS_WEB.isWeiXin
     }),
     methods: {
       changeUrl,
@@ -160,7 +161,7 @@
       height: 50px;
       display: flex;
       align-items: center;
-      border-bottom: 1px solid #e2e3e3;
+      border-bottom: 1px solid #ededed;
       &:last-child {
         border-bottom: none;
       }

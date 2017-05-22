@@ -1,6 +1,6 @@
 <template>
-  <div style="width: 70vw; position: relative; margin-bottom: 8px;">
-    <img :style="`width: 100%; height: ${imageHeight}`" v-if="imageSize == 1" @click="showSwiper(0)"  v-lazy="getImg(imageObject[0].storage_id, 60)" />
+  <div style="width: 68vw; position: relative; margin-bottom: 8px;">
+    <img :style="`width: 100%; height: ${imageHeight}; object-fit: cover; max-height: 80vw;`" v-if="imageSize == 1" @click="showSwiper(0)"  v-lazy="getImg(imageObject[0].storage_id, 60)" />
     <div style="width: 100%; display: flex;" v-if="imageSize == 2">
       <div style="width: 35vw;" :class="$style.showImgBox">
         <img :class="$style.perFeedImg" @click="showSwiper(0)"  v-lazy="getImg(imageObject[0].storage_id, 30)" />
@@ -180,7 +180,7 @@
         let height = 0;
         if(this.storages.length === 1) {
           let rate = this.imageObject[0].width / this.imageObject[0].height;
-          return parseInt(70 / rate) + 'vw';
+          return (parseInt(68 / rate) > 80 ? 80 : parseInt(68 / rate)) + 'vw';
         }
       }
     },

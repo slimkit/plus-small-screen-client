@@ -230,7 +230,7 @@
 
 <style lang="less" scoped>
 	.commonHeader {
-		height: 9vh;
+		height: 8vh;
 		position: fixed;
 		top: 0;
 		left: 0;
@@ -247,7 +247,7 @@
 		.msg-content {
 			padding: 2vw;
 		  	max-width: 60vw;
-		  	background: #e2e3e3;
+		  	background: #ededed;
 		  	color: #333;
 		  	border-radius: 0 10px 10px 10px;
 		  	float: left;

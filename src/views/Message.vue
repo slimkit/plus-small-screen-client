@@ -1,6 +1,6 @@
 <template>
   <div class="messageList">
-    <div class="commonHeader">
+    <div class="commonHeader" v-if="!isWeiXin">
       <Row :gutter="24">
         <Col span="14" offset="5" class="title-col">
           消息
@@ -12,7 +12,9 @@
         <div :class="$style.entryContainer" @click="changeUrl('/users/mycomments')">
           <Col span="4" :class="$style.entryIcon">
             <div :class="$style.commentIcon">
-              <CommentIcon height="30" width="30" color="#fff" />
+              <div style="width: 100%; border-radius: 100px; padding: 2vw">
+                <CommentIcon height="100%" width="100%" color="#fff" />
+              </div>
             </div>
           </Col>
           <Col span="15">
@@ -30,7 +32,9 @@
         <div :class="$style.entryContainer" @click="changeUrl('/users/diggs')">
           <Col span="4" :class="$style.entryIcon">
             <div :class="$style.diggIcon">
-              <DiggIcon height="30" width="30" color="#fff" />
+              <div style="width: 100%; border-radius: 100px; padding: 2vw">
+                <DiggIcon height="100%" width="100%" color="#fff" />
+              </div>
             </div>
           </Col>
           <Col span="15">
@@ -87,7 +91,8 @@
     },
     data: () => ({
       messages: {},
-      currentUser: 0
+      currentUser: 0,
+      isWeiXin: TS_WEB.isWeiXin
     }),
     computed: {
       imMessageList () {
@@ -223,7 +228,7 @@
       display: flex;
       align-items: center;
       background: #fff;
-      border-bottom: 1px solid #e2e3e3;
+      border-bottom: 1px solid #ededed;
       .entryContainer {
         width: 100%;
         .time {
@@ -250,8 +255,7 @@
           justify-content: center;
           align-items: center;
           .diggIcon {
-            padding: 2vw;
-            border-radius: 50%;
+            border-radius: 100px;
             background-color: #fe8f90;
           }
           .messageAvatar {
@@ -262,8 +266,7 @@
           }
           .commentIcon {
             background-color: rgb(89, 182, 215);
-            border-radius: 50%;
-            padding: 2vw;
+            border-radius: 100px;
           }
         }
       }
