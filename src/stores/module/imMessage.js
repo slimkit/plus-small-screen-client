@@ -20,6 +20,7 @@ const mutations = {
 	// signal user chat
 	[TOTALMESSAGELIST] (state, list) {
 		let oldState = state;
+		let time = !list[1].me ? (new Date()).getTime() : list[1].ext.time;
 		if(!lodash.keys(oldState.messageLists[`room_${list[1].cid}`]).length > 0) {
 			oldState.messageLists[`room_${list[1].cid}`]  = {};
 			let room = {};
@@ -41,7 +42,8 @@ const mutations = {
 			if(!list[1].me) oldState.messageLists[`room_${list[1].cid}`].count += 1;
 			// hash = list[1].ext.hash;
 		}
-		oldState.messageLists[`room_${list[1].cid}`].lists = [ ...oldState.messageLists[`room_${list[1].cid}`].lists, { txt: list[1].txt, user_id: list[1].uid, time: list[1].ext.time } ];
+		oldState.messageLists[`room_${list[1].cid}`].lists = [ ...oldState.messageLists[`room_${list[1].cid}`].lists, { txt: list[1].txt, user_id: list[1].uid, time } ];
+		console.log(oldState.messageLists[`room_${list[1].cid}`]);
 		state.messageLists = { ...state.messageLists, ...oldState.messageLists };
 	},
 	// 通过接口增加聊天对话
