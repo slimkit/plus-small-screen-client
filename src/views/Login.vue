@@ -1,5 +1,20 @@
 <template>
   <div class="container">
+    <div class="commonHeader" v-if="!isWeiXin">
+      <Row :gutter="24">
+        <Col span="5">
+          
+        </Col>
+        <Col span="14" class="title-col">
+          登录
+        </Col>
+        <Col span="5" class="header-end-col">
+          <router-link to="/register">
+            注册
+          </router-link>
+        </Col>
+      </Row>
+    </div>
     <div class="main-content">
       <form role="form" @submit.prevent="submit">
         <div class="loginForm">
@@ -8,7 +23,7 @@
               <label for="phone">手机号</label>
             </Col>
             <Col span="15">
-              <input type="tel" size="large" autocomplete="off" placeholder="输入11位手机号" v-model.number.trim="phone" id="phone" name="phone" />
+              <input type="tel" size="large" autocomplete="off" placeholder="输入11位手机号" v-model.number.trim="phone" id="phone" name="phone" maxlength="11" />
             </Col>
             <Col span="4" class="flexend">
               <CloseIcon v-show="isShowClean" @click.native="cleanPhone" width="21" height="21" color="#999" />
@@ -48,13 +63,13 @@
       </form>
       <div class="otherOperation">
         <Row :gutter="24" >
-          <Col span="12" >
+          <Col span="12" v-if="isWeiXin">
             <router-link to="/register">
-              注册账号
+              注册
             </router-link>
           </Col>
-          <Col span="12">
-            <router-link style="float: right" to="/findpassword">
+          <Col span="12" :offset="offset" class="header-end-col">
+            <router-link to="/findpassword">
               忘记密码
             </router-link>
           </Col>
@@ -101,14 +116,15 @@
       isShowPasswordText: false, // 是否显示明文密码
       isShowPassword: true, // 是否显示真实密码
       errors: {}, // 错误对象
-      isLoading: false // 登录loading
+      isLoading: false, // 登录loading
+      isWeiXin: TS_WEB.isWeiXin,
+      offset: TS_WEB.isWeiXin ? 0 : 12
     }),
     watch: {
       phone: function (newPhone) {
         this.isShowClean = (newPhone > 0) > 0 ? true : false;
         this.cleanErrors();
         if(!phoneReg.test(newPhone)) {
-          this.errors = { ...this.errors, phone: '请输入正确的手机号码' };
           this.isValidPhone = false;
         } else {
           let errors = this.errors;
@@ -121,7 +137,6 @@
       password: function (newPassword) {
         this.cleanErrors();
         if(newPassword.length < 6) {
-          this.errors = { ...this.errors, password: '密码长度必须大于6位' };
           this.isValidPassword = false;
         } else {
           let errors = this.errors;
@@ -135,7 +150,6 @@
       passwordText: function (newPasswordText) {
         this.cleanErrors();
         if(newPasswordText.length < 6) {
-          this.errors = { ...this.errors, password: '密码长度必须大于6位' };
           this.isValidPassword = false;
         } else {
           let errors = this.errors;
@@ -178,6 +192,15 @@
         }
       },
       submit () {
+        //判断信息合法性
+        if(!this.isValidPhone) {
+          this.errors = { ...this.errors, phone: '请输入正确的手机号码' };
+          return false;
+        }
+        if(!this.isValidPassword ) {
+          this.errors = { ...this.errors, password: '密码长度必须大于6位' };
+          return false;
+        }
         // 跳转信息
         let redirect = this.$route.query.redirect ? this.$route.query.redirect : 'feeds';
         let { phone, password } = this;
@@ -204,29 +227,13 @@
               cb(user)
             });
             // 链接im信息
-            if(lodash.keys(TS_WEB.webSocket).length && TS_WEB.webSocket.readyState != 1) {
-              connect(TS_WEB.webSocket.url);
-            } else if(TS_WEB.webSocket == null && TS_WEB.socketUrl) {
-              addAccessToken().get(createAPI('im/users'), {} , {
-                validateStatus: status => status === 200
-              })
-              .then( response => {
-                let data= response.data;
-                if(data.status || data.code === 0) {
-                  window.TS_WEB.im_token = data.data.im_password; // 保存im口令
-                  if(window.TS_WEB.socketUrl) {
-                    // 如果后台设置了socket地址 链接websocket
-                    connect(`ws://${window.TS_WEB.socketUrl}?token=${data.data.im_password}`); 
-                  }
-                }
-              });
-            }
+            connect();
             // 设置消息提示查询时间
             let time = 0;
             time = localEvent.getLocalItem('messageFlushTime');
             let nowtime = parseInt(new window.Date().getTime() / 1000);
             if(!time) {
-              time = parseInt(new window.Date().getTime() / 1000) - 86400;
+              time = nowtime - 86400;
             }
             localEvent.setLocalItem('messageFlushTime', nowtime);
             let types = 'diggs,comments,follows,notices';

@@ -3,7 +3,9 @@ import { COMMENTINPUT, CLOSECOMMENTINPUT } from '../types';
 const close = dispatch => dispatch(CLOSECOMMENTINPUT);
 // 回调
 const cb = close;
-
+const handler = function() {
+  event.preventDefault();
+}
 const state = {
   commentInput: {
     data: { 
@@ -20,17 +22,13 @@ const state = {
 const mutations = {
   [COMMENTINPUT] (state, info) {
     state.commentInput = { ...state.commentInput, ...info };
-    if(info.data.show) {
-      document.getElementById('html-root').style.overflow='hidden';
-      // document.getElementById('html-root').style.height='100%';
-      document.getElementById('body-root').style.overflow='hidden';
-      // document.getElementById('body-root').style.height='100%';
-    } else {
-      document.getElementById('body-root').style.overflow='auto';
-      document.getElementById('html-root').style.overflow='auto';
-      // document.getElementById('body-root').style.height='auto';
-      // document.getElementById('html-root').style.height='auto';
-    }
+    // if(TS_WEB.isIos) {
+      if(info.data.show) {
+        document.getElementById('app').addEventListener('touchmove', handler, false);
+      } else {
+        document.getElementById('app').removeEventListener('touchmove', handler, false);
+      }
+    // }
   }
 };
 

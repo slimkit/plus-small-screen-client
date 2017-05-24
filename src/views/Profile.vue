@@ -13,7 +13,7 @@
         <!--昵称+简介-->
         <Col span="15">
           <h4>{{ name }}</h4>
-          <p>{{ intro }}</p>
+          <p style="word-break: break-all">{{ intro }}</p>
         </Col>
         <Col span="3" :class="$style.rightIcon">
           <RightArrowIcon height="18" width="18" color="#999" />

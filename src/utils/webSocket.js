@@ -4,43 +4,79 @@ import { getImMessageItem } from './localDatabase';
 import localEvent from '../stores/localStorage';
 import lodash from 'lodash';
 import { getUserInfo } from './user';
+import { addAccessToken, createAPI } from './request';
 
 const url = window.TS_WEB.socketUrl;
 const im_token = window.TS_WEB.im_token;
 const reg = /^\[\"(.*?);\",/;
 const currentUser = localEvent.getLocalItem('UserLoginInfo');
-function connect (url, operation = false) {
-	// let counter = 0;
-	try {
-		window.TS_WEB.webSocket = new window.WebSocket(url);
-		window.TS_WEB.webSocket.onopen = evt => {
-			onOpen(evt);
-		}
-		window.TS_WEB.webSocket.onmessage = evt => {
-			onMessage(evt);
-		}
-		window.TS_WEB.webSocket.onclose = evt => {
-			onClose(evt);
-		}
-	} catch (e) {
-		window.console.log(e);
+function connect () {
+	// 链接IM
+	if(window.TS_WEB.socketUrl) { // 判断是否配置im聊天服务器,
+		if(TS_WEB.webSocket && TS_WEB.webSocket.readyState != 1) { // 已经连接过,但是处于非链接状态
+	    try {
+				window.TS_WEB.webSocket = new window.WebSocket(TS_WEB.webSocket.url);
+				window.TS_WEB.webSocket.onopen = evt => {
+					onOpen(evt);
+				}
+				window.TS_WEB.webSocket.onmessage = evt => {
+					onMessage(evt);
+				}
+				window.TS_WEB.webSocket.onclose = evt => {
+					onClose(evt);
+				}
+			} catch (e) {
+				window.console.log(e);
+			}
+	  } else if(TS_WEB.webSocket == null && TS_WEB.socketUrl) { // 还没有连接过, 直接新建链接
+	    addAccessToken().get(createAPI('im/users'), {} , {
+	      validateStatus: status => status === 200
+	    })
+	    .then( response => {
+	      let data= response.data;
+        window.TS_WEB.im_token = data.data.im_password; // 保存im口令
+        if(window.TS_WEB.socketUrl) {
+
+        	let socketUrl = `ws://${window.TS_WEB.socketUrl}?token=${data.data.im_password}`;
+          try {
+						window.TS_WEB.webSocket = new window.WebSocket(socketUrl);
+						window.TS_WEB.webSocket.onopen = evt => {
+							onOpen(evt);
+						}
+						window.TS_WEB.webSocket.onmessage = evt => {
+							onMessage(evt);
+						}
+						window.TS_WEB.webSocket.onclose = evt => {
+							onClose(evt);
+						}
+					} catch (e) {
+						window.console.log(e);
+					}
+        }
+	    });
+	  }
 	}
+  
+	
 };
 
 function onMessage (message) { 
 	let msg = message;
 	let messagetype = msg.data.substr(0, 1); // 获取消息第一位判断消息类型
 	let data = JSON.parse(msg.data.substr(1)); // 数据转换
+	console.log(data);
 	if(messagetype == 3) {
 		let user = localEvent.getLocalItem(`user_${currentUser.user_id}`);
-		if(data[0] === 'convr.msg.sync') {
+		if(data[0] === 'convr.msg.sync' && data[1].length) {
 			data[1].forEach( value => {
-				if(user.user_id != value.uid) {
+				// if(user.user_id != value.uid) {
 					app.$store.dispatch(SYNCIMMESSAGE, cb => {
 						cb(value);
 					});
-				}
+				// }
 			});
+			console.log(data[1][data[1].length - 1].cid);
+			localEvent.setLocalItem(`room_${data[1][data[1].length - 1].cid}_last_message`, data[1][data[1].length - 1]);
 		}
 	}
 	if( messagetype == 2) {
@@ -53,6 +89,7 @@ function onMessage (message) {
 					app.$store.dispatch(TOTALMESSAGELIST, cb => {
 						cb(data);
 					});
+					localEvent.setLocalItem(`room_${data[1].cid}_last_message`, data);
 				});
 			} else {
 				data[1].avatar = user.avatar[30];
@@ -60,6 +97,7 @@ function onMessage (message) {
 				app.$store.dispatch(TOTALMESSAGELIST, cb => {
 					cb(data);
 				});
+				localEvent.setLocalItem(`room_${data[1].cid}_last_message`, data);
 			}
 		}
 	}
@@ -88,16 +126,6 @@ function onOpen (evt) {
 	});
 };
 
-function sendMessage (message) {
-	if(window.TS_WEB.webSocket.readyState) {
-		window.TS_WEB.socketUrl.send(message);
-	} else {
-		connect(`${url}?token=${im_token}`);
-		sendMessage(message);
-	}
-}
-
 export {
-	connect,
-	sendMessage
+	connect
 }

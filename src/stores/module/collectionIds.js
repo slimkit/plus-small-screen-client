@@ -29,7 +29,7 @@ const actions = {
       context.commit(ADDCOLLECTIONIDS, ids);
     })
   },
-  [UNCOLLECTIONID]: (content, cb) => {
+  [UNCOLLECTIONID]: (context, cb) => {
     cb ( id => {
       context.commit(UNCOLLECTIONID, id);
     })

@@ -1,5 +1,15 @@
 <template>
   <div class="container">
+    <div class="commonHeader" v-if="!isWeiXin">
+      <Row :gutter="24">
+        <Col span="5" @click.native="goTo(-1)">
+          <BackIcon height="21" width="21" color="#999" />
+        </Col>
+        <Col span="14" class="title-col">
+          忘记密码
+        </Col>
+      </Row>
+    </div>
     <div class="main-content">
       <form role="form" @submit.prevent="submit">
         <div class="loginForm">
@@ -8,7 +18,7 @@
               <label for="phone" class="loginFormTitle">手机号</label>
             </Col>
             <Col span="14">
-              <input type="tel" autocomplete="off" placeholder="输入手机号码" v-model.trim.num="phone" id="phone" name="phone" />
+              <input type="tel" maxlength="12" autocomplete="off" placeholder="输入手机号码" v-model.trim.num="phone" id="phone" name="phone" />
             </Col>
             <Col span="5" class="flexend">
               <div @click="cleanPhone" v-show="isShowClean">
@@ -21,7 +31,7 @@
               <label for="code" class="loginFormTitle">验证码</label>
             </Col>
             <Col span="11">
-              <input type="tel" autocomplete="off" placeholder="请输入验证码" v-model.number.trim="code" id="code" name="code" />
+              <input type="tel" maxlength="6" autocomplete="off" placeholder="4-6位数字" v-model.number.trim="code" id="code" name="code" />
             </Col>
             <Col class="flexend" span="8" >
               <Button 
@@ -41,8 +51,8 @@
               <label for="password" class="loginFormTitle">新密码</label>
             </Col>
             <Col span="14">
-              <input type="password" v-show="isShowPassword" v-model.trim="password" placeholder="请输入6位以上登录密码" id="password" name="password" />
-              <input type="text"  v-model.trim="passwordText" v-show="isShowPasswordText" value="" placeholder="请输入6位以上登录密码" />
+              <input type="password" v-show="isShowPassword" v-model.trim="password" placeholder="登录密码至少6位" id="password" name="password" />
+              <input type="text"  v-model.trim="passwordText" v-show="isShowPasswordText" value="" placeholder="登录密码至少6位" />
             </Col>
             <Col span="5" class="flexend">
               <div @click="showPassword" v-show="isShowPasswordText">
@@ -86,19 +96,22 @@
   import EyeCloseIcon from '../icons/EyeClose';
   import EyeOpenIcon from '../icons/EyeOpen';
   import CloseIcon from '../icons/Close';
+  import BackIcon from '../icons/Back';
   import lodash from 'lodash';
   import LoadingWhiteIcon from '../icons/LoadingWhite';
   import { NOTICE } from '../stores/types';
+  import { goTo } from '../utils/changeUrl';
 
   // 手机号码规则
   const phoneReg = /^(((13[0-9]{1})|14[0-9]{1}|(15[0-9]{1})|17[0-9]{1}|(18[0-9]{1}))+\d{8})$/;
-  const codeReg = /^[0-9]{4}$/;
+  const codeReg = /^[0-9]{4,6}$/;
   const findPassword = {
     components: {
       EyeCloseIcon,
       EyeOpenIcon,
       CloseIcon,
-      LoadingWhiteIcon
+      LoadingWhiteIcon,
+      BackIcon
     },
     data: () => ({
       phone: '', // 手机号码 
@@ -116,9 +129,11 @@
       isValidPassword: false, // 是否合法密码
       CodeText: '获取验证码', // 获取验证码按钮文字
       time: 0, // 时间倒计时
-      isLoading: false // 登录loading
+      isLoading: false, // 登录loading
+      isWeiXin: TS_WEB.isWeiXin
     }),
     methods: {
+      goTo,
       // 清理请求错误
       cleanErrors () {
         let errors = this.errors;
@@ -182,6 +197,18 @@
       },
       submit () {
         let { phone, code, password } = this;
+        if(!phoneReg.test(phone)) {
+          this.errors = { ...errors, phone: '请输入正确的手机号码' };
+          return false;
+        }
+        if(!codeReg.test(code)) {
+          this.errors = { ...errors, code: '验证码为4-6位数字' };
+          return false;
+        }
+        if(password.length < 6) {
+          this.errors = { ...errors, password: '密码长度必须大于6位' };
+          return false;
+        }
         this.isLoading = true;
         this.isDisabled = true;
         request.patch(createAPI('auth/forgot'), {
@@ -190,7 +217,7 @@
             password
           },
           {
-            validateStatus: status => status === 200
+            validateStatus: status => status === 201
           }
         )
         .then(response => {
@@ -199,11 +226,19 @@
               show: true,
               status: true,
               time: 1500,
-              message: '密码重置成功'
+              text: '密码重置成功'
             })
           });
+          this.phone = '';
+          this.password = '';
+          this.code = '';
+          this.passwordText = '';
+          this.isDisabled = true;
+          this.isLoading = false;
+          this.time = 0;
+          this.isCanGetCode = false;
         })
-        .catch(({ response: { data = {} } ={} }) => {
+        .catch(({ response: { data = {} } = {} } ) => {
           this.isDisabled = false;
           const { code = 'xxxx' } = data;
           this.isLoading = false;
@@ -226,7 +261,7 @@
         this.isShowClean = (newPhone > 0) > 0 ? true : false;
         let errors = this.errors;
         if(!phoneReg.test(newPhone)) {
-          this.errors = { ...errors, phone: '请输入正确的手机号码' };
+          // this.errors = { ...errors, phone: '请输入正确的手机号码' };
           this.isValidPhone = false;
           this.isCanGetCode = false;
         } else {
@@ -242,7 +277,7 @@
         this.cleanErrors();
         let errors = this.errors;
         if(newPassword.length < 6) {
-          this.errors = { ...errors, password: '密码长度必须大于6位' };
+          // this.errors = { ...errors, password: '密码长度必须大于6位' };
           this.isValidPassword = false;
         } else {
           this.isValidPassword = true;
@@ -256,7 +291,7 @@
         this.cleanErrors();
         let errors = this.errors;
         if(newPasswordText.length < 6) {
-          this.errors = { ...errors, password: '密码长度必须大于6位' };
+          // this.errors = { ...errors, password: '密码长度必须大于6位' };
           this.isValidPassword = false;
         } else {
           this.isValidPassword = true;
@@ -270,7 +305,7 @@
         this.cleanErrors();
         let errors = this.errors;
         if(!codeReg.test(newCode)) {
-          this.errors = { ...errors, code: '验证码错误' };
+          // this.errors = { ...errors, code: '验证码为4-6位数字' };
           this.isValidCode = false;
         } else {
           this.isValidCode = true;

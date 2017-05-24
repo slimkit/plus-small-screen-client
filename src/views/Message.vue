@@ -57,11 +57,11 @@
           </Col>
           <Col span="14">
             <h4 style="font-weight: 400;">{{ message.name }}</h4>
-            <div v-if="message.lists.length" style="color: #999;">
+            <div v-if="message.lists.length" :class="$style.messagePreview" style="color: #999;">
               {{ message.lists.length ?  message.lists[message.lists.length - 1].txt  : '' }}
             </div>
           </Col>
-          <Col span="6" v-if="message.lists.length" class="header-end-col">
+          <Col span="6" v-if="message.lists.length" style="padding-top: 4px">
             <timeago :class="$style.timer" :since="message.lists[message.lists.length - 1].time" locale="zh-CN" :auto-update="60"></timeago>
             <i v-if="message.count" :class="$style.messageCount">{{message.count || 0}}</i>
           </Col>
@@ -178,12 +178,12 @@
     created () {
       let currentUser = localEvent.getLocalItem('UserLoginInfo');
       this.currentUser = currentUser.user_id;
-      let types = 'diggs,comments';
+      let types = 'diggs,comments, notices';
       let time = 0;
       time = localEvent.getLocalItem('messageFlushTime');
       let nowtime = parseInt(new window.Date().getTime() / 1000);
       if(!time) {
-        time = parseInt(new window.Date().getTime() / 1000) - 86400;
+        time = nowtime - 86400;
       }
       localEvent.setLocalItem('messageFlushTime', nowtime);
       let messages = {};
@@ -231,6 +231,16 @@
       border-bottom: 1px solid #ededed;
       .entryContainer {
         width: 100%;
+        .messagePreview {
+          color: #999;
+          text-align: initial;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: -webkit-box;
+          -webkit-line-clamp: 1;
+          -webkit-box-orient: vertical;
+          word-break: break-all;
+        }
         .time {
           display: flex;
           justify-content: flex-end;
@@ -247,8 +257,7 @@
           float: right;
           font-style: normal;
           font-size: 12px;
-          margin-right: 4px;
-          margin-top: 1vh;
+          margin-top: 4px;
         }
         .entryIcon {
           display: flex;

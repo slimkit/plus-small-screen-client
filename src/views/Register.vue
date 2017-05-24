@@ -1,5 +1,15 @@
 <template>
   <div class="container">
+    <div class="commonHeader" v-if="!isWeiXin">
+      <Row :gutter="24">
+        <Col span="5" @click.native="goTo(-1)">
+          <BackIcon height="21" width="21" color="#999" />
+        </Col>
+        <Col span="14" class="title-col">
+          注册
+        </Col>
+      </Row>
+    </div>
     <div class="main-content">
       <form role="form" @submit.prevent="register">
         <div class="loginForm">
@@ -8,7 +18,7 @@
               <label for="username" class="loginFormTitle">用户名</label>
             </Col>
             <Col span="16">
-              <input type="text" autocomplete="off" placeholder="输入您的用户名" v-model.trim="username" id="username" name="username" />
+              <input type="text" maxlength="12" autocomplete="off" placeholder="输入您的用户名" v-model.trim="username" id="username" name="username" />
             </Col>
             <Col span="3" class="flexend">
               <div @click="cleanUsername" v-show="isShowUserClean">
@@ -21,7 +31,7 @@
               <label for="phone" class="loginFormTitle">手机号</label>
             </Col>
             <Col span="14">
-              <input type="tel" autocomplete="off" placeholder="输入手机号码" v-model.trim.num="phone" id="phone" name="phone" />
+              <input type="tel" maxlength="11" autocomplete="off" placeholder="输入手机号码" v-model.trim.num="phone" id="phone" name="phone" />
             </Col>
             <Col span="5" class="flexend">
               <div @click="cleanPhone" v-show="isShowClean">
@@ -34,7 +44,7 @@
               <label for="code" class="loginFormTitle">验证码</label>
             </Col>
             <Col :span="11">
-              <input type="tel" autocomplete="off" placeholder="输入验证码" v-model.trim.num="code" id="code" name="code" />
+              <input type="tel"maxlength="6" autocomplete="off" placeholder="输入验证码" v-model.trim.num="code" id="code" name="code" />
             </Col>
             <Col class="flexend" span="8">
               <Button 
@@ -101,20 +111,24 @@
   import EyeCloseIcon from '../icons/EyeClose';
   import EyeOpenIcon from '../icons/EyeOpen';
   import CloseIcon from '../icons/Close';
+  import BackIcon from '../icons/Back';
   import lodash from 'lodash';
   import LoadingWhiteIcon from '../icons/LoadingWhite';
   import { connect } from '../utils/webSocket';
+  import { goTo } from '../utils/changeUrl';
+  import strLength from '../utils/strLength';
 
   // 手机号码规则
   const phoneReg = /^(((13[0-9]{1})|14[0-9]{1}|(15[0-9]{1})|17[0-9]{1}|(18[0-9]{1}))+\d{8})$/;
   const usernameReg = /^[a-zA-Z_\u4E00-\u9FA5\uF900-\uFA2D][a-zA-Z0-9_\u4E00-\u9FA5\uF900-\uFA2D]*$/;
-  const codeReg = /^[0-9]{4}$/;
+  const codeReg = /^[0-9]{4,6}$/;
   const register = {
     components: {
       EyeCloseIcon,
       EyeOpenIcon,
       CloseIcon,
-      LoadingWhiteIcon
+      LoadingWhiteIcon,
+      BackIcon
     },
     data: () => ({
       phone: '', // 手机号码 
@@ -132,10 +146,11 @@
       isValidCode: false, // 验证码合法性
       isValidPhone: false, // 是否合法手机号
       isValidPassword: false, // 是否合法密码
-      isValidUsername: false, // 用户名是否合法
+      isValidUsername: true, // 用户名是否合法
       CodeText: '获取验证码', // 获取验证码按钮文字
       time: 0, // 时间倒计时
-      isLoading: false // 登录loading
+      isLoading: false, // 登录loading
+      isWeiXin: TS_WEB.isWeiXin
     }),
     computed: {
       error: function () {
@@ -147,11 +162,12 @@
       }
     },
     methods: {
+      goTo,
       // 清理请求错误
       cleanErrors () {
         let errors = this.errors;
         let newErrors = deleteObjectItems(errors, [
-          'serverError'
+          'code'
         ]);
         this.errors = { ...newErrors };
       },
@@ -215,6 +231,36 @@
       // 注册
       register () {
         let { username, phone, code, password } = this;
+        let errors = this.errors;
+        // 判断首字符是否为数字
+        if(!isNaN(username[0])) {
+          this.errors = { ...errors, username: '用户名不能以数字开头' };
+          this.isValidUsername = false;
+          return false;
+        }
+        // 判断特殊字符及空格
+        if(!usernameReg.test(username)) {
+          this.errors = { ...errors, username: '用户名不能包含特殊符号以及空格' };
+          this.isValidUsername = false;
+          return false;
+          // 判断字节数
+        } else if( strLength(username) > 48 || strLength(username) < 4) {
+          this.errors = { ...errors, username: '用户名不能少于2个中文或4个英文' };
+          this.isValidUsername = false;
+          return false;
+        }
+        if(!phoneReg.test(phone)) {
+          this.errors = { ...errors, phone: '请输入正确的手机号码' };
+          return false;
+        }
+        if(!codeReg.test(code)) {
+          this.errors = { ...errors, code: '验证码长度为4 - 6位数字' };
+          return false;
+        }
+        if(password.length < 6) {
+          this.errors = { ...errors, password: '密码长度必须大于6位' };
+          return false;
+        }
         let device_code = detecdOS();
         this.isLoading = true;
         this.isDisabled = true;
@@ -241,9 +287,8 @@
             time = localEvent.getLocalItem('messageFlushTime');
             let nowtime = parseInt(new window.Date().getTime() / 1000);
             if(!time) {
-              time = parseInt(new window.Date().getTime() / 1000) - 86400;
+              time = nowtime - 86400;
             }
-            localEvent.setLocalItem('messageFlushTime', nowtime);
             let types = 'diggs,comments,follows,notices';
             // 查询新消息
             addAccessToken().get(createAPI(`users/flushmessages?key=${types}&time=${time+1}`), {} , {
@@ -273,20 +318,7 @@
               })
             });
             // 注册im用户， 
-            if(TS_WEB.webSocket == null && TS_WEB.socketUrl) {
-              addAccessToken().get(createAPI('im/users'), {} , {
-                validateStatus: status => status === 200
-              })
-              .then( response => {
-                let data= response.data;
-                if(data.status || data.code === 0) {
-                  window.TS_WEB.im_token = data.data.im_password; // 保存im口令
-                  if(window.TS_WEB.socketUrl) {
-                    connect(`ws://${window.TS_WEB.socketUrl}?token=${data.data.im_password}`); // 如果后台设置了socket地址 链接websocket
-                  }
-                }
-              });
-            }
+            connect();
 
             router.push({ path: 'feeds' });
           });
@@ -304,17 +336,9 @@
         this.cleanErrors();
         this.isShowUserClean = newUsername.length > 0 ? true : false;
         let errors = this.errors;
-        if(!usernameReg.test(newUsername)) {
-          this.errors = { ...errors, username: '用户名不能包含特殊符号以及空格' };
-          this.isValidUsername = false;
-        } else if( newUsername.length > 12 || newUsername.length < 3) {
-          this.errors = { ...errors, username: '请输入3-12位用户名' };
-          this.isValidUsername = false;
-        } else {
-          delete errors['username'];
-          this.errors = { ...errors };
-          this.isValidUsername = true;
-        }
+        delete errors['username'];
+        this.errors = { ...errors };
+        this.isValidUsername = true;
         this.isDisabled = this.checkIsDisabled();
       },
       phone: function (newPhone) {
@@ -322,7 +346,6 @@
         this.isShowClean = (newPhone > 0) > 0 ? true : false;
         let errors = this.errors;
         if(!phoneReg.test(newPhone)) {
-          this.errors = { ...errors, phone: '请输入正确的手机号码' };
           this.isValidPhone = false;
           this.isCanGetCode = false;
         } else {
@@ -338,7 +361,6 @@
         this.cleanErrors();
         let errors = this.errors;
         if(newPassword.length < 6) {
-          this.errors = { ...errors, password: '密码长度必须大于6位' };
           this.isValidPassword = false;
         } else {
           this.isValidPassword = true;
@@ -352,7 +374,6 @@
         this.cleanErrors();
         let errors = this.errors;
         if(newPasswordText.length < 6) {
-          this.errors = { ...errors, password: '密码长度必须大于6位' };
           this.isValidPassword = false;
         } else {
           this.isValidPassword = true;
@@ -366,7 +387,6 @@
         this.cleanErrors();
         let errors = this.errors;
         if(!codeReg.test(newCode)) {
-          this.errors = { ...errors, code: '验证码错误' };
           this.isValidCode = false;
         } else {
           this.isValidCode = true;

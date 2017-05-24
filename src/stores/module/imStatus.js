@@ -2,8 +2,7 @@ import { IMSTATUS } from '../types';
 
 const state = {
 	imStatus: {
-		open: false, // 是否链接
-		operation: false // 是否主动关闭，如主动关闭则不会重连
+		open: false // 是否链接
 	}
 };
 

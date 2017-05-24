@@ -25,7 +25,7 @@
   import errorCodes from './stores/errorCodes';
   import { connect } from './utils/webSocket';
   import { getUserInfo } from './utils/user';
-  import { MESSAGELISTS, IMSTATUS, USERS_APPEND } from './stores/types';
+  import { MESSAGELISTS, IMSTATUS, USERS_APPEND, MESSAGENOTICE } from './stores/types';
 
   const App = {
     components: {
@@ -36,29 +36,12 @@
       CommentInput,
       Confirm
     },
-    // created () {
-    //   // let currentUser = localEvent.getLocalItem('UserLoginInfo');
-    //   // if(lodash.keys(currentUser).length > 0) {
-    //   //   addAccessToken().get(createAPI('im/users'), {} , {
-    //   //     validateStatus: status => status === 200
-    //   //   })
-    //   //   .then( response => {
-    //   //     let data= response.data;
-    //   //     if(data.status || data.code === 0) {
-    //   //       window.TS_WEB.im_token = data.data.im_password; // 保存im口令
-    //   //       if(window.TS_WEB.socketUrl) {
-    //   //         connect(`ws://${window.TS_WEB.socketUrl}?token=${data.data.im_password}`); // 如果后台设置了socket地址 链接websocket
-    //   //       }
-    //   //     }
-    //   //   });
-    //   // }
-    // },
     computed: {
       imStatus () { // im状态监测
         let imstatus = this.$store.getters[IMSTATUS];
         let userLoginInfo = localEvent.getLocalItem('UserLoginInfo');
         if(lodash.keys(userLoginInfo).length && !imstatus.open && TS_WEB.webSocket !== null && TS_WEB.webSocket.readyState != 1 && TS_WEB.readyState != 0) {
-          connect(TS_WEB.webSocket.url);
+          connect();
         }
         return '';
       }
@@ -82,23 +65,43 @@
             cb(userInfo)
           });
         }
-        // 链接IM
-        if(lodash.keys(TS_WEB.webSocket).length && TS_WEB.webSocket.readyState != 1) {
-          connect(TS_WEB.webSocket.url);
-        } else if(TS_WEB.webSocket == null && TS_WEB.socketUrl) {
-          addAccessToken().get(createAPI('im/users'), {} , {
+        // 设置消息提示查询时间
+        let time = 0;
+        time = localEvent.getLocalItem('messageFlushTime');
+        let nowtime = parseInt(new window.Date().getTime() / 1000);
+        if(!time) {
+          time = nowtime - 86400;
+        }
+        let types = 'diggs,comments,follows,notices';
+        // 查询新消息
+        addAccessToken().get(createAPI(`users/flushmessages?key=${types}&time=${time+1}`), {} , {
             validateStatus: status => status === 200
           })
-          .then( response => {
-            let data= response.data;
-            if(data.status || data.code === 0) {
-              window.TS_WEB.im_token = data.data.im_password; // 保存im口令
-              if(window.TS_WEB.socketUrl) {
-                connect(`ws://${window.TS_WEB.socketUrl}?token=${data.data.im_password}`); // 如果后台设置了socket地址 链接websocket
-              }
+        .then( response => {
+          let count = {
+            fans: 0,
+            diggs: 0,
+            comments: 0,
+            notice: 0
+          }
+          let data = response.data.data;
+          for( let index in data ) {
+            if(data[index].key == "follows") {
+              count.fans = data[index].count;
+            } else if( data[index].key == 'comments') {
+              count.comments = data[index].count;
+            } else if( data[index].key == 'diggs') {
+              count.diggs = data[index].count;
+            } else {
+              count.notices = data[index].count;
             }
-          });
-        }
+          }
+          this.$store.dispatch(MESSAGENOTICE, cb => {
+            cb(count)
+          })
+        });
+        // im设置
+        connect();
         // 获取会话列表
         addAccessToken().get(createAPI('im/conversations/list/all'), {}, {
           validateStatus: status => status === 200
@@ -118,10 +121,21 @@
               } else {
                 user_id = uids[0];
               }
+              let lastMessage = localEvent.getLocalItem(`room_${list.cid}_last_message`);
+              console.log(lastMessage);
+              let messageList = [];
+              let messageBody = {};;
+              if(lastMessage.length) {
+                messageBody.user_id = lastMessage[1].uid;
+                messageBody.txt = lastMessage[1].txt;
+                messageBody.time = lastMessage[1].ext.time;
+                messageList.push(messageBody);
+              }
+              // console.log(messageBody);
               getUserInfo(user_id, 30).then( user => {
                 li.name = user.name;
                 li.avatar = user.avatar[30];
-                li.lists = [];
+                li.lists = messageList;
                 li.cid = list.cid;
                 li.user_id = user_id;
                 this.$store.dispatch(MESSAGELISTS, cb => {
@@ -133,63 +147,6 @@
           TS_WEB.loaded = true;
         });
       }
-    },
-    updated () {
-    //   let currentUser = localEvent.getLocalItem('UserLoginInfo');
-    //   if(lodash.keys(currentUser).length > 0) {
-    //     if(lodash.keys(TS_WEB.webSocket).length && TS_WEB.webSocket.readyState != 1) {
-    //       connect(TS_WEB.webSocket.url);
-    //     } else if(TS_WEB.webSocket == null) {
-    //       addAccessToken().get(createAPI('im/users'), {} , {
-    //         validateStatus: status => status === 200
-    //       })
-    //       .then( response => {
-    //         let data= response.data;
-    //         if(data.status || data.code === 0) {
-    //           window.TS_WEB.im_token = data.data.im_password; // 保存im口令
-    //           if(window.TS_WEB.socketUrl) {
-    //             connect(`ws://${window.TS_WEB.socketUrl}?token=${data.data.im_password}`); // 如果后台设置了socket地址 链接websocket
-    //           }
-    //         }
-    //       });
-    //     } else {
-    //       if(TS_WEB.loaded) return;
-    //       // 获取会话列表
-    //       addAccessToken().get(createAPI('im/conversations/list/all'), {}, {
-    //         validateStatus: status => status === 200
-    //       })
-    //       .then( response => {
-    //         let data = response.data;
-    //         let lists = {};
-    //         if(data.status || data.code === 0 ) {
-    //           if(!data.data.length) return;
-    //           data.data.forEach( list => {
-    //             lists[`room_${list.cid}`] = {};
-    //             let li = {};
-    //             let uids = list.uids.split(',');
-    //             let user_id = 0;
-    //             if(uids[0] == currentUser.user_id) {
-    //               user_id = uids[1];
-    //             } else {
-    //               user_id = uids[0];
-    //             }
-    //             getUserInfo(user_id, 30).then( user => {
-    //               li.name = user.name;
-    //               li.avatar = user.avatar[30];
-    //               li.lists = [];
-    //               li.cid = list.cid;
-    //               li.user_id = user_id;
-    //             });
-    //             lists = { ...lists, [`room_${list.cid}`]: li };
-    //           });
-    //         }
-    //         this.$store.dispatch(MESSAGELISTS, cb => {
-    //           cb(lists);
-    //         });
-    //         TS_WEB.loaded = true;
-    //       });
-    //     }
-    //   }
     }
   }
 

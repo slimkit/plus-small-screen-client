@@ -43,11 +43,11 @@ const mutations = {
 			// hash = list[1].ext.hash;
 		}
 		oldState.messageLists[`room_${list[1].cid}`].lists = [ ...oldState.messageLists[`room_${list[1].cid}`].lists, { txt: list[1].txt, user_id: list[1].uid, time } ];
-		console.log(oldState.messageLists[`room_${list[1].cid}`]);
 		state.messageLists = { ...state.messageLists, ...oldState.messageLists };
 	},
 	// 通过接口增加聊天对话
 	[MESSAGELISTS] (state, list) {
+		console.log(list);
 	 	let oldState = state;
 	 	if(!lodash.keys(oldState.messageLists[`room_${list.cid}`]).length > 0) {
 	 		let user = {};
@@ -58,7 +58,7 @@ const mutations = {
 					user_id: list.user_id,
 					cid: list.cid,
 					avatar: list.avatar,
-					lists: [],
+					lists: list.lists,
 					count: 0
 				}
 			};
@@ -67,7 +67,9 @@ const mutations = {
 	},
 
 	[SYNCIMMESSAGE] (state, list) {
+		// console.log(list);
 		let oldState = state;
+		let time = list.mid / 8388608 + 1451577600000;
 		if(!lodash.keys(oldState.messageLists[`room_${list.cid}`]).length > 0) {
 			let user = {};
 			oldState.messageLists[`room_${list.cid}`] = {
@@ -88,7 +90,7 @@ const mutations = {
 				oldState.messageLists[`room_${list.cid}`].avatar = user.avatar[30];
 			}
 		}
-		oldState.messageLists[`room_${list.cid}`].lists = [ ...oldState.messageLists[`room_${list.cid}`].lists, { txt: list.txt, user_id: list.uid } ];
+		oldState.messageLists[`room_${list.cid}`].lists = [ ...oldState.messageLists[`room_${list.cid}`].lists, { txt: list.txt, user_id: list.uid, time } ];
 		oldState.messageLists[`room_${list.cid}`].lists = Array.from(new Set(oldState.messageLists[`room_${list.cid}`].lists));
 		state.messageLists = { ...state.messageLists, ...oldState.messageLists };
 	},

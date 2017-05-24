@@ -109,8 +109,18 @@
 					})
 					return false;
 				}
+				let messageData = {
+					cid: this.cid,
+					uid: this.currentUser,
+					ext: { to_uid: parseInt(this.user_id), hash, time},
+					txt: this.message.content,
+					me: true,
+					hash,
+					avatar: this.targetUser.avatar[30],
+					name: this.targetUser.name
+				};
 				if(TS_WEB.webSocket.readyState != 1) {
-					connect(TS_WEB.webSocket.url);
+					connect();
 					setTimeout(() => {
 						if(TS_WEB.webSocket.readyState == 1) {
 							this.sendmsg();
@@ -121,19 +131,10 @@
 					this.$store.dispatch(TOTALMESSAGELIST, cb => {
 						cb([
 							'localmessage',
-							{
-								cid: this.cid,
-								uid: this.currentUser,
-								ext: { to_uid: parseInt(this.user_id), hash, time},
-								txt: this.message.content,
-								me: true,
-								hash,
-								avatar: this.targetUser.avatar[30],
-								name: this.targetUser.name
-							},
-
-						])
+							messageData
+						]);
 					});
+					localEvent.setLocalItem(`room_${this.cid}_last_message`, messageData);
 					this.message.content = '';
 				}
 			}
@@ -215,12 +216,20 @@
 			} else {
 				this.userInfo = { ...this.userInfo, ...userInfo };
 			}
-		},
-		updated () {
-			// scroll page
-			let box = document.getElementById('messagelists');
-			if(box) {
-				box.__proto__;
+
+			// 通过im获取10条最近的消息
+			if(TS_WEB.webSocket !== null && TS_WEB.webSocket.readyState == 1) {
+				if(this.messagelists.length > 1) return;
+				let msg = '2';
+				let message = [
+					'convr.msg.sync',
+					{
+				    "cid": parseInt(this.cid),
+				    "limit": 10,
+					}
+				];
+				msg += JSON.stringify(message);
+				TS_WEB.webSocket.send(msg);
 			}
 		}
 	}

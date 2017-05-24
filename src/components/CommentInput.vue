@@ -1,7 +1,7 @@
 <template>
-  <div :class="$style.commentRoot" v-show="show">
+  <div :class="$style.commentRoot" v-show="show" id="commentRoot">
     <transition name="">
-      <div :class="$style.commentInput" v-show="show">
+      <div :class="$style.commentInput" id="commentInput" v-show="show">
         <Row :gutter="16" type="flex" align="bottom" style="margin-left: 0; margin-right: 0;">
           <Col span="20">
             <Input type="textarea" class="commentInput" v-if="show" autofocus="autofocus" :placeholder="`回复: ${to_user_name}`" :autosize="{ minRows: 1, maxRows: 4 }" :minlength='1' blur="inputBlur" :maxlength='255' v-model="comment_content"></Input>
@@ -19,7 +19,7 @@
         </Row>
       </div>
     </transition>
-    <div @click.stop="closeInput" :class="$style.wrapper" v-show="show"></div>
+    <div @click.stop="closeInput" id="wrapper" :class="$style.wrapper" v-show="show"></div>
   </div>
 </template>
 <script>
@@ -135,7 +135,7 @@
     overflow: hidden;
     z-index: 7;
     .commentInput{
-      position: absolute;
+      position: fixed;
       bottom: 0;
       left: 0;
       width: 100%;
@@ -150,16 +150,6 @@
         bottom: 0;
         left: 0;
       }
-      // .sendComment {
-      //   font-size: 14px;
-      //   padding: 3px!important;
-      //   background-color: #59b6d7;
-      //   border: none;
-      //   &[disabled] {
-      //     background-color: #ccc!important;
-      //     color: #fff!important;
-      //   }
-      // }
     }
     .wrapper{
       background-color: rgba(0, 0, 0, .3);
@@ -168,7 +158,7 @@
       right: 0px;
       bottom: 0px;
       left: 0px;
-      position: fixed;
+      position: absolute;
       overflow: auto;
       margin: 0;
     }
