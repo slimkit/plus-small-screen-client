@@ -18,7 +18,7 @@
       <div :class="$style.content">
         <Row :gutter="24">
           <Col span="24">
-            <Input style="border-bottom: 1px #ededed solid;" :autosize="{minRows: 1, maxRows: 2}" type="textarea" v-model="feedTitle" :maxlength="30" placeholder="有标题更吸引人" :class="$style.contentInput"></Input>
+            <!-- <Input style="border-bottom: 1px #ededed solid;" :autosize="{minRows: 1, maxRows: 2}" type="textarea" v-model="feedTitle" :maxlength="30" placeholder="有标题更吸引人" :class="$style.contentInput"></Input> -->
             <Input v-model="feedContent" :autosize="{minRows: 6, maxRows: 12}" :maxlength="255" type="textarea" :class="$style.contentInput" placeholder="输入要说的话,图文结合更精彩哦"></Input>
           </Col>
         </Row>
@@ -97,7 +97,7 @@ const postFeed = {
     LoadingWhiteIcon
   },
   data: () => ({
-    feedTitle: '',
+    // feedTitle: '',
     feedContent: '',
     isatuser: 0,
     uploadList: [],
@@ -141,13 +141,13 @@ const postFeed = {
       if(this.isDisabled || this.loading) return;
       this.loading = true;
       let feed_content = this.feedContent;
-      let feed_title = this.feedTitle;
+      // let feed_title = this.feedTitle;
       let feed_from = 2;
       let isatuser = this.isatuser;
       let storage_task_ids = this.storage_task_ids;
       addAccessToken().post(createAPI('feeds'),{
           feed_content,
-          feed_title,
+          // feed_title,
           feed_from,
           isatuser,
           storage_task_ids
@@ -200,7 +200,7 @@ const postFeed = {
       })
     },
     closePost () {
-      this.feedTitle = '';
+      // this.feedTitle = '';
       this.feedContent = '';
       this.isatuser = 0;
       this.storage_task_ids = [];

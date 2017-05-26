@@ -7,9 +7,9 @@
           <router-link :class="$style.username" :to='`/users/feeds/${user.user_id}`'>{{ user.name }}</router-link>
           <timeago :class="$style.timer" :since="timer" locale="zh-CN" :auto-update="60"></timeago>
         </div>
-        <div :class="$style.feedContent">
-          <router-link v-if="feed.feed.feed_title" :to="`/feed/${feed.feed.feed_id}`" :class="$style.feedTitle">{{ feed.feed.feed_title }}</router-link>
-            <div :class="$style.content" @click="router(`/feed/${feed.feed.feed_id}`)">
+        <div :class="$style.feedContent"  @click.stop="changeUrl(`/feed/${feed.feed.feed_id}`)">
+          <!-- <router-link v-if="feed.feed.feed_title" :to="`/feed/${feed.feed.feed_id}`" :class="$style.feedTitle">{{ feed.feed.feed_title }}</router-link> -->
+            <div :class="$style.content" >
               {{ feed.feed.feed_content }}
             </div>
             <FeedImages v-show="feed.feed.storages.length" :storages="feed.feed.storages"></FeedImages>
@@ -35,6 +35,7 @@
   import router from '../routers/index';
   import defaultAvatar from '../statics/images/defaultAvatarx2.png';
   import lodash from 'lodash';
+  import { changeUrl } from '../utils/changeUrl';
 
   const feedinfo = {
     props: [
@@ -44,6 +45,7 @@
       user: {}
     }),
     methods: {
+      changeUrl,
       // 获取单条图片
       getImg (id, process = 30) {
         return createRequestURI(`api/v1/storages/${id}/${process}`);

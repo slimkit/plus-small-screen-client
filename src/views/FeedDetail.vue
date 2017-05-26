@@ -57,7 +57,7 @@
           <div class="feed-container-tool feed-background-color">
             <div class="feed-container-tool-digg">
               <Row :gutter="24" style="display: flex; align-items: center;">
-                <Col span="16"  @click.native="changeUrl(`/feed/${feed_id}/diggs`)">
+                <Col span="15"  @click.native="changeUrl(`/feed/${feed_id}/diggs`)">
                   <div style="display: flex; align-items: center;">
                     <div :style="`width: ${digglistWidth}`">
                       <div class="digg-digg-list" v-if="diggList.length" >
@@ -69,7 +69,7 @@
                     </div>
                   </div>
                 </Col>
-                <Col span="8">
+                <Col span="9">
                   <div class="detail-data">
                     <span>发布于<timeago :since="feedTimer" locale="zh-CN" :auto-update="60"></timeago></span>
                     <span>{{ friendNum(feedData.tool.feed_view_count) }}人浏览</span>
@@ -274,7 +274,7 @@
         this.feedData.feed.storages.forEach((value) => {
           urlList.push(
             {
-              url: getImg(value.storage_id, 100),
+              url: getImg(value.storage_id, 99),
               width: window.innerWidth,
               height: window.innerWidth * (value.height / value.width)
             }
@@ -283,7 +283,7 @@
         return urlList;
       },
       digglistWidth () {
-        return this.feedData.diggs.length ? ((this.feedData.diggs.length-1)*25 + 45 + 'px') : '0px';
+        return this.feedData.diggs.length ? ((this.feedData.diggs.length-1)*25 + 30 + 'px') : '0px';
       },
       diggList () {
         let digg_list = this.feedData.diggs;
@@ -703,7 +703,7 @@
   }
   .digg-digg-list {
     position: relative;
-    height: 40px;
+    height: 30px;
     img {
       position: absolute;
       height: 100%;

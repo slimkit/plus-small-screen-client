@@ -17,12 +17,12 @@
               </div>
             </div>
           </Col>
-          <Col span="15">
+          <Col span="14">
             <h4 style="font-weight: 400;">评论的</h4>
             <div v-if="commentCount" style="color: #999;">{{ commentLists }} <span v-show="userCount > 3">等人</span>评论了我</div>
             <div v-if="!commentCount" style="color: #999">还没有人评论我</div>
           </Col>
-          <Col span="5" v-if="commentCount">
+          <Col span="6" v-if="commentCount">
             <timeago :class=$style.time :since="commentTime" locale="zh-CN" :auto-update="60"></timeago>
             <i :class="$style.messageCount">{{commentCount}}</i>
           </Col>
@@ -37,12 +37,12 @@
               </div>
             </div>
           </Col>
-          <Col span="15">
+          <Col span="14">
             <h4 style="font-weight: 400;">赞过的</h4>
             <div v-if="diggsCount" style="color: #999;">{{ diggLists }} <span v-show="diggsCount > 3">等人</span>赞了我</div>
             <div v-if="!diggsCount" style="color: #999">还没有人赞我</div>
           </Col>
-          <Col span="5" v-if="diggsCount">
+          <Col span="6" v-if="diggsCount">
             <timeago :class=$style.time :since="diggTime" locale="zh-CN" :auto-update="60"></timeago>
             <i :class="$style.messageCount">{{diggsCount}}</i>
           </Col>

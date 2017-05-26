@@ -8,7 +8,7 @@
         <Col span="14" class="title-col">
           点赞榜
         </Col>
-        <Col span="4" style="display: flex;">
+        <Col span="4" class="header-end-col">
         </Col>
       </Row>
     </div>

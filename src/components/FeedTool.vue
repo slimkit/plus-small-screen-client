@@ -3,15 +3,15 @@
     <div :class="$style.toolItem">
       <DiggIcon v-show="isDigg" width="21" @click.native="cannelDigg" height="21" color="#f4504d" />
       <UnDiggIcon  v-show="!isDigg" @click.native="sendDigg" width="21" height="21" color="#999" />
-      <i :class="$style.count">{{ friendnum(feed.tool.feed_digg_count) }}</i>
+      <span :class="$style.count">{{ friendnum(feed.tool.feed_digg_count) }}</span>
     </div>
     <div :class="$style.toolItem" @click="commentFeed">
       <CommentIcon width="21" height="21" color="#999" />
-      <i :class="$style.count">{{ friendnum(feed.tool.feed_comment_count) }}</i>
+      <span :class="$style.count">{{ friendnum(feed.tool.feed_comment_count) }}</span>
     </div>
     <div :class="$style.toolItem" @click="router(`/feed/${feed.feed.feed_id}`)">
       <ViewIcon width="21" height="21" color="#999" />
-      <i :class="$style.count">{{ friendnum(feed.tool.feed_view_count) }}</i>
+      <span :class="$style.count">{{ friendnum(feed.tool.feed_view_count) }}</span>
     </div>
     <div :class="$style.toolItem">
       <MoreIcon width="21" height="21" color="#999" />
