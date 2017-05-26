@@ -289,7 +289,7 @@
             if(!time) {
               time = nowtime - 86400;
             }
-            let types = 'diggs,comments,follows,notices';
+            let types = 'diggs,comments,follows';
             // 查询新消息
             addAccessToken().get(createAPI(`users/flushmessages?key=${types}&time=${time+1}`), {} , {
                 validateStatus: status => status === 200
@@ -309,9 +309,10 @@
                   count.comments = data[index].count;
                 } else if( data[index].key == 'diggs') {
                   count.diggs = data[index].count;
-                } else {
-                  count.notices = data[index].count;
-                }
+                } 
+                // else {
+                //   count.notices = data[index].count;
+                // }
               }
               this.$store.dispatch(MESSAGENOTICE, cb => {
                 cb(count)
