@@ -2,10 +2,10 @@
   <div style="width: 68vw; position: relative; margin-bottom: 8px;">
     <img :style="`width: 100%; height: ${imageHeight}; object-fit: cover; max-height: 80vw;`" v-if="imageSize == 1" @click.stop="showSwiper(0)"  v-lazy="getImg(imageObject[0].storage_id, 60)" />
     <div style="width: 100%; display: flex;" v-if="imageSize == 2">
-      <div style="width: 35vw;" :class="$style.showImgBox">
+      <div style="width: 34vw;" :class="$style.showImgBox">
         <img :class="$style.perFeedImg" @click.stop="showSwiper(0)"  v-lazy="getImg(imageObject[0].storage_id, 30)" />
       </div>
-      <div style="width: 35vw;" :class="$style.showImgBox">
+      <div style="width: 34vw;" :class="$style.showImgBox">
         <img :class="$style.perFeedImg" @click.stop="showSwiper(1)"  v-lazy="getImg(imageObject[1].storage_id, 30)" />
       </div>
     </div>
@@ -21,16 +21,16 @@
       </div>
     </div>
     <div style="width: 100%; display: flex; flex-wrap: wrap;" v-if="imageSize == 4">
-      <div style="width: 35vw" :class="$style.showImgBox">
+      <div style="width: 34vw" :class="$style.showImgBox">
         <img :class="$style.perFeedImg" @click.stop="showSwiper(0)"  v-lazy="getImg(imageObject[0].storage_id, 30)" />
       </div>
-      <div style="width: 35vw;" :class="$style.showImgBox">
+      <div style="width: 34vw;" :class="$style.showImgBox">
         <img :class="$style.perFeedImg" @click.stop="showSwiper(1)"  v-lazy="getImg(imageObject[1].storage_id, 30)" />
       </div>
-      <div style="width: 35vw;" :class="$style.showImgBox">
+      <div style="width: 34vw;" :class="$style.showImgBox">
         <img :class="$style.perFeedImg" @click.stop="showSwiper(2)"  v-lazy="getImg(imageObject[2].storage_id, 30)" />
       </div>
-      <div style="width: 35vw;" :class="$style.showImgBox">
+      <div style="width: 34vw;" :class="$style.showImgBox">
         <img :class="$style.perFeedImg" @click.stop="showSwiper(3)"  v-lazy="getImg(imageObject[3].storage_id, 30)" />
       </div>
     </div>
@@ -46,10 +46,10 @@
           <img :class="$style.perFeedImg" @click.stop="showSwiper(2)"  v-lazy="getImg(imageObject[2].storage_id, 30)" />
         </div>
       </div>
-      <div style="width: 35vw;" :class="$style.showImgBox">
+      <div style="width: 34vw;" :class="$style.showImgBox">
         <img :class="$style.perFeedImg" @click.stop="showSwiper(3)"  v-lazy="getImg(imageObject[3].storage_id, 30)" />
       </div>
-      <div style="width: 35vw;" :class="$style.showImgBox">
+      <div style="width: 34vw;" :class="$style.showImgBox">
         <img :class="$style.perFeedImg" @click.stop="showSwiper(4)"  v-lazy="getImg(imageObject[4].storage_id, 30)" />
       </div>
     </div>
@@ -76,7 +76,7 @@
       </div>
     </div>
     <div style="width: 100%; display: flex; flex-wrap: wrap;" v-if="imageSize == 7">
-      <div style="width: 35vw">
+      <div style="width: 34vw">
         <div style="width: 100%" :class="$style.showImgBox">
           <img :class="$style.perFeedImg" @click.stop="showSwiper(0)"  v-lazy="getImg(imageObject[0].storage_id, 30)" />
         </div>
@@ -84,7 +84,7 @@
           <img :class="$style.perFeedImg" @click.stop="showSwiper(3)"  v-lazy="getImg(imageObject[3].storage_id, 30)" />
         </div>
       </div>
-      <div style="width: 35vw; display: flex; flex-wrap: wrap;">
+      <div style="width: 34vw; display: flex; flex-wrap: wrap;">
         <div style="width: 50%; padding-bottom: 2px;" :class="$style.showImgBox">
           <img :class="$style.perFeedImg" @click.stop="showSwiper(1)"  v-lazy="getImg(imageObject[1].storage_id, 30)" />
         </div>
