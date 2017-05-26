@@ -122,7 +122,6 @@
                 user_id = uids[0];
               }
               let lastMessage = localEvent.getLocalItem(`room_${list.cid}_last_message`);
-              console.log(lastMessage);
               let messageList = [];
               let messageBody = {};;
               if(lastMessage.length) {
@@ -131,7 +130,6 @@
                 messageBody.time = lastMessage[1].ext.time;
                 messageList.push(messageBody);
               }
-              // console.log(messageBody);
               getUserInfo(user_id, 30).then( user => {
                 li.name = user.name;
                 li.avatar = user.avatar[30];

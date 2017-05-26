@@ -225,6 +225,7 @@
 					'convr.msg.sync',
 					{
 				    "cid": parseInt(this.cid),
+				    'order': 1,
 				    "limit": 10,
 					}
 				];

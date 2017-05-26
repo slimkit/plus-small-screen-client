@@ -64,19 +64,35 @@ function onMessage (message) {
 	let msg = message;
 	let messagetype = msg.data.substr(0, 1); // 获取消息第一位判断消息类型
 	let data = JSON.parse(msg.data.substr(1)); // 数据转换
-	console.log(data);
+	// console.log(data);
 	if(messagetype == 3) {
 		let user = localEvent.getLocalItem(`user_${currentUser.user_id}`);
 		if(data[0] === 'convr.msg.sync' && data[1].length) {
-			data[1].forEach( value => {
-				// if(user.user_id != value.uid) {
-					app.$store.dispatch(SYNCIMMESSAGE, cb => {
-						cb(value);
-					});
-				// }
+			// data[1] = data[1].reverse();
+			data[1].forEach( (value, index) => {
+				let newData = ['convr.msg'];
+				let formateData = {
+					cid: value.cid,
+					ext: {
+						hash: value.ext.hash,
+						time: value.ext.time,
+						to_uid: value.ext.to_uid
+					},
+					mid: value.mid,
+					name: '',
+					seq: value.seq,
+					txt: value.txt,
+					type: value.type,
+					uid: value.uid
+				};
+				newData.push(formateData);
+				app.$store.dispatch(TOTALMESSAGELIST, cb => {
+					cb(newData);
+				});
+				if(index == (data[1].length - 1)) {
+					localEvent.setLocalItem(`room_${data[1][data[1].length - 1].cid}_last_message`, newData);
+				}
 			});
-			console.log(data[1][data[1].length - 1].cid);
-			localEvent.setLocalItem(`room_${data[1][data[1].length - 1].cid}_last_message`, data[1][data[1].length - 1]);
 		}
 	}
 	if( messagetype == 2) {
@@ -94,6 +110,7 @@ function onMessage (message) {
 			} else {
 				data[1].avatar = user.avatar[30];
 				data[1].name = user.name;
+				console.log(data);
 				app.$store.dispatch(TOTALMESSAGELIST, cb => {
 					cb(data);
 				});

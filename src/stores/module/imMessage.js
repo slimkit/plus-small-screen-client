@@ -19,21 +19,23 @@ const mutations = {
 	},
 	// signal user chat
 	[TOTALMESSAGELIST] (state, list) {
+		console.log('hh');
+		console.log(list);
 		let oldState = state;
-		let time = !list[1].me ? (new Date()).getTime() : list[1].ext.time;
+		let time = !list[1].me ? list[1].mid / 8388608 + 1451577600000 : list[1].ext.time;
 		if(!lodash.keys(oldState.messageLists[`room_${list[1].cid}`]).length > 0) {
 			oldState.messageLists[`room_${list[1].cid}`]  = {};
 			let room = {};
 			let target_user_id = !list[1].me ? list[1].ext.to_uid : list[1].uid;
 			// hash = list[1].me ? list[1].ext.hash : list[1].hash;
 			room = {
-					name: list[1].name,
-					user_id: target_user_id,
-					cid: list[1].cid,
-					avatar: list[1].avatar,
-					lists: [],
-					count: !list[1].me ? 1 : 0
-				};
+				name: list[1].name,
+				user_id: target_user_id,
+				cid: list[1].cid,
+				avatar: list[1].avatar,
+				lists: [],
+				count: !list[1].me ? 1 : 0
+			};
 			oldState.messageLists[`room_${list[1].cid}`] = { 
 				...oldState.messageLists[`room_${list[1].cid}`], 
 				...room
@@ -42,12 +44,13 @@ const mutations = {
 			if(!list[1].me) oldState.messageLists[`room_${list[1].cid}`].count += 1;
 			// hash = list[1].ext.hash;
 		}
-		oldState.messageLists[`room_${list[1].cid}`].lists = [ ...oldState.messageLists[`room_${list[1].cid}`].lists, { txt: list[1].txt, user_id: list[1].uid, time } ];
+		let newList = { txt: list[1].txt, user_id: list[1].uid, time };
+		console.log(oldState.messageLists[`room_${list[1].cid}`].lists.indexOf(newList));
+		oldState.messageLists[`room_${list[1].cid}`].lists = [ ...oldState.messageLists[`room_${list[1].cid}`].lists, newList ];
 		state.messageLists = { ...state.messageLists, ...oldState.messageLists };
 	},
 	// 通过接口增加聊天对话
 	[MESSAGELISTS] (state, list) {
-		console.log(list);
 	 	let oldState = state;
 	 	if(!lodash.keys(oldState.messageLists[`room_${list.cid}`]).length > 0) {
 	 		let user = {};

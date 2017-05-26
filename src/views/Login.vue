@@ -235,7 +235,6 @@
             if(!time) {
               time = nowtime - 86400;
             }
-            localEvent.setLocalItem('messageFlushTime', nowtime);
             let types = 'diggs,comments,follows,notices';
             // 查询新消息
             addAccessToken().get(createAPI(`users/flushmessages?key=${types}&time=${time+1}`), {} , {
@@ -283,10 +282,19 @@
                   } else {
                     user_id = uids[0];
                   }
+                  let lastMessage = localEvent.getLocalItem(`room_${list.cid}_last_message`);
+                  let messageList = [];
+                  let messageBody = {};;
+                  if(lastMessage.length) {
+                    messageBody.user_id = lastMessage[1].uid;
+                    messageBody.txt = lastMessage[1].txt;
+                    messageBody.time = lastMessage[1].ext.time;
+                    messageList.push(messageBody);
+                  }
                   getUserInfo(user_id, 30).then( user => {
                     li.name = user.name;
                     li.avatar = user.avatar[30];
-                    li.lists = [];
+                    li.lists = messageList;
                     li.cid = list.cid;
                     li.user_id = user_id;
                     this.$store.dispatch(MESSAGELISTS, cb => {
