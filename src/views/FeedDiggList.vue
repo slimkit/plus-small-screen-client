@@ -42,6 +42,12 @@
           </Row>
         </li>
       </div>
+      <div slot="bottom" class="mint-loadmore-bottom">
+        <span v-show="bottomAllLoaded">没有更多了</span>
+        <span v-show="bottomStatus === 'pull' && !bottomAllLoaded" :class="{ 'rotate': topStatus === 'drop' }">上拉加载更多</span>
+        <span v-show="bottomStatus === 'loading'">加载中...</span>
+        <span v-show="bottomStatus === 'drop' && !bottomAllLoaded">释放加载更多</span>
+      </div>
     </mt-loadmore>
   </div>
 </template>
@@ -80,7 +86,8 @@
       bottomStatus: '',
       currentUser: 0,
       localDiggs: {},
-      isWeiXin: TS_WEB.isWeiXin
+      isWeiXin: TS_WEB.isWeiXin,
+      topStatus: ''
     }),
     methods: {
       goTo,
@@ -195,22 +202,30 @@
         let diggUsers = reponse.data.data;
         let localUser = {};
         let diggFormate = {};
-          diggUsers.forEach( diggUser => {
-            localUser = localEvent.getLocalItem(`user_${diggUser.user_id}`);
-            if(!lodash.keys(localUser).length) {
-              getUserInfo(diggUser.user_id, 30).then( user => {
-                this.localDiggs = { ...this.localDiggs, [diggUser.user_id]: user };
-              });
-            } else {
-              this.localDiggs = { ...this.localDiggs, [diggUser.user_id]: localUser };
-            }
-            localUser = {};
-          });
+        let length = diggUsers.length;
+        if(!length) {
+          this.bottomAllLoaded = true;
+          return;
+        }
+        if(length < 15) {
+          this.bottomAllLoaded = true;
+        }
+        diggUsers.forEach( diggUser => {
+          localUser = localEvent.getLocalItem(`user_${diggUser.user_id}`);
+          if(!lodash.keys(localUser).length) {
+            getUserInfo(diggUser.user_id, 30).then( user => {
+              this.localDiggs = { ...this.localDiggs, [diggUser.user_id]: user };
+            });
+          } else {
+            this.localDiggs = { ...this.localDiggs, [diggUser.user_id]: localUser };
+          }
+          localUser = {};
+        });
       });
       setTimeout( () => {
         if(this.$refs.loadmoreDigglist)
           this.$refs.loadmoreDigglist.onTopLoaded();
-      })
+      }, 500)
     }
   };
 
@@ -249,7 +264,7 @@
   }
   
 </style>
-<style lang="scss">
+<style lang="scss" scoped>
   .feed-diggs-container-header {
     height: 45px;
     border-bottom: 1px #ddd solid;
@@ -272,5 +287,9 @@
         padding: 5px 0;
       }
     }
+  }
+  .mint-loadmore {
+    padding-bottom: 50px;
+    overflow: initial;
   }
 </style>
