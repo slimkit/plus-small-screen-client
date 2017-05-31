@@ -32,10 +32,10 @@
           </div>
           <div :class="$style.follows">
             <Row :gutter="24">
-              <Col span="12" :class="$style.followed">
+              <Col span="12" :class="$style.followed" @click.native="changeUrl(`/users/relationship/${user_id}/followed`)">
                 粉丝 <span :class="$style.counts">{{followed}}</span>
               </Col>
-              <Col span="12" :class="$style.following">
+              <Col span="12" :class="$style.following" @click.native="changeUrl(`/users/relationship/${user_id}/following`)">
                 关注 <span :class="$style.counts">{{following}}</span>
               </Col>
             </Row>
@@ -92,7 +92,7 @@
   import BackIcon from '../icons/Back';
   import ShareIcon from '../icons/Share';
   import CommentIcon from '../icons/Comment';
-  import { goTo } from '../utils/changeUrl';
+  import { goTo, changeUrl } from '../utils/changeUrl';
   import { resolveImage } from '../utils/resource';
 
   const defaultNothing =  resolveImage(require('../statics/images/defaultNothingx3.png'));
@@ -120,6 +120,7 @@
 
     }),
     methods: {
+      changeUrl,  
       goBack() {
         goTo(-1);
       },
@@ -166,6 +167,8 @@
           if(status.status || status.code == 0) {
             this.userInfo = { ...this.userInfo, is_following: 1 };
             localEvent.setLocalItem(`user_${this.user_id}`, this.userInfo);
+            // 更新页面数据
+            this.userInfo.counts.followed_count += 1;
           } else {
             this.$store.dispatch(NOTICE, cb => {
               cb({
@@ -183,6 +186,8 @@
         .then(() => {
           this.userInfo = { ...this.userInfo, is_following: 0 };
           localEvent.setLocalItem(`user_${this.user_id}`, this.userInfo);
+          // 更新页面数据
+          this.userInfo.counts.followed_count -= 1;
         })
         .catch( error => {
 
@@ -195,7 +200,12 @@
       timers,
       // 加载更多
       loadBottom () {
-        if(this.max_id == 0) return;
+        if(this.max_id == 0) {
+          setTimeout(() => {
+            this.$refs.loadmore.onBottomLoaded();
+          }, 500);
+          return;
+        }
         addAccessToken().get(createAPI(`feeds/users/${this.user_id}?max_id=${this.max_id}`),{},
           {
             validateStatus: status => status === 200
@@ -384,7 +394,11 @@
       )
       .then(response => {
         let feeds = response.data.data;
-        if(!feeds.length) return;
+        if(!feeds.length){
+          this.hasNoMore = false;
+          this.bottomAllLoaded = true;
+          return;
+        } 
         this.hasNoMore = true;
         if(feeds.length < 15) {
           this.hasNoMore = false;
@@ -405,8 +419,7 @@
         })
         setTimeout(() => {
           this.$refs.loadmore.onTopLoaded();
-          this.$refs.loadmore.onBottomLoaded();
-        }, 200);
+        }, 500);
       })
     }
   };

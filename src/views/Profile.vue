@@ -24,13 +24,13 @@
     <div :class="$style.follows">
       <Row :gutter="24">
         <div :class="$style.followsContent">
-          <Col span="12" style="border-right: 1px #ededed solid">
+          <Col span="12" style="border-right: 1px #ededed solid" @click.native="changeUrlFans(`/users/relationship/${currentUser}/followed`)">
             <p  v-if="!messageCount.fans" :class="$style.contentCenter" class="followsNum">{{followed}}</p>
             <p v-if="messageCount.fans" :class="$style.contentCenterHalf" class="followsNum">{{followed}}</p>
             <p v-if="messageCount.fans" :class="$style.newFollowsHalf">{{messageCount.fans}}</p>
             <p :class="$style.contentCenter">粉丝</p>
           </Col>
-          <Col span="12">
+          <Col span="12" @click.native="changeUrl(`/users/relationship/${currentUser}/following`)">
             <p :class="$style.contentCenter" class="followsNum">{{following}}</p>
             <p :class="$style.contentCenter">关注</p>
           </Col>
@@ -115,7 +115,7 @@
 <script>
   import localEvent from '../stores/localStorage';
   import ToolBar from '../components/ToolBar';
-  import { changeUrl } from '../utils/changeUrl';
+  import { changeUrl, goTo } from '../utils/changeUrl';
   import FeedbackIcon from '../icons/Feedback';
   import ConnectionIcon from '../icons/Connection';
   import RankingIcon from '../icons/Ranking';
@@ -127,6 +127,7 @@
   import lodash from 'lodash';
   import { getUserInfo } from '../utils/user';
   import { mapState } from 'vuex';
+  import { CLEANMESSAGE } from '../stores/types';
 
   const defaultAvatar = resolveImage(require('../statics/images/defaultAvatarx2.png'));
 
@@ -148,7 +149,13 @@
     }),
     methods: {
       // 跳转方法，减少使用 router-link
-      changeUrl
+      changeUrl,
+      changeUrlFans (url) {
+        this.$store.dispatch(CLEANMESSAGE, cb => {
+          cb('fans');
+        });
+        changeUrl(url);
+      }
     },
     computed: {
       ...mapState({

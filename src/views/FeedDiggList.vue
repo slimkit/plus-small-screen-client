@@ -34,7 +34,7 @@
               <h4 @click="changeUrl(`/users/feeds/${digg.user_id}`)">{{ digg.name }}</h4>
               <p>{{ digg.intro }}</p>
             </Col>
-            <Col span="4">
+            <Col span="4" >
               <UnFollowingIcon @click.native="doFollowing(digg.user_id)" v-if="!digg.is_following && currentUser != digg.user_id" height="21" width="21" color="#999" />
               <FollowingIcon @click.native="doUnFollowing(digg.user_id)" v-if="digg.is_following && !digg.is_followed && currentUser != digg.user_id" height="21" width="21" color="#59b6d7" />
               <EachFollowingIcon @click.native="doUnFollowing(digg.user_id)" v-if="digg.is_following && digg.is_followed && currentUser != digg.user_id" height="21" width="21" color="#59b6d7" />
@@ -64,6 +64,8 @@
   import { getUserInfo } from '../utils/user';
 
   const defaultNoBody = resolveImage(require('../statics/images/img_default_nobody@2x.png'));
+  const defaultAvatar = resolveImage(require('../statics/images/defaultAvatarx2.png'));
+
   const FeedDiggsLists = {
     components: {
       FollowingIcon,
@@ -137,7 +139,7 @@
           if(!lodash.keys(localUser).length) {
             getUserInfo(index, 30).then( user => {
               const { datas: { intro: { value: intro = '还没有简介...' } = {} } = {} } = user;
-              const { avatar: { 30: avatar = ''} = {} } = user;
+              const { avatar: { 30: avatar = defaultAvatar } = {} } = user;
               diggList = { ...diggList, [index]: {
                   is_following: user.is_following,
                   is_followed: user.is_followed,
@@ -150,7 +152,7 @@
             });
           } else {
             const { datas: { intro: { value: intro = '还没有简介...' } = {} } = {} } = localUser;
-            const { avatar: { 30: avatar = ''} = {} } = localUser;
+            const { avatar: { 30: avatar = defaultAvatar } = {} } = localUser;
             diggList = { ...diggList, [index]: {
                 is_following: localUser.is_following,
                 is_followed: localUser.is_followed,

@@ -22,6 +22,7 @@ import Discover from '../views/Discover';
 import FeedDiggList from '../views/FeedDiggList';
 import { requestAuth, CanNotGetInWhenLogged } from '../utils/auth';
 import ImMessage from '../views/ImMessage';
+import Relationship from '../views/Relationship';
 
 const routes = [
   {
@@ -175,6 +176,17 @@ const routes = [
     name: 'diggRanking',
     meta: {
       title: '排行榜'
+    },
+    beforeEnter: (to, from, next) => {
+      requestAuth(to, from, next)
+    }
+  },
+  {
+    path: '/users/relationship/:user_id/:status',
+    component: Relationship,
+    name: 'relationship',
+    meta: {
+      title: '粉丝/关注'
     },
     beforeEnter: (to, from, next) => {
       requestAuth(to, from, next)

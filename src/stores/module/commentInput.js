@@ -24,9 +24,9 @@ const mutations = {
     state.commentInput = { ...state.commentInput, ...info };
     // if(TS_WEB.isIos) {
       if(info.data.show) {
-        document.getElementById('app').addEventListener('touchmove', handler, false);
+        // document.getElementById('app').addEventListener('touchmove', handler, false);
       } else {
-        document.getElementById('app').removeEventListener('touchmove', handler, false);
+        // document.getElementById('app').removeEventListener('touchmove', handler, false);
       }
     // }
   }

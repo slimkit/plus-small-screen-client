@@ -61,7 +61,7 @@
                   <div style="display: flex; align-items: center;">
                     <div :style="`width: ${digglistWidth}`">
                       <div class="digg-digg-list" v-if="diggList.length" >
-                        <img v-lazy="digg.avatar" :style="`left: ${25 * (index) + 'px'}; z-index: ${5 - (1 * index)}`" :alt="digg.name" v-for="(digg, index) in diggList" :key="index" >
+                        <img v-lazy="digg.avatar" :style="`left: ${20 * (index) + 'px'}; z-index: ${5 - (1 * index)}`" :alt="digg.name" v-for="(digg, index) in diggList" :key="index" >
                       </div>
                     </div>
                     <div class="digg_counter">
@@ -71,8 +71,8 @@
                 </Col>
                 <Col span="9">
                   <div class="detail-data">
-                    <span>发布于<timeago :since="feedTimer" locale="zh-CN" :auto-update="60"></timeago></span>
-                    <span>{{ friendNum(feedData.tool.feed_view_count) }}人浏览</span>
+                    <p>发布于<timeago :since="feedTimer" locale="zh-CN" :auto-update="60"></timeago></p>
+                    <p>{{ friendNum(feedData.tool.feed_view_count) }}人浏览</p>
                   </div>
                 </Col>
               </Row>
@@ -283,7 +283,7 @@
         return urlList;
       },
       digglistWidth () {
-        return this.feedData.diggs.length ? ((this.feedData.diggs.length-1)*25 + 30 + 'px') : '0px';
+        return this.feedData.diggs.length ? ((this.feedData.diggs.length-1)*20 + 30 + 'px') : '0px';
       },
       diggList () {
         let digg_list = this.feedData.diggs;
@@ -716,13 +716,10 @@
     }
   }
   .detail-data {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-    span {
+    p {
       font-size: 12px;
-      color: #ccc
+      color: #ccc;
+      text-align: right;
     }
   }
   .feed-container-tool {

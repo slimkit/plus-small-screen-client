@@ -16,7 +16,7 @@
         </div>
       </div>
     </div>
-    <div style="padding-left: 18vw; width: 100vw; padding-right: 2vw; border-top: 1px #ededed solid; padding-top: 3vw; padding-bottom: 3vw;">
+    <div style="padding-left: 16vw; width: 100vw; padding-right: 2vw; border-top: 1px #ededed solid; padding-top: 3vw; padding-bottom: 3vw;">
       <FeedTool :user="user" :feed="feed" />
       <CommentsTool v-if="feed.comments" :feed="feed" />
     </div>

@@ -113,7 +113,7 @@
           setTimeout( () => {
             if(this.$refs.loadmoreDiggs)
               this.$refs.loadmoreDiggs.onTopLoaded();
-          })
+          }, 500)
         })
       },
       bottomStatusChange(status) {
@@ -136,7 +136,7 @@
             setTimeout( () => {
               if(this.$refs.loadmoreDiggs)
                 this.$refs.loadmoreDiggs.onBottomLoaded();
-            });
+            }, 500);
             this.max_id = diggs[diggs.length - 1].id;
           }
         })

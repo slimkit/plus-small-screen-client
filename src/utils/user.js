@@ -101,7 +101,7 @@ function getUserInfo (user_id, process = 30) {
       userLocal.is_following = user.is_following ? 1 : 0;
       user.counts.map(function (count, index) {
         let keyName = count.key;
-        let value = count.value;
+        let value = parseInt(count.value);
         userLocal.counts = { ...userLocal.counts, [keyName]:  value };
       });
       let newData = {};

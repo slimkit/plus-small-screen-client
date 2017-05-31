@@ -23,7 +23,7 @@
               <label for="phone">手机号</label>
             </Col>
             <Col span="15">
-              <input type="tel" size="large" autocomplete="off" placeholder="输入11位手机号" v-model.number.trim="phone" id="phone" name="phone" maxlength="11" />
+              <input type="tel" size="large" :autofocus="true" autocomplete="off" placeholder="输入11位手机号" v-model.number.trim="phone" id="phone" name="phone" maxlength="11" />
             </Col>
             <Col span="4" class="flexend">
               <CloseIcon v-show="isShowClean" @click.native="cleanPhone" width="21" height="21" color="#999" />
@@ -34,7 +34,7 @@
               <label for="password">密码</label>
             </Col>
             <Col span="15">
-              <input type="password"  size="large" v-show="isShowPassword" v-model.trim="password" placeholder="输入6位以上登录密码" id="password" name="password" />
+              <input type="password" size="large" v-show="isShowPassword" v-model.trim="password" placeholder="输入6位以上登录密码" id="password" name="password" />
               <input type="text"  v-model.trim="passwordText" v-show="isShowPasswordText" value="" placeholder="输入6位以上登录密码" />
             </Col>
             <Col span="4" class="flexend">

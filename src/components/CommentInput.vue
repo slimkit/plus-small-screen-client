@@ -4,7 +4,7 @@
       <div :class="$style.commentInput" id="commentInput" v-show="show">
         <Row :gutter="16" type="flex" align="bottom" style="margin-left: 0; margin-right: 0;">
           <Col span="20">
-            <Input type="textarea" class="commentInput" v-if="show" autofocus="autofocus" :placeholder="`回复: ${to_user_name}`" :autosize="{ minRows: 1, maxRows: 4 }" :minlength='1' blur="inputBlur" :maxlength='255' v-model="comment_content"></Input>
+            <Input type="textarea" ref="commentInput" @on-focus="onFocus" class="commentInput" v-if="show" @focus :autofocus="true" :placeholder="`回复: ${to_user_name}`" :autosize="{ minRows: 1, maxRows: 4 }" :minlength='1' blur="inputBlur" :maxlength='255' v-model="comment_content"></Input>
           </Col>
           <Col span="4">
             <Row v-if="commentCount > 200" :class="$style.commentCount">
@@ -35,6 +35,13 @@
       userInfo: {}
     }),
     methods: {
+      onFocus () {
+        // let interFace = this.$refs.commentInput.$refs.textarea;
+        let interFace = document.getElementById('commentRoot');
+        setInterval(function(){
+          interFace.scrollIntoView(false);
+        },200);
+      },
       closeInput () {
         this.$store.dispatch(CLOSECOMMENTINPUT);
       },

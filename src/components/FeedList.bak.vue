@@ -3,24 +3,15 @@
     <div class="nothingDefault"> 
       <img v-if="nothing" :src="nothing" />
     </div>
-    <div v-if="!nothing" class="fixed"></div>
-    <mt-loadmore
-      v-if="!nothing"
-      :bottom-method="loadBottom"
-      :top-method="loadTop"
-      :bottom-all-loaded="bottomAllLoaded"
-      :top-all-loaded="topAllLoaded"
-      ref="loadmore"
-      bottomPullText="上拉加载更多动态"
-      bottomDropText="释放加载更多动态"
-      topPullText="下拉更新动态"
-      topDropText="释放更新动态"
-      :bottomDistance="70"
+    <scroller style="top: 46px"
+      :on-refresh="refresh"
+      :on-infinite="infinite"
+      ref="scroller"
     >
       <div class="feed-list" v-if="!nothing">
         <Feed v-for="(feed, index) in feedsList" :feed="feed" :key="feed.feed.feed_id"></Feed>
       </div>
-    </mt-loadmore>
+    </scroller>
   </div>
 </template>
 <script>
@@ -32,7 +23,9 @@
   import router from '../routers/index';
   import lodash from 'lodash';
   import { resolveImage } from '../utils/resource';
+
   const nothingImg = resolveImage(require('../statics/images/defaultNothingx3.png'));
+
   const FeedLists = {
     components: {
       Feed
@@ -77,24 +70,34 @@
       }
     }),
     methods: {
+      refresh (done) {
+        console.log(this.$refs.scroller.content.offsetHeight, this.$refs.scroller.content.clientHeight);
+        console.log(this.$refs.scroller.scroller.getValues());
+        setTimeout(() => {
+          done()
+          this.loadTop(done);
+        }, 1500)
+      },
+      infinite (done) {
+        setTimeout(() => {
+          if(!this.bottomAllLoaded) {
+            this.loadBottom(done);
+          } else {
+            done(true);
+            return;
+          }
+        }, 1500)
+      },
       // 加载更多
-      loadBottom () {
+      loadBottom (done) {
         let limiterSend = '';
         let api = this.option.uri; // 查询地址
         let limiter = this.option.limiter; // 分页查询方式
-        if( this.maxId == 0) {
-          setTimeout(() => {
-            this.bottomAllLoaded = true;
-            if(this.$refs.loadmore)
-              this.$refs.loadmore.onBottomLoaded();
-          }, 500)
-          return ;
-        }
         if(limiter == 'page') {
           this.page += 1;
           limiterSend = `?page=${this.page}`;
         } else {
-          limiterSend = `?max_id=${this.maxId}`;
+          limiterSend = this.maxId ? `?max_id=${this.maxId}&limit=2` : '';
         }
         addAccessToken().get(createAPI(`${api}${limiterSend}`), {},
           {
@@ -107,12 +110,9 @@
           let length = data.length;
           let ids = [];
           let feeds = {};
-          if(!data.length > 0) {
+          if(!length > 0) {
             this.bottomAllLoaded = true;
-            setTimeout(() => {
-              if(this.$refs.loadmore)
-                this.$refs.loadmore.onBottomLoaded();
-            }, 500)
+            done(true);
             return;
           }
           data.forEach((d) => {
@@ -125,68 +125,64 @@
           this.$store.dispatch(type.ids, cb => {
             cb(ids);
           })
+          this.maxId = data[data.length - 1].feed.feed_id;
           if(length < 15) {
             this.bottomAllLoaded = true;
+            done(true);
+          } else {
+            done();
           }
-          this.maxId = data[data.length - 1].feed.feed_id;
-          setTimeout(() => {
-            if(this.$refs.loadmore)
-              this.$refs.loadmore.onBottomLoaded();
-          }, 500)
         })
       },
-      loadTop () {
+      loadTop (done) {
         let limiterSend = '';
         let api = this.option.uri;
         let limiter = this.option.limiter;
         let type = this.feedType[this.option.type];
-        let currentType = this.option.type; // 区分当前为哪种列表分类
-        let ids = this.$store.getters[type.ids];
-        if (limiter == 'page') {
-          this.limitCounter = 1;
-          limiterSend = '?page=1';
-        }
-        addAccessToken().get(createAPI(`${api}${limiterSend}`), {}, 
-          {
-            validate: status  => status === 200
-          }
-        )
-        .then( response => {
-          let feeds = response.data.data;
-          if(feeds.length == 0) {
-            setTimeout(() => {
-              if(this.$refs.loadmore)
-              {
-                this.$refs.loadmore.onTopLoaded();
-              }
-            }, 500)
-            return;
-          }
-          let newIds = [];
-          let newFeeds = {};
-          feeds.forEach( feed => {
-            if(ids.findIndex(function(value, index, arr) {
-              return value == feed.feed.feed_id;
-            }) == -1) {
-              newIds.push(feed.feed.feed_id);
-            }
-            newFeeds[feed.feed.feed_id] = feed;
-          });
-          this.$store.dispatch(FEEDSLIST, cb => {
-            cb(newFeeds);
-          });
-          this.$store.dispatch(type.add, cb => {
-            cb(newIds);
-          });
-          newFeeds = {};
-          newIds = [];
-          feeds = [];
-          setTimeout(() => {
-            if(this.$refs.loadmore) {
-              this.$refs.loadmore.onTopLoaded();
-            }
-          }, 500)
-        });
+        // let currentType = this.option.type; // 区分当前为哪种列表分类
+        // let ids = this.$store.getters[type.ids];
+        // if (limiter == 'page') {
+        //   this.limitCounter = 1;
+        //   limiterSend = '?page=1';
+        // }
+        // addAccessToken().get(createAPI(`${api}${limiterSend}`), {}, 
+        //   {
+        //     validate: status  => status === 200
+        //   }
+        // )
+        // .then( response => {
+        //   let feeds = response.data.data;
+        //   if(feeds.length == 0) {
+        //     this.bottomAllLoaded = true;
+        //     done(true);
+        //     return;
+        //   }
+        //   let newIds = [];
+        //   let newFeeds = {};
+        //   feeds.forEach( feed => {
+        //     if(ids.findIndex(function(value, index, arr) {
+        //       return value == feed.feed.feed_id;
+        //     }) == -1) {
+        //       newIds.push(feed.feed.feed_id);
+        //     }
+        //     newFeeds[feed.feed.feed_id] = feed;
+        //   });
+        //   this.$store.dispatch(FEEDSLIST, cb => {
+        //     cb(newFeeds);
+        //   });
+        //   this.$store.dispatch(type.add, cb => {
+        //     cb(newIds);
+        //   });
+        //   newFeeds = {};
+        //   newIds = [];
+        //   feeds = [];
+        //   if(feeds.length < 15) {
+        //     this.bottomAllLoaded = true;
+        //     done(true);
+        //     return;
+        //   }
+        //   done();
+        // });
       }
     },
     computed: {
@@ -205,16 +201,12 @@
       }
     },
     mounted () {
+      this.bottomAllLoaded = true;
       let type = this.feedType[this.option.type];
       let storeIds = this.$store.getters[type.ids];
       if(storeIds.length > 5) {
         this.firstId = storeIds[0];
         this.maxId = storeIds[storeIds.length -1];
-        setTimeout(() => {
-          if(this.$refs.loadmore){
-            this.$refs.loadmore.onTopLoaded();
-          }
-        }, 500);
         storeIds = [];
         return;
       }
@@ -236,7 +228,7 @@
         let storeFeeds = {};
         let ids = [];
         if(!feeds.length > 0) {
-          this.bottomAllLoaded = true;
+          // this.bottomAllLoaded = true;
           return;
         }
         this.firstId = feeds[0].feed.feed_id;
@@ -252,22 +244,14 @@
         })
         let lastFeed = feeds[feeds.length - 1];
         this.maxId = lastFeed.feed.feed_id;
-        if(feeds.length < 15) {
-          this.bottomAllLoaded = true;
+        if(!feeds.length < 15) {
+          this.bottomAllLoaded = false;
         }
         feeds = [];
-      })
-    }
-    ,
-    updated () {
-    //   this.showTop = false;
-    //   setTimeout(() => {
-    //     if(this.$refs.loadmore){
-    //       // this.$refs.loadmore.onTopLoaded();
-    //     }
-    //   }, 500);
+      });
     }
   };
+
   export default FeedLists;
 </script>
 
@@ -293,5 +277,12 @@
   .fixed {
     height: 46px;
     display: block;
+  }
+  ._v-container {
+    /*height: calc(100% - 48px)!important;*/
+  }
+  .loading-layer {
+    height: 30px;
+    line-height: 30px;
   }
 </style>
