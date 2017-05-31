@@ -1,5 +1,11 @@
 <template>
   <div class="feedParentContainer">
+    <div id="spinner" v-show="showSpinner">
+      <div id="spinner-parent">
+        <div class="spinner-double-bounce-bounce2" />
+        <div class="spinner-double-bounce-bounce1" />
+      </div>
+    </div>
     <div class="nothingDefault"> 
       <img v-if="nothing" :src="nothing" />
     </div>
@@ -11,14 +17,17 @@
       :bottom-all-loaded="bottomAllLoaded"
       :top-all-loaded="topAllLoaded"
       ref="loadmore"
-      bottomPullText="上拉加载更多动态"
-      bottomDropText="释放加载更多动态"
-      topPullText="下拉更新动态"
-      topDropText="释放更新动态"
       :bottomDistance="70"
+      @bottom-status-change="bottomStatusChange"
     >
       <div class="feed-list" v-if="!nothing">
         <Feed v-for="(feed, index) in feedsList" :feed="feed" :key="feed.feed.feed_id"></Feed>
+      </div>
+      <div slot="bottom" class="mint-loadmore-bottom">
+        <span v-show="bottomAllLoaded">没有更多了</span>
+        <span v-show="bottomStatus === 'pull' && !bottomAllLoaded" :class="{ 'rotate': topStatus === 'drop' }">上拉加载更多</span>
+        <span v-show="bottomStatus === 'loading'">加载中...</span>
+        <span v-show="bottomStatus === 'drop' && !bottomAllLoaded">释放加载更多</span>
       </div>
     </mt-loadmore>
   </div>
@@ -51,6 +60,8 @@
       topAllLoaded: false,
       bottomStatus: '',
       isShowComfirm: false,
+      topStatus: '',
+      showSpinner: true,
       // showTop: true,
       firstId: 0, // 下拉刷新过滤节点
       feedType: { // vuex相关action
@@ -77,6 +88,9 @@
       }
     }),
     methods: {
+      bottomStatusChange(status) {
+        this.bottomStatus = status;
+      },
       // 加载更多
       loadBottom () {
         let limiterSend = '';
@@ -216,6 +230,9 @@
           }
         }, 500);
         storeIds = [];
+        setTimeout( () => {
+          this.showSpinner = false;
+        }, 600);
         return;
       }
       let limiterSend = '';
@@ -256,7 +273,10 @@
           this.bottomAllLoaded = true;
         }
         feeds = [];
-      })
+        setTimeout( () => {
+          this.showSpinner = false;
+        }, 900);
+      });
     }
     ,
     updated () {
