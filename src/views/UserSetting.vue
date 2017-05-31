@@ -61,7 +61,7 @@
           城市
         </Col>
         <Col span="14">
-          <span :class="{cityDefaultText: !areaAbout.city}">{{ areaText }}</span>
+          <span :class="{sexDefaultText: !city}">{{ areaText }}</span>
         </Col>
         <Col span="5" :class="$style.rightIcon">
           <RightArrowIcon height="18" width="18" color="#999" />
@@ -277,7 +277,7 @@
         citysObjects: {}
       },
       minContainerWidth: window.innerWidth,
-      minContainerHeight: window.innerHeight - 55
+      minContainerHeight: window.innerHeight - 46
     }),
     methods: {
       changeUrl,
@@ -734,7 +734,7 @@
     width: 100%;
     z-index: 3;
     .cropper {
-      height: calc(100% - 55px);
+      height: calc(100% - 46px);
       width: 100%;
     }
   }
@@ -806,7 +806,7 @@
 </style>
 <style scoped lang="scss">
   .avatarOp {
-    height: 55px;
+    height: 46px;
     border-bottom: 1px #ddd solid;
     .ivu-row {
       width: 100%;

@@ -202,7 +202,7 @@
   .profile {
     padding-bottom: 60px;
     .header {
-      height: 55px;
+      height: 46px;
       display: flex;
       justify-content: center;
       align-items: center;
