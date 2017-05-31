@@ -135,7 +135,6 @@
         });
       },
       getData (name) {
-        this.dataList = [];
         let uri = '';
         let key = '';
         let lists = [];
@@ -152,6 +151,7 @@
         .then( response => {
           let datas = response.data.data[key];
           if(!datas.length > 0) return [];
+          this.dataList = [];
           datas.forEach( (data, index) => {
             let userInfo = localEvent.getLocalItem(`user_${data.user_id}`);
             let targetUser = {};
