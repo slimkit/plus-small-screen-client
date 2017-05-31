@@ -158,10 +158,13 @@
             :aspect-ratio="1"
             :view-mode="1"
             :auto-crop="true"
-            :min-canvas-width="100"
-            :min-canvas-height="100"
-            :minCropBoxWidth="100"
-            :minCropBoxHeight="100"
+            :auto-crop-area="0.5" 
+            :minContainerWidth="minContainerWidth"
+            :minContainerHeight="minContainerHeight"
+            :minCanvasWidth="minContainerWidth"
+            :minCanvasHeight="minContainerHeight"
+            :minCropBoxWidth="200"
+            :minCropBoxHeigh="200"
             drag-mode="move"
             :background="true"
             :src="imgSrc"
@@ -272,7 +275,9 @@
         preSelectedCity: 0,
         provincesObject: {},
         citysObjects: {}
-      }
+      },
+      minContainerWidth: window.innerWidth,
+      minContainerHeight: window.innerHeight - 55
     }),
     methods: {
       changeUrl,
