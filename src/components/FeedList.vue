@@ -253,6 +253,9 @@
         let storeFeeds = {};
         let ids = [];
         if(!feeds.length > 0) {
+          setTimeout( () => {
+            this.showSpinner = false;
+          }, 300);
           this.bottomAllLoaded = true;
           return;
         }
