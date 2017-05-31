@@ -433,7 +433,7 @@
         fileUpload.height = parseInt(fileData.height);
         // 截取宽度
         fileUpload.width = parseInt(fileData.width);
-        let fileStreamData = this.$refs.cropper.getCroppedCanvas().toDataURL();
+        let fileStreamData = this.$refs.cropper.getCroppedCanvas({ width: 250, height: 250 }).toDataURL();
         let fileSource = Base64.decode(fileStreamData.replace(base64Reg, ''));
 
         // 截取文件的mime_type
