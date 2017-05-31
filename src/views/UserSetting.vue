@@ -427,7 +427,8 @@
         let fileName = this.$refs.avatarInput.value;
         // 获取本地文件名
         fileUpload.origin_filename = fileName.replace('C:\\fakepath\\', '');
-        let fileData = this.$refs.cropper.getData();
+        // let fileData = this.$refs.cropper.getData();
+        let fileData = this.$refs.cropper.getCroppedCanvas({width: 250, height: 250});
         // 截取高度
         fileUpload.height = parseInt(fileData.height);
         // 截取宽度
