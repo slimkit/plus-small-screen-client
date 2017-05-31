@@ -20,10 +20,12 @@
       background: #fff;
     }
     #spinner-root-parent {
+      padding-top: 46px;
       display: flex;
       justify-content: center;
       position: relative;
       width: 100%;
+      align-items: center;
     }
     .spinner-root-double-bounce-bounce1, .spinner-root-double-bounce-bounce2 {
       width: 6vw;
