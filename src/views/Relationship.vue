@@ -126,9 +126,71 @@
       },
       // 加载更多
       loadBottom () {
-        setTimeout(() => {
-          this.$refs[`loadmore${this.type}`].onBottomLoaded();
-        }, 100);
+        let uri = '';
+        let key = '';
+        let lists = [];
+        if(this.type == 'followed') {
+          uri = `follows/followeds/${this.user_id}/${this.max_id}`;
+          key = 'followeds';
+        } else {
+          uri = `follows/follows/${this.user_id}/${this.max_id}`;
+          key = 'follows';
+        }
+        addAccessToken().get(createAPI(`${uri}?limit=15`), {}, {
+          validateStatus: status => status === 200
+        })
+        .then( response => {
+          let datas = response.data.data[key];
+          if(!datas.length > 0) {
+            this.bottomAllLoaded = true;
+            setTimeout(() => {
+              this.$refs[`loadmore${this.type}`].onBottomLoaded();
+            }, 100);
+            return;
+          }
+          if(datas.length < 15) {
+            this.bottomAllLoaded = true;
+          }
+          this.dataList = [];
+          datas.forEach( (data, index) => {
+            let userInfo = localEvent.getLocalItem(`user_${data.user_id}`);
+            let targetUser = {};
+            if(!lodash.keys(userInfo).length > 0) {
+              getUserInfo(data.user_id, 30).then(user => {
+                const { datas: { intro: { value: intro = '这家伙很懒,什么都没有留下' } = {} } = {} } = user;
+                const { avatar: { 30: avatar = defaultAvatar } = {} } = user;
+                lists = { ...lists, [user.user_id]: {
+                  is_following: user.is_following,
+                  is_followed: user.is_followed,
+                  user_id: user.user_id,
+                  avatar: avatar,
+                  name: user.name,
+                  intro: intro
+                } };
+                this.dataList = lists;
+              });
+            } else {
+              const { datas: { intro: { value: intro = '这家伙很懒,什么都没有留下' } = {} } = {} } = userInfo;
+              const { avatar: { 30: avatar = defaultAvatar } = {} } = userInfo;
+              lists = { ...lists, [userInfo.user_id]: {
+                is_following: userInfo.is_following,
+                is_followed: userInfo.is_followed,
+                user_id: userInfo.user_id,
+                avatar: avatar,
+                name: userInfo.name,
+                intro: intro
+              } };
+              this.dataList = this[name] = lists;
+            }
+          });
+          this.max_id = datas[datas.length -1].id;
+          // loadmore重新洗牌
+          if(this.$refs[`loadmore${this.type}`]) {
+            setTimeout(() => {
+              this.$refs[`loadmore${this.type}`].onBottomLoaded();
+            }, 900);
+          }
+        });
       },
       loadTop () {
         let uri = '';
