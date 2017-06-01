@@ -353,13 +353,13 @@
 
 <style lang="scss">
 	.relationship {
-    // .ivu-tabs {
+    .ivu-tabs {
     //   overflow-y: visible;
     //   overflow-x: hidden;
-    //   .ivu-tabs-tabpane {
-    //     min-height: calc(100vh - 46px);
-    //   }
-    // }
+      .ivu-tabs-tabpane {
+        min-height: calc(100vh - 46px);
+      }
+    }
 		position: relative;
     .ivu-tabs-bar {
       margin-bottom: 0;
