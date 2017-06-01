@@ -252,7 +252,6 @@
               this[this.type] = { ...this[this.type], ...lists };
             }
           });
-          this.max_id = datas[datas.length -1].id;
           // loadmore重新洗牌
           if(this.$refs[`loadmore${this.type}`]) {
             setTimeout(() => {
