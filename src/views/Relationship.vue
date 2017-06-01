@@ -273,15 +273,12 @@
           if(!datas.length > 0) {
             this.bottomAllLoaded = true;
             if(this.$refs[`loadmore${name}`]) {
-              this.$refs[`loadmore${name}`].onBottomLoaded();
+              this.$refs[`loadmore${name}`].onTopLoaded();
             }
             return [];
           }
           if(datas.length < 15) {
             this.bottomAllLoaded = true;
-            if(this.$refs[`loadmore${name}`]) {
-              this.$refs[`loadmore${name}`].onBottomLoaded();
-            }
           }
           this.dataList = [];
           datas.forEach( (data, index) => {
