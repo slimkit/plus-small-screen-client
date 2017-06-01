@@ -1,10 +1,10 @@
 <template>
-  <div :class="$style.commentRoot" v-show="show" id="commentRoot">
+  <div :class="$style.commentRoot" v-if="show" id="commentRoot">
     <transition name="">
       <div :class="$style.commentInput" id="commentInput" v-show="show">
         <Row :gutter="16" type="flex" align="bottom" style="margin-left: 0; margin-right: 0;">
           <Col span="20">
-            <Input type="textarea" ref="commentInput" @on-focus="onFocus" class="commentInput" v-if="show" @focus :autofocus="true" :placeholder="`回复: ${to_user_name}`" :autosize="{ minRows: 1, maxRows: 4 }" :minlength='1' blur="inputBlur" :maxlength='255' v-model="comment_content"></Input>
+            <Input type="textarea" ref="commentInput" @on-focus="onFocus" class="commentInput" v-if="show" :autofocus="true" :placeholder="`回复: ${to_user_name}`" :autosize="{ minRows: 1, maxRows: 4 }" :minlength='1' blur="inputBlur" :maxlength='255' v-model="comment_content"></Input>
           </Col>
           <Col span="4">
             <Row v-if="commentCount > 200" :class="$style.commentCount">

@@ -56,6 +56,7 @@
               type="drag"
               :action="uploadUri"
               accept="image/*"
+              :multiple="true"
               style="display: inline-block;width:22vw;height: 22vw; margin: .5vw;">
               <div :class="$style.camera">
                   <CameraIcon height="24" width="24" color="#999" />
@@ -112,7 +113,8 @@ const postFeed = {
     ids: {},
     format: ['jpg','jpeg','png'],
     maxSize: 10240,
-    loading: false
+    loading: false,
+    listCount: 0
   }),
   computed: {
     ...mapState({
@@ -293,6 +295,7 @@ const postFeed = {
     handleBeforeUpload (file) {
       const _file_format = file.name.split('.').pop().toLocaleLowerCase();
       const checked = this.format.some(item => item.toLocaleLowerCase() === _file_format);
+      this.listCount += 1;
       // 判断图片类型
       if(!checked) {
         this.handleFormatError(file.name);
@@ -304,7 +307,7 @@ const postFeed = {
         return false;
       }
       // 判断上传个数
-      const check = this.uploadList.length < 9;
+      const check = this.listCount < 10;
       if(!check) {
         this.handleMaxItems();
         return false;
