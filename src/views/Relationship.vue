@@ -1,6 +1,6 @@
 <template>
 	<div class="relationship">
-		<BackIcon width="21" height="21" @click.native="goTo(-1)" color="#999" style="z-index: 4; position: absolute; left: 12px; top: 12px;" />
+		<BackIcon width="21" height="21" @click.native="goTo(-1)" color="#999" style="z-index: 4; position: fixed; left: 12px; top: 12px;" />
 		<Tabs v-model="type" @on-click="getData">
       <Tab-pane label="粉丝" name="followed">
         <div v-if="!nothing" class="fixed"></div>
@@ -274,13 +274,10 @@
             localCurrentUser.counts.following_count += 1;
             localEvent.setLocalItem(`user_${this.currentUser}`, localCurrentUser);
             // if(type == 'following') {
-              lists[index].is_following = 1;
-              dataList = this.dataList;
+            lists[user].is_following = 1;
             // }
-            this[type] = lists;
-            // this[this.type][index].is_following = 1;
-            // this.dataList[index].is_following = 1;
-            this.dataList = dataList;
+            this[type] = lodash.cloneDeep(lists);
+            this.dataList = lodash.cloneDeep(lists);
           } else {
             this.$store.dispatch(NOTICE, cb => {
               cb({
@@ -306,14 +303,14 @@
           localEvent.setLocalItem(`user_${this.currentUser}`, localCurrentUser);
           localEvent.setLocalItem(`user_${user}`, localUser);
           if(type == 'following') {
-            lists.splice(index, 1);
-            dataList.splice(index, 1);
+            delete lists[user];
+            delete dataList[user];
           } else {
             lists[index].is_following = 0;
             dataList[index].is_following = 0;
           }
-          this[type] = lists;
-          this.dataList = dataList;
+          this[type] = lodash.cloneDeep(lists);
+          this.dataList = lodash.cloneDeep(dataList);
         });
       },
       // 设置需要展示的数据

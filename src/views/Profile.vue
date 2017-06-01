@@ -269,12 +269,12 @@
         background: #f00;
         min-width: 16px;
         height: 16px;
-        padding: 0 2px;
+        padding: 2px 4px;
         margin-left: 8px;
         text-align: center;
-        vertical-align: text-bottom;
+        vertical-align: inherit;
         font-size: 13px;
-        line-height: 1.5;
+        line-height: 1;
       }
     }
     

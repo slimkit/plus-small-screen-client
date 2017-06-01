@@ -220,7 +220,9 @@ const postFeed = {
     },
     handleRemove (index) {
       // 从 upload 实例删除数据
+      let fileName = this.$refs.upload.fileList[index].name;
       this.$refs.upload.fileList.splice(index, 1);
+      delete this.ids[fileName];
       this.storage_task_ids.splice(index, 1);
     },
     handleSuccess (res, file, fileList) {
