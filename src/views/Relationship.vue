@@ -291,7 +291,7 @@
               getUserInfo(data.user_id, 30).then(user => {
                 const { datas: { intro: { value: intro = '这家伙很懒,什么都没有留下' } = {} } = {} } = user;
                 const { avatar: { 30: avatar = defaultAvatar } = {} } = user;
-                lists = { ...lists, [user_id]: {
+                lists = { ...lists, [user.user_id]: {
                   is_following: user.is_following,
                   is_followed: user.is_followed,
                   user_id: user.user_id,
