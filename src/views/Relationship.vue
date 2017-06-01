@@ -3,39 +3,75 @@
 		<BackIcon width="21" height="21" @click.native="goTo(-1)" color="#999" style="z-index: 4; position: absolute; left: 12px; top: 12px;" />
 		<Tabs v-model="type" @on-click="getData">
       <Tab-pane label="粉丝" name="followed">
-      	<Row :gutter="24" v-for="(user, index) in dataList" :key="index" class-name="list">
-          <Col span="4" @click.native="changeUrl(`/users/feeds/${user.user_id}`)">
-            <img :class="$style.diggAvatar" v-lazy="user.avatar" :alt="user.name" :title="user.name">
-          </Col>
-          <Col span="16">
-            <h4 @click="changeUrl(`/users/feeds/${user.user_id}`)">{{ user.name }}</h4>
-            <p>{{ user.intro }}</p>
-          </Col>
-          <Col span="4" class="header-end-col">
-            <UnFollowingIcon @click.native="doFollowing(user.user_id, index, 'followed')" v-if="!user.is_following && currentUser != user.user_id" height="21" width="21" color="#999" />
-            <FollowingIcon @click.native="doUnFollowing(user.user_id, index, 'followed')" v-if="user.is_following && !user.is_followed && currentUser != user.user_id" height="21" width="21" color="#59b6d7" />
-            <EachFollowingIcon @click.native="doUnFollowing(user.user_id, index, 'followed')" v-if="user.is_following && user.is_followed && currentUser != user.user_id" height="21" width="21" color="#59b6d7" />
-          </Col>
-        </Row>
+        <div v-if="!nothing" class="fixed"></div>
+        <mt-loadmore
+          v-if="!nothing"
+          :bottom-method="loadBottom"
+          :top-method="loadTop"
+          :bottom-all-loaded="bottomAllLoaded"
+          :top-all-loaded="topAllLoaded"
+          ref="loadmorefollowed"
+          :bottomDistance="70"
+          @bottom-status-change="bottomStatusChange"
+        >
+        	<Row :gutter="24" v-for="(user, index) in dataList" :key="index" class-name="list">
+            <Col span="4" @click.native="changeUrl(`/users/feeds/${user.user_id}`)">
+              <img :class="$style.diggAvatar" v-lazy="user.avatar" :alt="user.name" :title="user.name">
+            </Col>
+            <Col span="16">
+              <h4 @click="changeUrl(`/users/feeds/${user.user_id}`)">{{ user.name }}</h4>
+              <p>{{ user.intro }}</p>
+            </Col>
+            <Col span="4" class="header-end-col" v-if="currentUser == user_id">
+              <UnFollowingIcon @click.native="doFollowing(user.user_id, index, 'followed')" v-if="!user.is_following && currentUser != user.user_id" height="21" width="21" color="#999" />
+              <FollowingIcon @click.native="doUnFollowing(user.user_id, index, 'followed')" v-if="user.is_following && !user.is_followed && currentUser != user.user_id" height="21" width="21" color="#59b6d7" />
+              <EachFollowingIcon @click.native="doUnFollowing(user.user_id, index, 'followed')" v-if="user.is_following && user.is_followed && currentUser != user.user_id" height="21" width="21" color="#59b6d7" />
+            </Col>
+          </Row>
+          <div slot="bottom" class="mint-loadmore-bottom">
+            <span v-show="bottomAllLoaded">没有更多了</span>
+            <span v-show="bottomStatus === 'pull' && !bottomAllLoaded" :class="{ 'rotate': topStatus === 'drop' }">上拉加载更多</span>
+            <span v-show="bottomStatus === 'loading'">加载中...</span>
+            <span v-show="bottomStatus === 'drop' && !bottomAllLoaded">释放加载更多</span>
+          </div>
+        </mt-loadmore>
         <div class="nothingDefault"> 
           <img v-if="nothing" :src="nothing" />
         </div>
       </Tab-pane>
       <Tab-pane label="关注" name="following" >
-        <Row :gutter="24" v-for="(user, index) in dataList" :key="index" class-name="list">
-          <Col span="4" @click.native="changeUrl(`/users/feeds/${user.user_id}`)">
-            <img :class="$style.diggAvatar" v-lazy="user.avatar" :alt="user.name" :title="user.name">
-          </Col>
-          <Col span="16">
-            <h4 @click="changeUrl(`/users/feeds/${user.user_id}`)">{{ user.name }}</h4>
-            <p>{{ user.intro }}</p>
-          </Col>
-          <Col span="4" class="header-end-col">
-            <UnFollowingIcon @click.native="doFollowing(user.user_id, index, 'following')" v-if="!user.is_following && currentUser != user.user_id" height="21" width="21" color="#999" />
-            <FollowingIcon @click.native="doUnFollowing(user.user_id, index, 'following')" v-if="user.is_following && !user.is_followed && currentUser != user.user_id" height="21" width="21" color="#59b6d7" />
-            <EachFollowingIcon @click.native="doUnFollowing(user.user_id, index, 'following')" v-if="user.is_following && user.is_followed && currentUser != user.user_id" height="21" width="21" color="#59b6d7" />
-          </Col>
-        </Row>
+        <div v-if="!nothing" class="fixed"></div>
+        <mt-loadmore
+          v-if="!nothing"
+          :bottom-method="loadBottom"
+          :top-method="loadTop"
+          :bottom-all-loaded="bottomAllLoaded"
+          :top-all-loaded="topAllLoaded"
+          ref="loadmorefollowing"
+          :bottomDistance="70"
+          @bottom-status-change="bottomStatusChange"
+        >
+          <Row :gutter="24" v-for="(user, index) in dataList" :key="index" class-name="list">
+            <Col span="4" @click.native="changeUrl(`/users/feeds/${user.user_id}`)">
+              <img :class="$style.diggAvatar" v-lazy="user.avatar" :alt="user.name" :title="user.name">
+            </Col>
+            <Col span="16">
+              <h4 @click="changeUrl(`/users/feeds/${user.user_id}`)">{{ user.name }}</h4>
+              <p>{{ user.intro }}</p>
+            </Col>
+            <Col span="4" class="header-end-col" v-if="currentUser == user_id">
+              <UnFollowingIcon @click.native="doFollowing(user.user_id, index, 'following')" v-if="!user.is_following && currentUser != user.user_id" height="21" width="21" color="#999" />
+              <FollowingIcon @click.native="doUnFollowing(user.user_id, index, 'following')" v-if="user.is_following && !user.is_followed && currentUser != user.user_id" height="21" width="21" color="#59b6d7" />
+              <EachFollowingIcon @click.native="doUnFollowing(user.user_id, index, 'following')" v-if="user.is_following && user.is_followed && currentUser != user.user_id" height="21" width="21" color="#59b6d7" />
+            </Col>
+          </Row>
+          <div slot="bottom" class="mint-loadmore-bottom">
+            <span v-show="bottomAllLoaded">没有更多了</span>
+            <span v-show="bottomStatus === 'pull' && !bottomAllLoaded" :class="{ 'rotate': topStatus === 'drop' }">上拉加载更多</span>
+            <span v-show="bottomStatus === 'loading' && !bottomAllLoaded">加载中...</span>
+            <span v-show="bottomStatus === 'drop' && !bottomAllLoaded">释放加载更多</span>
+          </div>
+        </mt-loadmore>
         <div class="nothingDefault"> 
           <img v-if="nothing" :src="nothing" />
         </div>
@@ -71,14 +107,96 @@
 		data: () => ({
 			type: '',
 			user_id: 0,
-			following: [],
-			followed: [],
-      dataList: [],
-      currentUser: 0
+			following: {},
+			followed: {},
+      dataList: {},
+      currentUser: 0,
+      bottomAllLoaded: false,
+      topAllLoaded: false,
+      bottomStatus: '',
+      isShowComfirm: false,
+      topStatus: '',
+      max_id: 0
 		}),
 		methods: {
 			goTo,
 			changeUrl,
+      bottomStatusChange(status) {
+        this.bottomStatus = status;
+      },
+      // 加载更多
+      loadBottom () {
+        setTimeout(() => {
+          this.$refs[`loadmore${this.type}`].onBottomLoaded();
+        }, 100);
+      },
+      loadTop () {
+        let uri = '';
+        let key = '';
+        let lists = [];
+        if(this.type == 'followed') {
+          uri = `follows/followeds/${this.user_id}`;
+          key = 'followeds';
+        } else {
+          uri = `follows/follows/${this.user_id}`;
+          key = 'follows';
+        }
+        addAccessToken().get(createAPI(`${uri}?limit=15`), {}, {
+          validateStatus: status => status === 200
+        })
+        .then( response => {
+          let datas = response.data.data[key];
+          if(!datas.length > 0) {
+            this.bottomAllLoaded = true;
+            setTimeout(() => {
+              this.$refs[`loadmore${this.type}`].onTopLoaded();
+            }, 100);
+            return;
+          }
+          if(datas.length < 15) {
+            this.bottomAllLoaded = true;
+          }
+          this.dataList = [];
+          datas.forEach( (data, index) => {
+            let userInfo = localEvent.getLocalItem(`user_${data.user_id}`);
+            let targetUser = {};
+            if(!lodash.keys(userInfo).length > 0) {
+              getUserInfo(data.user_id, 30).then(user => {
+                const { datas: { intro: { value: intro = '这家伙很懒,什么都没有留下' } = {} } = {} } = user;
+                const { avatar: { 30: avatar = defaultAvatar } = {} } = user;
+                lists = { ...lists, [user.user_id]: {
+                  is_following: user.is_following,
+                  is_followed: user.is_followed,
+                  user_id: user.user_id,
+                  avatar: avatar,
+                  name: user.name,
+                  intro: intro
+                } };
+                this.dataList = lists;
+              })
+            } else {
+              const { datas: { intro: { value: intro = '这家伙很懒,什么都没有留下' } = {} } = {} } = userInfo;
+              const { avatar: { 30: avatar = defaultAvatar } = {} } = userInfo;
+              lists = { ...lists, [userInfo.user_id]: {
+                is_following: userInfo.is_following,
+                is_followed: userInfo.is_followed,
+                user_id: userInfo.user_id,
+                avatar: avatar,
+                name: userInfo.name,
+                intro: intro
+              } };
+              this.dataList = this[name] = lists;
+            }
+          });
+          this.max_id = datas[datas.length -1].id;
+          // loadmore重新洗牌
+          if(this.$refs[`loadmore${this.type}`]) {
+            setTimeout(() => {
+              this.$refs[`loadmore${this.type}`].onTopLoaded();
+            }, 900);
+          }
+        });
+      },
       // 关注用户
       doFollowing (user, index, type) {
         followingUser(user)
@@ -111,6 +229,7 @@
           }
         })
       },
+
       // 取消关注用户
       doUnFollowing (user, index, type) {
         unFollowingUser(user)
@@ -134,6 +253,7 @@
           this.dataList = dataList;
         });
       },
+      // 设置需要展示的数据
       getData (name) {
         let uri = '';
         let key = '';
@@ -150,7 +270,19 @@
         })
         .then( response => {
           let datas = response.data.data[key];
-          if(!datas.length > 0) return [];
+          if(!datas.length > 0) {
+            this.bottomAllLoaded = true;
+            if(this.$refs[`loadmore${name}`]) {
+              this.$refs[`loadmore${name}`].onBottomLoaded();
+            }
+            return [];
+          }
+          if(datas.length < 15) {
+            this.bottomAllLoaded = true;
+            if(this.$refs[`loadmore${name}`]) {
+              this.$refs[`loadmore${name}`].onBottomLoaded();
+            }
+          }
           this.dataList = [];
           datas.forEach( (data, index) => {
             let userInfo = localEvent.getLocalItem(`user_${data.user_id}`);
@@ -159,36 +291,40 @@
               getUserInfo(data.user_id, 30).then(user => {
                 const { datas: { intro: { value: intro = '这家伙很懒,什么都没有留下' } = {} } = {} } = user;
                 const { avatar: { 30: avatar = defaultAvatar } = {} } = user;
-                lists = [ ...lists, {
+                lists = { ...lists, [user_id]: {
                   is_following: user.is_following,
                   is_followed: user.is_followed,
                   user_id: user.user_id,
                   avatar: avatar,
                   name: user.name,
                   intro: intro
-                }];
+                } };
                 this.dataList = lists;
               })
             } else {
               const { datas: { intro: { value: intro = '这家伙很懒,什么都没有留下' } = {} } = {} } = userInfo;
               const { avatar: { 30: avatar = defaultAvatar } = {} } = userInfo;
-              lists = [ ...lists, {
+              lists = { ...lists, [userInfo.user_id]: {
                 is_following: userInfo.is_following,
                 is_followed: userInfo.is_followed,
                 user_id: userInfo.user_id,
                 avatar: avatar,
                 name: userInfo.name,
                 intro: intro
-              }];
+              } };
               this.dataList = this[name] = lists;
             }
           });
+          this.max_id = datas[datas.length -1].id;
+          if(this.$refs[`loadmore${name}`]) {
+            this.$refs[`loadmore${name}`].onTopLoaded();
+          }
         });
       }
 		},
     computed: {
       nothing () {
-        return this.dataList.length > 0 ? 0 : defaultNoBody;
+        return lodash.keys(this.dataList).length > 0 ? 0 : defaultNoBody;
       }
     },
 		created () {
@@ -223,10 +359,20 @@
     .ivu-tabs {
       overflow-y: visible;
       overflow-x: hidden;
+      .ivu-tabs-tabpane {
+        min-height: calc(100vh - 46px);
+      }
     }
 		position: relative;
     .ivu-tabs-bar {
       margin-bottom: 0;
+      background: #fff;
+      border-bottom: 1px #e2e3e3 solid;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 3;
     }
     .nothingDefault {
       position: relative;
@@ -254,6 +400,18 @@
     .list {
       padding: 8px 0;
       background: #fff;
+    }
+    .mint-loadmore {
+      padding-bottom: 50px;
+      overflow: initial;
+    }
+    .noFixed {
+      height: 46px;
+      display: none;
+    }
+    .fixed {
+      height: 46px;
+      display: block;
     }
 	}
 </style>
