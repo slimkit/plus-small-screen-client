@@ -400,6 +400,7 @@
     }
     .mint-loadmore {
       padding-bottom: 50px;
+      overflow: visible;
     }
     .noFixed {
       height: 46px;
