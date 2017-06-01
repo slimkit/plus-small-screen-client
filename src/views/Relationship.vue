@@ -353,13 +353,13 @@
 
 <style lang="scss">
 	.relationship {
-    .ivu-tabs {
-      overflow-y: visible;
-      overflow-x: hidden;
-      .ivu-tabs-tabpane {
-        min-height: calc(100vh - 46px);
-      }
-    }
+    // .ivu-tabs {
+    //   overflow-y: visible;
+    //   overflow-x: hidden;
+    //   .ivu-tabs-tabpane {
+    //     min-height: calc(100vh - 46px);
+    //   }
+    // }
 		position: relative;
     .ivu-tabs-bar {
       margin-bottom: 0;
@@ -400,7 +400,6 @@
     }
     .mint-loadmore {
       padding-bottom: 50px;
-      overflow: initial;
     }
     .noFixed {
       height: 46px;
