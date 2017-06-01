@@ -151,7 +151,7 @@
           if(datas.length < 15) {
             this.bottomAllLoaded = true;
           }
-          this.dataList = [];
+          // this.dataList = [];
           datas.forEach( (data, index) => {
             let userInfo = localEvent.getLocalItem(`user_${data.user_id}`);
             let targetUser = {};
@@ -180,7 +180,8 @@
                 name: userInfo.name,
                 intro: intro
               } };
-              this.dataList = this[name] = lists;
+              this.dataList = { ...this.dataList, ...lists };
+              this[this.type] = { ...this[this.type], ...lists };
             }
           });
           this.max_id = datas[datas.length -1].id;
@@ -218,7 +219,7 @@
           if(datas.length < 15) {
             this.bottomAllLoaded = true;
           }
-          this.dataList = [];
+          // this.dataList = [];
           datas.forEach( (data, index) => {
             let userInfo = localEvent.getLocalItem(`user_${data.user_id}`);
             let targetUser = {};
@@ -247,7 +248,8 @@
                 name: userInfo.name,
                 intro: intro
               } };
-              this.dataList = this[name] = lists;
+              this.dataList = { ...this.dataList, ...lists };
+              this[this.type] = { ...this[this.type], ...lists };
             }
           });
           this.max_id = datas[datas.length -1].id;
