@@ -385,7 +385,7 @@ const postFeed = {
         }
           // }
         return false;
-      }
+      });
     },
     uploadFile (fileUpload) {
       return new Promise(function(resolve, reject) {
