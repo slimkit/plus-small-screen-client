@@ -347,44 +347,45 @@ const postFeed = {
     // 获取图像信息
     readImg (data) {
       return new Promise( (resolve, reject) => {
-        // let Orientation = null, height = 0, width = 0;
-        // EXIF.getData(data.file, 
-        //   () => {
-        //     let allTags = EXIF.getAllTags(data.file);
-        //     if(lodash.keys(allTags).length) { // 有exif信息
-        //       if(allTags.Orientation !== null && allTags.Orientation !== 1 && allTags.Orientation !== undefined) { // 需要旋转图片
-        //         // 旋转图片
-        //         exifOrient(data.dataUri, allTags.Orientation, (err, canvas) => {
-        //           let dataUri = canvas.toDataURL(data.file.type);
-        //           let img = new Image();
-        //           img.src = dataUri;
-        //           img.onload = () => {
-        //             let info = {};
-        //             info.img = img;
-        //             info.dataUri = dataUri;
-        //             resolve(info);
-        //           }
-        //         });
-        //       } else { // 不需要旋转图片
-        //         resolve({
-        //           dataUri: data.dataUri,
-        //           img: {
-        //             width: allTags.PixelXDimension,
-        //             height: allTags.PixelYDimension
-        //           }
-        //         })
-        //       }
-        //     } else {
-        let img = new Image();
-        img.src = data.dataUri;
-        img.onload = () => {
-          let info = {};
-          info.img = img;
-          info.dataUri = data.dataUri;
-          resolve(info);
-        }
-          // }
-        return false;
+        let Orientation = null, height = 0, width = 0;
+        EXIF.getData(data.file, 
+          () => {
+            let allTags = EXIF.getAllTags(data.file);
+            if(lodash.keys(allTags).length) { // 有exif信息
+              if(allTags.Orientation !== null && allTags.Orientation !== 1 && allTags.Orientation !== undefined) { // 需要旋转图片
+                // 旋转图片
+                exifOrient(data.dataUri, allTags.Orientation, (err, canvas) => {
+                  let dataUri = canvas.toDataURL(data.file.type);
+                  let img = new Image();
+                  img.src = dataUri;
+                  img.onload = () => {
+                    let info = {};
+                    info.img = img;
+                    info.dataUri = dataUri;
+                    resolve(info);
+                  }
+                });
+              } else { // 不需要旋转图片
+                resolve({
+                  dataUri: data.dataUri,
+                  img: {
+                    width: allTags.PixelXDimension,
+                    height: allTags.PixelYDimension
+                  }
+                })
+              }
+            } else {
+              let img = new Image();
+              img.src = data.dataUri;
+              img.onload = () => {
+                let info = {};
+                info.img = img;
+                info.dataUri = data.dataUri;
+                resolve(info);
+              }
+            }
+          return false;
+        });
       });
     },
     uploadFile (fileUpload) {
