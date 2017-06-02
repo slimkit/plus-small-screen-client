@@ -86,5 +86,6 @@ function noticeTask (taskId, data) {
 export {
   createUploadTask,
   uploadFile,
-  noticeTask
+  noticeTask,
+  dataURItoBlob
 }
