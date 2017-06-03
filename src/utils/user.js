@@ -51,11 +51,11 @@ function getAvatar (userInfo, process, cb) {
       if(userInfo.datas.avatar.hasOwnProperty('value')) { // 有上传过avatar
         if(userInfo.datas.avatar.hasOwnProperty('urls')) { // 没有本地图片
           if(!userInfo.datas.avatar.urls.hasOwnProperty(process)) {
-            userInfo.datas.avatar.urls[process] = userInfo.avatar[process] = getImage(userInfo.datas.avatar.value, process);
+            userInfo.datas.avatar.urls[process] = userInfo.avatar[process] = getImage(userInfo.datas.avatar.value, 20);
           }
         } else {
           userInfo.datas.avatar.urls = {};
-          userInfo.datas.avatar.urls[process] = userInfo.avatar[process] = getImage(userInfo.datas.avatar.value, process);
+          userInfo.datas.avatar.urls[process] = userInfo.avatar[process] = getImage(userInfo.datas.avatar.value, 20);
         }
       } else {
         userInfo.datas.avatar.urls = {};

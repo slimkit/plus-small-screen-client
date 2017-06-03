@@ -259,6 +259,7 @@ const routes = [
       requestAuth(to, from, next);
     }
   },
+  { path: '*', redirect: '/' }
 ];
 
 export default routes;

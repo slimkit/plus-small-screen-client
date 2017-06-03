@@ -425,15 +425,19 @@
         let base64Reg = /^data:(.*?);base64,/;
         let fileUpload = {};
         let fileName = this.$refs.avatarInput.value;
+
+        // 检测选中图片的mime-type;
+        let mime_type = this.$refs.cropper.$refs.img.currentSrc.match(reg)[1];
         // 获取本地文件名
         fileUpload.origin_filename = fileName.replace('C:\\fakepath\\', '');
-        // let fileData = this.$refs.cropper.getData();
-        let fileData = this.$refs.cropper.getCroppedCanvas({width: 250, height: 250});
+        let fileData = this.$refs.cropper.getData();
+        // let fileData = this.$refs.cropper.getCroppedCanvas();
         // 截取高度
         fileUpload.height = parseInt(fileData.height);
         // 截取宽度
         fileUpload.width = parseInt(fileData.width);
-        let fileStreamData = this.$refs.cropper.getCroppedCanvas({ width: 250, height: 250 }).toDataURL();
+        // let fileStreamData = this.$refs.cropper.getCroppedCanvas({ width: 250, height: 250 }).toDataURL();
+        let fileStreamData = this.$refs.cropper.getCroppedCanvas().toDataURL(mime_type);
         let fileSource = Base64.decode(fileStreamData.replace(base64Reg, ''));
 
         // 截取文件的mime_type
@@ -446,8 +450,8 @@
           if(data.hasOwnProperty('storage_id') && data.hasOwnProperty('storage_task_id')){
             this.handleHideAvatarSelect();
             this.storage_task_id = data.storage_task_id;
-            this.userInfo.avatar[30] = getImage(data.storage_id, 30);
-            this.$set(this.userInfo.avatar, '50', getImage(data.storage_id, 50));
+            this.userInfo.avatar[30] = getImage(data.storage_id, 20);
+            this.$set(this.userInfo.avatar, '30', getImage(data.storage_id, 20));
             this.$store.dispatch(NOTICE, cb => {
               cb({
                 text: '裁剪成功,记得保存资料哦',

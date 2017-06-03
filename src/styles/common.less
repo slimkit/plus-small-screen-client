@@ -65,7 +65,9 @@ li {
 #spinner-parent {
   align-items: center;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
+  width: 6vw;
+  height: 6vw;
 }
 .spinner-double-bounce-bounce1, .spinner-double-bounce-bounce2 {
   width: 6vw;
@@ -221,10 +223,10 @@ img.avatar {
 .commentInput {
   textarea {
     border: none;
-    border-bottom: 1px solid @themeColor;
+    // border-bottom: 1px solid @themeColor;
     &:focus {
       box-shadow: none;
-      border-bottom-color: @themeColor;
+      // border-bottom-color: @themeColor;
     }
   }
 }

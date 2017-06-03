@@ -16,15 +16,20 @@
       z-index: 8;
       display: flex;
       justify-content: center;
+      -webkit-justify-content: center;
       align-items: center;
+      -webkit-align-items: center;
       background: #fff;
     }
     #spinner-root-parent {
       padding-top: 46px;
       display: flex;
-      justify-content: center;
+      -webkit-justify-content: flex-start;
+      justify-content: flex-start;
       position: relative;
-      width: 100%;
+      width: 6vw;
+      height: 6vw;
+      -webkit-align-items: center;
       align-items: center;
     }
     .spinner-root-double-bounce-bounce1, .spinner-root-double-bounce-bounce2 {
