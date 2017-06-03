@@ -3,7 +3,7 @@
     <img :style="`width: 100%; height: ${imageHeight}; object-fit: cover; max-height: 80vw;`" v-if="imageSize == 1" @click.stop="showSwiper(0)"  v-lazy="getImg(imageObject[0].storage_id, imageObject[0].quality)" />
     <div style="width: 100%; display: flex;" v-if="imageSize == 2">
       <div style="width: 34vw;" :class="$style.showImgBox">
-        <img :class="$style.perFeedImg" @click.stop="showSwiper(0)"  v-lazy="getImg(imageObject[0].storage_id, parseInt(mageObject[0].quality/2))" />
+        <img :class="$style.perFeedImg" @click.stop="showSwiper(0)"  v-lazy="getImg(imageObject[0].storage_id, parseInt(imageObject[0].quality/2))" />
       </div>
       <div style="width: 34vw;" :class="$style.showImgBox">
         <img :class="$style.perFeedImg" @click.stop="showSwiper(1)"  v-lazy="getImg(imageObject[1].storage_id, parseInt(imageObject[1].quality/2))" />
@@ -122,7 +122,7 @@
         <img :class="$style.perFeedImg" @click.stop="showSwiper(5)"  v-lazy="getImg(imageObject[5].storage_id, parseInt(imageObject[5].quality/2))" />
       </div>
       <div style="width: 33.3333%;" :class="$style.showImgBox">
-        <img :class="$style.perFeedImg" @click.stop="showSwiper(6)"  v-lazy="getImg(imageObject[6].storage_id, parseInt(mageObject[6].quality/2))" />
+        <img :class="$style.perFeedImg" @click.stop="showSwiper(6)"  v-lazy="getImg(imageObject[6].storage_id, parseInt(imageObject[6].quality/2))" />
       </div>
       <div style="width: 33.3333%;" :class="$style.showImgBox">
         <img :class="$style.perFeedImg" @click.stop="showSwiper(7)"  v-lazy="getImg(imageObject[7].storage_id, parseInt(imageObject[7].quality/2))" />
