@@ -12,8 +12,9 @@ import loading_img from './statics/images/image-loading.png';
 import { Loadmore } from 'mint-ui';
 import { Popup } from 'mint-ui';
 import { Picker } from 'mint-ui';
+// import VueScroller from 'vue-scroller'
 
-
+// Vue.use(VueScroller);
 // iview ui
 Vue.use(iView);
 

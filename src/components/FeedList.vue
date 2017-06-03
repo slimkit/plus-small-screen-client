@@ -1,5 +1,5 @@
 <template>
-  <div class="feedParentContainer">
+  <div class="feedParentContainer" id="feedParentContainer">
     <div id="spinner" v-show="showSpinner">
       <div id="spinner-parent">
         <div class="spinner-double-bounce-bounce2" />
@@ -10,26 +10,41 @@
       <img v-if="nothing" :src="nothing" />
     </div>
     <div v-if="!nothing" class="fixed"></div>
-    <mt-loadmore
+    <!-- <mt-loadmore
       v-if="!nothing"
-      :bottom-method="loadBottom"
       :top-method="loadTop"
       :bottom-all-loaded="bottomAllLoaded"
       :top-all-loaded="topAllLoaded"
       ref="loadmore"
       :bottomDistance="70"
       @bottom-status-change="bottomStatusChange"
-    >
-      <div class="feed-list" v-if="!nothing">
-        <Feed v-for="(feed, index) in feedsList" :feed="feed" :key="feed.feed.feed_id"></Feed>
-      </div>
-      <div slot="bottom" class="mint-loadmore-bottom">
+    > -->
+      <!-- <div class="feed-list" v-if="!nothing"> -->
+      <!-- <virtualList class="list" :size="115" :remain="15" v-if="!nothing" @toBottom="loadBottom"> -->
+      <vue-recyclist
+        :list = "feedsList"
+        :size = "15"
+        :offset = "200"
+        :loadmore = "loadBottom"
+        :nomore = "bottomAllLoaded"
+        :spinner = "true"
+        class="list"
+      >
+        <template slot="item" scope="props">
+          <Feed :feed="props.data" :ke="props.index" />
+        </template>
+        <div slot="spinner">Loading...</div>
+        <div slot="nomore">No More Data</div>
+        <!-- <Feed v-for="(feed, index) in feedsList" :feed="feed" :key="index" :index="index"/> -->
+      </vue-recyclist>
+      <!-- </div> -->
+      <!-- <div slot="bottom" class="mint-loadmore-bottom">
         <span v-show="bottomAllLoaded">没有更多了</span>
         <span v-show="bottomStatus === 'pull' && !bottomAllLoaded" :class="{ 'rotate': topStatus === 'drop' }">上拉加载更多</span>
         <span v-show="bottomStatus === 'loading'">加载中...</span>
         <span v-show="bottomStatus === 'drop' && !bottomAllLoaded">释放加载更多</span>
       </div>
-    </mt-loadmore>
+    </mt-loadmore> -->
   </div>
 </template>
 <script>
@@ -41,10 +56,13 @@
   import router from '../routers/index';
   import lodash from 'lodash';
   import { resolveImage } from '../utils/resource';
+  import VueRecyclist from 'vue-recyclist'
+
   const nothingImg = resolveImage(require('../statics/images/defaultNothingx3.png'));
   const FeedLists = {
     components: {
-      Feed
+      Feed,
+      VueRecyclist
     },
     props: {
       option: Object
@@ -93,14 +111,18 @@
       },
       // 加载更多
       loadBottom () {
+        if(!this.maxId > 1 || this.bottomAllLoaded) {
+          console.log('xxx');
+          return false;
+        }
         let limiterSend = '';
         let api = this.option.uri; // 查询地址
         let limiter = this.option.limiter; // 分页查询方式
-        if( this.maxId == 0) {
+        if( !this.maxId > 1) {
           setTimeout(() => {
             this.bottomAllLoaded = true;
-            if(this.$refs.loadmore)
-              this.$refs.loadmore.onBottomLoaded();
+            // if(this.$refs.loadmore)
+            //   this.$refs.loadmore.onBottomLoaded();
           }, 500)
           return ;
         }
@@ -108,7 +130,7 @@
           this.page += 1;
           limiterSend = `?page=${this.page}`;
         } else {
-          limiterSend = `?max_id=${this.maxId}`;
+          limiterSend = this.maxId ? `?max_id=${this.maxId}` : '';
         }
         addAccessToken().get(createAPI(`${api}${limiterSend}`), {},
           {
@@ -123,10 +145,10 @@
           let feeds = {};
           if(!data.length > 0) {
             this.bottomAllLoaded = true;
-            setTimeout(() => {
-              if(this.$refs.loadmore)
-                this.$refs.loadmore.onBottomLoaded();
-            }, 500)
+            // setTimeout(() => {
+            //   if(this.$refs.loadmore)
+            //     this.$refs.loadmore.onBottomLoaded();
+            // }, 500)
             return;
           }
           data.forEach((d) => {
@@ -143,10 +165,13 @@
             this.bottomAllLoaded = true;
           }
           this.maxId = data[data.length - 1].feed.feed_id;
-          setTimeout(() => {
-            if(this.$refs.loadmore)
-              this.$refs.loadmore.onBottomLoaded();
-          }, 500)
+          setTimeout( () => {
+            this.showSpinner = false;
+          }, 900);
+          // setTimeout(() => {
+          //   if(this.$refs.loadmore)
+          //     this.$refs.loadmore.onBottomLoaded();
+          // }, 500)
         })
       },
       loadTop () {
@@ -195,11 +220,11 @@
           newFeeds = {};
           newIds = [];
           feeds = [];
-          setTimeout(() => {
-            if(this.$refs.loadmore) {
-              this.$refs.loadmore.onTopLoaded();
-            }
-          }, 500)
+          // setTimeout(() => {
+          //   if(this.$refs.loadmore) {
+          //     this.$refs.loadmore.onTopLoaded();
+          //   }
+          // }, 500)
         });
       }
     },
@@ -219,67 +244,70 @@
       }
     },
     mounted () {
-      let type = this.feedType[this.option.type];
-      let storeIds = this.$store.getters[type.ids];
-      if(storeIds.length > 5) {
-        this.firstId = storeIds[0];
-        this.maxId = storeIds[storeIds.length -1];
-        setTimeout(() => {
-          if(this.$refs.loadmore){
-            this.$refs.loadmore.onTopLoaded();
-          }
-        }, 500);
-        storeIds = [];
-        setTimeout( () => {
-          this.showSpinner = false;
-        }, 600);
-        return;
-      }
-      let limiterSend = '';
-      let api = this.option.uri;
-      let limiter = this.option.limiter;
-      if (limiter == 'page') {
-        this.limitCounter = 1;
-        limiterSend = '?page=1';
-      }
-      addAccessToken().get(createAPI(`${api}${limiterSend}`), 
-        {}, 
-        {
-          validate: status  => status === 200
-        }
-      )
-      .then(response => {
-        let feeds = response.data.data;
-        let storeFeeds = {};
-        let ids = [];
-        if(!feeds.length > 0) {
-          setTimeout( () => {
-            this.showSpinner = false;
-          }, 300);
-          this.bottomAllLoaded = true;
-          return;
-        }
-        this.firstId = feeds[0].feed.feed_id;
-        feeds.forEach( feed => {
-          ids.push(feed.feed.feed_id);
-          storeFeeds[feed.feed.feed_id] = feed;
-        });
-        this.$store.dispatch(FEEDSLIST, cb => {
-          cb(storeFeeds);
-        })
-        this.$store.dispatch(type.ids, cb => {
-          cb(ids);
-        })
-        let lastFeed = feeds[feeds.length - 1];
-        this.maxId = lastFeed.feed.feed_id;
-        if(feeds.length < 15) {
-          this.bottomAllLoaded = true;
-        }
-        feeds = [];
-        setTimeout( () => {
-          this.showSpinner = false;
-        }, 900);
-      });
+      document.getElementById('feedParentContainer').style.height = '100vh';
+      document.getElementById('feedParentContainer').style.overflowY = 'auto';
+    //   let type = this.feedType[this.option.type];
+    //   let storeIds = this.$store.getters[type.ids];
+    //   if(storeIds.length > 5) {
+    //     this.firstId = storeIds[0];
+    //     this.maxId = storeIds[storeIds.length -1];
+    //     // setTimeout(() => {
+    //     //   if(this.$refs.loadmore){
+    //     //     this.$refs.loadmore.onTopLoaded();
+    //     //   }
+    //     // }, 500);
+    //     storeIds = [];
+    //     setTimeout( () => {
+    //       this.showSpinner = false;
+    //     }, 600);
+    //     return;
+    //   }
+    //   let limiterSend = '';
+    //   let api = this.option.uri;
+    //   let limiter = this.option.limiter;
+    //   if (limiter == 'page') {
+    //     this.limitCounter = 1;
+    //     limiterSend = '?page=1';
+    //   }
+    //   addAccessToken().get(createAPI(`${api}${limiterSend}`), 
+    //     {}, 
+    //     {
+    //       validate: status  => status === 200
+    //     }
+    //   )
+    //   .then(response => {
+    //     let feeds = response.data.data;
+    //     console.log(feeds.length);
+    //     let storeFeeds = {};
+    //     let ids = [];
+    //     if(!feeds.length > 0) {
+    //       setTimeout( () => {
+    //         this.showSpinner = false;
+    //       }, 300);
+    //       this.bottomAllLoaded = true;
+    //       return;
+    //     }
+    //     this.firstId = feeds[0].feed.feed_id;
+    //     feeds.forEach( feed => {
+    //       ids.push(feed.feed.feed_id);
+    //       storeFeeds[feed.feed.feed_id] = feed;
+    //     });
+    //     this.$store.dispatch(FEEDSLIST, cb => {
+    //       cb(storeFeeds);
+    //     })
+    //     this.$store.dispatch(type.ids, cb => {
+    //       cb(ids);
+    //     })
+    //     let lastFeed = feeds[feeds.length - 1];
+    //     this.maxId = lastFeed.feed.feed_id;
+    //     if(feeds.length < 15) {
+    //       this.bottomAllLoaded = true;
+    //     }
+    //     feeds = [];
+    //     setTimeout( () => {
+    //       this.showSpinner = false;
+    //     }, 900);
+    //   });
     }
     ,
     updated () {
@@ -316,5 +344,11 @@
   .fixed {
     height: 46px;
     display: block;
+  }
+  .list {
+    -webkit-overflow-scrolling: touch;
+    overflow-scrolling: touch;
+    max-width: 100%;
+    height: 100%;
   }
 </style>

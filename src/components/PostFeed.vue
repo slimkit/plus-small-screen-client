@@ -87,6 +87,7 @@ import EyeOpenIcon from '../icons/EyeOpen';
 import LoadingWhiteIcon from '../icons/LoadingWhite';
 import EXIF from 'exif-js';
 import exifOrient from 'exif-orient';
+import piexif from 'piexifjs';
 
 const base64Reg = /^data:(.*?);base64,/;
 let reg = /data:(.*?);/;
@@ -271,15 +272,6 @@ const postFeed = {
         });
       })
     },
-    // dataurl转blob对象
-    dataURLtoBlob (dataurl) {
-      var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
-      bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
-      while(n--){
-          u8arr[n] = bstr.charCodeAt(n);
-      }
-      return new Blob([u8arr], {type:mime});
-    },
     // 检验上传图片数量
     handleMaxItems ( ) {
       this.$store.dispatch(NOTICE, cb => {
@@ -312,7 +304,6 @@ const postFeed = {
         this.handleMaxItems();
         return false;
       }
-
       return new Promise( (resolve, reject) => {
         this.formateUploadFile(file).then( data => {
           let newFile = {};
@@ -320,7 +311,7 @@ const postFeed = {
           newFile.url = data.url;
           this.ids = { ...this.ids, [file.name]: newFile };
           newFile = {};
-          let formateFile = this.dataURLtoBlob(data.url)
+          let formateFile = dataURItoBlob(data.url);
           if(data.status) {
             resolve(formateFile);
           } else {
@@ -334,58 +325,76 @@ const postFeed = {
     readFile (file) {
       return new Promise( function (resolve, reject) {
         let reader = new FileReader();
-        reader.onload = function () {
-          resolve({
-            dataUri: reader.result,
-            file
-          });
-        };
-        reader.readAsDataURL(file);
+        EXIF.getData(file, () => {
+          let exif = EXIF.getAllTags(file);
+          if(lodash.keys(exif).length) { // 有exif信息
+            let ori = EXIF.getTag(file, 'Orientation');
+            reader.onload = () => {
+              let newDataUri = piexif.remove(reader.result);
+              resolve({
+                dataUri: newDataUri,
+                ori,
+                width: exif.PixelXDimension,
+                height: exif.PixelYDimension
+              });
+            }
+          } else { // 无exif信息
+            reader.onload = () => {
+              // resolve({?
+                resolve({
+                  dataUri: reader.result,
+                  ori: null,
+                  height: 0,
+                  width: 0
+                });
+                // file
+              // });
+            };
+          }
+          reader.readAsDataURL(file);
+        });
       });
     },
 
     // 获取图像信息
     readImg (data) {
       return new Promise( (resolve, reject) => {
-        let Orientation = null, height = 0, width = 0;
-        EXIF.getData(data.file, 
-          () => {
-            let allTags = EXIF.getAllTags(data.file);
-            if(lodash.keys(allTags).length) { // 有exif信息
-              if(allTags.Orientation !== null && allTags.Orientation !== 1 && allTags.Orientation !== undefined) { // 需要旋转图片
-                // 旋转图片
-                exifOrient(data.dataUri, allTags.Orientation, (err, canvas) => {
-                  let dataUri = canvas.toDataURL(data.file.type);
-                  let img = new Image();
-                  img.src = dataUri;
-                  img.onload = () => {
-                    let info = {};
-                    info.img = img;
-                    info.dataUri = dataUri;
-                    resolve(info);
-                  }
-                });
-              } else { // 不需要旋转图片
-                resolve({
-                  dataUri: data.dataUri,
-                  img: {
-                    width: allTags.PixelXDimension,
-                    height: allTags.PixelYDimension
-                  }
-                })
-              }
-            } else {
+        let Orientation = data.ori, height = 0, width = 0;
+        if(data.ori !== null) { // 判断exif信息是否存在
+          if(data.ori !== null && data.ori !== 1 && data.ori !== undefined) { // 需要旋转图片
+            let type = data.dataUri.match(reg)[1];
+            // 旋转图片
+            exifOrient(data.dataUri, data.ori, (err, canvas) => {
+              let dataUri = canvas.toDataURL(type);
               let img = new Image();
-              img.src = data.dataUri;
+              img.src = dataUri;
               img.onload = () => {
                 let info = {};
                 info.img = img;
-                info.dataUri = data.dataUri;
+                info.dataUri = dataUri;
                 resolve(info);
               }
-            }
-          return false;
-        });
+            });
+          } else { // 不需要旋转
+            resolve({
+              dataUri: data.dataUri,
+              img: {
+                width: data.width,
+                height: data.height
+              }
+            });
+          }
+        } else { //  没有exif信息，不需要旋转图片
+          let img =new Image();
+          img.src = data.dataUri;
+          img.onload = () => {
+            let info = {};
+            info.img = img;
+            info.dataUri = data.dataUri;
+            resolve(info);
+          }
+        }
+        return false;
       });
     },
     uploadFile (fileUpload) {
@@ -428,7 +437,6 @@ const postFeed = {
               fileUpload.mime_type = info.dataUri.match(reg)[1]; // 文件mimetype
               let fileDecode = Base64.decode(info.dataUri.replace(base64Reg, ''));
               fileUpload.hash = md5(fileDecode);
-
               this.uploadFile(fileUpload).then( data => {
 
                 if(data.status == 'new') { // 新上传的文件
