@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.feedNavBar" class="feed-nav-bar">
+  <header :class="$style.feedNavBar" class="feed-nav-bar">
     <Row :gutter="32" :class="$style.NavRow">
       <Col :span="6" :class="$style.NavCol">
         <router-link :class="$style.navLink" to="/feeds/new">最新</router-link>
@@ -11,7 +11,7 @@
           <router-link :class="$style.navLink" to="/feeds/following">关注</router-link>
       </Col>
     </Row>
-  </div>
+  </header>
 </template>
 
 <script>

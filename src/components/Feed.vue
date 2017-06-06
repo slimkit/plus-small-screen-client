@@ -1,26 +1,62 @@
 <template>
-  <div :class="$style.detail" :id="`feed-${feed.feed.feed_id}`">
-    <div style="display: flex; align-items: flex-start;">
-      <img :src="avatar" alt="" style="padding: 0 2vw; width: 14vw; height: 10vw; border-radius: 100%;">
-      <div style="padding: 0 2vw; width: 86vw;">
-        <div :class="$style.contentBefore">
-          <router-link :class="$style.username" :to='`/users/feeds/${user.user_id}`'>{{ user.name }}</router-link>
-          <timeago :class="$style.timer" :since="timer" locale="zh-CN" :auto-update="60"></timeago>
-        </div>
-        <div :class="$style.feedContent"  @click.stop="changeUrl(`/feed/${feed.feed.feed_id}`)">
-          <!-- <router-link v-if="feed.feed.feed_title" :to="`/feed/${feed.feed.feed_id}`" :class="$style.feedTitle">{{ feed.feed.feed_title }}</router-link> -->
-            <div :class="$style.content" >
-              {{ feed.feed.feed_content }}
-            </div>
-            <FeedImages v-show="feed.feed.storages.length" :storages="feed.feed.storages"></FeedImages>
-        </div>
-      </div>
+  <li 
+    :class="$style.detail"
+    :id="`feed-${feed.feed.feed_id}`"
+  >
+    <section 
+      style="display: flex; align-items: flex-start;"
+    >
+      <img 
+        :src="avatar" 
+        :alt="user.name" 
+        :class="$style.detailAvatar"
+      >
+      <section 
+        style="padding: 0 2vw; width: 86vw;"
+      >
+        <section :class="$style.detailContentBefore">
+          <router-link 
+            :class="$style.detailUsername" 
+            :to='`/users/feeds/${user.user_id}`'
+          >
+            {{ user.name }}
+          </router-link>
+          <timeago 
+            :class="$style.detailTimer" 
+            :since="timer" 
+            locale="zh-CN" 
+            :auto-update="60"
+          />
+        </section>
+        <figure 
+          :class="$style.detailFeedContent"
+          @click.stop="changeUrl(`/feed/${feed.feed.feed_id}`)"
+        >
+          <p 
+            :class="$style.detailContent" 
+            v-html="feed.feed.feed_content.replace(/\n/g,'<br/>')"
+          >
+          </p>
+          <FeedImages 
+            v-show="feed.feed.storages.length" 
+            :storages="feed.feed.storages"
+          />
+        </figure>
+      </section>
+    </section>
+    <div 
+      :class="$style.detailTools"
+    >
+      <FeedTool 
+        :user="user" 
+        :feed="feed" 
+      />
+      <CommentsTool 
+        v-if="feed.comments" 
+        :feed="feed" 
+      />
     </div>
-    <div style="padding-left: 16vw; width: 100vw; padding-right: 2vw; border-top: 1px #ededed solid; padding-top: 3vw; padding-bottom: 3vw;">
-      <FeedTool :user="user" :feed="feed" />
-      <CommentsTool v-if="feed.comments" :feed="feed" />
-    </div>
-  </div>
+  </li>
 </template>
 
 <script>
@@ -92,35 +128,37 @@
     &:active, &:focus {
       background-color: #fff;
     }
-    .toolTop {
-      margin-top: 5px;
-      border-top: 1px #ededed solid;
-      display: flex!important;
-      align-items: center;
-      height: 45px!important;
+    .detailAvatar {
+      padding: 0 2vw; 
+      width: 14vw; 
+      height: 10vw; 
+      border-radius: 100%;
     }
-    .contentBefore {
+    .detailTools {
+      padding-left: 16vw; 
+      width: 100vw; 
+      padding-right: 2vw; 
+      border-top: 1px #ededed solid; 
+      padding-top: 3vw; 
+      padding-bottom: 3vw;
+    }
+    .detailContentBefore {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      .username {
+      .detailUsername {
         color: #333;
         font-size: 16px;
       }
-      .timer {
+      .detailTimer {
         text-align: right;
         color: #ccc;
         font-size: 12px;
       }
     }
-    .feedContent {
+    .detailFeedContent {
       width: 80vw;
-      .feedTitle {
-        display: flex;
-        padding: 0;
-        margin-top: 4px;
-      }
-      .content {
+      .detailContent {
         font-size: 14px;
         color: #666;
         text-align: initial;

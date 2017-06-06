@@ -1,6 +1,6 @@
 <template>
   <div class="feed-diggs-container" :class="$style.diggListsRoot">
-    <div class="commonHeader" v-if="!isWeiXin">
+    <header class="commonHeader" v-if="!isWeiXin">
       <Row :gutter="24">
         <Col span="6" style="display: flex; justify-content: flex-start" @click.native="goTo(-1)">
           <BackIcon height="21" width="21" color="#999" />
@@ -11,7 +11,7 @@
         <Col span="4" class="header-end-col">
         </Col>
       </Row>
-    </div>
+    </header>
     <div class="nothingDefault"> 
       <img v-if="nothing" :src="nothing" />
     </div>

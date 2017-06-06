@@ -23,6 +23,8 @@ import FeedDiggList from '../views/FeedDiggList';
 import { requestAuth, CanNotGetInWhenLogged } from '../utils/auth';
 import ImMessage from '../views/ImMessage';
 import Relationship from '../views/Relationship';
+import NewsIndex from '../views/news/NewsIndex';
+import NewsDetail from '../views/news/NewsDetail';
 
 const routes = [
   {
@@ -135,6 +137,22 @@ const routes = [
     component: Discover,
     meta: {
       title: '发现'
+    }
+  },
+  {
+    path: '/news',
+    component: NewsIndex,
+    name: 'newsIndex',
+    meta: {
+      title: '资讯'
+    }
+  },
+  {
+    path:'/news/:news_id/detail',
+    component: NewsDetail,
+    name: 'newsDetail',
+    meta: {
+      title: '资讯详情'
     }
   },
   {

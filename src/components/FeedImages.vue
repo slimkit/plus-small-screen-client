@@ -1,5 +1,5 @@
 <template>
-  <div style="width: 68vw; position: relative; margin-bottom: 8px;">
+  <section style="width: 68vw; position: relative; margin-bottom: 8px; display: inherit">
     <img :style="`width: 100%; height: ${imageHeight}; object-fit: cover; max-height: 80vw;`" v-if="imageSize == 1" @click.stop="showSwiper(0)"  v-lazy="getImg(imageObject[0].storage_id, imageObject[0].quality)" />
     <div style="width: 100%; display: flex;" v-if="imageSize == 2">
       <div style="width: 34vw;" :class="$style.showImgBox">
@@ -157,7 +157,7 @@
         <img :class="$style.perFeedImg" @click.stop="showSwiper(8)"  v-lazy="getImg(imageObject[8].storage_id, parseInt(imageObject[8].quality/3))" />
       </div>
     </div>
-  </div>
+  </section>
 </template>
 
 <script>

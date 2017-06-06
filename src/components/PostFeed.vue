@@ -1,7 +1,7 @@
 <template>
   <transition name="custom-classes-transition" enter-active-class="animated slideInUp" leave-active-class="animated slideOutDown">
     <div class="post-feed" :class="$style.postRoot" v-show="show">
-      <div class="commonHeader">
+      <header class="commonHeader">
         <Row :gutter="24">
           <Col span="5">
             <Button :class="$style.actionBtn" type="text" @click="closePost">取消</Button>
@@ -11,10 +11,10 @@
           </Col>
           <Col span="5" class="header-end-col">
             <LoadingWhiteIcon height="21" width="21" v-if="loading" />
-            <span :class="{ action: !isDisabled, notAction: isDisabled}"  v-show="!loading" @click="postFeed">发布</span>
+            <span :class="{ action: !isDisabled, notAction: isDisabled}"  v-else @click="postFeed">发布</span>
           </Col>
         </Row>
-      </div>
+      </header>
       <div :class="$style.content">
         <Row :gutter="24">
           <Col span="24">
@@ -43,7 +43,6 @@
                   </div>
               </template>
               <template v-else>
-                <!-- <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress> -->
                 <i-circle v-if="item.showProgress" :percent="item.percentage">
                   <span class="demo-i-circle-inner" style="font-size:24px">{{item.percentage}}%</span>
                 </i-circle>

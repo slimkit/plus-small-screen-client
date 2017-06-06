@@ -240,7 +240,7 @@
 
 <style lang="less" scoped>
 	.commonHeader {
-		height: 8vh;
+		height: 46px;
 		position: fixed;
 		top: 0;
 		left: 0;

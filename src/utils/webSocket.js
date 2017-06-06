@@ -14,7 +14,7 @@ function connect () {
 	// 链接IM
 	if(window.TS_WEB.socketUrl) { // 判断是否配置im聊天服务器,
 		if(TS_WEB.webSocket && TS_WEB.webSocket.readyState != 1) { // 已经连接过,但是处于非链接状态
-	    try {
+		    try {
 				window.TS_WEB.webSocket = new window.WebSocket(TS_WEB.webSocket.url);
 				window.TS_WEB.webSocket.onopen = evt => {
 					onOpen(evt);
@@ -33,12 +33,11 @@ function connect () {
 	      validateStatus: status => status === 200
 	    })
 	    .then( response => {
-	      let data= response.data;
+      	let data= response.data;
         window.TS_WEB.im_token = data.data.im_password; // 保存im口令
         if(window.TS_WEB.socketUrl) {
-
         	let socketUrl = `ws://${window.TS_WEB.socketUrl}?token=${data.data.im_password}`;
-          try {
+        	try {
 						window.TS_WEB.webSocket = new window.WebSocket(socketUrl);
 						window.TS_WEB.webSocket.onopen = evt => {
 							onOpen(evt);
@@ -52,7 +51,7 @@ function connect () {
 					} catch (e) {
 						window.console.log(e);
 					}
-        }
+      	}
 	    });
 	  }
 	}
@@ -110,7 +109,7 @@ function onMessage (message) {
 			} else {
 				data[1].avatar = user.avatar[30];
 				data[1].name = user.name;
-				console.log(data);
+				// console.log(data);
 				app.$store.dispatch(TOTALMESSAGELIST, cb => {
 					cb(data);
 				});

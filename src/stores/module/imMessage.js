@@ -19,8 +19,6 @@ const mutations = {
 	},
 	// signal user chat
 	[TOTALMESSAGELIST] (state, list) {
-		console.log('hh');
-		console.log(list);
 		let oldState = state;
 		let time = !list[1].me ? list[1].mid / 8388608 + 1451577600000 : list[1].ext.time;
 		if(!lodash.keys(oldState.messageLists[`room_${list[1].cid}`]).length > 0) {
@@ -45,7 +43,6 @@ const mutations = {
 			// hash = list[1].ext.hash;
 		}
 		let newList = { txt: list[1].txt, user_id: list[1].uid, time };
-		console.log(oldState.messageLists[`room_${list[1].cid}`].lists.indexOf(newList));
 		oldState.messageLists[`room_${list[1].cid}`].lists = [ ...oldState.messageLists[`room_${list[1].cid}`].lists, newList ];
 		state.messageLists = { ...state.messageLists, ...oldState.messageLists };
 	},
@@ -70,7 +67,6 @@ const mutations = {
 	},
 
 	[SYNCIMMESSAGE] (state, list) {
-		// console.log(list);
 		let oldState = state;
 		let time = list.mid / 8388608 + 1451577600000;
 		if(!lodash.keys(oldState.messageLists[`room_${list.cid}`]).length > 0) {

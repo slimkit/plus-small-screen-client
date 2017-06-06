@@ -7,7 +7,7 @@
         <div class="spinner-double-bounce-bounce1" />
       </div>
     </div>
-    <div class="commonHeader" id="feed-header">
+    <header class="commonHeader" id="feed-header">
       <Row :gutter="24">
         <Col span="5" style="display: flex; justify-content: flex-start">
           <BackIcon @click.native="goBack" height="21" width="21" color="#999" />
@@ -31,7 +31,7 @@
             <EachFollowingIcon v-if="userInfo.is_following && userInfo.is_followed && (userInfo.user_id != currentUser)" @click.native="handleUnFollowingStatus" height="21" width="21" color="#59b6d7" />
         </Col>
       </Row>
-    </div>
+    </header>
     <div style="padding-top: 46px">
       <mt-loadmore 
         :bottom-method="loadBottom"
@@ -49,9 +49,11 @@
                   <img v-lazy="item.url" />
                 </div>
               </div>
-              <div :class="{ feedContainerContentText: imagesList.length, feedContainerContentTextNoPadding: !imagesList.length }">
-                {{ feedData.feed.feed_content }}
-              </div>
+              <p 
+                :class="{ feedContainerContentText: imagesList.length, feedContainerContentTextNoPadding: !imagesList.length }"
+                v-html="feedData.feed.feed_content.replace(/\n/g,'<br/>')"
+              >
+              </p>
             </div>
           </div>
           <div class="feed-container-tool feed-background-color">
@@ -228,8 +230,8 @@
         user_id: 0,
         feed: {
           feed_id: 1,
-          title: "",
-          content: "",
+          feed_title: "",
+          feed_content: "",
           created_at: "",
           feed_from: 2,
           storages: [],
@@ -694,10 +696,10 @@
       }
     }
     .feedContainerContentText {
-      padding: 20px 8px;
+      padding: 20px 12px;
     }
     .feedContainerContentTextNoPadding {
-      padding: 16px 8px 20px 8px;
+      padding: 16px 12px 20px 12px;
       word-break: break-all;
     }
   }

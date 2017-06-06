@@ -147,7 +147,7 @@
             </Col>
             <Col span="5" style="display: flex; justify-content: flex-end">
               <LoadingWhiteIcon height="21" width="21" v-if="loading" />
-              <span v-if="!loading" @click="getCropData" class="operate avatarDone">完成</span>
+              <span v-else @click="getCropData" class="operate avatarDone">完成</span>
             </Col>
           </Row>
         </div>

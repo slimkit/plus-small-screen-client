@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.tabbar">
+  <footer :class="$style.tabbar">
     <Row :class="$style.toolBar" class="menu">
       <Col :span="5" :class="$style.menuItem">
         <router-link class="router-link" to="/feeds">
@@ -9,10 +9,8 @@
       </Col>
       <Col :span="5" :class="$style.menuItem">
         <router-link class="router-link" to="/discover">
-          <!-- <Badge dot> -->
-            <DiscoverIcon height="26" width="26" color="#999" />
-            <i>发现</i>
-          <!-- </Badge> -->
+          <DiscoverIcon height="26" width="26" color="#999" />
+          <i>发现</i>
         </router-link>
       </Col>
       <Col :span="4" :class="$style.menuItem" class="plus-parent">
@@ -39,7 +37,7 @@
         </router-link>
       </Col>
     </Row>
-  </div>
+  </footer>
 </template>
 
 <script>

@@ -41,8 +41,6 @@
 
   const commentsTool = {
     props: [
-      // 'commentsData', // 评论数据
-      // 'feedId', // 动态id
       'feed'
     ],
     components: {

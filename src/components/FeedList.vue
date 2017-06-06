@@ -20,9 +20,9 @@
       :bottomDistance="70"
       @bottom-status-change="bottomStatusChange"
     >
-      <div class="feed-list" v-if="!nothing">
+      <ul class="feed-list" v-if="!nothing">
         <Feed v-for="(feed, index) in feedsList" :feed="feed" :key="feed.feed.feed_id"></Feed>
-      </div>
+      </ul>
       <div slot="bottom" class="mint-loadmore-bottom">
         <span v-show="bottomAllLoaded">没有更多了</span>
         <span v-show="bottomStatus === 'pull' && !bottomAllLoaded" :class="{ 'rotate': topStatus === 'drop' }">上拉加载更多</span>
