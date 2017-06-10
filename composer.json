@@ -28,6 +28,5 @@
                 "Zhiyi\\Component\\ZhiyiPlus\\PlusComponentWeb\\ServiceProvider"
             ]
         }
-    },
-    "version": "2.0.0"
+    }
 }
