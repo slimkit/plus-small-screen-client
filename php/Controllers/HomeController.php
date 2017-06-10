@@ -3,23 +3,23 @@
 namespace Zhiyi\Component\ZhiyiPlus\PlusComponentWeb\Controllers;
 
 use Zhiyi\Plus\Http\Controllers\Controller;
-use Zhiyi\Plus\Models\CommonConfig;
-use Zhiyi\Component\ZhiyiPlus\PlusComponentIm\Installer\Installer;
-use function Zhiyi\Component\ZhiyiPlus\PlusComponentWeb\view;
+use Zhiyi\Component\ZhiyiPlus\PlusComponentIm\Repository\ImServe as ImServeRepsitory;
 
 class HomeController extends Controller
 {
-    public function index()
+    /**
+     * The SPA entry.
+     *
+     * @param \Zhiyi\Component\ZhiyiPlus\PlusComponentIm\Repository\ImServe $repository
+     * @return mixed
+     * @author Seven Du <shiweidu@outlook.com>
+     */
+    public function index(ImServeRepsitory $repository)
     {
-    	$server = CommonConfig::byNamespace(Installer::$configNamespace)
-            ->byName(Installer::$configName)
-            ->first();
-        $data = [
+        return view('plus:h5::index', [
             'base_url'   => url('/'),
             'api'        => url('api/v1'),
-            'webSocktUrl' => $server ? $server->value : ''
-        ];
-
-        return view('index', $data);
+            'webSocktUrl' => config('im.open') === true ? $repository->get() : '', // 如果 im 开启，则返回地址，否则返回空。
+        ]);
     }
 }
