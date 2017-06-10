@@ -1,21 +1,64 @@
-# plus-component-web
+# ThinkSNS+ HTML 5 (SPA)😊
 
-> A Vue.js project
+The package is a SPA for ThinkSNS+
 
-## Build Setup
+## Stack
 
-``` bash
-# install dependencies
-npm install
+- ES 6
+- webpack
+- SASS
+- LESS
+- Vue
+- vuex
+- vue-router
+- PHP 7
+- Composer
+- Yarn | NPM
+- Node
 
-# serve with hot reload at localhost:8080
-npm run dev
+## Install
 
-# build for production with minification
-npm run build
-
-# build for production and view the bundle analyzer report
-npm run build --report
+```shell
+composer require zhiyicx/plus-component-web
 ```
 
-For detailed explanation on how things work, checkout the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+##### Dependencies ThinkSNS+ library:
+
+- zhiyicx/plus-component-im
+- zhiyicx/plus-component-feed
+
+#### Publish font-end application （SPA）
+
+```shell
+php artisan package:handle h5 publish
+```
+
+## Remove
+
+```shell
+composer remove zhiyicx/plus-component-web
+```
+
+> Because h5 rely on the ThinkSNS+ other packages, so when the installation of h5 these packages will be installed together, you have not installed these packages alone, then remove the h5 when these dependent packages will be removed together.
+
+## Develop
+
+ - Node 6+
+ - PHP
+ - Yarn
+ - Composer
+ - ThinkSNS+
+
+Commands:
+
+- yarn clean-dist
+- yarn dev
+- yarn hot
+- yarn watch
+- yarn dist
+
+### Link asstes
+
+```shell
+php artisan package:handle h5 link
+```
