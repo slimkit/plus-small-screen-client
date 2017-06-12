@@ -75,7 +75,8 @@
       'im_token' => '',
       'webSocket' => null,
       'loaded' => false,
-      'isWeiXin' => false
+      'isWeiXin' => false,
+      'currentUserId' => 0
     ]) !!}
   </script>
 </head>

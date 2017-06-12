@@ -27,6 +27,9 @@
   import { getUserInfo } from './utils/user';
   import { MESSAGELISTS, IMSTATUS, USERS_APPEND, MESSAGENOTICE } from './stores/types';
 
+  // indexedDB
+  import Dexie from 'dexie';
+
   const App = {
     components: {
       NoticeText,
@@ -47,10 +50,31 @@
       }
     },
     created() {
+      // 初始化本地数据库
+      const TsDatabase = new Dexie("ThinkSNS+");
+      TsDatabase.open().then( db => {
+        console.log("Found database: " + db.name);
+        console.log ("Database version: " + db.verno);
+        db.tables.forEach(function (table) {
+          console.log ("Found table: " + table.name);
+          console.log ("Table Schema: " +
+              JSON.stringify(table.schema, null, 4));
+          }
+        );
+      })
+      .catch('NoSuchDatabaseError', function(e) {
+        // Database with that name did not exist
+        console.log ("Database not found");
+      }).catch(function (e) {
+        console.log ("Oh uh: " + e);
+      });
+
+      //
       if(TS_WEB.loaded) return;
       let currentUser = localEvent.getLocalItem('UserLoginInfo');
 
       if(lodash.keys(currentUser).length > 0) {
+        window.TS_WEB.currentUserId = currentUser.user_id;
         // 提交用户到vuex
         let userInfo = localEvent.getLocalItem(`user_${currentUser.user_id}`);
         if(!lodash.keys(userInfo).length > 0) {

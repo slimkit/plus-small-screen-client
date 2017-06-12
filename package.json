@@ -33,6 +33,7 @@
   "dependencies": {
     "animate.css": "^3.5.2",
     "axios": "^0.16.1",
+    "dexie": "^2.0.0-beta",
     "exif-js": "^2.2.1",
     "exif-orient": "^0.0.5",
     "iview": "^2.0.0-rc.15",

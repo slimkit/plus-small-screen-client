@@ -276,6 +276,7 @@
           }
         )
         .then(response => {
+          window.TS_WEB.currentUserId = data.user_id;
           localEvent.setLocalItem('UserLoginInfo', response.data.data);
           this.isLoading = false;
           getUserInfo(response.data.data.user_id, 30).then(user => {

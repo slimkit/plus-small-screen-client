@@ -51,10 +51,10 @@
         :user="user" 
         :feed="feed" 
       />
-      <CommentsTool 
+      <!-- <CommentsTool 
         v-if="feed.comments" 
         :feed="feed" 
-      />
+      /> -->
     </div>
   </li>
 </template>

@@ -221,6 +221,7 @@
           this.errors = {};
           let data = response.data.data;
           localEvent.setLocalItem('UserLoginInfo', data);
+          window.TS_WEB.currentUserId = data.user_id;
           getUserInfo(data.user_id, 30).then(user => {
             localEvent.setLocalItem(`user_${data.user_id}`, user);
             this.$store.dispatch(USERS_APPEND, cb =>{
