@@ -2,30 +2,31 @@
     "name": "zhiyicx/plus-component-web",
     "description": "🌝The SPA of ThinkSNS+",
     "license": "Apache-2.0",
-    "type": "plus-component",
     "authors": [
         {
             "name": "Wayne John",
-            "email": "qiaobinloverabbi@gmail.com"
+            "email": "qiaobinloverabbi@gmail.com",
+            "role": "developer"
         },
         {
             "name": "Seven Du",
             "email": "shiweidu@outlook.com",
-            "role": "PHP developer"
+            "role": "developer"
         }
     ],
     "require": {
-        "zhiyicx/plus-install-plugin": "^1.0"
-    },
-    "extra": {
-        "installer-class": "Zhiyi\\Component\\ZhiyiPlus\\PlusComponentWeb\\Installer"
+        "zhiyicx/plus-component-im": "^2.0"
     },
     "autoload" : {
-        "files" : [
-            "php/helper.php"
-        ],
         "psr-4": {
             "Zhiyi\\Component\\ZhiyiPlus\\PlusComponentWeb\\": "php/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Zhiyi\\Component\\ZhiyiPlus\\PlusComponentWeb\\ServiceProvider"
+            ]
         }
     }
 }
