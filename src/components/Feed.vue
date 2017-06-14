@@ -49,12 +49,9 @@
     >
       <FeedTool 
         :user="user" 
-        :feed="feed" 
+        :feed="feed"
+        :openInput="feed.feed.feed_id == commentFeed ? true : false"
       />
-      <!-- <CommentsTool 
-        v-if="feed.comments" 
-        :feed="feed" 
-      /> -->
     </div>
   </li>
 </template>
@@ -72,6 +69,7 @@
   import defaultAvatar from '../statics/images/defaultAvatarx2.png';
   import lodash from 'lodash';
   import { changeUrl } from '../utils/changeUrl';
+  import { mapState } from 'vuex';
 
   const feedinfo = {
     props: [
@@ -103,7 +101,11 @@
       },
       timer () {
         return this.timers(this.feed.feed.created_at, 8, false);
-      }
+      },
+      // 检测动态展开输入框
+      ...mapState({
+        commentFeed: state => state.commentInput.commentFeed
+      })
     },
     created () {
       let localUser = localEvent.getLocalItem('user_' + this.feed.user_id);

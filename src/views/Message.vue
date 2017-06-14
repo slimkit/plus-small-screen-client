@@ -72,7 +72,7 @@
   </div>
 </template>
 <script>
-  import { NOTICE, TOTALMESSAGELISTS } from '../stores/types';
+  import { NOTICE, TOTALMESSAGELISTS, MESSAGELISTS } from '../stores/types';
   import { createAPI, addAccessToken } from '../utils/request';
   import ToolBar from '../components/ToolBar';
   import localEvent from '../stores/localStorage';
@@ -187,6 +187,7 @@
       }
       localEvent.setLocalItem('messageFlushTime', nowtime);
       let messages = {};
+      // 获取新消息
       addAccessToken().get(createAPI(`users/flushmessages?key=${types}&time=${time+1}`),{},
         {
           validateStatus: status => status === 200
@@ -208,6 +209,58 @@
           }
         });
         this.messages = { ...this.messages, ...messages };
+      });
+      // 写入聊天对话
+      window.TS_WEB.dataBase.transaction('rw', window.TS_WEB.dataBase.chatroom, window.TS_WEB.dataBase.messagebase, () => {
+        window.TS_WEB.dataBase.chatroom.where('owner').equals(window.TS_WEB.currentUserId).limit(10).sortBy('last_message_time', results => {
+          console.log(results);
+          if(results.length) {
+            results.forEach( result => {
+              let li = {};
+              let uids = result.uids.split(',');
+              let user_id = 0;
+              if(uids[0] == currentUser.user_id) {
+                user_id = uids[1];
+              } else {
+                user_id = uids[0];
+              }
+              window.TS_WEB.dataBase.messagebase
+              .where('cid')
+              .equals(result.cid)
+              .filter( (item) => {
+                return item.seq != -1;
+              })
+              .limit(15)
+              .sortBy('mid', array => {
+                let messageList = [];
+                let messageBody = {};
+                if(array.length) {
+                  array.forEach( item => {
+                    messageBody.user_id = item.uid;
+                    messageBody.txt = item.txt;
+                    messageBody.time = item.time;
+                    messageList.push(messageBody);
+                    messageBody = {};
+                  })
+                }
+                getUserInfo(user_id, 30).then( user => {
+                  li.name = user.name;
+                  li.avatar = user.avatar[30];
+                  li.lists = messageList;
+                  li.cid = result.cid;
+                  li.user_id = user_id;
+                  this.$store.dispatch(MESSAGELISTS, cb => {
+                    cb(li);
+                  });
+                  li = {};
+                });
+              })
+            });
+          }
+        })
+      })
+      .catch( e => {
+        console.log(e);
       })
     }
   };

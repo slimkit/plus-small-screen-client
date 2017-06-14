@@ -1,60 +1,29 @@
 import { COMMENTINPUT, CLOSECOMMENTINPUT } from '../types';
-// 关闭
-const close = dispatch => dispatch(CLOSECOMMENTINPUT);
-// 回调
-const cb = close;
-const handler = function() {
-  event.preventDefault();
-}
+
 const state = {
-  commentInput: {
-    data: { 
-      show: false,
-      reply_to_user_id: 0,
-      to_user_name: '',
-      feed: {}
-    },
-    close,
-    cb
-  }
+  commentFeed: 0
 };
 
 const mutations = {
-  [COMMENTINPUT] (state, info) {
-    state.commentInput = { ...state.commentInput, ...info };
-    // if(TS_WEB.isIos) {
-      if(info.data.show) {
-        document.getElementById('app').addEventListener('touchmove', handler, false);
-      } else {
-        document.getElementById('app').removeEventListener('touchmove', handler, false);
-      }
-    // }
+  [COMMENTINPUT] (state, feed_id) {
+    state.commentFeed = feed_id;
   }
 };
 
 const actions = {
   [COMMENTINPUT]: (context, cb) => {
-    cb( info => {
-      context.commit(COMMENTINPUT, info);
+    cb( feed_id => {
+      context.commit(COMMENTINPUT, feed_id);
     })
   },
   [CLOSECOMMENTINPUT]: context => {
-    context.commit(COMMENTINPUT, {
-      data: {
-        show: false,
-        reply_to_user_id: 0,
-        to_user_name: '',
-        feed: {}
-      },
-      close,
-      cb
-    })
+    context.commit(COMMENTINPUT, 0)
   }
 };
 
 const getters = {
   [COMMENTINPUT]: state => {
-    return state.commentInput;
+    return state.commentFeed
   }
 };
 

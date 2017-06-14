@@ -76,7 +76,8 @@
       'webSocket' => null,
       'loaded' => false,
       'isWeiXin' => false,
-      'currentUserId' => 0
+      'currentUserId' => 0,
+      'dataBase' => null
     ]) !!}
   </script>
 </head>

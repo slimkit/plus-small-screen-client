@@ -32,19 +32,8 @@
                 v-model="comment_content"
               />
             </Col>
-            <!-- <Col span="4">
-              <Row v-if="commentCount > 200" :class="$style.commentCount">
-                <Col span="24" ><span :class="{ inputFull: commentCount > 100 }">{{ commentCount }}</span>/255</Col>
-              </Row>
-              <Row>
-                <Col span="24">
-                  <Button :long="true" type="primary" class="sendButton" :disabled="commentCount == 0" size="small" @click.native="sendComment()">发送</Button>
-                </Col>
-              </Row>
-            </Col> -->
           </Row>
         </div>
-      <!-- <div @click.stop="closeInput" id="wrapper" :class="$style.wrapper" v-show="show"></div> -->
     </div>
   </transition>
 </template>

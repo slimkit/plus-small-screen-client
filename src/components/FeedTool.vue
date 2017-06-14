@@ -18,7 +18,7 @@
         <MoreIcon width="21" height="21" color="#999" />
       </div>
     </div>
-    <ul :class="$style.comment" v-if="commentAbout.show">
+    <ul :class="$style.comment" v-if="openInputByVuex" ref="commentInput">
       <li>
         <Input 
           type="textarea" 
@@ -96,7 +96,7 @@
   import { friendNum } from '../utils/friendNum';
   import { createAPI, addAccessToken } from '../utils/request';
   import localEvent from '../stores/localStorage';
-  import { NOTICE, COMMENTINPUT, UPDATEFEED, USERS, CONFIRM } from '../stores/types';
+  import { NOTICE, COMMENTINPUT, UPDATEFEED, USERS, CONFIRM, CLOSECOMMENTINPUT } from '../stores/types';
   import { goTo, changeUrl } from '../utils/changeUrl';
   import ViewIcon from '../icons/View';
   import CommentIcon from '../icons/Comment';
@@ -109,6 +109,7 @@
   import { getUsersInfo, getUserInfo } from '../utils/user';
   import Comfirm from '../utils/Comfirm';
 
+
   const localUser = localEvent.getLocalItem('UserLoginInfo');
   const FeedTool = {
     components: {
@@ -120,7 +121,8 @@
     },
     props: [
       'feed',
-      'user'
+      'user',
+      'openInput'
     ],
     data: () => ({
       commentAbout: {
@@ -137,12 +139,15 @@
         let { [user_id]: { name = '' } = {} } = this.users;
         return name;
       },
-      handleCommentInput (open = true, reply_to_user_id = 0) {
-        this.commentAbout.show = open; // 展示或者隐藏输入框
-        if(open && reply_to_user_id) {
-          const reply_to_user = localEvent.getLocalItem(`user_${reply_to_user_id}`);
-          this.commentAbout.placeholder = `回复: ${reply_to_user.name}`;
+      handleCommentInput (open, reply_to_user_id = 0) {
+        if(open){
+          this.$store.dispatch(COMMENTINPUT, cb => {
+            cb(this.feed.feed.feed_id);
+          });
           this.commentAbout.reply_to_user_id = reply_to_user_id;
+        } else {
+          this.$store.dispatch(CLOSECOMMENTINPUT);
+          this.commentAbout.reply_to_user_id = 0;
         }
       },
       friendnum (num) { 
@@ -293,6 +298,15 @@
       users () {
         return this.$store.getters[USERS];
       },
+      openInputByVuex () {
+        if(this.openInput && this.commentAbout.reply_to_user_id) {
+          const reply_to_user = localEvent.getLocalItem(`user_${this.commentAbout.reply_to_user_id}`);
+          this.commentAbout.placeholder = `回复: ${reply_to_user.name}`;
+        } else {
+          this.commentAbout.placeholder = '随便说说';
+        }
+        return this.openInput;
+      }
     },
     created () {
       let user_ids_obj = {};
@@ -345,5 +359,14 @@
         }
       }
     }
+  }
+  .userName {
+    font-size: 13px;
+    color: #333;
+    border-bottom: none!important;
+  }
+  .commentContent{
+    font-size: 14px;
+    color: #999;
   }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.detail" :id="`feed-${feed.feed.feed_id}`">
+  <li :class="$style.detail" :id="`feed-${feed.feed.feed_id}`">
     <Row :gutter="16" :class="$style.userFeed">
       <Col span="3">
         <div class="grid-content bg-purple" style="line-height: 100%;">
@@ -14,7 +14,6 @@
         </div>
       </Col>
       <Col span="21">
-        <router-link style="display: flex; line-height: 100%; padding-bottom: 8px;" v-if="feed.feed.feed_title" :to="`/feed/${feed.feed.feed_id}`" class="feedTitle">{{ feed.feed.feed_title }}</router-link>
         <div :class="$style.content" @click="router(`/feed/${feed.feed.feed_id}`)">
           {{ feed.feed.feed_content }}
         </div>
@@ -24,22 +23,15 @@
       </Col>
     </Row>
     <Row :gutter="16" :class="$style.toolTop">
-      <Col span="3" :class="$style.seat">
-        1
-      </Col>
-      <Col span="21">
-        <FeedTool :feed="feed" :user="user" />
-      </Col>
-    </Row>
-    <Row v-if="feed.comments.length" :gutter="16">
-      <Col :class="$style.seat" span="3">
-        1
-      </Col>
-      <Col span="21" style="padding-bottom: 8px;">
-        <CommentsTool v-if="feed.comments" :feed="feed" />
+      <Col span="21" offset="3" style="padding-top: 3vw; padding-bottom: 3vw;">
+        <FeedTool 
+          :feed="feed" 
+          :user="user" 
+          :openInput="feed.feed.feed_id == commentFeed ? true : false"
+        />
       </Col>
     </Row>
-  </div>
+  </li>
 </template>
 
 <script>
@@ -53,6 +45,7 @@
   import timers from '../utils/timer';
   import router from '../routers/index';
   import lodash from 'lodash';
+  import { mapState } from 'vuex';
 
   const feedinfo = {
     props: [
@@ -80,7 +73,11 @@
       avatar () {
         const { avatar: { 30: avatar = '' } = {} } = this.user;
         return avatar;
-      }
+      },
+      // 检测动态展开输入框
+      ...mapState({
+        commentFeed: state => state.commentInput.commentFeed
+      })
     },
     created () {
       let localUser = localEvent.getLocalItem('user_' + this.feed.user_id);
@@ -112,11 +109,10 @@
     }
   }
   .toolTop {
-    margin-top: 5px;
-    border-top: 1px #e2e2e2 solid;
+    margin-top: 8px;
+    border-top: 1px #e2e3e3 solid;
     display: flex!important;
     align-items: center;
-    height: 45px!important;
   }
   .usernameLine {
     margin-bottom: 6px;
@@ -141,8 +137,5 @@
     text-align: right;
     color: #ccc;
     font-size: 12px;
-  }
-  .seat {
-    visibility: hidden;
   }
 </style>

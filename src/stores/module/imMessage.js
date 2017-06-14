@@ -2,8 +2,9 @@ import { TOTALMESSAGELISTS,  TOTALMESSAGELIST, SYNCIMMESSAGE, MESSAGELISTS, CLEA
 import localEvent from '../localStorage';
 import { getUserInfo } from '../../utils/user';
 import lodash from 'lodash';
-import { localDatabase } from '../../utils/localDatabase';
 
+// const currentUser = localEvent.getLocalItem('UserLoginInfo');
+const currentUser = window.TS_WEB.currentUserId;
 const state = {
 	messageLists: {}
 };
@@ -18,33 +19,66 @@ const mutations = {
 		}
 	},
 	// signal user chat
-	[TOTALMESSAGELIST] (state, list) {
+	[TOTALMESSAGELIST] (state, list) {		
+		console.log(list);
 		let oldState = state;
-		let time = !list[1].me ? list[1].mid / 8388608 + 1451577600000 : list[1].ext.time;
-		if(!lodash.keys(oldState.messageLists[`room_${list[1].cid}`]).length > 0) {
-			oldState.messageLists[`room_${list[1].cid}`]  = {};
-			let room = {};
-			let target_user_id = !list[1].me ? list[1].ext.to_uid : list[1].uid;
-			// hash = list[1].me ? list[1].ext.hash : list[1].hash;
-			room = {
-				name: list[1].name,
-				user_id: target_user_id,
-				cid: list[1].cid,
-				avatar: list[1].avatar,
-				lists: [],
-				count: !list[1].me ? 1 : 0
-			};
-			oldState.messageLists[`room_${list[1].cid}`] = { 
-				...oldState.messageLists[`room_${list[1].cid}`], 
-				...room
-			};
+		// let time = list.time;
+		let me = false;
+		if(list.uid === currentUser) me = true;
+		// 当前cid还不在会话列表中
+		if(!lodash.keys(oldState.messageLists[`room_${list.cid}`]).length > 0) {
+			oldState.messageLists[`room_${list.cid}`]  = {};
+			window.TS_WEB.dataBase.transaction('rw', window.TS_WEB.dataBase.userbase, () => {
+				let room = {};
+				window.TS_WEB.dataBase.userbase.where('user_id').equals(list.uid).first( item => {
+					if(!lodash.keys(item).length) {
+						getUserInfo(list.uid).then( user => {
+							room = {
+								name: user.name,
+								user_id: list.uid,
+								avatar: user.avatar[30],
+								lists: [],
+								count: 0,
+								cid: list.cid
+							}
+							oldState.messageLists[`room_${list.cid}`] = { 
+								...oldState.messageLists[`room_${list.cid}`], 
+								...room
+							};
+							if(!me) oldState.messageLists[`room_${list.cid}`].count += 1;
+							let newList = { txt: list.txt, user_id: list.uid, time: list.time };
+							oldState.messageLists[`room_${list.cid}`].lists = [ ...oldState.messageLists[`room_${list.cid}`].lists, newList ];
+							state.messageLists = { ...state.messageLists, ...oldState.messageLists };
+						});
+					} else {
+						room = {
+							name: item.name,
+							user_id: list.uid,
+							avatar: item.avatar[30],
+							lists: [],
+							count: 0,
+							cid: list.cid
+						}
+						oldState.messageLists[`room_${list.cid}`] = { 
+							...oldState.messageLists[`room_${list.cid}`], 
+							...room
+						};
+						if(!me) oldState.messageLists[`room_${list.cid}`].count += 1;
+						let newList = { txt: list.txt, user_id: list.uid, time: list.time };
+						oldState.messageLists[`room_${list.cid}`].lists = [ ...oldState.messageLists[`room_${list.cid}`].lists, newList ];
+						state.messageLists = { ...state.messageLists, ...oldState.messageLists };
+					}
+				})
+			})
+			.catch( e => {
+				console.log(e);
+			});
 		} else {
-			if(!list[1].me) oldState.messageLists[`room_${list[1].cid}`].count += 1;
-			// hash = list[1].ext.hash;
+			if(!me) oldState.messageLists[`room_${list.cid}`].count += 1;
+			let newList = { txt: list.txt, user_id: list.uid, time: list.time };
+			oldState.messageLists[`room_${list.cid}`].lists = [ ...oldState.messageLists[`room_${list.cid}`].lists, newList ];
+			state.messageLists = { ...state.messageLists, ...oldState.messageLists };
 		}
-		let newList = { txt: list[1].txt, user_id: list[1].uid, time };
-		oldState.messageLists[`room_${list[1].cid}`].lists = [ ...oldState.messageLists[`room_${list[1].cid}`].lists, newList ];
-		state.messageLists = { ...state.messageLists, ...oldState.messageLists };
 	},
 	// 通过接口增加聊天对话
 	[MESSAGELISTS] (state, list) {

@@ -63,59 +63,117 @@ function onMessage (message) {
 	let msg = message;
 	let messagetype = msg.data.substr(0, 1); // 获取消息第一位判断消息类型
 	let data = JSON.parse(msg.data.substr(1)); // 数据转换
-	// console.log(data);
 	if(messagetype == 3) {
 		let user = localEvent.getLocalItem(`user_${currentUser.user_id}`);
 		if(data[0] === 'convr.msg.sync' && data[1].length) {
-			// data[1] = data[1].reverse();
 			data[1].forEach( (value, index) => {
-				let newData = ['convr.msg'];
-				let formateData = {
-					cid: value.cid,
-					ext: {
-						hash: value.ext.hash,
-						time: value.ext.time,
-						to_uid: value.ext.to_uid
-					},
-					mid: value.mid,
-					name: '',
-					seq: value.seq,
-					txt: value.txt,
-					type: value.type,
-					uid: value.uid
-				};
-				newData.push(formateData);
-				app.$store.dispatch(TOTALMESSAGELIST, cb => {
-					cb(newData);
-				});
-				if(index == (data[1].length - 1)) {
-					localEvent.setLocalItem(`room_${data[1][data[1].length - 1].cid}_last_message`, newData);
+				if(value.uid !== currentUser.user_id) { // 非自己发送的消息
+					let user = localEvent.getLocalItem(`user_${value.uid}`);
+					if(!lodash.keys(user).length) {
+						getUserInfo(value.uid, 30).then( u => {
+							value.avatar = u.avatar[30];
+							value.name = u.name;
+							// app.$store.dispatch(TOTALMESSAGELIST, cb => {
+							// 	cb([
+							// 		'syncMessage',
+							// 		value
+							// 		]);
+							// });
+						});
+					} else {
+						value.avatar = user.avatar[30];
+						value.name = user.name;
+						// app.$store.dispatch(TOTALMESSAGELIST, cb => {
+						// 	cb([
+						// 		'syncMessage',
+						// 		value
+						// 		]);
+						// });
+					}
+					if(index == (data[1].length - 1)) {
+						localEvent.setLocalItem(`room_${value.cid}_lastseq`, value.seq);
+					}
+				} else { // 我的消息
+					let user = localEvent.getLocalItem(`user_${currentUser.user_id}`);
+					if(!lodash.keys(user).length) {
+						getUserInfo(currentUser.user_id, 30).then( u => {
+							value.avatar = u.avatar[30];
+							value.name = u.name;
+							value.me = true;
+							// app.$store.dispatch(TOTALMESSAGELIST, cb => {
+							// 	cb([
+							// 		'syncMessage',
+							// 		value
+							// 		]);
+							// });
+						});
+					} else {
+						value.avatar = user.avatar[30];
+						value.name = user.name;
+						value.me = true;
+						// app.$store.dispatch(TOTALMESSAGELIST, cb => {
+						// 	cb([
+						// 		'syncMessage',
+						// 		value
+						// 		]);
+						// });
+					}
 				}
+			});
+		}
+
+		// 登录后同步最近10条消息的操作
+		if(data[0] === 'auth' && data[1].seqs.length) {
+			data[1].seqs.forEach( seq => {
+				let msg = '2';
+				let message = [
+					'convr.msg.sync',
+					{
+				    "cid": parseInt(seq.cid),
+				    "limit": 10,
+				    "order": 1 // 倒序获取最新10条消息
+					}
+				];
+				msg += JSON.stringify(message);
+				TS_WEB.webSocket.send(msg);
+			});
+		}
+
+		if(data[0] === 'convr.msg') {
+			let dbData = {
+				seq: data[1].seq,
+				mid: data[1].mid,
+				time: data[1].mid / 8388608 + 1451577600000
+			};
+			window.TS_WEB.dataBase.transaction('rw', window.TS_WEB.dataBase.messagebase, () => {
+				window.TS_WEB.dataBase.messagebase.where('hash').equals(data[2]).modify(dbData);
+				window.TS_WEB.dataBase.messagebase.where('hash').equals(data[2]).first().then( results => {
+					app.$store.dispatch(TOTALMESSAGELIST, cb => {
+						cb(results);
+					});
+				});
+			})
+			.catch (window.TS_WEB.dataBase.ModifyError, function (e) {
+
+		    // ModifyError did occur
+		    console.error(e.failures.length + " items failed to modify");
+
+			}).catch (function (e) {
+		    console.error("Generic error: " + e);
 			});
 		}
 	}
 	if( messagetype == 2) {
-		if(currentUser.user_id != data[1].uid) {
-			let user = localEvent.getLocalItem(`user_${data[1].uid}`);
-			if(!lodash.keys(user).length > 0) {
-				getUserInfo(data[1].uid, 30).then( u => {
-					data[1].avatar = u.avatar[30];
-					data[1].name = u.name;
-					app.$store.dispatch(TOTALMESSAGELIST, cb => {
-						cb(data);
-					});
-					localEvent.setLocalItem(`room_${data[1].cid}_last_message`, data);
-				});
-			} else {
-				data[1].avatar = user.avatar[30];
-				data[1].name = user.name;
-				// console.log(data);
-				app.$store.dispatch(TOTALMESSAGELIST, cb => {
-					cb(data);
-				});
-				localEvent.setLocalItem(`room_${data[1].cid}_last_message`, data);
-			}
-		}
+		let dbMsg = data[1];
+		delete dbMsg.type;
+		dbMsg.time = dbMsg.mid / 8388608 + 1451577600000;
+		dbMsg.hash = '';
+		window.TS_WEB.dataBase.transaction('rw', window.TS_WEB.dataBase.messagebase, () => {
+			window.TS_WEB.dataBase.messagebase.add(dbMsg);
+		});
+		app.$store.dispatch(TOTALMESSAGELIST, cb => {
+			cb(dbMsg);
+		});
 	}
 };
 

@@ -79,7 +79,7 @@
   import errorCodes from '../stores/errorCodes';
   import localEvent from '../stores/localStorage';
   import { followingUser, unFollowingUser } from '../utils/user';
-  import { NOTICE, FEEDSLIST, USERFEEDS, APPENDUSERFEED, CLEANUSERFEEDS, DATES, GETUSERFEEDS } from '../stores/types';
+  import { NOTICE, FEEDSLIST, USERFEEDS, APPENDUSERFEED, CLEANUSERFEEDS, DATES, GETUSERFEEDS, MESSAGELISTS } from '../stores/types';
   import getImg from '../utils/getImage';
   import { friendNum } from '../utils/friendNum';
   import timers from '../utils/timer';
@@ -147,6 +147,30 @@
           } else {
             uid = uids[0];
           }
+          window.TS_WEB.dataBase.transaction('rw', window.TS_WEB.dataBase.chatroom, () => {
+            window.TS_WEB.dataBase.chatroom.where('cid').equals(data.cid).count( count => {
+              if(!count) {
+                window.TS_WEB.dataBase.chatroom.add({
+                  cid: data.cid,
+                  user_id: data.user_id,
+                  name: data.name,
+                  pwd: data.pwd,
+                  uids: data.uids,
+                  type: data.type,
+                  last_message_time: 0
+                });
+              }
+            })
+          });
+          this.$store.dispatch(MESSAGELISTS, cb => {
+            cb({
+              name: this.userInfo.name,
+              avatar: this.userInfo.avatar[30],
+              lists: [],
+              cid: data.cid,
+              user_id: this.currentUser
+            });
+          });
           this.$router.push(`/users/message/${uid}/${data.cid}`);
         })
         .catch( error => {

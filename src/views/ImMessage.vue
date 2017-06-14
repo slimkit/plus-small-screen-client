@@ -89,10 +89,9 @@
 				let message = [
 					'convr.msg',
 					{
-				    "cid": parseInt(this.cid), // 对话id
+				    "cid": this.cid, // 对话id
 				    "type": 0, // 消息的类型，私密消息
 				    "txt": this.message.content, // 消息的文本内容，字符串，可选，默认空字符串
-				    "ext": { to_uid: parseInt(this.user_id), hash, time }, // 消息的扩展，可以是字符串、集合、键值对，可选，默认空字符串
 				    "rt": false, // 非实时消息
 					},
 					hash
@@ -109,16 +108,6 @@
 					})
 					return false;
 				}
-				let messageData = {
-					cid: this.cid,
-					uid: this.currentUser,
-					ext: { to_uid: parseInt(this.user_id), hash, time},
-					txt: this.message.content,
-					me: true,
-					hash,
-					avatar: this.targetUser.avatar[30],
-					name: this.targetUser.name
-				};
 				if(TS_WEB.webSocket.readyState != 1) {
 					connect();
 					setTimeout(() => {
@@ -128,13 +117,21 @@
 					}, 1000);
 				} else {
 					TS_WEB.webSocket.send(msg);
-					this.$store.dispatch(TOTALMESSAGELIST, cb => {
-						cb([
-							'localmessage',
-							messageData
-						]);
+					let dbMsg = {
+							cid: this.cid,
+							uid: this.currentUser,
+							txt: this.message.content,
+							hash,
+							mid: 0,
+							seq: -1,
+							time: 0
+						};
+					window.TS_WEB.dataBase.transaction('rw', window.TS_WEB.dataBase.messagebase, () => {
+						window.TS_WEB.dataBase.messagebase.add(dbMsg);
+					})
+					.catch (function (e) {
+				    console.error("Generic error: " + e);
 					});
-					localEvent.setLocalItem(`room_${this.cid}_last_message`, messageData);
 					this.message.content = '';
 				}
 			}
@@ -179,7 +176,7 @@
 		created () {
 			// target user_id 
 			let targetUserId = this.user_id = this.$route.params.user_id;
-			this.cid = this.$route.params.cid;
+			this.cid = parseInt(this.$route.params.cid);
 			if(!targetUserId) {
 				this.$store.dispatch(NOTICE, cb => {
 					cb({

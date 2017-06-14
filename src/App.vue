@@ -5,7 +5,6 @@
     <NoticeText/>
     <IviewSwiper/>
     <PostFeed/>
-    <CommentInput/>
     <Confirm />
     {{ imStatus }}
   </div>
@@ -50,45 +49,44 @@
       }
     },
     created() {
-      // 初始化本地数据库
-      const TsDatabase = new Dexie("ThinkSNS+");
-      TsDatabase.open().then( db => {
-        console.log("Found database: " + db.name);
-        console.log ("Database version: " + db.verno);
-        db.tables.forEach(function (table) {
-          console.log ("Found table: " + table.name);
-          console.log ("Table Schema: " +
-              JSON.stringify(table.schema, null, 4));
-          }
-        );
-      })
-      .catch('NoSuchDatabaseError', function(e) {
-        // Database with that name did not exist
-        console.log ("Database not found");
-      }).catch(function (e) {
-        console.log ("Oh uh: " + e);
+      let db = new Dexie('ThinkSNS');
+      db
+      .version(1)
+      .stores({
+        // 用户
+        userbase: "++, &user_id, name, counts, datas, avatar",
+        // 动态
+        feedbase: "++, user_id, storages, &feed_id, feed_content, feed_from, created_at, feed_comment_count, feed_digg_count, feed_view_count",
+        // 评论
+        commentsbase: "++, comment_content, created_at, &id, reply_to_user_id, user_id, source_id",
+        // ImMessage
+        messagebase: "++, txt, cid, uid, hash, mid, seq, time",
+        // chatroom
+        chatroom: "++, cid, user_id, name, pwd, type, uids, last_message_time, owner, [cid+owner]",
+        // 被关注 uid 主用户id， followed 为1表示uuid关注uid， following为1 表示uid关注uuid [uid+uuid]组合查询组件
+        relationship: '++, uid, uuid, followed, following, [uid+uuid]',
       });
-
-      //
+      window.TS_WEB.dataBase = db;
       if(TS_WEB.loaded) return;
       let currentUser = localEvent.getLocalItem('UserLoginInfo');
 
       if(lodash.keys(currentUser).length > 0) {
         window.TS_WEB.currentUserId = currentUser.user_id;
         // 提交用户到vuex
-        let userInfo = localEvent.getLocalItem(`user_${currentUser.user_id}`);
-        if(!lodash.keys(userInfo).length > 0) {
-          getUserInfo(currentUser.user_id, 30).then(user => {
-            localEvent.setLocalItem(`user_${data.user_id}`, user);
+        // let userInfo = localEvent.getLocalItem(`user_${currentUser.user_id}`);
+        window.TS_WEB.dataBase.userbase.where('user_id').equals(currentUser.user_id).first().then( user => {
+          if(!lodash.keys(user).length > 0) {
+            getUserInfo(currentUser.user_id, 30).then( serverUser => {
+              this.$store.dispatch(USERS_APPEND, cb =>{
+                cb(serverUser)
+              });
+            });
+          } else {
             this.$store.dispatch(USERS_APPEND, cb =>{
               cb(user)
             });
-          });
-        } else {
-          this.$store.dispatch(USERS_APPEND, cb =>{
-            cb(userInfo)
-          });
-        }
+          }
+        });
         // 设置消息提示查询时间
         let time = 0;
         time = localEvent.getLocalItem('messageFlushTime');
@@ -137,33 +135,17 @@
           if(data.status || data.code === 0 ) {
             if(!data.data.length) return;
             data.data.forEach( list => {
-              lists[`room_${list.cid}`] = {};
-              let li = {};
-              let uids = list.uids.split(',');
-              let user_id = 0;
-              if(uids[0] == currentUser.user_id) {
-                user_id = uids[1];
-              } else {
-                user_id = uids[0];
-              }
-              let lastMessage = localEvent.getLocalItem(`room_${list.cid}_last_message`);
-              let messageList = [];
-              let messageBody = {};;
-              if(lastMessage.length) {
-                messageBody.user_id = lastMessage[1].uid;
-                messageBody.txt = lastMessage[1].txt;
-                messageBody.time = lastMessage[1].ext.time;
-                messageList.push(messageBody);
-              }
-              getUserInfo(user_id, 30).then( user => {
-                li.name = user.name;
-                li.avatar = user.avatar[30];
-                li.lists = messageList;
-                li.cid = list.cid;
-                li.user_id = user_id;
-                this.$store.dispatch(MESSAGELISTS, cb => {
-                  cb(li);
-                });
+              window.TS_WEB.dataBase.transaction('rw', window.TS_WEB.dataBase.chatroom, () => {
+                window.TS_WEB.dataBase.chatroom.where('[cid+owner]').equals([list.cid, window.TS_WEB.currentUserId ]).count( number => {
+                  if(!number > 0) {
+                    list.last_message_time = 0;
+                    list.owner = window.TS_WEB.currentUserId;
+                    window.TS_WEB.dataBase.chatroom.add(list);
+                  }
+                })
+              })
+              .catch(e => {
+                console.log(e);
               });
             });
           }

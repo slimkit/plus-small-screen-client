@@ -64,7 +64,6 @@
     },
     computed: {
       nothing () {
-        return false;
         return defaultNothing;
       }
     },

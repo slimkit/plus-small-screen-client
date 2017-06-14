@@ -75,6 +75,7 @@ function getAvatar (userInfo, process, cb) {
 };
 
 function getUserInfo (user_id, process = 30) {
+  const db = window.TS_WEB.dataBase;
   return new Promise( (resolve, reject) => {
     addAccessToken().post(createAPI('users'), {
         user_ids: [ user_id ]
@@ -99,6 +100,24 @@ function getUserInfo (user_id, process = 30) {
       userLocal.phone = user.phone;
       userLocal.is_followed = user.is_followed ? 1 : 0;
       userLocal.is_following = user.is_following ? 1 : 0;
+      if(user.id !== TS_WEB.currentUserId) {
+        // 关注和相互关注状态
+        db.transaction('rw', db.relationship, () => {
+          db.relationship.where('[uid+uuid]').equals([window.TS_WEB.currentUserId, user.id]).delete().then( item => {
+            console.log(item);
+            db.relationship.add({
+              uid: window.TS_WEB.currentUserId,
+              uuid: user.id,
+              followed: user.is_followed ? 1 : 0,
+              following: user.is_following ? 1 : 0
+            })
+          });
+        })
+        .catch( e => {
+          // console.log(TS_WEB.currentUserId, user.id);
+          // console.log(e);
+        });
+      }
       user.counts.map(function (count, index) {
         let keyName = count.key;
         let value = parseInt(count.value);
@@ -115,10 +134,28 @@ function getUserInfo (user_id, process = 30) {
         };
       });
       userLocal.datas = newData;
+      let dataForBase = {};
       getAvatar(userLocal, process, newUserLocal => {
         userLocal = newUserLocal;
+        dataForBase = newUserLocal;
       });
       localEvent.setLocalItem('user_' + user_id, userLocal);
+
+      delete dataForBase.is_following;
+      delete dataForBase.is_followed;
+      // 删除旧用户，写入新用户
+      db.transaction('rw', db.userbase, () => {
+        db.userbase.where('user_id').equals(dataForBase.user_id).delete().then( () => {
+          db.userbase.add(
+            dataForBase
+          )
+        });
+          
+      })
+      .then()
+      .catch( err => {
+        console.log(err.stack || err);
+      });
       resolve(userLocal);
     })
   })
@@ -187,6 +224,22 @@ function getUsersInfo (user_ids, cb) {
             current_local_user = newUserLocal;
           });
           localEvent.setLocalItem('user_' + current_local_user.user_id, current_local_user);
+          let db = window.TS_WEB.dataBase;
+          let dataForBase = current_local_user;
+          delete dataForBase.is_followed;
+          delete dataForBase.is_following;
+          // 删除旧用户，写入新用户
+          // db.transaction('rw', db.userbase, () => {
+          //   db.userbase.where('user_id').equals(dataForBase.user_id).delete().then(user => {
+          //     db.userbase.add(
+          //       dataForBase
+          //     )
+          //   })
+          //   .then()
+          //   .catch( err => {
+          //     console.log(err.stack || err);
+          //   });
+          // });
           users[user.id] = current_local_user;
         });
         resolve(users);
