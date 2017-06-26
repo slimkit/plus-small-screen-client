@@ -31,7 +31,7 @@
             <h3 v-if="detail.title" style="text-align: center; padding: 15px 8px 8px 8px; font-weight: 400; color: #59b6d7">{{ detail.title }}</h3>
             <div>
               <section 
-                :class="{ feedContainerContentText: imagesList.length, feedContainerContentTextNoPadding: !imagesList.length }"
+                class="feedContainerContentTextNoPadding"
                 v-html="detail.content"
               >
               </section>
@@ -291,22 +291,22 @@
         return this.timers(this.detail.created_at, 8, false);
       },
       // 计算图片跳转地址
-      imagesList () {
-        let urlList = [];
-        if(!this.detail.storage.length > 0) {
-          return [];
-        }
-        this.detail.storage.forEach((value) => {
-          urlList.push(
-            {
-              url: getImg(value.storage_id, 99),
-              width: window.innerWidth,
-              height: window.innerWidth * (value.height / value.width)
-            }
-          );
-        });
-        return urlList;
-      },
+      // imagesList () {
+      //   let urlList = [];
+      //   if(!this.detail.storage.length > 0) {
+      //     return [];
+      //   }
+      //   this.detail.storage.forEach((value) => {
+      //     urlList.push(
+      //       {
+      //         url: getImg(value.storage_id, 99),
+      //         width: window.innerWidth,
+      //         height: window.innerWidth * (value.height / value.width)
+      //       }
+      //     );
+      //   });
+      //   return urlList;
+      // },
       formateComments () {
         let formated = formateFeedComments(this.comments);
         this.max_id = formated.max_id;
