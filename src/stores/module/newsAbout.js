@@ -5,7 +5,8 @@ const state = {
     currentnewscateid: -1,
     searchKey: '',
     searchResult: [],
-    resultIds: []
+    resultIds: [],
+    storeSearched: false
   }
 };
 
@@ -16,6 +17,7 @@ const mutations = {
 
   [NEWSSEARCHKEY] (state, keyword) {
     state.newsAbout.searchKey = keyword;
+    state.newsAbout.storeSearched = true;
   },
 
   [NEWSSEARCHRESULT] (state, result) {
@@ -30,13 +32,14 @@ const mutations = {
     state.newsAbout.searchResult = [ result, ...state.newsAbout.searchResult ];
   },
   [RESULTIDS] (state, ids) {
-    state.newsAbout.resultIds = ids;
+    state.newsAbout.resultIds = [ ...ids ];
   },
 
   [RESETKEYWORD] (state) {
     state.newsAbout.searchResult = [];
     state.newsAbout.searchKey = '';
-    state.newsAbout.resultIds = []
+    state.newsAbout.resultIds = [];
+    state.newsAbout.storeSearched = false;
   }
 };
 
@@ -58,17 +61,27 @@ const actions = {
   },
   [APPENDNEWSTORESULT]: (context, cb) => {
     cb( result => {
-      context.commit(APPENDNEWSTORESULT, result);
+      if( context.state.newsAbout.searchResult.findIndex( item => {
+        return item.id === result.id;
+      }) === -1) {
+        context.commit(APPENDNEWSTORESULT, result);
+      }
     })
   },
   [PREPENDNEWSTORESULT]: (context, cb) => {
     cb( result => {
-      context.commit(PREPENDNEWSTORESULT, result);
+      if( context.state.newsAbout.searchResult.findIndex( item => {
+        return item.id === result.id;
+      }) === -1) {
+        context.commit(PREPENDNEWSTORESULT, result);
+      }
     })
   },
   [RESULTIDS]: (context, cb) => {
     cb( ids => {
-      context.commit(RESULTIDS, ids);
+      let newIds = context.state.newsAbout.resultIds.concat(ids);
+      newIds = Array.from(new Set(newIds));
+      context.commit(RESULTIDS, newIds);
     })
   },
   [RESETKEYWORD]: context => {

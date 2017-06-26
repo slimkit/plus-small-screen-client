@@ -19,11 +19,11 @@
       </Row>
     </header>
     <!--组件列表-->
-    <section v-if="!resultList.length && !searched"></section>
-    <section class="nothingDefault" v-if="nothing && searched"> 
+    <section v-if="!resultList.length && !storeSearched"></section>
+    <section class="nothingDefault" v-if="nothing && storeSearched"> 
       <img :src="nothing" />
     </section>
-    <section v-if="resultList.length && searched" :class="$style.newsIndexContainer">
+    <section v-if="resultList.length && storeSearched" :class="$style.newsIndexContainer">
       <section class="newsIndexContainerRecommend">
         
       </section>
@@ -40,7 +40,7 @@
           <ul :class="$style.newsLists">
             <li
               class="newsIndex-container-newslist"
-              v-for="(list, index) in resultList"
+              v-for="(list, index) in storeSearchResult"
               :key="index"
               :class="$style.new"
               @click="changeUrl(`/news/${list.id}/detail`)"
@@ -90,7 +90,7 @@
     created () {
       this.resultList = [ ...this.storeSearchResult ];
       this.keyword = this.storeKeyWord;
-      this.resultListIds = this.storeResultIds;
+      this.resultListIds = [ ...this.storeResultIds ];
     },
     components: {
       BackIcon,
@@ -105,7 +105,6 @@
       topAllLoaded: false,
       bottomStatus: '',
       topStatus: '',
-      searched: false
     }),
     methods: {
       changeUrl,
@@ -123,7 +122,6 @@
       },
       doSearch () {
         if(!this.keywordCount) return;
-        this.searched = true;
         addAccessToken().get(createAPI(`news/search?limit=15&key=${this.keyword}`),
           {},
           {
@@ -135,7 +133,9 @@
           if(response.data.data.length) {
             this.max_id = response.data.data[response.data.data.length - 1].id;
             response.data.data.forEach( news => {
-              this.resultListIds.push(news.id);
+              if(!this.resultListIds.includes(news.id)) {
+                this.resultListIds.push(news.id);
+              }
             });
           }
           this.$store.dispatch(NEWSSEARCHKEY, cb => {
@@ -154,7 +154,6 @@
           if(this.$refs.searchNewsLoadmore) {
             setTimeout( () => {
               this.$refs.searchNewsLoadmore.onTopLoaded();
-              this.$refs.searchNewsLoadmore.onBottomLoaded();
             }, 800)
           }
         });
@@ -243,7 +242,8 @@
       ...mapState({
         storeKeyWord: state => state.newsAbout.newsAbout.searchKey,
         storeSearchResult: state => state.newsAbout.newsAbout.searchResult,
-        storeResultIds: state => state.newsAbout.newsAbout.resultIds
+        storeResultIds: state => state.newsAbout.newsAbout.resultIds,
+        storeSearched: state => state.newsAbout.newsAbout.storeSearched
       })
     }
   };
