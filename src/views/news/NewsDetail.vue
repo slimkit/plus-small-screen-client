@@ -30,11 +30,6 @@
           <div class="feed-container-content feed-background-color">
             <h3 v-if="detail.title" style="text-align: center; padding: 15px 8px 8px 8px; font-weight: 400; color: #59b6d7">{{ detail.title }}</h3>
             <div>
-              <div v-if="imagesList.length" class="feed-container-content-images">
-                <div v-for="(item, index ) in imagesList" :key="index" :style="`height: ${item.height + 'px'}`">
-                  <img v-lazy="item.url" />
-                </div>
-              </div>
               <section 
                 :class="{ feedContainerContentText: imagesList.length, feedContainerContentTextNoPadding: !imagesList.length }"
                 v-html="detail.content"
