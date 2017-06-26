@@ -81,41 +81,52 @@ function onMessage (message) {
 								window.TS_WEB.dataBase.chatroom.where('[cid+owner]').equals([value.cid, window.TS_WEB.currentUserId]).modify({
 									last_message_time: value.time
 								});
-								getLocalDbUser(value.uid).then( item => {
-									if(item === undefined) {
-										getUserInfo(value.uid, 30).then( user => {
-											// 未读数
-											app.$store.dispatch(UNREAD, cb => {
-												cb({
-													cid: value.cid, 
-													uid: value.uid,
-													name: user.name,
-													avatar: user.avatar[30]
+								window.TS_WEB.dataBase.chatroom.where('[cid+owner]').equals([value.cid, window.TS_WEB.currentUserId]).first().then( items => {
+									if(items !== undefined) {
+										let uids = items.uids.split(',');
+		                let user_id = 0;
+		                if(uids[0] == window.TS_WEB.currentUserId) {
+		                  user_id = uids[1];
+		                } else {
+		                  user_id = uids[0];
+		                }
+		                getLocalDbUser(user_id).then( item => {
+											if(item === undefined) {
+												getUserInfo(user_id, 30).then( user => {
+													// 未读数
+													app.$store.dispatch(UNREAD, cb => {
+														cb({
+															cid: value.cid, 
+															uid: user_id,
+															name: user.name,
+															avatar: user.avatar[30]
+														});
+													})
+													.then ( () => {
+														app.$store.dispatch(TOTALMESSAGELIST, cb => {
+															cb(value);
+														});
+													});
+												})
+											} else {
+												// 未读数
+												app.$store.dispatch(UNREAD, cb => {
+													cb({
+														cid: value.cid, 
+														uid: user_id,
+														name: item.name,
+														avatar: item.avatar[30]
+													});
+												})
+												.then ( () => {
+													app.$store.dispatch(TOTALMESSAGELIST, cb => {
+														cb(value);
+													});
 												});
-											})
-											.then ( () => {
-												app.$store.dispatch(TOTALMESSAGELIST, cb => {
-													cb(value);
-												});
-											});
+											}
 										})
-									} else {
-										// 未读数
-										app.$store.dispatch(UNREAD, cb => {
-											cb({
-												cid: value.cid, 
-												uid: value.uid,
-												name: item.name,
-												avatar: item.avatar[30]
-											});
-										})
-										.then ( () => {
-											app.$store.dispatch(TOTALMESSAGELIST, cb => {
-												cb(value);
-											});
-										});
-									}
-								})
+		              }
+								});
 							} 
 						} else {
 							// 写入数据库
@@ -124,40 +135,51 @@ function onMessage (message) {
 							window.TS_WEB.dataBase.chatroom.where('[cid+owner]').equals([value.cid, window.TS_WEB.currentUserId]).modify({
 								last_message_time: value.time
 							});
-							// 未读数
-							getLocalDbUser(value.uid).then( item => {
-								if(item === undefined) {
-									getUserInfo(value.uid, 30).then( user => {
-										// 未读数
-										app.$store.dispatch(UNREAD, cb => {
-											cb({
-												cid: value.cid, 
-												uid: value.uid,
-												name: user.name,
-												avatar: user.avatar[30]
+							window.TS_WEB.dataBase.chatroom.where('[cid+owner]').equals([value.cid, window.TS_WEB.currentUserId]).first().then( items => {
+								if(item !== undefined) {
+									let uids = items.uids.split(',');
+	                let user_id = 0;
+	                if(uids[0] == window.TS_WEB.currentUserId) {
+	                  user_id = uids[1];
+	                } else {
+	                  user_id = uids[0];
+	                }
+	                // 未读数
+									getLocalDbUser(user_id).then( item => {
+										if(item === undefined) {
+											getUserInfo(user_id, 30).then( user => {
+												// 未读数
+												app.$store.dispatch(UNREAD, cb => {
+													cb({
+														cid: value.cid, 
+														uid: user_id,
+														name: user.name,
+														avatar: user.avatar[30]
+													});
+												})
+												.then ( () => {
+													app.$store.dispatch(TOTALMESSAGELIST, cb => {
+														cb(value);
+													});
+												});
+											})
+										} else {
+											// 未读数
+											app.$store.dispatch(UNREAD, cb => {
+												cb({
+													cid: value.cid, 
+													uid: user_id,
+													name: item.name,
+													avatar: item.avatar[30]
+												});
+											})
+											.then ( () => {
+												app.$store.dispatch(TOTALMESSAGELIST, cb => {
+													cb(value);
+												});
 											});
-										})
-										.then ( () => {
-											app.$store.dispatch(TOTALMESSAGELIST, cb => {
-												cb(value);
-											});
-										});
+										}
 									})
-								} else {
-									// 未读数
-									app.$store.dispatch(UNREAD, cb => {
-										cb({
-											cid: value.cid, 
-											uid: value.uid,
-											name: item.name,
-											avatar: item.avatar[30]
-										});
-									})
-									.then ( () => {
-										app.$store.dispatch(TOTALMESSAGELIST, cb => {
-											cb(value);
-										});
-									});
 								}
 							})
 						}

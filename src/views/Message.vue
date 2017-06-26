@@ -117,7 +117,7 @@
         let count = 0;
         if(uids.length) return 0;
         Array.from(new Set(uids)).forEach( (digg, index) => {
-          if(count == 3) return;
+          if(count > 3) return;
           window.TS_WEB.dataBase.transaction('rw?', window.TS_WEB.dataBase.userbase, () => {
             window.TS_WEB.dataBase.userbase.get({ user_id: parseInt(comment) }).then( item => {
               if(!lodash.keys(item).length > 0) {
@@ -148,7 +148,7 @@
         if(!uids.length) return 0;
         window.TS_WEB.dataBase.transaction('rw?', window.TS_WEB.dataBase.userbase, () => {
           Array.from(new Set(uids)).forEach((comment, index) => {
-            if(count == 3) return;
+            if(count > 3) return;
             window.TS_WEB.dataBase.userbase.get({ user_id: parseInt(comment) }).then( item => {
               if(!lodash.keys(item).length > 0) {
                 getUserInfo(comment, 30).then(user => {
