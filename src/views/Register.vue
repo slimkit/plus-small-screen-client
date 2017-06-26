@@ -276,10 +276,11 @@
           }
         )
         .then(response => {
+          let data = response.data.data;
           window.TS_WEB.currentUserId = data.user_id;
-          localEvent.setLocalItem('UserLoginInfo', response.data.data);
+          localEvent.setLocalItem('UserLoginInfo', data);
           this.isLoading = false;
-          getUserInfo(response.data.data.user_id, 30).then(user => {
+          getUserInfo(data.user_id, 30).then(user => {
             this.$store.dispatch(USERS_APPEND, cb =>{
               cb(user)
             });
