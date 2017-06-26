@@ -25,6 +25,9 @@ import ImMessage from '../views/ImMessage';
 import Relationship from '../views/Relationship';
 import NewsIndex from '../views/news/NewsIndex';
 import NewsDetail from '../views/news/NewsDetail';
+import NewsSearch from '../views/news/NewsSearch';
+import ChannelIndex from '../views/channel/ChannelIndex';
+import ChannelFeeds from '../views/channel/ChannelFeeds';
 
 const routes = [
   {
@@ -153,6 +156,30 @@ const routes = [
     name: 'newsDetail',
     meta: {
       title: '资讯详情'
+    }
+  },
+  {
+    path: '/news/search',
+    component: NewsSearch,
+    name: 'newsSearch',
+    meta: {
+      title: '资讯搜索'
+    }
+  },
+  {
+    path: '/channel',
+    component: ChannelIndex,
+    name: 'channelIndex',
+    meta: {
+      title: '频道'
+    }
+  },
+  {
+    path: '/channel/:id',
+    component: ChannelFeeds,
+    name: 'channelDetail',
+    meta: {
+      title: '频道列表'
     }
   },
   {

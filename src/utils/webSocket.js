@@ -1,9 +1,9 @@
-import { TOTALMESSAGELISTS, TOTALMESSAGELIST, SYNCIMMESSAGE, IMSTATUS } from '../stores/types';
+import { TOTALMESSAGELIST, IMSTATUS, UNREAD } from '../stores/types';
 import { app } from '../index';
 import { getImMessageItem } from './localDatabase';
 import localEvent from '../stores/localStorage';
 import lodash from 'lodash';
-import { getUserInfo } from './user';
+import { getUserInfo, getLocalDbUser } from './user';
 import { addAccessToken, createAPI } from './request';
 
 const url = window.TS_WEB.socketUrl;
@@ -63,62 +63,109 @@ function onMessage (message) {
 	let msg = message;
 	let messagetype = msg.data.substr(0, 1); // 获取消息第一位判断消息类型
 	let data = JSON.parse(msg.data.substr(1)); // 数据转换
+
+	// 同步之前的消息
 	if(messagetype == 3) {
-		let user = localEvent.getLocalItem(`user_${currentUser.user_id}`);
 		if(data[0] === 'convr.msg.sync' && data[1].length) {
 			data[1].forEach( (value, index) => {
-				if(value.uid !== currentUser.user_id) { // 非自己发送的消息
-					let user = localEvent.getLocalItem(`user_${value.uid}`);
-					if(!lodash.keys(user).length) {
-						getUserInfo(value.uid, 30).then( u => {
-							value.avatar = u.avatar[30];
-							value.name = u.name;
-							// app.$store.dispatch(TOTALMESSAGELIST, cb => {
-							// 	cb([
-							// 		'syncMessage',
-							// 		value
-							// 		]);
-							// });
-						});
-					} else {
-						value.avatar = user.avatar[30];
-						value.name = user.name;
-						// app.$store.dispatch(TOTALMESSAGELIST, cb => {
-						// 	cb([
-						// 		'syncMessage',
-						// 		value
-						// 		]);
-						// });
-					}
-					if(index == (data[1].length - 1)) {
-						localEvent.setLocalItem(`room_${value.cid}_lastseq`, value.seq);
-					}
-				} else { // 我的消息
-					let user = localEvent.getLocalItem(`user_${currentUser.user_id}`);
-					if(!lodash.keys(user).length) {
-						getUserInfo(currentUser.user_id, 30).then( u => {
-							value.avatar = u.avatar[30];
-							value.name = u.name;
-							value.me = true;
-							// app.$store.dispatch(TOTALMESSAGELIST, cb => {
-							// 	cb([
-							// 		'syncMessage',
-							// 		value
-							// 		]);
-							// });
-						});
-					} else {
-						value.avatar = user.avatar[30];
-						value.name = user.name;
-						value.me = true;
-						// app.$store.dispatch(TOTALMESSAGELIST, cb => {
-						// 	cb([
-						// 		'syncMessage',
-						// 		value
-						// 		]);
-						// });
-					}
-				}
+				value.time = value.mid / 8388608 + 1451577600000;
+				value.owner = window.TS_WEB.currentUserId;
+				// 对比本地存储的会话，写入新会话
+				window.TS_WEB.dataBase.transaction('rw?', window.TS_WEB.dataBase.messagebase, window.TS_WEB.dataBase.chatroom, () => {
+					window.TS_WEB.dataBase.messagebase.where('[cid+owner]').equals([value.cid, window.TS_WEB.currentUserId]).last( item => {
+						if(lodash.keys(item).length) {
+							if( value.seq > item.seq) {
+								// 写入数据库
+								window.TS_WEB.dataBase.messagebase.put(value);
+								// 修改房间最后通话时间
+								window.TS_WEB.dataBase.chatroom.where('[cid+owner]').equals([value.cid, window.TS_WEB.currentUserId]).modify({
+									last_message_time: value.time
+								});
+								getLocalDbUser(value.uid).then( item => {
+									if(item === undefined) {
+										getUserInfo(value.uid, 30).then( user => {
+											// 未读数
+											app.$store.dispatch(UNREAD, cb => {
+												cb({
+													cid: value.cid, 
+													uid: value.uid,
+													name: user.name,
+													avatar: user.avatar[30]
+												});
+											})
+											.then ( () => {
+												app.$store.dispatch(TOTALMESSAGELIST, cb => {
+													cb(value);
+												});
+											});
+										})
+									} else {
+										// 未读数
+										app.$store.dispatch(UNREAD, cb => {
+											cb({
+												cid: value.cid, 
+												uid: value.uid,
+												name: item.name,
+												avatar: item.avatar[30]
+											});
+										})
+										.then ( () => {
+											app.$store.dispatch(TOTALMESSAGELIST, cb => {
+												cb(value);
+											});
+										});
+									}
+								})
+							} 
+						} else {
+							// 写入数据库
+							window.TS_WEB.dataBase.messagebase.put(value);
+							// 更新时间
+							window.TS_WEB.dataBase.chatroom.where('[cid+owner]').equals([value.cid, window.TS_WEB.currentUserId]).modify({
+								last_message_time: value.time
+							});
+							// 未读数
+							getLocalDbUser(value.uid).then( item => {
+								if(item === undefined) {
+									getUserInfo(value.uid, 30).then( user => {
+										// 未读数
+										app.$store.dispatch(UNREAD, cb => {
+											cb({
+												cid: value.cid, 
+												uid: value.uid,
+												name: user.name,
+												avatar: user.avatar[30]
+											});
+										})
+										.then ( () => {
+											app.$store.dispatch(TOTALMESSAGELIST, cb => {
+												cb(value);
+											});
+										});
+									})
+								} else {
+									// 未读数
+									app.$store.dispatch(UNREAD, cb => {
+										cb({
+											cid: value.cid, 
+											uid: value.uid,
+											name: item.name,
+											avatar: item.avatar[30]
+										});
+									})
+									.then ( () => {
+										app.$store.dispatch(TOTALMESSAGELIST, cb => {
+											cb(value);
+										});
+									});
+								}
+							})
+						}
+					});
+				})
+				.catch( e => {
+					console.log(e);
+				})
 			});
 		}
 
@@ -143,21 +190,26 @@ function onMessage (message) {
 			let dbData = {
 				seq: data[1].seq,
 				mid: data[1].mid,
-				time: data[1].mid / 8388608 + 1451577600000
+				time: data[1].mid / 8388608 + 1451577600000,
+				owner: window.TS_WEB.currentUserId
 			};
-			window.TS_WEB.dataBase.transaction('rw', window.TS_WEB.dataBase.messagebase, () => {
+			window.TS_WEB.dataBase.transaction('rw?', window.TS_WEB.dataBase.messagebase, window.TS_WEB.dataBase.chatroom, () => {
+				// 修改本地消息
 				window.TS_WEB.dataBase.messagebase.where('hash').equals(data[2]).modify(dbData);
 				window.TS_WEB.dataBase.messagebase.where('hash').equals(data[2]).first().then( results => {
+					// 提交到vuex
 					app.$store.dispatch(TOTALMESSAGELIST, cb => {
 						cb(results);
+					});
+					// 更改房间的最后消息时间
+					window.TS_WEB.dataBase.chatroom.where('[cid+owner]').equals([results.cid, window.TS_WEB.currentUserId]).modify({
+						last_message_time: results.time
 					});
 				});
 			})
 			.catch (window.TS_WEB.dataBase.ModifyError, function (e) {
-
 		    // ModifyError did occur
 		    console.error(e.failures.length + " items failed to modify");
-
 			}).catch (function (e) {
 		    console.error("Generic error: " + e);
 			});
@@ -168,12 +220,50 @@ function onMessage (message) {
 		delete dbMsg.type;
 		dbMsg.time = dbMsg.mid / 8388608 + 1451577600000;
 		dbMsg.hash = '';
-		window.TS_WEB.dataBase.transaction('rw', window.TS_WEB.dataBase.messagebase, () => {
-			window.TS_WEB.dataBase.messagebase.add(dbMsg);
+		dbMsg.owner = window.TS_WEB.currentUserId;
+		dbMsg.addCount = true;
+		window.TS_WEB.dataBase.transaction('rw?', window.TS_WEB.dataBase.messagebase, window.TS_WEB.dataBase.chatroom, () => {
+			// 消息放入本地
+			window.TS_WEB.dataBase.messagebase.put(dbMsg);
+			// 修改房间最后消息时间
+			window.TS_WEB.dataBase.chatroom.where('[cid+owner]').equals([dbMsg.cid, dbMsg.owner]).modify({
+				last_message_time: dbMsg.time
+			})
 		});
-		app.$store.dispatch(TOTALMESSAGELIST, cb => {
-			cb(dbMsg);
-		});
+		// 提交到vuex
+		getLocalDbUser(dbMsg.uid).then( item => {
+			if(item !== undefined) {
+				app.$store.dispatch(UNREAD, cb => {
+					cb({
+						cid: dbMsg.cid, 
+						uid: dbMsg.uid,
+						name: item.name,
+						avatar: item.avatar[30]
+					});
+				})
+				.then ( () => {
+					app.$store.dispatch(TOTALMESSAGELIST, cb => {
+						cb(dbMsg);
+					});
+				})
+			} else {
+				getUserInfo(dbMsg.uid, 30).then(user => {
+					app.$store.dispatch(UNREAD, cb => {
+						cb({
+							cid: dbMsg.cid, 
+							uid: dbMsg.uid,
+							name: user.name,
+							avatar: user.avatar[30]
+						});
+					})
+					.then ( () => {
+						app.$store.dispatch(TOTALMESSAGELIST, cb => {
+							cb(dbMsg);
+						});
+					})
+				});
+			}
+		})
 	}
 };
 
@@ -192,7 +282,6 @@ function onClose (evt) {
 
 // 开启事件
 function onOpen (evt) {
-	// window.TS_WEB.webSocket.send('2["convr.get"]');
 	app.$store.dispatch(IMSTATUS, cb => {
 		cb({
 			open: true

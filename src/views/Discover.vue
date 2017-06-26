@@ -19,7 +19,7 @@
       <ul class="component-lists">
         <li class="component-list" @click="changeUrl(`/news`)">
           <i class="component-icon">
-            <BackIcon height="21" width="21" color="#666" />
+            <NewsIcon height="21" width="21" />
           </i>
           <section class="component-title">
             资讯
@@ -28,9 +28,9 @@
             <RightArrowIcon height="18" width="18" color="#999" />
           </i>
         </li>
-        <li class="component-list">
+        <li class="component-list" @click="changeUrl(`/channel`)">
           <i class="component-icon">
-            <BackIcon height="21" width="21" color="#666" />
+            <ChannelIcon height="21" width="21" />
           </i>
           <section class="component-title">
             频道
@@ -49,6 +49,8 @@
   import { goTo, changeUrl } from '../utils/changeUrl';
   import ToolBar from '../components/ToolBar';
   import BackIcon from '../icons/Back';
+  import NewsIcon from '../icons/News';
+  import ChannelIcon from '../icons/Channel';
   import RightArrowIcon from '../icons/RightArrow';
   import { resolveImage } from '../utils/resource';
   const defaultNothing = resolveImage(require('../statics/images/defaultNothingx2.png'));
@@ -60,10 +62,13 @@
     components: {
       BackIcon,
       ToolBar,
-      RightArrowIcon
+      RightArrowIcon,
+      NewsIcon,
+      ChannelIcon
     },
     computed: {
       nothing () {
+        return false;
         return defaultNothing;
       }
     },

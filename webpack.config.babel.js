@@ -157,7 +157,7 @@ const webpackConfig = {
         }
       },
       {
-        test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
+        test: /\.(woff2?|eot|ttf|otf|woff)(\?.*)?$/,
         loader: 'url-loader',
         query: {
           limit: 10000,

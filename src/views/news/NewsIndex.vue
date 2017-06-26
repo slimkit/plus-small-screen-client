@@ -1,52 +1,137 @@
 <template>
-  <div class="newsIndex">
-    <header class="commonHeader" v-if="!isWeiXin">
-      <Row :gutter="24">
+  <div :class="$style.newsIndex">
+    <div id="spinner" v-show="showSpinner">
+      <div id="spinner-parent">
+        <div class="spinner-double-bounce-bounce2"></div>
+        <div class="spinner-double-bounce-bounce1"></div>
+      </div>
+    </div>
+    <header class="commonHeader">
+      <Row :gutter="24" style="height: 46px; border-bottom: 1px solid #e2e3e3;">
         <Col span="5">
           <BackIcon width="21" height="21" color="#999"  @click.native="goTo(-1)"/>
         </Col>
         <Col span="14" class="title-col">
           资讯
         </Col>
-        <Col span="5" class="header-end-col">
-          搜索
+        <Col span="5" class="header-end-col" @click.native="changeUrl('/news/search')">
+          <SearchIcon height="21" width="21" color="#999" />
         </Col>
       </Row>
-    </header>
-    <nav class="newsIndex-nav">
-      <ul>
-        <li :class="{ actived: currentCateId == 0 }" @click="handleCateId(-1)">
-          <span>推荐</span>
-        </li>
-        <li 
-          @click="handleCateId(cate.id)" 
-          v-for="(cate, index) in myCates" 
-          :key="index"
-          :class="{ actived: currentCateId == cate.id }"
-        >
-          <span>
-          {{ cate.name }}
-          </span>
-        </li>
-      </ul>
-      <span class="newsIndex-nav-downArrow">
-        <BackIcon height="18" width="18" color="#999" />
-      </span>
-    </nav>
-    <section class="newsIndex-container">
-      <section class="newsIndex-container-recommend">
-        
-      </section>
-      <section class="newsIndex-container-newsLists">
+      <nav :class="$style.newsIndexNav">
         <ul>
+          <li :class="{ actived: currentNewsCateId === -1 }" @click="handleCateId(-1)">
+            <span>推荐</span>
+          </li>
           <li 
-            class="newsIndex-container-newslist"
-            v-for="(list, index) in newsLists"
+            @click="handleCateId(cate.id)" 
+            v-for="(cate, index) in oldMyCates" 
             :key="index"
+            :class="{ actived: currentNewsCateId === cate.id }"
           >
-            
+            <span>
+            {{ cate.name }}
+            </span>
           </li>
         </ul>
+        <span :class="$style.newsIndexNavDownArrow" @click="handleShowEditBox()">
+          <DownArrowIcon height="18" width="18" color="#999" />
+        </span>
+      </nav>
+    </header>
+    <section class="nothingDefault" v-if="nothing"> 
+      <img :src="nothing" />
+    </section>
+    <!--组件列表-->
+    <section v-else :class="$style.newsIndexContainer">
+      <section class="newsIndexContainerRecommend">
+        
+      </section>
+      <section class="newsIndexContainerNewsLists">
+        <mt-loadmore
+          v-if="!nothing"
+          :bottom-method="loadBottom"
+          :top-method="loadTop"
+          :bottom-all-loaded="bottomAllLoaded"
+          :top-all-loaded="topAllLoaded"
+          ref="loadmore"
+          :bottomDistance="70"
+          @bottom-status-change="bottomStatusChange"
+        >
+          <ul :class="$style.newsLists">
+            <li
+              class="newsIndex-container-newslist"
+              v-for="(list, index) in newsLists"
+              :key="index"
+              :class="$style.new"
+              @click="changeUrl(`news/${list.id}/detail`)"
+            >
+              <div :class="$style.sourceTitle">
+                <h4>{{ list.title }}</h4>
+                <section :class="$style.sourceFrom">
+                  <i>
+                    <timeago :class="$style.timer" :since="timers(list.created_at, 8, false)" locale="zh-CN" :auto-update="60"></timeago>
+                  </i>
+                  <i v-if="list.from">来自 {{ list.from }}</i>
+                </section>
+              </div>
+              <figure :class="$style.sourceImg">
+                <img v-lazy="getImg(list.storage.id, 30)" :alt="list.title">
+              </figure>
+            </li>
+          </ul>
+          <div slot="bottom" class="mint-loadmore-bottom">
+            <span v-if="bottomAllLoaded">没有更多了</span>
+            <section v-else>
+              <span v-show="bottomStatus === 'pull' && !bottomAllLoaded" :class="{ 'rotate': topStatus === 'drop' }">上拉加载更多</span>
+              <span v-show="bottomStatus === 'loading'">加载中...</span>
+              <span v-show="bottomStatus === 'drop' && !bottomAllLoaded">释放加载更多</span>
+            </section>
+          </div>
+        </mt-loadmore>
+      </section>
+    </section>
+    <section v-if="showEditBox" :class="$style.editBox">
+      <section :class="$style.operations">
+        <span v-if="!canEdit">编辑关注分类</span>
+        <span v-else>点击可调整分类</span>
+        <div :class="$style.controller">
+          <span v-if="canEdit" @click="handleCanEdit(false)">
+            完成
+          </span>
+          <span v-else @click="handleCanEdit(true)">
+            编辑
+          </span>
+          <span @click="handleShowEditBox(false)">
+            收起
+          </span>
+        </div>
+      </section>
+      <section :class="$style.allCates">
+        <p :class="$style.allCatesTitle">我的订阅</p>
+        <section :class="$style.allCatesBox">
+          <span :class="[$style.allCatesChild, $style.recommendCate]" > 推荐 </span>
+          <span 
+            :class="[ $style.allCatesChild, { endChild: (index + 2) % 4 === 0 }]" 
+            v-for="(cate, index) in myCates" 
+            :key="index"
+            @click="deleteMyCates(index)"
+          >
+            <CloseIcon :class="$style.closeIcon" v-if="canEdit" height="15" width="15" color="#999" />
+            {{cate.name}}
+          </span>
+        </section>
+        <p :class="$style.allCatesTitle">更多订阅</p>
+          <section :class="$style.allCatesBox">
+            <span 
+              :class="[ $style.allCatesChild, { endChild: (index + 1) % 4 === 0, canEdit: canEdit }]" 
+              v-for="(cate, index) in moreCates" 
+              :key="index"
+              @click="addToMyCates(index)"
+            >
+              {{cate.name}}
+            </span>
+          </section>
       </section>
     </section>
   </div>
@@ -57,89 +142,291 @@
   import lodash from 'lodash';
   import localEvent from '../../stores/localStorage';
   import { changeUrl, goTo } from '../../utils/changeUrl';
-  import { resolveImage } from '../../utils/resource';
-  import { getUserInfo } from '../../utils/user';
-
+  import { getUserInfo, getLocalDbUser } from '../../utils/user';
+  import getImg from '../../utils/getImage';
+  import timers from '../../utils/timer';
   import BackIcon from '../../icons/Back';
+  import CloseIcon from '../../icons/Close';
+  import SearchIcon from '../../icons/Search';
+  import DownArrowIcon from '../../icons/DownArrow';
+  import { resolveImage } from '../../utils/resource';
+  import { mapState } from 'vuex';
+  import { CURRENTNEWSCATEID } from '../../stores/types';
 
+  const defaultNothing = resolveImage(require('../../statics/images/defaultNothingx2.png'));
   const newsIndex = {
     components: {
-      BackIcon
+      BackIcon,
+      CloseIcon,
+      SearchIcon,
+      DownArrowIcon
     },
     data: () => ({
       isWeiXin: TS_WEB.isWeiXin,
       myCates: [], // 我订阅的分类
+      oldMyCates: [],
       moreCates: [], // 其他分类
+      oldMoreCates: [],
       newsLists: [], // 首页数据
       recommendLists: [], // banner内容
-      currentCateId: -1, //当前的分类ID
-      max_id: 0 // 查询条件之一
+      max_id: 0, // 查询条件之一,
+      showSpinner: false,
+      bottomAllLoaded: false,
+      topAllLoaded: false,
+      bottomStatus: '',
+      topStatus: '',
+      newsListIds: [], // 资讯id集合
+      recommendListIds: [], // 推荐id集合
+      showEditBox: false,
+      canEdit: false
     }),
+    computed: {
+      nothing () {
+        return (this.newsLists.length || this.recommendLists.length) ? false : defaultNothing;
+      },
+      ...mapState({
+        currentNewsCateId: state => state.newsAbout.newsAbout.currentnewscateid
+      })
+    },
     methods: {
+      timers,
+      getImg,
       goTo,
       changeUrl,
-      handleCateId (cateId) {
-        this.currentCateId = cateId;
-        this.getList();
+
+      deleteMyCates (index) {
+        if(!this.canEdit) return;
+        let element = this.myCates[index];
+        let newSet = new Set(this.myCates);
+        newSet.delete(element);
+        this.myCates = Array.from(newSet);
+        this.moreCates.push(element);
       },
-      loadMore () {
+
+      addToMyCates( index ) {
+        if(!this.canEdit) return;
+        let element = this.moreCates[index];
+        let newSet = new Set(this.moreCates);
+        newSet.delete(element);
+        this.moreCates = Array.from(newSet);
+        this.myCates.unshift(element);
+      },
+
+      handleCanEdit ( status = true ) {
+        this.canEdit = status;
+        if(!status) this.changeMyCates();
+      },
+
+      handleShowEditBox( status = true ) {
+        this.showEditBox = status;
+        if(!status) {
+          this.canEdit = false;
+          this.myCates = [ ...this.oldMyCates ];
+          this.moreCates = [ ...this.oldMoreCates ];
+        }
+      },
+
+      changeMyCates () {
+        if(!this.myCates.length) return;
+        let cates = '';
+        this.myCates.forEach( cate => {
+          cates += cate.id + ',';
+        });
+        cates = cates.substring(0, cates.length -1);
+        addAccessToken().post(createAPI(`news/cates/follow`),
+          {
+            follows: cates
+          },
+          {
+            validateStatus: status => status === 201
+          }
+        )
+        .then( response => {
+          this.oldMyCates = this.myCates;
+          this.oldMoreCates = this.moreCates;
+          this.$store.dispatch(CURRENTNEWSCATEID, cb => {
+            cb(-1);
+          });
+          this.getList();
+        })
+      },
+      bottomStatusChange(status) {
+        this.bottomStatus = status;
+      },
+      loadBottom () {
         this.getList(true);
       },
-      getList (loadMore = false) {
-        if(!loadMore) this.max_id = 0;
-        let query = `cate_id=${this.currentCateId}`;
-        if(this.max_id > 1) {
-          query += `&max_id=${max_id}`;
-        }
-        addAccessToken().get(createAPI(`news?cate_id=${this.currentCateId}`),{},
+      loadTop () {
+        this.getNewList();
+      },
+      getNewList () {
+        let query = `cate_id=${this.currentNewsCateId}`;
+        addAccessToken().get(createAPI(`news?cate_id=${this.currentNewsCateId}`),{},
         {
           validateStatus: status => status === 200
         })
         .then( response => {
           let data = response.data.data;
-          this.recommendLists = data.recommend // 推荐banner数据
-          if( !loadMore ) {
-            this.newsLists = data.list; // 首页数据
+          let newList = [];
+          let newRecommend = [];
+          data.list.forEach( list => {
+            if(!this.newsListIds.includes(list.id)) {
+              newList = [ ...newList, list ];
+              this.newsListIds.push(list.id);
+            }
+          });
+          data.recommend.forEach( list => {
+            if(!this.recommendListIds.includex(list.id)) {
+              newRecommend = [list, ...newRecommend ];
+              this.recommendListIds.push(list.id);
+            }
+          });
+          setTimeout(() => {
+            if(this.$refs.loadmore)
+              this.$refs.loadmore.onTopLoaded();
+          }, 500);
+        });
+      },
+      handleCateId (cateId) {
+        if(cateId === this.currentCateId) return;
+        this.$store.dispatch(CURRENTNEWSCATEID, cb => {
+          cb(cateId);
+        })
+        this.showSpinner = true;
+        this.newsListIds = []; // 清除资讯数据
+        this.recommendListIds = []; // 清除推荐数据
+        this.getList();
+      },
+      getList (loadMore = false) {
+        if(!loadMore) this.max_id = 0;
+        let query = `cate_id=${this.currentNewsCateId}`;
+        if(this.max_id > 1) {
+          query += `&max_id=${this.max_id}`;
+        }
+        addAccessToken().get(createAPI(`news?${query}`),{},
+        {
+          validateStatus: status => status === 200
+        })
+        .then( response => {
+          let data = response.data.data;
+          let length = data.list.length;
+          if( length < 15 ) {
+            this.bottomAllLoaded = true;
           } else {
-            this.newsLists = [ ...this.newsLists, ...data.list ];
+            this.bottomAllLoaded = false;
           }
+          data.list.forEach( list => {
+            this.newsListIds.push(list.id);
+          });
+          if( !loadMore ) {
+            this.recommendLists = data.recommend; // 推荐banner数据
+            this.newsLists = data.list; // 首页数据
+            data.recommend.forEach( list => {
+              this.recommendListIds.push(list.id);
+            });
+          } else {
+            this.newsLists = [ ...this.newsLists, ...data.list ]; // 加载更多
+          }
+          if(data.list.length) this.max_id = data.list[data.list.length - 1].id;
+          setTimeout(() => {
+            if(this.$refs.loadmore)
+              loadMore ? this.$refs.loadmore.onBottomLoaded() : this.$refs.loadmore.onTopLoaded();
+          }, 500)
+          this.showSpinner = false;
         });
       }
     },
     created () {
+      this.showSpinner = true;
       // 获取资讯分类
-      addAccessToken().get(createAPI('news/cates'), {}, {
-
-      })
+      addAccessToken().get(createAPI('news/cates'),
+        {},
+        {
+          validateStatus: status => status === 200
+        }
+      )
       .then( response => {
         let data = response.data.data;
-        this.myCates = data.my_cates; // 我订阅的频道
-        this.moreCates = data.more_cates; // 其他频道
+        this.myCates = [ ...data.my_cates ]; // 我订阅的频道
+        this.oldMyCates = data.my_cates.concat();
+        this.moreCates = [ ...data.more_cates ]; // 其他频道
+        this.oldMoreCates = data.more_cates.concat();
       })
       
       // 获取推荐资讯
-      let cate_id = -1;
-      addAccessToken().get(createAPI(`news?cate_id=${cate_id}`),{},
-      {
-        validateStatus: status => status === 200
-      })
+      let cate_id = this.currentNewsCateId || -1;
+      addAccessToken().get(createAPI(`news?cate_id=${cate_id}`),
+        {},
+        {
+          validateStatus: status => status === 200
+        }
+      )
       .then( response => {
         let data = response.data.data;
+
         if(data.list.length) {
-          this.newsLists = data.list; // 首页数据
+          data.list.forEach(list => {
+            this.newsListIds.push(list.id);
+          });
+          this.newsLists = [ ...data.list ] // 推荐banner数据
           this.max_id = data.list[data.list.length - 1].id;
         }
-        this.recommendLists = data.recommend // 推荐banner数据
+        if(data.list.length < 15) {
+          this.bottomAllLoaded = true;
+        }
+        if(data.recommend.length) {
+          data.recommend.forEach( list => {
+            this.recommendListIds.push(list.id);
+          });
+          this.recommendLists = [ ...data.recommend ]; // 推荐banner数据
+        }
+        this.showSpinner = false;
+        if(this.$refs.loadmore) {
+          setTimeout( () => {
+            this.$refs.loadmore.onTopLoaded();
+          }, 800)
+        }
       })
     }
   }
 
   export default newsIndex;
 </script>
-
 <style lang="less" scoped>
+  .commonHeader {
+    height: 87px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 6;
+    border-bottom: none;
+  }
+  .actived {
+    font-size: 16px;
+    font-weight: 600;
+  }
+  #spinner {
+    top: 87px;
+  }
+  .nothingDefault {
+    padding-top: 87px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    img {
+      width: 70%;
+    }
+  }
+  .mint-loadmore {
+    padding-bottom: 50px;
+    overflow: initial;
+  }
+</style>
+<style lang="less" module>
   .newsIndex {
-    .newsIndex-nav {
+    .newsIndexNav {
       width: 100vw;
       overflow: hidden;
       padding: 8px 2px;
@@ -150,8 +437,7 @@
           display: flex;
           align-items: center;
           width: 90vw;
-          overflow: scroll;
-          -webkit-overflow-scrolling: touch;
+          overflow-x: scroll;
         &::-webkit-scrollbar {
           height: 0;
           display: none;
@@ -162,16 +448,12 @@
             padding: 4px 10px;
           }
         }
-        .actived {
-          font-size: 16px;
-          font-weight: 600;
-        }
       }
-      .newsIndex-nav-downArrow {
+      .newsIndexNavDownArrow {
         position: absolute; 
         right: 0;
         top: 0;
-        padding-right: 8px;
+        padding-right: 12px;
         height: 100%;
         display: flex;
         align-items: center;
@@ -181,5 +463,120 @@
         width: 10vw;
       }
     }
+    .newsIndexContainer {
+      padding-top: 87px;
+      .newsLists{
+        background-color: #fff;
+        .new {
+          padding: 12px;
+          display: flex;
+          align-items: flex-start;
+          border-bottom: 1px solid #e2e3e3;
+          .sourceTitle {
+            width: 75vw;
+            height: 18vw;
+            padding-right: 8px;
+            position: relative;
+            h4 {
+              color: #333;
+              font-weight: 400;
+              text-align: initial;
+              overflow: hidden;
+              text-overflow: ellipsis;  
+              display: -webkit-box;  
+              -webkit-line-clamp: 2;  
+              -webkit-box-orient: vertical;
+              word-break: break-all;
+            }
+            .sourceFrom {
+              position: absolute;
+              bottom: 0;
+              line-height: 1;
+              i {
+                vertical-align: sub;
+                color: #999;
+                font-style: normal;
+                font-size: 12px;
+                &:last-child {
+                  margin-left: 16px;
+                }
+                &:first-child {
+                  margin-left: 0;
+                }
+              }
+            }
+          }
+          .sourceImg {
+            width: 25vw;
+            height: 18vw;
+            img {
+              width: 100%;
+              height: 18vw;
+              object-fit: cover;
+            }
+          }
+          &:last-child {
+            border-bottom: none;
+          }
+        }
+      }
+    }
+    .editBox {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #fff;
+      z-index: 6;
+      .operations {
+        padding: 8px 12px;
+        height: 46px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 16px;
+        background-color: #e2e3e3;
+        .controller {
+          color: #59b6d7;
+        }
+      }
+      .allCates {
+        font-size: 14px;
+        padding: 8px 12px;
+        .allCatesTitle {
+          color: #999;
+          padding: 20px 0 10px 0;
+        }
+        .allCatesBox {
+          display: inline-table;
+          width: 100%;
+          .allCatesChild {
+            &.recommendCate {
+              background-color: #d9eef6;
+            }
+            width: calc(~"91% / 4");
+            padding: 8px 2.5vw;
+            background-color: #eee;
+            display: inline-flex;
+            justify-content: center;
+            margin: 0 3% 3% 0;
+            border-radius: 5px;
+            position: relative;
+            svg.closeIcon {
+              position: absolute;
+              top: -5px;
+              left: -5px;
+            }
+          }
+        }
+      }
+    }
+  }
+</style>
+
+<style scoped lang="less">
+  .endChild {
+    margin-right: 0!important;
   }
 </style>

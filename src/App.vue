@@ -24,7 +24,7 @@
   import errorCodes from './stores/errorCodes';
   import { connect } from './utils/webSocket';
   import { getUserInfo } from './utils/user';
-  import { MESSAGELISTS, IMSTATUS, USERS_APPEND, MESSAGENOTICE } from './stores/types';
+  import { IMSTATUS, USERS_APPEND, MESSAGENOTICE } from './stores/types';
 
   // indexedDB
   import Dexie from 'dexie';
@@ -49,22 +49,28 @@
       }
     },
     created() {
+      // console.log(Dexie.semVer);
       let db = new Dexie('ThinkSNS');
+      db.debug = 'dexie';
       db
       .version(1)
       .stores({
         // 用户
-        userbase: "++, &user_id, name, counts, datas, avatar",
+        userbase: "++, user_id, name, counts, datas, avatar",
         // 动态
         feedbase: "++, user_id, storages, &feed_id, feed_content, feed_from, created_at, feed_comment_count, feed_digg_count, feed_view_count",
         // 评论
         commentsbase: "++, comment_content, created_at, &id, reply_to_user_id, user_id, source_id",
         // ImMessage
-        messagebase: "++, txt, cid, uid, hash, mid, seq, time",
+        messagebase: "++, txt, cid, uid, hash, mid, seq, time, owner, [cid+mid], [cid+owner]",
         // chatroom
-        chatroom: "++, cid, user_id, name, pwd, type, uids, last_message_time, owner, [cid+owner]",
+        chatroom: "++, cid, user_id, name, pwd, type, uids, last_message_time, owner, [cid+owner], newMessage",
         // 被关注 uid 主用户id， followed 为1表示uuid关注uid， following为1 表示uid关注uuid [uid+uuid]组合查询组件
         relationship: '++, uid, uuid, followed, following, [uid+uuid]',
+        // 对我的评论[消息]
+        commentslist: "++, user_id, uid, [user_id+uid]",
+        // 对我的点赞[消息]
+        diggslist: "++, user_id, uid, [user_id+uid]"
       });
       window.TS_WEB.dataBase = db;
       if(TS_WEB.loaded) return;
@@ -74,18 +80,20 @@
         window.TS_WEB.currentUserId = currentUser.user_id;
         // 提交用户到vuex
         // let userInfo = localEvent.getLocalItem(`user_${currentUser.user_id}`);
-        window.TS_WEB.dataBase.userbase.where('user_id').equals(currentUser.user_id).first().then( user => {
-          if(!lodash.keys(user).length > 0) {
-            getUserInfo(currentUser.user_id, 30).then( serverUser => {
-              this.$store.dispatch(USERS_APPEND, cb =>{
-                cb(serverUser)
+        window.TS_WEB.dataBase.transaction('rw?', window.TS_WEB.dataBase.userbase, () => {
+          window.TS_WEB.dataBase.userbase.where('user_id').equals(currentUser.user_id).first().then( user => {
+            if(!lodash.keys(user).length > 0) {
+              getUserInfo(currentUser.user_id, 30).then( serverUser => {
+                this.$store.dispatch(USERS_APPEND, cb =>{
+                  cb(serverUser)
+                });
               });
-            });
-          } else {
-            this.$store.dispatch(USERS_APPEND, cb =>{
-              cb(user)
-            });
-          }
+            } else {
+              this.$store.dispatch(USERS_APPEND, cb =>{
+                cb(user)
+              });
+            }
+          });
         });
         // 设置消息提示查询时间
         let time = 0;
@@ -97,13 +105,19 @@
         let types = 'diggs,comments,follows';
         // 查询新消息
         addAccessToken().get(createAPI(`users/flushmessages?key=${types}&time=${time+1}`), {} , {
-            validateStatus: status => status === 200
-          })
+          validateStatus: status => status === 200
+        })
         .then( response => {
           let count = {
             fans: 0,
-            diggs: 0,
-            comments: 0,
+            diggs: {
+              count: 0,
+              uids: []
+            },
+            comments: {
+              count: 0,
+              uids: []
+            },
             notice: 0
           }
           let data = response.data.data;
@@ -111,17 +125,51 @@
             if(data[index].key == "follows") {
               count.fans = data[index].count;
             } else if( data[index].key == 'comments') {
-              count.comments = data[index].count;
+              count.comments.count = data[index].count;
+              count.comments.uids = data[index].uids;
+              count.comments.time = data[index].time;
             } else if( data[index].key == 'diggs') {
-              count.diggs = data[index].count;
+              count.diggs.count = data[index].count;
+              count.diggs.uids = data[index].uids;
+              count.diggs.time = data[index].time;
             } 
-            // else {
-            //   count.notices = data[index].count;
-            // }
           }
+          window.TS_WEB.dataBase.transaction('rw?',
+            window.TS_WEB.dataBase.commentslist,
+            window.TS_WEB.dataBase.diggslist,
+            () => {
+              // 点赞用户本地存储
+              if(count.diggs.count) {
+                Array.from(new Set(count.diggs.uids)).forEach( uid => {
+                  window.TS_WEB.dataBase.diggslist.where('[user_id+uid]').equals([window.TS_WEB.currentUserId, uid]).delete().then( () => {
+                    window.TS_WEB.dataBase.diggslist.put({
+                      user_id: window.TS_WEB.currentUserId,
+                      uid: uid
+                    })
+                  })
+                  .catch( e => {
+                    console.log(e)
+                  });
+                })
+              }
+              // 评论用户本地存储
+              if(count.comments.count) {
+                Array.from(new Set(count.comments.uids)).forEach( uid => {
+                  window.TS_WEB.dataBase.commentslist.where('[user_id+uid]').equals([window.TS_WEB.currentUserId, uid]).delete().then( () => {
+                    window.TS_WEB.dataBase.commentslist.put({
+                      user_id: window.TS_WEB.currentUserId,
+                      uid: uid
+                    })
+                  })
+                  .catch( e => {
+                    console.log(e)
+                  });
+                })
+              }
+            })
           this.$store.dispatch(MESSAGENOTICE, cb => {
             cb(count)
-          })
+          });
         });
         // im设置
         connect();
@@ -135,12 +183,12 @@
           if(data.status || data.code === 0 ) {
             if(!data.data.length) return;
             data.data.forEach( list => {
-              window.TS_WEB.dataBase.transaction('rw', window.TS_WEB.dataBase.chatroom, () => {
+              window.TS_WEB.dataBase.transaction('rw?', window.TS_WEB.dataBase.chatroom, () => {
                 window.TS_WEB.dataBase.chatroom.where('[cid+owner]').equals([list.cid, window.TS_WEB.currentUserId ]).count( number => {
                   if(!number > 0) {
                     list.last_message_time = 0;
                     list.owner = window.TS_WEB.currentUserId;
-                    window.TS_WEB.dataBase.chatroom.add(list);
+                    window.TS_WEB.dataBase.chatroom.put(list);
                   }
                 })
               })

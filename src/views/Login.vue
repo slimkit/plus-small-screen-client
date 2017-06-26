@@ -244,67 +244,95 @@
             .then( response => {
               let count = {
                 fans: 0,
-                diggs: 0,
-                comments: 0,
+                diggs: {
+                  count: 0,
+                  time: '',
+                  uids: []
+                },
+                comments: {
+                  count: 0,
+                  time: '',
+                  uids: []
+                },
                 notice: 0
               }
               let data = response.data.data;
               for( let index in data ) {
-                if(data[index].key == "follows") {
+                if(data[index].key === "follows") { // 新增关注数
                   count.fans = data[index].count;
-                } else if( data[index].key == 'comments') {
-                  count.comments = data[index].count;
-                } else if( data[index].key == 'diggs') {
-                  count.diggs = data[index].count;
+                } else if( data[index].key === 'comments') { // 评论数
+                  count.comments.count = data[index].count;
+                  count.comments.uids = data[index].uids;
+                  count.comments.time = data[index].time;
+                } else if( data[index].key === 'diggs') { // 点赞数
+                  count.diggs.count = data[index].count;
+                  count.diggs.uids = data[index].uids;
+                  count.diggs.time = data[index].time;
                 }
-                //  else {
-                //   count.notices = data[index].count;
-                // }
               }
+              window.TS_WEB.dataBase.transaction('rw?',
+                window.TS_WEB.dataBase.commentslist,
+                window.TS_WEB.dataBase.diggslist,
+                () => {
+                  // 点赞用户本地存储
+                  if(count.diggs.count) {
+                    Array.from(new Set(count.diggs.uids)).forEach( uid => {
+                      window.TS_WEB.dataBase.diggslist.where('[user_id+uid]').equals([window.TS_WEB.currentUserId, uid]).delete().then( () => {
+                        window.TS_WEB.dataBase.diggslist.put({
+                          user_id: window.TS_WEB.currentUserId,
+                          uid: uid
+                        })
+                      })
+                      .catch( e => {
+                        console.log(e)
+                      });
+                    })
+                  }
+                  // 评论用户本地存储
+                  if(count.comments.count) {
+                    Array.from(new Set(count.comments.uids)).forEach( uid => {
+                      window.TS_WEB.dataBase.commentslist.where('[user_id+uid]').equals([window.TS_WEB.currentUserId, uid]).delete().then( () => {
+                        window.TS_WEB.dataBase.commentslist.put({
+                          user_id: window.TS_WEB.currentUserId,
+                          uid: uid
+                        })
+                      })
+                      .catch( e => {
+                        console.log(e)
+                      });
+                    })
+                  }
+                }
+              );
               this.$store.dispatch(MESSAGENOTICE, cb => {
                 cb(count)
               })
             });
-            // 获取会话列表im
+            // 获取会话列表
             addAccessToken().get(createAPI('im/conversations/list/all'), {}, {
               validateStatus: status => status === 200
             })
             .then( response => {
-              let chatListData = response.data;
+              let data = response.data;
               let lists = {};
-              if(chatListData.status || chatListData.code === 0 ) {
-                if(!chatListData.data.length) return;
-                chatListData.data.forEach( list => {
-                  lists[`room_${list.cid}`] = {};
-                  let li = {};
-                  let uids = list.uids.split(',');
-                  let user_id = 0;
-                  if(uids[0] == data.user_id) {
-                    user_id = uids[1];
-                  } else {
-                    user_id = uids[0];
-                  }
-                  let lastMessage = localEvent.getLocalItem(`room_${list.cid}_last_message`);
-                  let messageList = [];
-                  let messageBody = {};;
-                  if(lastMessage.length) {
-                    messageBody.user_id = lastMessage[1].uid;
-                    messageBody.txt = lastMessage[1].txt;
-                    messageBody.time = lastMessage[1].ext.time;
-                    messageList.push(messageBody);
-                  }
-                  getUserInfo(user_id, 30).then( user => {
-                    li.name = user.name;
-                    li.avatar = user.avatar[30];
-                    li.lists = messageList;
-                    li.cid = list.cid;
-                    li.user_id = user_id;
-                    this.$store.dispatch(MESSAGELISTS, cb => {
-                      cb(li);
-                    });
+              if(data.status || data.code === 0 ) {
+                if(!data.data.length) return;
+                data.data.forEach( list => {
+                  window.TS_WEB.dataBase.transaction('rw?', window.TS_WEB.dataBase.chatroom, () => {
+                    window.TS_WEB.dataBase.chatroom.where('[cid+owner]').equals([list.cid, window.TS_WEB.currentUserId ]).count( number => {
+                      if(!number > 0) {
+                        list.last_message_time = 0;
+                        list.owner = window.TS_WEB.currentUserId;
+                        window.TS_WEB.dataBase.chatroom.put(list);
+                      }
+                    })
+                  })
+                  .catch(e => {
+                    console.log(e);
                   });
                 });
               }
+              TS_WEB.loaded = true;
             });
             // 跳转到动态页面
             router.push({ path: redirect });

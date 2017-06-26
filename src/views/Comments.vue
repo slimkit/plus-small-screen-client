@@ -23,40 +23,77 @@
       ref="loadmoreComments"
       :bottomDistance="70"
     >
-      <div class="commentContent">
-        <div :class="$style.comments">
-          <Row :gutter="16" v-for="(comment, index) in formatedComments" :key="index" :class="$style.comment">
-            <Col span="4" class="avatar-parent-col">
-              <img @click="changeUrl(`/users/feeds/${comment.user_id}`)" class="avatar" :src="comment.avatar" :alt="comment.name" />
-            </Col>
-            <Col span="16">
-              <h4 @click="changeUrl(`/users/feeds/${comment.user_id}`)">{{comment.name}}</h4>
-              <div class="gray-color">
-                <span v-if="comment.reply_to_user_id">回复</span>
-                <span @click="changeUrl(`/users/feeds/${comment.reply_to_user_id}`)" class="primary-color" style="padding: 0 4px;" v-if="comment.reply_to_user_id">{{comment.reply_to_user_name}}: </span>
-                {{comment.comment_content}}
+      <section class="commentContent">
+        <ul :class="$style.comments">
+          <li v-for="(comment, index) in formated" :key="index" :class="$style.comment">
+            <div :class="$style.commentContent">
+              <div class="avatar-parent-col" style="width: 16vw">
+                <img @click="changeUrl(`/users/feeds/${comment.user_id}`)" class="avatar" :src="comment.avatar" :alt="comment.name" />
               </div>
-              <timeago style="font-size: 14px; color: #999;" :since="comment.time" locale="zh-CN" :auto-update="60"></timeago>
-            </Col>
-            <Col span="4">
-              <div :class="$style.sourceContent">
-                <img v-if="comment.cover" @click="changeUrl(`/feed/${comment.source_id}`)" :src="comment.cover" />
-                <div v-if="!comment.cover" @click="changeUrl(`/feed/${comment.source_id}`)" :class="$style.source">
-                  <div :class="$style.content">
-                    {{comment.source_content}}
+              <div span="16" style="width: 68vw; padding: 0 12px;">
+                <h4 @click="changeUrl(`/users/feeds/${comment.user_id}`)">{{comment.name}}</h4>
+                <div class="gray-color">
+                  <span v-if="comment.reply_to_user_id">回复</span>
+                  <span @click="changeUrl(`/users/feeds/${comment.reply_to_user_id}`)" class="primary-color" style="padding: 0 4px;" v-if="comment.reply_to_user_id">{{comment.reply_to_user_name}}: </span>
+                  {{comment.comment_content}}
+                </div>
+                <timeago style="font-size: 14px; color: #999;" :since="comment.time" locale="zh-CN" :auto-update="60"></timeago>
+              </div>
+              <div style="width: 16vw">
+                <div :class="$style.sourceContent">
+                  <img v-if="comment.cover" @click="openCommentBox(index)" :src="comment.cover" />
+                  <!-- <div v-if="!comment.cover" @click="changeUrl(`/feed/${comment.source_id}`)" :class="$style.source"> -->
+                  <div v-if="!comment.cover" @click="openCommentBox(index)" :class="$style.source">
+                    <div :class="$style.content">
+                      {{comment.source_content}}
+                    </div>
                   </div>
                 </div>
               </div>
-            </Col>
-          </Row>
-        </div>
-      </div>
-      <div slot="bottom" class="mint-loadmore-bottom">
-        <span v-show="bottomAllLoaded">没有更多了</span>
-        <span v-show="bottomStatus === 'pull' && !bottomAllLoaded" :class="{ 'rotate': topStatus === 'drop' }">上拉加载更多</span>
-        <span v-show="bottomStatus === 'loading' && !bottomAllLoaded">加载中...</span>
-        <span v-show="bottomStatus === 'drop' && !bottomAllLoaded">释放加载更多</span>
-      </div>
+            </div>
+            <!-- 评论框 -->
+            <section :class="$style.commentBox" v-if="openId === index" ref="commentInput" style="width: 100%;">
+              <li>
+                <Input 
+                  type="textarea" 
+                  ref="commentInput"
+                  class="commentInput"
+                  :autosize="{ minRows: 1, maxRows: 4 }" 
+                  :minlength='1' 
+                  :maxlength='255'
+                  :autofocus="true"
+                  v-model="commentsContent"
+                  :placeholder="placeholder"
+                />
+              </li>
+              <li :class="$style.commentOperations">
+                <p :class="$style.commentOperation" v-show="commentCount > 100">
+                  <span :class="{ inputFull: commentCount > 100 }">{{ commentCount }}</span>/255
+                </p>
+                <Button :class="$style.commentOperation" type="text" class="sendButton" size="small" @click.native="closeCommentBox()">取消</Button>
+                <Button 
+                  :class="$style.commentOperation" 
+                  type="primary" 
+                  class="sendButton" 
+                  :disabled="!commentCount" 
+                  size="small" 
+                  @click.native="sendComment()"
+                >
+                  发送
+                </Button>
+              </li>
+            </section>
+          </li>
+        </ul>
+      </section>
+      <section slot="bottom" class="mint-loadmore-bottom">
+        <span v-if="bottomAllLoaded">没有更多了</span>
+        <section v-else>
+          <span v-show="bottomStatus === 'pull' && !bottomAllLoaded" :class="{ 'rotate': topStatus === 'drop' }">上拉加载更多</span>
+          <span v-show="bottomStatus === 'loading' && !bottomAllLoaded">加载中...</span>
+          <span v-show="bottomStatus === 'drop' && !bottomAllLoaded">释放加载更多</span>
+        </section>
+      </section>
     </mt-loadmore>
   </div>
 </template>
@@ -69,10 +106,10 @@
   import getImage from '../utils/getImage';
   import BackIcon from '../icons/Back';
   import lodash from 'lodash';
+  import { getLocalDbUser } from '../utils/user';
   import { resolveImage } from '../utils/resource';
   const defaultNoBody = resolveImage(require('../statics/images/img_default_nobody@2x.png'));
   const defaultAvatar = resolveImage(require('../statics/images/defaultAvatarx2.png'));
-  
   const Comments = {
     components: {
       BackIcon
@@ -85,9 +122,59 @@
       topAllLoaded: false,
       bottomStatus: '',
       topStatus: '',
-      isWeiXin: TS_WEB.isWeiXin
+      isWeiXin: TS_WEB.isWeiXin,
+      formated: [],
+      openId: -1,
+      commentsContent: '',
+      placeholder: '',
+      commentLoading: false
     }),
     methods: {
+      sendComment() {
+        if(!this.commentCount || this.loading) return;
+        this.loading = true;
+        let source = this.comments[this.openId];
+        let api = `feeds/${source.source_id}/comment`;
+        if(source.component === 'news') {
+          api = `news/${source.source_id}/comment`;
+        }
+        addAccessToken().post(createAPI(`${api}`), {
+          comment_content: this.commentsContent,
+          reply_to_user_id: source.user_id
+        },
+        {
+          validateStatus: status => status === 201
+        })
+        .then( response => {
+          this.commentsContent = '';
+          this.loading = false;
+          this.$store.dispatch(NOTICE, cb => {
+            cb({
+              text: '评论成功',
+              time: 1500,
+              status: true
+            });
+          });
+        })
+      },
+      openCommentBox (id) {
+        this.openId = id;
+        let user_id = this.formated[id].user_id;
+        getLocalDbUser(user_id).then( item => {
+          if(item === undefined) {
+            getUserInfo( user_id, 30).then( user => {
+              this.placeholder = `回复: ${user.name}`;
+            })
+          } else {
+            this.placeholder = `回复: ${item.name}`;
+          }
+        })
+      },
+      closeCommentBox () {
+        this.openId = -1;
+        this.commentsContent = '';
+        this.placeholder = '';
+      },
       changeUrl,
       goTo,
       loadTop () {
@@ -106,7 +193,7 @@
               newcomments.push(comment);
             }
           });
-          this.comments = [ ...newcomments, ...this.comments ];
+          this._loadTopFormatedComments(newcomments);
           setTimeout( () => {
             if(this.$refs.loadmoreComments)
               this.$refs.loadmoreComments.onTopLoaded();
@@ -125,22 +212,66 @@
         )
         .then(response => {
           let comments = response.data.data;
-          this.comments = [ ...this.comments, ...comments ];
+          this._loadTopFormatedComments(comments, false);
           let length = comments.length;
           if(length < 15) {
             this.bottomAllLoaded = true;
           };
           this.max_id = comments[length -1].id;
           setTimeout( () => {
-            if(this.$refs.loadmoreDiggs)
-              this.$refs.loadmoreDiggs.onBottomLoaded();
+            if(this.$refs.loadmoreComments)
+              this.$refs.loadmoreComments.onBottomLoaded();
           }, 500)
         })
-      }
-    },
-    computed: {
-      formatedComments () {
+      },
+      _initFormatedComments () {
         let comments = this.comments;
+        let newcomments = [];
+        comments.forEach(comment => {
+          let newcomment = {
+            name: '',
+            avatar: '',
+            user_id: comment.user_id,
+            reply_to_user_id: comment.reply_to_user_id,
+            reply_to_user_name: '',
+            time: 0,
+            source_id: comment.source_id,
+            source_content: comment.source_content,
+            component: comment.component,
+            comment_content: comment.comment_content,
+            cover: '',
+            id: comment.id
+          };
+          getLocalDbUser(comment.user_id).then( user => {
+            return getLocalDbUser(comment.reply_to_user_id).then( replyUser => {
+              user.replyUser = replyUser;
+              return user;
+            });
+          }).then( user => {
+            if(comment.reply_to_user_id) {
+              if(!lodash.keys(user.replyUser).length) {
+                getUserInfo(comment.reply_to_user_id, 30).then( replyUser => {
+                  const { name = '' } = replyUser;
+                  newcomment.reply_to_user_name = name;
+                });
+              } else {
+                const { name = '' } = user.replyUser;
+                newcomment.reply_to_user_name = name;
+              }
+            }
+            const { avatar: { 30: avatar = defaultAvatar} = {} } = user;
+            const { name = '' } = user;
+            if(comment.source_cover) {
+              newcomment.cover = getImage(comment.source_cover, 20);
+            }
+            newcomment.name = name;
+            newcomment.avatar = avatar;
+            newcomment.time = timers(comment.created_at, 8, false);
+            this.formated = [ ...this.formated, newcomment ];
+          });
+        });
+      },
+      _loadTopFormatedComments (comments = [], top = true) {
         let newcomments = [];
         comments.forEach(comment => {
           let newcomment = {
@@ -156,35 +287,46 @@
             comment_content: comment.comment_content,
             cover: ''
           };
-          let user = localEvent.getLocalItem(`user_${comment.user_id}`);
-          let reply_to_user = {};
-          if(comment.reply_to_user_id) {
-            reply_to_user = localEvent.getLocalItem(`user_${comment.reply_to_user_id}`);
-            if(!lodash.keys(reply_to_user).length) {
-              getUserInfo(comment.reply_to_user_id, 30).then( replyUser => {
-                const { name = '' } = replyUser;
+          getLocalDbUser(comment.user_id).then( user => {
+            return getLocalDbUser(comment.reply_to_user_id).then( replyUser => {
+              user.replyUser = replyUser;
+              return user;
+            });
+          }).then( user => {
+            if(comment.reply_to_user_id) {
+              if(!lodash.keys(user.replyUser).length) {
+                getUserInfo(comment.reply_to_user_id, 30).then( replyUser => {
+                  const { name = '' } = replyUser;
+                  newcomment.reply_to_user_name = name;
+                });
+              } else {
+                const { name = '' } = user.replyUser;
                 newcomment.reply_to_user_name = name;
-              });
-            } else {
-              const { name = '' } = reply_to_user;
-              newcomment.reply_to_user_name = name;
+              }
             }
-            
-          }
-          const { avatar: { 30: avatar = defaultAvatar} = {} } = user;
-          const { name = '' } = user;
-          if(comment.source_cover) {
-            newcomment.cover = getImage(comment.source_cover, 20);
-          }
-          newcomment.name = name;
-          newcomment.avatar = avatar;
-          newcomment.time = timers(comment.created_at, 8, false)
-          newcomments.push(newcomment);
+            const { avatar: { 30: avatar = defaultAvatar} = {} } = user;
+            const { name = '' } = user;
+            if(comment.source_cover) {
+              newcomment.cover = getImage(comment.source_cover, 20);
+            }
+            newcomment.name = name;
+            newcomment.avatar = avatar;
+            newcomment.time = timers(comment.created_at, 8, false);
+            if( top ) {
+              this.formated = [ newcomment, ...this.formated ];
+            } else {
+              this.formated = [ ...this.formated, newcomment ];
+            }
+          });
         });
-        return newcomments;
-      },
+      }
+    },
+    computed: {
       nothing () {
         return this.comments.length > 0 ? 0 : defaultNoBody;
+      },
+      commentCount () {
+        return this.commentsContent.length > 0;
       }
     },
     created () {
@@ -211,19 +353,41 @@
         };
         if(length)
           this.max_id = this.comments[length - 1].id;
+        this._initFormatedComments();
       })
     }
   };
   export default Comments;
 </script>
-<style lang="scss" module>
+<style lang="less" module>
   .comments {
     .comment {
       border-bottom: 1px #ededed solid;
-      padding: 8px 0;
+      padding: 8px;
       background-color: #fff;
+      display: block;
       &:last-child {
         border-bottom: none;
+      }
+      .commentContent {
+        display: flex;
+        align-items: flex-start;
+      }
+      .commentBox {
+        li {
+          margin-top: 8px;
+        }
+        .commentOperations {
+          display: flex;
+          justify-content: flex-end;
+          align-items: center;
+          .commentOperation {
+            margin: 0 8px;
+            &:last-child {
+              margin-right: 0;
+            }
+          }
+        }
       }
     }
   }

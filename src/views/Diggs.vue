@@ -25,7 +25,7 @@
     >
       <div class="commentContent">
         <div :class="$style.comments">
-          <Row :gutter="16" v-for="(digg, index) in formatedDiggs" :key="index" :class="$style.comment">
+          <Row :gutter="16" v-for="(digg, index) in formated" :key="index" :class="$style.comment">
             <Col span="4" class="avatar-parent-col">
               <img @click="changeUrl(`/users/feeds/${digg.user_id}`)" class="avatar" :src="digg.avatar" :alt="digg.name" />
             </Col>
@@ -50,10 +50,12 @@
         </div>
       </div>
       <div slot="bottom" class="mint-loadmore-bottom">
-        <span v-show="bottomAllLoaded">没有更多了</span>
-        <span v-show="bottomStatus === 'pull' && !bottomAllLoaded" :class="{ 'rotate': topStatus === 'drop' }">上拉加载更多</span>
-        <span v-show="bottomStatus === 'loading'">加载中...</span>
-        <span v-show="bottomStatus === 'drop' && !bottomAllLoaded">释放加载更多</span>
+        <span v-if="bottomAllLoaded">没有更多了</span>
+        <section v-else>
+          <span v-show="bottomStatus === 'pull' && !bottomAllLoaded" :class="{ 'rotate': topStatus === 'drop' }">上拉加载更多</span>
+          <span v-show="bottomStatus === 'loading'">加载中...</span>
+          <span v-show="bottomStatus === 'drop' && !bottomAllLoaded">释放加载更多</span>
+        </section>
       </div>
     </mt-loadmore>
   </div>
@@ -68,6 +70,7 @@
   import BackIcon from '../icons/Back';
   import DiggIcon from '../icons/Digg';
   import { resolveImage } from '../utils/resource';
+  import { getLocalDbUser } from '../utils/user';
 
   const defaultNobody = resolveImage(require('../statics/images/img_default_nobody@2x.png'));
   const defaultAvatar = resolveImage(require('../statics/images/defaultAvatarx2.png'));
@@ -85,7 +88,8 @@
       topAllLoaded: false,
       bottomStatus: '',
       topStatus: '',
-      isWeiXin: TS_WEB.isWeiXin
+      isWeiXin: TS_WEB.isWeiXin,
+      formated: []
     }),
     methods: {
       changeUrl,
@@ -110,6 +114,7 @@
             }
           });
           this.diggs = [ ...newdiggs, ...this.diggs ];
+          this._loadFormateDiggs(newdiggs);
           setTimeout( () => {
             if(this.$refs.loadmoreDiggs)
               this.$refs.loadmoreDiggs.onTopLoaded();
@@ -129,7 +134,8 @@
         .then(response => {
           let diggs = response.data.data;
           if(diggs.length) {
-            this.diggs = [ ...this.diggs, ...diggs ];
+            this.diggs = [ ...this.diggs, diggs ];
+            this._loadFormateDiggs(diggs, false);
             if(diggs.length < 15) {
               this.bottomAllLoaded = true;
             };
@@ -140,11 +146,39 @@
             this.max_id = diggs[diggs.length - 1].id;
           }
         })
-      }
-    },
-    computed: {
-      formatedDiggs () {
-        let newdiggs = [];
+      },
+      _loadFormateDiggs( diggs, top = true) {
+        diggs.forEach(digg => {
+          let newDigg = {
+            name: '',
+            avatar: '',
+            user_id: digg.user_id,
+            time: 0,
+            source_id: digg.source_id,
+            source_content: digg.source_content,
+            component: digg.component,
+            comment_content: digg.comment_content,
+            cover: ''
+          };
+          let user = localEvent.getLocalItem(`user_${digg.user_id}`);
+          getLocalDbUser(digg.user_id).then( user => {
+            const { avatar: { 30: avatar = defaultAvatar} = {} } = user;
+            const { name = '' } = user;
+            if(digg.source_cover) {
+              newDigg.cover = getImage(digg.source_cover, 20);
+            }
+            newDigg.name = name;
+            newDigg.avatar = avatar;
+            newDigg.time = timers(digg.created_at, 8, false);
+            if(!top) {
+              this.formated = [ ...this.formated, newDigg ];
+            } else {
+              this.formated = [ newDigg, ...this.formated ];
+            }
+          });
+        });
+      },
+      _initFormatedDiggs () {
         this.diggs.forEach(digg => {
           let newDigg = {
             name: '',
@@ -158,18 +192,21 @@
             cover: ''
           };
           let user = localEvent.getLocalItem(`user_${digg.user_id}`);
-          const { avatar: { 30: avatar = defaultAvatar} = {} } = user;
-          const { name = '' } = user;
-          if(digg.source_cover) {
-            newDigg.cover = getImage(digg.source_cover, 20);
-          }
-          newDigg.name = name;
-          newDigg.avatar = avatar;
-          newDigg.time = timers(digg.created_at, 8, false)
-          newdiggs.push(newDigg);
+          getLocalDbUser(digg.user_id).then( user => {
+            const { avatar: { 30: avatar = defaultAvatar} = {} } = user;
+            const { name = '' } = user;
+            if(digg.source_cover) {
+              newDigg.cover = getImage(digg.source_cover, 20);
+            }
+            newDigg.name = name;
+            newDigg.avatar = avatar;
+            newDigg.time = timers(digg.created_at, 8, false)
+            this.formated = [ ...this.formated, newDigg ];
+          });
         });
-        return newdiggs;
-      },
+      }
+    },
+    computed: {
       nothing () {
         return this.diggs.length > 0 ? 0 : defaultNobody;
       }
@@ -192,6 +229,7 @@
         this.diggs.forEach( digg => {
           this.ids.push(digg.id);
         });
+        this._initFormatedDiggs();
         if(length < 15) {
           this.bottomAllLoaded = true;
           setTimeout( () => {

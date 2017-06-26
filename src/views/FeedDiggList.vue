@@ -211,15 +211,15 @@
           this.bottomAllLoaded = true;
         }
         diggUsers.forEach( diggUser => {
-          localUser = localEvent.getLocalItem(`user_${diggUser.user_id}`);
-          if(!lodash.keys(localUser).length) {
+          // localUser = localEvent.getLocalItem(`user_${diggUser.user_id}`);
+          // if(!lodash.keys(localUser).length) {
             getUserInfo(diggUser.user_id, 30).then( user => {
               this.localDiggs = { ...this.localDiggs, [diggUser.user_id]: user };
             });
-          } else {
-            this.localDiggs = { ...this.localDiggs, [diggUser.user_id]: localUser };
-          }
-          localUser = {};
+          // } else {
+          //   this.localDiggs = { ...this.localDiggs, [diggUser.user_id]: localUser };
+          // }
+          // localUser = {};
         });
       });
       setTimeout( () => {

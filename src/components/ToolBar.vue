@@ -77,7 +77,7 @@
         for( let index in messageList ) {
           count += messageList[index].count;
         }
-        return count + this.messageCount.comments + this.messageCount.diggs + this.messageCount.notices > 0;
+        return (count + this.messageCount.comments.count + this.messageCount.diggs.count) > 0;
       }
     }
   }

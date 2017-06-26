@@ -4,8 +4,17 @@ const state = {
 	messageCount: {
 		fans: 0,
 		message: 0,
-		comments: 0,
-		notices: 0
+		comments: {
+			count: 0,
+			uids: [],
+			time: ''
+		},
+		notices: 0,
+		diggs: {
+			count: 0,
+			uids: [],
+			time: ''
+		}
 	}
 };
 
@@ -14,7 +23,14 @@ const mutations = {
 		state.messageCount = { ...state.messageCount, ...messageCount };
 	},
 	[CLEANMESSAGE] (state, cleanData) {
-		state.messageCount = { ...state.messageCount, [cleanData] : 0 };
+		let data = 0;
+		if([ 'diggs', 'comments' ].includes(cleanData)) {
+			data = {
+				count: 0,
+				uids: state.messageCount[cleanData].uids
+			};
+		}
+		state.messageCount = { ...state.messageCount, [cleanData] : data };
 	}
 };
 

@@ -6,8 +6,11 @@
           <Col span="5">
             <Button :class="$style.actionBtn" type="text" @click="closePost">取消</Button>
           </Col>
-          <Col span="14" class="title-col">
+          <Col span="14" v-if="!channelId" class="title-col">
             发布动态
+          </Col>
+          <Col span="14" v-else class="title-col">
+            投稿到频道
           </Col>
           <Col span="5" class="header-end-col">
             <LoadingWhiteIcon height="21" width="21" v-if="loading" />
@@ -126,7 +129,8 @@ const postFeed = {
   }),
   computed: {
     ...mapState({
-      show: state => state.showPost.showPost.show
+      show: state => state.showPost.showPost.show,
+      channelId: state => state.showPost.showPost.channelId
     }),
     isDisabled () {
       return !this.feedContent.length;
@@ -151,13 +155,13 @@ const postFeed = {
       if(this.isDisabled || this.loading) return;
       this.loading = true;
       let feed_content = this.feedContent;
-      // let feed_title = this.feedTitle;
       let feed_from = 2;
       let isatuser = this.isatuser;
       let storage_task_ids = this.storage_task_ids;
-      addAccessToken().post(createAPI('feeds'),{
+      let url = this.channelId ? `channels/${this.channelId}/feed` : 'feeds';
+
+      addAccessToken().post(createAPI(url),{
           feed_content,
-          // feed_title,
           feed_from,
           isatuser,
           storage_task_ids
@@ -189,23 +193,25 @@ const postFeed = {
           }
         )
         .then(({ data: { data = {} } = {} }) => {
-          this.$store.dispatch(FEEDSLIST, cb => {
-            cb({
-              [feed_id]: data
+          if(!this.channelId) {
+            this.$store.dispatch(FEEDSLIST, cb => {
+              cb({
+                [feed_id]: data
+              });
             });
-          });
-          // 添加本地最新数据
-          this.$store.dispatch(ADDNEWIDS, cb => {
-            cb([
-              feed_id
-            ]);
-          });
-          // 添加本地关注数据
-          this.$store.dispatch(ADDFOLLOWINGIDS, cb => {
-            cb([
-              feed_id
-            ]);
-          });
+            // 添加本地最新数据
+            this.$store.dispatch(ADDNEWIDS, cb => {
+              cb([
+                feed_id
+              ]);
+            });
+            // 添加本地关注数据
+            this.$store.dispatch(ADDFOLLOWINGIDS, cb => {
+              cb([
+                feed_id
+              ]);
+            });
+          }
         })
       })
     },
@@ -220,7 +226,8 @@ const postFeed = {
       this.loading = false;
       this.$store.dispatch(SHOWPOST, cb => {
         cb ({
-          show: false
+          show: false,
+          channelId: 0
         });
       });
     },

@@ -19,12 +19,12 @@
           </Col>
           <Col span="14">
             <h4 style="font-weight: 400;">评论的</h4>
-            <div v-if="commentCount" style="color: #999;">{{ commentLists }} <span v-show="userCount > 3">等人</span>评论了我</div>
-            <div v-if="!commentCount" style="color: #999">还没有人评论我</div>
+            <div v-if="commentLists" style="color: #999;">{{ commentsText }} <span v-show="messageCount.comments.count > 3">等人</span>评论了我</div>
+            <div v-else style="color: #999">还没有人评论我</div>
           </Col>
-          <Col span="6" v-if="commentCount">
+          <Col span="6" v-if="messageCount.comments.count">
             <timeago :class=$style.time :since="commentTime" locale="zh-CN" :auto-update="60"></timeago>
-            <i :class="$style.messageCount">{{commentCount}}</i>
+            <i :class="$style.messageCount">{{ messageCount.comments.count }}</i>
           </Col>
         </div>
       </Row>
@@ -39,12 +39,12 @@
           </Col>
           <Col span="14">
             <h4 style="font-weight: 400;">赞过的</h4>
-            <div v-if="diggsCount" style="color: #999;">{{ diggLists }} <span v-show="diggsCount > 3">等人</span>赞了我</div>
-            <div v-if="!diggsCount" style="color: #999">还没有人赞我</div>
+            <div v-if="diggLists" style="color: #999;">{{ diggsText }} <span v-show="messageCount.diggs.count > 3">等人</span>赞了我</div>
+            <div v-else style="color: #999">还没有人赞我</div>
           </Col>
-          <Col span="6" v-if="diggsCount">
+          <Col span="6" v-if="messageCount.diggs.count">
             <timeago :class=$style.time :since="diggTime" locale="zh-CN" :auto-update="60"></timeago>
-            <i :class="$style.messageCount">{{diggsCount}}</i>
+            <i :class="$style.messageCount">{{messageCount.diggs.count}}</i>
           </Col>
         </div>
       </Row>
@@ -72,16 +72,17 @@
   </div>
 </template>
 <script>
-  import { NOTICE, TOTALMESSAGELISTS, MESSAGELISTS } from '../stores/types';
+  import { NOTICE, TOTALMESSAGELISTS, MESSAGENOTICE, MESSAGELISTS } from '../stores/types';
   import { createAPI, addAccessToken } from '../utils/request';
   import ToolBar from '../components/ToolBar';
   import localEvent from '../stores/localStorage';
-  import { getUserInfo } from '../utils/user';
+  import { getUserInfo, getLocalDbUser } from '../utils/user';
   import DiggIcon from '../icons/Digg';
   import CommentIcon from '../icons/Comment';
   import timers from '../utils/timer';
   import { changeUrl } from '../utils/changeUrl';
   import lodash from 'lodash';
+  import { mapState } from 'vuex';
 
   const MessageList = {
     components: {
@@ -91,75 +92,83 @@
     },
     data: () => ({
       messages: {},
-      currentUser: 0,
-      isWeiXin: TS_WEB.isWeiXin
+      isWeiXin: TS_WEB.isWeiXin,
+      commentsText: '',
+      diggsText: ''
     }),
     computed: {
+      // 消息统计
+      ...mapState({
+        messageCount: state => state.messageCount.messageCount
+      }),
       imMessageList () {
-        let messageList = this.$store.getters[TOTALMESSAGELISTS];
+        // 获取会话列表
+        let messageList = { ...this.$store.getters[TOTALMESSAGELISTS] };
+        if(!lodash.keys(messageList).length > 0) return {};
         return messageList;
       },
-      diggsCount () {
-        const { diggs: { count = 0 } = {} } = this.messages;
-        return count;
-      },
       diggTime () {
-        return this.messages.diggs.time;
-      },
-      diggLists () {
-        const { diggs: { uids = [] } = {} } = this.messages;
-        let users = '';
-        let count = 0;
-        uids.forEach( (digg, index) => {
-          if(count == 3) return;
-          let userLocalInfo = localEvent.getLocalItem(`user_${digg}`);
-          if(!lodash.keys(userLocalInfo).length) {
-            getUserInfo(digg, 30).then(user => {
-              const { name = '' } = user;
-              users += name + '、';
-            });
-          } else {
-            const { name = ''} = userLocalInfo;
-            users += name + '、';
-          }
-          count ++;
-        });
-        // 删除最后一个 顿号
-        users = users.substr(0, users.length - 1);
-        return users;
-      },
-      commentTime() {
-        const { comments: { time = new window.Date().getTime() } = {} } = this.messages;
+        const { diggs: { time = new window.Date().getTime() } = {} } = this.messageCount;
         return time;
       },
-      commentCount () {
-        const { comments: { count = 0 } = {} } = this.messages;
-        return count;
-      },
-      userCount () {
-        const { comments: { userCount = 0 } = {} } = this.messages;
-        return userCount;
-      },
-      commentLists () {
-        const { comments: { uids = [] } = {} } = this.messages;
+      diggLists () {
+        const { diggs: { uids = [] } = {} } = this.messageCount;
         let users = '';
         let count = 0;
-        uids.forEach((comment, index) => {
+        if(uids.length) return 0;
+        Array.from(new Set(uids)).forEach( (digg, index) => {
           if(count == 3) return;
-          let userLocalInfo = localEvent.getLocalItem(`user_${comment}`);
-          if(!lodash.keys(userLocalInfo).length > 0) {
-            getUserInfo(comment, 30).then(user => {
-              const { name = '' } = user;
-              users += name + '、';
+          window.TS_WEB.dataBase.transaction('rw?', window.TS_WEB.dataBase.userbase, () => {
+            window.TS_WEB.dataBase.userbase.get({ user_id: parseInt(comment) }).then( item => {
+              if(!lodash.keys(item).length > 0) {
+                getUserInfo(comment, 30).then(user => {
+                  const { name = '' } = user;
+                  users += name + '、';
+                  this.diggsText = users.substr(0, users.length - 1);
+                });
+              } else {
+                const { name = '' } = item;
+                users += name + '、';
+                this.diggsText = users.substr(0, users.length - 1);
+              }
+              count ++;    
             });
-          } else {
-            const { name = '' } = userLocalInfo;
-            users += name + '、';
-          }
-          count ++;
+          });
+        });
+        return uids.length;
+      },
+      commentTime() {
+        const { comments: { time = new window.Date().getTime() } = {} } = this.messageCount;
+        return time;
+      },
+      commentLists () {
+        const { comments: { uids = [] } = {} } = this.messageCount;
+        let users = '';
+        let count = 0;
+        if(!uids.length) return 0;
+        window.TS_WEB.dataBase.transaction('rw?', window.TS_WEB.dataBase.userbase, () => {
+          Array.from(new Set(uids)).forEach((comment, index) => {
+            if(count == 3) return;
+            window.TS_WEB.dataBase.userbase.get({ user_id: parseInt(comment) }).then( item => {
+              if(!lodash.keys(item).length > 0) {
+                getUserInfo(comment, 30).then(user => {
+                  const { name = '' } = user;
+                  users += name + '、';
+                  this.commentsText = users.substr(0, users.length - 1);
+                });
+              } else {
+                const { name = '' } = item;
+                users += name + '、';
+                this.commentsText = users.substr(0, users.length - 1);
+              }
+              count ++;    
+            });
+          });
         })
-        users = users.substr(0, users.length - 1);
-        return users;
+        .catch( e => {
+          console.log(e);
+        });
+        return uids.length;
       }
     },
     methods: {
@@ -176,9 +185,7 @@
       }
     },
     created () {
-      let currentUser = localEvent.getLocalItem('UserLoginInfo');
-      this.currentUser = currentUser.user_id;
-      let types = 'diggs,comments, notices';
+      let types = 'diggs,comments';
       let time = 0;
       time = localEvent.getLocalItem('messageFlushTime');
       let nowtime = parseInt(new window.Date().getTime() / 1000);
@@ -195,68 +202,104 @@
       )
       .then( response => {
         let datas = response.data.data;
+        let count = {};
         datas.forEach((data) => {
-          let uids = new window.Array();
-          if(data.uids.length) {
-            uids = Array.from(new Set(data.uids.map( uid => parseInt(uid) )));
-          }
-          messages[data.key] = {
-            count: data.count,
-            max_id: data.max_id,
-            uids: uids,
-            time: this.timers(data.time, 8, false),
-            userCount: uids.length
+          // 消息数量不为空
+          if(data.count) {
+            // 组装数组 写入vuex
+            if(data.key === "follows") {
+              count.fans = data.count + this.messageCount[data.key];
+            } else if( data.key === 'comments') {
+              count[data.key] = {};
+              count[data.key].count = data.count + this.messageCount[data.key].count;
+              count[data.key].uids = Array.from(new Set([ ...this.messageCount[data.key].uids, ...data.uids ]));
+              count[data.key].time = this.timers(data.time, 8, false);
+            } else if( data.key === 'diggs') {
+              count[data.key] = {};
+              count[data.key].count = data.count + this.messageCount[data.key].count;
+              count[data.key].uids = Array.from(new Set([ ...this.messageCount[data.key].uids, ...data.uids ]));
+              count[data.key].time = this.timers(data.time, 8, false);
+            }
           }
         });
-        this.messages = { ...this.messages, ...messages };
+        this.$store.dispatch(MESSAGENOTICE, cb => {
+          cb(count)
+        });
       });
       // 写入聊天对话
-      window.TS_WEB.dataBase.transaction('rw', window.TS_WEB.dataBase.chatroom, window.TS_WEB.dataBase.messagebase, () => {
-        window.TS_WEB.dataBase.chatroom.where('owner').equals(window.TS_WEB.currentUserId).limit(10).sortBy('last_message_time', results => {
-          console.log(results);
-          if(results.length) {
-            results.forEach( result => {
-              let li = {};
-              let uids = result.uids.split(',');
-              let user_id = 0;
-              if(uids[0] == currentUser.user_id) {
-                user_id = uids[1];
-              } else {
-                user_id = uids[0];
-              }
-              window.TS_WEB.dataBase.messagebase
-              .where('cid')
-              .equals(result.cid)
-              .filter( (item) => {
-                return item.seq != -1;
-              })
-              .limit(15)
-              .sortBy('mid', array => {
-                let messageList = [];
-                let messageBody = {};
-                if(array.length) {
-                  array.forEach( item => {
-                    messageBody.user_id = item.uid;
-                    messageBody.txt = item.txt;
-                    messageBody.time = item.time;
-                    messageList.push(messageBody);
-                    messageBody = {};
-                  })
+      window.TS_WEB.dataBase.transaction('rw?', window.TS_WEB.dataBase.chatroom, window.TS_WEB.dataBase.messagebase, window.TS_WEB.dataBase.userbase, () => {
+        // 查询当前用户的本地对话
+        window.TS_WEB.dataBase.chatroom
+          .orderBy('last_message_time')
+          .filter( (item) => {
+            return (item.owner === window.TS_WEB.currentUserId);
+          })
+          .limit(10)
+          .reverse()
+          .toArray( results => {
+            if(results.length) {
+              results.forEach( result => {
+                let li = {};
+                let uids = result.uids.split(',');
+                let user_id = 0;
+                if(uids[0] == window.TS_WEB.currentUserId) {
+                  user_id = uids[1];
+                } else {
+                  user_id = uids[0];
                 }
-                getUserInfo(user_id, 30).then( user => {
-                  li.name = user.name;
-                  li.avatar = user.avatar[30];
-                  li.lists = messageList;
-                  li.cid = result.cid;
-                  li.user_id = user_id;
-                  this.$store.dispatch(MESSAGELISTS, cb => {
-                    cb(li);
+                window.TS_WEB.dataBase.messagebase
+                .orderBy('seq')
+                .filter( (item) => {
+                  return (item.seq != -1 && item.cid === result.cid);
+                })
+                .limit(15)
+                .reverse()
+                .toArray( array => {
+                  let messageList = [];
+                  let messageBody = {};
+                  if(array.length) {
+                    array = array.reverse();
+                    array.forEach( amessage => {
+                      messageBody.user_id = amessage.uid;
+                      messageBody.txt = amessage.txt;
+                      messageBody.time = amessage.time;
+                      messageBody.addCount = false;
+                      messageList = [ ...messageList, messageBody ];
+                      messageBody = {};
+                    });
+                  }
+                  getLocalDbUser(user_id).then( item => {
+                    if(!item) {
+                      getUserInfo(user_id, 30).then( user => {
+                        li.name = user.name;
+                        li.avatar = user.avatar[30];
+                        li.lists = messageList;
+                        li.cid = result.cid;
+                        li.user_id = user_id;
+                        // li.count = 0;
+                        this.$store.dispatch(MESSAGELISTS, cb => {
+                          cb(li);
+                        });
+                        li = {};
+                      });
+
+                    } else {
+                      li.name = item.name;
+                      li.avatar = item.avatar[30];
+                      li.lists = messageList;
+                      li.cid = result.cid;
+                      li.user_id = user_id;
+                      // li.count = 0;
+                      this.$store.dispatch(MESSAGELISTS, cb => {
+                        cb(li);
+                      });
+                      // 
+                      li = {};
+                    }
                   });
-                  li = {};
                 });
-              })
-            });
-          }
+              });
+            }
         })
       })
       .catch( e => {

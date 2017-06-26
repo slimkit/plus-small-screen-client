@@ -120,8 +120,8 @@
           if(status.status || status.code == 0) {
             this.localDiggs[user].is_following = 1;
             // localEvent.setLocalItem(`user_${user}`, this.localDiggs[user]);
-            window.TS_WEB.dataBase.transaction('rw', window.TS_WEB.dataBase.userbase, () => {
-              window.TS_WEB.dataBase.userbase.add(this.localDiggs[user]);
+            window.TS_WEB.dataBase.transaction('rw?', window.TS_WEB.dataBase.userbase, () => {
+              window.TS_WEB.dataBase.userbase.put(this.localDiggs[user]);
             })
             this.$store.dispatch(SHOWFEEDDIGGSLISTS, cb => {
               cb({

@@ -15,7 +15,8 @@
         }
     ],
     "require": {
-        "zhiyicx/plus-component-im": "^2.0"
+        "zhiyicx/plus-component-im": "^2.0",
+        "zhiyicx/plus-component-news": "^1.0"
     },
     "autoload" : {
         "psr-4": {

@@ -52,10 +52,12 @@
         </div>
       </div>
       <div slot="bottom" v-if="!nothing" class="loadMoreBottom" :class="{hasNoMore: loadMoreBottomStyle == 0, noMore: loadMoreBottomStyle == 1, hasHalfMore: loadMoreBottomStyle == 2}">
-        <span v-show="bottomAllLoaded && bottomStatus !== 'loading' && !nothing && hasNoMore">没有更多了</span>
-        <span v-show="bottomStatus === 'loading' && !bottomAllLoaded">加载中...</span>
-        <span v-show="bottomStatus === 'pull' && !bottomAllLoaded">上拉加载更多</span>
-        <span v-show="bottomStatus === 'drop'">释放加载更多</span>
+        <span v-if="bottomAllLoaded && bottomStatus !== 'loading' && !nothing && hasNoMore">没有更多了</span>
+        <section v-else>
+          <span v-show="bottomStatus === 'loading' && !bottomAllLoaded">加载中...</span>
+          <span v-show="bottomStatus === 'pull' && !bottomAllLoaded">上拉加载更多</span>
+          <span v-show="bottomStatus === 'drop'">释放加载更多</span>
+        </section>
       </div>
     </mt-loadmore>
     <div v-if="currentUser != user_id" :class="$style.followStatus">
@@ -110,7 +112,7 @@
       CommentIcon
     },
     data: () => ({
-      currentUser: 0, // 当前登录用户
+      currentUser: window.TS_WEB.currentUserId, // 当前登录用户
       userInfo: {}, // 当前被查看着用户信息
       user_id: 0,
       bottomAllLoaded: false,
@@ -131,7 +133,7 @@
             type: 0,
             uids: [
               this.user_id,
-              this.currentUser
+              window.TS_WEB.currentUserId
             ]
           },
           {
@@ -142,15 +144,15 @@
           let data = response.data.data;
           let uids = data.uids.split(',');
           let uid = 0;
-          if(uids[0] == this.currentUser) {
+          if(uids[0] == window.TS_WEB.currentUserId) {
             uid = uids[1];
           } else {
             uid = uids[0];
           }
-          window.TS_WEB.dataBase.transaction('rw', window.TS_WEB.dataBase.chatroom, () => {
+          window.TS_WEB.dataBase.transaction('rw?', window.TS_WEB.dataBase.chatroom, () => {
             window.TS_WEB.dataBase.chatroom.where('cid').equals(data.cid).count( count => {
               if(!count) {
-                window.TS_WEB.dataBase.chatroom.add({
+                window.TS_WEB.dataBase.chatroom.put({
                   cid: data.cid,
                   user_id: data.user_id,
                   name: data.name,
@@ -168,7 +170,7 @@
               avatar: this.userInfo.avatar[30],
               lists: [],
               cid: data.cid,
-              user_id: this.currentUser
+              user_id: window.TS_WEB.currentUserId
             });
           });
           this.$router.push(`/users/message/${uid}/${data.cid}`);
@@ -297,7 +299,7 @@
         // loadmore 底部margin状态
         let MarginLoadMoreBottom = 0;
 
-        if(this.currentUser != this.user_id) {
+        if(window.TS_WEB.currentUserId != this.user_id) {
           MarginLoadMoreBottom = 1;
         } else {
           // 第一次加载内容不足15条 没有margin值
@@ -309,7 +311,7 @@
       },
       mintPaddingBottomStyle () {
         let mintPaddingBottom = 0;
-        if(this.currentUser != this.user_id) {
+        if(window.TS_WEB.currentUserId != this.user_id) {
           if(this.bottomAllLoaded == true) {
             mintPaddingBottom = 1;
           } else {
@@ -391,10 +393,8 @@
       this.$store.dispatch(CLEANUSERFEEDS);
     },
     created () {
-      let currentUser = localEvent.getLocalItem('UserLoginInfo');
-      this.currentUser = currentUser.user_id;
       let user_id = parseInt(this.$route.params.user_id);
-      if ( !user_id && !this.currentUser ) {
+      if ( !user_id && !window.TS_WEB.currentUserId ) {
         this.$store.dispatch(NOTICE, cb => {
           cb({
             text: '发生一些错误',
@@ -405,9 +405,9 @@
         this.goBack();
         return;
       }
-      this.user_id = this.currentUser != user_id ? user_id : this.currentUser;
-      // this.userInfo = { ...this.userInfo, ...localEvent.getLocalItem(`user_${this.user_id}`) };
+      this.user_id = window.TS_WEB.currentUserId != user_id ? user_id : window.TS_WEB.currentUserId;
       getUserInfo(this.user_id, 30).then( user => {
+        console.log(user);
         this.userInfo = { ...this.userInfo, ...user };
       });
       // 获取动态列表

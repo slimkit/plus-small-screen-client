@@ -298,18 +298,30 @@
             .then( response => {
               let count = {
                 fans: 0,
-                diggs: 0,
-                comments: 0,
+                diggs: {
+                  count: 0,
+                  time: '',
+                  uids: []
+                },
+                comments: {
+                  count: 0,
+                  time: '',
+                  uids: []
+                },
                 notice: 0
               }
               let data = response.data.data;
               for( let index in data ) {
-                if(data[index].key == "follows") {
+                if(data[index].key === "follows") {
                   count.fans = data[index].count;
-                } else if( data[index].key == 'comments') {
-                  count.comments = data[index].count;
-                } else if( data[index].key == 'diggs') {
-                  count.diggs = data[index].count;
+                } else if( data[index].key === 'comments') {
+                  count.comments.count = data[index].count;
+                  count.comments.uids = data[index].uids;
+                  count.comments.time = data[index].time;
+                } else if( data[index].key === 'diggs') {
+                  count.diggs.count = data[index].count;
+                  count.diggs.uids = data[index].uids;
+                  count.diggs.time = data[index].time;
                 } 
                 // else {
                 //   count.notices = data[index].count;

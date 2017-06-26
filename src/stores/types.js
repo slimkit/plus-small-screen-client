@@ -94,3 +94,16 @@ export const CLEANNEWMESSAGE = 'cleannewmessage';
 export const IMSTATUS = 'imstatus'; // 监测im 链接状态
 export const MESSAGENOTICE = 'messagenotice';
 export const CLEANMESSAGE = 'cleanmessage';
+export const UNREAD = 'unread';
+
+/**
+ * news about
+ */
+export const CURRENTNEWSCATEID = 'currentnewscateid';
+export const NEWSSEARCHKEY = 'newssearchkey';
+export const NEWSSEARCHRESULT = 'newssearchresult';
+export const APPENDNEWSTORESULT = 'appendnewstoresult';
+export const PREPENDNEWSTORESULT = 'prependnewstoresult';
+export const RESETKEYWORD = 'resetkeyword';
+export const RESULTIDS = 'resultids';
+export const ADDRESULTIDS = 'addresultids';

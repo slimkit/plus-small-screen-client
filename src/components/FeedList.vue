@@ -24,10 +24,12 @@
         <Feed v-for="(feed, index) in feedsList" :feed="feed" :key="feed.feed.feed_id"></Feed>
       </ul>
       <div slot="bottom" class="mint-loadmore-bottom">
-        <span v-show="bottomAllLoaded">没有更多了</span>
-        <span v-show="bottomStatus === 'pull' && !bottomAllLoaded" :class="{ 'rotate': topStatus === 'drop' }">上拉加载更多</span>
-        <span v-show="bottomStatus === 'loading'">加载中...</span>
-        <span v-show="bottomStatus === 'drop' && !bottomAllLoaded">释放加载更多</span>
+        <span v-if="bottomAllLoaded">没有更多了</span>
+        <section v-else>
+          <span v-show="bottomStatus === 'pull' && !bottomAllLoaded" :class="{ 'rotate': topStatus === 'drop' }">上拉加载更多</span>
+          <span v-show="bottomStatus === 'loading'">加载中...</span>
+          <span v-show="bottomStatus === 'drop' && !bottomAllLoaded">释放加载更多</span>
+        </section>
       </div>
     </mt-loadmore>
   </div>
@@ -59,7 +61,6 @@
       bottomAllLoaded: false,
       topAllLoaded: false,
       bottomStatus: '',
-      isShowComfirm: false,
       topStatus: '',
       showSpinner: true,
       // showTop: true,

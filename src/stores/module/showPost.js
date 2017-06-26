@@ -2,7 +2,8 @@ import { SHOWPOST } from '../types';
 
 const state = {
   showPost: {
-    show: false
+    show: false,
+    channelId: 0
   }
 };
 

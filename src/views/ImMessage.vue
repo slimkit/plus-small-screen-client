@@ -50,7 +50,7 @@
 </template>
 
 <script>
-	import { getUserInfo } from '../utils/user';
+	import { getUserInfo, getLocalDbUser } from '../utils/user';
 	import localEvent from '../stores/localStorage';
 	import { NOTICE, TOTALMESSAGELISTS, TOTALMESSAGELIST, CLEANNEWMESSAGE } from '../stores/types';
 	import MoreIcon from '../icons/More';
@@ -124,10 +124,11 @@
 							hash,
 							mid: 0,
 							seq: -1,
-							time: 0
+							time: 0,
+							owner: window.TS_WEB.currentUserId
 						};
-					window.TS_WEB.dataBase.transaction('rw', window.TS_WEB.dataBase.messagebase, () => {
-						window.TS_WEB.dataBase.messagebase.add(dbMsg);
+					window.TS_WEB.dataBase.transaction('rw?', window.TS_WEB.dataBase.messagebase, () => {
+						window.TS_WEB.dataBase.messagebase.put(dbMsg);
 					})
 					.catch (function (e) {
 				    console.error("Generic error: " + e);
@@ -137,12 +138,10 @@
 			}
 		},
 		computed: {
-			...mapGetters({
-				messages: TOTALMESSAGELISTS
-			}),
 			room() {
+				let messagelist = this.$store.getters[TOTALMESSAGELISTS];
 				const key = `room_${this.cid}`;
-				const { [key]: room = {} } = this.messages;
+				const { [key]: room = {} } = messagelist;
 				return room;
 			},
 			messagelists () {
@@ -193,42 +192,26 @@
 				return;
 			}
 			// load target user info;
-			let targetUser = localEvent.getLocalItem(`user_${targetUserId}`);
-			if(!lodash.keys(targetUser).length > 0) {
-				getUserInfo(targetUserId, 20).then( user => {
-					this.targetUser = { ...this. targetUser, ...user };
-				})
-			} else {
-				this.targetUser = { ...this.targetUser, ...targetUser };
-			}
+			getLocalDbUser(targetUserId).then( item => {
+				if(item !== undefined) {
+					this.targetUser = { ...item };
+				} else {
+					getUserInfo(targetUserId, 30).then( user => {
+						this.targetUser = { ...user };
+					})
+				}
+			});
 
-			// load current user info
-			let currentUser = localEvent.getLocalItem('UserLoginInfo');
-			this.currentUser = currentUser.user_id;
-			let userInfo = localEvent.getLocalItem(`user_${currentUser.user_id}`);
-			if(!lodash.keys(userInfo).length > 0) {
-				getUserInfo(currentUser.user_id, 20).then( user => {
-					this.userInfo = { ...this.userInfo, ...user };
-				});
-			} else {
-				this.userInfo = { ...this.userInfo, ...userInfo };
-			}
-
-			// 通过im获取10条最近的消息
-			if(TS_WEB.webSocket !== null && TS_WEB.webSocket.readyState == 1) {
-				if(this.messagelists.length > 1) return;
-				let msg = '2';
-				let message = [
-					'convr.msg.sync',
-					{
-				    "cid": parseInt(this.cid),
-				    'order': 1,
-				    "limit": 10,
-					}
-				];
-				msg += JSON.stringify(message);
-				TS_WEB.webSocket.send(msg);
-			}
+			// load logged on userinfo
+			getLocalDbUser(window.TS_WEB.currentUserId).then( item => {
+				if(item !== undefined) {
+					this.userInfo = { ...item };
+				} else {
+					getUserInfo(window.TS_WEB.currentUserId, 30).then( user => {
+						this.userInfo = { ...user };
+					})
+				}
+			});
 		}
 	}
 

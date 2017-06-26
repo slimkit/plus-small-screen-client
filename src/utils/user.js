@@ -5,6 +5,19 @@ import getImage from './getImage';
 import defaultAvatar from '../statics/images/defaultAvatarx2.png';
 import lodash from 'lodash';
 
+// async function getLocalDbUser(user_id) {
+//   return await window.TS_WEB.dataBase.transaction('rw?', window.TS_WEB.dataBase.userbase, async () => {
+//     return await window.TS_WEB.dataBase.userbase.where('user_id').equals(parseInt(user_id)).toArray(); 
+//   })
+// };
+function getLocalDbUser( user_id ) {
+  return window.TS_WEB.dataBase.transaction('rw?', window.TS_WEB.dataBase.userbase, () => {
+    return window.TS_WEB.dataBase.userbase.where('user_id').equals(parseInt(user_id)).toArray().then( array => {
+      return array.pop();
+    }); 
+  })
+};
+
 function followingUser(user_id, cb) {
   return new Promise( (resolve, reject ) => {
     addAccessToken().post(
@@ -17,6 +30,9 @@ function followingUser(user_id, cb) {
       }
     )
     .then(response => {
+      window.TS_WEB.dataBase.transaction('rw?', window.TS_WEB.dataBase.relationship, () => {
+        window.TS_WEB.dataBase.relationship.where("[uid+uuid]").equals([window.TS_WEB.currentUserId, user_id]).modify({following: 1});
+      });
       resolve(response.data);
     })
     .catch( error => {
@@ -35,6 +51,9 @@ function unFollowingUser(user_id) {
       }
     )
     .then(response => {
+      window.TS_WEB.dataBase.transaction('rw?', window.TS_WEB.dataBase.relationship, () => {
+        window.TS_WEB.dataBase.relationship.where("[uid+uuid]").equals([window.TS_WEB.currentUserId, user_id]).modify({following: 0});
+      });
       resolve(response.data);
     })
     .catch(error => {
@@ -102,10 +121,9 @@ function getUserInfo (user_id, process = 30) {
       userLocal.is_following = user.is_following ? 1 : 0;
       if(user.id !== TS_WEB.currentUserId) {
         // 关注和相互关注状态
-        db.transaction('rw', db.relationship, () => {
+        db.transaction('rw?', db.relationship, () => {
           db.relationship.where('[uid+uuid]').equals([window.TS_WEB.currentUserId, user.id]).delete().then( item => {
-            console.log(item);
-            db.relationship.add({
+            db.relationship.put({
               uid: window.TS_WEB.currentUserId,
               uuid: user.id,
               followed: user.is_followed ? 1 : 0,
@@ -141,16 +159,13 @@ function getUserInfo (user_id, process = 30) {
       });
       localEvent.setLocalItem('user_' + user_id, userLocal);
 
-      delete dataForBase.is_following;
-      delete dataForBase.is_followed;
       // 删除旧用户，写入新用户
-      db.transaction('rw', db.userbase, () => {
-        db.userbase.where('user_id').equals(dataForBase.user_id).delete().then( () => {
-          db.userbase.add(
+      db.transaction('rw?', db.userbase, () => {
+        db.userbase.where('user_id').equals(parseInt(dataForBase.user_id)).delete().then( () => {
+          db.userbase.put(
             dataForBase
           )
         });
-          
       })
       .then()
       .catch( err => {
@@ -229,7 +244,7 @@ function getUsersInfo (user_ids, cb) {
           delete dataForBase.is_followed;
           delete dataForBase.is_following;
           // 删除旧用户，写入新用户
-          // db.transaction('rw', db.userbase, () => {
+          // db.transaction('rw?', db.userbase, () => {
           //   db.userbase.where('user_id').equals(dataForBase.user_id).delete().then(user => {
           //     db.userbase.add(
           //       dataForBase
@@ -256,5 +271,6 @@ export {
   getUsersInfo,
   getAvatar,
   unFollowingUser,
-  followingUser
+  followingUser,
+  getLocalDbUser
 };
