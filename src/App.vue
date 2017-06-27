@@ -23,8 +23,8 @@
   import { createAPI, addAccessToken } from './utils/request';
   import errorCodes from './stores/errorCodes';
   import { connect } from './utils/webSocket';
-  import { getUserInfo } from './utils/user';
-  import { IMSTATUS, USERS_APPEND, MESSAGENOTICE } from './stores/types';
+  import { getUserInfo, getLocalDbUser } from './utils/user';
+  import { IMSTATUS, USERS_APPEND, MESSAGENOTICE, MESSAGEROOMS } from './stores/types';
 
   // indexedDB
   import Dexie from 'dexie';
@@ -184,7 +184,42 @@
                   if(!number > 0) {
                     list.last_message_time = 0;
                     list.owner = window.TS_WEB.currentUserId;
-                    window.TS_WEB.dataBase.chatroom.put(list)
+                    // 将对话列表写入到本地数据库
+                    window.TS_WEB.dataBase.chatroom.put(list);
+                    // 组装vuex所需要的数据
+                    let room = {
+                      cid: list.cid, // 聊天id
+                      user_id: 0, // 聊天对象id
+                      name: '', // 聊天对象昵称
+                      avatar: '', // 聊天对象头像
+                      lists: [], // 聊天内容， 默认为空
+                      count: 0 // 新消息统计， 默认为空
+                    };
+                    let uids = list.uids.split(',');
+                    let user_id = 0;
+                    if(uids[0] == window.TS_WEB.currentUserId) {
+                      user_id = uids[1];
+                    } else {
+                      user_id = uids[0];
+                    }
+                    room.user_id = user_id;
+                    getLocalDbUser(user_id).then( item => {
+                      if(item === undefined) {
+                        getUserInfo(user_id, 30).then( user => {
+                          room.name = user.name;
+                          room.avatar = user.avatar[30];
+                          this.$store.dispatch(MESSAGEROOMS, cb => {
+                            cb(room);
+                          })
+                        })
+                      } else {
+                        room.name = item.name;
+                        room.avatar = item.avatar[30];
+                        this.$store.dispatch(MESSAGEROOMS, cb => {
+                          cb(room);
+                        })
+                      }
+                    });
                   }
                 });
               })

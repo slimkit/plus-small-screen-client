@@ -95,6 +95,7 @@ export const IMSTATUS = 'imstatus'; // 监测im 链接状态
 export const MESSAGENOTICE = 'messagenotice';
 export const CLEANMESSAGE = 'cleanmessage';
 export const UNREAD = 'unread';
+export const MESSAGEROOMS = 'messagerooms';
 
 /**
  * news about

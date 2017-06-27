@@ -1,4 +1,4 @@
-import { TOTALMESSAGELISTS,  TOTALMESSAGELIST, SYNCIMMESSAGE, MESSAGELISTS, CLEANNEWMESSAGE, UNREAD } from '../types';
+import { TOTALMESSAGELISTS,  TOTALMESSAGELIST, SYNCIMMESSAGE, MESSAGELISTS, CLEANNEWMESSAGE, UNREAD, MESSAGEROOMS } from '../types';
 import localEvent from '../localStorage';
 import { getUserInfo, getLocalDbUser } from '../../utils/user';
 import lodash from 'lodash';
@@ -10,6 +10,11 @@ const state = {
 };
 
 const mutations = {
+	// 添加聊天对话
+	[MESSAGEROOMS] (state, { index, data }) {
+		state.messageLists = { ...state.messageLists, [index]: data };
+	},
+
 	[UNREAD] (state, {index, room}) {
 		state.messageLists = { ...state.messageLists, [index]: room };
 	},
@@ -39,6 +44,14 @@ const mutations = {
 };
 
 const actions = {
+	// 添加聊天房间, 数据需要在提交到action之前先处理
+	[MESSAGEROOMS]: (context, cb) => {
+		cb( data => {
+			let index = `room_${data.cid}`;
+			context.commit(MESSAGEROOMS, { index, data });
+		})
+	},
+
 	// 未读数
 	[UNREAD]: (context, cb) => {
 		return new Promise( (resolove, reject) => {
@@ -47,7 +60,6 @@ const actions = {
 				let { messageLists } = context.state;
 				if(messageLists[index] === undefined) {
 					const room = {
-						// user_id: roomInfo.uid,
 						user_id: roomInfo.targetUser,
 						lists: [],
 						count: 1,
