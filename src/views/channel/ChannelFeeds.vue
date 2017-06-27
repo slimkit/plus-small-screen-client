@@ -5,10 +5,10 @@
         <BackIcon @click.native="goTo(-1)" height="30" width="30" color="#fff" />
       </p>
       <section class="info">
-        <img :src="avatar" class="cover" :alt="channelInfo.title">
+        <img v-lazy="avatar" class="cover" :alt="channelInfo.title">
         <section class="detailInfo">
           <section>
-            <img :src="avatar" :alt="channelInfo.title" >
+            <img v-lazy="avatar" :alt="channelInfo.title" >
             <h4>{{ channelInfo.title }}</h4>
             <p>{{ channelInfo.description }}</p>
             <section>
