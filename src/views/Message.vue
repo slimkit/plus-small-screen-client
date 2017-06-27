@@ -115,8 +115,10 @@
         const { diggs: { uids = [] } = {} } = this.messageCount;
         let users = '';
         let count = 0;
-        if(uids.length) return 0;
-        Array.from(new Set(uids)).forEach( (digg, index) => {
+        let newUids = [ ...uids ];
+
+        if(!newUids.length) return 0;
+        Array.from(new Set(newUids)).forEach( (digg, index) => {
           if(count > 3) return;
           window.TS_WEB.dataBase.transaction('rw?', window.TS_WEB.dataBase.userbase, () => {
             window.TS_WEB.dataBase.userbase.get({ user_id: parseInt(digg) }).then( item => {
@@ -128,14 +130,14 @@
                 });
               } else {
                 const { name = '' } = item;
-                users += name + '、';
+                users += (name + '、');
                 this.diggsText = users.substr(0, users.length - 1);
               }
               count ++;    
             });
           });
         });
-        return uids.length;
+        return newUids.length;
       },
       commentTime() {
         const { comments: { time = new window.Date().getTime() } = {} } = this.messageCount;
@@ -158,7 +160,7 @@
                 });
               } else {
                 const { name = '' } = item;
-                users += name + '、';
+                users += (name + '、');
                 this.commentsText = users.substr(0, users.length - 1);
               }
               count ++;    
