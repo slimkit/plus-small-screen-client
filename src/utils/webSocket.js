@@ -94,13 +94,38 @@ function onMessage (message) {
 		                getLocalDbUser(user_id).then( item => {
 											if(item === undefined) {
 												getUserInfo(user_id, 30).then( user => {
-													// 未读数
+													// 未读数 
+													if(value.uid !== window.TS_WEB.currentUserId) { // 添加新消息
+														app.$store.dispatch(UNREAD, cb => {
+															cb({
+																cid: value.cid, 
+																uid: value.uid,
+																name: user.name,
+																avatar: user.avatar[30],
+																targetUser: user_id
+															});
+														})
+														.then ( () => {
+															app.$store.dispatch(TOTALMESSAGELIST, cb => {
+																cb(value);
+															});
+														});
+													} else {
+														app.$store.dispatch(TOTALMESSAGELIST, cb => {
+															cb(value);
+														});
+													}
+													
+												})
+											} else {
+												// 未读数
+												if(value.uid !== window.TS_WEB.currentUserId) { // 添加信息消息
 													app.$store.dispatch(UNREAD, cb => {
 														cb({
 															cid: value.cid, 
 															uid: value.uid,
-															name: user.name,
-															avatar: user.avatar[30],
+															name: item.name,
+															avatar: item.avatar[30],
 															targetUser: user_id
 														});
 													})
@@ -109,23 +134,11 @@ function onMessage (message) {
 															cb(value);
 														});
 													});
-												})
-											} else {
-												// 未读数
-												app.$store.dispatch(UNREAD, cb => {
-													cb({
-														cid: value.cid, 
-														uid: value.uid,
-														name: item.name,
-														avatar: item.avatar[30],
-														targetUser: user_id
-													});
-												})
-												.then ( () => {
+												} else {
 													app.$store.dispatch(TOTALMESSAGELIST, cb => {
 														cb(value);
 													});
-												});
+												}
 											}
 										})
 		              }
@@ -153,12 +166,36 @@ function onMessage (message) {
 										if(item === undefined) {
 											getUserInfo(user_id, 30).then( user => {
 												// 未读数
+												if(value.uid !== window.TS_WEB.currentUserId) { // 添加新消息
+													app.$store.dispatch(UNREAD, cb => {
+														cb({
+															cid: value.cid, 
+															uid: value.uid,
+															name: user.name,
+															avatar: user.avatar[30],
+															targetUser: user_id
+														});
+													})
+													.then ( () => {
+														app.$store.dispatch(TOTALMESSAGELIST, cb => {
+															cb(value);
+														});
+													});
+												} else {
+													app.$store.dispatch(TOTALMESSAGELIST, cb => {
+														cb(value);
+													});
+												}
+											})
+										} else {
+											// 未读数
+											if(value.uid !== window.TS_WEB.currentUserId) { // 添加新消息
 												app.$store.dispatch(UNREAD, cb => {
 													cb({
 														cid: value.cid, 
 														uid: value.uid,
-														name: user.name,
-														avatar: user.avatar[30],
+														name: item.name,
+														avatar: item.avatar[30],
 														targetUser: user_id
 													});
 												})
@@ -166,24 +203,13 @@ function onMessage (message) {
 													app.$store.dispatch(TOTALMESSAGELIST, cb => {
 														cb(value);
 													});
-												});
-											})
-										} else {
-											// 未读数
-											app.$store.dispatch(UNREAD, cb => {
-												cb({
-													cid: value.cid, 
-													uid: value.uid,
-													name: item.name,
-													avatar: item.avatar[30],
-													targetUser: user_id
-												});
-											})
-											.then ( () => {
+												});	
+											} else {
 												app.$store.dispatch(TOTALMESSAGELIST, cb => {
 													cb(value);
 												});
-											});
+
+											}
 										}
 									})
 								}
