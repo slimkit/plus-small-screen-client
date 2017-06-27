@@ -17,9 +17,14 @@
               </div>
             </div>
           </Col>
-          <Col span="15" style="padding: 0;">
+          <Col span="15" style="padding: 0;" v-if="messageCount.comments.count">
             <h4 style="font-weight: 400;">评论的</h4>
             <div v-if="commentLists" style="color: #999;">{{ commentsText }} <span v-show="messageCount.comments.count > 3">等人</span>评论了我</div>
+            <div v-else style="color: #999">还没有人评论我</div>
+          </Col>
+          <Col span="20" style="padding-right: 12px;" v-else>
+            <h4 style="font-weight: 400;">评论的</h4>
+            <div v-if="commentLists" style="color: #999;">{{ commentsText }}</div>
             <div v-else style="color: #999">还没有人评论我</div>
           </Col>
           <Col span="5" v-if="messageCount.comments.count">
