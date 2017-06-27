@@ -73,7 +73,7 @@ function onMessage (message) {
 				// 对比本地存储的会话，写入新会话
 				window.TS_WEB.dataBase.transaction('rw?', window.TS_WEB.dataBase.messagebase, window.TS_WEB.dataBase.chatroom, () => {
 					window.TS_WEB.dataBase.messagebase.where('[cid+owner]').equals([value.cid, window.TS_WEB.currentUserId]).last( item => {
-						if(lodash.keys(item).length) {
+						if(item !== undefined) {
 							if( value.seq > item.seq) {
 								// 写入数据库
 								window.TS_WEB.dataBase.messagebase.put(value);
@@ -97,9 +97,10 @@ function onMessage (message) {
 													app.$store.dispatch(UNREAD, cb => {
 														cb({
 															cid: value.cid, 
-															uid: user_id,
+															uid: value.uid,
 															name: user.name,
-															avatar: user.avatar[30]
+															avatar: user.avatar[30],
+															targetUser: user_id
 														});
 													})
 													.then ( () => {
@@ -113,9 +114,10 @@ function onMessage (message) {
 												app.$store.dispatch(UNREAD, cb => {
 													cb({
 														cid: value.cid, 
-														uid: user_id,
+														uid: value.uid,
 														name: item.name,
-														avatar: item.avatar[30]
+														avatar: item.avatar[30],
+														targetUser: user_id
 													});
 												})
 												.then ( () => {
@@ -145,6 +147,7 @@ function onMessage (message) {
 	                  user_id = uids[0];
 	                }
 	                // 未读数
+	                // 获取目标用户
 									getLocalDbUser(user_id).then( item => {
 										if(item === undefined) {
 											getUserInfo(user_id, 30).then( user => {
@@ -152,9 +155,10 @@ function onMessage (message) {
 												app.$store.dispatch(UNREAD, cb => {
 													cb({
 														cid: value.cid, 
-														uid: user_id,
+														uid: value.uid,
 														name: user.name,
-														avatar: user.avatar[30]
+														avatar: user.avatar[30],
+														targetUser: user_id
 													});
 												})
 												.then ( () => {
@@ -168,9 +172,10 @@ function onMessage (message) {
 											app.$store.dispatch(UNREAD, cb => {
 												cb({
 													cid: value.cid, 
-													uid: user_id,
+													uid: value.uid,
 													name: item.name,
-													avatar: item.avatar[30]
+													avatar: item.avatar[30],
+													targetUser: user_id
 												});
 											})
 											.then ( () => {

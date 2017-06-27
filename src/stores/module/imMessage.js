@@ -47,7 +47,8 @@ const actions = {
 				let { messageLists } = context.state;
 				if(messageLists[index] === undefined) {
 					const room = {
-						user_id: roomInfo.uid,
+						// user_id: roomInfo.uid,
+						user_id: roomInfo.targetUser,
 						lists: [],
 						count: 1,
 						cid: roomInfo.cid,

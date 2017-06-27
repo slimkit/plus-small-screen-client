@@ -15,7 +15,7 @@
     </div>
 		<div class="messageList" id="messagelists">
 			<div class="message" v-for="msg in messagelists">
-				<div class="hemessage" v-if="msg.user_id != currentUser" >
+				<div class="hemessage" v-if="msg.user_id !== currentUser" >
 					<img :src="room.avatar" class="avatar">
 					<div class="content">
 						<h5 class="name">{{room.name}}</h5>
@@ -70,7 +70,7 @@
 			targetUser: { 
 
 			},
-			currentUser: 0,
+			currentUser: window.TS_WEB.currentUserId,
 			userInfo: {},
 			cid: 0,
 			user_id: 0,
