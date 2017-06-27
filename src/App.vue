@@ -43,7 +43,6 @@
     },
     computed: {
       imStatus () { // im状态监测
-        if(!this.loaded) return '';
         let imstatus = this.$store.getters[IMSTATUS];
         let userLoginInfo = localEvent.getLocalItem('UserLoginInfo');
         if(lodash.keys(userLoginInfo).length && !imstatus.open && TS_WEB.webSocket !== null && TS_WEB.webSocket.readyState != 1 && TS_WEB.readyState != 0) {
