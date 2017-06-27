@@ -30,6 +30,9 @@
   import Dexie from 'dexie';
 
   const App = {
+    data: () => ({
+      loaded: false
+    }),
     components: {
       NoticeText,
       IviewSwiper,
@@ -40,6 +43,7 @@
     },
     computed: {
       imStatus () { // im状态监测
+        if(!this.loaded) return '';
         let imstatus = this.$store.getters[IMSTATUS];
         let userLoginInfo = localEvent.getLocalItem('UserLoginInfo');
         if(lodash.keys(userLoginInfo).length && !imstatus.open && TS_WEB.webSocket !== null && TS_WEB.webSocket.readyState != 1 && TS_WEB.readyState != 0) {
@@ -49,7 +53,6 @@
       }
     },
     created() {
-      // console.log(Dexie.semVer);
       let db = new Dexie('ThinkSNS');
       db.debug = 'dexie';
       db
@@ -189,22 +192,19 @@
                   if(!number > 0) {
                     list.last_message_time = 0;
                     list.owner = window.TS_WEB.currentUserId;
-                    // window.TS_WEB.dataBase.chatroom.put(list);
                     lists.push(list);
                   }
                 })
                 .then( () => {
                   window.TS_WEB.dataBase.chatroom.put(lists);
-                }).then( () => {
-                  connect();
-                })
+                });
               })
               .catch(e => {
                 console.log(e);
               });
             });
           }
-          TS_WEB.loaded = true;
+          this.loaded = true;
         });
       }
     }
