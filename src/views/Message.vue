@@ -22,7 +22,7 @@
             <div v-if="commentLists" style="color: #999;">{{ commentsText }} <span v-show="messageCount.comments.count > 3">等人</span>评论了我</div>
             <div v-else style="color: #999">还没有人评论我</div>
           </Col>
-          <Col span="20" style="padding-right: 12px;" v-else>
+          <Col span="20" style="padding:0 12px 0 0;" v-else>
             <h4 style="font-weight: 400;">评论的</h4>
             <div v-if="commentLists" style="color: #999;">{{ commentsText }} <span v-show="messageCount.comments.count > 3">等人</span>评论过我</div>
             <div v-else style="color: #999">还没有人评论我</div>
@@ -47,7 +47,7 @@
             <div v-if="diggLists" style="color: #999;">{{ diggsText }} <span v-show="messageCount.diggs.count > 3">等人</span>赞了我</div>
             <div v-else style="color: #999">还没有人赞我</div>
           </Col>
-          <Col span="15" style="padding-right: 12px;" v-else>
+          <Col span="15" style="padding: 0 12px 0 0;" v-else>
             <h4 style="font-weight: 400;">赞过的</h4>
             <div v-if="diggLists" style="color: #999;">{{ diggsText }} <span v-show="messageCount.diggs.count > 3">等人</span>赞过我</div>
             <div v-else style="color: #999">还没有人赞我</div>
