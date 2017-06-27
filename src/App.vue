@@ -171,8 +171,6 @@
             cb(count)
           });
         });
-        // im设置
-        connect();
         // 获取会话列表
         addAccessToken().get(createAPI('im/conversations/list/all'), {}, {
           validateStatus: status => status === 200
@@ -182,14 +180,23 @@
           let lists = {};
           if(data.status || data.code === 0 ) {
             if(!data.data.length) return;
+            let lists = [];
             data.data.forEach( list => {
+                list.last_message_time = 0;
+                list.owner = window.TS_WEB.currentUserId;
               window.TS_WEB.dataBase.transaction('rw?', window.TS_WEB.dataBase.chatroom, () => {
                 window.TS_WEB.dataBase.chatroom.where('[cid+owner]').equals([list.cid, window.TS_WEB.currentUserId ]).count( number => {
                   if(!number > 0) {
                     list.last_message_time = 0;
                     list.owner = window.TS_WEB.currentUserId;
-                    window.TS_WEB.dataBase.chatroom.put(list);
+                    // window.TS_WEB.dataBase.chatroom.put(list);
+                    lists.push(list);
                   }
+                })
+                .then( () => {
+                  window.TS_WEB.dataBase.chatroom.put(lists);
+                }).then( () => {
+                  connect();
                 })
               })
               .catch(e => {
