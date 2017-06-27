@@ -117,7 +117,28 @@
         let count = 0;
         let newUids = [ ...uids ];
 
-        if(!newUids.length) return 0;
+        if(!uids.length) {
+          let oldIds = [];
+          let count = {
+            diggs: {}
+          };
+          window.TS_WEB.dataBase.transaction('rw?', window.TS_WEB.dataBase.diggslist, () => {
+            window.TS_WEB.dataBase.diggslist.where({user_id: window.TS_WEB.currentUserId}).limit(10).toArray().then( result => {
+              if(result.length) {
+                result.forEach( res => {
+                  oldIds.push(res.uid);
+                });
+                count.diggs.count = 0;
+                count.diggs.uids = Array.from(new Set(oldIds));
+                this.$store.dispatch(MESSAGENOTICE, cb => {
+                  cb(count);
+                });
+              }
+            })
+          })
+          return 0;
+        }
+
         Array.from(new Set(newUids)).forEach( (digg, index) => {
           count ++;
           if(count > 3) return;
@@ -147,7 +168,28 @@
         const { comments: { uids = [] } = {} } = this.messageCount;
         let users = '';
         let count = 0;
-        if(!uids.length) return 0;
+        if(!uids.length) {
+          let oldIds = [];
+          let count = {
+            comments: {}
+          };
+          window.TS_WEB.dataBase.transaction('rw?', window.TS_WEB.dataBase.commentslist, () => {
+            window.TS_WEB.dataBase.commentslist.where({user_id: window.TS_WEB.currentUserId}).limit(10).toArray().then( result => {
+              if(result.length) {
+                result.forEach( res => {
+                  oldIds.push(res.uid);
+                });
+                count.comments.count = 0;
+                count.comments.uids = Array.from(new Set(oldIds));
+                this.$store.dispatch(MESSAGENOTICE, cb => {
+                  cb(count);
+                });
+              }
+            })
+          })
+          return 0;
+        }
+
         window.TS_WEB.dataBase.transaction('rw?', window.TS_WEB.dataBase.userbase, () => {
           Array.from(new Set(uids)).forEach((comment, index) => {
             count ++;
