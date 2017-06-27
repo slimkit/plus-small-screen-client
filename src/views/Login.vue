@@ -227,8 +227,6 @@
             this.$store.dispatch(USERS_APPEND, cb =>{
               cb(user)
             });
-            // 链接im信息
-            connect();
             // 设置消息提示查询时间
             let time = 0;
             time = localEvent.getLocalItem('messageFlushTime');
@@ -314,11 +312,12 @@
             })
             .then( response => {
               let data = response.data;
-              let lists = {};
+              let lists = [];
               if(data.status || data.code === 0 ) {
                 if(!data.data.length) return;
-                data.data.forEach( list => {
-                  window.TS_WEB.dataBase.transaction('rw?', window.TS_WEB.dataBase.chatroom, () => {
+                
+                window.TS_WEB.dataBase.transaction('rw?', window.TS_WEB.dataBase.chatroom, () => {
+                  data.data.forEach( list => {
                     window.TS_WEB.dataBase.chatroom.where('[cid+owner]').equals([list.cid, window.TS_WEB.currentUserId ]).count( number => {
                       if(!number > 0) {
                         list.last_message_time = 0;
@@ -332,8 +331,8 @@
                   });
                 });
               }
-              TS_WEB.loaded = true;
             });
+            connect();
             // 跳转到动态页面
             router.push({ path: redirect });
           });

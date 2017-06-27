@@ -30,9 +30,6 @@
   import Dexie from 'dexie';
 
   const App = {
-    data: () => ({
-      loaded: false
-    }),
     components: {
       NoticeText,
       IviewSwiper,
@@ -75,7 +72,6 @@
         diggslist: "++, user_id, uid, [user_id+uid]"
       });
       window.TS_WEB.dataBase = db;
-      if(TS_WEB.loaded) return;
       let currentUser = localEvent.getLocalItem('UserLoginInfo');
 
       if(lodash.keys(currentUser).length > 0) {
@@ -179,33 +175,27 @@
         })
         .then( response => {
           let data = response.data;
-          let lists = {};
+          let lists = [];
           if(data.status || data.code === 0 ) {
             if(!data.data.length) return;
-            let lists = [];
-            data.data.forEach( list => {
-                list.last_message_time = 0;
-                list.owner = window.TS_WEB.currentUserId;
-              window.TS_WEB.dataBase.transaction('rw?', window.TS_WEB.dataBase.chatroom, () => {
+            window.TS_WEB.dataBase.transaction('rw?', window.TS_WEB.dataBase.chatroom, () => {
+              data.data.forEach( list => {
                 window.TS_WEB.dataBase.chatroom.where('[cid+owner]').equals([list.cid, window.TS_WEB.currentUserId ]).count( number => {
                   if(!number > 0) {
                     list.last_message_time = 0;
                     list.owner = window.TS_WEB.currentUserId;
-                    lists.push(list);
+                    window.TS_WEB.dataBase.chatroom.put(list)
                   }
-                })
-                .then( () => {
-                  window.TS_WEB.dataBase.chatroom.put(lists);
                 });
               })
-              .catch(e => {
-                console.log(e);
-              });
-            });
+            })
+            .catch(e => {
+              console.log(e);
+            })
           }
-          this.loaded = true;
         });
       }
+      connect();
     }
   }
 

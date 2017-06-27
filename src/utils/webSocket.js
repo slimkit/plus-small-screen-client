@@ -33,10 +33,11 @@ function connect () {
 	      validateStatus: status => status === 200
 	    })
 	    .then( response => {
-      	let data= response.data;
-        window.TS_WEB.im_token = data.data.im_password; // 保存im口令
+	    	
+      	let data = response.data.data;
+        window.TS_WEB.im_token = data.im_password; // 保存im口令
         if(window.TS_WEB.socketUrl) {
-        	let socketUrl = `ws://${window.TS_WEB.socketUrl}?token=${data.data.im_password}`;
+        	let socketUrl = `ws://${window.TS_WEB.socketUrl}?token=${data.im_password}`;
         	try {
 						window.TS_WEB.webSocket = new window.WebSocket(socketUrl);
 						window.TS_WEB.webSocket.onopen = evt => {
