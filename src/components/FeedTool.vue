@@ -226,6 +226,7 @@
               status: true
             });
           });
+          this.$store.dispatch(CLOSECOMMENTINPUT);
           // 重置输入框
           this.commentAbout = { ...this.commentAbout, ...{
             comment: '',
