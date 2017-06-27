@@ -33,7 +33,6 @@ function connect () {
 	      validateStatus: status => status === 200
 	    })
 	    .then( response => {
-	    	console.log(response);
       	let data = response.data.data;
         window.TS_WEB.im_token = data.im_password; // 保存im口令
         if(window.TS_WEB.socketUrl) {
