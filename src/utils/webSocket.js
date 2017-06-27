@@ -72,6 +72,7 @@ function onMessage (message) {
 				value.owner = window.TS_WEB.currentUserId;
 				// 对比本地存储的会话，写入新会话
 				window.TS_WEB.dataBase.transaction('rw?', window.TS_WEB.dataBase.messagebase, window.TS_WEB.dataBase.chatroom, () => {
+					// 查找我的最后一条消息
 					window.TS_WEB.dataBase.messagebase.where('[cid+owner]').equals([value.cid, window.TS_WEB.currentUserId]).last( item => {
 						if(item !== undefined) {
 							if( value.seq > item.seq) {
@@ -138,7 +139,7 @@ function onMessage (message) {
 								last_message_time: value.time
 							});
 							window.TS_WEB.dataBase.chatroom.where('[cid+owner]').equals([value.cid, window.TS_WEB.currentUserId]).first().then( items => {
-								if(item !== undefined) {
+								if(items !== undefined) {
 									let uids = items.uids.split(',');
 	                let user_id = 0;
 	                if(uids[0] == window.TS_WEB.currentUserId) {
