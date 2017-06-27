@@ -119,6 +119,7 @@
 
         if(!newUids.length) return 0;
         Array.from(new Set(newUids)).forEach( (digg, index) => {
+          count ++;
           if(count > 3) return;
           window.TS_WEB.dataBase.transaction('rw?', window.TS_WEB.dataBase.userbase, () => {
             window.TS_WEB.dataBase.userbase.get({ user_id: parseInt(digg) }).then( item => {
@@ -132,8 +133,7 @@
                 const { name = '' } = item;
                 users += (name + '、');
                 this.diggsText = users.substr(0, users.length - 1);
-              }
-              count ++;    
+              }   
             });
           });
         });
@@ -150,6 +150,7 @@
         if(!uids.length) return 0;
         window.TS_WEB.dataBase.transaction('rw?', window.TS_WEB.dataBase.userbase, () => {
           Array.from(new Set(uids)).forEach((comment, index) => {
+            count ++;
             if(count > 3) return;
             window.TS_WEB.dataBase.userbase.get({ user_id: parseInt(comment) }).then( item => {
               if(item === undefined) {
@@ -162,8 +163,7 @@
                 const { name = '' } = item;
                 users += (name + '、');
                 this.commentsText = users.substr(0, users.length - 1);
-              }
-              count ++;    
+              }    
             });
           });
         })
