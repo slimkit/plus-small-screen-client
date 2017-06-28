@@ -71,10 +71,14 @@ export const NEWIDS = 'newids';
 export const ADDNEWIDS = 'addnewids';
 
 // 收藏相关
-export const COLLECTIONIDS = 'collectionids';
+export const COLLECTIONFEEDSIDS = 'collectionfeedsids';
 export const COLLECTIONFEEDS = 'collectionfeeds';
-export const ADDCOLLECTIONIDS = 'addcollectionsids';
-export const UNCOLLECTIONID = 'uncollectionid';
+export const ADDCOLLECTIONFEEDSIDS = 'addcollectionfeedsids';
+export const UNCOLLECTIONFEEDSID = 'uncollectionfeedsid';
+export const COLLECTIONNEWS = 'collectionnews';
+export const ADDCOLLECTIONNEWS = 'addcollectionnews'; 
+export const UNCOLLECTIONNEWS = 'uncollectionnews';
+export const COLLECTIONTYPE = 'collectiontype';
 
 /**
  * confirm组件相关

@@ -28,6 +28,7 @@ import commentInput from './module/commentInput';
  * news about
  */
 import newsAbout from './module/newsAbout';
+import collectionNews from './module/collectionNews';
 
 const modules = {
   user,
@@ -46,7 +47,8 @@ const modules = {
   imMessage,
   imStatus,
   messageCount,
-  newsAbout
+  newsAbout,
+  collectionNews
 }
 
 const store = new Vuex.Store({

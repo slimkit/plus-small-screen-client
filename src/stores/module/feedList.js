@@ -1,4 +1,4 @@
-import { FEEDSLIST, UPDATEFEED, FOLLOWINGFEEDS, HOTFEEDS, NEWFEEDS, FOLLOWINGIDS, HOTIDS, NEWIDS, USERFEEDS, GETUSERFEEDS, COLLECTIONFEEDS, COLLECTIONIDS } from '../types';
+import { FEEDSLIST, UPDATEFEED, FOLLOWINGFEEDS, HOTFEEDS, NEWFEEDS, FOLLOWINGIDS, HOTIDS, NEWIDS, USERFEEDS, GETUSERFEEDS, COLLECTIONFEEDS, COLLECTIONFEEDSIDS } from '../types';
 
 const state = {
   feedList: {}
@@ -64,7 +64,7 @@ const getters = {
   },
   [COLLECTIONFEEDS]: (state, getters) => {
     let collectionFeeds = [];
-    let collectionIds = getters[COLLECTIONIDS];
+    let collectionIds = getters[COLLECTIONFEEDSIDS];
     collectionIds.forEach( id => {
       collectionFeeds.push(state.feedList[id]);
     });

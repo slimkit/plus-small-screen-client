@@ -5,7 +5,7 @@
       <Tab-pane label="粉丝" name="followed">
         <div v-if="!nothing" class="fixed"></div>
         <mt-loadmore
-          v-if="!nothing"
+          v-if="!nothing && type === 'followed'"
           :bottom-method="loadBottom"
           :top-method="loadTop"
           :bottom-all-loaded="bottomAllLoaded"
@@ -29,10 +29,12 @@
             </Col>
           </Row>
           <div slot="bottom" class="mint-loadmore-bottom">
-            <span v-show="bottomAllLoaded">没有更多了</span>
-            <span v-show="bottomStatus === 'pull' && !bottomAllLoaded" :class="{ 'rotate': topStatus === 'drop' }">上拉加载更多</span>
-            <span v-show="bottomStatus === 'loading'">加载中...</span>
-            <span v-show="bottomStatus === 'drop' && !bottomAllLoaded">释放加载更多</span>
+            <span v-if="bottomAllLoaded">没有更多了</span>
+            <section v-else>
+              <span v-show="bottomStatus === 'pull' && !bottomAllLoaded" :class="{ 'rotate': topStatus === 'drop' }">上拉加载更多</span>
+              <span v-show="bottomStatus === 'loading'">加载中...</span>
+              <span v-show="bottomStatus === 'drop' && !bottomAllLoaded">释放加载更多</span>
+            </section>
           </div>
         </mt-loadmore>
         <div class="nothingDefault"> 
@@ -42,7 +44,7 @@
       <Tab-pane label="关注" name="following" >
         <div v-if="!nothing" class="fixed"></div>
         <mt-loadmore
-          v-if="!nothing"
+          v-if="!nothing && type === 'following'"
           :bottom-method="loadBottom"
           :top-method="loadTop"
           :bottom-all-loaded="bottomAllLoaded"
@@ -66,10 +68,12 @@
             </Col>
           </Row>
           <div slot="bottom" class="mint-loadmore-bottom">
-            <span v-show="bottomAllLoaded">没有更多了</span>
-            <span v-show="bottomStatus === 'pull' && !bottomAllLoaded" :class="{ 'rotate': topStatus === 'drop' }">上拉加载更多</span>
-            <span v-show="bottomStatus === 'loading' && !bottomAllLoaded">加载中...</span>
-            <span v-show="bottomStatus === 'drop' && !bottomAllLoaded">释放加载更多</span>
+            <span v-if="bottomAllLoaded">没有更多了</span>
+            <section v-else>
+              <span v-show="bottomStatus === 'pull' && !bottomAllLoaded" :class="{ 'rotate': topStatus === 'drop' }">上拉加载更多</span>
+              <span v-show="bottomStatus === 'loading' && !bottomAllLoaded">加载中...</span>
+              <span v-show="bottomStatus === 'drop' && !bottomAllLoaded">释放加载更多</span>
+            </section>
           </div>
         </mt-loadmore>
         <div class="nothingDefault"> 
@@ -122,6 +126,7 @@
 			goTo,
 			changeUrl,
       bottomStatusChange(status) {
+        console.log(status);
         this.bottomStatus = status;
       },
       // 加载更多
@@ -129,6 +134,7 @@
         let uri = '';
         let key = '';
         let lists = [];
+        this.bottomAllLoaded = true;
         if(this.type == 'followed') {
           uri = `follows/followeds/${this.user_id}/${this.max_id}`;
           key = 'followeds';
@@ -136,60 +142,48 @@
           uri = `follows/follows/${this.user_id}/${this.max_id}`;
           key = 'follows';
         }
-        addAccessToken().get(createAPI(`${uri}?limit=15`), {}, {
+        addAccessToken().get(createAPI(uri), {}, {
           validateStatus: status => status === 200
         })
         .then( response => {
           let datas = response.data.data[key];
           if(!datas.length > 0) {
-            this.bottomAllLoaded = true;
-            setTimeout(() => {
-              this.$refs[`loadmore${this.type}`].onBottomLoaded();
-            }, 100);
+            if(this.$refs[`loadmore${this.type}`]) {
+              setTimeout(() => {
+                this.$refs[`loadmore${this.type}`].onBottomLoaded();
+              }, 800);
+            }
             return;
           }
-          if(datas.length < 15) {
-            this.bottomAllLoaded = true;
-          }
-          // this.dataList = [];
           datas.forEach( (data, index) => {
             let userInfo = localEvent.getLocalItem(`user_${data.user_id}`);
-            let targetUser = {};
-            if(!lodash.keys(userInfo).length > 0) {
-              getUserInfo(data.user_id, 30).then(user => {
-                const { datas: { intro: { value: intro = '这家伙很懒,什么都没有留下' } = {} } = {} } = user;
-                const { avatar: { 30: avatar = defaultAvatar } = {} } = user;
-                lists = { ...lists, [user.user_id]: {
-                  is_following: user.is_following,
-                  is_followed: user.is_followed,
-                  user_id: user.user_id,
-                  avatar: avatar,
-                  name: user.name,
-                  intro: intro
-                } };
-                this.dataList = lists;
-              });
-            } else {
-              const { datas: { intro: { value: intro = '这家伙很懒,什么都没有留下' } = {} } = {} } = userInfo;
-              const { avatar: { 30: avatar = defaultAvatar } = {} } = userInfo;
-              lists = { ...lists, [userInfo.user_id]: {
-                is_following: userInfo.is_following,
-                is_followed: userInfo.is_followed,
-                user_id: userInfo.user_id,
+            getUserInfo(data.user_id, 30).then(user => {
+              const { datas: { intro: { value: intro = '这家伙很懒,什么都没有留下' } = {} } = {} } = user;
+              const { avatar: { 30: avatar = defaultAvatar } = {} } = user;
+              this.dataList = { ...this.dataList, [data.user_id]: {
+                is_following: user.is_following,
+                is_followed: user.is_followed,
+                user_id: user.user_id,
                 avatar: avatar,
-                name: userInfo.name,
+                name: user.name,
                 intro: intro
               } };
-              this.dataList = { ...this.dataList, ...lists };
-              this[this.type] = { ...this[this.type], ...lists };
-            }
+              this[this.type] = { ...this[this.type],  [data.user_id]: {
+                is_following: user.is_following,
+                is_followed: user.is_followed,
+                user_id: user.user_id,
+                avatar: avatar,
+                name: user.name,
+                intro: intro
+              }};
+            });
           });
           this.max_id = datas[datas.length -1].id;
           // loadmore重新洗牌
           if(this.$refs[`loadmore${this.type}`]) {
             setTimeout(() => {
               this.$refs[`loadmore${this.type}`].onBottomLoaded();
-            }, 900);
+            }, 800);
           }
         });
       },
@@ -209,47 +203,34 @@
         })
         .then( response => {
           let datas = response.data.data[key];
-          if(!datas.length > 0) {
-            this.bottomAllLoaded = true;
-            setTimeout(() => {
-              this.$refs[`loadmore${this.type}`].onTopLoaded();
-            }, 100);
-            return;
-          }
-          if(datas.length < 15) {
-            this.bottomAllLoaded = true;
-          }
-          // this.dataList = [];
+          // if(!datas.length > 0) {
+          //   setTimeout(() => {
+          //     this.$refs[`loadmore${this.type}`].onTopLoaded();
+          //   }, 100);
+          //   return;
+          // }
           datas.forEach( (data, index) => {
-            let userInfo = localEvent.getLocalItem(`user_${data.user_id}`);
-            let targetUser = {};
-            if(!lodash.keys(userInfo).length > 0) {
+            if(!data.user_id in this.dataList) {
               getUserInfo(data.user_id, 30).then(user => {
                 const { datas: { intro: { value: intro = '这家伙很懒,什么都没有留下' } = {} } = {} } = user;
                 const { avatar: { 30: avatar = defaultAvatar } = {} } = user;
-                lists = { ...lists, [user.user_id]: {
+                this.dataList = {[data.user_id]: {
                   is_following: user.is_following,
                   is_followed: user.is_followed,
                   user_id: user.user_id,
                   avatar: avatar,
                   name: user.name,
                   intro: intro
-                } };
-                this.dataList = lists;
+                }, ...this.dataList};
+                this[this.type] = { [data.user_id]: {
+                  is_following: user.is_following,
+                  is_followed: user.is_followed,
+                  user_id: user.user_id,
+                  avatar: avatar,
+                  name: user.name,
+                  intro: intro
+                }, ...this[this.type] };
               });
-            } else {
-              const { datas: { intro: { value: intro = '这家伙很懒,什么都没有留下' } = {} } = {} } = userInfo;
-              const { avatar: { 30: avatar = defaultAvatar } = {} } = userInfo;
-              lists = { ...lists, [userInfo.user_id]: {
-                is_following: userInfo.is_following,
-                is_followed: userInfo.is_followed,
-                user_id: userInfo.user_id,
-                avatar: avatar,
-                name: userInfo.name,
-                intro: intro
-              } };
-              this.dataList = { ...this.dataList, ...lists };
-              this[this.type] = { ...this[this.type], ...lists };
             }
           });
           // loadmore重新洗牌
@@ -318,6 +299,9 @@
         let uri = '';
         let key = '';
         let lists = [];
+        this.max_id = 0;
+        this.bottomAllLoaded = true;
+        this.bottomStatus = 'pull';
         if(name == 'followed') {
           uri = `follows/followeds/${this.user_id}`;
           key = 'followeds';
@@ -325,56 +309,41 @@
           uri = `follows/follows/${this.user_id}`;
           key = 'follows';
         }
-        addAccessToken().get(createAPI(`${uri}?limit=15`), {}, {
+        addAccessToken().get(createAPI(uri), {}, {
           validateStatus: status => status === 200
         })
         .then( response => {
           let datas = response.data.data[key];
           if(!datas.length > 0) {
-            this.bottomAllLoaded = true;
             if(this.$refs[`loadmore${name}`]) {
               this.$refs[`loadmore${name}`].onTopLoaded();
             }
-            return [];
+            this.dataList = [];
+            return ;
           }
-          if(datas.length < 15) {
+          if(!datas.length < 15) {
             this.bottomAllLoaded = true;
           }
           this.dataList = [];
           datas.forEach( (data, index) => {
-            let userInfo = localEvent.getLocalItem(`user_${data.user_id}`);
-            let targetUser = {};
-            if(!lodash.keys(userInfo).length > 0) {
-              getUserInfo(data.user_id, 30).then(user => {
-                const { datas: { intro: { value: intro = '这家伙很懒,什么都没有留下.' } = {} } = {} } = user;
-                const { avatar: { 30: avatar = defaultAvatar } = {} } = user;
-                lists = { ...lists, [user.user_id]: {
-                  is_following: user.is_following,
-                  is_followed: user.is_followed,
-                  user_id: user.user_id,
-                  avatar: avatar,
-                  name: user.name,
-                  intro: intro
-                } };
-                this.dataList = lists;
-              })
-            } else {
-              const { datas: { intro: { value: intro = '这家伙很懒,什么都没有留下' } = {} } = {} } = userInfo;
-              const { avatar: { 30: avatar = defaultAvatar } = {} } = userInfo;
-              lists = { ...lists, [userInfo.user_id]: {
-                is_following: userInfo.is_following,
-                is_followed: userInfo.is_followed,
-                user_id: userInfo.user_id,
+            getUserInfo(data.user_id, 30).then(user => {
+              const { datas: { intro: { value: intro = '这家伙很懒,什么都没有留下.' } = {} } = {} } = user;
+              const { avatar: { 30: avatar = defaultAvatar } = {} } = user;
+              lists = { ...lists, [user.user_id]: {
+                is_following: user.is_following,
+                is_followed: user.is_followed,
+                user_id: user.user_id,
                 avatar: avatar,
-                name: userInfo.name,
+                name: user.name,
                 intro: intro
               } };
-              this.dataList = this[name] = lists;
-            }
+              this.dataList = lists;
+            });
           });
           this.max_id = datas[datas.length -1].id;
           if(this.$refs[`loadmore${name}`]) {
             this.$refs[`loadmore${name}`].onTopLoaded();
+            this.$refs[`loadmore${name}`].onBottomLoaded();
           }
         });
       }

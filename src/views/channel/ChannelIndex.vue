@@ -149,9 +149,6 @@
     }
   }
 </style>
-<style lang="less" module>
-  
-</style>
 
 <script>
   import { createAPI, addAccessToken } from '../../utils/request';

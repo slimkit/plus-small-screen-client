@@ -1,44 +1,44 @@
-import { COLLECTIONIDS, ADDCOLLECTIONIDS, UNCOLLECTIONID } from '../types';
+import { COLLECTIONFEEDSIDS, ADDCOLLECTIONFEEDSIDS, UNCOLLECTIONFEEDSID } from '../types';
 
 const state = {
-  collectionIds: []
+  collectionFeedsIds: []
 };
 
 const mutations = {
-  [COLLECTIONIDS] (state, ids) {
-    state.collectionIds = Array.from(new Set([ ...state.collectionIds, ...ids ]));
+  [COLLECTIONFEEDSIDS] (state, ids) {
+    state.collectionFeedsIds = Array.from(new Set([ ...state.collectionFeedsIds, ...ids ]));
   },
-  [ADDCOLLECTIONIDS] (state, ids) {
-    state.collectionIds = Array.from(new Set([ ...ids, ...state.collectionIds ]));
+  [ADDCOLLECTIONFEEDSIDS] (state, ids) {
+    state.collectionFeedsIds = Array.from(new Set([ ...ids, ...state.collectionFeedsIds ]));
   },
-  [UNCOLLECTIONID] (state, id) {
-    let collectionIds = state.collectionIds;
-    collectionIds.splice(collectionIds.indexOf(id), 1);
-    state.collectionIds = Array.from(new Set(collectionIds));
+  [UNCOLLECTIONFEEDSID] (state, id) {
+    let collectionFeedsIds = state.collectionFeedsIds;
+    collectionFeedsIds.splice(collectionFeedsIds.indexOf(id), 1);
+    state.collectionFeedsIds = Array.from(new Set(collectionFeedsIds));
   }
 };
 
 const actions = {
-  [COLLECTIONIDS]: (context, cb) => {
+  [COLLECTIONFEEDSIDS]: (context, cb) => {
     cb( ids => {
-      context.commit(COLLECTIONIDS, ids);
+      context.commit(COLLECTIONFEEDSIDS, ids);
     })
   },
-  [ADDCOLLECTIONIDS]: (context, cb) => {
+  [ADDCOLLECTIONFEEDSIDS]: (context, cb) => {
     cb( ids => {
-      context.commit(ADDCOLLECTIONIDS, ids);
+      context.commit(ADDCOLLECTIONFEEDSIDS, ids);
     })
   },
-  [UNCOLLECTIONID]: (context, cb) => {
+  [UNCOLLECTIONFEEDSID]: (context, cb) => {
     cb ( id => {
-      context.commit(UNCOLLECTIONID, id);
+      context.commit(UNCOLLECTIONFEEDSID, id);
     })
   }
 };
 
 const getters = {
-  [COLLECTIONIDS]: state => {
-    return state.collectionIds
+  [COLLECTIONFEEDSIDS]: state => {
+    return state.collectionFeedsIds
   }
 }
 

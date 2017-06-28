@@ -9,9 +9,8 @@ import store from './stores/store';
 import App from './App';
 import 'mint-ui/lib/style.css'
 import loading_img from './statics/images/image-loading.png';
-import { Loadmore } from 'mint-ui';
-import { Popup } from 'mint-ui';
-import { Picker } from 'mint-ui';
+import { TabContainer, TabContainerItem, Loadmore, Popup, Picker } from 'mint-ui';
+
 // import VueScroller from 'vue-scroller'
 
 // Vue.use(VueScroller);
@@ -39,6 +38,8 @@ Vue.use(TimeAgo, {
 Vue.component(Loadmore.name, Loadmore);
 Vue.component(Popup.name, Popup);
 Vue.component(Picker.name, Picker);
+Vue.component(TabContainer.name, TabContainer);
+Vue.component(TabContainerItem.name, TabContainerItem);
 
 const app = new Vue({
   router,
