@@ -10,6 +10,7 @@
         :src="avatar" 
         :alt="user.name" 
         :class="$style.detailAvatar"
+        @click="changeUrl(`/users/feeds/${user.user_id}`)"
       >
       <section 
         style="padding: 0 2vw; width: 86vw;"
@@ -112,12 +113,12 @@
     created () {
       window.TS_WEB.dataBase.transaction('rw?', window.TS_WEB.dataBase.userbase, () => {
         window.TS_WEB.dataBase.userbase.get({ user_id: parseInt(this.feed.user_id) }).then( item => {
-          if(!lodash.keys(item).length > 0) {
+          if(item === undefined) {
             getUserInfo(this.feed.user_id, 30).then( user => {
-              this.user = { ...this.user, ...user };
+              this.user = { ...user };
             });
           } else {
-            this.user = { ...this.user, ...item };
+            this.user = { ...item };
           }
         })
       })

@@ -87,7 +87,7 @@
           </p>
         </li>
       </ul>
-      <router-link v-if="hasMore" :class="$style.userName" :to="`/feed/${feed.feed.feed_id}`">查看全部评论</router-link>
+      <router-link v-if="hasMore" :class="$style.userName" :to="`/feed/${feed.feed.feed_id}#comments`">查看全部评论</router-link>
     </div>
   </div>
 </template>
@@ -96,7 +96,17 @@
   import { friendNum } from '../utils/friendNum';
   import { createAPI, addAccessToken } from '../utils/request';
   import localEvent from '../stores/localStorage';
-  import { NOTICE, COMMENTINPUT, UPDATEFEED, USERS, CONFIRM, CLOSECOMMENTINPUT, SHOWPOPUP, CLOSEPOPUP } from '../stores/types';
+  import { 
+    NOTICE, 
+    COMMENTINPUT, 
+    UPDATEFEED, 
+    USERS, 
+    CONFIRM, 
+    CLOSECOMMENTINPUT, 
+    SHOWPOPUP, 
+    CLOSEPOPUP,
+    FEEDSLIST
+  } from '../stores/types';
   import { goTo, changeUrl } from '../utils/changeUrl';
   import ViewIcon from '../icons/View';
   import CommentIcon from '../icons/Comment';
@@ -233,6 +243,8 @@
           this.comment_content = '';
           // 本地数据更新
           feed.comments.unshift(newComment);
+          // 更新vuex数据
+          this.$store.getters[FEEDSLIST][this.feed.feed.feed_id].comments.push(newComment);
           feed.tool.feed_comment_count += 1;
           this.$store.dispatch(NOTICE, cb => {
             cb({
@@ -251,9 +263,9 @@
             loading: false
           }}
           // 更新动态
-          this.$store.dispatch(UPDATEFEED, cb => {
-            cb(feed);
-          });
+          // this.$store.dispatch(UPDATEFEED, cb => {
+          //   cb(feed);
+          // });
           this.loading = false;
         });
       },

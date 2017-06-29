@@ -155,7 +155,6 @@
        * @return {[type]} [description]
        */
       handleCollection(status, feed_id) {
-        console.log(this.feed);
         if(status) {
           addAccessToken().post(createAPI(`feeds/${feed_id}/collection`), {}, {
             validateStatus: status => status === 201

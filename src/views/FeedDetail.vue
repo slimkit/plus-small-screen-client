@@ -103,10 +103,10 @@
         </Button>
       </li>
     </ul>
-    <div class="noComment" v-if="!feedData.tool.feed_comment_count">
+    <div id="comments" class="noComment" v-if="!feedData.tool.feed_comment_count">
       <img :src="defaultImage" />
     </div>
-    <div v-else>
+    <div id="comments" v-else>
       <mt-loadmore 
         :bottom-method="loadBottom"
         :bottom-all-loaded="bottomAllLoaded"
@@ -594,16 +594,18 @@
                 if(this.commentToUserId) {
                   newComment.reply_to_user = { ...this.commentedUser };
                   feed.comments.unshift(newComment);
+                  this.$store.getters[FEEDSLIST][this.feed_id].comments.push(newComment);
                   // 更新动态
-                  this.$store.dispatch(UPDATEFEED, cb => {
-                    cb(feed);
-                  });
+                  // this.$store.dispatch(UPDATEFEED, cb => {
+                  //   cb(feed);
+                  // });
                 } else {
                   feed.comments.unshift(newComment);
+                  this.$store.getters[FEEDSLIST][this.feed_id].comments.push(newComment);
                   // 更新动态
-                  this.$store.dispatch(UPDATEFEED, cb => {
-                    cb(feed);
-                  });
+                  // this.$store.dispatch(UPDATEFEED, cb => {
+                  //   cb(feed);
+                  // });
                 }
               });
             } else { // find local db user
@@ -613,16 +615,18 @@
               if(this.commentToUserId) {
                 newComment.reply_to_user = { ...this.commentedUser };
                 feed.comments.unshift(newComment);
+                this.$store.getters[FEEDSLIST][this.feed_id].comments.push(newComment);
                 // 更新动态
-                this.$store.dispatch(UPDATEFEED, cb => {
-                  cb(feed);
-                });
+                // this.$store.dispatch(UPDATEFEED, cb => {
+                //   cb(feed);
+                // });
               } else {
                 feed.comments.unshift(newComment);
+                this.$store.getters[FEEDSLIST][this.feed_id].comments.push(newComment);
                 // 更新动态
-                this.$store.dispatch(UPDATEFEED, cb => {
-                  cb(feed);
-                });
+                // this.$store.dispatch(UPDATEFEED, cb => {
+                //   cb(feed);
+                // });
               }
             }
           });

@@ -81,10 +81,9 @@
       if(lodash.keys(currentUser).length > 0) {
         window.TS_WEB.currentUserId = currentUser.user_id;
         // 提交用户到vuex
-        // let userInfo = localEvent.getLocalItem(`user_${currentUser.user_id}`);
         window.TS_WEB.dataBase.transaction('rw?', window.TS_WEB.dataBase.userbase, () => {
           window.TS_WEB.dataBase.userbase.where('user_id').equals(currentUser.user_id).first().then( user => {
-            if(!lodash.keys(user).length > 0) {
+            if(user === undefined) {
               getUserInfo(currentUser.user_id, 30).then( serverUser => {
                 this.$store.dispatch(USERS_APPEND, cb =>{
                   cb(serverUser)

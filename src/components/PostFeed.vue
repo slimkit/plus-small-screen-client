@@ -133,7 +133,7 @@ const postFeed = {
       channelId: state => state.showPost.showPost.channelId
     }),
     isDisabled () {
-      return !this.feedContent.length;
+      return !(this.feedContent.length || this.storage_task_ids.length);
     },
     imageList () {
       let imglist = [];
