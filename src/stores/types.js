@@ -63,6 +63,7 @@ export const SHOWPOPUP = 'showpopup';
  */
 export const FEEDSLIST = 'feedslist';
 export const UPDATEFEED = 'updatefeed';
+export const DELETEFEED = 'deletefeed';
 // 关注相关
 export const FOLLOWINGFEEDS = 'followingfeeds';
 export const FOLLOWINGIDS = 'followingids';

@@ -5,7 +5,8 @@ const state = {
   showPopup: {
     show: false,
     feed_id: 0,
-    me: false
+    me: false,
+    isCollection: 0
   }
 };
 
@@ -30,7 +31,12 @@ const actions = {
     })
   },
   [CLOSEPOPUP]: context => {
-    context.commit(SHOWPOPUP, {show: 0, feed_id: 0, me: false});
+    context.commit(SHOWPOPUP, {
+      show: false, 
+      feed_id: 0, 
+      me: false,
+      isCollection: 0
+    });
   }
   ,
   [CLOSECOMMENTINPUT]: context => {

@@ -1,4 +1,18 @@
-import { FEEDSLIST, UPDATEFEED, FOLLOWINGFEEDS, HOTFEEDS, NEWFEEDS, FOLLOWINGIDS, HOTIDS, NEWIDS, USERFEEDS, GETUSERFEEDS, COLLECTIONFEEDS, COLLECTIONFEEDSIDS } from '../types';
+import { 
+  FEEDSLIST, 
+  UPDATEFEED, 
+  FOLLOWINGFEEDS, 
+  HOTFEEDS, 
+  NEWFEEDS, 
+  FOLLOWINGIDS, 
+  HOTIDS, 
+  NEWIDS, 
+  USERFEEDS, 
+  GETUSERFEEDS, 
+  COLLECTIONFEEDS, 
+  COLLECTIONFEEDSIDS,
+  DELETEFEED
+} from '../types';
 
 const state = {
   feedList: {}
@@ -30,6 +44,7 @@ const getters = {
   [FEEDSLIST]: state => {
     return state.feedList;
   },
+  /** 关注的动态 */
   [FOLLOWINGFEEDS]: (state, getters) => {
     let followingFeeds = [];
     let followingIds = getters[FOLLOWINGIDS];
@@ -38,6 +53,7 @@ const getters = {
     });
     return followingFeeds;
   },
+  /** 热门动态 */
   [HOTFEEDS]: (state, getters) => {
     let hotFeeds = [];
     let hotIds = getters[HOTIDS];
@@ -46,6 +62,7 @@ const getters = {
     });
     return hotFeeds;
   },
+  /** 最新动态 */
   [NEWFEEDS]: (state, getters) => {
     let newFeeds = [];
     let newIds = getters[NEWIDS];
@@ -54,6 +71,7 @@ const getters = {
     });
     return newFeeds;
   },
+  /** 收藏的动态 */
   [GETUSERFEEDS]: (state, getters) => {
     let userFeeds = [];
     let userIds = getters[USERFEEDS];

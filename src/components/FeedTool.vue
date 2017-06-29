@@ -154,7 +154,12 @@
       handleShowPopup( open ) {
         if(open) {
           this.$store.dispatch(SHOWPOPUP, cb => {
-            cb({ show: true, feed_id: this.feed.feed.feed_id, me: this.feed.user_id === window.TS_WEB.currentUserId });
+            cb({
+              show: true, 
+              feed_id: this.feed.feed.feed_id, 
+              me: this.feed.user_id === window.TS_WEB.currentUserId,
+              isCollection: this.feed.tool.is_collection_feed
+            });
           })
         } else {
           this.$store.dispatch(CLOSEPOPUP);

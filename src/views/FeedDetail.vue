@@ -254,7 +254,7 @@
   import errorCodes from '../stores/errorCodes';
   import localEvent from '../stores/localStorage';
   import { getUserInfo, followingUser, unFollowingUser, getLocalDbUser } from '../utils/user';
-  import { NOTICE, SHOWFEEDDIGGSLISTS, FEEDSLIST, UPDATEFEED, CONFIRM, COMMENTINPUT, COLLECTIONIDS, ADDCOLLECTIONIDS, UNCOLLECTIONID } from '../stores/types';
+  import { NOTICE, SHOWFEEDDIGGSLISTS, FEEDSLIST, UPDATEFEED, CONFIRM, COMMENTINPUT, COLLECTIONFEEDSIDS, ADDCOLLECTIONFEEDSIDS, UNCOLLECTIONFEEDSID } from '../stores/types';
   import getImg from '../utils/getImage';
   import { friendNum } from '../utils/friendNum';
   import Comfirm from '../utils/Comfirm';
@@ -461,7 +461,7 @@
         })
         .then(response => {
           this.feedData.tool.is_collection_feed = 0;
-          this.$store.dispatch(UNCOLLECTIONID, cb => {
+          this.$store.dispatch(UNCOLLECTIONFEEDSID, cb => {
             cb(feed_id);
           })
         })

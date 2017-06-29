@@ -23,7 +23,6 @@
       <div class="nothingDefault" v-if="nothing"> 
         <img :src="nothing" />
       </div>
-      <!-- <div v-if="!nothing" class="fixed"></div> -->
       <mt-loadmore
         v-else
         :bottom-method="loadBottom"

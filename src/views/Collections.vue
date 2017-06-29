@@ -11,11 +11,11 @@
         <Col span="5"></Col>
       </Row>
     </div>
-    <section class="tabButton">
+    <section :class="{ tabButtonInWeixin: isWeiXin }" class="tabButton">
       <span @click="changeTab('feeds')" :class="{ active: active === 'feeds' }">动态</span>
       <span @click="changeTab('news')" :class="{ active: active === 'news' }">资讯</span>
     </section>
-    <mt-tab-container v-model="active" style="padding-top: 91px; min-height: 100vh;">
+    <mt-tab-container v-model="active" :class="{ tabInWeixin: isWeiXin }" class="tabContainer">
       <mt-tab-container-item id="feeds">
         <div v-if="nothingFeeds" :class="$style.nothingDefault"> 
           <img :src="nothingFeeds" />
@@ -574,6 +574,9 @@
   .collections {
     position: relative;
     .tabButton {
+      &.tabButtonInWeixin {
+        top: 0;
+      }
       background-color: #fff; 
       z-index: 9; 
       position: fixed; 
@@ -609,38 +612,12 @@
       left: 0;
       right: 0;
     }
-    .ivu-tabs-bar {
-      margin-bottom: 0;
-      background: #fff;
-      border-bottom: 1px #e2e3e3 solid;
-      position: fixed;
-      top: 46px;
-      left: 0;
-      right: 0;
-      z-index: 3;
-      .ivu-tabs-nav-scroll {
-        display: flex;
-        justify-content: center;
-        height: 46px;
-        line-height: 45px;
-        .ivu-tabs-nav {
-          height: 100%;
-          .ivu-tabs-tab{
-            line-height: 2;
-            font-size: 16px;
-            &.ivu-tabs-tab-active {
-              color: #333;
-            }
-          }
-        }
+    .tabContainer {
+      &.tabInWeixin{
+        padding-top: 45px;
       }
-    }
-    .ivu-tabs-tabpane {
-      height: 100vh;
-      padding-top: 91px;
-      .mint-loadmore {
-        overflow: visible;
-      }
+      padding-top: 91px; 
+      min-height: 100vh;
     }
   }
 </style>

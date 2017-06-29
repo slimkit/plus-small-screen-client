@@ -3,7 +3,6 @@
 		<BackIcon width="21" height="21" @click.native="goTo(-1)" color="#999" style="z-index: 4; position: fixed; left: 12px; top: 12px;" />
 		<Tabs v-model="type" @on-click="getData">
       <Tab-pane label="粉丝" name="followed">
-        <div v-if="!nothing" class="fixed"></div>
         <mt-loadmore
           v-if="!nothing && type === 'followed'"
           :bottom-method="loadBottom"
@@ -42,7 +41,6 @@
         </div>
       </Tab-pane>
       <Tab-pane label="关注" name="following" >
-        <div v-if="!nothing" class="fixed"></div>
         <mt-loadmore
           v-if="!nothing && type === 'following'"
           :bottom-method="loadBottom"
@@ -380,13 +378,12 @@
 	export default relationship;
 </script>
 
-<style lang="scss">
+<style lang="less">
 	.relationship {
     .ivu-tabs {
-    //   overflow-y: visible;
-    //   overflow-x: hidden;
       .ivu-tabs-tabpane {
-        min-height: calc(100vh - 46px);
+        min-height: calc(~'100vh - 46px');
+        padding-top: 46px;
       }
     }
 		position: relative;
@@ -431,18 +428,10 @@
       padding-bottom: 50px;
       overflow: visible;
     }
-    .noFixed {
-      height: 46px;
-      display: none;
-    }
-    .fixed {
-      height: 46px;
-      display: block;
-    }
 	}
 </style>
 
-<style lang="scss" module>
+<style lang="less" module>
   .diggAvatar {
     width: 100%;
     border-radius: 50%;

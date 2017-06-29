@@ -9,7 +9,6 @@
     <div class="nothingDefault"> 
       <img v-if="nothing" :src="nothing" />
     </div>
-    <div v-if="!nothing" class="fixed"></div>
     <mt-loadmore
       v-if="!nothing"
       :bottom-method="loadBottom"
@@ -282,15 +281,6 @@
         }, 900);
       });
     }
-    ,
-    updated () {
-    //   this.showTop = false;
-    //   setTimeout(() => {
-    //     if(this.$refs.loadmore){
-    //       // this.$refs.loadmore.onTopLoaded();
-    //     }
-    //   }, 500);
-    }
   };
   export default FeedLists;
 </script>
@@ -305,17 +295,12 @@
     line-height: 18px;
   }
 </style>
-<style scoped>
-  .mint-loadmore {padding-bottom: 60px}
-  .mint-loadmore-content-parent-no-trans .mint-loadmore-content {
-    transform: inherit;
-  }
-  .noFixed {
-    height: 46px;
-    display: none;
-  }
-  .fixed {
-    height: 46px;
-    display: block;
+<style scoped lang="less">
+  .feedParentContainer {
+    padding-top: 46px;
+    .mint-loadmore {padding-bottom: 60px}
+    .mint-loadmore-content-parent-no-trans .mint-loadmore-content {
+      transform: inherit;
+    }
   }
 </style>

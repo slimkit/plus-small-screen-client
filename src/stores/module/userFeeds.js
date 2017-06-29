@@ -1,4 +1,4 @@
-import { USERFEEDS, APPENDUSERFEED, CLEANUSERFEEDS, DATES, PREPENDUSERFEED } from '../types';
+import { USERFEEDS, APPENDUSERFEED, CLEANUSERFEEDS, PREPENDUSERFEED } from '../types';
 
 const sort = function(a, b) {
   return b - a;
