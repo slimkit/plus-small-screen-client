@@ -53,6 +53,12 @@ export const COMMENTINPUT = 'commentinput';
 export const CLOSECOMMENTINPUT = 'closecommentinput';
 
 /**
+ * 弹出框控制
+ */
+export const CLOSEPOPUP = 'closepopup';
+export const SHOWPOPUP = 'showpopup';
+
+/**
  * 总的动态列表
  */
 export const FEEDSLIST = 'feedslist';

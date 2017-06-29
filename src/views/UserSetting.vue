@@ -710,7 +710,7 @@
 
   export default UserSetting;
 </script>
-<style lang="scss" module>
+<style lang="less" module>
   .areaSelect {
     position: fixed;
     left: 0;

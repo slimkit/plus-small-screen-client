@@ -6,6 +6,7 @@
     <IviewSwiper/>
     <PostFeed/>
     <Confirm />
+    <ShowFeedPopup />
     {{ imStatus }}
   </div>
 </template>
@@ -16,6 +17,7 @@
   import FeedDiggList from './components/FeedDiggList';
   import CommentInput from './components/CommentInput';
   import Confirm from './components/Confirm';
+  import ShowFeedPopup from './components/ShowFeedPopup';
 
   // im聊天相关
   import localEvent from './stores/localStorage';
@@ -36,7 +38,8 @@
       PostFeed,
       FeedDiggList,
       CommentInput,
-      Confirm
+      Confirm,
+      ShowFeedPopup
     },
     computed: {
       imStatus () { // im状态监测
@@ -46,7 +49,8 @@
           connect();
         }
         return '';
-      }
+      },
+
     },
     created() {
       let db = new Dexie('ThinkSNS');

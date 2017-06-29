@@ -14,7 +14,7 @@
         <ViewIcon width="21" height="21" color="#999" />
         <span :class="$style.count">{{ friendnum(feed.tool.feed_view_count) }}</span>
       </div>
-      <div :class="$style.toolItem">
+      <div :class="$style.toolItem" @click="handleShowPopup(true)">
         <MoreIcon width="21" height="21" color="#999" />
       </div>
     </div>
@@ -96,7 +96,7 @@
   import { friendNum } from '../utils/friendNum';
   import { createAPI, addAccessToken } from '../utils/request';
   import localEvent from '../stores/localStorage';
-  import { NOTICE, COMMENTINPUT, UPDATEFEED, USERS, CONFIRM, CLOSECOMMENTINPUT } from '../stores/types';
+  import { NOTICE, COMMENTINPUT, UPDATEFEED, USERS, CONFIRM, CLOSECOMMENTINPUT, SHOWPOPUP, CLOSEPOPUP } from '../stores/types';
   import { goTo, changeUrl } from '../utils/changeUrl';
   import ViewIcon from '../icons/View';
   import CommentIcon from '../icons/Comment';
@@ -122,7 +122,8 @@
     props: [
       'feed',
       'user',
-      'openInput'
+      'openInput',
+      'showPopup'
     ],
     data: () => ({
       commentAbout: {
@@ -148,6 +149,15 @@
         } else {
           this.$store.dispatch(CLOSECOMMENTINPUT);
           this.commentAbout.reply_to_user_id = 0;
+        }
+      },
+      handleShowPopup( open ) {
+        if(open) {
+          this.$store.dispatch(SHOWPOPUP, cb => {
+            cb({ show: true, feed_id: this.feed.feed.feed_id, me: this.feed.user_id === window.TS_WEB.currentUserId });
+          })
+        } else {
+          this.$store.dispatch(CLOSEPOPUP);
         }
       },
       friendnum (num) { 

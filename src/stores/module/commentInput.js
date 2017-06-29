@@ -1,12 +1,20 @@
-import { COMMENTINPUT, CLOSECOMMENTINPUT } from '../types';
+import { COMMENTINPUT, CLOSECOMMENTINPUT, CLOSEPOPUP, SHOWPOPUP } from '../types';
 
 const state = {
-  commentFeed: 0
+  commentFeed: 0,
+  showPopup: {
+    show: false,
+    feed_id: 0,
+    me: false
+  }
 };
 
 const mutations = {
   [COMMENTINPUT] (state, feed_id) {
     state.commentFeed = feed_id;
+  },
+  [SHOWPOPUP] (state, data) {
+    state.showPopup = { ...data };
   }
 };
 
@@ -16,6 +24,15 @@ const actions = {
       context.commit(COMMENTINPUT, feed_id);
     })
   },
+  [SHOWPOPUP]: (context, cb) => {
+    cb( data => {
+      context.commit(SHOWPOPUP, data);
+    })
+  },
+  [CLOSEPOPUP]: context => {
+    context.commit(SHOWPOPUP, {show: 0, feed_id: 0, me: false});
+  }
+  ,
   [CLOSECOMMENTINPUT]: context => {
     context.commit(COMMENTINPUT, 0)
   }
@@ -24,6 +41,9 @@ const actions = {
 const getters = {
   [COMMENTINPUT]: state => {
     return state.commentFeed
+  },
+  [SHOWPOPUP]: state => {
+    return state.showPopup;
   }
 };
 

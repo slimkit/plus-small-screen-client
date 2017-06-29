@@ -51,6 +51,7 @@
         :user="user" 
         :feed="feed"
         :openInput="feed.feed.feed_id == commentFeed ? true : false"
+        :showPopup="feed.feed.feed_id == showPopup ? true : false"
       />
     </div>
   </li>
@@ -104,7 +105,8 @@
       },
       // 检测动态展开输入框
       ...mapState({
-        commentFeed: state => state.commentInput.commentFeed
+        commentFeed: state => state.commentInput.commentFeed,
+        showPopup: state => state.commentInput.showPopup
       })
     },
     created () {
