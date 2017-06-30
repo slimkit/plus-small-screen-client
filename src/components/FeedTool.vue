@@ -2,8 +2,8 @@
   <div>
     <div :class="$style.tool">
       <div :class="$style.toolItem">
-        <DiggIcon v-show="isDigg" width="21" @click.native="cannelDigg" height="21" color="#f4504d" />
-        <UnDiggIcon  v-show="!isDigg" @click.native="sendDigg" width="21" height="21" color="#999" />
+        <DiggIcon v-if="isDigg" width="21" @click.native="cannelDigg" height="21" color="#f4504d" />
+        <UnDiggIcon  v-else @click.native="sendDigg" width="21" height="21" color="#999" />
         <span :class="$style.count">{{ friendnum(feed.tool.feed_digg_count) }}</span>
       </div>
       <div :class="$style.toolItem" @click="handleCommentInput(true)">
@@ -49,12 +49,13 @@
         </Button>
       </li>
     </ul>
-    <div style="padding-top: 2wv;">
+    <div style="padding-top: 2wv;" v-if="commentsData.length">
       <ul>
-        <li v-for="(comment, commentIndex) in commentsData" :key="comment.id" v-if="commentIndex < 3">
+        <li v-for="(comment, commentIndex) in commentsData" :key="comment.id">
           <p>
             <router-link 
               v-if="comment.user_id" 
+
               :class="$style.userName" 
               :to="{ path: `/users/feeds/${comment.user_id}` }"
             >
@@ -321,7 +322,7 @@
         return this.feed.comments;
       },
       hasMore () {
-        return this.feed.comments.length > 2;
+        return this.feed.tool.feed_comment_count > 3;
       },
       users () {
         return this.$store.getters[USERS];
