@@ -247,7 +247,8 @@
           // feed.comments.unshift(newComment);
           // 更新vuex数据
           this.$store.getters[FEEDSLIST][this.feed.feed.feed_id].comments.unshift(newComment);
-          feed.tool.feed_comment_count += 1;
+          this.$store.getters[FEEDSLIST][this.feed.feed.feed_id].tool.feed_comment_count += 1;
+          // feed.tool.feed_comment_count += 1;
           this.$store.dispatch(NOTICE, cb => {
             cb({
               text: '已发送',
@@ -298,11 +299,13 @@
           validateStatus: status => status === 204
         })
         .then(response => {
-          feed.comments.splice(data.index, 1);
-          feed.tool.feed_comment_count -= 1;
-          this.$store.dispatch(UPDATEFEED, cb => cb({
-            feed
-          }));
+          // feed.comments.splice(data.index, 1);
+          // feed.tool.feed_comment_count -= 1;
+          // this.$store.dispatch(UPDATEFEED, cb => cb({
+          //   feed
+          // }));
+          this.$store.getters[FEEDSLIST][this.feed.feed.feed_id].comments.splice(data.index, 1);
+          this.$store.getters[FEEDSLIST][this.feed.feed.feed_id].tool.feed_comment_count -= 1;
         })
       },
     },

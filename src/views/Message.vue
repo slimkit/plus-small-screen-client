@@ -250,7 +250,7 @@
         time = nowtime - 86400;
       }
       localEvent.setLocalItem('messageFlushTime', nowtime);
-      let messages = {};
+      // let messages = {};
       // 获取新消息
       addAccessToken().get(createAPI(`users/flushmessages?key=${types}&time=${time+1}`),{},
         {

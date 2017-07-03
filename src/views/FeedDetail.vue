@@ -618,6 +618,7 @@
                 newComment.reply_to_user = { ...this.commentedUser };
                 // feed.comments.unshift(newComment);
                 this.$store.getters[FEEDSLIST][this.feed_id].comments.unshift(newComment);
+                this.$store.getters[FEEDSLIST][this.feed_id].tool.feed_comment_count += 1;
                 // 更新动态
                 // this.$store.dispatch(UPDATEFEED, cb => {
                 //   cb(feed);
@@ -625,6 +626,7 @@
               } else {
                 // feed.comments.unshift(newComment);
                 this.$store.getters[FEEDSLIST][this.feed_id].comments.unshift(newComment);
+                this.$store.getters[FEEDSLIST][this.feed_id].tool.feed_comment_count += 1;
                 // 更新动态
                 // this.$store.dispatch(UPDATEFEED, cb => {
                 //   cb(feed);
@@ -634,7 +636,7 @@
           });
           
           // 本地数据更新
-          this.feedData.tool.feed_comment_count += 1;
+          // this.feedData.tool.feed_comment_count += 1;
           this.$store.dispatch(NOTICE, cb => {
             cb({
               text: '已发送',
@@ -709,10 +711,12 @@
           validateStatus: status => status === 204
         })
         .then(response => {
-          let newComments = this.comments;
-          newComments.splice(data.index,1);
-          this.comments = newComments;
-          this.feedData.tool.feed_comment_count -- ;
+          // let newComments = this.comments;
+          // newComments.splice(data.index,1);
+          this.$store.getters[FEEDSLIST][this.feed_id].comments.splice(data.index, 1);
+          // this.comments = newComments;
+          // this.feedData.tool.feed_comment_count -- ;
+          this.$store.getters[FEEDSLIST][this.feed_id].tool.feed_comment_count -= 1;
           this.$store.dispatch(NOTICE, cb => {
             cb({
               text: '已删除',
@@ -820,7 +824,7 @@
           })
           setTimeout( () => {
             this.showSpinner = false;
-          }, 1200);
+          }, 800);
         });
       });
     },
