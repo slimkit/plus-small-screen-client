@@ -244,9 +244,9 @@
           };
           this.comment_content = '';
           // 本地数据更新
-          feed.comments.unshift(newComment);
+          // feed.comments.unshift(newComment);
           // 更新vuex数据
-          this.$store.getters[FEEDSLIST][this.feed.feed.feed_id].comments.push(newComment);
+          this.$store.getters[FEEDSLIST][this.feed.feed.feed_id].comments.unshift(newComment);
           feed.tool.feed_comment_count += 1;
           this.$store.dispatch(NOTICE, cb => {
             cb({

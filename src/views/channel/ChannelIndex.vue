@@ -20,6 +20,9 @@
               </div>
             </li>
           </ul>
+          <div v-else class="nothingDefault"> 
+            <img :src="nothingMy" />
+          </div>
         </section>
       </Tab-pane>
       <Tab-pane label="全部频道" name="allChannel" >
@@ -41,6 +44,9 @@
               </div>
             </li>
           </ul>
+          <div v-else class="nothingDefault"> 
+            <img :src="nothingMy" />
+          </div>
         </section>
       </Tab-pane>
     </Tabs>
@@ -130,10 +136,12 @@
             width: 25vw;
             display: flex;
             justify-content: flex-end;
-            padding: 0 12px;
+            padding: 0 12px 0 0;
             .ivu-btn-ghost {
               display: flex;
               align-items: center;
+              justify-content: center;
+              width: 100%;
               .ivu-icon-ios-plus-empty:before {
                 color: #59b6d7;
                 font-size: 24px;
@@ -155,6 +163,8 @@
   import { changeUrl, goTo } from '../../utils/changeUrl';
   import BackIcon from '../../icons/Back';
   import getImg from '../../utils/getImage';
+  import { resolveImage } from '../../utils/resource';
+  const nothingImg = resolveImage(require('../../statics/images/defaultNothingx3.png'));
 
   const channelIndex = {
     data: () => ({
@@ -164,6 +174,14 @@
       allChannelIds: [],
       currentTab: 'allChannel'
     }),
+    computed: {
+      nothingMy () {
+        return this.myChannelIds.length  ? 0 : nothingImg;
+      },
+      nothingAll() {
+        return this.allChannelIds.length ? 0 : nothingImg;
+      }
+    },
     methods: {
       goTo,
       changeUrl,

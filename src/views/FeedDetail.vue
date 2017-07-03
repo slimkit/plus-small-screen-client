@@ -73,7 +73,7 @@
       </div>
     </div>
     <ul :class="$style.comment" v-if="commentFeed" ref="commentFeedInput">
-      <li v-auto-focus="true">
+      <li>
         <Input 
           type="textarea" 
           ref="commentInput"
@@ -595,15 +595,15 @@
                 // commented user
                 if(this.commentToUserId) {
                   newComment.reply_to_user = { ...this.commentedUser };
-                  feed.comments.unshift(newComment);
-                  this.$store.getters[FEEDSLIST][this.feed_id].comments.push(newComment);
+                  // feed.comments.unshift(newComment);
+                  this.$store.getters[FEEDSLIST][this.feed_id].comments.unshift(newComment);
                   // 更新动态
                   // this.$store.dispatch(UPDATEFEED, cb => {
                   //   cb(feed);
                   // });
                 } else {
-                  feed.comments.unshift(newComment);
-                  this.$store.getters[FEEDSLIST][this.feed_id].comments.push(newComment);
+                  // feed.comments.unshift(newComment);
+                  this.$store.getters[FEEDSLIST][this.feed_id].comments.unshift(newComment);
                   // 更新动态
                   // this.$store.dispatch(UPDATEFEED, cb => {
                   //   cb(feed);
@@ -616,15 +616,15 @@
               // commented user
               if(this.commentToUserId) {
                 newComment.reply_to_user = { ...this.commentedUser };
-                feed.comments.unshift(newComment);
-                this.$store.getters[FEEDSLIST][this.feed_id].comments.push(newComment);
+                // feed.comments.unshift(newComment);
+                this.$store.getters[FEEDSLIST][this.feed_id].comments.unshift(newComment);
                 // 更新动态
                 // this.$store.dispatch(UPDATEFEED, cb => {
                 //   cb(feed);
                 // });
               } else {
-                feed.comments.unshift(newComment);
-                this.$store.getters[FEEDSLIST][this.feed_id].comments.push(newComment);
+                // feed.comments.unshift(newComment);
+                this.$store.getters[FEEDSLIST][this.feed_id].comments.unshift(newComment);
                 // 更新动态
                 // this.$store.dispatch(UPDATEFEED, cb => {
                 //   cb(feed);

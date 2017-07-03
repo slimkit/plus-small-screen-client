@@ -227,7 +227,6 @@
       },
 
       changeMyCates () {
-        if(!this.myCates.length) return;
         let cates = '';
         this.myCates.forEach( cate => {
           cates += cate.id + ',';
