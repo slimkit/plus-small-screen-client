@@ -51,6 +51,7 @@
                   :autofocus="true"
                   v-model="commentContent"
                   :placeholder="placeholder"
+                  v-childfocus
                 />
               </li>
               <li :class="$style.commentOperations">

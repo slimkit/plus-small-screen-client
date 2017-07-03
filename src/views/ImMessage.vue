@@ -38,7 +38,7 @@
 		<div class="sendBox">
 			<Row :gutter="16" style="width: 100%;">
 				<Col span="20">
-					<Input :maxLength="255" type="textarea" class="commentInput" v-model="message.content" placeholder="say anything" :autosize="{minRows: 1,maxRows: 4}" />
+					<Input v-childfocus :maxLength="255" type="textarea" class="commentInput" v-model="message.content" placeholder="say anything" :autosize="{minRows: 1,maxRows: 4}" />
 				</Col>
 
 				<Col span="4">

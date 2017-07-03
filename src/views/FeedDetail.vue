@@ -73,7 +73,7 @@
       </div>
     </div>
     <ul :class="$style.comment" v-if="commentFeed" ref="commentFeedInput">
-      <li>
+      <li v-auto-focus="true">
         <Input 
           type="textarea" 
           ref="commentInput"
@@ -84,6 +84,7 @@
           :autofocus="true"
           v-model="commentContent"
           :placeholder="placeholder"
+          v-childfocus
         />
       </li>
       <li :class="$style.commentOperations">
@@ -178,6 +179,7 @@
                       :autofocus="true"
                       v-model="commentContent"
                       :placeholder="placeholder"
+                      v-childfocus
                     />
                   </li>
                   <li :class="$style.commentOperations">

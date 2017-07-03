@@ -23,7 +23,7 @@
               <label for="phone">手机号</label>
             </Col>
             <Col span="15">
-              <input type="tel" size="large" :autofocus="true" autocomplete="off" placeholder="输入11位手机号" v-model.number.trim="phone" id="phone" name="phone" maxlength="11" />
+              <input type="tel" v-focus size="large" :autofocus="true" autocomplete="off" placeholder="输入11位手机号" v-model.number.trim="phone" id="phone" name="phone" maxlength="11" />
             </Col>
             <Col span="4" class="flexend">
               <CloseIcon v-show="isShowClean" @click.native="cleanPhone" width="21" height="21" color="#999" />

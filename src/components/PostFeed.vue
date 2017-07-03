@@ -21,7 +21,6 @@
       <div :class="$style.content">
         <Row :gutter="24">
           <Col span="24">
-            <!-- <Input style="border-bottom: 1px #ededed solid;" :autosize="{minRows: 1, maxRows: 2}" type="textarea" v-model="feedTitle" :maxlength="30" placeholder="有标题更吸引人" :class="$style.contentInput"></Input> -->
             <Input 
               v-model="feedContent" 
               :autosize="{minRows: 6, maxRows: 12}" 
@@ -30,6 +29,7 @@
               type="textarea" 
               :class="$style.contentInput" 
               placeholder="输入要说的话,图文结合更精彩哦"
+              v-childfocus
             />
           </Col>
         </Row>

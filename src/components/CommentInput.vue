@@ -30,6 +30,7 @@
                 :minlength='1' blur="inputBlur" 
                 :maxlength='255' 
                 v-model="comment_content"
+                v-childfocus
               />
             </Col>
           </Row>

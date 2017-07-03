@@ -30,6 +30,7 @@
           :autofocus="true"
           v-model="commentAbout.comment"
           :placeholder="commentAbout.placeholder"
+          v-childfocus
         />
       </li>
       <li :class="$style.commentOperations">

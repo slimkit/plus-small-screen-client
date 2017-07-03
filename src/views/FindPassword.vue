@@ -18,7 +18,7 @@
               <label for="phone" class="loginFormTitle">手机号</label>
             </Col>
             <Col span="14">
-              <input type="tel" maxlength="12" autocomplete="off" placeholder="输入手机号码" v-model.trim.num="phone" id="phone" name="phone" />
+              <input v-focus type="tel" maxlength="12" autocomplete="off" placeholder="输入手机号码" v-model.trim.num="phone" id="phone" name="phone" />
             </Col>
             <Col span="5" class="flexend">
               <div @click="cleanPhone" v-show="isShowClean">

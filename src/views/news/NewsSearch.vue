@@ -10,6 +10,7 @@
             v-model="keyword"
             :autofocus="true"
             @on-enter="doSearch()"
+            v-childfocus
           />
           <CloseIcon @click.native="cleanKeyword();" height="20" width="20" color="#999" v-if="keywordCount" style="position: absolute; top: 6px; right: 8px;"/>
         </Col>

@@ -18,7 +18,7 @@
               <label for="username" class="loginFormTitle">用户名</label>
             </Col>
             <Col span="16">
-              <input type="text" maxlength="12" autocomplete="off" placeholder="输入您的用户名" v-model.trim="username" id="username" name="username" />
+              <input v-focus type="text" maxlength="12" autocomplete="off" placeholder="输入您的用户名" v-model.trim="username" id="username" name="username" />
             </Col>
             <Col span="3" class="flexend">
               <div @click="cleanUsername" v-show="isShowUserClean">
