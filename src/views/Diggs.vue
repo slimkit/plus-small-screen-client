@@ -226,9 +226,24 @@
         if( length ) {
           this.max_id = this.diggs[length - 1].id;
         }
-        this.diggs.forEach( digg => {
-          this.ids.push(digg.id);
-        });
+        // 点赞记录写入本地数据
+        window.TS_WEB.dataBase.transaction('rw?',
+          window.TS_WEB.dataBase.diggslist,
+          () => {
+            this.diggs.forEach( digg => {
+              this.ids.push(digg.id);
+              window.TS_WEB.dataBase.diggslist.where('[user_id+uid]').equals([window.TS_WEB.currentUserId, digg.user_id]).delete().then( () => {
+                window.TS_WEB.dataBase.diggslist.put({
+                  user_id: window.TS_WEB.currentUserId,
+                  uid: digg.user_id
+                })
+              })
+              .catch( e => {
+                console.log(e)
+              });
+            });
+          }
+        );
         this._initFormatedDiggs();
         if(length < 15) {
           this.bottomAllLoaded = true;

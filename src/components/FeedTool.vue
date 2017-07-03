@@ -320,7 +320,7 @@
         return this.commentAbout.comment.length;
       },
       commentsData () {
-        return this.feed.comments;
+        return this.feed.comments.slice(0, 3); // 返回前三条评论
       },
       hasMore () {
         return this.feed.tool.feed_comment_count > 3;

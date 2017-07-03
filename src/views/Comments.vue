@@ -341,9 +341,23 @@
       )
       .then(response => {
         this.comments = response.data.data;
-        this.comments.forEach( comment => {
-          this.ids.push(comment.id);
-        });
+        window.TS_WEB.dataBase.transaction('rw?',
+          window.TS_WEB.dataBase.commentslist,
+          () => {
+            this.comments.forEach( comment => {
+              this.ids.push(comment.id);
+              window.TS_WEB.dataBase.commentslist.where('[user_id+uid]').equals([window.TS_WEB.currentUserId, comment.user_id]).delete().then( () => {
+                window.TS_WEB.dataBase.commentslist.put({
+                  user_id: window.TS_WEB.currentUserId,
+                  uid: comment.user_id
+                })
+              })
+              .catch( e => {
+                console.log(e)
+              });
+            });
+          }
+        );
         let length = this.comments.length;
         if(length < 15) {
           this.bottomAllLoaded = true;
