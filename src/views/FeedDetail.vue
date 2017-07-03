@@ -438,7 +438,7 @@
         .then(response => {
           let data = response.data;
           if(data.status || data.code == 0) {
-            this.$store.dispatch(COLLECTIONIDS, cb => {
+            this.$store.dispatch(COLLECTIONFEEDSIDS, cb => {
               cb([
                 feed_id
               ])
