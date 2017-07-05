@@ -77,9 +77,6 @@ const routes = [
     meta: {
       title: '动态'
     },
-    beforeEnter: (to, from, next) => {
-      requestAuth(to, from, next)
-    },
     redirect: '/feeds/new',
     children: [
       {
@@ -88,6 +85,9 @@ const routes = [
         name: 'followingFeeds',
         meta: {
           title: '关注的动态'
+        },
+        beforeEnter: (to, from, next) => {
+          requestAuth(to, from, next)
         }
       },
       {
@@ -130,9 +130,6 @@ const routes = [
     name: 'userSpace',
     meta: {
       title: '个人主页'
-    },
-    beforeEnter: (to, from, next) => {
-      requestAuth(to, from, next);
     }
   },
   {

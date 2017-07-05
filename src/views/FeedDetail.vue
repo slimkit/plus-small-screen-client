@@ -731,10 +731,13 @@
       unFollowingUser,
       followingUser,
       goBack () {
+        if(window.history.length < 2) {
+          this.$router.push('/feeds');
+          return;
+        }
         this.$router.back();
       },
       getUser (user_id) {
-        let userLocal = localEvent.getLocalItem(`user_${user_id}`);
         getLocalDbUser(user_id).then( item => {
           if (item === undefined) {
             getUserInfo(user_id, 30).then(user => {

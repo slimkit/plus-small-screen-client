@@ -9,7 +9,7 @@
     <header class="commonHeader" id="feed-header" v-if="!isWeixin">
       <Row :gutter="24">
         <Col span="5" style="display: flex; justify-content: flex-start">
-          <BackIcon @click.native="goTo(-1)" height="21" width="21" color="#999" />
+          <BackIcon @click.native="goBack()" height="21" width="21" color="#999" />
         </Col>
         <Col span="14" class="title-col">
           <div>
@@ -291,23 +291,6 @@
       newsTimer () {
         return this.timers(this.detail.created_at, 8, false);
       },
-      // 计算图片跳转地址
-      // imagesList () {
-      //   let urlList = [];
-      //   if(!this.detail.storage.length > 0) {
-      //     return [];
-      //   }
-      //   this.detail.storage.forEach((value) => {
-      //     urlList.push(
-      //       {
-      //         url: getImg(value.storage_id, 99),
-      //         width: window.innerWidth,
-      //         height: window.innerWidth * (value.height / value.width)
-      //       }
-      //     );
-      //   });
-      //   return urlList;
-      // },
       formateComments () {
         let formated = formateFeedComments(this.comments);
         this.max_id = formated.max_id;
@@ -536,7 +519,13 @@
       },
       getImg,
       friendNum,
-      goTo,
+      goBack() {
+        if(window.history.length < 2) {
+          this.$route.push('/news');
+          return;
+        }
+        this.$route.back();
+      },
       menu() {
         // console.log(document);
         let header = document.getElementById('feed-header');
