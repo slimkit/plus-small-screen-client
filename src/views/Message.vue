@@ -152,7 +152,7 @@
           return 0;
         }
 
-        Array.from(new Set(newUids)).forEach( (digg, index) => {
+        Array.from(new Set(newUids)).slice(0, 3).forEach( (digg, index) => {
           count ++;
           if(count > 3) return;
           window.TS_WEB.dataBase.transaction('rw?', window.TS_WEB.dataBase.userbase, () => {
@@ -204,7 +204,7 @@
         }
 
         window.TS_WEB.dataBase.transaction('rw?', window.TS_WEB.dataBase.userbase, () => {
-          Array.from(new Set(uids)).forEach((comment, index) => {
+          Array.from(new Set(uids)).slice(0,3).forEach((comment, index) => {
             count ++;
             if(count > 3) return;
             window.TS_WEB.dataBase.userbase.get({ user_id: parseInt(comment) }).then( item => {
