@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.detail" :id="`feed-${feed.feed.feed_id}`">
+  <div :class="$style.detail" :id="`feed-${feed.id}`">
     <Row :gutter="16" style="-webkit-align-items: flex-start; align-items: flex-start;">
       <Col span="4">
         <img :src="avatar" alt="" style="width:100%; border-radius:50%">
@@ -15,11 +15,10 @@
         </Row>
         <Row>
           <Col span="23">
-            <router-link style="display: flex;" v-if="feed.feed.feed_title" :to="`/feed/${feed.feed.feed_id}`" class="feedTitle">{{ feed.feed.feed_title }}</router-link>
-            <div :class="$style.content" @click="router(`/feed/${feed.feed.feed_id}`)">
-              {{ feed.feed.feed_content }}
+            <div :class="$style.content" @click="router(`/feed/${feed.id}`)">
+              {{ feed.feed_content }}
             </div>
-            <FeedImages v-show="feed.feed.storages.length" :storages="feed.feed.storages"></FeedImages>
+            <FeedImages v-show="feed.images.length" :storages="feed.images"></FeedImages>
           </Col>
         </Row>
       </Col>
@@ -64,17 +63,17 @@
     },
     computed: {
       avatar () {
-        const { avatar: { 30: avatar = defaultAvatar } = {} } = this.user;
+        const { avatar = '' } = this.user;
         return avatar;
       },
       timer () {
-        return this.timers(this.feed.feed.created_at, 8, false);
+        return this.timers(this.feed.created_at, 8, false);
       }
     },
     created () {
       let localUser = localEvent.getLocalItem('user_' + this.feed.user_id);
       if(!lodash.keys(localUser).length > 0) {
-        getUserInfo(this.feed.user_id, 30).then( user => {
+        getUserInfo(this.feed.user_id).then( user => {
           this.user = { ...this.user, ...user };
         });
       } else {

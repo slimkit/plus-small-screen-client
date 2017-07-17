@@ -144,9 +144,9 @@
         for(let index in this.localDiggs) {
           let localUser = localEvent.getLocalItem(`user_${index}`);
           if(!lodash.keys(localUser).length) {
-            getUserInfo(index, 30).then( user => {
+            getUserInfo(index).then( user => {
               const { datas: { intro: { value: intro = '还没有简介...' } = {} } = {} } = user;
-              const { avatar: { 30: avatar = defaultAvatar } = {} } = user;
+              const { avatar = defaultAvatar } = user;
               diggList = { ...diggList, [index]: {
                   is_following: user.is_following,
                   is_followed: user.is_followed,
@@ -159,12 +159,12 @@
             });
           } else {
             const { datas: { intro: { value: intro = '还没有简介...' } = {} } = {} } = localUser;
-            const { avatar: { 30: avatar = defaultAvatar } = {} } = localUser;
+            const { avatar = defaultAvatar } = localUser;
             diggList = { ...diggList, [index]: {
                 is_following: localUser.is_following,
                 is_followed: localUser.is_followed,
                 user_id: index,
-                avatar: localUser.avatar[30],
+                avatar: localUser.avatar,
                 name: localUser.name,
                 intro: intro
               }

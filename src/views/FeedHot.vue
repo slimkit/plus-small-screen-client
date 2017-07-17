@@ -13,7 +13,7 @@
     },
     data: () => ({
       option: {
-        uri: 'feeds/hots',
+        uri: 'feeds?type=hot',
         limiter: 'page',
         type: 'hot'
       }

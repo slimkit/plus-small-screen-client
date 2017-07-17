@@ -6,11 +6,8 @@
           <Col span="5">
             <Button :class="$style.actionBtn" type="text" @click="closePost">取消</Button>
           </Col>
-          <Col span="14" v-if="!channelId" class="title-col">
+          <Col span="14" class="title-col">
             发布动态
-          </Col>
-          <Col span="14" v-else class="title-col">
-            投稿到频道
           </Col>
           <Col span="5" class="header-end-col">
             <LoadingWhiteIcon height="21" width="21" v-if="loading" />
@@ -37,7 +34,7 @@
       <div :class="$style.upload">
         <template>
           <div :class="$style.uploadList">
-            <div class="demo-upload-list" v-for="(item, index) in imageList">
+            <div class="demo-upload-list" v-for="(item, index) in uploadList">
               <template v-if="item.status === 'finished'">
                   <img :src="item.url" :alt="item.name" >
                   <div class="demo-upload-list-cover">
@@ -54,7 +51,6 @@
             <Upload
               ref="upload"
               :show-upload-list="false"
-              :default-file-list="defaultList"
               :on-success="handleSuccess"
               :format="format"
               :max-size="maxSize"
@@ -62,7 +58,6 @@
               :on-exceeded-size="handleMaxSize"
               :before-upload="handleBeforeUpload"
               :headers="headers"
-              :data="uploadData"
               type="drag"
               :action="uploadUri"
               accept="image/*"
@@ -85,7 +80,8 @@
 <script>
 import { mapState } from 'vuex';
 import { SHOWPOST, NOTICE, ADDFOLLOWINGIDS, ADDNEWIDS, FEEDSLIST } from '../stores/types';
-import { createAPI, addAccessToken } from '../utils/request';
+import { createAPI, addAccessToken, createRequestURI } from '../utils/request';
+import buildURL from 'axios/lib/helpers/buildURL';
 import localEvent from '../stores/localStorage';
 import { Base64 } from 'js-base64';
 import md5 from 'js-md5';
@@ -101,6 +97,8 @@ import piexif from 'piexifjs';
 
 const base64Reg = /^data:(.*?);base64,/;
 let reg = /data:(.*?);/;
+const UserLoginInfo = localEvent.getLocalItem('UserLoginInfo');
+//
 const postFeed = {
   components: {
     CameraIcon,
@@ -109,45 +107,23 @@ const postFeed = {
     LoadingWhiteIcon
   },
   data: () => ({
-    // feedTitle: '',
     feedContent: '',
-    isatuser: 0,
     uploadList: [],
-    defaultList: [],
-    imgName: '',
     visible: false,
-    uploadHeaders: {},
-    storage_task_ids: [],
-    uploadUri: '',
-    uploadData: {},
-    headers: {},
-    ids: {},
-    format: ['jpg','jpeg','png'],
+    uploadUri: createAPI('files'),
+    headers: { Authorization: `Bearer ${UserLoginInfo.token}` },
+    images: [],
+    format: ['jpg', 'jpeg', 'png', 'gif', 'svg', 'bmp'],
     maxSize: 10240,
     loading: false,
     listCount: 0
   }),
   computed: {
     ...mapState({
-      show: state => state.showPost.showPost.show,
-      channelId: state => state.showPost.showPost.channelId
+      show: state => state.showPost.showPost.show
     }),
     isDisabled () {
-      return !(this.feedContent.length || this.storage_task_ids.length);
-    },
-    imageList () {
-      let imglist = [];
-      this.uploadList.forEach( img => {
-        if(this.ids[img.name])
-          imglist.push({
-            status: img.status,
-            name: img.name,
-            url: this.ids[img.name].url,
-            percentage: parseInt(img.percentage) || 0,
-            showProgress: img.showProgress
-          })
-      });
-      return imglist;
+      return !(this.feedContent.length || this.images.length);
     }
   },
   methods: {
@@ -156,22 +132,25 @@ const postFeed = {
       this.loading = true;
       let feed_content = this.feedContent;
       let feed_from = 2;
-      let isatuser = this.isatuser;
-      let storage_task_ids = this.storage_task_ids;
-      let url = this.channelId ? `channels/${this.channelId}/feed` : 'feeds';
+      let feed_mark = parseInt(window.TS_WEB.currentUserId + (new Date).getTime());
 
-      addAccessToken().post(createAPI(url),{
-          feed_content,
-          feed_from,
-          isatuser,
-          storage_task_ids
-        },
+      let feed_data = {
+        feed_content,
+        feed_from,
+        feed_mark
+      };
+
+      if( this.images.length ) {
+        feed_data.images = this.images;
+      }
+
+      addAccessToken().post(createAPI('feeds'), feed_data,
         {
           validateStatus: status => status === 201
         }
       )
       .then(response => {
-        let feed_id = response.data.data;
+        let feed_id = response.data.id;
         this.closePost();
         this.$store.dispatch(NOTICE, cb => {
           cb({
@@ -180,38 +159,37 @@ const postFeed = {
             status: true
           });
         });
-        this.storage_task_ids = [];
+
         this.uploadList =[];
         this.$refs.upload.clearFiles();
-        this.ids = {};
         this.loading = false;
+        this.images = [];
+
         addAccessToken().get(
-          createAPI(`feeds/${response.data.data}`),
+          createAPI(`feeds/${response.data.id}`),
           {},
           {
             validateStatus: status => status === 200
           }
         )
-        .then(({ data: { data = {} } = {} }) => {
-          if(!this.channelId) {
-            this.$store.dispatch(FEEDSLIST, cb => {
-              cb({
-                [feed_id]: data
-              });
+        .then(({ data = {} }) => {
+          this.$store.dispatch(FEEDSLIST, cb => {
+            cb({
+              [feed_id]: data
             });
-            // 添加本地最新数据
-            this.$store.dispatch(ADDNEWIDS, cb => {
-              cb([
-                feed_id
-              ]);
-            });
-            // 添加本地关注数据
-            this.$store.dispatch(ADDFOLLOWINGIDS, cb => {
-              cb([
-                feed_id
-              ]);
-            });
-          }
+          });
+          // 添加本地最新数据
+          this.$store.dispatch(ADDNEWIDS, cb => {
+            cb([
+              feed_id
+            ]);
+          });
+          // 添加本地关注数据
+          this.$store.dispatch(ADDFOLLOWINGIDS, cb => {
+            cb([
+              feed_id
+            ]);
+          });
         })
       })
     },
@@ -231,41 +209,29 @@ const postFeed = {
         });
       });
     },
+    
     handleView (index) {
         this.imgName = index;
         this.visible = true;
     },
+
     handleRemove (index) {
       // 从 upload 实例删除数据
       let fileName = this.$refs.upload.fileList[index].name;
       this.$refs.upload.fileList.splice(index, 1);
-      delete this.ids[fileName];
-      this.storage_task_ids.splice(index, 1);
     },
+
     handleSuccess (res, file, fileList) {
-      let message = '';
-      if(typeof(res) == 'string') {
-        message = res;
-      } else if(typeof(res) == 'object') {
-        message = window.JSON.stringify(res);
-      }
-      if(this.ids[file.name].taskId) {
-        noticeTask(this.ids[file.name].taskId, message).then(data => {
-          if(data.status || data.code == 0) {
-            this.storage_task_ids.push(this.ids[file.name].taskId);
-          }
-        });
-      } else {
-        this.$store.dispatch(NOTICE, cb => {
-          cb({
-            show: true,
-            status: false,
-            text: '图片' + file.name + '上传出现异常',
-            time: 1500
-          })
-        })
-      }
+      file.url = buildURL(createAPI(`files/${res.id}`), {
+        w: 200,
+        h: 200
+      });
+
+      this.images.push({
+        id: res.id
+      });
     },
+
     handleFormatError (name) {
       this.$store.dispatch(NOTICE, cb => {
         cb({
@@ -299,200 +265,48 @@ const postFeed = {
     },
     // 上传前置操作
     handleBeforeUpload (file) {
-      const _file_format = file.name.split('.').pop().toLocaleLowerCase();
-      const checked = this.format.some(item => item.toLocaleLowerCase() === _file_format);
-      this.listCount += 1;
-      // 判断图片类型
-      if(!checked) {
-        this.handleFormatError(file.name);
-        return false;
-      }
-      // 判断图片大小
-      if(file.size > this.maxSize * 1024) {
-        this.handleMaxSize(file.name);
-        return false;
-      }
-      // 判断上传个数
-      const check = this.listCount < 10;
-      if(!check) {
-        this.handleMaxItems();
-        return false;
-      }
-      return new Promise( (resolve, reject) => {
-        this.formateUploadFile(file).then( data => {
-          let newFile = {};
-          newFile.taskId = data.taskId;
-          newFile.url = data.url;
-          this.ids = { ...this.ids, [file.name]: newFile };
-          newFile = {};
-          let formateFile = dataURItoBlob(data.url);
-          if(data.status) {
-            resolve(formateFile);
-          } else {
-            return false;
-          }
-        });
-      })
-    },
-
-    // 读取文件信息
-    readFile (file) {
-      return new Promise( function (resolve, reject) {
-        let reader = new FileReader();
-        EXIF.getData(file, () => {
-          let exif = EXIF.getAllTags(file);
-          if(lodash.keys(exif).length) { // 有exif信息
-            let ori = EXIF.getTag(file, 'Orientation');
-            reader.onload = () => {
-              let newDataUri = piexif.remove(reader.result);
-              resolve({
-                dataUri: newDataUri,
-                ori,
-                width: exif.PixelXDimension,
-                height: exif.PixelYDimension
-              });
-            }
-          } else { // 无exif信息
-            reader.onload = () => {
-              // resolve({?
-                resolve({
-                  dataUri: reader.result,
-                  ori: null,
-                  height: 0,
-                  width: 0
-                });
-                // file
-              // });
-            };
-          }
-          reader.readAsDataURL(file);
-        });
-      });
-    },
-
-    // 获取图像信息
-    readImg (data) {
-      return new Promise( (resolve, reject) => {
-        let Orientation = data.ori, height = 0, width = 0;
-        if(data.ori !== null) { // 判断exif信息是否存在
-          if(data.ori !== null && data.ori !== 1 && data.ori !== undefined) { // 需要旋转图片
-            let type = data.dataUri.match(reg)[1];
-            // 旋转图片
-            exifOrient(data.dataUri, data.ori, (err, canvas) => {
-              let dataUri = canvas.toDataURL(type);
-              let img = new Image();
-              img.src = dataUri;
-              img.onload = () => {
-                let info = {};
-                info.img = img;
-                info.dataUri = dataUri;
-                resolve(info);
-              }
-            });
-          } else { // 不需要旋转
-            resolve({
-              dataUri: data.dataUri,
-              img: {
-                width: data.width,
-                height: data.height
-              }
-            });
-          }
-        } else { //  没有exif信息，不需要旋转图片
-          let img =new Image();
-          img.src = data.dataUri;
-          img.onload = () => {
-            let info = {};
-            info.img = img;
-            info.dataUri = data.dataUri;
-            resolve(info);
-          }
-        }
-        return false;
-      });
-    },
-    uploadFile (fileUpload) {
-      return new Promise(function(resolve, reject) {
-        createUploadTask(fileUpload).then(data => {
-          if(data.hasOwnProperty('storage_id') && data.hasOwnProperty('storage_task_id')){
-            resolve({
-              status: 'old',
-              data: {
-                taskId: data.storage_task_id
-              }
-            });
-          }
-          resolve({
-            status: 'new',
-            data: {
-              uploadUri: data.uri,
-              headers: data.headers,
-              uploadData: data.options,
-              taskId: data.storage_task_id
-            }
+      const check = this.uploadList.length < 9;
+      if (!check) {
+          this.$Notice.warning({
+              title: '最多只能上传 9 张图片。'
           });
-        });
-      })
+      }
+      return check;
+      // const _file_format = file.name.split('.').pop().toLocaleLowerCase();
+      // const checked = this.format.some(item => item.toLocaleLowerCase() === _file_format);
+      // this.listCount += 1;
+      // // 判断图片类型
+      // if(!checked) {
+      //   this.handleFormatError(file.name);
+      //   return false;
+      // }
+      // // 判断图片大小
+      // if(file.size > this.maxSize * 1024) {
+      //   this.handleMaxSize(file.name);
+      //   return false;
+      // }
+      // // 判断上传个数
+      // const check = this.listCount < 10;
+      // if(!check) {
+      //   this.handleMaxItems();
+      //   return false;
+      // }
+      // return new Promise( (resolve, reject) => {
+      //   this.formateUploadFile(file).then( data => {
+      //     let newFile = {};
+      //     newFile.taskId = data.taskId;
+      //     newFile.url = data.url;
+      //     this.ids = { ...this.ids, [file.name]: newFile };
+      //     newFile = {};
+      //     let formateFile = dataURItoBlob(data.url);
+      //     if(data.status) {
+      //       resolve(formateFile);
+      //     } else {
+      //       return false;
+      //     }
+      //   });
+      // })
     },
-    formateUploadFile (file) {
-      return new Promise((resolve, reject) => {
-        let fileDataURL = '';
-        let fileBinaryString = '';
-        let fileUpload = {};
-        if(file.type.indexOf('image') !== -1) { // 暂时仅支持图片上传
-
-          this.readFile(file).then( dataUri => { // 读取文件信息
-
-            this.readImg(dataUri).then( info => { // 读取图片信息
-
-              fileUpload.width = info.img.width; // 图片宽度
-              fileUpload.height = info.img.height; // 图片高度
-              fileUpload.origin_filename = file.name; // 文件名(本地)
-              fileUpload.mime_type = info.dataUri.match(reg)[1]; // 文件mimetype
-              let fileDecode = Base64.decode(info.dataUri.replace(base64Reg, ''));
-              fileUpload.hash = md5(fileDecode);
-              this.uploadFile(fileUpload).then( data => {
-
-                if(data.status == 'new') { // 新上传的文件
-
-                  this.uploadUri = data.data.uploadUri;
-                  this.headers = { ...this.headers, ...data.data.headers };
-                  this.uploadData = { ...this.uploadData, ...data.data.uploadData };
-
-                  resolve({
-                    status: true,
-                    taskId: data.data.taskId,
-                    url: info.dataUri
-                  })
-
-                } else { // 已经检测到服务端上传过该文件
-
-                  this.storage_task_ids.push(data.data.taskId);
-                  this.uploadList.push({
-                    name: file.name,
-                    url: info.dataUri,
-                    status: 'finished'
-                  });
-
-                  resolve({
-                    status: false,
-                    taskId: 0,
-                    url: info.dataUri,
-                    percentage: 100
-                  });
-                }
-              });
-            });
-          })
-        } else {
-          resolve({
-            status: false,
-            taskId: 0,
-            url: ''
-          });
-        }
-      });
-    }
   },
   updated () {
     this.uploadList = this.$refs.upload.fileList;

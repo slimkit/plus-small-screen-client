@@ -1,5 +1,5 @@
 <template>
-  <li :class="$style.detail" :id="`feed-${feed.feed.feed_id}`">
+  <li :class="$style.detail" :id="`feed-${feed.id}`">
     <Row :gutter="16" :class="$style.userFeed">
       <Col span="3">
         <div class="grid-content bg-purple" style="line-height: 100%;">
@@ -14,11 +14,11 @@
         </div>
       </Col>
       <Col span="21">
-        <div :class="$style.content" @click="router(`/feed/${feed.feed.feed_id}`)">
-          {{ feed.feed.feed_content }}
+        <div :class="$style.content" @click="router(`/feed/${feed.id}`)">
+          {{ feed.feed_content }}
         </div>
-        <div v-if="feed.feed.storages.length">
-          <FeedImages :storages="feed.feed.storages"></FeedImages>
+        <div v-if="feed.images.length">
+          <FeedImages :storages="feed.images"></FeedImages>
         </div>
       </Col>
     </Row>
@@ -27,7 +27,7 @@
         <FeedTool 
           :feed="feed" 
           :user="user" 
-          :openInput="feed.feed.feed_id == commentFeed ? true : false"
+          :openInput="feed.id == commentFeed ? true : false"
         />
       </Col>
     </Row>
@@ -71,7 +71,7 @@
     },
     computed: {
       avatar () {
-        const { avatar: { 30: avatar = '' } = {} } = this.user;
+        const { avatar = '' } = this.user;
         return avatar;
       },
       // 检测动态展开输入框
@@ -82,7 +82,7 @@
     created () {
       let localUser = localEvent.getLocalItem('user_' + this.feed.user_id);
       if(!lodash.keys(localUser).length > 0) {
-        getUserInfo(this.feed.user_id, 30).then(user => {
+        getUserInfo(this.feed.user_id).then(user => {
           localUser = user;
           this.user = { ...this.user, ...localUser };
         });

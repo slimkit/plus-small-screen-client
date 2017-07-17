@@ -133,8 +133,8 @@
           let digg = {};
           let user = localEvent.getLocalItem(`user_${list.user_id}`);
           if(!lodash.keys(user).length) {
-            getUserInfo(list.user_id, 30).then(gotUser => {
-              const { avatar: { 30: avatar = '' } = {} } = gotUser;
+            getUserInfo(list.user_id).then(gotUser => {
+              const { avatar = '' } = gotUser;
               const { name = '' } = gotUser;
               const { datas: { intro: { value: intro = '还没有简介呢' } = {} } } = gotUser;
               digg.intro = intro;
@@ -142,7 +142,7 @@
               digg.avatar = avatar;
             });
           } else {
-            const { avatar: { 30: avatar = defaultAvatar } = {} } = user;
+            const { avatar = defaultAvatar } = user;
             const { name = '' } = user;
             const { datas: { intro: { value: intro = '还没有简介呢' } = {} } } = user;
             digg.name = name,

@@ -216,14 +216,15 @@
 	</div>
 </template>
 <script>
+  import buildURL from 'axios/lib/helpers/buildURL';
   import { changeUrl, goTo } from '../utils/changeUrl';
-  import { createAPI, addAccessToken } from '../utils/request';
+  import { createAPI, addAccessToken, createOldAPI } from '../utils/request';
   import localEvent from '../stores/localStorage';
   import { getUserInfo } from '../utils/user';
   import VueCropper from 'vue-cropperjs';
   import { NOTICE } from '../stores/types';
   import md5 from 'js-md5';
-  import { createUploadTask, uploadFile, noticeTask } from '../utils/upload';
+  import { createUploadTask, uploadFile, noticeTask, dataURItoBlob } from '../utils/upload';
   import { Base64 } from 'js-base64';
   import getImage from '../utils/getImage';
   import contains from '../utils/contains';
@@ -350,7 +351,7 @@
           saveData.storage_task_id = storage_task_id;
         }
         addAccessToken().patch(
-          createAPI('users'),
+          createOldAPI('users'),
           {
             ...saveData
           },
@@ -359,7 +360,7 @@
           }
         )
         .then(response => {
-          getUserInfo(this.currentUser, 30).then(user => {
+          getUserInfo(this.currentUser).then(user => {
             this.userInfo = { ...this.userInfo, ...user };
           });
           this.$store.dispatch(NOTICE, cb => {
@@ -430,54 +431,28 @@
         let mime_type = this.$refs.cropper.$refs.img.currentSrc.match(reg)[1];
         // 获取本地文件名
         fileUpload.origin_filename = fileName.replace('C:\\fakepath\\', '');
-        let fileData = this.$refs.cropper.getData();
-        // let fileData = this.$refs.cropper.getCroppedCanvas();
-        // 截取高度
-        fileUpload.height = parseInt(fileData.height);
-        // 截取宽度
-        fileUpload.width = parseInt(fileData.width);
-        // let fileStreamData = this.$refs.cropper.getCroppedCanvas({ width: 250, height: 250 }).toDataURL();
-        let fileStreamData = this.$refs.cropper.getCroppedCanvas().toDataURL(mime_type);
-        let fileSource = Base64.decode(fileStreamData.replace(base64Reg, ''));
+        let fileStreamData = this.$refs.cropper.getCroppedCanvas({width: 500, height: 500}).toDataURL(mime_type);
 
-        // 截取文件的mime_type
-        fileUpload.mime_type = fileStreamData.match(reg)[1];
-        // 被截取部分的hash
-        fileUpload.hash = md5(fileSource);
         this.loading = true;
-        // create storage task
-        createUploadTask(fileUpload).then(data => {
-          if(data.hasOwnProperty('storage_id') && data.hasOwnProperty('storage_task_id')){
-            this.handleHideAvatarSelect();
-            this.storage_task_id = data.storage_task_id;
-            this.userInfo.avatar[30] = getImage(data.storage_id, 20);
-            this.$set(this.userInfo.avatar, '30', getImage(data.storage_id, 20));
-            this.$store.dispatch(NOTICE, cb => {
-              cb({
-                text: '裁剪成功,记得保存资料哦',
-                time: 1500,
-                status: true
-              });
-            });
-            return;
+        const formdata = new FormData();
+        formdata.append('avatar', dataURItoBlob(fileStreamData));
+        addAccessToken().post(createAPI('user/avatar'),
+          formdata,
+          {
+            validateStatus: status => status === 201
           }
-          // upload file
-          uploadFile(data, fileStreamData).then(uploadInfo => {
-            // notice server with uploaded-info
-            noticeTask(data.storage_task_id, uploadInfo).then(noticeInfo => {
-              this.handleHideAvatarSelect();
-              this.userInfo.avatar[30] = fileStreamData;
-              this.storage_task_id = data.storage_task_id;
-              this.$store.dispatch(NOTICE, cb => {
-                cb({
-                  text: '头像上传成功,请保存更改',
-                  time: 2500,
-                  status: true
-                });
-              });
+        )
+        .then( ({ data = {} }) => {
+          this.handleHideAvatarSelect();
+          this.userInfo.avatar = buildURL(createAPI(`users/${TS_WEB.currentUserId}/avatar?s=200`));
+          this.$store.dispatch(NOTICE, cb => {
+            cb({
+              text: '头像上传成功,请保存更改',
+              time: 2500,
+              status: true
             });
-          })
-        });
+          });
+        })
       },
       handleHideAvatarSelect () {
         this.isShowCropper = false;
@@ -537,7 +512,7 @@
     },
     computed: {
       avatar () {
-        const { avatar: { 30: avatar = defaultAvatar } = {} } = this.userInfo;
+        const { avatar = defaultAvatar } = this.userInfo;
 
         return avatar;
       },
@@ -623,7 +598,7 @@
     mounted () {
       let currentUser = localEvent.getLocalItem('UserLoginInfo');
       this.currentUser = currentUser.user_id;
-      getUserInfo(this.currentUser, 30).then(user => {
+      getUserInfo(this.currentUser).then(user => {
         this.userInfo = { ...this.userInfo, ...user };
         this.name = user.name;
         const { datas: { 
@@ -675,7 +650,7 @@
         this.areaAbout.provincesObject = { ...this.provincesObject, ...provincesObject };
         this.areaAbout.citysObjects = { ...this.citysObjects, ...citysObjects };
       } else {
-        addAccessToken().get(createAPI('areas'), {}, {
+        addAccessToken().get(createOldAPI('areas'), {}, {
           validateStatus: status => status === 200
         })
         .then(response => {

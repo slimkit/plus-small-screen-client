@@ -80,13 +80,13 @@
 </template>
 
 <script>
-  import { createAPI, addAccessToken } from '../utils/request';
+  import { createAPI, addAccessToken, createOldAPI } from '../utils/request';
   import localEvent from '../stores/localStorage';
   import router from '../routers/index';
   import detecdOS from '../utils/detecdOS';
   import errorCodes from '../stores/errorCodes';
   import deleteObjectItems from '../utils/deleteObjectItems';
-  import { getUserInfo, getLocalDbUser } from '../utils/user';
+  import { getUserInfo, getLocalDbUser, getLoggedUserInfo } from '../utils/user';
   import { USERS_APPEND, MESSAGELISTS, MESSAGENOTICE, MESSAGEROOMS } from '../stores/types';
   import defaultAvatar from '../statics/images/defaultAvatarx2.png';
   import EyeCloseIcon from '../icons/EyeClose';
@@ -208,7 +208,7 @@
         let device_code = detecdOS();
         this.isLoading = true;
         this.isDisabled = true;
-        addAccessToken().post(createAPI('auth'), {
+        addAccessToken().post(createAPI('login'), {
             phone,
             password,
             device_code
@@ -218,25 +218,33 @@
           }
         )
         .then(response => {
+
           this.errors = {};
-          let data = response.data.data;
+          let data = response.data;
           localEvent.setLocalItem('UserLoginInfo', data);
+
           window.TS_WEB.currentUserId = data.user_id;
-          getUserInfo(data.user_id, 30).then(user => {
+
+          // 获取当前用户的信息
+          getLoggedUserInfo().then(user => {
             localEvent.setLocalItem(`user_${data.user_id}`, user);
+            console.log(user);
             this.$store.dispatch(USERS_APPEND, cb =>{
               cb(user)
             });
+
             // 设置消息提示查询时间
             let time = 0;
             time = localEvent.getLocalItem('messageFlushTime');
             let nowtime = parseInt(new window.Date().getTime() / 1000);
+
             if(!time) {
               time = nowtime - 86400;
             }
+
             let types = 'diggs,comments,follows';
             // 查询新消息
-            addAccessToken().get(createAPI(`users/flushmessages?key=${types}&time=${time+1}`), {} , {
+            addAccessToken().get(createOldAPI(`users/flushmessages?key=${types}&time=${time+1}`), {} , {
                 validateStatus: status => status === 200
               })
             .then( response => {
@@ -306,68 +314,70 @@
                 cb(count)
               })
             });
-            // 获取会话列表
-            addAccessToken().get(createAPI('im/conversations/list/all'), {}, {
-              validateStatus: status => status === 200
-            })
-            .then( response => {
-              let data = response.data;
-              let lists = [];
-              if(data.status || data.code === 0 ) {
-                if(!data.data.length) return;
-                
-                window.TS_WEB.dataBase.transaction('rw?', window.TS_WEB.dataBase.chatroom, () => {
-                  data.data.forEach( list => {
-                    window.TS_WEB.dataBase.chatroom.where('[cid+owner]').equals([list.cid, window.TS_WEB.currentUserId ]).count( number => {
-                      if(!number > 0) {
-                        list.last_message_time = 0;
-                        list.owner = window.TS_WEB.currentUserId;
-                        // 将对话列表写入到本地数据库
-                        window.TS_WEB.dataBase.chatroom.put(list);
-                        // 组装vuex所需要的数据
-                        let room = {
-                          cid: list.cid, // 聊天id
-                          user_id: 0, // 聊天对象id
-                          name: '', // 聊天对象昵称
-                          avatar: '', // 聊天对象头像
-                          lists: [], // 聊天内容， 默认为空
-                          count: 0 // 新消息统计， 默认为空
-                        };
-                        let uids = list.uids.split(',');
-                        let user_id = 0;
-                        if(uids[0] == window.TS_WEB.currentUserId) {
-                          user_id = uids[1];
-                        } else {
-                          user_id = uids[0];
-                        }
-                        room.user_id = user_id;
-                        getLocalDbUser(user_id).then( item => {
-                          if(item === undefined) {
-                            getUserInfo(user_id, 30).then( user => {
-                              room.name = user.name;
-                              room.avatar = user.avatar[30];
+            if(window.TS_WEB.socketUrl) {
+              // 获取会话列表
+              addAccessToken().get(createOldAPI('im/conversations/list/all'), {}, {
+                validateStatus: status => status === 200
+              })
+              .then( response => {
+                let data = response.data;
+                let lists = [];
+                if(data.status || data.code === 0 ) {
+                  if(!data.data.length) return;
+                  
+                  window.TS_WEB.dataBase.transaction('rw?', window.TS_WEB.dataBase.chatroom, () => {
+                    data.data.forEach( list => {
+                      window.TS_WEB.dataBase.chatroom.where('[cid+owner]').equals([list.cid, window.TS_WEB.currentUserId ]).count( number => {
+                        if(!number > 0) {
+                          list.last_message_time = 0;
+                          list.owner = window.TS_WEB.currentUserId;
+                          // 将对话列表写入到本地数据库
+                          window.TS_WEB.dataBase.chatroom.put(list);
+                          // 组装vuex所需要的数据
+                          let room = {
+                            cid: list.cid, // 聊天id
+                            user_id: 0, // 聊天对象id
+                            name: '', // 聊天对象昵称
+                            avatar: '', // 聊天对象头像
+                            lists: [], // 聊天内容， 默认为空
+                            count: 0 // 新消息统计， 默认为空
+                          };
+                          let uids = list.uids.split(',');
+                          let user_id = 0;
+                          if(uids[0] == window.TS_WEB.currentUserId) {
+                            user_id = uids[1];
+                          } else {
+                            user_id = uids[0];
+                          }
+                          room.user_id = user_id;
+                          getLocalDbUser(user_id).then( item => {
+                            if(item === undefined) {
+                              getUserInfo(user_id).then( user => {
+                                room.name = user.name;
+                                room.avatar = user.avatar;
+                                this.$store.dispatch(MESSAGEROOMS, cb => {
+                                  cb(room);
+                                })
+                              })
+                            } else {
+                              room.name = item.name;
+                              room.avatar = item.avatar;
                               this.$store.dispatch(MESSAGEROOMS, cb => {
                                 cb(room);
                               })
-                            })
-                          } else {
-                            room.name = item.name;
-                            room.avatar = item.avatar[30];
-                            this.$store.dispatch(MESSAGEROOMS, cb => {
-                              cb(room);
-                            })
-                          }
-                        });
-                      }
+                            }
+                          });
+                        }
+                      })
                     })
                   })
-                })
-                .catch(e => {
-                   console.log(e);
-                });
-              }
-            });
-            connect();
+                  .catch(e => {
+                     console.log(e);
+                  });
+                }
+              });
+              connect();
+            }
             // 跳转到动态页面
             router.push({ path: redirect });
           });

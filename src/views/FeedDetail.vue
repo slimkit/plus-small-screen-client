@@ -33,7 +33,6 @@
     </header>
     <div class="feed-container">
         <div class="feed-container-content feed-background-color">
-          <h3 v-if="feedData.feed.title" style="text-align: center; padding: 15px 8px 8px 8px; font-weight: 400; color: #59b6d7">{{ feedData.feed.feed_title }}</h3>
           <div>
             <div v-if="imagesList.length" class="feed-container-content-images">
               <div v-for="(item, index ) in imagesList" :key="index" :style="`height: ${item.height + 'px'}`">
@@ -42,7 +41,7 @@
             </div>
             <p 
               :class="{ feedContainerContentText: imagesList.length, feedContainerContentTextNoPadding: !imagesList.length }"
-              v-html="feedData.feed.feed_content.replace(/\n/g,'<br/>')"
+              v-html="feedData.feed_content ? feedData.feed_content.replace(/\n/g,'<br/>') : feedData.feed_content"
             >
             </p>
           </div>
@@ -58,14 +57,14 @@
                     </div>
                   </div>
                   <div class="digg_counter">
-                    {{ friendNum(feedData.tool.feed_digg_count) }}人点赞
+                    {{ friendNum(feedData.like_count) }}人点赞
                   </div>
                 </div>
               </Col>
               <Col span="9">
                 <div class="detail-data">
                   <p>发布于<timeago :since="feedTimer" locale="zh-CN" :auto-update="60"></timeago></p>
-                  <p>{{ friendNum(feedData.tool.feed_view_count) }}人浏览</p>
+                  <p>{{ friendNum(feedData.feed_view_count) }}人浏览</p>
                 </div>
               </Col>
             </Row>
@@ -104,8 +103,8 @@
         </Button>
       </li>
     </ul>
-    <div id="comments" class="noComment" v-if="!feedData.tool.feed_comment_count">
-      <img :src="defaultImage" />
+    <div id="comments" class="noComment" v-if="!feedData.feed_comment_count">
+      <img v-lazy="defaultImage" />
     </div>
     <div id="comments" v-else>
       <mt-loadmore 
@@ -120,7 +119,7 @@
             <Row :gutter="24" class="comments_count" style="height: 45px; display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center;">
               <Col span="24">
                   <span class="comments_counter">
-                    {{feedData.tool.feed_comment_count}}人评论
+                    {{feedData.feed_comment_count}}人评论
                   </span>
               </Col>
             </Row>
@@ -129,7 +128,7 @@
                 <Row :gutter="24" :class="$style.perComment">
                   <Col span="4">
                     <div class="grid-content bg-purple">
-                      <img @click="changeUrl(`/users/feeds/${comment.user.user_id}`)" :src="comment.user.avatar[30]" alt="" style="width:100%; border-radius:50%">
+                      <img @click="changeUrl(`/users/feeds/${comment.user.user_id}`)" :src="comment.user.avatar" alt="" style="width:100%; border-radius:50%">
                     </div>
                   </Col>
                   <Col span="20">
@@ -216,7 +215,7 @@
     <div id="feed-footer" class="feed-container-tool-operation feed-background-color">
       <Row :gutter="24" style="display: flex; justify-content: center; align-items: center; height: 100%;">
         <Col span="6" class="operation">
-          <div v-if="!feedData.tool.is_digg_feed" @click="handleDiggFeed(feed_id)">
+          <div v-if="!feedData.has_like" @click="handleDiggFeed(feed_id)">
             <UnDiggIcon height="20" width="20" color="#999" />
             <i>喜欢</i>
           </div>
@@ -238,7 +237,7 @@
           </div>
         </Col>
         <Col span="6" class="operation">
-          <div v-if="!feedData.tool.is_collection_feed" @click="handleCollection(feed_id)">
+          <div v-if="!feedData.has_collect" @click="handleCollection(feed_id)">
             <ConnectionIcon height="20" width="20" color="#999" />
             <i>收藏</i>
           </div>
@@ -252,7 +251,8 @@
   </div>
 </template>
 <script>
-  import { createAPI, addAccessToken } from '../utils/request';
+  import { createAPI, addAccessToken, } from '../utils/request';
+  import buildURL from 'axios/lib/helpers/buildURL';
   import errorCodes from '../stores/errorCodes';
   import localEvent from '../stores/localStorage';
   import { getUserInfo, followingUser, unFollowingUser, getLocalDbUser } from '../utils/user';
@@ -277,6 +277,7 @@
   import getLocalTime from '../utils/getLocalTime';
 
   const noCommentImage = resolveImage(require('../statics/images/defaultNothingx2.png'));
+
   const feedDetail = {
     components: {
       Comfirm,
@@ -293,39 +294,19 @@
     data: () => ({
       scroll: 0,
       feed_id: 0,
-      feedData: {
-        user_id: 0,
-        feed: {
-          feed_id: 1,
-          feed_title: "",
-          feed_content: "",
-          created_at: "",
-          feed_from: 2,
-          storages: [],
-        },
-        tool: {
-          feed_digg_count: 0,
-          feed_view_count: 0,
-          feed_comment_count: 0,
-          is_digg_feed: 0,
-          is_collection_feed: 0
-        },
-        diggs: [],
-        comments: [] // 更新列表使用
-      },
+      feedData: {},
       comments: [],
+      likes: [],
       userInfo: {
         is_following: 0,
         is_followed: 0
       },
-      defaultImage: noCommentImage,
-      currentUser: 0,
       // 上拉加载更多相关
       bottomAllLoaded: false,
       max_id: 0,
       bottomStatus: '',
       showSpinner: true,
-
+      currentUser: TS_WEB.currentUserId,
       // 输入框有关
       commentFeed: false,
       commentToUserId: 0,
@@ -336,55 +317,62 @@
       commentIndex: -1
     }),
     computed: {
+      defaultImage () {
+        return noCommentImage;
+      },
       commentCount () {
         return this.commentContent.length;
       },
       feedTimer () {
-        return this.timers(this.feedData.feed.created_at, 8, false);
+        const { created_at = '' } = this.feedData;
+        return this.timers(created_at, 8, false);
       },
       avatar () {
-        const { avatar: { 30: avatar = '' } = {} } = this.userInfo;
+        const { avatar = '' } = this.userInfo;
         return avatar;
       },
       // 计算图片跳转地址
       imagesList () {
         let urlList = [];
-        if(!this.feedData.feed.storages.length > 0) {
+        const { images = [] } = this.feedData;
+        if(!images.length > 0) {
           return [];
         }
-        this.feedData.feed.storages.forEach((value) => {
+        images.forEach((value) => {
+          let size = value.size.split('x');
           urlList.push(
             {
-              url: getImg(value.storage_id, 99),
+              url: buildURL(createAPI(`files/${value.file}`)),
               width: window.innerWidth,
-              height: window.innerWidth * (value.height / value.width)
+              height: window.innerWidth * (size[1] / size[0])
             }
           );
         });
         return urlList;
       },
       digglistWidth () {
-        return this.feedData.diggs.length ? ((this.feedData.diggs.length-1)*20 + 30 + 'px') : '0px';
+        const { likes = [] } = this.feedData;
+        return likes.length ? ((likes.length-1)*20 + 30 + 'px') : '0px';
       },
       diggList () {
-        let digg_list = this.feedData.diggs;
+        const { likes = [] } = this.feedData;
         let digg_users = [];
         let userLocal = {};
         let avatar = '';
-        digg_list.forEach( (uid, index) => {
-          userLocal = localEvent.getLocalItem(`user_${uid}`);
+        likes.forEach( (digg, index) => {
+          userLocal = localEvent.getLocalItem(`user_${digg.user_id}`);
           if(index > 4) { return; }
           if(!lodash.keys(userLocal).length > 0) {
-            getUserInfo(uid, 30).then(user => {
+            getUserInfo(digg.user_id).then(user => {
               digg_users.push({
-                avatar: user.avatar[30],
+                avatar: user.avatar,
                 user_id: user.user_id,
                 name: user.name
               });
             });
           } else {
             digg_users.push({
-              avatar: userLocal.avatar[30],
+              avatar: userLocal.avatar,
               user_id: userLocal.user_id,
               name: userLocal.name
             });
@@ -434,69 +422,60 @@
         }
       },
       handleCollection (feed_id) {
-        addAccessToken().post(createAPI(`feeds/${feed_id}/collection`), {}, {
+        addAccessToken().post(createAPI(`feeds/${feed_id}/collections`), {}, {
           validateStatus: status => status === 201
         })
         .then(response => {
-          let data = response.data;
-          if(data.status || data.code == 0) {
-            this.$store.dispatch(COLLECTIONFEEDSIDS, cb => {
-              cb([
-                feed_id
-              ])
-            });
-            this.feedData.tool.is_collection_feed = 1;
-          } else {
-            this.$store.dispatch(NOTICE, cb => {
-              cb({
-                text: data.message,
-                time: 1500,
-                status: false
-              });
-            });
-          }
+          this.$store.dispatch(COLLECTIONFEEDSIDS, cb => {
+            cb([
+              feed_id
+            ])
+          });
+          this.feedData.has_collect = true;
         })
       },
       handleUnCollection (feed_id) {
-        addAccessToken().delete(createAPI(`feeds/${feed_id}/collection`), {}, {
+        addAccessToken().delete(createAPI(`feeds/${feed_id}/uncollect`), {}, {
           validateStatus: status => status === 204
         })
         .then(response => {
-          this.feedData.tool.is_collection_feed = 0;
+          this.feedData.has_collect = false;
           this.$store.dispatch(UNCOLLECTIONFEEDSID, cb => {
             cb(feed_id);
           })
         })
       },
+
       handleDiggFeed (feed_id) {
-        addAccessToken().post(createAPI(`feeds/${feed_id}/digg`), {}, {
+        addAccessToken().post(createAPI(`feeds/${feed_id}/like`), {}, {
           validateStatus: status => status === 201
         })
         .then(response => {
-          let data = response.data;
-          if(data.status || data.code == 0) {
-            this.feedData.tool.is_digg_feed = 1;
-            this.feedData.diggs.push(this.currentUser);
-            this.feedData.tool.feed_digg_count++;
-          } else {
-            this.$store.dispatch(NOTICE, cb => {
-              cb({
-                text: data.message,
-                time: 1500,
-                status: false
-              });
-            });
-          }
+          this.feedData.has_like = true;
+          this.feedData.likes.push({ user_id: TS_WEB.currentUserId });
+          this.feedData.like_count++;
+          this.$store.dispatch(UPDATEFEED, cb => {
+            cb(this.feedData);
+          })
         })
       },
+
       handleUnDiggFeed (feed_id) {
-        addAccessToken().delete(createAPI(`feeds/${feed_id}/digg`), {}, {
+        addAccessToken().delete(createAPI(`feeds/${feed_id}/unlike`), {}, {
           validateStatus: status => status === 204
         })
         .then(response => {
-          this.feedData.tool.is_digg_feed = 0;
-          this.feedData.tool.feed_digg_count--;
-          this.removeByValue(this.feedData.diggs, this.currentUser);
+          this.feedData.has_like = false;
+          this.feedData.likes.splice(
+            this.feedData.likes.findIndex( value => {
+              value = TS_WEB.currentUserId
+            }),
+          1);
+
+          this.feedData.like_count--;
+          this.$store.dispatch(UPDATEFEED, cb => {
+            cb(this.feedData);
+          })
         })
       },
       /**
@@ -529,11 +508,18 @@
         })
       },
       loadBottom() {
-        let max_id = this.max_id;
+        if( !this.max_id > 1 ) {
+          setTimeout(() => {
+            // 若数据已全部获取完毕
+            this.bottomStatus = '';
+            this.bottomAllLoaded = true;
+            this.$refs.loadmore.onBottomLoaded();
+          }, 500);
+        }
         let limit = 15;
         this.bottomStatus = 'loading';
         addAccessToken().get(
-          createAPI(`feeds/${this.feed_id}/comments?max_id=${max_id}&limit=${limit}`),
+          createAPI(`feeds/${this.feed_id}/comments?after=${this.max_id}&limit=${limit}`),
           {},
           {
             validateStatus: status => status === 200
@@ -566,15 +552,22 @@
       sendComment () {
         if(!this.commentContent.length && this.loading) return;
         this.loading = true;
-        addAccessToken().post(createAPI(`feeds/${this.feed_id}/comment`), {
-            comment_content: this.commentContent,
-            reply_to_user_id: this.commentToUserId
-          },
+        let comment_data = {
+          comment_mark: parseInt(TS_WEB.currentUserId + (new Date).getTime()),
+          comment_content: this.commentContent
+        };
+
+        if(this.commentToUserId) {
+          comment_data.reply_to_user_id = this.commentToUserId
+        }
+        addAccessToken().post(createAPI(`feeds/${this.feed_id}/comments`), 
+          comment_data,
           {
             validateStatus: status => status === 201
           }
         )
         .then( response => {
+          this.feedData.feed_comment_count += 1;
           let feed = this.feedData;
           let newComment = {
             comment_content: this.commentContent,
@@ -595,19 +588,9 @@
                 // commented user
                 if(this.commentToUserId) {
                   newComment.reply_to_user = { ...this.commentedUser };
-                  // feed.comments.unshift(newComment);
                   this.$store.getters[FEEDSLIST][this.feed_id].comments.unshift(newComment);
-                  // 更新动态
-                  // this.$store.dispatch(UPDATEFEED, cb => {
-                  //   cb(feed);
-                  // });
                 } else {
-                  // feed.comments.unshift(newComment);
                   this.$store.getters[FEEDSLIST][this.feed_id].comments.unshift(newComment);
-                  // 更新动态
-                  // this.$store.dispatch(UPDATEFEED, cb => {
-                  //   cb(feed);
-                  // });
                 }
               });
             } else { // find local db user
@@ -616,21 +599,11 @@
               // commented user
               if(this.commentToUserId) {
                 newComment.reply_to_user = { ...this.commentedUser };
-                // feed.comments.unshift(newComment);
                 this.$store.getters[FEEDSLIST][this.feed_id].comments.unshift(newComment);
-                this.$store.getters[FEEDSLIST][this.feed_id].tool.feed_comment_count += 1;
-                // 更新动态
-                // this.$store.dispatch(UPDATEFEED, cb => {
-                //   cb(feed);
-                // });
+                this.$store.getters[FEEDSLIST][this.feed_id].feed_comment_count += 1;
               } else {
-                // feed.comments.unshift(newComment);
                 this.$store.getters[FEEDSLIST][this.feed_id].comments.unshift(newComment);
-                this.$store.getters[FEEDSLIST][this.feed_id].tool.feed_comment_count += 1;
-                // 更新动态
-                // this.$store.dispatch(UPDATEFEED, cb => {
-                //   cb(feed);
-                // });
+                this.$store.getters[FEEDSLIST][this.feed_id].feed_comment_count += 1;
               }
             }
           });
@@ -646,7 +619,6 @@
           });
           // reset comment input
           this.handleCommentInput();
-
           this.loading = false;
         });
       },
@@ -707,16 +679,13 @@
        * @return {[type]}       [description]
        */
       deleteComment (close, data) {
-        addAccessToken().delete(createAPI(`feeds/${data.feed_id}/comment/${data.comment_id}`), {}, {
+        addAccessToken().delete(createAPI(`feeds/${data.feed_id}/comments/${data.comment_id}`), {}, {
           validateStatus: status => status === 204
         })
         .then(response => {
-          // let newComments = this.comments;
-          // newComments.splice(data.index,1);
+          this.feedData.feed_comment_count -= 1;
           this.$store.getters[FEEDSLIST][this.feed_id].comments.splice(data.index, 1);
-          // this.comments = newComments;
-          // this.feedData.tool.feed_comment_count -- ;
-          this.$store.getters[FEEDSLIST][this.feed_id].tool.feed_comment_count -= 1;
+          this.$store.getters[FEEDSLIST][this.feed_id].feed_comment_count -= 1;
           this.$store.dispatch(NOTICE, cb => {
             cb({
               text: '已删除',
@@ -759,7 +728,6 @@
         })
       },
       menu() {
-        // console.log(document);
         let header = document.getElementById('feed-header');
         let footer = document.getElementById('feed-footer');
         if(header && footer) {
@@ -777,8 +745,6 @@
       }
     },
     created () {
-      let currentUser = localEvent.getLocalItem('UserLoginInfo');
-      this.currentUser = currentUser.user_id;
       let serviceFeed = {};
       let feed_id = parseInt(this.$route.params.feed_id);
       if ( !feed_id ) {
@@ -802,7 +768,7 @@
           validateStatus: status => status === 200
         }
       )
-      .then(({ data: { data = {} } = {} }) => {
+      .then(({ data = {} }) => {
         this.getUser(data.user_id);
         this.feed_id = feed_id;
         this.feedData = { ...this.feedData, ...data };
@@ -814,11 +780,11 @@
             validateStatus: status => status === 200
           }
         )
-        .then(({ data: { data = {} } = {} }) => {
+        .then(({ data = {} }) => {
           // 格式化评论列表
-          let formatedComments = formateFeedComments(data);
-          this.comments = data;
-          this.feedData = { ...this.feedData, comments: data };
+          let formatedComments = formateFeedComments(data.comments);
+          this.comments = data.comments;
+          this.feedData = { ...this.feedData, comments: data.comments };
           if(this.comments.length < 15) {
             this.bottomAllLoaded = true;
           }
@@ -828,6 +794,14 @@
           setTimeout( () => {
             this.showSpinner = false;
           }, 800);
+        });
+
+        // 获取点赞的用户
+        addAccessToken().get(createAPI(`feeds/${feed_id}/likes`), {}, {
+          validateStatus: status => status === 200
+        })
+        .then( ({ data = {} }) => {
+          this.$set(this.feedData, 'likes', data);
         });
       });
     },

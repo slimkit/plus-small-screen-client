@@ -86,7 +86,7 @@
 </template>
 <script>
   import { NOTICE, TOTALMESSAGELISTS, MESSAGENOTICE, MESSAGELISTS } from '../stores/types';
-  import { createAPI, addAccessToken } from '../utils/request';
+  import { createAPI, addAccessToken, createOldAPI } from '../utils/request';
   import ToolBar from '../components/ToolBar';
   import localEvent from '../stores/localStorage';
   import { getUserInfo, getLocalDbUser } from '../utils/user';
@@ -252,7 +252,7 @@
       localEvent.setLocalItem('messageFlushTime', nowtime);
       // let messages = {};
       // 获取新消息
-      addAccessToken().get(createAPI(`users/flushmessages?key=${types}&time=${time+1}`),{},
+      addAccessToken().get(createOldAPI(`users/flushmessages?key=${types}&time=${time+1}`),{},
         {
           validateStatus: status => status === 200
         }
@@ -327,9 +327,9 @@
                   }
                   getLocalDbUser(user_id).then( item => {
                     if(!item) {
-                      getUserInfo(user_id, 30).then( user => {
+                      getUserInfo(user_id).then( user => {
                         li.name = user.name;
-                        li.avatar = user.avatar[30];
+                        li.avatar = user.avatar;
                         li.lists = messageList;
                         li.cid = result.cid;
                         li.user_id = user_id;
@@ -342,7 +342,7 @@
 
                     } else {
                       li.name = item.name;
-                      li.avatar = item.avatar[30];
+                      li.avatar = item.avatar;
                       li.lists = messageList;
                       li.cid = result.cid;
                       li.user_id = user_id;

@@ -210,7 +210,7 @@
   <!-- </transition> -->
 </template>
 <script>
-  import { createAPI, addAccessToken } from '../../utils/request';
+  import { createAPI, addAccessToken, createOldAPI } from '../../utils/request';
   import errorCodes from '../../stores/errorCodes';
   import localEvent from '../../stores/localStorage';
   import { getUserInfo, getLocalDbUser } from '../../utils/user';
@@ -313,7 +313,7 @@
         }
       },
       handleCollection (news_id) {
-        addAccessToken().post(createAPI(`news/${news_id}/collection`), {}, {
+        addAccessToken().post(createOldAPI(`news/${news_id}/collection`), {}, {
           validateStatus: status => status === 201
         })
         .then(response => {
@@ -322,7 +322,7 @@
         })
       },
       handleUnCollection (news_id) {
-        addAccessToken().delete(createAPI(`news/${news_id}/collection`), {}, {
+        addAccessToken().delete(createOldAPI(`news/${news_id}/collection`), {}, {
           validateStatus: status => status === 204
         })
         .then(response => {
@@ -330,7 +330,7 @@
         })
       },
       handleDiggFeed (news_id) {
-        addAccessToken().post(createAPI(`news/${news_id}/digg`), {}, {
+        addAccessToken().post(createOldAPI(`news/${news_id}/digg`), {}, {
           validateStatus: status => status === 201
         })
         .then(response => {
@@ -338,7 +338,7 @@
         })
       },
       handleUnDiggFeed (news_id) {
-        addAccessToken().delete(createAPI(`news/${news_id}/digg`), {}, {
+        addAccessToken().delete(createOldAPI(`news/${news_id}/digg`), {}, {
           validateStatus: status => status === 204
         })
         .then(response => {
@@ -350,7 +350,7 @@
         let limit = 15;
         this.bottomStatus = 'loading';
         addAccessToken().get(
-          createAPI(`news/${this.detail.id}/comments?max_id=${max_id}&limit=${limit}`),
+          createOldAPI(`news/${this.detail.id}/comments?max_id=${max_id}&limit=${limit}`),
           {},
           {
             validateStatus: status => status === 200
@@ -394,7 +394,7 @@
       sendComment () {
         if(!this.commentContent.length && this.loading) return;
         this.loading = true;
-        addAccessToken().post(createAPI(`news/${this.detail.id}/comment`), {
+        addAccessToken().post(createOldAPI(`news/${this.detail.id}/comment`), {
             comment_content: this.commentContent,
             reply_to_user_id: this.commentToUserId
           },
@@ -500,7 +500,7 @@
         })
       },
       deleteComment (close, data) {
-        addAccessToken().delete(createAPI(`news/${data.news_id}/comment/${data.comment_id}`), {}, {
+        addAccessToken().delete(createOldAPI(`news/${data.news_id}/comment/${data.comment_id}`), {}, {
           validateStatus: status => status === 204
         })
         .then(response => {
@@ -562,7 +562,7 @@
       }
         // 获取动态详情
         addAccessToken().get(
-          createAPI(`news/${news_id}?accept=json`),
+          createOldAPI(`news/${news_id}?accept=json`),
           {},
           {
             validateStatus: status => status === 200
@@ -572,7 +572,7 @@
           this.detail = { ... data };
           // 获取动态评论 前15条
           addAccessToken().get(
-            createAPI(`news/${news_id}/comments`),
+            createOldAPI(`news/${news_id}/comments`),
             {},
             {
               validateStatus: status => status === 200

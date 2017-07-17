@@ -20,7 +20,7 @@
       @bottom-status-change="bottomStatusChange"
     >
       <ul class="feed-list" v-if="!nothing">
-        <Feed v-for="(feed, index) in feedsList" :feed="feed" :key="feed.feed.feed_id"></Feed>
+        <Feed v-for="(feed, index) in feedsList" :feed="feed" :key="feed.id"></Feed>
       </ul>
       <div slot="bottom" class="mint-loadmore-bottom">
         <span v-if="bottomAllLoaded">没有更多了</span>
@@ -95,7 +95,7 @@
       loadBottom () {
         let limiterSend = '';
         let api = this.option.uri; // 查询地址
-        let limiter = this.option.limiter; // 分页查询方式
+        
         if( this.maxId == 0) {
           setTimeout(() => {
             this.bottomAllLoaded = true;
@@ -104,24 +104,21 @@
           }, 500)
           return ;
         }
-        if(limiter == 'page') {
-          this.page += 1;
-          limiterSend = `?page=${this.page}`;
-        } else {
-          limiterSend = `?max_id=${this.maxId}`;
-        }
+        
+        limiterSend = `&after=${this.maxId}&limit=15`;
+
         addAccessToken().get(createAPI(`${api}${limiterSend}`), {},
           {
             validate: status  => status === 200
           }
         )
-        .then(response => {
+        .then(({ data = {} }) => {
           let type = this.feedType[this.option.type];
-          let data = response.data.data;
-          let length = data.length;
+          let morefeeds = data.feeds;
+          let length = morefeeds.length;
           let ids = [];
           let feeds = {};
-          if(!data.length > 0) {
+          if(!length > 0) {
             this.bottomAllLoaded = true;
             setTimeout(() => {
               if(this.$refs.loadmore)
@@ -129,9 +126,9 @@
             }, 500)
             return;
           }
-          data.forEach((d) => {
-            ids.push(d.feed.feed_id);
-            feeds[d.feed.feed_id] = d;
+          morefeeds.forEach( d => {
+            ids.push(d.id);
+            feeds[d.id] = d;
           });
           this.$store.dispatch(FEEDSLIST, cb => {
             cb(feeds);
@@ -142,7 +139,7 @@
           if(length < 15) {
             this.bottomAllLoaded = true;
           }
-          this.maxId = data[data.length - 1].feed.feed_id;
+          this.maxId = morefeeds[morefeeds.length - 1].id;
           setTimeout(() => {
             if(this.$refs.loadmore)
               this.$refs.loadmore.onBottomLoaded();
@@ -156,17 +153,13 @@
         let type = this.feedType[this.option.type];
         let currentType = this.option.type; // 区分当前为哪种列表分类
         let ids = this.$store.getters[type.ids];
-        if (limiter == 'page') {
-          this.limitCounter = 1;
-          limiterSend = '?page=1';
-        }
         addAccessToken().get(createAPI(`${api}${limiterSend}`), {}, 
           {
             validate: status  => status === 200
           }
         )
         .then( response => {
-          let feeds = response.data.data;
+          let feeds = response.data.feeds;
           if(feeds.length == 0) {
             setTimeout(() => {
               if(this.$refs.loadmore)
@@ -180,11 +173,11 @@
           let newFeeds = {};
           feeds.forEach( feed => {
             if(ids.findIndex(function(value, index, arr) {
-              return value == feed.feed.feed_id;
+              return value == feed.id;
             }) == -1) {
-              newIds.push(feed.feed.feed_id);
+              newIds.push(feed.id);
             }
-            newFeeds[feed.feed.feed_id] = feed;
+            newFeeds[feed.id] = feed;
           });
           this.$store.dispatch(FEEDSLIST, cb => {
             cb(newFeeds);
@@ -238,20 +231,18 @@
       let limiterSend = '';
       let api = this.option.uri;
       let limiter = this.option.limiter;
-      if (limiter == 'page') {
-        this.limitCounter = 1;
-        limiterSend = '?page=1';
-      }
-      addAccessToken().get(createAPI(`${api}${limiterSend}`), 
+      addAccessToken().get(createAPI(`${api}&limit=15`), 
         {}, 
         {
           validate: status  => status === 200
         }
       )
       .then(response => {
-        let feeds = response.data.data;
+
+        let feeds = response.data.feeds;
         let storeFeeds = {};
         let ids = [];
+        //
         if(!feeds.length > 0) {
           setTimeout( () => {
             this.showSpinner = false;
@@ -259,19 +250,25 @@
           this.bottomAllLoaded = true;
           return;
         }
-        this.firstId = feeds[0].feed.feed_id;
+
+        this.firstId = feeds[0].id;
+
         feeds.forEach( feed => {
-          ids.push(feed.feed.feed_id);
-          storeFeeds[feed.feed.feed_id] = feed;
+          ids.push(feed.id);
+          storeFeeds[feed.id] = feed;
         });
+
         this.$store.dispatch(FEEDSLIST, cb => {
           cb(storeFeeds);
         })
+
         this.$store.dispatch(type.ids, cb => {
           cb(ids);
         })
+
         let lastFeed = feeds[feeds.length - 1];
-        this.maxId = lastFeed.feed.feed_id;
+        this.maxId = lastFeed.id;
+
         if(feeds.length < 15) {
           this.bottomAllLoaded = true;
         }

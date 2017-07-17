@@ -42,7 +42,6 @@
               <div style="width: 16vw">
                 <div :class="$style.sourceContent">
                   <img v-if="comment.cover" @click="openCommentBox(index)" :src="comment.cover" />
-                  <!-- <div v-if="!comment.cover" @click="changeUrl(`/feed/${comment.source_id}`)" :class="$style.source"> -->
                   <div v-if="!comment.cover" @click="openCommentBox(index)" :class="$style.source">
                     <div :class="$style.content">
                       {{comment.source_content}}
@@ -100,7 +99,7 @@
 </template>
 <script>
   import { NOTICE, CLEANMESSAGE } from '../stores/types';
-  import { createAPI, addAccessToken } from '../utils/request';
+  import { createAPI, addAccessToken, createOldAPI } from '../utils/request';
   import localEvent from '../stores/localStorage';
   import { changeUrl, goTo } from '../utils/changeUrl';
   import timers from '../utils/timer';
@@ -135,20 +134,29 @@
         if(!this.commentCount || this.loading) return;
         this.loading = true;
         let source = this.comments[this.openId];
-        let api = `feeds/${source.source_id}/comment`;
+        let api = `feeds/${source.source_id}/comments`;
         if(source.component === 'news') {
           api = `news/${source.source_id}/comment`;
         }
-        addAccessToken().post(createAPI(`${api}`), {
-          comment_content: this.commentsContent,
-          reply_to_user_id: source.user_id
-        },
+
+        let comment_data = {
+          comment_mark: parseInt(TS_WEB.currentUserId + (new Date).getTime()),
+          comment_content: this.commentsContent
+        };
+
+        if(source.user_id) {
+          comment_data.reply_to_user_id = source.user_id
+        }
+
+        addAccessToken().post(createAPI(`${api}`),
+          comment_data,
         {
           validateStatus: status => status === 201
         })
         .then( response => {
           this.commentsContent = '';
           this.loading = false;
+          this.closeCommentBox();
           this.$store.dispatch(NOTICE, cb => {
             cb({
               text: '评论成功',
@@ -251,7 +259,7 @@
           }).then( user => {
             if(comment.reply_to_user_id) {
               if(!lodash.keys(user.replyUser).length) {
-                getUserInfo(comment.reply_to_user_id, 30).then( replyUser => {
+                getUserInfo(comment.reply_to_user_id).then( replyUser => {
                   const { name = '' } = replyUser;
                   newcomment.reply_to_user_name = name;
                 });
@@ -260,10 +268,10 @@
                 newcomment.reply_to_user_name = name;
               }
             }
-            const { avatar: { 30: avatar = defaultAvatar} = {} } = user;
+            const { avatar = defaultAvatar } = user;
             const { name = '' } = user;
             if(comment.source_cover) {
-              newcomment.cover = getImage(comment.source_cover, 20);
+              newcomment.cover = buildUrl(createAPI(comment.source_cover), {w: 100, h: 100});
             }
             newcomment.name = name;
             newcomment.avatar = avatar;
@@ -296,7 +304,7 @@
           }).then( user => {
             if(comment.reply_to_user_id) {
               if(!lodash.keys(user.replyUser).length) {
-                getUserInfo(comment.reply_to_user_id, 30).then( replyUser => {
+                getUserInfo(comment.reply_to_user_id).then( replyUser => {
                   const { name = '' } = replyUser;
                   newcomment.reply_to_user_name = name;
                 });
@@ -305,7 +313,7 @@
                 newcomment.reply_to_user_name = name;
               }
             }
-            const { avatar: { 30: avatar = defaultAvatar} = {} } = user;
+            const { avatar = defaultAvatar} = user;
             const { name = '' } = user;
             if(comment.source_cover) {
               newcomment.cover = getImage(comment.source_cover, 20);
@@ -334,7 +342,7 @@
       this.$store.dispatch(CLEANMESSAGE, cb => {
         cb('comments');
       });
-      addAccessToken().get(createAPI(`users/mycomments?max_id=${this.max_id}`),{},
+      addAccessToken().get(createOldAPI(`users/mycomments?max_id=${this.max_id}`),{},
         {
           validateStatus: status => status === 200
         }

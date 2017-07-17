@@ -22,7 +22,7 @@
   // im聊天相关
   import localEvent from './stores/localStorage';
   import lodash from 'lodash';
-  import { createAPI, addAccessToken } from './utils/request';
+  import { createAPI, addAccessToken, createOldAPI } from './utils/request';
   import errorCodes from './stores/errorCodes';
   import { connect } from './utils/webSocket';
   import { getUserInfo, getLocalDbUser } from './utils/user';
@@ -84,7 +84,7 @@
         window.TS_WEB.dataBase.transaction('rw?', window.TS_WEB.dataBase.userbase, () => {
           window.TS_WEB.dataBase.userbase.where('user_id').equals(currentUser.user_id).first().then( user => {
             if(user === undefined) {
-              getUserInfo(currentUser.user_id, 30).then( serverUser => {
+              getUserInfo(currentUser.user_id).then( serverUser => {
                 this.$store.dispatch(USERS_APPEND, cb =>{
                   cb(serverUser)
                 });
@@ -105,7 +105,7 @@
         }
         let types = 'diggs,comments,follows';
         // 查询新消息
-        addAccessToken().get(createAPI(`users/flushmessages?key=${types}&time=${time+1}`), {} , {
+        addAccessToken().get(createOldAPI(`users/flushmessages?key=${types}&time=${time+1}`), {} , {
           validateStatus: status => status === 200
         })
         .then( response => {
@@ -172,67 +172,71 @@
             cb(count)
           });
         });
-        // 获取会话列表
-        addAccessToken().get(createAPI('im/conversations/list/all'), {}, {
-          validateStatus: status => status === 200
-        })
-        .then( response => {
-          let data = response.data;
-          let lists = [];
-          if(data.status || data.code === 0 ) {
-            if(!data.data.length) return;
-            window.TS_WEB.dataBase.transaction('rw?', window.TS_WEB.dataBase.chatroom, () => {
-              data.data.forEach( list => {
-                window.TS_WEB.dataBase.chatroom.where('[cid+owner]').equals([list.cid, window.TS_WEB.currentUserId ]).count( number => {
-                  if(!number > 0) {
-                    list.last_message_time = 0;
-                    list.owner = window.TS_WEB.currentUserId;
-                    // 将对话列表写入到本地数据库
-                    window.TS_WEB.dataBase.chatroom.put(list);
-                    // 组装vuex所需要的数据
-                    let room = {
-                      cid: list.cid, // 聊天id
-                      user_id: 0, // 聊天对象id
-                      name: '', // 聊天对象昵称
-                      avatar: '', // 聊天对象头像
-                      lists: [], // 聊天内容， 默认为空
-                      count: 0 // 新消息统计， 默认为空
-                    };
-                    let uids = list.uids.split(',');
-                    let user_id = 0;
-                    if(uids[0] == window.TS_WEB.currentUserId) {
-                      user_id = uids[1];
-                    } else {
-                      user_id = uids[0];
-                    }
-                    room.user_id = user_id;
-                    getLocalDbUser(user_id).then( item => {
-                      if(item === undefined) {
-                        getUserInfo(user_id, 30).then( user => {
-                          room.name = user.name;
-                          room.avatar = user.avatar[30];
+
+        // 如果配置了im服务器
+        if(TS_WEB.socketUrl) {
+          // 获取会话列表
+          addAccessToken().get(createOldAPI('im/conversations/list/all'), {}, {
+            validateStatus: status => status === 200
+          })
+          .then( response => {
+            let data = response.data;
+            let lists = [];
+            if(data.status || data.code === 0 ) {
+              if(!data.data.length) return;
+              window.TS_WEB.dataBase.transaction('rw?', window.TS_WEB.dataBase.chatroom, () => {
+                data.data.forEach( list => {
+                  window.TS_WEB.dataBase.chatroom.where('[cid+owner]').equals([list.cid, window.TS_WEB.currentUserId ]).count( number => {
+                    if(!number > 0) {
+                      list.last_message_time = 0;
+                      list.owner = window.TS_WEB.currentUserId;
+                      // 将对话列表写入到本地数据库
+                      window.TS_WEB.dataBase.chatroom.put(list);
+                      // 组装vuex所需要的数据
+                      let room = {
+                        cid: list.cid, // 聊天id
+                        user_id: 0, // 聊天对象id
+                        name: '', // 聊天对象昵称
+                        avatar: '', // 聊天对象头像
+                        lists: [], // 聊天内容， 默认为空
+                        count: 0 // 新消息统计， 默认为空
+                      };
+                      let uids = list.uids.split(',');
+                      let user_id = 0;
+                      if(uids[0] == window.TS_WEB.currentUserId) {
+                        user_id = uids[1];
+                      } else {
+                        user_id = uids[0];
+                      }
+                      room.user_id = user_id;
+                      getLocalDbUser(user_id).then( item => {
+                        if(item === undefined) {
+                          getUserInfo(user_id).then( user => {
+                            room.name = user.name;
+                            room.avatar = user.avatar;
+                            this.$store.dispatch(MESSAGEROOMS, cb => {
+                              cb(room);
+                            })
+                          })
+                        } else {
+                          room.name = item.name;
+                          room.avatar = item.avatar;
                           this.$store.dispatch(MESSAGEROOMS, cb => {
                             cb(room);
                           })
-                        })
-                      } else {
-                        room.name = item.name;
-                        room.avatar = item.avatar[30];
-                        this.$store.dispatch(MESSAGEROOMS, cb => {
-                          cb(room);
-                        })
-                      }
-                    });
-                  }
-                });
+                        }
+                      });
+                    }
+                  });
+                })
               })
-            })
-            .catch(e => {
-              console.log(e);
-            })
-          }
-        });
-        connect();
+              .catch(e => {
+                console.log(e);
+              })
+            }
+          });
+          connect();
+        }
       }
     }
   }

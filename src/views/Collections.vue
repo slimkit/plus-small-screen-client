@@ -30,7 +30,7 @@
           :bottomDistance="70"
         >
           <div class="feed-list" v-if="!nothingFeeds">
-            <CollectionFeed v-for="(feed, index) in feedsList" :feed="feed" :key="feed.feed.feed_id" />
+            <CollectionFeed v-for="(feed, index) in feedsList" :feed="feed" :key="feed.id" />
           </div>
           <div slot="bottom" class="mint-loadmore-bottom">
             <span v-if="bottomFeedsAllLoaded">没有更多了</span>
@@ -90,67 +90,10 @@
         </mt-loadmore>
       </mt-tab-container-item>
     </mt-tab-container>
-
-    <!-- <Tabs v-model="currentTab" @on-click="getType">
-      <Tab-pane label="动态" name="feeds">
-        <div v-if="nothingFeeds" :class="$style.nothingDefault"> 
-          <img :src="nothingFeeds" />
-        </div>
-        <mt-loadmore
-          v-else
-          :bottom-method="loadFeedsBottom"
-          :top-method="loadFeedsTop"
-          :bottom-all-loaded="bottomFeedsAllLoaded"
-          :top-all-loaded="topFeedsAllLoaded"
-          ref="loadmoreFeedsCollections"
-          @bottom-status-change="bottomFeedsStatusChange"
-          :bottomDistance="70"
-        >
-          <div class="feed-list" v-if="!nothingFeeds">
-            <CollectionFeed v-for="(feed, index) in feedsList" :feed="feed" :key="feed.feed.feed_id" />
-          </div>
-          <div slot="bottom" class="mint-loadmore-bottom">
-            <span v-if="bottomFeedsAllLoaded">没有更多了</span>
-            <section v-else>
-              <span v-show="bottomFeedsStatus === 'pull' && !bottomFeedsAllLoaded">上拉加载更多</span>
-              <span v-show="bottomFeedsStatus === 'loading'">加载中...</span>
-              <span v-show="bottomFeedsStatus === 'drop' && !bottomFeedsAllLoaded">释放加载更多</span>
-            </section>
-          </div>
-        </mt-loadmore>
-      </Tab-pane>
-      <Tab-pane label="资讯" name="news">
-        <div v-if="nothingNews" :class="$style.nothingDefault"> 
-          <img :src="nothingNews" />
-        </div>
-        <mt-loadmore
-          v-else
-          :bottom-method="loadNewsBottom"
-          :top-method="loadNewsTop"
-          :bottom-all-loaded="bottomNewsAllLoaded"
-          :top-all-loaded="topNewsAllLoaded"
-          ref="loadmoreNewsCollections"
-          @bottom-status-change="bottomNewsStatusChange"
-          :bottomDistance="70"
-        >
-          <div class="feed-list" v-if="!nothingNews">
-            <CollectionFeed v-for="(feed, index) in feedsList" :feed="feed" :key="feed.feed.feed_id" />
-          </div>
-          <div slot="bottom" class="mint-loadmore-bottom">
-            <span v-if="bottomNewsAllLoaded">没有更多了</span>
-            <section v-else>
-              <span v-show="bottomNewsStatus === 'pull' && !bottomNewsAllLoaded">上拉加载更多</span>
-              <span v-show="bottomNewsStatus === 'loading'">加载中...</span>
-              <span v-show="bottomNewsStatus === 'drop' && !bottomNewsAllLoaded">释放加载更多</span>
-            </section>
-          </div>
-        </mt-loadmore>
-      </Tab-pane>
-    </Tabs> -->
   </div>
 </template>
 <script>
-  import request, { createAPI, addAccessToken } from '../utils/request';
+  import { createAPI, addAccessToken, createOldAPI } from '../utils/request';
   import errorCodes from '../stores/errorCodes';
   import localEvent from '../stores/localStorage';
   import CollectionFeed from '../components/CollectionFeed';
@@ -224,13 +167,12 @@
           }
           return ;
         }
-        addAccessToken().get(createAPI(`feeds/collections?max_id=${this.feedsMaxId}`), {},
+        addAccessToken().get(createAPI(`feeds/collections?limit=15&after=${this.feedsMaxId}`), {},
           {
             validate: status  => status === 200
           }
         )
-        .then(response => {
-          let data = response.data.data;
+        .then(({ data = {} }) => {
           let length = data.length;
           if(!length > 0) {
             this.bottomFeedsAllLoaded = true;
@@ -243,8 +185,8 @@
           let ids = [];
           let feeds = {};
           data.forEach((d) => {
-            ids.push(d.feed.feed_id);
-            feeds[d.feed.feed_id] = d;
+            ids.push(d.id);
+            feeds[d.id] = d;
           });
           this.$store.dispatch(FEEDSLIST, cb => {
             cb(feeds);
@@ -255,7 +197,6 @@
           if(length < 15) {
             this.bottomFeedsAllLoaded = true;
           }
-          // this.feedsMaxId = data[data.length - 1].feed.feed_id;
           setTimeout(() => {
             if(this.$refs.loadmoreFeedsCollections)
               this.$refs.loadmoreFeedsCollections.onBottomLoaded();
@@ -270,13 +211,13 @@
         let limiterSend = '';
         let api = this.uri;
         let ids = this.$store.getters[this.feedType.ids];
-        addAccessToken().get(createAPI(`feeds/collections`), {}, 
+        addAccessToken().get(createAPI(`feeds/collections?limit=15`), {}, 
           {
             validate: status  => status === 200
           }
         )
-        .then( response => {
-          let feeds = response.data.data;
+        .then( ({ data = {} }) => {
+          let feeds = data;
           if(!feeds.length > 0) {
             setTimeout(() => {
               if(this.$refs.loadmoreFeedsCollections)
@@ -290,11 +231,11 @@
           let newFeeds = {};
           feeds.forEach( feed => {
             if(ids.findIndex(function(value, index, arr) {
-              return value == feed.feed.feed_id;
+              return value == feed.id;
             }) == -1) {
-              newIds.push(feed.feed.feed_id);
+              newIds.push(feed.id);
             }
-            newFeeds[feed.feed.feed_id] = feed;
+            newFeeds[feed.id] = feed;
           });
           this.$store.dispatch(FEEDSLIST, cb => {
             cb(newFeeds);
@@ -317,7 +258,7 @@
        * @return {[type]} [description]
        */
       loadNewsTop () {
-        addAccessToken().get(createAPI(`news/collections`), {}, {
+        addAccessToken().get(createOldAPI(`news/collections`), {}, {
           validate: status => status === 200
         })
         .then( response => {
@@ -349,7 +290,7 @@
           }
           return;
         }
-        addAccessToken().get(createAPI(`news/collections?max_id=${this.newsMaxId}`), {}, {
+        addAccessToken().get(createOldAPI(`news/collections?max_id=${this.newsMaxId}`), {}, {
           validate: status => status === 200
         })
         .then( response => {
@@ -380,7 +321,7 @@
         });
       },
       getNewsData () {
-        addAccessToken().get(createAPI(`news/collections`), {}, {
+        addAccessToken().get(createOldAPI(`news/collections`), {}, {
           validate: status => status === 200
         })
         .then( response => {
@@ -421,7 +362,7 @@
       },
       feedsList() {
         let feeds = this.$store.getters[this.feedType.feeds];
-        if(feeds.length) this.feedsMaxId = feeds[feeds.length -1].feed.feed_id;
+        if(feeds.length) this.feedsMaxId = feeds[feeds.length -1].id;
         return feeds;
       },
       newsLists () {
@@ -448,14 +389,14 @@
             validate: status  => status === 200
           }
         )
-        .then(response => {
-          let feeds = response.data.data;
+        .then(({ data = {} }) => {
+          let feeds = data;
           if(!feeds.length > 0) return;
           let storeFeeds = {};
           let ids = [];
           feeds.forEach( feed => {
-            ids.push(feed.feed.feed_id);
-            storeFeeds[feed.feed.feed_id] = feed;
+            ids.push(feed.id);
+            storeFeeds[feed.id] = feed;
           });
           this.$store.dispatch(FEEDSLIST, cb => {
             cb(storeFeeds);

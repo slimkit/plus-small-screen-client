@@ -11,7 +11,7 @@
     },
     data: () => ({
       option: {
-        uri: 'feeds/follows',
+        uri: 'feeds?type=follow',
         limiter: 'max_id',
         type: 'following'
       }

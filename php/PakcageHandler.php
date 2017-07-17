@@ -1,6 +1,6 @@
 <?php
 
-namespace Zhiyi\Component\ZhiyiPlus\PlusComponentWeb;
+namespace Zhiyi\Component\ZhiyiPlus\PlusComponentH5;
 
 use Illuminate\Console\Command;
 

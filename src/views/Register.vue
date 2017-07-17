@@ -41,10 +41,10 @@
           </Row>
           <Row :gutter="24" class="bottom-border formChildrenRow">
             <Col span="5">
-              <label for="code" class="loginFormTitle">验证码</label>
+              <label for="verify_code" class="loginFormTitle">验证码</label>
             </Col>
             <Col :span="11">
-              <input type="tel"maxlength="6" autocomplete="off" placeholder="输入验证码" v-model.trim.num="code" id="code" name="code" />
+              <input type="tel"maxlength="6" autocomplete="off" placeholder="输入验证码" v-model.trim.num="verify_code" id="verify_code" name="verify_code" />
             </Col>
             <Col class="flexend" span="8">
               <Button 
@@ -101,7 +101,7 @@
 
 <script>
   import router from '../routers/index';
-  import { addAccessToken, createAPI } from '../utils/request';
+  import { addAccessToken, createAPI, createOldAPI } from '../utils/request';
   import detecdOS from '../utils/detecdOS';
   import localEvent from '../stores/localStorage';
   import errorCodes from '../stores/errorCodes';
@@ -134,7 +134,7 @@
       phone: '', // 手机号码 
       password: '', // 密码
       username: '', // 昵称
-      code: '', // 手机验证码
+      verify_code: '', // 手机验证码
       passwordText: '', // 明文密码
       isDisabled: true, // 提交按钮disabled状态
       isShowClean: false, // 是否显示清除手机号按钮
@@ -143,7 +143,7 @@
       isShowPassword: true, // 是否显示真实密码
       isCanGetCode: false,
       errors: {}, // 错误对象
-      isValidCode: false, // 验证码合法性
+      // isValidCode: false, // 验证码合法性
       isValidPhone: false, // 是否合法手机号
       isValidPassword: false, // 是否合法密码
       isValidUsername: true, // 用户名是否合法
@@ -172,7 +172,7 @@
         this.errors = { ...newErrors };
       },
       checkIsDisabled () {
-         return !(this.isValidPassword && this.isValidPhone && this.isValidCode && this.isValidUsername);
+         return !(this.isValidPassword && this.isValidPhone  && this.isValidUsername);
       },
       timer () {
         if (this.time > 0) {
@@ -203,23 +203,19 @@
       // 获取验证码
       getCode () {
         let phone = this.phone;
-        let type = 'register';
         this.isCanGetCode = false;
-        addAccessToken().post(createAPI('auth/phone/send-code'), {
-            phone,
-            type
+        addAccessToken().post(createAPI('verifycodes/register'), {
+            phone
           },
           {
             validateStatus: status => status === 201
           }
         )
-        .then(response => {
-          if(response.data.code === 0 || response.data.status) {
-            // 删除网络问题
-            this.cleanErrors();
-            this.time = 60;
-            this.timer();
-          }
+        .then( ({ data = {} }) => {
+          // 删除网络问题
+          this.cleanErrors();
+          this.time = 60;
+          this.timer();
         })
         .catch(({ response: { data = {} } = {} } ) => {
           this.isCanGetCode = true;
@@ -230,7 +226,7 @@
       },
       // 注册
       register () {
-        let { username, phone, code, password } = this;
+        let { username, phone, verify_code, password } = this;
         let errors = this.errors;
         // 判断首字符是否为数字
         if(!isNaN(username[0])) {
@@ -253,10 +249,10 @@
           this.errors = { ...errors, phone: '请输入正确的手机号码' };
           return false;
         }
-        if(!codeReg.test(code)) {
-          this.errors = { ...errors, code: '验证码长度为4 - 6位数字' };
-          return false;
-        }
+        // if(!codeReg.test(code)) {
+        //   this.errors = { ...errors, code: '验证码长度为4 - 6位数字' };
+        //   return false;
+        // }
         if(password.length < 6) {
           this.errors = { ...errors, password: '密码长度必须大于6位' };
           return false;
@@ -264,10 +260,10 @@
         let device_code = detecdOS();
         this.isLoading = true;
         this.isDisabled = true;
-        addAccessToken().post(createAPI('auth/register'), {
+        addAccessToken().post(createAPI('users'), {
             name: username,
             phone,
-            code,
+            verify_code,
             password,
             device_code
           },
@@ -275,8 +271,7 @@
             validateStatus: status => status === 201
           }
         )
-        .then(response => {
-          let data = response.data.data;
+        .then(({ data = {} }) => {
           window.TS_WEB.currentUserId = data.user_id;
           localEvent.setLocalItem('UserLoginInfo', data);
           this.isLoading = false;
@@ -293,7 +288,7 @@
             }
             let types = 'diggs,comments,follows';
             // 查询新消息
-            addAccessToken().get(createAPI(`users/flushmessages?key=${types}&time=${time+1}`), {} , {
+            addAccessToken().get(createOldAPI(`users/flushmessages?key=${types}&time=${time+1}`), {} , {
                 validateStatus: status => status === 200
               })
             .then( response => {
@@ -324,9 +319,6 @@
                   count.diggs.uids = data[index].uids;
                   count.diggs.time = data[index].time;
                 } 
-                // else {
-                //   count.notices = data[index].count;
-                // }
               }
               this.$store.dispatch(MESSAGENOTICE, cb => {
                 cb(count)
@@ -397,19 +389,20 @@
         }
         this.password = newPasswordText;
         this.isDisabled = this.checkIsDisabled();
-      },
-      code: function (newCode) {
-        this.cleanErrors();
-        let errors = this.errors;
-        if(!codeReg.test(newCode)) {
-          this.isValidCode = false;
-        } else {
-          this.isValidCode = true;
-          delete errors['code'];
-          this.errors = { ...errors };
-        }
-        this.isDisabled = this.checkIsDisabled();
       }
+      // ,
+      // code: function (newCode) {
+      //   this.cleanErrors();
+      //   let errors = this.errors;
+      //   if(!codeReg.test(newCode)) {
+      //     this.isValidCode = false;
+      //   } else {
+      //     this.isValidCode = true;
+      //     delete errors['code'];
+      //     this.errors = { ...errors };
+      //   }
+      //   this.isDisabled = this.checkIsDisabled();
+      // }
     }
   }
 

@@ -44,7 +44,7 @@
         <div :class="$style.feeds" v-if="!nothing">
           <div style="padding: 8px; background: #f4f5f5; color: #999;">{{feedCounts}}条动态</div>
           <div :class="$style.feedContainer">
-            <UserFeed v-for="feed in feedList" :feed="feed" :key="feed.feed_id" />
+            <UserFeed v-for="feed in feedList" :feed="feed" :key="feed.id" />
           </div>
         </div>
         <div v-if="nothing" :class="$style.nothingDefault">
@@ -76,7 +76,7 @@
 </template>
 
 <script>
-  import { createAPI, addAccessToken } from '../utils/request';
+  import { createAPI, addAccessToken, createOldAPI } from '../utils/request';
   import { getUserInfo } from '../utils/user';
   import errorCodes from '../stores/errorCodes';
   import localEvent from '../stores/localStorage';
@@ -128,7 +128,7 @@
       },
       imMessage () {
         addAccessToken().post(
-          createAPI('im/conversations'),
+          createOldAPI('im/conversations'),
           {
             type: 0,
             uids: [
@@ -167,7 +167,7 @@
           this.$store.dispatch(MESSAGELISTS, cb => {
             cb({
               name: this.userInfo.name,
-              avatar: this.userInfo.avatar[30],
+              avatar: this.userInfo.avatar,
               lists: [],
               cid: data.cid,
               user_id: window.TS_WEB.currentUserId
@@ -191,7 +191,7 @@
         followingUser(this.user_id)
         .then(status => {
           if(status.status || status.code == 0) {
-            this.userInfo = { ...this.userInfo, is_following: 1 };
+            this.userInfo = { ...this.userInfo, following: true };
             localEvent.setLocalItem(`user_${this.user_id}`, this.userInfo);
             // 更新页面数据
             this.userInfo.counts.followed_count += 1;
@@ -210,7 +210,7 @@
       handleUnfollowing () {
         unFollowingUser(this.user_id)
         .then(() => {
-          this.userInfo = { ...this.userInfo, is_following: 0 };
+          this.userInfo = { ...this.userInfo, following: false };
           localEvent.setLocalItem(`user_${this.user_id}`, this.userInfo);
           // 更新页面数据
           this.userInfo.counts.followed_count -= 1;
@@ -232,24 +232,24 @@
           }, 500);
           return;
         }
-        addAccessToken().get(createAPI(`feeds/users/${this.user_id}?max_id=${this.max_id}`),{},
+        addAccessToken().get(createAPI(`feeds?user=${this.user_id}&after=${this.max_id}&limit=15`),{},
           {
             validateStatus: status => status === 200
           }
         )
-        .then(response => {
-          let data = response.data.data;
-          let length = data.length;
+        .then(({ data = {} }) => {
+          let moreFeeds = data.feeds;
+          let length = moreFeeds.length;
           let ids = [];
           let feeds = {};
           if(length < 15) {
             this.bottomAllLoaded = true;
           }
           if(length) {
-            data.forEach((feed) => {
-              ids.push(feed.feed.feed_id);
-              feeds[feed.feed.feed_id] = feed;
-              this.max_id = feed.feed.feed_id;
+            moreFeeds.forEach((feed) => {
+              ids.push(feed.id);
+              feeds[feed.id] = feed;
+              this.max_id = feed.id;
             });
             this.$store.dispatch(USERFEEDS, cb => {
               cb(ids);
@@ -272,7 +272,7 @@
         let yesterday = new window.Date(new Date()-24*60*60*1000).toLocaleDateString();
         feeds.forEach((feed) => {
           // 获取动态生成日期
-          let timestamp = new window.Date(this.timers(feed.feed.created_at, 8, false));
+          let timestamp = new window.Date(this.timers(feed.created_at, 8, false));
           let createDate = timestamp.toLocaleDateString();
           feed.month = '';
           feed.date = '';
@@ -288,7 +288,7 @@
             feed.created_at = '今天';
           }
           dayFeeds.push(feed);
-          max_id = feed.feed.feed_id;
+          max_id = feed.id;
         });
         return dayFeeds;
       }
@@ -332,19 +332,19 @@
         feeds: state => state.userFeeds.userFeeds
       }),
       followAction () {
-        if(this.userInfo.is_following && this.userInfo.is_followed) {
+        if(this.userInfo.following && this.userInfo.follower) {
           return {
             status: true,
             text: '相互关注'
           };
         }
-        if(!this.userInfo.is_following) {
+        if(!this.userInfo.following) {
           return {
             status: false,
             text: '关注'
           }
         }
-        if(this.userInfo.is_following && !this.userInfo.is_followed) {
+        if(this.userInfo.following && !this.userInfo.follower) {
           return {
             status: true,
             text: '已关注'
@@ -356,7 +356,7 @@
         return feedLength.length ? 0 : defaultNothing;
       },
       avatar () {
-        const { avatar: { 30: avatar = defaultAvatar } = {} } = this.userInfo;
+        const { avatar = defaultAvatar } = this.userInfo;
         return avatar;
       },
       feedCounts () {
@@ -407,17 +407,16 @@
       }
       this.user_id = window.TS_WEB.currentUserId != user_id ? user_id : window.TS_WEB.currentUserId;
       getUserInfo(this.user_id, 30).then( user => {
-        console.log(user);
         this.userInfo = { ...this.userInfo, ...user };
       });
       // 获取动态列表
-      addAccessToken().get(createAPI(`feeds/users/${this.user_id}`), {},
+      addAccessToken().get(createAPI(`feeds?user=${this.user_id}&limit=15`), {},
         {
           validateStatus: status => status === 200
         }
       )
-      .then(response => {
-        let feeds = response.data.data;
+      .then(({ data = {} = {} }) => {
+        let feeds = data.feeds;
         if(!feeds.length){
           this.hasNoMore = false;
           this.bottomAllLoaded = true;
@@ -430,10 +429,10 @@
         }
         let ids = [];
         let storeFeeds = {};
-        this.max_id = feeds[feeds.length - 1].feed.feed_id;
+        this.max_id = feeds[feeds.length - 1].id;
         feeds.forEach( feed => {
-          ids.push(feed.feed.feed_id);
-          storeFeeds[feed.feed.feed_id] = feed;
+          ids.push(feed.id);
+          storeFeeds[feed.id] = feed;
         });
         this.$store.dispatch(FEEDSLIST, cb => {
           cb(storeFeeds);

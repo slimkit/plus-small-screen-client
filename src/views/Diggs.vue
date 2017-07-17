@@ -62,7 +62,7 @@
 </template>
 <script>
   import { NOTICE, CLEANMESSAGE } from '../stores/types';
-  import { createAPI, addAccessToken } from '../utils/request';
+  import { createAPI, addAccessToken, createOldAPI } from '../utils/request';
   import localEvent from '../stores/localStorage';
   import { changeUrl, goTo } from '../utils/changeUrl';
   import timers from '../utils/timer';
@@ -71,6 +71,7 @@
   import DiggIcon from '../icons/Digg';
   import { resolveImage } from '../utils/resource';
   import { getLocalDbUser } from '../utils/user';
+  import buildUrl from 'axios/lib/helpers/buildURL';
 
   const defaultNobody = resolveImage(require('../statics/images/img_default_nobody@2x.png'));
   const defaultAvatar = resolveImage(require('../statics/images/defaultAvatarx2.png'));
@@ -162,10 +163,10 @@
           };
           let user = localEvent.getLocalItem(`user_${digg.user_id}`);
           getLocalDbUser(digg.user_id).then( user => {
-            const { avatar: { 30: avatar = defaultAvatar} = {} } = user;
+            const { avatar = defaultAvatar } = user;
             const { name = '' } = user;
             if(digg.source_cover) {
-              newDigg.cover = getImage(digg.source_cover, 20);
+              newDigg.cover = buildUrl(createAPI(digg.source_cover), {w: 100, h: 100});
             }
             newDigg.name = name;
             newDigg.avatar = avatar;
@@ -193,7 +194,7 @@
           };
           let user = localEvent.getLocalItem(`user_${digg.user_id}`);
           getLocalDbUser(digg.user_id).then( user => {
-            const { avatar: { 30: avatar = defaultAvatar} = {} } = user;
+            const { avatar = defaultAvatar } = user;
             const { name = '' } = user;
             if(digg.source_cover) {
               newDigg.cover = getImage(digg.source_cover, 20);
@@ -215,7 +216,7 @@
       this.$store.dispatch(CLEANMESSAGE, cb => {
         cb('diggs');
       });
-      addAccessToken().get(createAPI(`users/mydiggs?max_id=${this.max_id}`),{},
+      addAccessToken().get(createOldAPI(`users/mydiggs?max_id=${this.max_id}`),{},
         {
           validateStatus: status => status === 200
         }

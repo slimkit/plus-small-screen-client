@@ -4,15 +4,15 @@
       <div :class="$style.toolItem">
         <DiggIcon v-if="isDigg" width="21" @click.native="cannelDigg" height="21" color="#f4504d" />
         <UnDiggIcon  v-else @click.native="sendDigg" width="21" height="21" color="#999" />
-        <span :class="$style.count">{{ friendnum(feed.tool.feed_digg_count) }}</span>
+        <span :class="$style.count">{{ friendnum(feed.like_count) }}</span>
       </div>
       <div :class="$style.toolItem" @click="handleCommentInput(true)">
         <CommentIcon width="21" height="21" color="#999" />
-        <span :class="$style.count">{{ friendnum(feed.tool.feed_comment_count) }}</span>
+        <span :class="$style.count">{{ friendnum(feed.feed_comment_count) }}</span>
       </div>
-      <div :class="$style.toolItem" @click="changeUrl(`/feed/${feed.feed.feed_id}`)">
+      <div :class="$style.toolItem" @click="changeUrl(`/feed/${feed.id}`)">
         <ViewIcon width="21" height="21" color="#999" />
-        <span :class="$style.count">{{ friendnum(feed.tool.feed_view_count) }}</span>
+        <span :class="$style.count">{{ friendnum(feed.feed_view_count) }}</span>
       </div>
       <div :class="$style.toolItem" @click="handleShowPopup(true)">
         <MoreIcon width="21" height="21" color="#999" />
@@ -81,7 +81,7 @@
             </span>
             <span
               v-else
-              @click.stop="showComfirm(comment.id, feed.feed.feed_id, commentIndex)"
+              @click.stop="showComfirm(comment.id, feed.id, commentIndex)"
               :class="$style.commentContent"
             > 
              : {{ comment.comment_content }}
@@ -89,7 +89,7 @@
           </p>
         </li>
       </ul>
-      <router-link v-if="hasMore" :class="$style.userName" :to="`/feed/${feed.feed.feed_id}#comments`">查看全部评论</router-link>
+      <router-link v-if="hasMore" :class="$style.userName" :to="`/feed/${feed.id}#comments`">查看全部评论</router-link>
     </div>
   </div>
 </template>
@@ -155,7 +155,7 @@
       handleCommentInput (open, reply_to_user_id = 0) {
         if(open){
           this.$store.dispatch(COMMENTINPUT, cb => {
-            cb(this.feed.feed.feed_id);
+            cb(this.feed.id);
           });
           this.commentAbout.reply_to_user_id = reply_to_user_id;
         } else {
@@ -168,20 +168,22 @@
           this.$store.dispatch(SHOWPOPUP, cb => {
             cb({
               show: true, 
-              feed_id: this.feed.feed.feed_id, 
+              feed_id: this.feed.id, 
               me: this.feed.user_id === window.TS_WEB.currentUserId,
-              isCollection: this.feed.tool.is_collection_feed
+              isCollection: this.feed.has_collect
             });
           })
         } else {
           this.$store.dispatch(CLOSEPOPUP);
         }
       },
+
       friendnum (num) { 
         return friendNum(num);
       },
+
       sendDigg () {
-        let uri = `feeds/${this.feed.feed.feed_id}/digg`;
+        let uri = `feeds/${this.feed.id}/like`;
         let feed = this.feed;
         (addAccessToken().post(createAPI (uri), {}, 
           {
@@ -189,26 +191,24 @@
           }
         ))
         .then(response => {
-          if (response.data.code === 0 || response.data.status) {
-            feed.tool.is_digg_feed = 1;
-            feed.tool.feed_digg_count += 1;
-            this.$store.dispatch(UPDATEFEED, cb => {
-              cb(feed);
-            })
-          }
+          feed.has_like = 1;
+          feed.like_count += 1;
+          this.$store.dispatch(UPDATEFEED, cb => {
+            cb(feed);
+          })
         })
       },
       cannelDigg () {
         let feed = this.feed;
-        let uri = `feeds/${this.feed.feed.feed_id}/digg`;
+        let uri = `feeds/${this.feed.id}/unlike`;
         addAccessToken().delete(createAPI (uri), 
           {
             validateStatus: status => status === 204
           }
         )
         .then(response => {
-          feed.tool.is_digg_feed = 0;
-          feed.tool.feed_digg_count -= 1;
+          feed.has_like = 0;
+          feed.like_count -= 1;
           this.$store.dispatch(UPDATEFEED, cb => {
             cb(feed);
           })
@@ -217,10 +217,17 @@
       sendComment () {
         if(!this.validComment || this.commentAbout.loading) return;
         this.commentAbout.loading = true;
-        addAccessToken().post(createAPI(`feeds/${this.feed.feed.feed_id}/comment`), {
-            comment_content: this.commentAbout.comment,
-            reply_to_user_id: this.commentAbout.reply_to_user_id
-          },
+        let comment_data = {
+          comment_mark: parseInt(TS_WEB.currentUserId + (new Date).getTime()),
+          comment_content: this.commentAbout.comment
+        };
+
+        if(this.commentAbout.reply_to_user_id) {
+          comment_data.reply_to_user_id = this.commentAbout.reply_to_user_id
+        }
+        //
+        addAccessToken().post(createAPI(`feeds/${this.feed.id}/comments`), 
+          comment_data,
           {
             validateStatus: status => status === 201
           }
@@ -246,9 +253,8 @@
           // 本地数据更新
           // feed.comments.unshift(newComment);
           // 更新vuex数据
-          this.$store.getters[FEEDSLIST][this.feed.feed.feed_id].comments.unshift(newComment);
-          this.$store.getters[FEEDSLIST][this.feed.feed.feed_id].tool.feed_comment_count += 1;
-          // feed.tool.feed_comment_count += 1;
+          this.$store.getters[FEEDSLIST][this.feed.id].comments.unshift(newComment);
+          this.$store.getters[FEEDSLIST][this.feed.id].feed_comment_count += 1;
           this.$store.dispatch(NOTICE, cb => {
             cb({
               text: '已发送',
@@ -295,23 +301,18 @@
       },
       deleteComment (close, data) {
         let feed = this.feed;
-        addAccessToken().delete(createAPI(`feeds/${data.feed_id}/comment/${data.comment_id}`), {}, {
+        addAccessToken().delete(createAPI(`feeds/${data.feed_id}/comments/${data.comment_id}`), {}, {
           validateStatus: status => status === 204
         })
         .then(response => {
-          // feed.comments.splice(data.index, 1);
-          // feed.tool.feed_comment_count -= 1;
-          // this.$store.dispatch(UPDATEFEED, cb => cb({
-          //   feed
-          // }));
-          this.$store.getters[FEEDSLIST][this.feed.feed.feed_id].comments.splice(data.index, 1);
-          this.$store.getters[FEEDSLIST][this.feed.feed.feed_id].tool.feed_comment_count -= 1;
+          this.$store.getters[FEEDSLIST][this.feed.id].comments.splice(data.index, 1);
+          this.$store.getters[FEEDSLIST][this.feed.id].feed_comment_count -= 1;
         })
       },
     },
     computed: {
       isDigg () {
-        return this.feed.tool.is_digg_feed;
+        return this.feed.has_like;
       },
       currentUser () {
         return localEvent.getLocalItem('UserLoginInfo');
@@ -323,10 +324,11 @@
         return this.commentAbout.comment.length;
       },
       commentsData () {
-        return this.feed.comments.slice(0, 3); // 返回前三条评论
+        const { comments = [] } = this.feed; 
+        return comments.slice(0, 3); // 返回前三条评论
       },
       hasMore () {
-        return this.feed.tool.feed_comment_count > 3;
+        return this.feed.feed_comment_count > 3;
       },
       users () {
         return this.$store.getters[USERS];
@@ -343,13 +345,16 @@
     },
     created () {
       let user_ids_obj = {};
-      this.feed.comments.forEach( (comment, index) => {
+      const { comments = [] } =  this.feed;
+      //
+      comments.forEach( (comment, index) => {
         if(comment.reply_to_user_id) {
           user_ids_obj = { ...user_ids_obj, [comment.user_id]: comment.user_id, [comment.reply_to_user_id]: comment.reply_to_user_id };
         } else {
           user_ids_obj = { ...user_ids_obj, [comment.user_id]: comment.user_id };
         }
       });
+
       let user_ids = lodash.values(user_ids_obj);
       this.$store.dispatch(USERS, cb => getUsersInfo(user_ids).then(users => cb(users)));
     }

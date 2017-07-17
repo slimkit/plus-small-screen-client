@@ -68,8 +68,9 @@
     }
   </style>
   <script>
-  	window.TS_WEB = {!! json_encode([
+    window.TS_WEB = {!! json_encode([
       'api' => $api,
+      'apiv1' => $apiv1,
       'url' => $base_url,
       'socketUrl' => $webSocktUrl,
       'im_token' => '',

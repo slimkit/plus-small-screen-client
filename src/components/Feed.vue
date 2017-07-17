@@ -1,7 +1,7 @@
 <template>
   <li 
     :class="$style.detail"
-    :id="`feed-${feed.feed.feed_id}`"
+    :id="`feed-${feed.id}`"
   >
     <section 
       style="display: flex; align-items: flex-start;"
@@ -31,16 +31,16 @@
         </section>
         <figure 
           :class="$style.detailFeedContent"
-          @click.stop="changeUrl(`/feed/${feed.feed.feed_id}`)"
+          @click.stop="changeUrl(`/feed/${feed.id}`)"
         >
           <p 
             :class="$style.detailContent" 
-            v-html="feed.feed.feed_content.replace(/\n/g,'<br/>')"
+            v-html="feed.feed_content ? feed.feed_content.replace(/\n/g,'<br/>') : feed.feed_content"
           >
           </p>
           <FeedImages 
-            v-show="feed.feed.storages.length" 
-            :storages="feed.feed.storages"
+            v-show="feed.images.length" 
+            :storages="feed.images"
           />
         </figure>
       </section>
@@ -51,8 +51,8 @@
       <FeedTool 
         :user="user" 
         :feed="feed"
-        :openInput="feed.feed.feed_id == commentFeed ? true : false"
-        :showPopup="feed.feed.feed_id == showPopup ? true : false"
+        :openInput="feed.id == commentFeed ? true : false"
+        :showPopup="feed.id == showPopup ? true : false"
       />
     </div>
   </li>
@@ -98,11 +98,11 @@
     },
     computed: {
       avatar () {
-        const { avatar: { 30: avatar = defaultAvatar } = {} } = this.user;
+        const { avatar = defaultAvatar } = this.user;
         return avatar;
       },
       timer () {
-        return this.timers(this.feed.feed.created_at, 8, false);
+        return this.timers(this.feed.created_at, 8, false);
       },
       // 检测动态展开输入框
       ...mapState({
@@ -114,7 +114,7 @@
       window.TS_WEB.dataBase.transaction('rw?', window.TS_WEB.dataBase.userbase, () => {
         window.TS_WEB.dataBase.userbase.get({ user_id: parseInt(this.feed.user_id) }).then( item => {
           if(item === undefined) {
-            getUserInfo(this.feed.user_id, 30).then( user => {
+            getUserInfo(this.feed.user_id).then( user => {
               this.user = { ...user };
             });
           } else {

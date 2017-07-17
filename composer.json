@@ -1,33 +1,27 @@
 {
-    "name": "zhiyicx/plus-component-web",
+    "name": "zhiyicx/plus-component-h5",
     "description": "🌝The SPA of ThinkSNS+",
     "license": "Apache-2.0",
-    "authors": [
-        {
-            "name": "Wayne John",
-            "email": "qiaobinloverabbi@gmail.com",
-            "role": "developer"
-        },
-        {
-            "name": "Seven Du",
-            "email": "shiweidu@outlook.com",
-            "role": "developer"
-        }
-    ],
-    "require": {
-        "zhiyicx/plus-component-im": "^2.0",
-        "zhiyicx/plus-component-news": "^1.0"
-    },
-    "autoload" : {
+    "authors": [{
+        "name": "Wayne John",
+        "email": "qiaobinloverabbi@gmail.com",
+        "role": "developer"
+    }, {
+        "name": "Seven Du",
+        "email": "shiweidu@outlook.com",
+        "role": "developer"
+    }],
+    "autoload": {
         "psr-4": {
-            "Zhiyi\\Component\\ZhiyiPlus\\PlusComponentWeb\\": "php/"
+            "Zhiyi\\Component\\ZhiyiPlus\\PlusComponentH5\\": "php/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "Zhiyi\\Component\\ZhiyiPlus\\PlusComponentWeb\\ServiceProvider"
+                "Zhiyi\\Component\\ZhiyiPlus\\PlusComponentH5\\ServiceProvider"
             ]
         }
-    }
+    },
+    "version": "0.0.1"
 }

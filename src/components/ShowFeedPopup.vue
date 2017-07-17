@@ -97,7 +97,7 @@
         })
         .then( () => {
           let collectionLists = this.$store.getters[COLLECTIONFEEDS];
-          let collectionIndex = collectionLists.findIndex( item => { return item.feed.feed_id === feed_id; });
+          let collectionIndex = collectionLists.findIndex( item => { return item.id === feed_id; });
           let collectionIds = this.$store.getters[COLLECTIONFEEDSIDS];
           let collectionIdsIndx = collectionIds.findIndex( item => { return item === feed_id; });
           if(collectionIdsIndx !== -1) {
@@ -108,13 +108,13 @@
           }
 
           let userLists = this.$store.getters[USERFEEDS];
-          let userIndex = userLists.findIndex( item => { return item.feed.feed_id === feed_id; });
+          let userIndex = userLists.findIndex( item => { return item.id === feed_id; });
           if(collectionIndex !== -1) {
             this.$store.getters[USERFEEDS].splice(userIndex, 1);
           }
 
           let newLists = this.$store.getters[NEWFEEDS];
-          let newIndex = newLists.findIndex( item => { return item.feed.feed_id === feed_id; });
+          let newIndex = newLists.findIndex( item => { return item.id === feed_id; });
           let newIds = this.$store.getters[NEWIDS];
           let newIdsIndx = newIds.findIndex( item => { return item === feed_id; });
           if(newIdsIndx !== -1) {
@@ -125,7 +125,7 @@
           }
 
           let hotLists = this.$store.getters[HOTFEEDS];
-          let hotIndex = hotLists.findIndex( item => { return item.feed.feed_id === feed_id; });
+          let hotIndex = hotLists.findIndex( item => { return item.id === feed_id; });
           let hotIds = this.$store.getters[HOTIDS];
           let hotIdsIndx = hotIds.findIndex( item => { return item === feed_id; });
           if(hotIdsIndx !== -1) {
@@ -136,7 +136,7 @@
           }
 
           let followingLists = this.$store.getters[FOLLOWINGFEEDS];
-          let followingIndex = followingLists.findIndex( item => { return item.feed.feed_id === feed_id; });
+          let followingIndex = followingLists.findIndex( item => { return item.id === feed_id; });
           let followingIds = this.$store.getters[FOLLOWINGIDS];
           let followingIdsIndx = followingIds.findIndex( item => { return item === feed_id; });
           if(followingIdsIndx !== -1) {
@@ -156,19 +156,19 @@
        */
       handleCollection(status, feed_id) {
         if(status) {
-          addAccessToken().post(createAPI(`feeds/${feed_id}/collection`), {}, {
+          addAccessToken().post(createAPI(`feeds/${feed_id}/collections`), {}, {
             validateStatus: status => status === 201
           })
           .then( response => {
-            this.$set(this.feed.tool, 'is_collection_feed', 1);
+            this.$set(this.feed, 'has_collect', true);
             this.handleClosePopup();
           })
         } else {
-          addAccessToken().delete(createAPI(`feeds/${feed_id}/collection`), {}, {
+          addAccessToken().delete(createAPI(`feeds/${feed_id}/uncollect`), {}, {
             validateStatus: status => status === 204
           })
           .then( response => {
-            this.$set(this.feed.tool, 'is_collection_feed', 0);
+            this.$set(this.feed, 'has_collect', false);
             this.handleClosePopup();
           })
         }

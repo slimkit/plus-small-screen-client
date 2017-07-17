@@ -162,7 +162,7 @@
         messageCount: state => state.messageCount.messageCount
       }),
       avatar () {
-        const { avatar: { 30: avatar = defaultAvatar } = {} } = this.userInfo;
+        const { avatar = defaultAvatar } = this.userInfo;
         return avatar;
       },
       name () {

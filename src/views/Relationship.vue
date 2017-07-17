@@ -155,9 +155,9 @@
           }
           datas.forEach( (data, index) => {
             let userInfo = localEvent.getLocalItem(`user_${data.user_id}`);
-            getUserInfo(data.user_id, 30).then(user => {
+            getUserInfo(data.user_id).then(user => {
               const { datas: { intro: { value: intro = '这家伙很懒,什么都没有留下' } = {} } = {} } = user;
-              const { avatar: { 30: avatar = defaultAvatar } = {} } = user;
+              const { avatar = defaultAvatar } = user;
               this.dataList = { ...this.dataList, [data.user_id]: {
                 is_following: user.is_following,
                 is_followed: user.is_followed,
@@ -209,9 +209,9 @@
           // }
           datas.forEach( (data, index) => {
             if(!data.user_id in this.dataList) {
-              getUserInfo(data.user_id, 30).then(user => {
+              getUserInfo(data.user_id).then(user => {
                 const { datas: { intro: { value: intro = '这家伙很懒,什么都没有留下' } = {} } = {} } = user;
-                const { avatar: { 30: avatar = defaultAvatar } = {} } = user;
+                const { avatar = defaultAvatar } = user;
                 this.dataList = {[data.user_id]: {
                   is_following: user.is_following,
                   is_followed: user.is_followed,
@@ -324,9 +324,9 @@
           }
           this.dataList = [];
           datas.forEach( (data, index) => {
-            getUserInfo(data.user_id, 30).then(user => {
+            getUserInfo(data.user_id).then(user => {
               const { datas: { intro: { value: intro = '这家伙很懒,什么都没有留下.' } = {} } = {} } = user;
-              const { avatar: { 30: avatar = defaultAvatar } = {} } = user;
+              const { avatar = defaultAvatar } = user;
               lists = { ...lists, [user.user_id]: {
                 is_following: user.is_following,
                 is_followed: user.is_followed,

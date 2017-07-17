@@ -138,7 +138,7 @@
 </template>
 
 <script>
-  import { createAPI, addAccessToken } from '../../utils/request';
+  import { createAPI, addAccessToken, createOldAPI } from '../../utils/request';
   import lodash from 'lodash';
   import localEvent from '../../stores/localStorage';
   import { changeUrl, goTo } from '../../utils/changeUrl';
@@ -260,7 +260,7 @@
       },
       getNewList () {
         let query = `cate_id=${this.currentNewsCateId}`;
-        addAccessToken().get(createAPI(`news?cate_id=${this.currentNewsCateId}`),{},
+        addAccessToken().get(createOldAPI(`news?cate_id=${this.currentNewsCateId}`),{},
         {
           validateStatus: status => status === 200
         })
@@ -302,7 +302,7 @@
         if(this.max_id > 1) {
           query += `&max_id=${this.max_id}`;
         }
-        addAccessToken().get(createAPI(`news?${query}`),{},
+        addAccessToken().get(createOldAPI(`news?${query}`),{},
         {
           validateStatus: status => status === 200
         })
@@ -338,7 +338,7 @@
     created () {
       this.showSpinner = true;
       // 获取资讯分类
-      addAccessToken().get(createAPI('news/cates'),
+      addAccessToken().get(createOldAPI('news/cates'),
         {},
         {
           validateStatus: status => status === 200
@@ -354,7 +354,7 @@
       
       // 获取推荐资讯
       let cate_id = this.currentNewsCateId || -1;
-      addAccessToken().get(createAPI(`news?cate_id=${cate_id}`),
+      addAccessToken().get(createOldAPI(`news?cate_id=${cate_id}`),
         {},
         {
           validateStatus: status => status === 200

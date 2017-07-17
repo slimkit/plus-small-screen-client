@@ -158,7 +158,7 @@
 				return lists;
 			},
 			myAvatar () {
-				const { avatar: { 30: avatar = '' } = {} } = this.userInfo;
+				const { avatar = '' } = this.userInfo;
 				return avatar;
 			},
 			canSend () {

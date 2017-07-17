@@ -1,15 +1,15 @@
-import { 
-  FEEDSLIST, 
-  UPDATEFEED, 
-  FOLLOWINGFEEDS, 
-  HOTFEEDS, 
-  NEWFEEDS, 
-  FOLLOWINGIDS, 
-  HOTIDS, 
-  NEWIDS, 
-  USERFEEDS, 
-  GETUSERFEEDS, 
-  COLLECTIONFEEDS, 
+import {
+  FEEDSLIST,
+  UPDATEFEED,
+  FOLLOWINGFEEDS,
+  HOTFEEDS,
+  NEWFEEDS,
+  FOLLOWINGIDS,
+  HOTIDS,
+  NEWIDS,
+  USERFEEDS,
+  GETUSERFEEDS,
+  COLLECTIONFEEDS,
   COLLECTIONFEEDSIDS,
   DELETEFEED
 } from '../types';
@@ -19,22 +19,26 @@ const state = {
 };
 
 const mutations = {
-  [FEEDSLIST] (state, feedlist) {
-    state.feedList = { ...state.feedList, ...feedlist };
+  [FEEDSLIST](state, feedlist) {
+    state.feedList = {...state.feedList,
+      ...feedlist
+    };
   },
-  [UPDATEFEED] (state, feed) {
-    state.feedList[feed.feed.feed_id] = { ...state.feedList[feed.feed.feed_id], ...feed };
+  [UPDATEFEED](state, feed) {
+    state.feedList[feed.id] = {...state.feedList[feed.id],
+      ...feed
+    };
   }
 };
 
 const actions = {
   [FEEDSLIST]: (context, cb) => {
-    cb( feedlist => {
+    cb(feedlist => {
       context.commit(FEEDSLIST, feedlist);
     })
   },
   [UPDATEFEED]: (context, cb) => {
-    cb (feed => {
+    cb(feed => {
       context.commit(UPDATEFEED, feed);
     })
   }
@@ -48,7 +52,7 @@ const getters = {
   [FOLLOWINGFEEDS]: (state, getters) => {
     let followingFeeds = [];
     let followingIds = getters[FOLLOWINGIDS];
-    followingIds.forEach( id => {
+    followingIds.forEach(id => {
       followingFeeds.push(state.feedList[id]);
     });
     return followingFeeds;
@@ -57,7 +61,7 @@ const getters = {
   [HOTFEEDS]: (state, getters) => {
     let hotFeeds = [];
     let hotIds = getters[HOTIDS];
-    hotIds.forEach( id => {
+    hotIds.forEach(id => {
       hotFeeds.push(state.feedList[id]);
     });
     return hotFeeds;
@@ -66,7 +70,7 @@ const getters = {
   [NEWFEEDS]: (state, getters) => {
     let newFeeds = [];
     let newIds = getters[NEWIDS];
-    newIds.forEach( id => {
+    newIds.forEach(id => {
       newFeeds.push(state.feedList[id]);
     });
     return newFeeds;
@@ -75,7 +79,7 @@ const getters = {
   [GETUSERFEEDS]: (state, getters) => {
     let userFeeds = [];
     let userIds = getters[USERFEEDS];
-    userIds.forEach( id => {
+    userIds.forEach(id => {
       userFeeds.push(state.feedList[id]);
     });
     return userFeeds;
@@ -83,7 +87,7 @@ const getters = {
   [COLLECTIONFEEDS]: (state, getters) => {
     let collectionFeeds = [];
     let collectionIds = getters[COLLECTIONFEEDSIDS];
-    collectionIds.forEach( id => {
+    collectionIds.forEach(id => {
       collectionFeeds.push(state.feedList[id]);
     });
     return collectionFeeds;

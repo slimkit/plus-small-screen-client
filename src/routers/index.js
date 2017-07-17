@@ -20,7 +20,7 @@ const scrollBehavior = (to, from, savedPosition) => {
 }
 const router = new VueRouter({
   mode: 'history',
-  base: '/web',
+  base: '/h5',
   scrollBehavior,
   routes
 });
