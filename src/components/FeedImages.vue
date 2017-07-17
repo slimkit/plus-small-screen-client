@@ -163,7 +163,6 @@
 <script>
   import { createAPI } from '../utils/request';
   import { IMGSWIPER } from '../stores/types';
-  import getImg from '../utils/getImage';
   import buildURL from 'axios/lib/helpers/buildURL';
 
   const feedImages = {
@@ -205,8 +204,7 @@
             show: true
           });
         });
-      },
-      getImg
+      }
     }
   }
 

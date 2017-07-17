@@ -82,7 +82,6 @@
   import localEvent from '../stores/localStorage';
   import { followingUser, unFollowingUser } from '../utils/user';
   import { NOTICE, FEEDSLIST, USERFEEDS, APPENDUSERFEED, CLEANUSERFEEDS, DATES, GETUSERFEEDS, MESSAGELISTS } from '../stores/types';
-  import getImg from '../utils/getImage';
   import { friendNum } from '../utils/friendNum';
   import timers from '../utils/timer';
   import contains from '../utils/contains';
@@ -96,6 +95,7 @@
   import CommentIcon from '../icons/Comment';
   import { goTo, changeUrl } from '../utils/changeUrl';
   import { resolveImage } from '../utils/resource';
+  import buildUrl from 'axios/lib/helpers/buildURL';
 
   const defaultNothing =  resolveImage(require('../statics/images/defaultNothingx3.png'));
   const defaultBackgroundPic = resolveImage(require('../statics/images/default_cover.png'));
@@ -378,7 +378,7 @@
       coverImg () {
         const { datas: { cover: { value: cover = 0 } = {} } = {} } = this.userInfo;
         if(cover) {
-          return getImg(cover, 100);
+          return buildUrl(createAPI(`files/${cover}`));
         } else {
           return defaultBackgroundPic;
         }

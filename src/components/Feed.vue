@@ -82,10 +82,6 @@
     }),
     methods: {
       changeUrl,
-      // 获取单条图片
-      getImg (id, process = 30) {
-        return createRequestURI(`api/v1/storages/${id}/${process}`);
-      },
       timers,
       router (link) {
         router.push(link);

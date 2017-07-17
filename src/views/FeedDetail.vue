@@ -257,7 +257,6 @@
   import localEvent from '../stores/localStorage';
   import { getUserInfo, followingUser, unFollowingUser, getLocalDbUser } from '../utils/user';
   import { NOTICE, SHOWFEEDDIGGSLISTS, FEEDSLIST, UPDATEFEED, CONFIRM, COMMENTINPUT, COLLECTIONFEEDSIDS, ADDCOLLECTIONFEEDSIDS, UNCOLLECTIONFEEDSID } from '../stores/types';
-  import getImg from '../utils/getImage';
   import { friendNum } from '../utils/friendNum';
   import Comfirm from '../utils/Comfirm';
   import formateFeedComments from '../utils/formateFeedComments';
@@ -695,7 +694,6 @@
           });
         })
       },
-      getImg,
       friendNum,
       unFollowingUser,
       followingUser,

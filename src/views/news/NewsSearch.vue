@@ -56,7 +56,7 @@
                 </section>
               </div>
               <figure :class="$style.sourceImg">
-                <img v-lazy="getImg(list.storage.id, 30)" :alt="list.title">
+                <img v-lazy="getImg(list.storage.id)" :alt="list.title">
               </figure>
             </li>
           </ul>
@@ -81,7 +81,6 @@
   import { createAPI, createOldAPI, addAccessToken } from '../../utils/request';
   import lodash from 'lodash';
   import timers from '../../utils/timer';
-  import getImg from '../../utils/getImage';
   import { changeUrl, goTo } from '../../utils/changeUrl';
   import { mapState } from 'vuex';
   import { resolveImage } from '../../utils/resource';
@@ -114,7 +113,9 @@
         goTo(-1);
       },
       timers,
-      getImg,
+      getImg (id) {
+        return buildUrl(createAPI(`files/${id}`), {w: 200, height: 200});
+      },
       bottomStatusChange(status) {
         this.bottomStatus = status;
       },

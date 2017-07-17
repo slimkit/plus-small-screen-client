@@ -116,6 +116,7 @@
               left: 12px;
               right: 12px;
               bottom: 0;
+              height: 100;
             }
           }
           .channelIntro {

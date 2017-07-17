@@ -84,7 +84,7 @@
 
 <script>
 	import { NOTICE } from '../stores/types';
-  import { createAPI, addAccessToken } from '../utils/request';
+  import { createAPI, createOldAPI, addAccessToken } from '../utils/request';
 	import BackIcon from '../icons/Back';
   import FollowingIcon from '../icons/Following';
   import UnFollowingIcon from '../icons/UnFollowing';
@@ -140,7 +140,7 @@
           uri = `follows/follows/${this.user_id}/${this.max_id}`;
           key = 'follows';
         }
-        addAccessToken().get(createAPI(uri), {}, {
+        addAccessToken().get(createOldAPI(uri), {}, {
           validateStatus: status => status === 200
         })
         .then( response => {
@@ -196,7 +196,7 @@
           uri = `follows/follows/${this.user_id}`;
           key = 'follows';
         }
-        addAccessToken().get(createAPI(`${uri}?limit=15`), {}, {
+        addAccessToken().get(createOldAPI(`${uri}?limit=15`), {}, {
           validateStatus: status => status === 200
         })
         .then( response => {
@@ -307,7 +307,7 @@
           uri = `follows/follows/${this.user_id}`;
           key = 'follows';
         }
-        addAccessToken().get(createAPI(uri), {}, {
+        addAccessToken().get(createOldAPI(uri), {}, {
           validateStatus: status => status === 200
         })
         .then( response => {

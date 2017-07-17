@@ -74,7 +74,7 @@
                   </section>
                 </div>
                 <figure :class="$style.sourceImg">
-                  <img v-lazy="getImg(list.storage.id, 30)" :alt="list.title">
+                  <img v-lazy="getImg(list.storage.id)" :alt="list.title">
                 </figure>
               </li>
             </ul>
@@ -103,7 +103,6 @@
   import { changeUrl, goTo } from '../utils/changeUrl';
   import lodash from 'lodash';
   import { resolveImage } from '../utils/resource';
-  import getImg from '../utils/getImage';
   import timers from '../utils/timer';
 
   const nothingImg = resolveImage(require('../statics/images/defaultNothingx3.png'));
@@ -132,7 +131,9 @@
     }),
     methods: {
       timers,
-      getImg,
+      getImg (id) {
+        return buildUrl(createAPI(`files/${id}`));
+      },
       changeUrl,
       goBack (num) {
         this.$store.dispatch(COLLECTIONTYPE, cb => {
