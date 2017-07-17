@@ -166,7 +166,7 @@
             const { avatar = defaultAvatar } = user;
             const { name = '' } = user;
             if(digg.source_cover) {
-              newDigg.cover = buildUrl(createAPI(digg.source_cover), {w: 100, h: 100});
+              newDigg.cover = buildUrl(createAPI(`files/${digg.source_cover}`), {w: 100, h: 100});
             }
             newDigg.name = name;
             newDigg.avatar = avatar;

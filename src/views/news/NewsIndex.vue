@@ -76,7 +76,7 @@
                 </section>
               </div>
               <figure :class="$style.sourceImg">
-                <img v-lazy="getImg(list.storage.id, 30)" :alt="list.title">
+                <img v-lazy="getImg(list.storage.id)" :alt="list.title">
               </figure>
             </li>
           </ul>
@@ -143,7 +143,6 @@
   import localEvent from '../../stores/localStorage';
   import { changeUrl, goTo } from '../../utils/changeUrl';
   import { getUserInfo, getLocalDbUser } from '../../utils/user';
-  import getImg from '../../utils/getImage';
   import timers from '../../utils/timer';
   import BackIcon from '../../icons/Back';
   import CloseIcon from '../../icons/Close';
@@ -152,6 +151,7 @@
   import { resolveImage } from '../../utils/resource';
   import { mapState } from 'vuex';
   import { CURRENTNEWSCATEID } from '../../stores/types';
+  import buildUrl from 'axios/lib/helpers/buildURL';
 
   const defaultNothing = resolveImage(require('../../statics/images/defaultNothingx2.png'));
   const newsIndex = {
@@ -190,10 +190,11 @@
     },
     methods: {
       timers,
-      getImg,
       goTo,
       changeUrl,
-
+      getImg (id) {
+        return buildUrl(createAPI(`files/${id}`), {w: 100, h: 100});
+      },
       deleteMyCates (index) {
         if(!this.canEdit) return;
         let element = this.myCates[index];

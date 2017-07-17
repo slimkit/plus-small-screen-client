@@ -271,7 +271,7 @@
             const { avatar = defaultAvatar } = user;
             const { name = '' } = user;
             if(comment.source_cover) {
-              newcomment.cover = buildUrl(createAPI(comment.source_cover), {w: 100, h: 100});
+              newcomment.cover = buildUrl(createAPI(`files/${comment.source_cover}`), {w: 100, h: 100});
             }
             newcomment.name = name;
             newcomment.avatar = avatar;

@@ -162,7 +162,7 @@
   import { createAPI, addAccessToken } from '../../utils/request';
   import { changeUrl, goTo } from '../../utils/changeUrl';
   import BackIcon from '../../icons/Back';
-  import getImg from '../../utils/getImage';
+  import buildUrl from 'axios/lib/helpers/buildURL';
   import { resolveImage } from '../../utils/resource';
   const nothingImg = resolveImage(require('../../statics/images/defaultNothingx3.png'));
 
@@ -185,9 +185,8 @@
     methods: {
       goTo,
       changeUrl,
-      getImg,
-      getChannels() {
-
+      getImg (id) {
+        return buildUrl(createAPI(`files/${id}`), {w: 100, h: 100});
       },
       /**
        * 订阅频道

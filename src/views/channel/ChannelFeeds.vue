@@ -145,7 +145,7 @@
   import { changeUrl, goTo } from '../../utils/changeUrl';
   import BackIcon from '../../icons/Back';
   import PlusIcon from '../../icons/Plus';
-  import getImg from '../../utils/getImage';
+  import buildUrl from 'axios/lib/helpers/buildURL';
   import { resolveImage } from '../../utils/resource';
   import { SHOWPOST } from '../../stores/types';
 
@@ -259,13 +259,13 @@
       bgImage () {
         const { cover: { id = 0 }  = {} } = this.channelInfo;
         if( !id ) return '';
-        let cover = getImg(id, 30);
+        let cover = buildUrl(createAPI(`files/${id}`), {w: 100, h: 100});
         return `background: url(${cover});background-size:cover;filter:blur(50px);`;
       },
       avatar () {
         const { cover: { id = 0 }  = {} } = this.channelInfo;
         if(!id) return '';
-        return getImg(id, 30);
+        return buildUrl(createAPI(`files/${id}`), {w: 100, h: 100});
       }
     },
     components: {

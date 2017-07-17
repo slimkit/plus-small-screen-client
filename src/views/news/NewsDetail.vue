@@ -215,7 +215,6 @@
   import localEvent from '../../stores/localStorage';
   import { getUserInfo, getLocalDbUser } from '../../utils/user';
   import { NOTICE, CONFIRM } from '../../stores/types';
-  import getImg from '../../utils/getImage';
   import { friendNum } from '../../utils/friendNum';
   import Comfirm from '../../utils/Comfirm';
   import formateFeedComments from '../../utils/formateFeedComments';
@@ -517,7 +516,6 @@
           });
         })
       },
-      getImg,
       friendNum,
       goBack() {
         if(window.history.length < 2) {
@@ -527,7 +525,6 @@
         this.$route.back();
       },
       menu() {
-        // console.log(document);
         let header = document.getElementById('feed-header');
         let footer = document.getElementById('feed-footer');
         if(header || footer) {
