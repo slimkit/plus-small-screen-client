@@ -228,7 +228,6 @@
           // 获取当前用户的信息
           getLoggedUserInfo().then(user => {
             localEvent.setLocalItem(`user_${data.user_id}`, user);
-            console.log(user);
             this.$store.dispatch(USERS_APPEND, cb =>{
               cb(user)
             });

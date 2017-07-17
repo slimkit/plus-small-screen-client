@@ -141,7 +141,7 @@
 </style>
 <script>
   import Feed from '../../components/Feed';
-  import { createAPI, addAccessToken } from '../../utils/request';
+  import { createAPI, createOldAPI addAccessToken } from '../../utils/request';
   import { changeUrl, goTo } from '../../utils/changeUrl';
   import BackIcon from '../../icons/Back';
   import PlusIcon from '../../icons/Plus';
@@ -165,14 +165,14 @@
     created () {
       let channelId = this.$route.params.id;
       this.channelId = channelId;
-      addAccessToken().get(createAPI(`channel/${channelId}`), {}, {
+      addAccessToken().get(createOldAPI(`channel/${channelId}`), {}, {
         validateStatus: status => status === 200
       })
       .then( response => {
         this.channelInfo = { ...response.data.data };
       });
 
-      addAccessToken().get(createAPI(`channels/${channelId}/feeds`),{},
+      addAccessToken().get(createOldAPI(`channels/${channelId}/feeds`),{},
       {
         validateStatus: status => status === 200
       })
@@ -204,7 +204,7 @@
         this.bottomStatus = status;
       },
       loadTop() {
-        addAccessToken().get(createAPI(`channels/${this.channelId}/feeds`),{},
+        addAccessToken().get(createOldAPI(`channels/${this.channelId}/feeds`),{},
         {
           validateStatus: status => status === 200
         })
@@ -230,7 +230,7 @@
       },
       loadBottom() {
         if(!this.max_id > 1) return;
-        addAccessToken().get(createAPI(`channels/${this.channelId}/feeds?max_id=${this.max_id}`),{},
+        addAccessToken().get(createOldAPI(`channels/${this.channelId}/feeds?max_id=${this.max_id}`),{},
         {
           validateStatus: status => status === 200
         })

@@ -116,7 +116,7 @@ function onMessage(message) {
 																		cid: value.cid,
 																		uid: value.uid,
 																		name: user.name,
-																avatar: user.avatar,
+																		avatar: user.avatar,
 																		targetUser: user_id
 																	});
 																})
@@ -239,7 +239,7 @@ function onMessage(message) {
 		}
 
 		// 登录后同步最近10条消息的操作
-		if (data[0] === 'auth' && data[1].seqs.length) {
+		if (data[0] === 'auth' && data[1].seqs) {
 			data[1].seqs.forEach(seq => {
 				let msg = '2';
 				let message = [

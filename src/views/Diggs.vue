@@ -96,7 +96,7 @@
       changeUrl,
       goTo,
       loadTop () {
-        addAccessToken().get(createAPI(`users/mydiggs`),{},
+        addAccessToken().get(createOldAPI(`users/mydiggs`),{},
           {
             validateStatus: status => status === 200
           }
@@ -127,7 +127,7 @@
       },
       loadBottom () {
         if(!this.max_id) return ;
-        addAccessToken().get(createAPI(`users/mydiggs?max_id=${this.max_id}`),{},
+        addAccessToken().get(createOldAPI(`users/mydiggs?max_id=${this.max_id}`),{},
           {
             validateStatus: status => status === 200
           }

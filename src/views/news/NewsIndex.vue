@@ -232,7 +232,7 @@
           cates += cate.id + ',';
         });
         cates = cates.substring(0, cates.length -1);
-        addAccessToken().post(createAPI(`news/cates/follow`),
+        addAccessToken().post(createOldAPI(`news/cates/follow`),
           {
             follows: cates
           },

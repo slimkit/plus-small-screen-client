@@ -78,7 +78,7 @@
   import { CURRENTNEWSCATEID, NEWSSEARCHKEY, NEWSSEARCHRESULT, APPENDNEWSTORESULT, PREPENDNEWSTORESULT, RESETKEYWORD, RESULTIDS } from '../../stores/types';
   import BackIcon from '../../icons/Back';
   import CloseIcon from '../../icons/Close';
-  import { createAPI, addAccessToken } from '../../utils/request';
+  import { createAPI, createOldAPI, addAccessToken } from '../../utils/request';
   import lodash from 'lodash';
   import timers from '../../utils/timer';
   import getImg from '../../utils/getImage';
@@ -123,7 +123,7 @@
       },
       doSearch () {
         if(!this.keywordCount) return;
-        addAccessToken().get(createAPI(`news/search?limit=15&key=${this.keyword}`),
+        addAccessToken().get(createOldAPI(`news/search?limit=15&key=${this.keyword}`),
           {},
           {
             validateStatus: status => status === 200
@@ -161,7 +161,7 @@
       },
       loadTop () {
         if(!this.keywordCount) return;
-        addAccessToken().get(createAPI(`news/search?limit=15&key=${this.keyword}`),
+        addAccessToken().get(createOldAPI(`news/search?limit=15&key=${this.keyword}`),
           {},
           {
             validateStatus: status => status === 200
@@ -199,7 +199,7 @@
        */
       loadBottom () {
         if(!this.keywordCount) return;
-        addAccessToken().get(createAPI(`news/search?limit=15&key=${this.keyword}&max_id=${this.max_id}`),
+        addAccessToken().get(createOldAPI(`news/search?limit=15&key=${this.keyword}&max_id=${this.max_id}`),
           {},
           {
             validateStatus: status => status === 200
