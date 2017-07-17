@@ -141,7 +141,7 @@
 </style>
 <script>
   import Feed from '../../components/Feed';
-  import { createAPI, createOldAPI addAccessToken } from '../../utils/request';
+  import { createAPI, createOldAPI, addAccessToken } from '../../utils/request';
   import { changeUrl, goTo } from '../../utils/changeUrl';
   import BackIcon from '../../icons/Back';
   import PlusIcon from '../../icons/Plus';
@@ -259,13 +259,13 @@
       bgImage () {
         const { cover: { id = 0 }  = {} } = this.channelInfo;
         if( !id ) return '';
-        let cover = buildUrl(createAPI(`files/${id}`), {w: 100, h: 100});
+        let cover = buildUrl(createOldAPI(`files/${id}`), {w: 100, h: 100});
         return `background: url(${cover});background-size:cover;filter:blur(50px);`;
       },
       avatar () {
         const { cover: { id = 0 }  = {} } = this.channelInfo;
         if(!id) return '';
-        return buildUrl(createAPI(`files/${id}`), {w: 100, h: 100});
+        return buildUrl(createOldAPI(`files/${id}`), {w: 100, h: 100});
       }
     },
     components: {

@@ -519,10 +519,10 @@
       friendNum,
       goBack() {
         if(window.history.length < 2) {
-          this.$route.push('/news');
+          this.$router.push('/news');
           return;
         }
-        this.$route.back();
+        this.$router.back();
       },
       menu() {
         let header = document.getElementById('feed-header');

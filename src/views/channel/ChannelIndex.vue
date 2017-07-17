@@ -159,7 +159,7 @@
 </style>
 
 <script>
-  import { createAPI, addAccessToken } from '../../utils/request';
+  import { createAPI, addAccessToken, createOldAPI } from '../../utils/request';
   import { changeUrl, goTo } from '../../utils/changeUrl';
   import BackIcon from '../../icons/Back';
   import buildUrl from 'axios/lib/helpers/buildURL';
@@ -195,7 +195,7 @@
        */
       handleSubscrible (index) {
         let element = this.allChannel[index];
-        addAccessToken().post(createAPI(`channels/${element.id}/follow`), {},
+        addAccessToken().post(createOldAPI(`channels/${element.id}/follow`), {},
           {
             validateStatus: status => status === 201
           }
@@ -214,7 +214,7 @@
        */
       handleUnSubscribleInAll (index) {
         let element = this.allChannel[index];
-        addAccessToken().delete(createAPI(`channels/${element.id}/follow`), {},
+        addAccessToken().delete(createOldAPI(`channels/${element.id}/follow`), {},
           {
             validateStatus: status => status === 204
           }
@@ -239,7 +239,7 @@
        */
       handleUnSubscrible (index) {
         let element = this.myChannel[index];
-        addAccessToken().delete(createAPI(`channels/${element.id}/follow`), {},
+        addAccessToken().delete(createOldAPI(`channels/${element.id}/follow`), {},
           {
             validateStatus: status => status === 204
           }
@@ -260,7 +260,7 @@
     },
     created () {
       // 获取全部频道
-      addAccessToken().get(createAPI('channels'), 
+      addAccessToken().get(createOldAPI('channels'), 
         {}, 
         {
           validateStatus: status => status === 200
@@ -277,7 +277,7 @@
       });
 
       // 获取我关注的频道
-      addAccessToken().get(createAPI('channels/my'),
+      addAccessToken().get(createOldAPI('channels/my'),
         {},
         {
           validateStatus: status => status === 200
