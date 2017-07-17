@@ -3,7 +3,7 @@
 namespace Zhiyi\Component\ZhiyiPlus\PlusComponentH5\Controllers;
 
 use Zhiyi\Plus\Http\Controllers\Controller;
-// use Zhiyi\Component\ZhiyiPlus\PlusComponentIm\Repository\ImServe as ImServeRepsitory;
+use Zhiyi\Component\ZhiyiPlus\PlusComponentIm\Repository\ImServe as ImServeRepsitory;
 
 class HomeController extends Controller
 {
@@ -14,8 +14,8 @@ class HomeController extends Controller
      * @return mixed
      * @author Seven Du <shiweidu@outlook.com>
      */
-    // public function index(ImServeRepsitory $repository)
-    public function index()
+    public function index(ImServeRepsitory $repository)
+    // public function index()
     {
         return view('plus:h5::index', [
             'base_url'   => url('/'),
