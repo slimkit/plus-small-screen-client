@@ -238,7 +238,7 @@
           } else { // 已付费
             return {
               paid: true,
-              url: buildURL(createAPI(`files/${storage.file}`), {w: 200, h: 200});
+              url: buildURL(createAPI(`files/${storage.file}`), {w: 200, h: 200})
             };
           }
         });
