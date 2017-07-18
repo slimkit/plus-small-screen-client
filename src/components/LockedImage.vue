@@ -1,21 +1,21 @@
 <template>
-	<div :class="{!single: $style.locked, single: $style.singleLocked}">
-		<section v-if="square" :class="$style.square">
+	<div :class="{ locked: !single , singleLocked: single }">
+		<section v-if="square" class="square">
 			<img :src="defaultImage">
 			<div>
-				<LockIcon :height="32" :width="32" :color="#fff" />
+				<LockIcon height="24" width="24" color="#fff" />
 			</div>
 		</section>
-		<section v-else :class="$style.notSquare">
+		<section v-else class="notSquare">
 			<img :src="defaultImage" alt="">
 			<div>
-				<LockIcon :height="32" :width="32" :color="#fff" />
+				<LockIcon height="24" width="24" color="#fff" />
 			</div>
 		</section>
 	</div>
 </template>
 
-<style lang="less" module>
+<style lang="less" scoped>
   .singleLocked {
     img {
       width: 100%;
