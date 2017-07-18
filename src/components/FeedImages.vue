@@ -231,7 +231,7 @@
       imageObject() {
         let storages = this.storages;
         return storages.map( (storage) => {
-          if(storage.paid_node && !paid) { // 未付费
+          if(storage.paid_node && !storage.paid) { // 未付费
             return {
               paid: false
             };
