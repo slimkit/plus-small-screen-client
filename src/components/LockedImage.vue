@@ -1,5 +1,5 @@
 <template>
-	<div :class="[!single: $style.locked, single: $style.singleLocked]">
+	<div :class="{!single: $style.locked, single: $style.singleLocked}">
 		<section v-if="square" :class="$style.square">
 			<img :src="defaultImage">
 			<div>
