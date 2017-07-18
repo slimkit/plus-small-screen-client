@@ -1,24 +1,30 @@
 <template>
-	<div :class="$style.locked">
+	<div :class="[!single: $style.locked, single: $style.singleLocked]">
 		<section v-if="square" :class="$style.square">
 			<img :src="defaultImage">
 			<div>
-				<LockIcon height="32" width="32" color="#fff" />
+				<LockIcon :height="32" :width="32" :color="#fff" />
 			</div>
 		</section>
 		<section v-else :class="$style.notSquare">
 			<img :src="defaultImage" alt="">
 			<div>
-				<LockIcon height="32" width="32" color="#fff" />
+				<LockIcon :height="32" :width="32" :color="#fff" />
 			</div>
 		</section>
 	</div>
 </template>
 
 <style lang="less" module>
+  .singleLocked {
+    img {
+      width: 100%;
+      display: block;
+    }
+  }
   .locked{
-    position: absolute;s
-    left: 0;
+    position: absolute;
+    left: 2px;
     right: 0;
     top: 0;
     bottom: 0;
@@ -67,7 +73,11 @@
 			square: {
 				type: Boolean,
 				default: false
-			}
+			},
+      single: {
+        type: Boolean,
+        default: false
+      }
 		},
 		computed: {
 			defaultImage () {
