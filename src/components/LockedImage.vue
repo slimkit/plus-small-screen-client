@@ -19,6 +19,8 @@
   .singleLocked {
     .notSquare {
       position: relative;
+      overflow: hidden;
+      max-height: 80vw;
       div {
         position: absolute;
         left: 0;
