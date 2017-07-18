@@ -1,5 +1,5 @@
 <template>
-	<div :class="{ locked: !single , singleLocked: single }">
+	<div :class="{ locked: !single , singleLocked: single }" @click.stop="showBy();">
 		<section v-if="square" class="square">
 			<img :src="defaultImage">
 			<div>
@@ -112,7 +112,13 @@
 			defaultImage () {
 				return this.square ? squareImage : image;
 			}
-		}
+		},
+    methods: {
+      showBy() {
+        alert('By First');
+        return;
+      }
+    }
 	};
 
 	export default LockedImage;
