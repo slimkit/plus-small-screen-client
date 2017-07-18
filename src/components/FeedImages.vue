@@ -183,10 +183,10 @@
       imageObject() {
         let storages = this.storages;
         return storages.map( (storage) => {
-          return buildURL(createAPI(`files/${storage.file}`), {
-            w: 200,
-            h: 200
-          })
+          console.log(storage);
+          return { 
+            url: buildURL(createAPI(`files/${storage.file}`), {w: 200, h: 200}),
+          }
         });
       }
     },
