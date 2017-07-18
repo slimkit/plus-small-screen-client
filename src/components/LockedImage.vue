@@ -58,7 +58,7 @@
 		props: {
 			// 是否是正方形
 			square: {
-				type: boolean,
+				type: Boolean,
 				default: false
 			}
 		},
