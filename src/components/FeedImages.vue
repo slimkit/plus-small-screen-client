@@ -193,11 +193,11 @@
         <LockedImage v-else/>
       </div>
       <div style="width: 33.3333%;" :class="$style.showImgBox">
-        <img v-if="imageObject[7].paid" v-if="imageObject[7].paid" :class="$style.perFeedImg" @click.stop="showSwiper(7)"  v-lazy="imageObject[7].url" />
+        <img v-if="imageObject[7].paid" :class="$style.perFeedImg" @click.stop="showSwiper(7)"  v-lazy="imageObject[7].url" />
         <LockedImage v-else/>
       </div>
       <div style="width: 33.3333%;" :class="$style.showImgBox">
-        <img v-if="imageObject[8].paid" v-if="imageObject[8].paid" :class="$style.perFeedImg" @click.stop="showSwiper(8)"  v-lazy="imageObject[8].url" />
+        <img v-if="imageObject[8].paid" :class="$style.perFeedImg" @click.stop="showSwiper(8)"  v-lazy="imageObject[8].url" />
         <LockedImage v-else/>
       </div>
     </div>
