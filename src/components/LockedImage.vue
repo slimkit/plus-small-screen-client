@@ -1,47 +1,54 @@
 <template>
-	<div>
+	<div :class="$style.locked">
 		<section v-if="square" :class="$style.square">
 			<img :src="defaultImage">
 			<div>
-				<LockIcon/>
+				<LockIcon height="32" width="32" color="#fff" />
 			</div>
 		</section>
 		<section v-else :class="$style.notSquare">
 			<img :src="defaultImage" alt="">
 			<div>
-				<LockIcon/>
+				<LockIcon height="32" width="32" color="#fff" />
 			</div>
 		</section>
 	</div>
 </template>
 
 <style lang="less" module>
-	.square {
-		position: relative;
-		div {
-			position: absolute;
-			left: 0;
-			right: 0;
-			bottom: 0;
-			top: 0;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-		}
-	}
-	.notSquare {
-		position: relative;
-		div {
-			position: absolute;
-			left: 0;
-			right: 0;
-			bottom: 0;
-			top: 0;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-		}
-	}
+  .locked{
+    position: absolute;s
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    .square {
+      position: relative;
+      div {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        top: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+    .notSquare {
+      position: relative;
+      div {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        top: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+  }
 </style>
 
 <script>
