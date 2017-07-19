@@ -346,7 +346,7 @@
             {
               url: buildURL(createAPI(`files/${value.file}`)),
               width: window.innerWidth,
-              height: window.innerWidth * (size[1] / size[0])
+              height: window.innerWidth * (size[1] / size[0]),
               paid: (value.paid_node && !value.paid) ? false : true
             }
           );
