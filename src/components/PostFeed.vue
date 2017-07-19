@@ -192,8 +192,9 @@ const postFeed = {
           });
         })
       })
-      .catch( error => {
-        console.log(error);
+      .catch( ({ response: { data = {} } = {} }) => {
+        console.log(data);
+        this.loading = false;
         this.$store.dispatch(NOTICE, cb => {
           cb({
             text: '发送失败',
