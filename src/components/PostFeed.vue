@@ -192,7 +192,8 @@ const postFeed = {
           });
         })
       })
-      .catch( ({ data = {} } ) => {
+      .catch( ({ response: { data = {} } = {} } = error ) => {
+        console.log(error.response);
         console.log(data);
         this.loading = false;
         this.$store.dispatch(NOTICE, cb => {
