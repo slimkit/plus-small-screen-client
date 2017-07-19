@@ -192,6 +192,16 @@ const postFeed = {
           });
         })
       })
+      .catch( error => {
+        console.log(error);
+        this.$store.dispatch(NOTICE, cb => {
+          cb({
+            text: '发送失败',
+            time: 1500,
+            status: true
+          });
+        });
+      })
     },
     closePost () {
       // this.feedTitle = '';
