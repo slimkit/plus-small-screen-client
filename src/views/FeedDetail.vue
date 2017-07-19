@@ -860,12 +860,13 @@
   } 
   .feed-container-content { 
     .feed-container-content-images {
-      div {
+      &>div {
         display: flex;
         justify-content: center;
         align-items: center;
         margin-bottom: 5px;
         width: 100%;
+        height: 100%;
         img[lazy='loading'] 
         {
           width: 100%
