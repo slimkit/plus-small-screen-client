@@ -41,6 +41,8 @@
     
   }
   .locked{
+    height: 100%;
+    width: 100%;
     .square {
       position: relative;
       img {
@@ -61,6 +63,8 @@
       }
     }
     .notSquare {
+      height: 100%;
+      width: 100%;
       position: relative;
       height: 100%;
       img {
