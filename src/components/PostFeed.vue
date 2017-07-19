@@ -44,7 +44,7 @@
               </template>
               <template v-else>
                 <i-circle v-if="item.showProgress" :percent="item.percentage">
-                  <span class="demo-i-circle-inner" style="font-size:24px">{{item.percentage}}%</span>
+                  <span class="demo-i-circle-inner" style="font-size:24px">{{parseInt(item.percentage)}}%</span>
                 </i-circle>
               </template>
             </div>
