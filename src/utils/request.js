@@ -46,59 +46,6 @@ axios.interceptors.response.use(
   function(response) {
     //对响应数据做些事
     return response;
-  },
-  function(error) {
-    console.log(error);
-    return;
-    //请求时发生用户认证失败的情况，直接跳转到登录页
-    let errorResponse = error.response;
-    if (errorResponse.data.code === cutDownCode) {
-      let notice = {
-          show: true,
-          time: 1500,
-          status: false,
-          text: '登录信息失效，请重新登录'
-        }
-        // 关闭发布弹出层
-      app.$store.dispatch(SHOWPOST, cb => {
-        cb({
-          show: false
-        });
-      });
-      app.$store.dispatch(SHOWFEEDDIGGSLISTS, cb => {
-        cb({
-          show: false,
-          diggs: {}
-        });
-      });
-      // 跳转登录
-      let redirect = app.$route.path;
-      localEvent.setLocalItem('UserLoginInfo', {});
-      app.$store.dispatch(NOTICE, cb => {
-        cb(notice);
-      });
-      setTimeout(() => {
-        app.$router.push({
-          path: '/login',
-          query: {
-            redirect: redirect
-          }
-        });
-      }, 1500);
-    } else if (promiseCode.indexOf(errorResponse.data.code) !== -1) {
-      return Promise.reject(error);
-    } else {
-      let notice = {
-        show: true,
-        time: 1500,
-        status: false,
-        text: errorCodes[errorResponse.data.code]
-      }
-      app.$store.dispatch(NOTICE, cb => {
-        cb(notice);
-      });
-      return false;
-    }
   }
 );
 

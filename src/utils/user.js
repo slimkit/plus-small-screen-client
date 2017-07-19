@@ -274,7 +274,6 @@ function getUsersInfo(user_ids, cb) {
         .then(({
           data = []
         } = {}) => {
-          console.log(data);
           let users_service = data;
           users_service.forEach(user => {
             let userLocal = {

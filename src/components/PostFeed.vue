@@ -52,6 +52,7 @@
               ref="upload"
               :show-upload-list="false"
               :on-success="handleSuccess"
+              :on-error="handleError"
               :format="format"
               :max-size="maxSize"
               :on-format-error="handleFormatError"
@@ -192,15 +193,14 @@ const postFeed = {
           });
         })
       })
-      .catch( ({ response: { data = {} } = {} } = error ) => {
-        console.log(error.response);
-        console.log(data);
+      .catch( ({ response: { data: { message = [] } = {} } = {} }) => {
+        let msg = message[0] ? message[0] : '发送失败';
         this.loading = false;
         this.$store.dispatch(NOTICE, cb => {
           cb({
-            text: '发送失败',
+            text: msg,
             time: 1500,
-            status: true
+            status: false
           });
         });
       })
@@ -226,6 +226,11 @@ const postFeed = {
         this.visible = true;
     },
 
+    handleError (error, file, fileList) {
+      console.log(error);
+      console.log(file);
+      console.log(fileList);
+    },
     handleRemove (index) {
       // 从 upload 实例删除数据
       let fileName = this.$refs.upload.fileList[index].name;
@@ -283,40 +288,6 @@ const postFeed = {
           });
       }
       return check;
-      // const _file_format = file.name.split('.').pop().toLocaleLowerCase();
-      // const checked = this.format.some(item => item.toLocaleLowerCase() === _file_format);
-      // this.listCount += 1;
-      // // 判断图片类型
-      // if(!checked) {
-      //   this.handleFormatError(file.name);
-      //   return false;
-      // }
-      // // 判断图片大小
-      // if(file.size > this.maxSize * 1024) {
-      //   this.handleMaxSize(file.name);
-      //   return false;
-      // }
-      // // 判断上传个数
-      // const check = this.listCount < 10;
-      // if(!check) {
-      //   this.handleMaxItems();
-      //   return false;
-      // }
-      // return new Promise( (resolve, reject) => {
-      //   this.formateUploadFile(file).then( data => {
-      //     let newFile = {};
-      //     newFile.taskId = data.taskId;
-      //     newFile.url = data.url;
-      //     this.ids = { ...this.ids, [file.name]: newFile };
-      //     newFile = {};
-      //     let formateFile = dataURItoBlob(data.url);
-      //     if(data.status) {
-      //       resolve(formateFile);
-      //     } else {
-      //       return false;
-      //     }
-      //   });
-      // })
     },
   },
   updated () {
