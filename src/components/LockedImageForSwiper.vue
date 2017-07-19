@@ -41,11 +41,6 @@
     
   }
   .locked{
-    position: absolute;
-    left: 2px;
-    right: 0;
-    top: 0;
-    bottom: 0;
     .square {
       position: relative;
       div {
@@ -93,7 +88,7 @@
 	const squareImage = resolveImage(require('../statics/images/pic_locked_square_bg.png'));
 	const image = resolveImage(require('../statics/images/pic_locked_bg.png'));
 	
-	const LockedImage = {
+	const LockedImageForSwiper = {
 		components: {
 			LockIcon
 		},
@@ -115,5 +110,5 @@
 		}
 	};
 
-	export default LockedImage;
+	export default LockedImageForSwiper;
 </script>

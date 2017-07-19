@@ -13,7 +13,7 @@
           <div class="swiper-lazy-preloader"></div>
         </div>
         <div class="swiper-container" v-else>
-          <LockedImage />
+          <LockedImageForSwiper />
         </div>
       </swiper-slide>
       <div v-if="list.length > 1" class="swiper-pagination swiper-pagination-bullets" slot="pagination"></div>
@@ -25,13 +25,13 @@
   import { swiper, swiperSlide } from 'vue-awesome-swiper'
   import { mapState } from 'vuex';
   import { IMGSWIPER } from '../stores/types';
-  import LockedImage from './LockedImage';
+  import LockedImageForSwiper from './LockedImageForSwiper';
 
   const imageSwiper = {
     components: {
       swiper,
       swiperSlide,
-      LockedImage
+      LockedImageForSwiper
     },
     computed: {
       ...mapState({
