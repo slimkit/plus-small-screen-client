@@ -9,7 +9,7 @@
     >
       <swiper-slide class="swiperSlide" v-for="(item, index) in list" :key="index">
         <div class="swiper-zoom-container" v-if="item.paid">
-          <img :data-src="item" class="swiper-lazy">
+          <img :data-src="item.url" class="swiper-lazy">
           <div class="swiper-lazy-preloader"></div>
         </div>
         <div class="swiper-container" v-else>
