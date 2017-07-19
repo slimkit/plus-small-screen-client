@@ -21,6 +21,12 @@
       position: relative;
       overflow: hidden;
       max-height: 80vw;
+      img {
+        width: 100%;
+        display: block;
+        height: 100%;
+        object-fit: cover;
+      }
       div {
         position: absolute;
         left: 0;
@@ -30,12 +36,6 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        img {
-          width: 100%;
-          display: block;
-          height: 100%;
-          object-fit: cover;
-        }
       }
     }
     
@@ -48,6 +48,11 @@
     bottom: 0;
     .square {
       position: relative;
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
       div {
         position: absolute;
         left: 0;
@@ -57,16 +62,16 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-        }
       }
     }
     .notSquare {
       position: relative;
       height: 100%;
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
       div {
         position: absolute;
         left: 0;
@@ -76,11 +81,6 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-        }
       }
     }
   }
