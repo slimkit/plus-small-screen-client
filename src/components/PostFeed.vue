@@ -192,7 +192,7 @@ const postFeed = {
           });
         })
       })
-      .catch( ({ response: { data = {} } = {} }) => {
+      .catch( ({ data = {} } ) => {
         console.log(data);
         this.loading = false;
         this.$store.dispatch(NOTICE, cb => {
@@ -205,7 +205,6 @@ const postFeed = {
       })
     },
     closePost () {
-      // this.feedTitle = '';
       this.feedContent = '';
       this.isatuser = 0;
       this.storage_task_ids = [];
