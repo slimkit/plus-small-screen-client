@@ -1,7 +1,7 @@
 <template>
   <section style="width: 68vw; position: relative; margin-bottom: 8px; display: inherit">
-    <img :style="`width: 100%; height: ${imageHeight}; object-fit: cover; max-height: 80vw;`" v-if="imageSize == 1 && imageObject[0].paid" @click.stop="showSwiper(0)"  v-lazy="imageObject[0].url" />
-    <LockedImage :single="true" v-if="imageSize==1 && !imageObject[0].paid"/>
+    <img :style="`width: 100%; height: ${imageHeight}; object-fit: cover; max-height: 80vw;`" v-if="imageSize == 1 && imageObject[0].paid" @click.native="showSwiper(0)"  v-lazy="imageObject[0].url" />
+    <LockedImage :single="true" v-if="imageSize==1 && !imageObject[0].paid" @click.stop="showSwiper(0)"/>
     <div style="width: 100%; display: flex;" v-if="imageSize == 2">
       <div style="width: 34vw;" :class="$style.showImgBox">
         <img v-if="imageObject[0].paid" :class="$style.perFeedImg" @click.stop="showSwiper(0)"  v-lazy="imageObject[0].url" />
@@ -65,7 +65,7 @@
       </div>
       <div style="width: 34vw;" :class="$style.showImgBox">
         <img :class="$style.perFeedImg"  v-if="imageObject[4].paid" @click.stop="showSwiper(4)"  v-lazy="imageObject[4].url" />
-          <LockedImage v-else   @click.stop="showSwiper(4)" />
+        <LockedImage v-else   @click.stop="showSwiper(4)" />
       </div>
     </div>
     <div style="width: 100%; display: flex; flex-wrap: wrap;" v-if="imageSize == 6">
