@@ -249,15 +249,16 @@
       showSwiper (index) {
         let images = [];
         this.imageObject.forEach((storage) => {
-          images.push(storage.replace(/\?.*/, ''));
+          console.log(imageObject);
+          // images.push(storage.replace(/\?.*/, ''));
         });
-        this.$store.dispatch(IMGSWIPER, cb => {
-          cb({
-            list:images,
-            value: index,
-            show: true
-          });
-        });
+        // this.$store.dispatch(IMGSWIPER, cb => {
+        //   cb({
+        //     list:images,
+        //     value: index,
+        //     show: true
+        //   });
+        // });
       }
     }
   }

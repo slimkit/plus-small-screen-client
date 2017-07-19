@@ -8,9 +8,12 @@
       ref="mySwiper"
     >
       <swiper-slide class="swiperSlide" v-for="(item, index) in list" :key="index">
-        <div class="swiper-zoom-container">
+        <div class="swiper-zoom-container" v-if="item.paid">
           <img :data-src="item" class="swiper-lazy">
           <div class="swiper-lazy-preloader"></div>
+        </div>
+        <div class="swiper-container" v-else>
+          <LockedImage />
         </div>
       </swiper-slide>
       <div v-if="list.length > 1" class="swiper-pagination swiper-pagination-bullets" slot="pagination"></div>
@@ -22,11 +25,13 @@
   import { swiper, swiperSlide } from 'vue-awesome-swiper'
   import { mapState } from 'vuex';
   import { IMGSWIPER } from '../stores/types';
+  import LockedImage from './LockedImage';
 
   const imageSwiper = {
     components: {
       swiper,
-      swiperSlide
+      swiperSlide,
+      LockedImage
     },
     computed: {
       ...mapState({
