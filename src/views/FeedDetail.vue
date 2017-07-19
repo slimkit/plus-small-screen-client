@@ -36,7 +36,8 @@
           <div>
             <div v-if="imagesList.length" class="feed-container-content-images">
               <div v-for="(item, index ) in imagesList" :key="index" :style="`height: ${item.height + 'px'}`">
-                <img v-lazy="item.url" />
+                <img v-if="item.paid" v-lazy="item.url" />
+                <LockedImage v-else />
               </div>
             </div>
             <p 
@@ -274,6 +275,7 @@
   import { resolveImage } from '../utils/resource';
   import { changeUrl } from '../utils/changeUrl';
   import getLocalTime from '../utils/getLocalTime';
+  import LockedImage from '../components/LockedImage';
 
   const noCommentImage = resolveImage(require('../statics/images/defaultNothingx2.png'));
 
@@ -288,7 +290,8 @@
       CommentIcon,
       ShareIcon,
       ConnectionIcon,
-      BackIcon
+      BackIcon,
+      LockedImage
     },
     data: () => ({
       scroll: 0,
@@ -344,6 +347,7 @@
               url: buildURL(createAPI(`files/${value.file}`)),
               width: window.innerWidth,
               height: window.innerWidth * (size[1] / size[0])
+              paid: (value.paid_node && !value.paid) ? false : true
             }
           );
         });
