@@ -37,7 +37,7 @@
             <div v-if="imagesList.length" class="feed-container-content-images">
               <div v-for="(item, index ) in imagesList" :key="index" :style="`height: ${item.height + 'px'}`">
                 <img v-if="item.paid" v-lazy="item.url" />
-                <LockedImage v-else />
+                <LockedImageForSwiper v-else />
               </div>
             </div>
             <p 
@@ -275,7 +275,7 @@
   import { resolveImage } from '../utils/resource';
   import { changeUrl } from '../utils/changeUrl';
   import getLocalTime from '../utils/getLocalTime';
-  import LockedImage from '../components/LockedImage';
+  import LockedImageForSwiper from '../components/LockedImageForSwiper';
 
   const noCommentImage = resolveImage(require('../statics/images/defaultNothingx2.png'));
 
@@ -291,7 +291,7 @@
       ShareIcon,
       ConnectionIcon,
       BackIcon,
-      LockedImage
+      LockedImageForSwiper
     },
     data: () => ({
       scroll: 0,
