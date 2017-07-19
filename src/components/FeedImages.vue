@@ -248,17 +248,17 @@
       // 展示走马灯
       showSwiper (index) {
         let images = [];
-        this.imageObject.forEach((storage) => {
-          console.log(imageObject);
-          // images.push(storage.replace(/\?.*/, ''));
-        });
-        // this.$store.dispatch(IMGSWIPER, cb => {
-        //   cb({
-        //     list:images,
-        //     value: index,
-        //     show: true
-        //   });
+        // this.imageObject.forEach((storage) => {
+        //   console.log(this.imageObject);
+        //   images.push(storage);
         // });
+        this.$store.dispatch(IMGSWIPER, cb => {
+          cb({
+            list:this.imageObject,
+            value: index,
+            show: true
+          });
+        });
       }
     }
   }
