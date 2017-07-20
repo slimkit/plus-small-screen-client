@@ -31,7 +31,7 @@
         </section>
         <figure 
           :class="$style.detailFeedContent"
-          @click.stop="toFeedDetail(`/feed/${feed.id}`)"
+          @click.stop="toFeedDetail(feed.id)"
         >
           <p 
             :class="$style.detailContent" 
@@ -92,6 +92,7 @@
               status: false
             });
           });
+          return;
         }
         changeUrl(`feed/${id}`);
       },
