@@ -31,7 +31,7 @@
         </section>
         <figure 
           :class="$style.detailFeedContent"
-          @click.stop="changeUrl(`/feed/${feed.id}`)"
+          @click.stop="toFeedDetail(`/feed/${feed.id}`)"
         >
           <p 
             :class="$style.detailContent" 
@@ -72,6 +72,7 @@
   import lodash from 'lodash';
   import { changeUrl } from '../utils/changeUrl';
   import { mapState } from 'vuex';
+  import { NOTICE } from '../stores/types';
 
   const feedinfo = {
     props: [
@@ -82,6 +83,18 @@
     }),
     methods: {
       changeUrl,
+      toFeedDetail(id) {
+        if(this.feed.paid_node && !this.feed.paid_node.paid) {
+          this.$store.dispatch(NOTICE, cb => {
+            cb({
+              text: '请先购买动态',
+              time: 1500,
+              status: false
+            });
+          });
+        }
+        changeUrl(`feed/${id}`);
+      },
       timers,
       router (link) {
         router.push(link);
