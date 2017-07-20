@@ -125,20 +125,18 @@ function getLoggedUserInfo() {
           };
         });
         userLocal.datas = newData;
+
         let dataForBase = {};
-        // getAvatar(userLocal, 30, newUserLocal => {
-        //   userLocal = newUserLocal;
-        //   dataForBase = newUserLocal;
-        // });
-        if (!userLocal.avatar) {
-          userLocal.avatar = defaultAvatar;
-        }
-        if (newData.avatar) {
-          userLocal.avatar = buildURL(createAPI(`files/${newData.avatar.value}`), {
+        let avatar = defaultAvatar;
+        if (newData.avatar && !userLocal.avatar) {
+          avatar = buildURL(createAPI(`files/${newData.avatar.value}`), {
             w: 200,
             h: 200
           });
         }
+
+        userLocal.avatar = userLocal.avatar ? userLocal.avatar : avatar;
+
         dataForBase = {
           ...userLocal
         };
@@ -222,15 +220,17 @@ function getUserInfo(user_id) {
         });
         userLocal.datas = newData;
         let dataForBase = {};
-        if (!userLocal.avatar) {
-          userLocal.avatar = defaultAvatar;
-        }
-        if (newData.avatar) {
+
+        let avatar = defaultAvatar;
+
+        if (newData.avatar && !userLocal.avatar) {
           userLocal.avatar = buildURL(createAPI(`files/${newData.avatar.value}`), {
             w: 200,
             h: 200
           });
         }
+
+        userLocal.avatar = userLocal.avatar ? userLocal.avatar : avatar;
         dataForBase = {
           ...userLocal
         };
@@ -317,15 +317,16 @@ function getUsersInfo(user_ids, cb) {
                   };
                 });
                 current_local_user.datas = newData;
-                if (newData.avatar) {
-                  current_local_user.avatar = buildURL(createAPI(`files/${newData.avatar.value}`), {
+
+                let avatar = defaultAvatar;
+
+                if (newData.avatar && !current_local_user.avatar) {
+                  avatar = buildURL(createAPI(`files/${newData.avatar.value}`), {
                     w: 200,
                     h: 200
                   });
                 }
-              }
-              if (!current_local_user.avatar) {
-                current_local_user.avatar = defaultAvatar;
+                current_local_user.avatar = current_local_user.avatar ? current_local_user.avatar : avatar;
               }
               localEvent.setLocalItem('user_' + current_local_user.user_id, current_local_user);
               let db = window.TS_WEB.dataBase;
