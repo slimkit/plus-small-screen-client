@@ -570,34 +570,20 @@
         ]
       },
       canSave () {
-        let newName = this.name;
-        let newSex = this.sex;
-        let newIntro = this.intro;
-        let newProvince = this.areaAbout.province;
-        let newCity = this.areaAbout.city;
-        let newLocation = this.areaAbout.location;
-
-        let oldProvince = this.province;
-        let oldCity = this.city;
-        let oldLocation = this.location;
-        let oldName = this.userInfo.name;
         const { datas: { sex: { value: sex = 0 } = {} } = {} } = this.userInfo;
-        let oldSex = sex;
         const { datas: { intro: { value:  intro = '' } = {} } = {} } = this.userInfo;
-        let oldIntro =  intro;
-        let changeName = (newName != oldName) && usernameReg.test(newName) && newName.length > 2 && newName.length < 13;
-        let changeSex = newSex != oldSex && newSex != 0;
-        let changeIntro = newIntro != oldIntro && newIntro != '';
-        let changeAvatar = this.storage_task_id != 0;
-        let changeProvince = newProvince != oldProvince && newProvince != 0;
-        let changeCity = newCity != oldCity && newCity != 0;
-        let changeLocation = newLocation != oldLocation && newLocation != '';
-        return (changeName || changeSex || changeIntro || changeAvatar || changeProvince || changeCity || changeLocation);
+        
+        let changeName = (this.name != this.userInfo.name) && usernameReg.test(this.name) && this.name.length > 2 && this.name.length < 13;
+        let changeSex = this.sex != sex && this.sex != 0;
+        let changeIntro = this.intro != intro && this.intro != '';
+        let changeProvince = this.areaAbout.province != this.province && this.areaAbout.province != 0;
+        let changeCity = this.areaAbout.city != this.city && this.areaAbout.city != 0;
+        let changeLocation = this.areaAbout.location != this.location && this.areaAbout.location != '';
+        return (changeName || changeSex || changeIntro || changeProvince || changeCity || changeLocation);
       }
     },
     mounted () {
-      let currentUser = localEvent.getLocalItem('UserLoginInfo');
-      this.currentUser = currentUser.user_id;
+      this.currentUser = TS_WEB.currentUserId
       getUserInfo(this.currentUser).then(user => {
         this.userInfo = { ...this.userInfo, ...user };
         this.name = user.name;
