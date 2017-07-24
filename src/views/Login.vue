@@ -208,8 +208,8 @@
         let device_code = detecdOS();
         this.isLoading = true;
         this.isDisabled = true;
-        addAccessToken().post(createAPI('login'), {
-            phone,
+        addAccessToken().post(createAPI('tokens'), {
+            login: phone,
             password,
             device_code
           },
@@ -227,7 +227,7 @@
 
           // 获取当前用户的信息
           getLoggedUserInfo().then(user => {
-            localEvent.setLocalItem(`user_${data.user_id}`, user);
+            // localEvent.setLocalItem(`user_${data.user_id}`, user);
             this.$store.dispatch(USERS_APPEND, cb =>{
               cb(user)
             });

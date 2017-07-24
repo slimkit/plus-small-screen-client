@@ -220,7 +220,7 @@
   import { changeUrl, goTo } from '../utils/changeUrl';
   import { createAPI, addAccessToken, createOldAPI } from '../utils/request';
   import localEvent from '../stores/localStorage';
-  import { getUserInfo } from '../utils/user';
+  import { getLoggedUserInfo } from '../utils/user';
   import VueCropper from 'vue-cropperjs';
   import { NOTICE } from '../stores/types';
   import md5 from 'js-md5';
@@ -360,7 +360,7 @@
           }
         )
         .then(response => {
-          getUserInfo(this.currentUser).then(user => {
+          getLoggedUserInfo().then(user => {
             this.userInfo = { ...this.userInfo, ...user };
           });
           this.$store.dispatch(NOTICE, cb => {
@@ -439,7 +439,7 @@
         addAccessToken().post(createAPI('user/avatar'),
           formdata,
           {
-            validateStatus: status => status === 201
+            validateStatus: status => status === 204
           }
         )
         .then( ({ data = {} }) => {
@@ -447,7 +447,7 @@
           this.userInfo.avatar = buildURL(createAPI(`users/${TS_WEB.currentUserId}/avatar?s=200`));
           this.$store.dispatch(NOTICE, cb => {
             cb({
-              text: '头像上传成功,请保存更改',
+              text: '头像上传成功',
               time: 2500,
               status: true
             });
@@ -584,7 +584,7 @@
     },
     mounted () {
       this.currentUser = TS_WEB.currentUserId
-      getUserInfo(this.currentUser).then(user => {
+      getLoggedUserInfo().then(user => {
         this.userInfo = { ...this.userInfo, ...user };
         this.name = user.name;
         const { datas: { 

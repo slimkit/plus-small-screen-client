@@ -41,10 +41,10 @@
           </Row>
           <Row :gutter="24" class="bottom-border formChildrenRow">
             <Col span="5">
-              <label for="verify_code" class="loginFormTitle">验证码</label>
+              <label for="verifiable_code" class="loginFormTitle">验证码</label>
             </Col>
             <Col :span="11">
-              <input type="tel"maxlength="6" autocomplete="off" placeholder="输入验证码" v-model.trim.num="verify_code" id="verify_code" name="verify_code" />
+              <input type="tel"maxlength="6" autocomplete="off" placeholder="输入验证码" v-model.trim.num="verifiable_code" id="verifiable_code" name="verifiable_code" />
             </Col>
             <Col class="flexend" span="8">
               <Button 
@@ -106,7 +106,7 @@
   import localEvent from '../stores/localStorage';
   import errorCodes from '../stores/errorCodes';
   import deleteObjectItems from '../utils/deleteObjectItems';
-  import { getUserInfo } from '../utils/user';
+  import { getUserInfo, getLoggedUserInfo} from '../utils/user';
   import { USERS_APPEND, MESSAGENOTICE } from '../stores/types';
   import EyeCloseIcon from '../icons/EyeClose';
   import EyeOpenIcon from '../icons/EyeOpen';
@@ -134,7 +134,7 @@
       phone: '', // 手机号码 
       password: '', // 密码
       username: '', // 昵称
-      verify_code: '', // 手机验证码
+      verifiable_code: '', // 手机验证码
       passwordText: '', // 明文密码
       isDisabled: true, // 提交按钮disabled状态
       isShowClean: false, // 是否显示清除手机号按钮
@@ -226,7 +226,8 @@
       },
       // 注册
       register () {
-        let { username, phone, verify_code, password } = this;
+        let { username, phone, verifiable_code, password } = this;
+        let verifiable_type = 'sms';
         let errors = this.errors;
         // 判断首字符是否为数字
         if(!isNaN(username[0])) {
@@ -249,10 +250,6 @@
           this.errors = { ...errors, phone: '请输入正确的手机号码' };
           return false;
         }
-        // if(!codeReg.test(code)) {
-        //   this.errors = { ...errors, code: '验证码长度为4 - 6位数字' };
-        //   return false;
-        // }
         if(password.length < 6) {
           this.errors = { ...errors, password: '密码长度必须大于6位' };
           return false;
@@ -263,9 +260,10 @@
         addAccessToken().post(createAPI('users'), {
             name: username,
             phone,
-            verify_code,
+            verifiable_code,
             password,
-            device_code
+            device_code,
+            verifiable_type
           },
           {
             validateStatus: status => status === 201
@@ -275,7 +273,8 @@
           window.TS_WEB.currentUserId = data.user_id;
           localEvent.setLocalItem('UserLoginInfo', data);
           this.isLoading = false;
-          getUserInfo(data.user_id, 30).then(user => {
+          getLoggedUserInfo().then(user => {
+            console.log(user);
             this.$store.dispatch(USERS_APPEND, cb =>{
               cb(user)
             });

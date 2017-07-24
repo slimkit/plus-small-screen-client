@@ -125,7 +125,7 @@
   import RightArrowIcon from '../icons/RightArrow';
   import { resolveImage } from '../utils/resource';
   import lodash from 'lodash';
-  import { getUserInfo } from '../utils/user';
+  import { getUserInfo, getLoggedUserInfo } from '../utils/user';
   import { mapState } from 'vuex';
   import { CLEANMESSAGE } from '../stores/types';
 
@@ -183,16 +183,11 @@
       }
     },
     created () {
-      let currentUser = localEvent.getLocalItem('UserLoginInfo');
-      this.currentUser = currentUser.user_id;
-      let userInfo = localEvent.getLocalItem(`user_${this.currentUser}`);
-      if(!lodash.keys(userInfo).length) {
-        getUserInfo(this.currentUser, 30).then( user => {
-          this.userInfo = { ...this.userInfo, ...user };
-        })
-      } else {
-        this.userInfo = { ...this.userInfo, ...userInfo };
-      }
+      this.currentUser = TS_WEB.currentUserId;
+      getLoggedUserInfo().then( user => {
+        console.log(user);
+        this.userInfo = { ...this.userInfo, ...user };
+      });
     }
   };
   export default profile;

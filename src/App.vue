@@ -25,7 +25,7 @@
   import { createAPI, addAccessToken, createOldAPI } from './utils/request';
   import errorCodes from './stores/errorCodes';
   import { connect } from './utils/webSocket';
-  import { getUserInfo, getLocalDbUser } from './utils/user';
+  import { getUserInfo, getLocalDbUser, getLoggedUserInfo } from './utils/user';
   import { IMSTATUS, USERS_APPEND, MESSAGENOTICE, MESSAGEROOMS } from './stores/types';
 
   // indexedDB
@@ -79,12 +79,12 @@
       let currentUser = localEvent.getLocalItem('UserLoginInfo');
 
       if(lodash.keys(currentUser).length > 0) {
-        window.TS_WEB.currentUserId = currentUser.user_id;
         // 提交用户到vuex
         window.TS_WEB.dataBase.transaction('rw?', window.TS_WEB.dataBase.userbase, () => {
           window.TS_WEB.dataBase.userbase.where('user_id').equals(currentUser.user_id).first().then( user => {
             if(user === undefined) {
-              getUserInfo(currentUser.user_id).then( serverUser => {
+              getLoggedUserInfo().then( serverUser => {
+                console.log(serverUser);
                 this.$store.dispatch(USERS_APPEND, cb =>{
                   cb(serverUser)
                 });

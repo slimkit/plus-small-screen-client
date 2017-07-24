@@ -110,13 +110,13 @@
             }
             img {
               object-fit: cover;
-              width: calc(~'100% - 24px');
+              width: 100%;
               position: absolute;
               top: 0;
               left: 12px;
               right: 12px;
               bottom: 0;
-              height: 100;
+              height: 100%;
             }
           }
           .channelIntro {
