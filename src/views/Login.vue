@@ -84,6 +84,7 @@
   import localEvent from '../stores/localStorage';
   import router from '../routers/index';
   import detecdOS from '../utils/detecdOS';
+  import errorTips from '../utils/errorTips';
   import errorCodes from '../stores/errorCodes';
   import deleteObjectItems from '../utils/deleteObjectItems';
   import { getUserInfo, getLocalDbUser, getLoggedUserInfo } from '../utils/user';
@@ -163,7 +164,17 @@
     },
     computed: {
       error: function () {
+
+        //判断信息合法性
+        if( this.phone !== '' && !this.isValidPhone ) {
+          this.errors = { ...this.errors, phone: '请输入正确的手机号码' };
+        }
+        if( this.password !== '' && !this.isValidPassword ) {
+          this.errors = { ...this.errors, password: '密码长度必须大于6位' };
+        }
+
         let errors = lodash.values(this.errors);
+
         return errors[0] || '';
       }
     },
@@ -192,15 +203,7 @@
         }
       },
       submit () {
-        //判断信息合法性
-        if(!this.isValidPhone) {
-          this.errors = { ...this.errors, phone: '请输入正确的手机号码' };
-          return false;
-        }
-        if(!this.isValidPassword ) {
-          this.errors = { ...this.errors, password: '密码长度必须大于6位' };
-          return false;
-        }
+        if (!this.isValidPassword || !this.isValidPhone) return;
         // 跳转信息
         let redirect = this.$route.query.redirect ? this.$route.query.redirect : 'feeds';
         let { phone, password } = this;
@@ -218,18 +221,22 @@
           }
         )
         .then(response => {
-
           this.errors = {};
           let data = response.data;
-          localEvent.setLocalItem('UserLoginInfo', data);
 
-          window.TS_WEB.currentUserId = data.user_id;
+          // 本地存储 登陆信息
+          let localLoginInfo = {
+            token: data.token,
+            user_id: data.user.id
+          };
+
+          localEvent.setLocalItem('UserLoginInfo', localLoginInfo);
+
+          window.TS_WEB.currentUserId = data.user.id;
 
           // 获取当前用户的信息
-          getLoggedUserInfo().then(user => {
-            // localEvent.setLocalItem(`user_${data.user_id}`, user);
             this.$store.dispatch(USERS_APPEND, cb =>{
-              cb(user)
+              cb(data.user)
             });
 
             // 设置消息提示查询时间
@@ -379,13 +386,13 @@
             }
             // 跳转到动态页面
             router.push({ path: redirect });
-          });
+          // });
         })
         .catch(({ response: { data = {} } = {} } ) => {
           this.isDisabled = false;
-          const { code = 'xxxx' } = data;
-          this.isLoading = false;
-          this.errors = { ...this.errors, code: errorCodes[code] };
+          this.isLoading = false;    
+          console.log((data.login)[0])     
+          this.errors = { ...this.errors, ...errorTips(data) };
         });
       }
     }

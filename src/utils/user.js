@@ -78,11 +78,16 @@ function getLoggedUserInfo() {
           user_id: 0,
           name: '',
           phone: '',
-          counts: {},
-          datas: {},
           following: 0,
           follower: 0,
-          avatar: ''
+          avatar: '',
+          bg: '',
+          bio: '',
+          email: '',
+          extra: '',
+          location: '',
+          sex: '',
+          wallet: {}
         };
         userLocal.user_id = user.id;
         userLocal.name = user.name;
@@ -90,6 +95,13 @@ function getLoggedUserInfo() {
         userLocal.following = user.following ? 1 : 0;
         userLocal.follower = user.follower ? 1 : 0;
         userLocal.avatar = user.avatar;
+        userLocal.sex = user.sex;
+        userLocal.bg = user.bg;
+        userLocal.bio = user.bio;
+        userLocal.email = user.email;
+        userLocal.extra = user.extra;
+        userLocal.location = user.location;
+        userLocal.wallet = user.wallet;
         if (user.id !== TS_WEB.currentUserId) {
           // 关注和相互关注状态
           db.transaction('rw?', db.relationship, () => {
@@ -107,28 +119,31 @@ function getLoggedUserInfo() {
               // console.log(e);
             });
         }
-        user.counts.map(function(count, index) {
-          let keyName = count.key;
-          let value = parseInt(count.value);
-          userLocal.counts = {...userLocal.counts,
-            [keyName]: value
-          };
-        });
-        let newData = {};
-        user.datas.forEach(data => {
-          newData[data.profile] = {
-            display: data.profile_name,
-            value: data.pivot.user_profile_setting_data,
-            type: data.type,
-            options: data.default_options,
-            updated_at: data.updated_at
-          };
-        });
-        userLocal.datas = newData;
+
+        // let newData = {};
+        // user.datas.forEach(data => {
+        //   newData[data.profile] = {
+        //     display: data.profile_name,
+        //     value: data.pivot.user_profile_setting_data,
+        //     type: data.type,
+        //     options: data.default_options,
+        //     updated_at: data.updated_at
+        //   };
+        // });
+        // userLocal.datas = newData;
 
         let dataForBase = {};
+
         let avatar = defaultAvatar;
-        if (newData.avatar && !userLocal.avatar) {
+
+        // if (newData.avatar && !userLocal.avatar) {
+        //   avatar = buildURL(createAPI(`files/${newData.avatar.value}`), {
+        //     w: 200,
+        //     h: 200
+        //   });
+        // }
+
+        if (!userLocal.avatar) {
           avatar = buildURL(createAPI(`files/${newData.avatar.value}`), {
             w: 200,
             h: 200
@@ -201,34 +216,17 @@ function getUserInfo(user_id) {
               // console.log(e);
             });
         }
-        user.counts.map(function(count, index) {
-          let keyName = count.key;
-          let value = parseInt(count.value);
-          userLocal.counts = {...userLocal.counts,
-            [keyName]: value
-          };
-        });
-        let newData = {};
-        user.datas.forEach(data => {
-          newData[data.profile] = {
-            display: data.profile_name,
-            value: data.pivot.user_profile_setting_data,
-            type: data.type,
-            options: data.default_options,
-            updated_at: data.updated_at
-          };
-        });
-        userLocal.datas = newData;
+        
         let dataForBase = {};
 
         let avatar = defaultAvatar;
 
-        if (newData.avatar && !userLocal.avatar) {
-          userLocal.avatar = buildURL(createAPI(`files/${newData.avatar.value}`), {
-            w: 200,
-            h: 200
-          });
-        }
+        // if (newData.avatar && !userLocal.avatar) {
+        //   userLocal.avatar = buildURL(createAPI(`files/${newData.avatar.value}`), {
+        //     w: 200,
+        //     h: 200
+        //   });
+        // }
 
         userLocal.avatar = userLocal.avatar ? userLocal.avatar : avatar;
         dataForBase = {

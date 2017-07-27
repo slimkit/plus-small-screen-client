@@ -185,7 +185,6 @@
     created () {
       this.currentUser = TS_WEB.currentUserId;
       getLoggedUserInfo().then( user => {
-        console.log(user);
         this.userInfo = { ...this.userInfo, ...user };
       });
     }

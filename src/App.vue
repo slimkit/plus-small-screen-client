@@ -43,6 +43,7 @@
     },
     computed: {
       imStatus () { // im状态监测
+        if(! TS_WEB.socketUrl) return;
         let imstatus = this.$store.getters[IMSTATUS];
         let userLoginInfo = localEvent.getLocalItem('UserLoginInfo');
         if(lodash.keys(userLoginInfo).length && !imstatus.open && TS_WEB.webSocket !== null && TS_WEB.webSocket.readyState != 1 && TS_WEB.readyState != 0) {
@@ -53,6 +54,7 @@
 
     },
     created() {
+      // 创建 DB;
       let db = new Dexie('ThinkSNS');
       db.debug = 'dexie';
       db
@@ -75,7 +77,10 @@
         // 对我的点赞[消息]
         diggslist: "++, user_id, uid, [user_id+uid]"
       });
+
+      // 保存
       window.TS_WEB.dataBase = db;
+
       let currentUser = localEvent.getLocalItem('UserLoginInfo');
 
       if(lodash.keys(currentUser).length > 0) {
