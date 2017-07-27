@@ -166,12 +166,12 @@
       error: function () {
 
         //判断信息合法性
-        if( this.phone !== '' && !this.isValidPhone ) {
-          this.errors = { ...this.errors, phone: '请输入正确的手机号码' };
-        }
-        if( this.password !== '' && !this.isValidPassword ) {
-          this.errors = { ...this.errors, password: '密码长度必须大于6位' };
-        }
+        // if( this.phone !== '' && !this.isValidPhone ) {
+        //   this.errors = { ...this.errors, phone: '请输入正确的手机号码' };
+        // }
+        // if( this.password !== '' && !this.isValidPassword ) {
+        //   this.errors = { ...this.errors, password: '密码长度必须大于6位' };
+        // }
 
         let errors = lodash.values(this.errors);
 
@@ -233,8 +233,26 @@
           localEvent.setLocalItem('UserLoginInfo', localLoginInfo);
 
           window.TS_WEB.currentUserId = data.user.id;
+          let localUser = data.user;
+          localUser.user_id = localUser.id;
+          delete(localUser.id);
+          delete(localUser.created_at);
+          delete(localUser.updated_at);
+          let db = window.TS_WEB.dataBase;
+          // 写入本地用户
+          db.transaction('rw?', db.userbase, () => {
+            db.userbase.where('user_id').equals(parseInt(localUser.user_id)).delete().then(() => {
+              db.userbase.put(
+                localUser
+              );
+            });
+          })
+          .then()
+          .catch(err => {
+            console.log(err.stack || err);
+          });
 
-          // 获取当前用户的信息
+          // 写入vuex
             this.$store.dispatch(USERS_APPEND, cb =>{
               cb(data.user)
             });
@@ -386,12 +404,10 @@
             }
             // 跳转到动态页面
             router.push({ path: redirect });
-          // });
         })
         .catch(({ response: { data = {} } = {} } ) => {
           this.isDisabled = false;
           this.isLoading = false;    
-          console.log((data.login)[0])     
           this.errors = { ...this.errors, ...errorTips(data) };
         });
       }

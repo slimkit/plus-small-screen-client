@@ -28,7 +28,7 @@
           :minlength='1' 
           :maxlength='255'
           :autofocus="true"
-          v-model="commentAbout.comment"
+          v-model="commentAbout.body"
           :placeholder="commentAbout.placeholder"
           v-childfocus
         />
@@ -62,29 +62,29 @@
             >
               {{ getUserName(comment.user_id) }}
             </router-link> 
-            <span v-if="comment.reply_to_user_id" :class="$style.commentContent">
+            <span v-if="comment.reply_user" :class="$style.commentContent">
               回复
             </span>
             <router-link 
-              v-if="comment.reply_to_user_id" 
+              v-if="comment.reply_user" 
               :class="$style.userName" 
-              :to="{ path: `/users/feeds/${comment.reply_to_user_id}` }"
+              :to="{ path: `/users/feeds/${comment.reply_user}` }"
             >
-              {{ getUserName(comment.reply_to_user_id) }}
+              {{ getUserName(comment.reply_user) }}
             </router-link> 
             <span
               v-if="comment.user_id  != currentUser.user_id"
               @click.stop="handleCommentInput(true, comment.user_id)"
               :class="$style.commentContent"
             > 
-             : {{ comment.comment_content }}
+             : {{ comment.body }}
             </span>
             <span
               v-else
               @click.stop="showComfirm(comment.id, feed.id, commentIndex)"
               :class="$style.commentContent"
             > 
-             : {{ comment.comment_content }}
+             : {{ comment.body }}
             </span>
           </p>
         </li>
@@ -139,10 +139,10 @@
     ],
     data: () => ({
       commentAbout: {
-        comment: '',
+        body: '',
         show: false,
         placeholder: '随便说说',
-        reply_to_user_id: 0,
+        reply_user: 0,
         loading: false
       }
     }),
@@ -152,15 +152,15 @@
         let { [user_id]: { name = '' } = {} } = this.users;
         return name;
       },
-      handleCommentInput (open, reply_to_user_id = 0) {
+      handleCommentInput (open, reply_user = 0) {
         if(open){
           this.$store.dispatch(COMMENTINPUT, cb => {
             cb(this.feed.id);
           });
-          this.commentAbout.reply_to_user_id = reply_to_user_id;
+          this.commentAbout.reply_user = reply_user;
         } else {
           this.$store.dispatch(CLOSECOMMENTINPUT);
-          this.commentAbout.reply_to_user_id = 0;
+          this.commentAbout.reply_user = 0;
         }
       },
       handleShowPopup( open ) {
@@ -218,12 +218,11 @@
         if(!this.validComment || this.commentAbout.loading) return;
         this.commentAbout.loading = true;
         let comment_data = {
-          comment_mark: parseInt(TS_WEB.currentUserId + (new Date).getTime()),
-          comment_content: this.commentAbout.comment
+          body: this.commentAbout.body
         };
 
-        if(this.commentAbout.reply_to_user_id) {
-          comment_data.reply_to_user_id = this.commentAbout.reply_to_user_id
+        if(this.commentAbout.reply_user) {
+          comment_data.reply_user = this.commentAbout.reply_user
         }
         //
         addAccessToken().post(createAPI(`feeds/${this.feed.id}/comments`), 
@@ -232,28 +231,30 @@
             validateStatus: status => status === 201
           }
         )
-        .then( response => {
+        .then( ({data = {}}) => {
+          let comment = data.comment
           let feed = this.feed;
           let user_info = localEvent.getLocalItem(`user_${window.TS_WEB.currentUserId}`);
           let reply_to_user = null;
-          if(this.commentAbout.reply_to_user_id) {
-            reply_to_user = localEvent.getLocalItem(`user_${this.commentAbout.reply_to_user_id}`);
+          if(this.commentAbout.reply_user) {
+            reply_to_user = localEvent.getLocalItem(`user_${this.commentAbout.reply_user}`);
           }
           let newComment = {
-            comment_content: this.commentAbout.comment,
-            comment_mark: null,
-            created_at: getLocalTime(),
-            id: response.data.data,
-            reply_to_user_id: this.commentAbout.reply_to_user_id,
-            user_id: window.TS_WEB.currentUserId,
+            body: comment.body,
+            created_at: comment.created_at,
+            id: comment.id,
+            reply_user: comment.reply_user,
+            user_id: comment.user_id,
             reply_to_user: reply_to_user,
-            user: user_info
+            user: user_info,
+            updated_at: comment.updated_at
           };
-          this.comment_content = '';
+          this.body = '';
           // 本地数据更新
           // feed.comments.unshift(newComment);
-          // 更新vuex数据
-          this.$store.getters[FEEDSLIST][this.feed.id].comments.unshift(newComment);
+          // 更新vuex
+          this.$store.getters[FEEDSLIST][this.feed.id].comments = this.$store.getters[FEEDSLIST][this.feed.id].comments ? this.$store.getters[FEEDSLIST][this.feed.id].comments : [];
+          this.$store.getters[FEEDSLIST][this.feed.id].comments.unshift(newComment)
           this.$store.getters[FEEDSLIST][this.feed.id].feed_comment_count += 1;
           this.$store.dispatch(NOTICE, cb => {
             cb({
@@ -265,10 +266,10 @@
           this.$store.dispatch(CLOSECOMMENTINPUT);
           // 重置输入框
           this.commentAbout = { ...this.commentAbout, ...{
-            comment: '',
+            body: '',
             show: false,
             placeholder: '随便说说',
-            reply_to_user_id: 0,
+            reply_user: 0,
             loading: false
           }}
           // 更新动态
@@ -318,10 +319,10 @@
         return localEvent.getLocalItem('UserLoginInfo');
       },
       validComment () {
-        return this.commentAbout.comment.length > 0;
+        return this.commentAbout.body.length > 0;
       },
       commentCount () {
-        return this.commentAbout.comment.length;
+        return this.commentAbout.body.length;
       },
       commentsData () {
         const { comments = [] } = this.feed; 
@@ -334,8 +335,8 @@
         return this.$store.getters[USERS];
       },
       openInputByVuex () {
-        if(this.openInput && this.commentAbout.reply_to_user_id) {
-          const reply_to_user = localEvent.getLocalItem(`user_${this.commentAbout.reply_to_user_id}`);
+        if(this.openInput && this.commentAbout.reply_user) {
+          const reply_to_user = localEvent.getLocalItem(`user_${this.commentAbout.reply_user}`);
           this.commentAbout.placeholder = `回复: ${reply_to_user.name}`;
         } else {
           this.commentAbout.placeholder = '随便说说';
@@ -349,7 +350,7 @@
       //
       comments.forEach( (comment, index) => {
         if(comment.reply_to_user_id) {
-          user_ids_obj = { ...user_ids_obj, [comment.user_id]: comment.user_id, [comment.reply_to_user_id]: comment.reply_to_user_id };
+          user_ids_obj = { ...user_ids_obj, [comment.user_id]: comment.user_id, [comment.reply_user]: comment.reply_user };
         } else {
           user_ids_obj = { ...user_ids_obj, [comment.user_id]: comment.user_id };
         }

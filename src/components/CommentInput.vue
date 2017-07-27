@@ -29,7 +29,7 @@
                 :autosize="{ minRows: 1, maxRows: 4 }" 
                 :minlength='1' blur="inputBlur" 
                 :maxlength='255' 
-                v-model="comment_content"
+                v-model="body"
                 v-childfocus
               />
             </Col>
@@ -54,7 +54,7 @@
       LoadingWhiteIcon
     },
     data: () => ({
-      comment_content: '',
+      body: '',
       userInfo: {},
       loading: false
     }),
@@ -74,7 +74,7 @@
         this.loading = true;
         let currentUser = localEvent.getLocalItem(`UserLoginInfo`);
         let commentStore = this.$store.getters[COMMENTINPUT];
-        let comment_content = this.comment_content;
+        let body = this.body;
         let reply_to_user_id = commentStore.data.reply_to_user_id;
         let user_id = currentUser.user_id;
         // 当前用户信息
@@ -85,8 +85,8 @@
         let feed_id = feed.feed.feed_id;
         let newCommentInfo = [];
         addAccessToken().post(createAPI(`feeds/${feed_id}/comment`), {
-            comment_content,
-            reply_to_user_id
+            body,
+            reply_user
           },
           {
             validateStatus: status => status === 201
@@ -94,7 +94,7 @@
         )
         .then(response => {
           let newComment = {
-            comment_content: comment_content,
+            body: body,
             comment_mark: null,
             created_at: getLocalTime(),
             id: response.data.data,
@@ -103,7 +103,7 @@
             reply_to_user: reply_to_user,
             user: user_info
           };
-          this.comment_content = '';
+          this.body = '';
           let info = {
             data: {
               show: false,
@@ -144,7 +144,7 @@
       }),
       // 评论长短
       commentCount () {
-        return this.comment_content.length;
+        return this.body.length;
       },
       canSend () {
         return this.commentCount > 0;

@@ -152,14 +152,14 @@
                               @click.stop="focusInput(comment.user_id, index)"
                               :class="$style.commentContent"
                             > 
-                             {{ comment.comment_content }}
+                             {{ comment.body }}
                             </span>
                             <span
                               v-if="comment.user_id == currentUser"
                               @click.stop="showComfirm(comment.id, feed_id, index)"
                               :class="$style.commentContent"
                             > 
-                             {{ comment.comment_content }}
+                             {{ comment.body }}
                             </span>
                           </div>
                         </Col>
@@ -556,12 +556,11 @@
         if(!this.commentContent.length && this.loading) return;
         this.loading = true;
         let comment_data = {
-          comment_mark: parseInt(TS_WEB.currentUserId + (new Date).getTime()),
-          comment_content: this.commentContent
+          body: this.commentContent
         };
 
         if(this.commentToUserId) {
-          comment_data.reply_to_user_id = this.commentToUserId
+          comment_data.reply_user = this.commentToUserId
         }
         addAccessToken().post(createAPI(`feeds/${this.feed_id}/comments`), 
           comment_data,
@@ -569,18 +568,18 @@
             validateStatus: status => status === 201
           }
         )
-        .then( response => {
+        .then( ({data = {}}) => {
+          let comment = data.comment;
           this.feedData.feed_comment_count += 1;
           let feed = this.feedData;
+          
           let newComment = {
-            comment_content: this.commentContent,
-            comment_mark: null,
-            created_at: getLocalTime(),
-            id: response.data.data,
-            reply_to_user_id: this.commentToUserId,
-            user_id: window.TS_WEB.currentUserId,
-            reply_to_user: {},
-            user: {}
+            body: comment.body,
+            created_at: comment.created_at,
+            id: comment.id,
+            reply_user: comment.reply_user,
+            user_id: comment.user_id,
+            reply_to_user: {}
           };
           // current logged user
           getLocalDbUser(window.TS_WEB.currentUserId).then( item => {

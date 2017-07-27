@@ -74,7 +74,7 @@
         <Col span="19" :class="$style.colBottom">
           <Input 
             :class="$style.intro" 
-            v-model="intro" 
+            v-model="bio" 
             type="textarea" 
             :autosize="{minRows: 1, maxRows: 4}" 
             placeholder="编辑简介"
@@ -255,9 +255,8 @@
       location: '', // 地区显示字符串
       province: 0, // 省份
       city: 0, // 城市
-      storage_task_id: 0, // storage_tast_id for avatar
       isShowSexPopup: false, // is show sex select
-      intro: '', // intro
+      bio: '', // intro
       isShowCropper: false, // is show avatar cropper
       imgSrc: '', // source image for cropper
       loading: false, // doing status
@@ -279,6 +278,7 @@
       },
       minContainerWidth: window.innerWidth,
       minContainerHeight: window.innerHeight - 46
+
     }),
     methods: {
       changeUrl,
@@ -300,18 +300,16 @@
         this.areaAbout.province = 0;
         this.areaAbout.city = 0;
         this.areaAbout.location = '';
-        this.storage_task_id = 0;
         this.imgSrc = '';
       },
       save () {
         // 新数据
         let newName = this.name;
         let newSex = this.sex;
-        let newIntro = this.intro;
+        let newBio = this.bio;
         let newProvince = this.areaAbout.province;
         let newCity = this.areaAbout.city;
         let newLocation = this.areaAbout.location;
-        let storage_task_id = this.storage_task_id;
 
         // 旧数据
         let oldName = this.userInfo.name;
@@ -320,8 +318,8 @@
         let oldLocation = this.location;
         const { datas: { sex = 0 } = {} } = this.userInfo;
         let oldSex = sex;
-        const { datas: { intro = '' } = {} } = this.userInfo;
-        let oldIntro =  intro;
+        const { datas: { bio = '' } = {} } = this.userInfo;
+        let oldBio =  bio;
 
         let saveData = {};
 
@@ -341,22 +339,20 @@
           saveData.city = newCity;
         }
 
-        if(newIntro != oldIntro) {
-          saveData.intro = newIntro;
+        if(newBio != oldBio) {
+          saveData.bio = newBio;
         }
         if(oldSex != newSex) {
           saveData.sex = newSex;
         }
-        if(storage_task_id != 0) {
-          saveData.storage_task_id = storage_task_id;
-        }
+
         addAccessToken().patch(
-          createOldAPI('users'),
+          createAPI('user'),
           {
             ...saveData
           },
           {
-            validateStatus: status => status === 201
+            validateStatus: status => status === 204
           }
         )
         .then(response => {
@@ -570,16 +566,16 @@
         ]
       },
       canSave () {
-        const { datas: { sex: { value: sex = 0 } = {} } = {} } = this.userInfo;
-        const { datas: { intro: { value:  intro = '' } = {} } = {} } = this.userInfo;
+        const { sex = 0 } = this.userInfo;
+        const { bio = '' } = this.userInfo;
         
         let changeName = (this.name != this.userInfo.name) && usernameReg.test(this.name) && this.name.length > 2 && this.name.length < 13;
         let changeSex = this.sex != sex && this.sex != 0;
-        let changeIntro = this.intro != intro && this.intro != '';
+        let changeBio = this.bio != bio && this.bio != '';
         let changeProvince = this.areaAbout.province != this.province && this.areaAbout.province != 0;
         let changeCity = this.areaAbout.city != this.city && this.areaAbout.city != 0;
         let changeLocation = this.areaAbout.location != this.location && this.areaAbout.location != '';
-        return (changeName || changeSex || changeIntro || changeProvince || changeCity || changeLocation);
+        return (changeName || changeSex || changeBio || changeProvince || changeCity || changeLocation);
       }
     },
     mounted () {
@@ -587,17 +583,13 @@
       getLoggedUserInfo().then(user => {
         this.userInfo = { ...this.userInfo, ...user };
         this.name = user.name;
-        const { datas: { 
-                sex: { value: sex = 0 } = {} , 
-                intro: { value: intro = '' } = {},
-                province: { value: province = 0 } = {},
-                city: { value: city = 0 } = {},
-                location: { value: location = '' } = {}
-              } = {} } = this.userInfo;
+        const { 
+                sex = 0, 
+                bio = '',
+                location = '' 
+              } = this.userInfo;
         this.sex = sex;
-        this.intro = intro;
-        this.province = province;
-        this.city = city;
+        this.bio = bio;
         this.location = location;
 
       });

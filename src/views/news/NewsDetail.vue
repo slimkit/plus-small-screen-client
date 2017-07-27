@@ -111,14 +111,14 @@
                                 @click.stop="focusInput(comment.user_id, index)"
                                 :class="$style.commentContent"
                               > 
-                               {{ comment.comment_content }}
+                               {{ comment.body }}
                               </span>
                               <span
                                 v-if="comment.user_id == currentUser"
                                 @click.stop="showComfirm(comment.id, detail.id, index)"
                                 :class="$style.commentContent"
                               > 
-                               {{ comment.comment_content }}
+                               {{ comment.body }}
                               </span>
                             </div>
                           </Col>
@@ -394,7 +394,7 @@
         if(!this.commentContent.length && this.loading) return;
         this.loading = true;
         addAccessToken().post(createOldAPI(`news/${this.detail.id}/comment`), {
-            comment_content: this.commentContent,
+            body: this.body,
             reply_to_user_id: this.commentToUserId
           },
           {
@@ -404,7 +404,7 @@
         .then( response => {
           let feed = this.feedData;
           let newComment = {
-            comment_content: this.commentContent,
+            body: this.body,
             comment_mark: null,
             created_at: getLocalTime(),
             id: response.data.data,

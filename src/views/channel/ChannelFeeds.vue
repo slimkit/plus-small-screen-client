@@ -46,11 +46,6 @@
         </div>
       </mt-loadmore>
     </section>
-    <p class="plusIcon" v-if="channelInfo.follow_status">
-      <span @click="showPost">
-        <PlusIcon @click.native="showPost" height="21" width="21" color="#fff" />
-      </span>
-    </p>
   </div>
 </template>
 <style lang="less" scoped>

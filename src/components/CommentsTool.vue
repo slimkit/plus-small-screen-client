@@ -13,14 +13,14 @@
               @click.stop="focusInput(comment.user_id)"
               :class="$style.commentContent"
             > 
-             : {{ comment.comment_content }}
+             : {{ comment.body }}
             </span>
             <span
               v-if="comment.user_id == currentUser.user_id"
               @click.stop="showComfirm(comment.id, feed.feed.feed_id, commentIndex)"
               :class="$style.commentContent"
             > 
-             : {{ comment.comment_content }}
+             : {{ comment.body }}
             </span>
           </p>
         </li>

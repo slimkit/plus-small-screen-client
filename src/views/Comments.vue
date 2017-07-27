@@ -35,7 +35,7 @@
                 <div class="gray-color">
                   <span v-if="comment.reply_to_user_id">回复</span>
                   <span @click="changeUrl(`/users/feeds/${comment.reply_to_user_id}`)" class="primary-color" style="padding: 0 4px;" v-if="comment.reply_to_user_id">{{comment.reply_to_user_name}}: </span>
-                  {{comment.comment_content}}
+                  {{comment.body}}
                 </div>
                 <timeago style="font-size: 14px; color: #999;" :since="comment.time" locale="zh-CN" :auto-update="60"></timeago>
               </div>
@@ -44,7 +44,7 @@
                   <img v-if="comment.cover" @click="openCommentBox(index)" :src="comment.cover" />
                   <div v-if="!comment.cover" @click="openCommentBox(index)" :class="$style.source">
                     <div :class="$style.content">
-                      {{comment.source_content}}
+                      {{comment.body}}
                     </div>
                   </div>
                 </div>
@@ -140,12 +140,11 @@
         }
 
         let comment_data = {
-          comment_mark: parseInt(TS_WEB.currentUserId + (new Date).getTime()),
-          comment_content: this.commentsContent
+          body: this.commentsContent
         };
 
         if(source.user_id) {
-          comment_data.reply_to_user_id = source.user_id
+          comment_data.sendComment = source.user_id
         }
 
         addAccessToken().post(createAPI(`${api}`),
@@ -247,7 +246,7 @@
             source_id: comment.source_id,
             source_content: comment.source_content,
             component: comment.component,
-            comment_content: comment.comment_content,
+            body: comment.body,
             cover: '',
             id: comment.id
           };
@@ -293,7 +292,7 @@
             source_id: comment.source_id,
             source_content: comment.source_content,
             component: comment.component,
-            comment_content: comment.comment_content,
+            body: comment.body,
             cover: ''
           };
           getLocalDbUser(comment.user_id).then( user => {

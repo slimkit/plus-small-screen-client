@@ -58,14 +58,16 @@
       let db = new Dexie('ThinkSNS');
       db.debug = 'dexie';
       db
-      .version(1)
+      // .version(1)
+      .version(2)
       .stores({
         // 用户
-        userbase: "++, user_id, name, counts, datas, avatar",
+        // userbase: "++, user_id, name, counts, datas, avatar",
+        userbase: "++,user_id,avatar,bg,bio,email,extra,location,name,phone,sex,verified",
         // 动态
         feedbase: "++, user_id, storages, &feed_id, feed_content, feed_from, created_at, feed_comment_count, feed_digg_count, feed_view_count",
         // 评论
-        commentsbase: "++, comment_content, created_at, &id, reply_to_user_id, user_id, source_id",
+        commentsbase: "++, body, created_at, &id, reply_to_user_id, user_id, source_id",
         // ImMessage
         messagebase: "++, txt, cid, uid, hash, mid, seq, time, owner, [cid+mid], [cid+owner]",
         // chatroom
@@ -84,12 +86,12 @@
       let currentUser = localEvent.getLocalItem('UserLoginInfo');
 
       if(lodash.keys(currentUser).length > 0) {
+        window.TS_WEB.currentUserId = currentUser.user_id;
         // 提交用户到vuex
         window.TS_WEB.dataBase.transaction('rw?', window.TS_WEB.dataBase.userbase, () => {
           window.TS_WEB.dataBase.userbase.where('user_id').equals(currentUser.user_id).first().then( user => {
             if(user === undefined) {
               getLoggedUserInfo().then( serverUser => {
-                console.log(serverUser);
                 this.$store.dispatch(USERS_APPEND, cb =>{
                   cb(serverUser)
                 });

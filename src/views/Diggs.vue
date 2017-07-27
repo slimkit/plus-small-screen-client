@@ -158,7 +158,7 @@
             source_id: digg.source_id,
             source_content: digg.source_content,
             component: digg.component,
-            comment_content: digg.comment_content,
+            body: digg.body,
             cover: ''
           };
           let user = localEvent.getLocalItem(`user_${digg.user_id}`);
@@ -189,7 +189,7 @@
             source_id: digg.source_id,
             source_content: digg.source_content,
             component: digg.component,
-            comment_content: digg.comment_content,
+            body: digg.body,
             cover: ''
           };
           let user = localEvent.getLocalItem(`user_${digg.user_id}`);

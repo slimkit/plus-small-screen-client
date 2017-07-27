@@ -84,7 +84,7 @@
     methods: {
       changeUrl,
       toFeedDetail(id) {
-        if(this.feed.paid_node && !this.feed.paid_node.paid) {
+        if(this.feed.paid_node && !this.feed.paid) {
           this.$store.dispatch(NOTICE, cb => {
             cb({
               text: '请先购买动态',
@@ -94,7 +94,7 @@
           });
           return;
         }
-        changeUrl(`feed/${id}`);
+        this.changeUrl(`/feed/${id}`);
       },
       timers,
       router (link) {

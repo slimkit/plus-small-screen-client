@@ -115,7 +115,7 @@ const postFeed = {
     headers: { Authorization: `Bearer ${UserLoginInfo.token}` },
     images: [],
     format: ['jpg', 'jpeg', 'png', 'gif', 'svg', 'bmp'],
-    maxSize: 10240,
+    maxSize: 5120,
     loading: false,
     listCount: 0
   }),
@@ -150,12 +150,12 @@ const postFeed = {
           validateStatus: status => status === 201
         }
       )
-      .then(response => {
-        let feed_id = response.data.id;
+      .then(({data = {}}) => {
+        let feed_id = data.id;
         this.closePost();
         this.$store.dispatch(NOTICE, cb => {
           cb({
-            text: '已发送',
+            text: data.message[0],
             time: 1500,
             status: true
           });
@@ -167,13 +167,14 @@ const postFeed = {
         this.images = [];
 
         addAccessToken().get(
-          createAPI(`feeds/${response.data.id}`),
+          createAPI(`feeds/${feed_id}`),
           {},
           {
             validateStatus: status => status === 200
           }
         )
         .then(({ data = {} }) => {
+          data.comments = [];
           this.$store.dispatch(FEEDSLIST, cb => {
             cb({
               [feed_id]: data
@@ -192,8 +193,11 @@ const postFeed = {
             ]);
           });
         })
+        .catch((error) => {
+          console.log(error);
+        });
       })
-      .catch( ({ response: { data: { message = [] } = {} } = {} }) => {
+      .catch( ({ data: { message = [] } = {} }) => {
         let msg = message[0] ? message[0] : '发送失败';
         this.loading = false;
         this.$store.dispatch(NOTICE, cb => {
@@ -235,6 +239,7 @@ const postFeed = {
       // 从 upload 实例删除数据
       let fileName = this.$refs.upload.fileList[index].name;
       this.$refs.upload.fileList.splice(index, 1);
+      this.images.splice(index, 1);
     },
 
     handleSuccess (res, file, fileList) {
@@ -264,7 +269,7 @@ const postFeed = {
           show: true,
           status: false,
           time: 1500,
-          text: '图片 ' + name + ' 太大，不能超过 10M。'
+          text: '图片 ' + name + ' 太大，不能超过 5M。'
         });
       })
     },

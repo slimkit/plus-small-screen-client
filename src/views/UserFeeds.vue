@@ -77,10 +77,9 @@
 
 <script>
   import { createAPI, addAccessToken, createOldAPI } from '../utils/request';
-  import { getUserInfo } from '../utils/user';
   import errorCodes from '../stores/errorCodes';
   import localEvent from '../stores/localStorage';
-  import { followingUser, unFollowingUser } from '../utils/user';
+  import { followingUser, unFollowingUser, getLoggedUserInfo, getUserInfo } from '../utils/user';
   import { NOTICE, FEEDSLIST, USERFEEDS, APPENDUSERFEED, CLEANUSERFEEDS, DATES, GETUSERFEEDS, MESSAGELISTS } from '../stores/types';
   import { friendNum } from '../utils/friendNum';
   import timers from '../utils/timer';
@@ -360,31 +359,28 @@
         return avatar;
       },
       feedCounts () {
-        const { counts: { feeds_count = 0 } = {} } = this.userInfo;
+        const { extra: { feeds_count = 0 } = {} } = this.userInfo;
         return feeds_count;
       },
       following () {
-        const { counts: { following_count = 0 } = {} } = this.userInfo;
-        return following_count;
+        const { extra: { followings_count = 0 } = {} } = this.userInfo;
+        return followings_count;
       },
       followed () {
-        const { counts: { followed_count = 0 } = {} } = this.userInfo;
-        return followed_count;
+        const { extra: { followers_count = 0 } = {} } = this.userInfo;
+        return followers_count;
       },
       introText () {
-        const { datas: { intro: { value: intro = '还没有简介呢' } = {} } = {} } = this.userInfo;
-        return intro;
+        const { bio = '还没有简介呢' } = this.userInfo;
+        return bio;
       },
+      // 封面
       coverImg () {
-        const { datas: { cover: { value: cover = 0 } = {} } = {} } = this.userInfo;
-        if(cover) {
-          return buildUrl(createAPI(`files/${cover}`));
-        } else {
-          return defaultBackgroundPic;
-        }
+        const { bg = '' } = this.userInfo;
+        return bg ? bg : defaultBackgroundPic;
       },
       feedList () {
-        let feeds = this.$store.getters[GETUSERFEEDS];
+        let feeds = [ ...this.$store.getters[GETUSERFEEDS]];
         return this.fomateFeeds(feeds);
       }
     },
@@ -406,7 +402,7 @@
         return;
       }
       this.user_id = window.TS_WEB.currentUserId != user_id ? user_id : window.TS_WEB.currentUserId;
-      getUserInfo(this.user_id, 30).then( user => {
+      getLoggedUserInfo(this.user_id, 30).then( user => {
         this.userInfo = { ...this.userInfo, ...user };
       });
       // 获取动态列表

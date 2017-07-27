@@ -1,8 +1,5 @@
 import axios from 'axios';
 import localEvent from '../stores/localStorage';
-import {
-  app
-} from '../index';
 import errorCodes from '../stores/errorCodes';
 import {
   NOTICE,

@@ -92,6 +92,7 @@
     methods: {
       goTo,
       changeUrl,
+      // 加载更多
       loadBottom() {
         setTimeout(() => {
           // 若数据已全部获取完毕
@@ -100,6 +101,7 @@
           this.$refs.loadmoreDigglist.onBottomLoaded();
         }, 500);
       },
+      // 加载最新
       loadTop () {
         setTimeout(() => {
           // 若数据已全部获取完毕
@@ -194,12 +196,12 @@
       }
       let currentUser = localEvent.getLocalItem('UserLoginInfo');
       this.currentUser = currentUser.user_id;
-      addAccessToken().get(createAPI(`feeds/${feed_id}/diggusers`), {}, {
+      addAccessToken().get(createAPI(`feeds/${feed_id}/likes`), {}, {
           validateStatus: status => status === 200
         }
       )
-      .then( reponse => {
-        let diggUsers = reponse.data.data;
+      .then( ({data = {}}) => {
+        let diggUsers = data;
         let localUser = {};
         let diggFormate = {};
         let length = diggUsers.length;
@@ -211,15 +213,9 @@
           this.bottomAllLoaded = true;
         }
         diggUsers.forEach( diggUser => {
-          // localUser = localEvent.getLocalItem(`user_${diggUser.user_id}`);
-          // if(!lodash.keys(localUser).length) {
-            getUserInfo(diggUser.user_id, 30).then( user => {
-              this.localDiggs = { ...this.localDiggs, [diggUser.user_id]: user };
-            });
-          // } else {
-          //   this.localDiggs = { ...this.localDiggs, [diggUser.user_id]: localUser };
-          // }
-          // localUser = {};
+          getUserInfo(diggUser.user_id).then( user => {
+            this.localDiggs = { ...this.localDiggs, [diggUser.user_id]: user };
+          });
         });
       });
       setTimeout( () => {
