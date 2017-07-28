@@ -74,7 +74,7 @@ function unFollowingUser(user_id) {
             following: 0
           });
         });
-        resolve(response.status === 204 ? true : false);
+        resolve(true);
       })
       .catch(error => {
         if(error.response.status === 401) {
@@ -82,15 +82,22 @@ function unFollowingUser(user_id) {
             cb({
               text: '请先登录',
               time: 1500,
-              status: true
+              status: false
             });
           });
           setTimeout(() => {
             app.$router.push('/login');
           }, 1500);
           return;
+        } else {
+          app.$store.dispatch(NOTICE, cb => {
+            cb({
+              text: '操作失败',
+              time: 1500,
+              status: false
+            });
+          });
         }
-        resolve(false);
       });
   });
 };

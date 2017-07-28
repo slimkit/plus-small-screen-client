@@ -170,16 +170,16 @@
         return name;
       },
       intro () {
-        const { datas: { intro: { value: intro = '还没有简介呢' } = {} } = {} } = this.userInfo;
-        return intro;
+        const { bio = '还没有简介呢' } = this.userInfo;
+        return bio;
       },
       following () {
-        const { counts: { following_count = 0 } = {} } = this.userInfo;
-        return following_count;
+        const { extra: { followings_count = 0 } = {} } = this.userInfo;
+        return followings_count;
       },
       followed () {
-        const { counts: { followed_count = 0 } = {} } = this.userInfo;
-        return followed_count;
+        const { extra: { followers_count = 0 } = {} } = this.userInfo;
+        return followers_count;
       }
     },
     created () {

@@ -4,14 +4,15 @@
 		<Tabs v-model="type" @on-click="getData">
       <Tab-pane label="粉丝" name="followers">
         <mt-loadmore
+          class="followers"
           v-if="!nothing && type === 'followers'"
           :bottom-method="loadBottom"
           :top-method="loadTop"
           :bottom-all-loaded="bottomAllLoaded"
           :top-all-loaded="topAllLoaded"
-          ref="loadmorefollowed"
+          ref="loadmorefollowers"
           :bottomDistance="70"
-          @bottom-status-change="bottomStatusChange"
+          @bottom-status-change="followersBottomStatusChange"
         >
         	<Row :gutter="24" v-for="(user, index) in formateList" :key="index" class-name="list">
             <Col span="4" @click.native="changeUrl(`/users/feeds/${user.id}`)">
@@ -22,9 +23,9 @@
               <p>{{ user.bio }}</p>
             </Col>
             <Col span="4" class="header-end-col" v-if="currentUser == user_id">
-              <UnFollowingIcon @click.native="doFollowing(user.id, index, 'followings')" v-if="!user.follower && currentUser != user.id" height="21" width="21" color="#999" />
-              <FollowingIcon @click.native="doUnFollowing(user.id, index, 'followings')" v-if="!user.following && user.follower && currentUser != user.id" height="21" width="21" color="#59b6d7" />
-              <EachFollowingIcon @click.native="doUnFollowing(user.id, index, 'followings')" v-if="user.following && user.follower && currentUser != user.id" height="21" width="21" color="#59b6d7" />
+              <UnFollowingIcon @click.native="doFollowing(user.id, index, 'followers')" v-if="!user.follower && currentUser != user.id" height="21" width="21" color="#999" />
+              <FollowingIcon @click.native="doUnFollowing(user.id, index, 'followers')" v-if="!user.following && user.follower && currentUser != user.id" height="21" width="21" color="#59b6d7" />
+              <EachFollowingIcon @click.native="doUnFollowing(user.id, index, 'followers')" v-if="user.following && user.follower && currentUser != user.id" height="21" width="21" color="#59b6d7" />
             </Col>
           </Row>
           <div slot="bottom" class="mint-loadmore-bottom">
@@ -42,14 +43,15 @@
       </Tab-pane>
       <Tab-pane label="关注" name="followings" >
         <mt-loadmore
+          class="followings"
           v-if="!nothing && type === 'followings'"
           :bottom-method="loadBottom"
           :top-method="loadTop"
           :bottom-all-loaded="bottomAllLoaded"
           :top-all-loaded="topAllLoaded"
-          ref="loadmorefollowing"
+          ref="loadmorefollowings"
           :bottomDistance="70"
-          @bottom-status-change="bottomStatusChange"
+          @bottom-status-change="followingsBottomStatusChange"
         >
           <Row :gutter="24" v-for="(user, index) in formateList" :key="index" class-name="list">
             <Col span="4" @click.native="changeUrl(`/users/feeds/${user.id}`)">
@@ -60,11 +62,11 @@
               <p>{{ user.bio }}</p>
             </Col>
             <Col span="4" class="header-end-col" v-if="currentUser == user_id">
-              <UnFollowingIcon @click.native="doFollowing(user.id, index, 'followers')" v-if="!user.follower && currentUser != user.id" height="21" width="21" color="#999" />
+              <UnFollowingIcon @click.native="doFollowing(user.id, index, 'followings')" v-if="!user.follower && currentUser != user.id" height="21" width="21" color="#999" />
 
-              <FollowingIcon @click.native="doUnFollowing(user.id, index, 'followers')" v-if="!user.following && user.follower && currentUser != user.id" height="21" width="21" color="#59b6d7" />
+              <FollowingIcon @click.native="doUnFollowing(user.id, index, 'followings')" v-if="!user.following && user.follower && currentUser != user.id" height="21" width="21" color="#59b6d7" />
 
-              <EachFollowingIcon @click.native="doUnFollowing(user.id, index, 'followers')" v-if="user.following && user.follower && currentUser != user.id" height="21" width="21" color="#59b6d7" />
+              <EachFollowingIcon @click.native="doUnFollowing(user.id, index, 'followings')" v-if="user.following && user.follower && currentUser != user.id" height="21" width="21" color="#59b6d7" />
 
             </Col>
           </Row>
@@ -121,17 +123,22 @@
       bottomStatus: '',
       isShowComfirm: false,
       topStatus: '',
-      max_id: 0
+      max_id: 0,
+      loading: false
 		}),
 		methods: {
 			goTo,
 			changeUrl,
-      bottomStatusChange(status) {
-        console.log(status);
+      followersBottomStatusChange(status) {
+        this.bottomStatus = status;
+      },
+      followingsBottomStatusChange(status) {
         this.bottomStatus = status;
       },
       // 加载更多
       loadBottom () {
+        if(this.loading) return;
+        this.loading = true;
         let uri = '';
         let key = '';
         let lists = [];
@@ -155,12 +162,14 @@
             }
             return;
           }
-          this.dataList = this[this.type] =  [ ...this[this.type], ...data ];
+          this[this.type] =  lodash.uniqBy([ ...this[this.type], ...data ], 'id');
           this.max_id = data[data.length -1].id;
+          
           // loadmore重新洗牌
           if(this.$refs[`loadmore${this.type}`]) {
             setTimeout(() => {
               this.$refs[`loadmore${this.type}`].onBottomLoaded();
+              this.loading = false;
             }, 800);
           }
         });
@@ -182,10 +191,9 @@
         })
         .then( ({data = []}) => {
           // 去重
-          this.dataList = this[this.type] = Array.from(new Set([ ...this[this.type], ...data ]));
+          this[this.type] =  lodash.uniqBy([ ...this[this.type], ...data ], 'id');
         });
 
-        // loadmore重新洗牌
         if(this.$refs[`loadmore${this.type}`]) {
           setTimeout(() => {
             this.$refs[`loadmore${this.type}`].onTopLoaded();
@@ -197,21 +205,13 @@
         followingUser(user)
         .then(status => {
           if(status) {
-            let localUser = localEvent.getLocalItem(`user_${user}`);
-            let localCurrentUser = localEvent.getLocalItem(`user_${this.currentUser}`);
             let lists = this[type];
-            localUser.following = true;
-            localEvent.setLocalItem(`user_${user}`, localUser);
-            localCurrentUser.extra.followings_count += 1;
-            localEvent.setLocalItem(`user_${this.currentUser}`, localCurrentUser);
-            let index = this.followers.findIndex(value => {
-              return user = value.id;
-            });
-            if(index !== -1) {
-              let user = this.followers[index];
-              user.following = true;
-              lists.unshift(user);
-            }
+            let other = type === 'followers' ? this['followings'] : this['followers'];
+            let user = this.followers[index];
+            lists[index].follower = true;
+            user.following = true;
+            user.follower = true;
+            other.unshift(user);
             this[type] = lodash.cloneDeep(lists);
 
           } else {
@@ -231,38 +231,39 @@
         unFollowingUser(user)
         .then( status => {
           if(status) {
-            let localUser = localEvent.getLocalItem(`user_${user}`);
-            let localCurrentUser = localEvent.getLocalItem(`user_${this.currentUser}`);
             let lists = this[type];
-            localUser.following = false;
-            localCurrentUser.extra.followings_count -= 1;
-            localEvent.setLocalItem(`user_${this.currentUser}`, localCurrentUser);
-            localEvent.setLocalItem(`user_${user}`, localUser);
+            let other = type === 'followers' ? this['followings'] : this['followers'];
             if(type == 'followings') {
               let index = lists.findIndex(value => {
-                return value.id = user;
-              });
-              if(index !== -1) {
-                lists.splice(index, 1);
-              }
+                return value.id == user;
+              })
+              lists.splice(index, 1);
             } else {
-              lists[index].following = false;
+              type === 'followers' ? lists[index].following = false : lists[index].follower = false;
+
+              let index = other.findIndex(value => {
+                return value.id == user;
+              })
+              if(index !== -1) {
+                type === 'followers' ? other[index].following = false : other[index].follower = false;
+              }
             }
             this[type] = lodash.cloneDeep(lists);
-            this.dataList = lodash.cloneDeep(dataList);
           }
-          
+        })
+        .catch(error => {
+          console.log(error);
         });
       },
       // 设置需要展示的数据
       getData (name) {
+        this.loading = true;
         let uri = '';
         let key = '';
         this.max_id = 0;
         this.bottomAllLoaded = true;
         this.bottomStatus = 'pull';
         name = name || this.type;
-        console.log(name);
         if(name == 'followers') {
           uri = `users/${this.user_id}/followers`;
         } else {
@@ -273,9 +274,9 @@
         })
         .then( ({data = []}) => {
           if(!data.length > 0) {
-            if(this.$refs[`loadmore${name}`]) {
-              this.$refs[`loadmore${name}`].onTopLoaded();
-            }
+            setTimeout(() => {
+              this.loading = false;
+            }, 800);
             return ;
           }
           if(!data.length < 15) {
@@ -284,10 +285,10 @@
           this[name] = [];
           this[name] = [ ...data ];
           this.max_id = data[data.length -1].id;
-          if(this.$refs[`loadmore${name}`]) {
-            this.$refs[`loadmore${name}`].onTopLoaded();
-            this.$refs[`loadmore${name}`].onBottomLoaded();
-          }
+
+          setTimeout(() => {
+            this.loading = false;
+          }, 800);
         });
       }
 		},
