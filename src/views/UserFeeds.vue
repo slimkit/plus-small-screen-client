@@ -61,13 +61,13 @@
       </div>
     </mt-loadmore>
     <div v-if="currentUser != user_id" :class="$style.followStatus">
-      <div class="actionButton" @click="handleFollowingStaus(followAction.status ? true : false)">
+      <div class="actionButton" @click="handleFollowingStatus(followAction.status ? true : false)">
         <UnFollowingIcon v-if="followAction.text == '关注'" height="21" width="21" color="#333"/>
         <FollowingIcon v-if="followAction.text == '已关注'" height="21" width="21" color="#59b6d7"/>
         <EachFollowingIcon v-if="followAction.text == '相互关注'" height="21" width="21" color="#59b6d7"/>
         <span :class="{ following: followAction.status, noFollowing: !followAction.status }"> {{ followAction.text }} </span>
       </div>
-      <div class="actionButton" @click="imMessage">
+      <div v-if="im_token" class="actionButton" @click="imMessage">
         <CommentIcon width="21" height="21" color="#333" />
         <span class="noFollowing"> 聊天 </span>
       </div>
@@ -117,7 +117,8 @@
       bottomAllLoaded: false,
       bottomStatus: '',
       max_id: 0,
-      hasNoMore: false
+      hasNoMore: false,
+      im_token: window.TS_WEB.im_token
 
     }),
     methods: {
@@ -178,7 +179,7 @@
           console.log(error);
         });
       },
-      handleFollowingStaus (status) {
+      handleFollowingStatus (status) {
         if(status) {
           this.handleUnfollowing();
         } else {
@@ -188,16 +189,18 @@
       // 关注操作
       handleFollowing() {
         followingUser(this.user_id)
-        .then(status => {
-          if(status.status || status.code == 0) {
+        .then( status => {
+          if (status) {
+
             this.userInfo = { ...this.userInfo, following: true };
             localEvent.setLocalItem(`user_${this.user_id}`, this.userInfo);
             // 更新页面数据
-            this.userInfo.counts.followed_count += 1;
+            this.userInfo.extra.followers_count += 1;
+
           } else {
             this.$store.dispatch(NOTICE, cb => {
               cb({
-                text: status.message,
+                text: '关注失败,可能是已经关注了',
                 time: 1500,
                 status: true
               });
@@ -208,21 +211,32 @@
       // 取关操作
       handleUnfollowing () {
         unFollowingUser(this.user_id)
-        .then(() => {
-          this.userInfo = { ...this.userInfo, following: false };
-          localEvent.setLocalItem(`user_${this.user_id}`, this.userInfo);
-          // 更新页面数据
-          this.userInfo.counts.followed_count -= 1;
-        })
-        .catch( error => {
+        .then( status => {
+          if (status) {
+            this.userInfo = { ...this.userInfo, following: false };
+            localEvent.setLocalItem(`user_${this.user_id}`, this.userInfo);
 
+            // 更新页面数据
+            this.userInfo.extra.followers_count -= 1;
+          } else {
+            this.$store.dispatch(NOTICE, cb => {
+              cb({
+                text: '取关失败,可能是还没关注',
+                time: 1500,
+                status: true
+              });
+            });
+          }
         });
       },
+
       // 检测底部loading的状态变化
       bottomStatusChange (status) {
         this.bottomStatus = status;
       },
+
       timers,
+      
       // 加载更多
       loadBottom () {
         if(this.max_id == 0) {
@@ -401,7 +415,7 @@
         return;
       }
       this.user_id = (window.TS_WEB.currentUserId != user_id) ? user_id : window.TS_WEB.currentUserId;
-      getLoggedUserInfo(this.user_id, 30).then( user => {
+      getUserInfo(this.user_id).then( user => {
         this.userInfo = { ...this.userInfo, ...user };
       });
       // 获取动态列表
