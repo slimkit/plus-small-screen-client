@@ -23,11 +23,11 @@
         </Col>
         <Col span="5" class="header-end-col">
           <!--未关注作者, 采用关注操作-->
-            <UnFollowingIcon @click.native="handleFollowingStatus" v-if="!userInfo.is_following && (userInfo.user_id != currentUser)" height="21" width="21" color="#999" />
+            <UnFollowingIcon @click.native="handleFollowingStatus" v-if="!userInfo.follower && (userInfo.user_id != currentUser)" height="21" width="21" color="#999" />
           <!--已关注作者,但作者未关注我， 采用取消关注操作-->
-            <FollowingIcon  @click.native="handleUnFollowingStatus" height="21" width="21" color="#59b6d7" v-if="userInfo.is_following && !userInfo.is_followed && (userInfo.user_id != currentUser)" />
+            <FollowingIcon  @click.native="handleUnFollowingStatus" height="21" width="21" color="#59b6d7" v-if="userInfo.follower && !userInfo.following && (userInfo.user_id != currentUser)" />
           <!--相互关注， 采用取消关注操作-->
-            <EachFollowingIcon v-if="userInfo.is_following && userInfo.is_followed && (userInfo.user_id != currentUser)" @click.native="handleUnFollowingStatus" height="21" width="21" color="#59b6d7" />
+            <EachFollowingIcon v-if="userInfo.follower && userInfo.following && (userInfo.user_id != currentUser)" @click.native="handleUnFollowingStatus" height="21" width="21" color="#59b6d7" />
         </Col>
       </Row>
     </header>
@@ -145,7 +145,7 @@
                       <Row>
                         <Col span="24">
                           <div style="color: #ccc;">
-                            <span v-if="comment.reply_to_user_id">回复 </span>
+                            <span v-if="comment.reply_user">回复 </span>
                             <router-link :class="$style.profileLink" :to="{ path: `/profile/${comment.reply_to_user_id}` }">{{ comment.replyToUser.name }} </router-link>
                             <span
                               v-if="comment.user_id  != currentUser"
@@ -299,10 +299,7 @@
       feedData: {},
       comments: [],
       likes: [],
-      userInfo: {
-        is_following: 0,
-        is_followed: 0
-      },
+      userInfo: {},
       // 上拉加载更多相关
       bottomAllLoaded: false,
       max_id: 0,
@@ -436,6 +433,28 @@
           });
           this.feedData.has_collect = true;
         })
+        .catch( error => {
+          if(error.response.status === 401) {
+            this.$store.dispatch(NOTICE, cb => {
+              cb({
+                text: '请先登录',
+                time: 1500,
+                status: false
+              });
+            });
+            setTimeout( () => {
+              this.$router.push('/login');
+            }, 1500);
+          } else {
+            this.$store.dispatch(NOTICE, cb => {
+              cb({
+                text: '系统错误',
+                time: 1500,
+                status: false
+              });
+            });
+          }
+        })
       },
       handleUnCollection (feed_id) {
         addAccessToken().delete(createAPI(`feeds/${feed_id}/uncollect`), {}, {
@@ -446,6 +465,28 @@
           this.$store.dispatch(UNCOLLECTIONFEEDSID, cb => {
             cb(feed_id);
           })
+        })
+        .catch( error => {
+          if(error.response.status === 401) {
+            this.$store.dispatch(NOTICE, cb => {
+              cb({
+                text: '请先登录',
+                time: 1500,
+                status: false
+              });
+            });
+            setTimeout( () => {
+              this.$router.push('/login');
+            }, 1500);
+          } else {
+            this.$store.dispatch(NOTICE, cb => {
+              cb({
+                text: '系统错误',
+                time: 1500,
+                status: false
+              });
+            });
+          }
         })
       },
 
@@ -460,6 +501,28 @@
           this.$store.dispatch(UPDATEFEED, cb => {
             cb(this.feedData);
           })
+        })
+        .catch(error => {
+          if(error.response.status === 401) {
+            this.$store.dispatch(NOTICE, cb => {
+              cb({
+                text: '请先登录',
+                time: 1500,
+                status: false
+              });
+            });
+            setTimeout( () => {
+              this.$router.push('/login');
+            }, 1500);
+          } else {
+            this.$store.dispatch(NOTICE, cb => {
+              cb({
+                text: '系统错误',
+                time: 1500,
+                status: false
+              });
+            });
+          }
         })
       },
 
@@ -487,7 +550,7 @@
        */
       handleUnFollowingStatus () {
         unFollowingUser(this.feedData.user_id).then(() => {
-          this.userInfo = { ...this.userInfo, is_following: 0 };
+          this.userInfo = { ...this.userInfo, follower: false };
           // localEvent.setLocalItem(`user_${this.feedData.user_id}`, this.userInfo);
         })
         .catch(error => {
@@ -497,7 +560,7 @@
       handleFollowingStatus () {
         followingUser(this.feedData.user_id).then(status => {
           if(status.status || status.code == 0) {
-            this.userInfo = { ...this.userInfo, is_following: 1 };
+            this.userInfo = { ...this.userInfo, follower: true };
             localEvent.setLocalItem(`user_${this.feedData.user_id}`, this.userInfo);
           } else {
             this.$store.dispatch(NOTICE, cb => {
@@ -710,16 +773,17 @@
       getUser (user_id) {
         getLocalDbUser(user_id).then( item => {
           if (item === undefined) {
-            getUserInfo(user_id, 30).then(user => {
-              this.userInfo = { ...this.userInfo, ...user };
+            getUserInfo(user_id).then(user => {
+              console.log(user);
+              this.userInfo = { ...user };
             });
           } else {
             window.TS_WEB.dataBase.transaction('rw?', window.TS_WEB.dataBase.relationship, () => {
               window.TS_WEB.dataBase.relationship.where('[uid+uuid]').equals([window.TS_WEB.currentUserId, user_id]).toArray().then( relation => {
                 if(relation.length) {
                   this.userInfo = { ...this.userInfo, ...{
-                    is_following: relation[0].following,
-                    is_followed: relation[0].followed
+                    follower: relation[0].follower,
+                    following: relation[0].following
                   }}
                 }
               });

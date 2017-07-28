@@ -75,7 +75,7 @@
         // chatroom
         chatroom: "++, cid, user_id, name, pwd, type, uids, last_message_time, owner, [cid+owner], newMessage",
 
-        // 被关注 uid 主用户id， followed 为1表示uuid关注uid， following为1 表示uid关注uuid [uid+uuid]组合查询组件
+        // 被关注 uid 主用户id， following 为1表示uuid关注uid， follower为1 表示uid关注uuid [uid+uuid]组合查询组件
         relationship: '++, uid, uuid, follower, following, [uid+uuid]',
 
         // 对我的评论[消息]

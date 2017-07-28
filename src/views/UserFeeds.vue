@@ -32,10 +32,10 @@
           </div>
           <div :class="$style.follows">
             <Row :gutter="24">
-              <Col span="12" :class="$style.followed" @click.native="changeUrl(`/users/relationship/${user_id}/followed`)">
+              <Col span="12" :class="$style.followed" @click.native="changeUrl(`/users/relationship/${user_id}/followers`)">
                 粉丝 <span :class="$style.counts">{{followed}}</span>
               </Col>
-              <Col span="12" :class="$style.following" @click.native="changeUrl(`/users/relationship/${user_id}/following`)">
+              <Col span="12" :class="$style.following" @click.native="changeUrl(`/users/relationship/${user_id}/followings`)">
                 关注 <span :class="$style.counts">{{following}}</span>
               </Col>
             </Row>

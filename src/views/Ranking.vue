@@ -33,7 +33,7 @@
             </Col>
             <Col span="20">
               <h4 :class="$style.name" @click="changeUrl(`/users/feeds/${digg.user_id}`)" >{{digg.name}}</h4>
-              <div :class="$style.intro">{{digg.intro}}</div>
+              <div :class="$style.intro">{{digg.bio}}</div>
               <div :class="$style.gray">点赞<span :class="$style.diggCount">{{digg.value}}</span></div>
             </Col>
           </Row>
@@ -50,7 +50,7 @@
 </template>
 <script>
   import { NOTICE } from '../stores/types';
-  import { createAPI, addAccessToken } from '../utils/request';
+  import { createAPI, createOldAPI, addAccessToken } from '../utils/request';
   import BackIcon from '../icons/Back';
   import { friendNum } from '../utils/friendNum';
   import localEvent from '../stores/localStorage';
@@ -69,7 +69,6 @@
     data: () => ({
       page: 1,
       diggLists: [],
-      ids: [],
       bottomAllLoaded: false,
       topAllLoaded: false,
       bottomStatus: '',
@@ -81,7 +80,7 @@
       goTo,
       // 下拉刷新 直接更新列表
       loadTop () {
-        addAccessToken().get(createAPI(`diggsrank?page=1`),{},
+        addAccessToken().get(createOldAPI(`diggsrank?page=1`),{},
           {
             validateStatus: status => status === 200
           }
@@ -93,14 +92,14 @@
           setTimeout( () => {
             if(this.$refs.loadMoreLists)
               this.$refs.loadMoreLists.onTopLoaded();
-          })
+          }, 800)
         })
       },
       bottomStatusChange(status) {
         this.bottomStatus = status;
       },
       loadBottom () {
-        addAccessToken().get(createAPI(`diggsrank?page=${this.page+1}&limit=15`),{},
+        addAccessToken().get(createOldAPI(`diggsrank?page=${this.page+1}&limit=15`),{},
           {
             validateStatus: status => status === 200
           }
@@ -109,9 +108,6 @@
           this.page += 1;
           let diggs = response.data.data;
           this.diggLists = [ ...this.diggLists, ...diggs ];
-          diggs.forEach( digg => {
-            this.ids.push(digg.id);
-          });
           if(diggs.length < 15) {
             this.bottomAllLoaded = true;
           };
@@ -129,25 +125,25 @@
           return [];
         }
         let newLists = [];
-        lists.forEach( list => {
+        lists.reverse().forEach( list => {
           let digg = {};
           let user = localEvent.getLocalItem(`user_${list.user_id}`);
           if(!lodash.keys(user).length) {
             getUserInfo(list.user_id).then(gotUser => {
               const { avatar = '' } = gotUser;
               const { name = '' } = gotUser;
-              const { datas: { intro: { value: intro = '还没有简介呢' } = {} } } = gotUser;
-              digg.intro = intro;
+              const { bio = '还没有简介呢' } = gotUser;
+              digg.bio = bio;
               digg.name = name,
-              digg.avatar = avatar;
+              digg.avatar = avatar ? avatar : defaultAvatar;
             });
           } else {
-            const { avatar = defaultAvatar } = user;
+            const { avatar = '' } = user;
             const { name = '' } = user;
-            const { datas: { intro: { value: intro = '还没有简介呢' } = {} } } = user;
+            const { bio = '还没有简介呢' } = user;
             digg.name = name,
-            digg.avatar = avatar;
-            digg.intro = intro;
+            digg.avatar = avatar ? avatar : defaultAvatar;
+            digg.bio = bio;
           }
           digg.value = friendNum(parseInt(list.value));
           digg.user_id = list.user_id;
@@ -160,17 +156,15 @@
       }
     },
     created () {
-      addAccessToken().get(createAPI(`diggsrank?page=${this.page}&limit=15`),{},
+      addAccessToken().get(createOldAPI(`diggsrank?page=${this.page}&limit=15`),{},
         {
           validateStatus: status => status === 200
         }
       )
       .then(response => {
         this.diggLists = response.data.data;
-        this.diggLists.forEach( digg => {
-          this.ids.push(digg.id);
-        });
-        if(this.ids.length < 15 ) {
+
+        if(this.diggLists.length < 15 ) {
           this.bottomAllLoaded = true;
         };
         setTimeout(() => {

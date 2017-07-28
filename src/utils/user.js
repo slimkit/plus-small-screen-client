@@ -111,6 +111,9 @@ function getLoggedUserInfo() {
         delete user.id;
         delete user.created_at;
         delete user.updated_at;
+        delete user.follower;
+        delete user.following;
+        user.avatar = user.avatar ? user.avatar : avatar;
         app.$store.dispatch(USERS_APPEND, cb =>{
           cb(user)
         });
@@ -126,7 +129,6 @@ function getLoggedUserInfo() {
           .catch(err => {
             console.log(err.stack || err);
           });
-        user.avatar = user.avatar ? user.avatar : avatar;
         resolve(user);
       })
   })
@@ -143,7 +145,7 @@ function getUserInfo(user_id) {
         if (user.id !== TS_WEB.currentUserId) {
           // 关注和相互关注状态
           db.transaction('rw?', db.relationship, () => {
-              db.relationship.where('[uid+uuid]').equals([window.TS_WEB.currentUserId, user.id]).delete().then(item => {
+              db.relationships.where('[uid+uuid]').equals([window.TS_WEB.currentUserId, user.id]).delete().then(item => {
                 db.relationship.put({
                   uid: window.TS_WEB.currentUserId,
                   uuid: user.id,
@@ -152,14 +154,22 @@ function getUserInfo(user_id) {
                 })
               });
             })
+            .then( x => {
+              console.log(x);
+            })
             .catch(e => {
             });
         }
         user.user_id = user.id;
         localEvent.setLocalItem('user_' + user_id, user);
+        
         delete user.id;
         delete user.created_at;
         delete user.updated_at;
+        // delete user.following;
+        // delete user.follower;
+        
+        user.avatar = user.avatar || defaultAvatar;
         app.$store.dispatch(USERS_APPEND, cb =>{
           cb(user)
         });
@@ -177,7 +187,6 @@ function getUserInfo(user_id) {
         .catch(err => {
           console.log(err);
         });
-        user.avatar = user.avatar ? user.avatar : defaultAvatar;
 
         resolve(user);
       })

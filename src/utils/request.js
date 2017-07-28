@@ -6,7 +6,7 @@ import {
   SHOWPOST,
   SHOWFEEDDIGGSLISTS
 } from '../stores/types';
-
+import { app } from '../index';
 const {
   apiv1,
   api,
@@ -43,6 +43,23 @@ axios.interceptors.response.use(
   function(response) {
     //对响应数据做些事
     return response;
+  },
+  function (error) {
+    if (error.response.status === 401) {
+      app.$store.dispatch(NOTICE, cb => {
+        cb({
+          show: true,
+          time: 1500,
+          status: false,
+          text: '请登录...'
+        });
+      });
+      setTimeout( () => {
+        app.$router.push('/login');
+      }, 1500);
+      return false;
+    }
+    return Promise.reject(error);
   }
 );
 

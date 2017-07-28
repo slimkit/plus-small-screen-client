@@ -24,13 +24,13 @@
     <div :class="$style.follows">
       <Row :gutter="24">
         <div :class="$style.followsContent">
-          <Col span="12" style="border-right: 1px #ededed solid" @click.native="changeUrlFans(`/users/relationship/${currentUser}/followed`)">
+          <Col span="12" style="border-right: 1px #ededed solid" @click.native="changeUrlFans(`/users/relationship/${currentUser}/followers`)">
             <p  v-if="!messageCount.fans" :class="$style.contentCenter" class="followsNum">{{followed}}</p>
             <p v-if="messageCount.fans" :class="$style.contentCenterHalf" class="followsNum">{{followed}}</p>
             <p v-if="messageCount.fans" :class="$style.newFollowsHalf">{{messageCount.fans}}</p>
             <p :class="$style.contentCenter">粉丝</p>
           </Col>
-          <Col span="12" @click.native="changeUrl(`/users/relationship/${currentUser}/following`)">
+          <Col span="12" @click.native="changeUrl(`/users/relationship/${currentUser}/followings`)">
             <p :class="$style.contentCenter" class="followsNum">{{following}}</p>
             <p :class="$style.contentCenter">关注</p>
           </Col>

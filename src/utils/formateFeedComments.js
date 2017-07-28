@@ -16,20 +16,14 @@ export default function(commentsSource) {
     comment.user = {};
     comment.replyToUser = {};
     // 评论用户
-    comment.user = localEvent.getLocalItem(`user_${comment.user_id}`);
-    if (!lodash.keys(comment.user).length) {
-      getUserInfo(comment.user_id, 30).then(localUser => {
-        comment.user = localUser;
-      });
-    }
+    getUserInfo(comment.user_id).then(localUser => {
+      comment.user = localUser;
+    });
     // 被回复的用户
-    if (comment.reply_to_user_id) {
-      comment.replyToUser = localEvent.getLocalItem(`user_${comment.reply_to_user_id}`);
-      if (!lodash.keys(comment.replyToUser).length) {
-        getUserInfo(comment.reply_to_user_id, 30).then(localUser => {
-          comment.replyToUser = localUser;
-        });
-      }
+    if(comment.reply_user) {
+      getUserInfo(comment.reply_user).then(localUser => {
+        comment.replyToUser = localUser;
+      });
     }
     newComment.push(comment);
     max_id = comment.id;
