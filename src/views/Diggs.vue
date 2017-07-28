@@ -37,7 +37,7 @@
               <DiggIcon height="21" width="21" color="#f4504d" />
             </Col>
             <Col span="5">
-              <div :class="$style.sourceContent" @click="changeUrl(`/feed/${digg.source_id}`)">
+              <div :class="$style.sourceContent" @click="changeUrl(`/feed/${digg.likeable_id}`)">
                 <img v-show="digg.cover" :src="digg.cover" />
                 <div v-show="!digg.cover" :class="$style.source">
                   <div :class="$style.content">
@@ -66,7 +66,6 @@
   import localEvent from '../stores/localStorage';
   import { changeUrl, goTo } from '../utils/changeUrl';
   import timers from '../utils/timer';
-  import getImage from '../utils/getImage';
   import BackIcon from '../icons/Back';
   import DiggIcon from '../icons/Digg';
   import { resolveImage } from '../utils/resource';
@@ -96,13 +95,13 @@
       changeUrl,
       goTo,
       loadTop () {
-        addAccessToken().get(createOldAPI(`users/mydiggs`),{},
+        addAccessToken().get(createAPI(`user/likes?limit=15`),{},
           {
             validateStatus: status => status === 200
           }
         )
-        .then(response => {
-          let diggs = response.data.data;
+        .then(({ data = []}) => {
+          let diggs = data;
           if(diggs.length) {
             this.max_id = diggs[0].id;
           }
@@ -127,13 +126,13 @@
       },
       loadBottom () {
         if(!this.max_id) return ;
-        addAccessToken().get(createOldAPI(`users/mydiggs?max_id=${this.max_id}`),{},
+        addAccessToken().get(createAPI(`user/likes?limit=15&after=${this.max_id}`),{},
           {
             validateStatus: status => status === 200
           }
         )
-        .then(response => {
-          let diggs = response.data.data;
+        .then(({data = []}) => {
+          let diggs = data;
           if(diggs.length) {
             this.diggs = [ ...this.diggs, diggs ];
             this._loadFormateDiggs(diggs, false);
@@ -150,59 +149,46 @@
       },
       _loadFormateDiggs( diggs, top = true) {
         diggs.forEach(digg => {
-          let newDigg = {
-            name: '',
-            avatar: '',
-            user_id: digg.user_id,
-            time: 0,
-            source_id: digg.source_id,
-            source_content: digg.source_content,
-            component: digg.component,
-            body: digg.body,
-            cover: ''
-          };
-          let user = localEvent.getLocalItem(`user_${digg.user_id}`);
+          let 
+              digg_source = {...digg.likeable},
+              user = localEvent.getLocalItem(`user_${digg.user_id}`);
           getLocalDbUser(digg.user_id).then( user => {
-            const { avatar = defaultAvatar } = user;
-            const { name = '' } = user;
-            if(digg.source_cover) {
-              newDigg.cover = buildUrl(createAPI(`files/${digg.source_cover}`), {w: 100, h: 100});
+            const { avatar = defaultAvatar, name = '' } = user;
+            if(digg_source.images.length > 0) {
+              digg.cover = buildUrl(createAPI(`files/${digg_source.images[0].id}`), {w: 100, h: 100});
+            }else if(digg_source.feed_content){
+              digg.source_content = digg_source.feed_content;
             }
-            newDigg.name = name;
-            newDigg.avatar = avatar;
-            newDigg.time = timers(digg.created_at, 8, false);
+            digg.name = name;
+            digg.avatar = avatar;
+            digg.time = timers(digg.created_at, 8, false);
             if(!top) {
-              this.formated = [ ...this.formated, newDigg ];
+              this.formated = [ ...this.formated, digg ];
             } else {
-              this.formated = [ newDigg, ...this.formated ];
+              this.formated = [ digg, ...this.formated ];
             }
           });
         });
       },
       _initFormatedDiggs () {
         this.diggs.forEach(digg => {
-          let newDigg = {
-            name: '',
-            avatar: '',
-            user_id: digg.user_id,
-            time: 0,
-            source_id: digg.source_id,
-            source_content: digg.source_content,
-            component: digg.component,
-            body: digg.body,
-            cover: ''
-          };
-          let user = localEvent.getLocalItem(`user_${digg.user_id}`);
+          let
+              digg_source = {...digg.likeable},
+              user = localEvent.getLocalItem(`user_${digg.user_id}`);
           getLocalDbUser(digg.user_id).then( user => {
-            const { avatar = defaultAvatar } = user;
-            const { name = '' } = user;
-            if(digg.source_cover) {
-              newDigg.cover = getImage(digg.source_cover, 20);
+            const { avatar = defaultAvatar, name = '' } = user;
+            if(digg_source.images.length > 0) {
+              digg.cover = buildUrl(createAPI(`files/${digg_source.images[0].id}`), {w: 100, h: 100});
+            }else if(digg_source.feed_content){
+              digg.source_content = digg_source.feed_content;
             }
-            newDigg.name = name;
-            newDigg.avatar = avatar;
-            newDigg.time = timers(digg.created_at, 8, false)
-            this.formated = [ ...this.formated, newDigg ];
+            digg.name = name;
+            digg.avatar = avatar;
+            digg.time = timers(digg.created_at, 8, false)
+            this.formated = [ ...this.formated, digg ];
+          })
+          .catch( error => {
+            console.log(error);
           });
         });
       }
@@ -216,13 +202,13 @@
       this.$store.dispatch(CLEANMESSAGE, cb => {
         cb('diggs');
       });
-      addAccessToken().get(createOldAPI(`users/mydiggs?max_id=${this.max_id}`),{},
+      addAccessToken().get(createAPI(`user/likes?limit=15&after=${this.max_id}`),{},
         {
           validateStatus: status => status === 200
         }
       )
-      .then(response => {
-        this.diggs = response.data.data;
+      .then(({data = []}) => {
+        this.diggs = data;
         let length = this.diggs.length;
         if( length ) {
           this.max_id = this.diggs[length - 1].id;

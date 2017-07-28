@@ -31,10 +31,12 @@
                 <img @click="changeUrl(`/users/feeds/${comment.user_id}`)" class="avatar" :src="comment.avatar" :alt="comment.name" />
               </div>
               <div span="16" style="width: 68vw; padding: 0 12px;">
+                <!-- 评论者 -->
                 <h4 @click="changeUrl(`/users/feeds/${comment.user_id}`)">{{comment.name}}</h4>
+                <!-- 第三+评论者 -->
                 <div class="gray-color">
-                  <span v-if="comment.reply_to_user_id">回复</span>
-                  <span @click="changeUrl(`/users/feeds/${comment.reply_to_user_id}`)" class="primary-color" style="padding: 0 4px;" v-if="comment.reply_to_user_id">{{comment.reply_to_user_name}}: </span>
+                  <span v-if="comment.replyUser">回复</span>
+                  <span @click="changeUrl(`/users/feeds/${comment.replyUser.user_id}`)" class="primary-color" style="padding: 0 4px;" v-if="comment.replyUser">{{comment.replyUser.name}}: </span>
                   {{comment.body}}
                 </div>
                 <timeago style="font-size: 14px; color: #999;" :since="comment.time" locale="zh-CN" :auto-update="60"></timeago>
@@ -44,7 +46,7 @@
                   <img v-if="comment.cover" @click="openCommentBox(index)" :src="comment.cover" />
                   <div v-if="!comment.cover" @click="openCommentBox(index)" :class="$style.source">
                     <div :class="$style.content">
-                      {{comment.body}}
+                      {{comment.source_content}}
                     </div>
                   </div>
                 </div>
@@ -103,11 +105,11 @@
   import localEvent from '../stores/localStorage';
   import { changeUrl, goTo } from '../utils/changeUrl';
   import timers from '../utils/timer';
-  import getImage from '../utils/getImage';
   import BackIcon from '../icons/Back';
   import lodash from 'lodash';
-  import { getLocalDbUser } from '../utils/user';
+  import { getLocalDbUser, getUserInfo } from '../utils/user';
   import { resolveImage } from '../utils/resource';
+  import buildURL from 'axios/lib/helpers/buildURL';
   const defaultNoBody = resolveImage(require('../statics/images/img_default_nobody@2x.png'));
   const defaultAvatar = resolveImage(require('../statics/images/defaultAvatarx2.png'));
   const Comments = {
@@ -134,11 +136,11 @@
         if(!this.commentCount || this.loading) return;
         this.loading = true;
         let source = this.comments[this.openId];
-        let api = `feeds/${source.source_id}/comments`;
-        if(source.component === 'news') {
-          api = `news/${source.source_id}/comment`;
+        let api = `feeds/${source.id}/comments`;
+        if(source.commentable_type === 'news') {
+          api = `news/${source.id}/comment`;
         }
-
+        
         let comment_data = {
           body: this.commentsContent
         };
@@ -186,13 +188,13 @@
       changeUrl,
       goTo,
       loadTop () {
-        addAccessToken().get(createAPI(`users/mycomments`),{},
+        addAccessToken().get(createAPI(`user/comments?limit=15`),{},
           {
             validateStatus: status => status === 200
           }
         )
-        .then(response => {
-          let comments = response.data.data;
+        .then(({data = []}) => {
+          let comments = data;
           let newcomments = [];
           comments.forEach( comment => {
             if( this.ids.findIndex(function(value, index, arr) {
@@ -213,13 +215,13 @@
       },
       loadBottom () {
         if(!this.max_id) return;
-        addAccessToken().get(createAPI(`users/mycomments?max_id=${this.max_id}`),{},
+        addAccessToken().get(createAPI(`user/comments?limit=15&after=${this.max_id}`),{},
           {
             validateStatus: status => status === 200
           }
         )
-        .then(response => {
-          let comments = response.data.data;
+        .then(({data = []}) => {
+          let comments = data;
           this._loadTopFormatedComments(comments, false);
           let length = comments.length;
           if(length < 15) {
@@ -234,96 +236,71 @@
       },
       _initFormatedComments () {
         let comments = this.comments;
-        let newcomments = [];
         comments.forEach(comment => {
-          let newcomment = {
-            name: '',
-            avatar: '',
-            user_id: comment.user_id,
-            reply_to_user_id: comment.reply_to_user_id,
-            reply_to_user_name: '',
-            time: 0,
-            source_id: comment.source_id,
-            source_content: comment.source_content,
-            component: comment.component,
-            body: comment.body,
-            cover: '',
-            id: comment.id
-          };
-          getLocalDbUser(comment.user_id).then( user => {
-            return getLocalDbUser(comment.reply_to_user_id).then( replyUser => {
-              user.replyUser = replyUser;
+          let comment_source = { ...comment.commentable};
+          getLocalDbUser(comment.user_id)
+          .then( user => {
+            return getLocalDbUser(comment.reply_user).then( replyUser => {
+              comment.replyUser = replyUser || null;
               return user;
             });
-          }).then( user => {
-            if(comment.reply_to_user_id) {
-              if(!lodash.keys(user.replyUser).length) {
-                getUserInfo(comment.reply_to_user_id).then( replyUser => {
-                  const { name = '' } = replyUser;
-                  newcomment.reply_to_user_name = name;
-                });
-              } else {
-                const { name = '' } = user.replyUser;
-                newcomment.reply_to_user_name = name;
-              }
-            }
+          })
+          .then( user => {
+
             const { avatar = defaultAvatar } = user;
             const { name = '' } = user;
-            if(comment.source_cover) {
-              newcomment.cover = buildUrl(createAPI(`files/${comment.source_cover}`), {w: 100, h: 100});
+
+            if(comment_source.images.length > 0) {
+              comment.cover = buildURL(createAPI(`files/${comment_source.images[0].id}`), {w: 100, h: 100});
+            }else if(comment_source.feed_content){
+              comment.source_content = comment_source.feed_content;
             }
-            newcomment.name = name;
-            newcomment.avatar = avatar;
-            newcomment.time = timers(comment.created_at, 8, false);
-            this.formated = [ ...this.formated, newcomment ];
+            comment.name = name;
+            comment.avatar = avatar;
+            comment.time = timers(comment.created_at, 8, false);
+            this.formated = [...this.formated, comment];
+          })
+          .catch(error=>{ 
+            console.log(error);
           });
         });
       },
       _loadTopFormatedComments (comments = [], top = true) {
-        let newcomments = [];
         comments.forEach(comment => {
-          let newcomment = {
-            name: '',
-            avatar: '',
-            user_id: comment.user_id,
-            reply_to_user_id: comment.reply_to_user_id,
-            reply_to_user_name: '',
-            time: 0,
-            source_id: comment.source_id,
-            source_content: comment.source_content,
-            component: comment.component,
-            body: comment.body,
-            cover: ''
-          };
+          let comment_source = { ...comment.commentable};
           getLocalDbUser(comment.user_id).then( user => {
-            return getLocalDbUser(comment.reply_to_user_id).then( replyUser => {
+            return getLocalDbUser(comment.reply_user).then( replyUser => {
               user.replyUser = replyUser;
               return user;
             });
           }).then( user => {
-            if(comment.reply_to_user_id) {
+            console.log(user);
+            if(comment.reply_user) {
               if(!lodash.keys(user.replyUser).length) {
-                getUserInfo(comment.reply_to_user_id).then( replyUser => {
+                getUserInfo(comment.reply_user).then( replyUser => {
                   const { name = '' } = replyUser;
-                  newcomment.reply_to_user_name = name;
+                  comment.reply_user_user_name = name;
                 });
               } else {
                 const { name = '' } = user.replyUser;
-                newcomment.reply_to_user_name = name;
+                comment.reply_user_name = name;
               }
             }
             const { avatar = defaultAvatar} = user;
             const { name = '' } = user;
-            if(comment.source_cover) {
-              newcomment.cover = getImage(comment.source_cover, 20);
+            if(comment_source.images.length > 0) {
+              comment.cover = buildURL(createAPI(`files/${comment_source.images[0].id}`), {w: 100, h: 100});
+            }else if(comment_source.feed_content){
+              comment.source_content = comment_source.feed_content;
             }
-            newcomment.name = name;
-            newcomment.avatar = avatar;
-            newcomment.time = timers(comment.created_at, 8, false);
+            comment.name = name;
+            comment.avatar = avatar;
+            comment.time = timers(comment.created_at, 8, false);
+            this.updateCommentList(comment);
             if( top ) {
-              this.formated = [ newcomment, ...this.formated ];
+              this.formated = [ comment, ...this.formated ];
             } else {
-              this.formated = [ ...this.formated, newcomment ];
+              this.formated = [ ...this.formated, comment ];
             }
           });
         });
@@ -341,13 +318,15 @@
       this.$store.dispatch(CLEANMESSAGE, cb => {
         cb('comments');
       });
-      addAccessToken().get(createOldAPI(`users/mycomments?max_id=${this.max_id}`),{},
+      addAccessToken().get(createAPI(`user/comments?limit=15&after=${this.max_id}`),{},
         {
           validateStatus: status => status === 200
         }
       )
-      .then(response => {
-        this.comments = response.data.data;
+      .then(({data = []}) => {
+
+        this.comments = data;
+
         window.TS_WEB.dataBase.transaction('rw?',
           window.TS_WEB.dataBase.commentslist,
           () => {
