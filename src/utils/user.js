@@ -123,7 +123,7 @@ function getLoggedUserInfo() {
         userLocal.phone = user.phone;
         userLocal.following = user.following ? 1 : 0;
         userLocal.follower = user.follower ? 1 : 0;
-        userLocal.avatar = user.avatar;
+        userLocal.avatar = user.avatar || defaultAvatar;
         userLocal.sex = user.sex;
         userLocal.bg = user.bg;
         userLocal.bio = user.bio;
@@ -144,8 +144,6 @@ function getLoggedUserInfo() {
               });
             })
             .catch(e => {
-              // console.log(TS_WEB.currentUserId, user.id);
-              // console.log(e);
             });
         }
 
@@ -198,6 +196,7 @@ function getUserInfo(user_id) {
         delete(userLocal.id);
         delete(userLocal.follower);
         delete(userLocal.following);
+        userLocal.avatar = userLocal.avatar || defaultAvatar;
         console.log(userLocal);
         if (user.id !== TS_WEB.currentUserId) {
           // 关注和相互关注状态

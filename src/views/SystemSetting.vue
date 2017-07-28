@@ -56,7 +56,7 @@
   import { changeUrl } from '../utils/changeUrl';
   import localEvent from '../stores/localStorage';
   import Comfirm from '../utils/Comfirm';
-  import { NOTICE } from '../stores/types';
+  import { NOTICE, CLEANUSERFEEDS } from '../stores/types';
   import BackIcon from '../icons/Back';
   import RightArrowIcon from '../icons/RightArrow';
 
@@ -118,6 +118,7 @@
           TS_WEB.webSocket.close();
         }
         this.cannel();
+        this.$store.dispatch(CLEANUSERFEEDS);
         localEvent.setLocalItem('UserLoginInfo', {});
         this.changeUrl('/login');
       }

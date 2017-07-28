@@ -275,7 +275,6 @@
           let createDate = timestamp.toLocaleDateString();
           feed.month = '';
           feed.date = '';
-          feed.created_at = '';
           if(createDate != yesterday && createDate != today) {
              feed.month = timestamp.getMonth() + 1;
              feed.date = timestamp.getDate();
@@ -401,12 +400,12 @@
         this.goBack();
         return;
       }
-      this.user_id = window.TS_WEB.currentUserId != user_id ? user_id : window.TS_WEB.currentUserId;
+      this.user_id = (window.TS_WEB.currentUserId != user_id) ? user_id : window.TS_WEB.currentUserId;
       getLoggedUserInfo(this.user_id, 30).then( user => {
         this.userInfo = { ...this.userInfo, ...user };
       });
       // 获取动态列表
-      addAccessToken().get(createAPI(`feeds?user=${this.user_id}&limit=15`), {},
+      addAccessToken().get(createAPI(`feeds?type=users&user=${this.user_id}&limit=15`), {},
         {
           validateStatus: status => status === 200
         }
