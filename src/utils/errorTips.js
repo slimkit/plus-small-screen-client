@@ -1,7 +1,2 @@
-export default (data) => {
-  let error = {};
-  for (let t in data) {
-    error = {...error, ...data[t]};
-  }
-  return error;
-}
+import { reduce } from "lodash";
+export default ({...data}) => reduce(data, (input, [...items]) => ([...input, ...items]));

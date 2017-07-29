@@ -84,7 +84,7 @@
   import localEvent from '../stores/localStorage';
   import router from '../routers/index';
   import detecdOS from '../utils/detecdOS';
-  import errorTips from '../utils/errorTips';
+  import formatError from '../utils/errorTips';
   import errorCodes from '../stores/errorCodes';
   import deleteObjectItems from '../utils/deleteObjectItems';
   import { getUserInfo, getLocalDbUser, getLoggedUserInfo } from '../utils/user';
@@ -408,7 +408,7 @@
         .catch(({ response: { data = {} } = {} } ) => {
           this.isDisabled = false;
           this.isLoading = false;    
-          this.errors = { ...this.errors, ...errorTips(data) };
+          this.errors = { ...this.errors, ...formatError(data) };
         });
       }
     }

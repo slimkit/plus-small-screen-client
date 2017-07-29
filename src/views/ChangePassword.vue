@@ -19,7 +19,7 @@
           旧密码
         </Col>
         <Col span="15">
-          <input type="password"  size="large" v-show="isShowOldPassword" v-model.trim="oldPassword" placeholder="旧密码" id="password" name="password" />
+          <input type="text"  size="large" v-show="isShowOldPassword" v-model.trim="oldPassword" placeholder="旧密码" id="password" name="password" />
         </Col>
         <Col span="3">
           <CloseIcon v-show="showOldIcon" height="21" width="21" color="#999" @click.native="cleanOldPassword" />
@@ -65,11 +65,15 @@
   import { createAPI, addAccessToken } from '../utils/request';
   import errorCodes from '../stores/errorCodes';
   import { NOTICE } from '../stores/types';
-  import { goTo } from '../utils/changeUrl';
+  import { goTo, changeUrl } from '../utils/changeUrl';
   import BackIcon from '../icons/Back';
   import CloseIcon from '../icons/Close';
   import EyeOpenIcon from '../icons/EyeOpen';
   import EyeCloseIcon from '../icons/EyeClose';
+
+  import { CLEANUSERFEEDS } from '../stores/types';
+  import formatError from '../utils/errorTips';
+  import localEvent from '../stores/localStorage';
 
   const changePassword = {
     components: {
@@ -85,16 +89,17 @@
       isShowOldPassword: true,
       isShowNewPassword: true,
       isShowRepeatPassword: true,
+      isDisabled: true,
       error: ''
     }),
     computed: {
-      isDisabled () {
-        return (this.oldPassword.length > 5) 
-                && (this.oldPassword.length < 16) 
-                && (this.newPassword.length > 5) 
-                && (this.newPassword.length < 16) 
-                && (this.newPassword === this.repeatNewPassword);
-      },
+      // isDisabled () {
+      //   return (this.oldPassword.length > 5) 
+      //           && (this.newPassword.length > 5) 
+      //           && (this.newPassword.length > 5) 
+      //           && (this.newPassword.length < 16) 
+      //           && (this.newPassword === this.repeatNewPassword);
+      // },
       showOldIcon () {
         return this.oldPassword.length > 0;
       },
@@ -105,11 +110,8 @@
         return this.repeatNewPassword.length > 0;
       }
     },
-    watch: {
-
-    },
     methods: {
-      goTo,
+      goTo,changeUrl,
       cleanOldPassword () {
         this.oldPassword = '';
       },
@@ -120,33 +122,30 @@
         this.isShowRepeatPassword = !this.isShowRepeatPassword;
       },
       changePassword () {
-        let password = this.oldPassword;
-        let new_password = this.newPassword;
-        let repeat_password = this.repeatNewPassword;
+        let old_password = this.oldPassword;
+        let password = this.newPassword;
+        let password_confirmation = this.repeatNewPassword;
         if(password.length < 6) {
           this.error = '旧密码长度不能小于6';
-          return;
+          return false;
         }
-        if(new_password.length < 6) {
+        if(password.length < 6) {
           this.error = '新密码长度不能小于6';
-          return;
+          return false;
         }
-        if(new_password !== repeat_password) {
-          this.error = '新密码长度不能小于6';
-          return;
+        if(password !== password_confirmation) {
+          this.error = '两次输入密码不匹配';
+          return false;
         }
-        addAccessToken().patch(createAPI('users/password'),{
+        addAccessToken().put(createAPI('user/password'),{
+            old_password,
             password,
-            new_password
-          },
-          {
-            validateStatus: status => status === 201
+            password_confirmation
           }
         )
         .then(response => {
-          let data = response.data;
-          if(data.status || data.code == 0)
-          {
+          const { status = 0, data = { tips: "未知数据"} } = response;
+          if(status && status === 204){
             this.$store.dispatch(NOTICE, cb => {
               cb({
                 show: true,
@@ -158,17 +157,33 @@
             this.oldPassword = '';
             this.newPassword = '';
             this.repeatNewPassword = '';
+
+            // 密码修改成功后 // 1. 清除localLoginInfo 并 退回至登录页面 // 2. 直接退出
+
+            // 1.
+            // localEvent.clearLocalItem('localLoginInfo');
+            // this.changeUrl('/login');
+
+            // 2.
+            if(TS_WEB.webSocket){
+              TS_WEB.webSocket.close();
+            }
+            this.$store.dispatch(CLEANUSERFEEDS);
+            localEvent.setLocalItem('UserLoginInfo', {});
+            this.changeUrl('/login');
           }
         })
         .catch( error => {
-          let data = error.response.data;
-          if(data.code === 1006) {
+          console.log(error);
+          const { response = {} } = error;
+          const { status = 0, data = {error: "修改密码失败，未知错误"}} = response;
+          if( status && status === 422){
             this.$store.dispatch(NOTICE, cb => {
               cb({
                 show: true,
                 time: 1500,
                 status: false,
-                text: '原密码错误'
+                text: formatError(data).join("")
               });
             });
           }
