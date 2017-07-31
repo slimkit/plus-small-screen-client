@@ -3,12 +3,6 @@
     <Row :gutter="16" :class="$style.userFeed">
       <Col span="3">
         <div class="grid-content bg-purple" style="line-height: 100%;">
-          <span 
-            style="text-align: center; font-weight: 400; width: 100%; display: flex; justify-content: center; align-items: center; flex-wrap: wrap; line-height: 100%; font-size: 18px;" 
-            v-if="feed.created_at"
-          >
-            {{feed.created_at}}
-          </span>
           <span style="text-align: center; font-weight: 400; font-size: 18px;display: flex; justify-content: center; padding-bottom: 8px;" v-if="feed.date">{{feed.date}}</span>
           <span style="text-align: center; font-size: 14px;display: flex; justify-content: center;" v-if="feed.month">{{feed.month}}月</span>
         </div>
