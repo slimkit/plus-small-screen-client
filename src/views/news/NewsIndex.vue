@@ -339,33 +339,51 @@
     created () {
       this.showSpinner = true;
       // 获取资讯分类
-      addAccessToken().get(createOldAPI('news/cates'),
+      addAccessToken().get(createAPI('news/cates'),
         {},
         {
           validateStatus: status => status === 200
         }
       )
       .then( response => {
-        let data = response.data.data;
-        this.myCates = [ ...data.my_cates ]; // 我订阅的频道
-        this.oldMyCates = data.my_cates.concat();
-        this.moreCates = [ ...data.more_cates ]; // 其他频道
-        this.oldMoreCates = data.more_cates.concat();
+        let {
+          more_cates = []
+          // 未订阅时 截取全部分类的前5个
+          my_cates = more_cates.splice(0, 5) || [],
+        } = response.data || {};
+
+        this.myCates = [ ...my_cates ]; // 我订阅的频道
+        this.oldMyCates = [...my_cates];
+        this.moreCates = [ ...more_cates ]; // 其他频道
+        this.oldMoreCates = [ ...more_cates ];
+        
+      })
+      .catch(error => {
+        if(error.response) {
+          const { status = 0 } = error.response;
+          if(status === 404){
+            this.myCates = [] // 我订阅的频道
+            this.moreCates = []; // 其他频道
+            this.oldMyCates = [];
+            this.oldMoreCates = [];
+          }
+          console.log('none');
+        }
       })
       
       // 获取推荐资讯
       let cate_id = this.currentNewsCateId || -1;
-      addAccessToken().get(createOldAPI(`news?cate_id=${cate_id}`),
+      addAccessToken().get(createAPI(`news/cates/pinneds`),
         {},
         {
           validateStatus: status => status === 200
         }
       )
       .then( response => {
-        let data = response.data.data;
+        let data = response.data;
 
         if(data.list.length) {
-          data.list.forEach(list => {
+          data.forEach(list => {
             this.newsListIds.push(list.id);
           });
           this.newsLists = [ ...data.list ] // 推荐banner数据
@@ -380,13 +398,23 @@
           });
           this.recommendLists = [ ...data.recommend ]; // 推荐banner数据
         }
-        this.showSpinner = false;
         if(this.$refs.loadmore) {
           setTimeout( () => {
             this.$refs.loadmore.onTopLoaded();
           }, 800)
         }
       })
+      .catch(error => {
+        console.log(error);
+        if(error.response) {
+          const { status = 0 } = error.response;
+          if(status === 404){
+
+          }
+          console.log('none');
+        }
+      });
+      this.showSpinner = false;
     }
   }
 
