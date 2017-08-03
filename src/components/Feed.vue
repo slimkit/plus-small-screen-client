@@ -68,12 +68,17 @@
   import CommentsTool from './CommentsTool';
   import timers from '../utils/timer';
   import router from '../routers/index';
-  import defaultAvatar from '../statics/images/defaultAvatarx2.png';
+  import {
+    resolveImage
+  } from '../utils/resource';
+
   import lodash from 'lodash';
   import { changeUrl } from '../utils/changeUrl';
   import { mapState } from 'vuex';
-  import { NOTICE } from '../stores/types';
-
+  import { NOTICE, USERS_APPEND } from '../stores/types';
+  import storeLocal from 'store';
+  const defaultAvatar =  resolveImage(require('../statics/images/defaultAvatarx2.png'));
+  console.log(defaultAvatar);
   const feedinfo = {
     props: [
       'feed'
@@ -108,7 +113,8 @@
     },
     computed: {
       avatar () {
-        const { avatar = defaultAvatar } = this.user;
+        let { avatar = defaultAvatar } = this.user;
+        // avatar = avatar || ;
         return avatar;
       },
       timer () {
@@ -121,17 +127,25 @@
       })
     },
     created () {
-      window.TS_WEB.dataBase.transaction('rw?', window.TS_WEB.dataBase.userbase, () => {
-        window.TS_WEB.dataBase.userbase.get({ user_id: parseInt(this.feed.user_id) }).then( item => {
-          if(item === undefined) {
-            getUserInfo(this.feed.user_id).then( user => {
-              this.user = { ...user };
-            });
-          } else {
-            this.user = { ...item };
-          }
-        })
-      })
+      let user = storeLocal.get(`user_${this.feed.user_id}`);
+      if(!user) {
+        if(this.feed.user_id !== TS_WEB.currentUserId) {
+          getUserInfo(this.feed.user_id).then( user => {
+            this.user = { ...user };
+          });
+        } else {
+          getLoggedUserInfo().then( user => {
+            this.user = { ...user };
+          });
+        }
+          
+      } else {
+        user.avatar = user.avatar ? user.avatar : defaultAvatar;
+        this.$store.dispatch(USERS_APPEND, cb =>{
+          cb(user)
+        });
+        this.user = { ...user };
+      }
     }
   }
 

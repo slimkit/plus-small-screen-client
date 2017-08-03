@@ -247,16 +247,14 @@
           })
           .then( user => {
 
-            const { avatar = defaultAvatar } = user;
             const { name = '' } = user;
-
             if(comment_source.images.length > 0) {
               comment.cover = buildURL(createAPI(`files/${comment_source.images[0].id}`), {w: 100, h: 100});
             }else if(comment_source.feed_content){
               comment.source_content = comment_source.feed_content;
             }
             comment.name = name;
-            comment.avatar = avatar;
+            comment.avatar = comment.avatar || defaultAvatar;
             comment.time = timers(comment.created_at, 8, false);
             this.formated = [...this.formated, comment];
           })
@@ -268,41 +266,36 @@
       _loadTopFormatedComments (comments = [], top = true) {
         comments.forEach(comment => {
           let comment_source = { ...comment.commentable};
-          getLocalDbUser(comment.user_id).then( user => {
-            return getLocalDbUser(comment.reply_user).then( replyUser => {
-              user.replyUser = replyUser;
-              return user;
-            });
-          }).then( user => {
-            console.log(user);
-            if(comment.reply_user) {
-              if(!lodash.keys(user.replyUser).length) {
-                getUserInfo(comment.reply_user).then( replyUser => {
-                  const { name = '' } = replyUser;
-                  comment.reply_user_user_name = name;
-                });
-              } else {
-                const { name = '' } = user.replyUser;
-                comment.reply_user_name = name;
-              }
-            }
-            const { avatar = defaultAvatar} = user;
-            const { name = '' } = user;
-            if(comment_source.images.length > 0) {
-              comment.cover = buildURL(createAPI(`files/${comment_source.images[0].id}`), {w: 100, h: 100});
-            }else if(comment_source.feed_content){
-              comment.source_content = comment_source.feed_content;
-            }
-            comment.name = name;
-            comment.avatar = avatar;
-            comment.time = timers(comment.created_at, 8, false);
-            this.updateCommentList(comment);
-            if( top ) {
-              this.formated = [ comment, ...this.formated ];
+          
+          if(comment.reply_user) {
+            replyUser = this.$storeLocal.get(`user_${comment.reply_user}`)
+            if(!replyUser) {
+              getUserInfo(comment.reply_user).then( replyUser => {
+                const { name = '' } = replyUser;
+                comment.reply_user_user_name = name;
+              });
             } else {
-              this.formated = [ ...this.formated, comment ];
+              const { name = '' } = user.replyUser;
+              comment.reply_user_name = name;
             }
-          });
+          }
+
+          const { name = '' } = user;
+          if(comment_source.images.length > 0) {
+            comment.cover = buildURL(createAPI(`files/${comment_source.images[0].id}`), {w: 100, h: 100});
+          }else if(comment_source.feed_content){
+            comment.source_content = comment_source.feed_content;
+          }
+
+          comment.name = name;
+          comment.avatar = comment.avatar || defaultAvatar;
+          comment.time = timers(comment.created_at, 8, false);
+          this.updateCommentList(comment);
+          if( top ) {
+            this.formated = [ comment, ...this.formated ];
+          } else {
+            this.formated = [ ...this.formated, comment ];
+          }
         });
       }
     },

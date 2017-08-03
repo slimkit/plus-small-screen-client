@@ -45,6 +45,7 @@
     "lodash": "^4.17.4",
     "mint-ui": "^2.2.7",
     "piexifjs": "^1.0.3",
+    "store": "^2.0.12",
     "vue": "^2.3.4",
     "vue-awesome-swiper": "^2.4.0",
     "vue-cropperjs": "^2.1.0",

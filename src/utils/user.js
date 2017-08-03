@@ -1,4 +1,4 @@
-import localEvent from '../stores/localStorage';
+// import localEvent from '../stores/localStorage';
 import {
   createAPI,
   addAccessToken,
@@ -11,7 +11,8 @@ import errorCodes from '../stores/errorCodes';
 import getImage from './getImage';
 import lodash from 'lodash';
 import buildURL from 'axios/lib/helpers/buildURL';
-import { NOTICE, USERS_APPEND } from '../stores/types';
+import { NOTICE, USERS_APPEND, USERS } from '../stores/types';
+import storeLocal from 'store';
 import {
   resolveImage
 } from './resource';
@@ -34,12 +35,7 @@ function followingUser(user_id, cb) {
         }
       )
       .then(response => {
-        window.TS_WEB.dataBase.transaction('rw?', window.TS_WEB.dataBase.relationship, () => {
-          window.TS_WEB.dataBase.relationship.where("[uid+uuid]").equals([window.TS_WEB.currentUserId, user_id]).modify({
-            following: 1
-          });
-        });
-        resolve(response.status === 204 ? true : false);
+        resolve(true);
       })
       .catch(error => {
         if(error.response.status === 401) {
@@ -69,11 +65,6 @@ function unFollowingUser(user_id) {
         }
       )
       .then(response => {
-        window.TS_WEB.dataBase.transaction('rw?', window.TS_WEB.dataBase.relationship, () => {
-          window.TS_WEB.dataBase.relationship.where("[uid+uuid]").equals([window.TS_WEB.currentUserId, user_id]).modify({
-            following: 0
-          });
-        });
         resolve(true);
       })
       .catch(error => {
@@ -112,87 +103,43 @@ function getLoggedUserInfo() {
       .then(response => {
         let user = response.data;
         user.user_id = user.id;
-        
-        localEvent.setLocalItem('user_' + user.id, user);
 
         delete user.id;
         delete user.created_at;
         delete user.updated_at;
         delete user.follower;
         delete user.following;
-        user.avatar = user.avatar ? user.avatar : avatar;
+
+        app.$storeLocal.set(`user_${user.user_id}`, user);
+
+        user.avatar = user.avatar ? user.avatar : defaultAvatar;
         app.$store.dispatch(USERS_APPEND, cb =>{
           cb(user)
         });
-        // 删除旧用户，写入新用户
-        db.transaction('rw?', db.userbase, () => {
-            db.userbase.where('user_id').equals(parseInt(user.user_id)).delete().then(() => {
-              db.userbase.put(
-                user
-              );
-            });
-          })
-          .then()
-          .catch(err => {
-            console.log(err.stack || err);
-          });
+
         resolve(user);
       })
   })
 }
 
 function getUserInfo(user_id) {
-  const db = window.TS_WEB.dataBase;
   return new Promise((resolve, reject) => {
-    addAccessToken().get(createAPI(`users/${user_id}?following=${user_id}&follower=${user_id}`), {}, {
+    const currentUserId = TS_WEB.currentUserId;
+    addAccessToken().get(createAPI(`users/${user_id}?following=${currentUserId}&follower=${currentUserId}`), {}, {
         validate: status => status === 200
       })
       .then(response => {
         let user = response.data;
-        if (user.id !== TS_WEB.currentUserId) {
-          // 关注和相互关注状态
-          db.transaction('rw?', db.relationship, () => {
-              db.relationships.where('[uid+uuid]').equals([window.TS_WEB.currentUserId, user.id]).delete().then(item => {
-                db.relationship.put({
-                  uid: window.TS_WEB.currentUserId,
-                  uuid: user.id,
-                  follower: user.follower,
-                  following: user.following
-                })
-              });
-            })
-            .then( x => {
-              console.log(x);
-            })
-            .catch(e => {
-            });
-        }
+
         user.user_id = user.id;
-        localEvent.setLocalItem('user_' + user_id, user);
         
         delete user.id;
-        delete user.created_at;
-        delete user.updated_at;
-        // delete user.following;
-        // delete user.follower;
-        
+          
+        app.$storeLocal.set(`user_${user.user_id}`, user);
+
         user.avatar = user.avatar || defaultAvatar;
         app.$store.dispatch(USERS_APPEND, cb =>{
           cb(user)
-        });
-        // 删除旧用户，写入新用户
-        db.transaction('rw?', db.userbase, () => {
-          db.userbase.where('user_id').equals(parseInt(user.user_id)).delete().then(() => {
-            db.userbase.put(
-              user
-            )
-          });
-        })
-        .then( () => {
-
-        })
-        .catch(err => {
-          console.log(err);
         });
 
         resolve(user);
@@ -220,21 +167,16 @@ function getUsersInfo(user_ids, cb) {
               };
               delete current_local_user.follower;
               delete current_local_user.following;
-              delete current_local_user.updated_at;
-              delete current_local_user.created_at;
-              delete current_local_user.id;
+              app.$storeLocal.set(`user_${user.user_id}`, $current_local_user);
 
-              current_local_user.avatar = current_local_user.avatar || defaultAvatar;
+              user.avatar = user.avatar || defaultAvatar;
+              users[user.id] = user;
 
-              localEvent.setLocalItem('user_' + current_local_user.user_id, current_local_user);
-
-              let db = window.TS_WEB.dataBase;
-              let dataForBase = current_local_user;
-
-              users[user.id] = current_local_user;
             });
           });
-
+          this.$store.dispatch(USERS, cb => {
+            cb(users);
+          })
           resolve(users);
         });
     } else {

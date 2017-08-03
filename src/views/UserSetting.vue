@@ -61,7 +61,7 @@
           城市
         </Col>
         <Col span="14">
-          <span :class="{sexDefaultText: !city}">{{ areaText }}</span>
+          <span :class="{sexDefaultText: !location}">{{ areaText }}</span>
         </Col>
         <Col span="5" :class="$style.rightIcon">
           <RightArrowIcon height="18" width="18" color="#999" />

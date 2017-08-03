@@ -191,9 +191,7 @@
         followingUser(this.user_id)
         .then( status => {
           if (status) {
-
-            this.userInfo = { ...this.userInfo, following: true };
-            localEvent.setLocalItem(`user_${this.user_id}`, this.userInfo);
+            this.userInfo.follower = true;
             // 更新页面数据
             this.userInfo.extra.followers_count += 1;
 
@@ -213,11 +211,10 @@
         unFollowingUser(this.user_id)
         .then( status => {
           if (status) {
-            this.userInfo = { ...this.userInfo, following: false };
-            localEvent.setLocalItem(`user_${this.user_id}`, this.userInfo);
-
+            this.userInfo.follower = false;
             // 更新页面数据
             this.userInfo.extra.followers_count -= 1;
+
           } else {
             this.$store.dispatch(NOTICE, cb => {
               cb({
@@ -350,13 +347,13 @@
             text: '相互关注'
           };
         }
-        if(!this.userInfo.following) {
+        if(!this.userInfo.follower) {
           return {
             status: false,
             text: '关注'
           }
         }
-        if(this.userInfo.following && !this.userInfo.follower) {
+        if(!this.userInfo.following && this.userInfo.follower) {
           return {
             status: true,
             text: '已关注'

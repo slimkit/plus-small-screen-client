@@ -10,12 +10,12 @@ import App from './App';
 import 'mint-ui/lib/style.css'
 import loading_img from './statics/images/image-loading.png';
 import { TabContainer, TabContainerItem, Loadmore, Popup, Picker } from 'mint-ui';
+import storeLocal from 'store';
 
-// import VueScroller from 'vue-scroller'
-
-// Vue.use(VueScroller);
 // iview ui
 Vue.use(iView);
+
+Vue.prototype.$storeLocal = storeLocal;
 
 // html title
 Vue.use(VueWechatTitle);

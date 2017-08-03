@@ -256,7 +256,7 @@
   import buildURL from 'axios/lib/helpers/buildURL';
   import errorCodes from '../stores/errorCodes';
   import localEvent from '../stores/localStorage';
-  import { getUserInfo, followingUser, unFollowingUser, getLocalDbUser } from '../utils/user';
+  import { getUserInfo, followingUser, unFollowingUser } from '../utils/user';
   import { NOTICE, SHOWFEEDDIGGSLISTS, FEEDSLIST, UPDATEFEED, CONFIRM, COMMENTINPUT, COLLECTIONFEEDSIDS, ADDCOLLECTIONFEEDSIDS, UNCOLLECTIONFEEDSID } from '../stores/types';
   import { friendNum } from '../utils/friendNum';
   import Comfirm from '../utils/Comfirm';
@@ -276,8 +276,10 @@
   import { changeUrl } from '../utils/changeUrl';
   import getLocalTime from '../utils/getLocalTime';
   import LockedImageForSwiper from '../components/LockedImageForSwiper';
+  import storeLocal from 'store';
 
   const noCommentImage = resolveImage(require('../statics/images/defaultNothingx2.png'));
+  const defaultAvatar = resolveImage(require('../statics/images/defaultAvatarx2.png'));
 
   const feedDetail = {
     components: {
@@ -327,7 +329,7 @@
         return this.timers(created_at, 8, false);
       },
       avatar () {
-        const { avatar = '' } = this.userInfo;
+        const { avatar = defaultAvatar } = this.userInfo;
         return avatar;
       },
       // 计算图片跳转地址
@@ -360,7 +362,7 @@
         let userLocal = {};
         let avatar = '';
         likes.forEach( (digg, index) => {
-          userLocal = localEvent.getLocalItem(`user_${digg.user_id}`);
+          let userLocal = storeLocal.get(`user_${digg.user_id}`);
           if(index > 4) { return; }
           if(!lodash.keys(userLocal).length > 0) {
             getUserInfo(digg.user_id).then(user => {
@@ -371,6 +373,7 @@
               });
             });
           } else {
+            userLocal.avatar = userLocal.avatar || defaultAvatar;
             digg_users.push({
               avatar: userLocal.avatar,
               user_id: userLocal.user_id,
@@ -549,25 +552,30 @@
        * @return {[type]} [description]
        */
       handleUnFollowingStatus () {
-        unFollowingUser(this.feedData.user_id).then(() => {
-          this.userInfo = { ...this.userInfo, follower: false };
-          // localEvent.setLocalItem(`user_${this.feedData.user_id}`, this.userInfo);
-        })
-        .catch(error => {
-        
-        });
-      },
-      handleFollowingStatus () {
-        followingUser(this.feedData.user_id).then(status => {
-          if(status.status || status.code == 0) {
-            this.userInfo = { ...this.userInfo, follower: true };
-            localEvent.setLocalItem(`user_${this.feedData.user_id}`, this.userInfo);
+        unFollowingUser(this.feedData.user_id).then((status) => {
+          if(status) {
+            this.userInfo.follower = false;
           } else {
             this.$store.dispatch(NOTICE, cb => {
               cb({
-                text: status.message,
+                text: '操作错误',
                 time: 1500,
-                status: true
+                status: false
+              });
+            });
+          }
+        })
+      },
+      handleFollowingStatus () {
+        followingUser(this.feedData.user_id).then(status => {
+          if(status) {
+            this.userInfo.follower = true;
+          } else {
+            this.$store.dispatch(NOTICE, cb => {
+              cb({
+                text: '操作错误',
+                time: 1500,
+                status: false
               });
             });
           }
@@ -645,9 +653,9 @@
             reply_to_user: {}
           };
           // current logged user
-          getLocalDbUser(window.TS_WEB.currentUserId).then( item => {
+          let currentUser = storeLocal.get(`user_${TS_WEB.currentUserId}`);
             // don't find local db user
-            if(item === undefined) {
+            if(!currentUser) {
               getUserInfo(window.TS_WEB.currentUserId).then( user => {
                 newComment.user = { ...user };
                 // commented user
@@ -659,7 +667,7 @@
                 }
               });
             } else { // find local db user
-              newComment.user = { ...item };
+              newComment.user = { ...currentUser };
 
               // commented user
               if(this.commentToUserId) {
@@ -671,7 +679,6 @@
                 this.$store.getters[FEEDSLIST][this.feed_id].feed_comment_count += 1;
               }
             }
-          });
           
           // 本地数据更新
           // this.feedData.tool.feed_comment_count += 1;
@@ -699,17 +706,16 @@
         if(reply_to_user_id) {
           this.commentIndex = index;
           this.commentToUserId = reply_to_user_id;
-          getLocalDbUser( reply_to_user_id ).then( item => {
-            if(item === undefined) {
-              getUserInfo( reply_to_user_id, 30 ).then( user => {
-                this.placeholder = `回复： ${user.name}`;
-                this.commentedUser = { ...user };
-              })
-            } else {
-              this.placeholder = `回复: ${item.name}`;
-              this.commentedUser = { ...item };
-            }
-          });
+          let reply_user = storeLocal.get(`user_${reply_to_user_id}`);
+          if(reply_user === undefined) {
+            getUserInfo( reply_to_user_id, 30 ).then( user => {
+              this.placeholder = `回复： ${user.name}`;
+              this.commentedUser = { ...user };
+            })
+          } else {
+            this.placeholder = `回复: ${reply_user.name}`;
+            this.commentedUser = { ...reply_user };
+          }
         } else {
           this.placeholder = '随便说说';
           this.commentFeed = true;
@@ -770,27 +776,11 @@
         }
         this.$router.back();
       },
+      // 获取当前动态用户的用户信息
       getUser (user_id) {
-        getLocalDbUser(user_id).then( item => {
-          if (item === undefined) {
-            getUserInfo(user_id).then(user => {
-              console.log(user);
-              this.userInfo = { ...user };
-            });
-          } else {
-            window.TS_WEB.dataBase.transaction('rw?', window.TS_WEB.dataBase.relationship, () => {
-              window.TS_WEB.dataBase.relationship.where('[uid+uuid]').equals([window.TS_WEB.currentUserId, user_id]).toArray().then( relation => {
-                if(relation.length) {
-                  this.userInfo = { ...this.userInfo, ...{
-                    follower: relation[0].follower,
-                    following: relation[0].following
-                  }}
-                }
-              });
-            });
-            this.userInfo = { ...this.userInfo, ...item };
-          }
-        })
+        getUserInfo(user_id).then(user => {
+          this.userInfo = { ...user };
+        });
       },
       menu() {
         let header = document.getElementById('feed-header');

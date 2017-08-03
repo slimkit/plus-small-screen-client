@@ -326,10 +326,10 @@
       },
       commentsData () {
         const { comments = [] } = this.feed; 
-        return comments.slice(0, 3); // 返回前三条评论
+        return comments.slice(0, 5); // 返回前三条评论
       },
       hasMore () {
-        return this.feed.feed_comment_count > 3;
+        return this.feed.feed_comment_count > 5;
       },
       users () {
         return this.$store.getters[USERS];
@@ -347,9 +347,9 @@
     created () {
       let user_ids_obj = {};
       const { comments = [] } =  this.feed;
-      //
+
       comments.forEach( (comment, index) => {
-        if(comment.reply_to_user_id) {
+        if(comment.reply_user) {
           user_ids_obj = { ...user_ids_obj, [comment.user_id]: comment.user_id, [comment.reply_user]: comment.reply_user };
         } else {
           user_ids_obj = { ...user_ids_obj, [comment.user_id]: comment.user_id };
@@ -357,13 +357,15 @@
       });
 
       let user_ids = lodash.values(user_ids_obj);
-      this.$store.dispatch(USERS, cb => getUsersInfo(user_ids).then(users => cb(users)));
+
+      // 批量获取用户
+      getUsersInfo(user_ids);
     }
   }
 
   export default FeedTool;
 </script>
-
+ty 
 <style lang="less" module>
   .tool {
     display: flex;

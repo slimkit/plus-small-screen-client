@@ -39,11 +39,14 @@
   import errorCodes from '../stores/errorCodes';
   import localEvent from '../stores/localStorage';
   import CollectionFeed from './CollectionFeed';
-  import nothingImg from '../statics/images/defaultNothingx3.png';
   import { NOTICE, FEEDSLIST, COLLECTIONIDS, COLLECTIONFEEDS, ADDCOLLECTIONIDS } from '../stores/types';
   import router from '../routers/index';
   import lodash from 'lodash';
   import { goTo } from '../utils/changeUrl';
+  import {
+    resolveImage
+  } from '../utils/resource';
+  const nothing = resolveImage(require'../statics/images/defaultNothingx3.png');
 
   const FeedLists = {
     components: {

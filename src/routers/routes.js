@@ -80,7 +80,7 @@ const routes = [
     redirect: '/feeds/new',
     children: [
       {
-        path: 'followings',
+        path: 'following',
         component: FeedFollowing,
         name: 'followingFeeds',
         meta: {
