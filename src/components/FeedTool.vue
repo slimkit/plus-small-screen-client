@@ -103,7 +103,7 @@
     COMMENTINPUT, 
     UPDATEFEED, 
     USERS, 
-    USER_APPEND,
+    USERS_APPEND,
     CONFIRM, 
     CLOSECOMMENTINPUT, 
     SHOWPOPUP, 
@@ -340,7 +340,7 @@
       },
       openInputByVuex () {
         if(this.openInput && this.commentAbout.reply_user) {
-          const reply_to_user = localEvent.getLocalItem(`user_${this.commentAbout.reply_user}`);
+          const reply_to_user = this.$storeLocal.get(`user_${this.commentAbout.reply_user}`);
           this.commentAbout.placeholder = `回复: ${reply_to_user.name}`;
         } else {
           this.commentAbout.placeholder = '随便说说';
@@ -350,27 +350,28 @@
     },
     created () {
       let user_ids_obj = {};
-      const { comments = [] } =  this.feed;
+      const { comments = [] } =  this.feed; 
+      // console.log(comments);
       comments.forEach( (comment, index) => {
         if(comment.reply_user) {
           let user = this.$storeLocal.get(`user_${comment.reply_user}`);
           if( !user ){
             user_ids_obj = { ...user_ids_obj, [comment.user_id]: comment.user_id, [comment.reply_user]: comment.reply_user };
           }else{
-            this.$store.dispatch(USER_APPEND, cb =>{ cb(user); });
+            this.$store.dispatch(USERS_APPEND, cb => cb(user));
           }
         } else {
           let user = this.$storeLocal.get(`user_${comment.user_id}`);
           if( !user ){
             user_ids_obj = { ...user_ids_obj, [comment.user_id]: comment.user_id };
           }else{
-            this.$store.dispatch(USER_APPEND, cb =>{ cb(user); });
+            this.$store.dispatch(USERS_APPEND, cb => cb(user));
           }
         }
       });
 
       let user_ids = lodash.values(user_ids_obj);
-
+      console.log(user_ids);
       // 批量获取用户
       getUsersInfo(user_ids);
     }
