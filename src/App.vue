@@ -44,7 +44,7 @@
       imStatus () { // im状态监测
         if(! TS_WEB.socketUrl) return;
         let imstatus = this.$store.getters[IMSTATUS];
-        let userLoginInfo = this.$storeLocal.get('UserLoginInfo');
+        let userLoginInfo = this.$storeLocal.get('UserLoginInfo') || {};
         if(lodash.keys(userLoginInfo).length && !imstatus.open && TS_WEB.webSocket !== null && TS_WEB.webSocket.readyState != 1 && TS_WEB.readyState != 0) {
           connect();
         }

@@ -103,6 +103,7 @@
     COMMENTINPUT, 
     UPDATEFEED, 
     USERS, 
+    USER_APPEND,
     CONFIRM, 
     CLOSECOMMENTINPUT, 
     SHOWPOPUP, 
@@ -224,7 +225,7 @@
         if(this.commentAbout.reply_user) {
           comment_data.reply_user = this.commentAbout.reply_user
         }
-        //
+
         addAccessToken().post(createAPI(`feeds/${this.feed.id}/comments`), 
           comment_data,
           {
@@ -279,6 +280,8 @@
           this.loading = false;
         });
       },
+
+      // 删除评论
       /**
        * [showComfirm description]
        * @param  {[type]} commentId  [description]
@@ -311,6 +314,7 @@
         })
       },
     },
+
     computed: {
       isDigg () {
         return this.feed.has_like;
@@ -347,12 +351,21 @@
     created () {
       let user_ids_obj = {};
       const { comments = [] } =  this.feed;
-
       comments.forEach( (comment, index) => {
         if(comment.reply_user) {
-          user_ids_obj = { ...user_ids_obj, [comment.user_id]: comment.user_id, [comment.reply_user]: comment.reply_user };
+          let user = this.$storeLocal.get(`user_${comment.reply_user}`);
+          if( !user ){
+            user_ids_obj = { ...user_ids_obj, [comment.user_id]: comment.user_id, [comment.reply_user]: comment.reply_user };
+          }else{
+            this.$store.dispatch(USER_APPEND, cb =>{ cb(user); });
+          }
         } else {
-          user_ids_obj = { ...user_ids_obj, [comment.user_id]: comment.user_id };
+          let user = this.$storeLocal.get(`user_${comment.user_id}`);
+          if( !user ){
+            user_ids_obj = { ...user_ids_obj, [comment.user_id]: comment.user_id };
+          }else{
+            this.$store.dispatch(USER_APPEND, cb =>{ cb(user); });
+          }
         }
       });
 
@@ -365,7 +378,6 @@
 
   export default FeedTool;
 </script>
-ty 
 <style lang="less" module>
   .tool {
     display: flex;
