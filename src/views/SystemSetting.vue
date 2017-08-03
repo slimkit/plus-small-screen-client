@@ -119,7 +119,7 @@
         }
         this.cannel();
         this.$store.dispatch(CLEANUSERFEEDS);
-        localEvent.setLocalItem('UserLoginInfo', {});
+        this.$storeLocal.set('UserLoginInfo', {});
         this.changeUrl('/login');
       }
     }

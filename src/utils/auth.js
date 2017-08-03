@@ -4,7 +4,7 @@ import router from '../routers/index';
 
 // 判断是否可以进入目标路由
 function requestAuth (to, from, next) {
-  let UserLoginInfo = storeLocal.get('UserLoginInfo');
+  let UserLoginInfo = storeLocal.get('UserLoginInfo') || {};
   if(UserLoginInfo.token) {
     next();
   } else {
@@ -19,7 +19,7 @@ function requestAuth (to, from, next) {
 
 // 登录状况不能进入的页面
 function CanNotGetInWhenLogged (to, from, next) {
-  let UserLoginInfo = storeLocal.get('UserLoginInfo');
+  let UserLoginInfo = storeLocal.get('UserLoginInfo') || {};
   if(UserLoginInfo.token) {
     next({
       path: '/feeds/new',
@@ -34,7 +34,7 @@ function CanNotGetInWhenLogged (to, from, next) {
 
 // 退出登录
 function logout () {
-  storeLocal.remove('UserLoginInfo');
+  storeLocal.set('UserLoginInfo', {});
   debugger;
   router.push({ path: '/login' });
 }

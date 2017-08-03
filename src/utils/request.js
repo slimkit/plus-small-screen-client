@@ -27,10 +27,10 @@ export const addAccessToken = () => {
   // 如果有才发送
   const {
     token = ''
-  } = storeLocal.get('UserLoginInfo');
-  let _token = '';
+  } = storeLocal.get('UserLoginInfo') || {};
+  let _token = token ? `Bearer ${token}` : '';
   axios.defaults.headers.common = {
-    'Authorization': `Bearer ${token}`,
+    'Authorization': _token,
     'Accept': 'application/json'
   };
   return axios;

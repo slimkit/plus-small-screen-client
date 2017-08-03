@@ -152,7 +152,7 @@ function getUsersInfo(user_ids) {
 
     if (user_ids_need_to_request.length) {
       let user_str = user_ids_need_to_request.join(',');
-      addAccessToken().get(createAPI(`users?user=${user_str}`), {}, {
+      addAccessToken().get(createAPI(`users?id=${user_str}`), {}, {
           validate: status => status === 200
         })
         .then(({ data = [] } = {}) => {
@@ -163,9 +163,10 @@ function getUsersInfo(user_ids) {
               let current_local_user = {
                 ...user
               };
+              current_local_user.user_id = user.id;
               delete current_local_user.follower;
               delete current_local_user.following;
-              app.$storeLocal.set(`user_${user.user_id}`, current_local_user);
+              app.$storeLocal.set(`user_${current_local_user.user_id}`, current_local_user);
 
               user.avatar = user.avatar || defaultAvatar;
               users[user.id] = user;
