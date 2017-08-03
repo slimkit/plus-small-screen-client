@@ -83,7 +83,7 @@ import { mapState } from 'vuex';
 import { SHOWPOST, NOTICE, ADDFOLLOWINGIDS, ADDNEWIDS, FEEDSLIST } from '../stores/types';
 import { createAPI, addAccessToken, createRequestURI } from '../utils/request';
 import buildURL from 'axios/lib/helpers/buildURL';
-import localEvent from '../stores/localStorage';
+import $storeLocal from 'store';
 import { Base64 } from 'js-base64';
 import md5 from 'js-md5';
 import { createUploadTask, uploadFile, noticeTask, dataURItoBlob } from '../utils/upload';
@@ -98,7 +98,7 @@ import piexif from 'piexifjs';
 
 const base64Reg = /^data:(.*?);base64,/;
 let reg = /data:(.*?);/;
-const UserLoginInfo = localEvent.getLocalItem('UserLoginInfo');
+const UserLoginInfo = $storeLocal.get('UserLoginInfo');
 //
 const postFeed = {
   components: {

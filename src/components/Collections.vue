@@ -37,7 +37,6 @@
 <script>
   import request, { createAPI, addAccessToken } from '../utils/request';
   import errorCodes from '../stores/errorCodes';
-  import localEvent from '../stores/localStorage';
   import CollectionFeed from './CollectionFeed';
   import { NOTICE, FEEDSLIST, COLLECTIONIDS, COLLECTIONFEEDS, ADDCOLLECTIONIDS } from '../stores/types';
   import router from '../routers/index';

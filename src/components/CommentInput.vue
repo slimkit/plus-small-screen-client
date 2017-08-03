@@ -41,7 +41,6 @@
 <script>
   import { COMMENTINPUT, CLOSECOMMENTINPUT, NOTICE, UPDATEFEED } from '../stores/types';
   import { mapState } from 'vuex';
-  import localEvent from '../stores/localStorage';
   import { createAPI, addAccessToken } from '../utils/request';
   import getLocalTime from '../utils/getLocalTime';
   import LoadingWhiteIcon from '../icons/LoadingWhite';
@@ -72,15 +71,15 @@
       sendComment () {
         if(!this.canSend || this.loading) return;
         this.loading = true;
-        let currentUser = localEvent.getLocalItem(`UserLoginInfo`);
+        let currentUser = ths.$storeLocal(`UserLoginInfo`);
         let commentStore = this.$store.getters[COMMENTINPUT];
         let body = this.body;
         let reply_to_user_id = commentStore.data.reply_to_user_id;
         let user_id = currentUser.user_id;
         // 当前用户信息
-        let user_info = localEvent.getLocalItem(`user_${user_id}`);
+        let user_info = this.$storeLocal.get(`user_${user_id}`);
         // 被评论者用户信息
-        let reply_to_user = localEvent.getLocalItem(`user_${reply_to_user_id}`);
+        let reply_to_user = this.$storeLocal.get(`user_${reply_to_user_id}`);
         let feed = commentStore.data.feed;
         let feed_id = feed.feed.feed_id;
         let newCommentInfo = [];

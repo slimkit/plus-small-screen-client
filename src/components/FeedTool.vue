@@ -97,7 +97,6 @@
 <script>
   import { friendNum } from '../utils/friendNum';
   import { createAPI, addAccessToken } from '../utils/request';
-  import localEvent from '../stores/localStorage';
   import { 
     NOTICE, 
     COMMENTINPUT, 
@@ -122,8 +121,6 @@
   import { getUsersInfo, getUserInfo } from '../utils/user';
   import Comfirm from '../utils/Comfirm';
 
-
-  const localUser = localEvent.getLocalItem('UserLoginInfo');
   const FeedTool = {
     components: {
       CommentIcon,
@@ -235,10 +232,10 @@
         .then( ({data = {}}) => {
           let comment = data.comment
           let feed = this.feed;
-          let user_info = localEvent.getLocalItem(`user_${window.TS_WEB.currentUserId}`);
+          let user_info = this.$storeLocal.get(`user_${window.TS_WEB.currentUserId}`);
           let reply_to_user = null;
           if(this.commentAbout.reply_user) {
-            reply_to_user = localEvent.getLocalItem(`user_${this.commentAbout.reply_user}`);
+            reply_to_user = this.$storeLocal.get(`user_${this.commentAbout.reply_user}`);
           }
           let newComment = {
             body: comment.body,

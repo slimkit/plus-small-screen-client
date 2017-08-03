@@ -29,7 +29,6 @@
 <script>
   import { createAPI, addAccessToken } from '../utils/request';
   import errorCodes from '../stores/errorCodes';
-  import localEvent from '../stores/localStorage';
   import { getUserInfo } from '../utils/user';
   import FeedImages from './FeedImages';
   import FeedTool from './FeedTool';
@@ -67,7 +66,7 @@
       }
     },
     created () {
-      let localUser = localEvent.getLocalItem('user_' + this.feed.user_id);
+      let localUser = this.$storeLocal.get('user_' + this.feed.user_id);
       if(!lodash.keys(localUser).length > 0) {
         getUserInfo(this.feed.user_id).then( user => {
           this.user = { ...this.user, ...user };

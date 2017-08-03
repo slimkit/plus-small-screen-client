@@ -61,7 +61,6 @@
 <script>
   import { createAPI, addAccessToken } from '../utils/request';
   import errorCodes from '../stores/errorCodes';
-  import localEvent from '../stores/localStorage';
   import { getUserInfo, getLoggedUserInfo } from '../utils/user';
   import FeedImages from './FeedImages';
   import FeedTool from './FeedTool';

@@ -15,15 +15,15 @@
 </template>
 
 <script>
-  import localEvent from '../stores/localStorage';
+  // import localEvent from '../stores/localStorage';
   import router from '../routers/index';
 
   const navBar = {
     methods: {
-      clean () {
-        localEvent.clearLocalAll();
-        router.push({ path: '/login' });
-      }
+      // clean () {
+      //   localEvent.clearLocalAll();
+      //   router.push({ path: '/login' });
+      // }
     }
   }
 

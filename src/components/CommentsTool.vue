@@ -30,7 +30,6 @@
 </template>
 
 <script>
-  import localEvent from '../stores/localStorage';
   import { getUserInfo, getUsersInfo } from '../utils/user';
   import { createAPI, addAccessToken } from '../utils/request';
   import router from '../routers/index';
@@ -55,7 +54,7 @@
     }),
     methods: {
       focusInput (comment_to_uid) {
-        let to_user = localEvent.getLocalItem(`user_${comment_to_uid}`);
+        let to_user = this.$storeLocal.get(`user_${comment_to_uid}`);
         let to_user_name = ''; // 回复谁 用户名
         let show = true; // 展示输入框
         let feed = this.feed;
@@ -126,7 +125,7 @@
         return this.$store.getters[USERS];
       },
       currentUser () {
-        return localEvent.getLocalItem('UserLoginInfo');
+        return this.$storeLocal.get('UserLoginInfo');
       },
       commentsData () {
         return this.feed.comments;

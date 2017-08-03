@@ -35,8 +35,6 @@
 </template>
 <script>
   import request, { createAPI, addAccessToken } from '../utils/request';
-  import errorCodes from '../stores/errorCodes';
-  import localEvent from '../stores/localStorage';
   import Feed from './Feed';
   import { NOTICE, FEEDSLIST, FOLLOWINGFEEDS, FOLLOWINGIDS, HOTIDS, NEWIDS, HOTFEEDS, NEWFEEDS, ADDFOLLOWINGIDS, ADDHOTIDS, ADDNEWIDS, COLLECTIONIDS, COLLECTIONFEEDS, ADDCOLLECTIONIDS } from '../stores/types';
   import router from '../routers/index';
