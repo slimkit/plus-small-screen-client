@@ -353,6 +353,8 @@
       const { comments = [] } =  this.feed; 
       // console.log(comments);
       comments.forEach( (comment, index) => {
+
+        // 被回复用户
         if(comment.reply_user) {
           let user = this.$storeLocal.get(`user_${comment.reply_user}`);
           if( !user ){
@@ -360,18 +362,18 @@
           }else{
             this.$store.dispatch(USERS_APPEND, cb => cb(user));
           }
-        } else {
-          let user = this.$storeLocal.get(`user_${comment.user_id}`);
-          if( !user ){
-            user_ids_obj = { ...user_ids_obj, [comment.user_id]: comment.user_id };
-          }else{
-            this.$store.dispatch(USERS_APPEND, cb => cb(user));
-          }
+        } 
+
+        // 评论用户
+        let user = this.$storeLocal.get(`user_${comment.user_id}`);
+        if( !user ){
+          user_ids_obj = { ...user_ids_obj, [comment.user_id]: comment.user_id };
+        }else{
+          this.$store.dispatch(USERS_APPEND, cb => cb(user));
         }
       });
 
       let user_ids = lodash.values(user_ids_obj);
-      console.log(user_ids);
       // 批量获取用户
       getUsersInfo(user_ids);
     }
