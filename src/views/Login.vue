@@ -81,13 +81,12 @@
 
 <script>
   import { createAPI, addAccessToken, createOldAPI } from '../utils/request';
-  import localEvent from '../stores/localStorage';
   import router from '../routers/index';
   import detecdOS from '../utils/detecdOS';
   import formatError from '../utils/errorTips';
   import errorCodes from '../stores/errorCodes';
   import deleteObjectItems from '../utils/deleteObjectItems';
-  import { getUserInfo, getLocalDbUser, getLoggedUserInfo } from '../utils/user';
+  import { getUserInfo, getLoggedUserInfo } from '../utils/user';
   import { USERS_APPEND, MESSAGELISTS, MESSAGENOTICE, MESSAGEROOMS } from '../stores/types';
   import defaultAvatar from '../statics/images/defaultAvatarx2.png';
   import EyeCloseIcon from '../icons/EyeClose';
@@ -230,28 +229,11 @@
             user_id: data.user.id
           };
 
-          localEvent.setLocalItem('UserLoginInfo', localLoginInfo);
+          this.$storeLocal.set('UserLoginInfo', localLoginInfo);
 
           window.TS_WEB.currentUserId = data.user.id;
-          let localUser = data.user;
-          localUser.user_id = localUser.id;
-          delete(localUser.id);
-          delete(localUser.created_at);
-          delete(localUser.updated_at);
-          let db = window.TS_WEB.dataBase;
-          // 写入本地用户
-          db.transaction('rw?', db.userbase, () => {
-            db.userbase.where('user_id').equals(parseInt(localUser.user_id)).delete().then(() => {
-              db.userbase.put(
-                localUser
-              );
-            });
-          })
-          .then()
-          .catch(err => {
-            console.log(err.stack || err);
-          });
 
+          data.user.avatar = data.user.avatar || defaultAvatar;
           // 写入vuex
             this.$store.dispatch(USERS_APPEND, cb =>{
               cb(data.user)
@@ -259,7 +241,7 @@
 
             // 设置消息提示查询时间
             let time = 0;
-            time = localEvent.getLocalItem('messageFlushTime');
+            time = this.$storeLocal.get('messageFlushTime');
             let nowtime = parseInt(new window.Date().getTime() / 1000);
 
             if(!time) {
@@ -374,23 +356,23 @@
                             user_id = uids[0];
                           }
                           room.user_id = user_id;
-                          getLocalDbUser(user_id).then( item => {
-                            if(item === undefined) {
-                              getUserInfo(user_id).then( user => {
-                                room.name = user.name;
-                                room.avatar = user.avatar;
-                                this.$store.dispatch(MESSAGEROOMS, cb => {
-                                  cb(room);
-                                })
-                              })
-                            } else {
-                              room.name = item.name;
-                              room.avatar = item.avatar;
+                          // getLocalDbUser(user_id).then( item => {
+                          let item = this.$storeLocal.get(user_id);
+                          if(item === undefined) {
+                            getUserInfo(user_id).then( user => {
+                              room.name = user.name;
+                              room.avatar = user.avatar;
                               this.$store.dispatch(MESSAGEROOMS, cb => {
                                 cb(room);
                               })
-                            }
-                          });
+                            })
+                          } else {
+                            room.name = item.name;
+                            room.avatar = item.avatar;
+                            this.$store.dispatch(MESSAGEROOMS, cb => {
+                              cb(room);
+                            })
+                          }
                         }
                       })
                     })

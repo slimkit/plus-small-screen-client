@@ -50,7 +50,7 @@
 </template>
 
 <script>
-	import { getUserInfo, getLocalDbUser } from '../utils/user';
+	import { getUserInfo } from '../utils/user';
 	import localEvent from '../stores/localStorage';
 	import { NOTICE, TOTALMESSAGELISTS, TOTALMESSAGELIST, CLEANNEWMESSAGE } from '../stores/types';
 	import MoreIcon from '../icons/More';
@@ -192,26 +192,26 @@
 				return;
 			}
 			// load target user info;
-			getLocalDbUser(targetUserId).then( item => {
-				if(item !== undefined) {
-					this.targetUser = { ...item };
-				} else {
-					getUserInfo(targetUserId, 30).then( user => {
-						this.targetUser = { ...user };
-					})
-				}
-			});
+			let itemTarget = this.$storeLocal.get(targetUserId);
+
+			if(itemTarget !== undefined) {
+				this.targetUser = { ...itemTarget };
+			} else {
+				getUserInfo(targetUserId, 30).then( user => {
+					this.targetUser = { ...user };
+				})
+			}
 
 			// load logged on userinfo
-			getLocalDbUser(window.TS_WEB.currentUserId).then( item => {
-				if(item !== undefined) {
-					this.userInfo = { ...item };
-				} else {
-					getUserInfo(window.TS_WEB.currentUserId, 30).then( user => {
-						this.userInfo = { ...user };
-					})
-				}
-			});
+			
+			let item = this.$storeLocal.get(window.TS_WEB.currentUserId);
+			if(item !== undefined) {
+				this.userInfo = { ...item };
+			} else {
+				getUserInfo(window.TS_WEB.currentUserId, 30).then( user => {
+					this.userInfo = { ...user };
+				})
+			}
 		}
 	}
 

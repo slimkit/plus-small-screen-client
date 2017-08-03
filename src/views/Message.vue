@@ -88,8 +88,7 @@
   import { NOTICE, TOTALMESSAGELISTS, MESSAGENOTICE, MESSAGELISTS } from '../stores/types';
   import { createAPI, addAccessToken, createOldAPI } from '../utils/request';
   import ToolBar from '../components/ToolBar';
-  import localEvent from '../stores/localStorage';
-  import { getUserInfo, getLocalDbUser } from '../utils/user';
+  import { getUserInfo } from '../utils/user';
   import DiggIcon from '../icons/Digg';
   import CommentIcon from '../icons/Comment';
   import timers from '../utils/timer';
@@ -155,21 +154,18 @@
         Array.from(new Set(newUids)).slice(0, 3).forEach( (digg, index) => {
           count ++;
           if(count > 3) return;
-          window.TS_WEB.dataBase.transaction('rw?', window.TS_WEB.dataBase.userbase, () => {
-            window.TS_WEB.dataBase.userbase.get({ user_id: parseInt(digg) }).then( item => {
-              if(item === undefined) {
-                getUserInfo(digg, 30).then(user => {
-                  const { name = '' } = user;
-                  users += name + '、';
-                  this.diggsText = users.substr(0, users.length - 1);
-                });
-              } else {
-                const { name = '' } = item;
-                users += (name + '、');
-                this.diggsText = users.substr(0, users.length - 1);
-              }   
+          let user = this.$storeLocal.get(`user_${digg}`);
+          if(user === undefined) {
+            getUserInfo(digg, 30).then(user => {
+              const { name = '' } = user;
+              users += name + '、';
+              this.diggsText = users.substr(0, users.length - 1);
             });
-          });
+          } else {
+            const { name = '' } = user;
+            users += (name + '、');
+            this.diggsText = users.substr(0, users.length - 1);
+          }
         });
         return newUids.length;
       },
@@ -203,29 +199,24 @@
           return 0;
         }
 
-        window.TS_WEB.dataBase.transaction('rw?', window.TS_WEB.dataBase.userbase, () => {
-          Array.from(new Set(uids)).slice(0,3).forEach((comment, index) => {
-            count ++;
-            if(count > 3) return;
-            window.TS_WEB.dataBase.userbase.get({ user_id: parseInt(comment) }).then( item => {
-              if(item === undefined) {
-                getUserInfo(comment, 30).then(user => {
-                  const { name = '' } = user;
-                  users += name + '、';
-                  this.commentsText = users.substr(0, users.length - 1);
-                });
-              } else {
-                const { name = '' } = item;
-                users += (name + '、');
-                this.commentsText = users.substr(0, users.length - 1);
-              }    
+        Array.from(new Set(uids)).slice(0,3).forEach((comment, index) => {
+          count ++;
+          
+          if(count > 3) return;
+          
+          let user = this.$storeLocal.get(`user_${comment}`);
+          if(user === undefined) {
+            getUserInfo(comment, 30).then(user => {
+              const { name = '' } = user;
+              users += name + '、';
+              this.commentsText = users.substr(0, users.length - 1);
             });
-          });
-        })
-        .catch( e => {
-          console.log(e);
+          } else {
+            const { name = '' } = user;
+            users += (name + '、');
+            this.commentsText = users.substr(0, users.length - 1);
+          }    
         });
-        return uids.length;
       }
     },
     methods: {
@@ -244,13 +235,13 @@
     created () {
       let types = 'diggs,comments';
       let time = 0;
-      time = localEvent.getLocalItem('messageFlushTime');
+      time = this.$storeLocal.get('messageFlushTime');
       let nowtime = parseInt(new window.Date().getTime() / 1000);
       if(!time) {
         time = nowtime - 86400;
       }
-      localEvent.setLocalItem('messageFlushTime', nowtime);
-      // let messages = {};
+      this.$storeLocal.set('messageFlushTime', nowtime);
+
       // 获取新消息
       addAccessToken().get(createOldAPI(`users/flushmessages?key=${types}&time=${time+1}`),{},
         {
@@ -284,7 +275,7 @@
         });
       });
       // 写入聊天对话
-      window.TS_WEB.dataBase.transaction('rw?', window.TS_WEB.dataBase.chatroom, window.TS_WEB.dataBase.messagebase, window.TS_WEB.dataBase.userbase, () => {
+      window.TS_WEB.dataBase.transaction('rw?', window.TS_WEB.dataBase.chatroom, window.TS_WEB.dataBase.messagebase, () => {
         // 查询当前用户的本地对话
         window.TS_WEB.dataBase.chatroom
           .orderBy('last_message_time')
@@ -333,7 +324,6 @@
                         li.lists = messageList;
                         li.cid = result.cid;
                         li.user_id = user_id;
-                        // li.count = 0;
                         this.$store.dispatch(MESSAGELISTS, cb => {
                           cb(li);
                         });

@@ -142,7 +142,7 @@
   import lodash from 'lodash';
   import localEvent from '../../stores/localStorage';
   import { changeUrl, goTo } from '../../utils/changeUrl';
-  import { getUserInfo, getLocalDbUser } from '../../utils/user';
+  import { getUserInfo } from '../../utils/user';
   import timers from '../../utils/timer';
   import BackIcon from '../../icons/Back';
   import CloseIcon from '../../icons/Close';

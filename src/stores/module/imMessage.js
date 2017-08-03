@@ -1,6 +1,6 @@
 import { TOTALMESSAGELISTS,  TOTALMESSAGELIST, SYNCIMMESSAGE, MESSAGELISTS, CLEANNEWMESSAGE, UNREAD, MESSAGEROOMS } from '../types';
 import localEvent from '../localStorage';
-import { getUserInfo, getLocalDbUser } from '../../utils/user';
+import { getUserInfo } from '../../utils/user';
 import lodash from 'lodash';
 
 const currentUser = window.TS_WEB.currentUserId;

@@ -1,9 +1,10 @@
-import localEvent from '../stores/localStorage';
+import { app } from '../index';
+import storeLocal from 'store';
 import router from '../routers/index';
 
 // 判断是否可以进入目标路由
 function requestAuth (to, from, next) {
-  let UserLoginInfo = localEvent.getLocalItem('UserLoginInfo');
+  let UserLoginInfo = storeLocal.get('UserLoginInfo');
   if(UserLoginInfo.token) {
     next();
   } else {
@@ -18,7 +19,7 @@ function requestAuth (to, from, next) {
 
 // 登录状况不能进入的页面
 function CanNotGetInWhenLogged (to, from, next) {
-  let UserLoginInfo = localEvent.getLocalItem('UserLoginInfo');
+  let UserLoginInfo = storeLocal.get('UserLoginInfo');
   if(UserLoginInfo.token) {
     next({
       path: '/feeds/new',
@@ -33,7 +34,7 @@ function CanNotGetInWhenLogged (to, from, next) {
 
 // 退出登录
 function logout () {
-  localEvent.clearLocalItem('UserLoginInfo');
+  storeLocal.remove('UserLoginInfo');
   debugger;
   router.push({ path: '/login' });
 }

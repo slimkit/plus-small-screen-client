@@ -63,14 +63,13 @@
 <script>
   import { NOTICE, CLEANMESSAGE } from '../stores/types';
   import { createAPI, addAccessToken, createOldAPI } from '../utils/request';
-  import localEvent from '../stores/localStorage';
   import { changeUrl, goTo } from '../utils/changeUrl';
   import timers from '../utils/timer';
   import BackIcon from '../icons/Back';
   import DiggIcon from '../icons/Digg';
   import { resolveImage } from '../utils/resource';
-  import { getLocalDbUser } from '../utils/user';
   import buildUrl from 'axios/lib/helpers/buildURL';
+  import lodash from 'lodash';
 
   const defaultNobody = resolveImage(require('../statics/images/img_default_nobody@2x.png'));
   const defaultAvatar = resolveImage(require('../statics/images/defaultAvatarx2.png'));
@@ -149,34 +148,33 @@
       },
       _loadFormateDiggs( diggs, top = true) {
         diggs.forEach(digg => {
+          if(lodash.findIndex(this.formated, { id: digg.id }) !== -1) return;
           let 
-              digg_source = {...digg.likeable},
-              user = localEvent.getLocalItem(`user_${digg.user_id}`);
-          getLocalDbUser(digg.user_id).then( user => {
-            const { avatar = defaultAvatar, name = '' } = user;
-            if(digg_source.images.length > 0) {
-              digg.cover = buildUrl(createAPI(`files/${digg_source.images[0].id}`), {w: 100, h: 100});
-            }else if(digg_source.feed_content){
-              digg.source_content = digg_source.feed_content;
-            }
-            digg.name = name;
-            digg.avatar = avatar;
-            digg.time = timers(digg.created_at, 8, false);
-            if(!top) {
-              this.formated = [ ...this.formated, digg ];
-            } else {
-              this.formated = [ digg, ...this.formated ];
-            }
-          });
+            digg_source = {...digg.likeable},
+            user = this.$storeLocal.get(`user_${digg.user_id}`);
+          const { avatar = defaultAvatar, name = '' } = user;
+          if(digg_source.images.length > 0) {
+            digg.cover = buildUrl(createAPI(`files/${digg_source.images[0].id}`), {w: 100, h: 100});
+          }else if(digg_source.feed_content){
+            digg.source_content = digg_source.feed_content;
+          }
+          digg.name = name;
+          digg.avatar = avatar;
+          digg.time = timers(digg.created_at, 8, false);
+          if(!top) {
+            this.formated = [ ...this.formated, digg ];
+          } else {
+            this.formated = [ digg, ...this.formated ];
+          }
         });
       },
       _initFormatedDiggs () {
         this.diggs.forEach(digg => {
           let
-              digg_source = {...digg.likeable},
-              user = localEvent.getLocalItem(`user_${digg.user_id}`);
-          getLocalDbUser(digg.user_id).then( user => {
+            digg_source = {...digg.likeable},
+            user = this.$storeLocal.get(`user_${digg.user_id}`);
             const { avatar = defaultAvatar, name = '' } = user;
+            
             if(digg_source.images.length > 0) {
               digg.cover = buildUrl(createAPI(`files/${digg_source.images[0].id}`), {w: 100, h: 100});
             }else if(digg_source.feed_content){
@@ -186,10 +184,6 @@
             digg.avatar = avatar;
             digg.time = timers(digg.created_at, 8, false)
             this.formated = [ ...this.formated, digg ];
-          })
-          .catch( error => {
-            console.log(error);
-          });
         });
       }
     },

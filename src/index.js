@@ -15,8 +15,6 @@ import storeLocal from 'store';
 // iview ui
 Vue.use(iView);
 
-Vue.prototype.$storeLocal = storeLocal;
-
 // html title
 Vue.use(VueWechatTitle);
 
@@ -58,11 +56,12 @@ Vue.directive('childfocus', {
     el.firstChild.focus()
   }
 })
-
+Vue.prototype.$storeLocal = storeLocal;
 const app = new Vue({
   router,
   store,
   el: '#app',
   render: h => h(App)
 });
+
 export { app, router };

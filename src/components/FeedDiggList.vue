@@ -53,7 +53,6 @@
    */
   import { SHOWFEEDDIGGSLISTS, DIGGLISTS } from '../stores/types';
   import { mapState } from 'vuex';
-  import localEvent from '../stores/localStorage';
   import { followingUser, unFollowingUser } from '../utils/user';
   import { NOTICE } from '../stores/types';
   import FollowingIcon from '../icons/Following';
@@ -117,12 +116,8 @@
       // 关注用户
       doFollowing (user) {
         followingUser(user, status => {
-          if(status.status || status.code == 0) {
-            this.localDiggs[user].is_following = 1;
-            // localEvent.setLocalItem(`user_${user}`, this.localDiggs[user]);
-            window.TS_WEB.dataBase.transaction('rw?', window.TS_WEB.dataBase.userbase, () => {
-              window.TS_WEB.dataBase.userbase.put(this.localDiggs[user]);
-            })
+          if(status) {
+            this.localDiggs[user].follower = true;
             this.$store.dispatch(SHOWFEEDDIGGSLISTS, cb => {
               cb({
                 show: true,
@@ -143,9 +138,8 @@
       // 取消关注用户
       doUnFollowing (user) {
         unFollowingUser(user, status => {
-          if(status.status || status.code == 0) {
-            this.localDiggs[user].is_following = 0;
-            localEvent.setLocalItem(`user_${user}`, this.localDiggs[user]);
+          if(status) {
+            this.localDiggs[user].follower = false;
             this.$store.dispatch(SHOWFEEDDIGGSLISTS, cb => {
               cb({
                 show: true,
@@ -177,7 +171,7 @@
       }
     },
     created () {
-      let currentUser = localEvent.getLocalItem('UserLoginInfo');
+      let currentUser = this.$storeLocal.get('UserLoginInfo');
       this.currentUser = currentUser.user_id;
       setTimeout( () => {
         if(this.$refs.loadmoreDigglist)

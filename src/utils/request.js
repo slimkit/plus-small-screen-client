@@ -1,12 +1,13 @@
 import axios from 'axios';
-import localEvent from '../stores/localStorage';
 import errorCodes from '../stores/errorCodes';
 import {
   NOTICE,
   SHOWPOST,
   SHOWFEEDDIGGSLISTS
 } from '../stores/types';
-import { app } from '../index';
+import app from '../index';
+import storeLocal from 'store';
+
 const {
   apiv1,
   api,
@@ -26,14 +27,10 @@ export const addAccessToken = () => {
   // 如果有才发送
   const {
     token = ''
-  } = localEvent.getLocalItem('UserLoginInfo');
+  } = storeLocal.get('UserLoginInfo');
   let _token = '';
-  if (token) {
-    _token = `Bearer ${token}`;
-  }
   axios.defaults.headers.common = {
-    'Authorization': _token,
-    'ACCESS-TOKEN': token,
+    'Authorization': `Bearer ${token}`,
     'Accept': 'application/json'
   };
   return axios;

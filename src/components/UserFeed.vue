@@ -70,8 +70,8 @@
       })
     },
     created () {
-      let localUser = localEvent.getLocalItem('user_' + this.feed.user_id);
-      if(!lodash.keys(localUser).length > 0) {
+      let localUser = this.$storeLocal.get('user_' + this.feed.user_id);
+      if(!localUser) {
         getUserInfo(this.feed.user_id).then(user => {
           localUser = user;
           this.user = { ...this.user, ...localUser };

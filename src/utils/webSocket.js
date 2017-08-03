@@ -12,8 +12,7 @@ import {
 import localEvent from '../stores/localStorage';
 import lodash from 'lodash';
 import {
-	getUserInfo,
-	getLocalDbUser
+	getUserInfo
 } from './user';
 import {
 	addAccessToken,
@@ -107,41 +106,18 @@ function onMessage(message) {
 											} else {
 												user_id = uids[0];
 											}
-											getLocalDbUser(user_id).then(item => {
-												if (item === undefined) {
-													getUserInfo(user_id).then(user => {
-														// 未读数 
-														if (value.uid !== window.TS_WEB.currentUserId) { // 添加新消息
-															app.$store.dispatch(UNREAD, cb => {
-																	cb({
-																		cid: value.cid,
-																		uid: value.uid,
-																		name: user.name,
-																		avatar: user.avatar,
-																		targetUser: user_id
-																	});
-																})
-																.then(() => {
-																	app.$store.dispatch(TOTALMESSAGELIST, cb => {
-																		cb(value);
-																	});
-																});
-														} else {
-															app.$store.dispatch(TOTALMESSAGELIST, cb => {
-																cb(value);
-															});
-														}
 
-													})
-												} else {
-													// 未读数
-													if (value.uid !== window.TS_WEB.currentUserId) { // 添加信息消息
+											let item = this.$storeLocal.get(`user_${user_id}`);
+											if (item === undefined) {
+												getUserInfo(user_id).then(user => {
+													// 未读数 
+													if (value.uid !== window.TS_WEB.currentUserId) { // 添加新消息
 														app.$store.dispatch(UNREAD, cb => {
 																cb({
 																	cid: value.cid,
 																	uid: value.uid,
-																	name: item.name,
-																	avatar: item.avatar,
+																	name: user.name,
+																	avatar: user.avatar,
 																	targetUser: user_id
 																});
 															})
@@ -155,8 +131,31 @@ function onMessage(message) {
 															cb(value);
 														});
 													}
+
+												})
+											} else {
+												// 未读数
+												if (value.uid !== window.TS_WEB.currentUserId) { // 添加信息消息
+													app.$store.dispatch(UNREAD, cb => {
+															cb({
+																cid: value.cid,
+																uid: value.uid,
+																name: item.name,
+																avatar: item.avatar,
+																targetUser: user_id
+															});
+														})
+														.then(() => {
+															app.$store.dispatch(TOTALMESSAGELIST, cb => {
+																cb(value);
+															});
+														});
+												} else {
+													app.$store.dispatch(TOTALMESSAGELIST, cb => {
+														cb(value);
+													});
 												}
-											})
+											}
 										}
 									});
 								}
@@ -178,40 +177,18 @@ function onMessage(message) {
 										}
 										// 未读数
 										// 获取目标用户
-										getLocalDbUser(user_id).then(item => {
-											if (item === undefined) {
-												getUserInfo(user_id).then(user => {
-													// 未读数
-													if (value.uid !== window.TS_WEB.currentUserId) { // 添加新消息
-														app.$store.dispatch(UNREAD, cb => {
-																cb({
-																	cid: value.cid,
-																	uid: value.uid,
-																	name: user.name,
-																	avatar: user.avatar,
-																	targetUser: user_id
-																});
-															})
-															.then(() => {
-																app.$store.dispatch(TOTALMESSAGELIST, cb => {
-																	cb(value);
-																});
-															});
-													} else {
-														app.$store.dispatch(TOTALMESSAGELIST, cb => {
-															cb(value);
-														});
-													}
-												})
-											} else {
+										let item = this.$storeLocal.get(`user_${user_id}`);
+
+										if (item === undefined) {
+											getUserInfo(user_id).then(user => {
 												// 未读数
 												if (value.uid !== window.TS_WEB.currentUserId) { // 添加新消息
 													app.$store.dispatch(UNREAD, cb => {
 															cb({
 																cid: value.cid,
 																uid: value.uid,
-																name: item.name,
-																avatar: item.avatar,
+																name: user.name,
+																avatar: user.avatar,
 																targetUser: user_id
 															});
 														})
@@ -224,10 +201,32 @@ function onMessage(message) {
 													app.$store.dispatch(TOTALMESSAGELIST, cb => {
 														cb(value);
 													});
-
 												}
+											})
+										} else {
+											// 未读数
+											if (value.uid !== window.TS_WEB.currentUserId) { // 添加新消息
+												app.$store.dispatch(UNREAD, cb => {
+														cb({
+															cid: value.cid,
+															uid: value.uid,
+															name: item.name,
+															avatar: item.avatar,
+															targetUser: user_id
+														});
+													})
+													.then(() => {
+														app.$store.dispatch(TOTALMESSAGELIST, cb => {
+															cb(value);
+														});
+													});
+											} else {
+												app.$store.dispatch(TOTALMESSAGELIST, cb => {
+													cb(value);
+												});
+
 											}
-										})
+										}
 									}
 								})
 							}
@@ -300,14 +299,30 @@ function onMessage(message) {
 			})
 		});
 		// 提交到vuex
-		getLocalDbUser(dbMsg.uid).then(item => {
-			if (item !== undefined) {
+		let item = this.$storeLocal.get(`user_${dbMsg.uid}`);
+
+		if (item !== undefined) {
+			app.$store.dispatch(UNREAD, cb => {
+					cb({
+						cid: dbMsg.cid,
+						uid: dbMsg.uid,
+						name: item.name,
+						avatar: item.avatar
+					});
+				})
+				.then(() => {
+					app.$store.dispatch(TOTALMESSAGELIST, cb => {
+						cb(dbMsg);
+					});
+				})
+		} else {
+			getUserInfo(dbMsg.uid).then(user => {
 				app.$store.dispatch(UNREAD, cb => {
 						cb({
 							cid: dbMsg.cid,
 							uid: dbMsg.uid,
-							name: item.name,
-							avatar: item.avatar
+							name: user.name,
+							avatar: user.avatar
 						});
 					})
 					.then(() => {
@@ -315,24 +330,8 @@ function onMessage(message) {
 							cb(dbMsg);
 						});
 					})
-			} else {
-				getUserInfo(dbMsg.uid).then(user => {
-					app.$store.dispatch(UNREAD, cb => {
-							cb({
-								cid: dbMsg.cid,
-								uid: dbMsg.uid,
-								name: user.name,
-								avatar: user.avatar
-							});
-						})
-						.then(() => {
-							app.$store.dispatch(TOTALMESSAGELIST, cb => {
-								cb(dbMsg);
-							});
-						})
-				});
-			}
-		})
+			});
+		}
 	}
 };
 

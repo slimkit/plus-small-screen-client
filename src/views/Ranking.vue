@@ -127,7 +127,7 @@
         let newLists = [];
         lists.reverse().forEach( list => {
           let digg = {};
-          let user = localEvent.getLocalItem(`user_${list.user_id}`);
+          let user = this.$storeLocal.get(`user_${list.user_id}`);
           if(!lodash.keys(user).length) {
             getUserInfo(list.user_id).then(gotUser => {
               const { avatar = '' } = gotUser;

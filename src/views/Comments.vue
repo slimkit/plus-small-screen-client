@@ -107,7 +107,7 @@
   import timers from '../utils/timer';
   import BackIcon from '../icons/Back';
   import lodash from 'lodash';
-  import { getLocalDbUser, getUserInfo } from '../utils/user';
+  import { getUserInfo } from '../utils/user';
   import { resolveImage } from '../utils/resource';
   import buildURL from 'axios/lib/helpers/buildURL';
   const defaultNoBody = resolveImage(require('../statics/images/img_default_nobody@2x.png'));
@@ -136,9 +136,10 @@
         if(!this.commentCount || this.loading) return;
         this.loading = true;
         let source = this.comments[this.openId];
-        let api = `feeds/${source.id}/comments`;
+        // 评论来源
+        let api = `feeds/${source.commentable_id}/comments`;
         if(source.commentable_type === 'news') {
-          api = `news/${source.id}/comment`;
+          api = `news/${source.commentable_id}/comment`;
         }
         
         let comment_data = {
@@ -146,7 +147,7 @@
         };
 
         if(source.user_id) {
-          comment_data.sendComment = source.user_id
+          comment_data.reply_user = source.user_id
         }
 
         addAccessToken().post(createAPI(`${api}`),
@@ -170,15 +171,15 @@
       openCommentBox (id) {
         this.openId = id;
         let user_id = this.formated[id].user_id;
-        getLocalDbUser(user_id).then( item => {
-          if(item === undefined) {
-            getUserInfo( user_id, 30).then( user => {
-              this.placeholder = `回复: ${user.name}`;
-            })
-          } else {
-            this.placeholder = `回复: ${item.name}`;
-          }
-        })
+
+        let item = this.$storeLocal.get(`user_${user_id}`);
+        if(item === undefined) {
+          getUserInfo( user_id, 30).then( user => {
+            this.placeholder = `回复: ${user.name}`;
+          })
+        } else {
+          this.placeholder = `回复: ${item.name}`;
+        }
       },
       closeCommentBox () {
         this.openId = -1;
@@ -237,46 +238,46 @@
       _initFormatedComments () {
         let comments = this.comments;
         comments.forEach(comment => {
+          let user= this.$storeLocal.get(`user_${comment.user_id}`);
           let comment_source = { ...comment.commentable};
-          getLocalDbUser(comment.user_id)
-          .then( user => {
-            return getLocalDbUser(comment.reply_user).then( replyUser => {
-              comment.replyUser = replyUser || null;
-              return user;
-            });
-          })
-          .then( user => {
-
-            const { name = '' } = user;
-            if(comment_source.images.length > 0) {
-              comment.cover = buildURL(createAPI(`files/${comment_source.images[0].id}`), {w: 100, h: 100});
-            }else if(comment_source.feed_content){
-              comment.source_content = comment_source.feed_content;
+          if(comment.reply_user) {
+            let replyUser = this.$storeLocal.get(`user_${comment.reply_user}`);
+            if(!replyUser) {
+              getUserInfo(comment.reply_user).then( user => {
+                comment.replyUser = { ...user };
+              });
+            } else {
+              comment.replyUser = { ...replyUser };
             }
-            comment.name = name;
-            comment.avatar = comment.avatar || defaultAvatar;
-            comment.time = timers(comment.created_at, 8, false);
-            this.formated = [...this.formated, comment];
-          })
-          .catch(error=>{ 
-            console.log(error);
-          });
-        });
+          }
+          const { name = '' } = user;
+          if(comment_source.images.length > 0) {
+            comment.cover = buildURL(createAPI(`files/${comment_source.images[0].id}`), {w: 100, h: 100});
+          }else if(comment_source.feed_content){
+            comment.source_content = comment_source.feed_content;
+          }
+          comment.name = name;
+          comment.avatar = comment.avatar || defaultAvatar;
+          comment.time = timers(comment.created_at, 8, false);
+          this.formated = lodash.uniq([...this.formated, comment], 'id');
+        })
       },
       _loadTopFormatedComments (comments = [], top = true) {
         comments.forEach(comment => {
+          // 去重
+          if(lodash.findIndex(this.formated, { id: comment.id }) !== -1) return;
+
           let comment_source = { ...comment.commentable};
-          
+          let user = this.$storeLocal.get(`user_${comment.user_id}`);
+
           if(comment.reply_user) {
-            replyUser = this.$storeLocal.get(`user_${comment.reply_user}`)
+            let replyUser = this.$storeLocal.get(`user_${comment.reply_user}`)
             if(!replyUser) {
               getUserInfo(comment.reply_user).then( replyUser => {
-                const { name = '' } = replyUser;
-                comment.reply_user_user_name = name;
+                comment.replyUser = replyUser;
               });
             } else {
-              const { name = '' } = user.replyUser;
-              comment.reply_user_name = name;
+              comment.replyUser = { ...replyUser };
             }
           }
 
@@ -290,7 +291,6 @@
           comment.name = name;
           comment.avatar = comment.avatar || defaultAvatar;
           comment.time = timers(comment.created_at, 8, false);
-          this.updateCommentList(comment);
           if( top ) {
             this.formated = [ comment, ...this.formated ];
           } else {

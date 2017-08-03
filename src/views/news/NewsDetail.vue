@@ -414,22 +414,12 @@
             user: {}
           };
           // current logged user
-          getLocalDbUser(window.TS_WEB.currentUserId).then( item => {
+          
+          let item = this.$storeLocal.get(window.TS_WEB.currentUserId);
             // don't find local db user
-            if(item === undefined) {
-              getUserInfo(window.TS_WEB.currentUserId).then( user => {
-                newComment.user = { ...user };
-                // commented user
-                if(this.commentToUserId) {
-                  newComment.reply_to_user = { ...this.commentedUser };
-                  this.comments.unshift(newComment);
-                } else {
-                  this.comments.unshift(newComment);
-                }
-              });
-            } else { // find local db user
-              newComment.user = { ...item };
-
+          if(item === undefined) {
+            getUserInfo(window.TS_WEB.currentUserId).then( user => {
+              newComment.user = { ...user };
               // commented user
               if(this.commentToUserId) {
                 newComment.reply_to_user = { ...this.commentedUser };
@@ -437,8 +427,18 @@
               } else {
                 this.comments.unshift(newComment);
               }
+            });
+          } else { // find local db user
+            newComment.user = { ...item };
+
+            // commented user
+            if(this.commentToUserId) {
+              newComment.reply_to_user = { ...this.commentedUser };
+              this.comments.unshift(newComment);
+            } else {
+              this.comments.unshift(newComment);
             }
-          });
+          }
           
           // 本地数据更新
           this.detail.comment_count += 1;
@@ -467,17 +467,17 @@
         if(reply_to_user_id) {
           this.commentIndex = index;
           this.commentToUserId = reply_to_user_id;
-          getLocalDbUser( reply_to_user_id ).then( item => {
-            if(item === undefined) {
-              getUserInfo( reply_to_user_id, 30 ).then( user => {
-                this.placeholder = `回复： ${user.name}`;
-                this.commentedUser = { ...user };
-              })
-            } else {
-              this.placeholder = `回复: ${item.name}`;
-              this.commentedUser = { ...item };
-            }
-          });
+          
+          let item = this.$storeLocal.get(reply_to_user_id);
+          if(item === undefined) {
+            getUserInfo( reply_to_user_id, 30 ).then( user => {
+              this.placeholder = `回复： ${user.name}`;
+              this.commentedUser = { ...user };
+            })
+          } else {
+            this.placeholder = `回复: ${item.name}`;
+            this.commentedUser = { ...item };
+          }
         } else {
           this.placeholder = '随便说说';
           this.commentFeed = true;

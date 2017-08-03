@@ -1,4 +1,3 @@
-// import localEvent from '../stores/localStorage';
 import {
   createAPI,
   addAccessToken,
@@ -12,18 +11,17 @@ import getImage from './getImage';
 import lodash from 'lodash';
 import buildURL from 'axios/lib/helpers/buildURL';
 import { NOTICE, USERS_APPEND, USERS } from '../stores/types';
-import storeLocal from 'store';
 import {
   resolveImage
 } from './resource';
 const defaultAvatar = resolveImage(require('../statics/images/defaultAvatarx2.png'));
 
 function getLocalDbUser(user_id) {
-  return window.TS_WEB.dataBase.transaction('rw?', window.TS_WEB.dataBase.userbase, () => {
-    return window.TS_WEB.dataBase.userbase.where('user_id').equals(parseInt(user_id)).toArray().then(array => {
-      return array.pop();
-    });
-  })
+  // return window.TS_WEB.dataBase.transaction('rw?', window.TS_WEB.dataBase.userbase, () => {
+  //   return window.TS_WEB.dataBase.userbase.where('user_id').equals(parseInt(user_id)).toArray().then(array => {
+  //     return array.pop();
+  //   });
+  // })
 };
 
 function followingUser(user_id, cb) {
@@ -147,9 +145,9 @@ function getUserInfo(user_id) {
   })
 };
 
-function getUsersInfo(user_ids, cb) {
+function getUsersInfo(user_ids) {
   return new Promise((resolve, reject) => {
-    let user_ids_need_to_request = [];
+    let user_ids_need_to_request = [...user_ids];
     let users = {};
 
     if (user_ids_need_to_request.length) {
@@ -167,14 +165,14 @@ function getUsersInfo(user_ids, cb) {
               };
               delete current_local_user.follower;
               delete current_local_user.following;
-              app.$storeLocal.set(`user_${user.user_id}`, $current_local_user);
+              app.$storeLocal.set(`user_${user.user_id}`, current_local_user);
 
               user.avatar = user.avatar || defaultAvatar;
               users[user.id] = user;
 
             });
           });
-          this.$store.dispatch(USERS, cb => {
+          app.$store.dispatch(USERS, cb => {
             cb(users);
           })
           resolve(users);

@@ -20,12 +20,11 @@
   import ShowFeedPopup from './components/ShowFeedPopup';
 
   // im聊天相关
-  import localEvent from './stores/localStorage';
   import lodash from 'lodash';
   import { createAPI, addAccessToken, createOldAPI } from './utils/request';
   import errorCodes from './stores/errorCodes';
   import { connect } from './utils/webSocket';
-  import { getUserInfo, getLocalDbUser, getLoggedUserInfo } from './utils/user';
+  import { getUserInfo, getLoggedUserInfo } from './utils/user';
   import { IMSTATUS, USERS_APPEND, MESSAGENOTICE, MESSAGEROOMS } from './stores/types';
 
   // indexedDB
@@ -45,7 +44,7 @@
       imStatus () { // im状态监测
         if(! TS_WEB.socketUrl) return;
         let imstatus = this.$store.getters[IMSTATUS];
-        let userLoginInfo = localEvent.getLocalItem('UserLoginInfo');
+        let userLoginInfo = this.$storeLocal.get('UserLoginInfo');
         if(lodash.keys(userLoginInfo).length && !imstatus.open && TS_WEB.webSocket !== null && TS_WEB.webSocket.readyState != 1 && TS_WEB.readyState != 0) {
           connect();
         }
@@ -58,25 +57,22 @@
       let db = new Dexie('ThinkSNS');
       db.debug = 'dexie';
       db
-      .version(3)
+      .version(4)
       .stores({
         // 用户
-        userbase: "++,user_id,avatar,bg,bio,email,extra,location,name,phone,sex,verified, wallat",
+        // userbase: "++,user_id,avatar,bg,bio,email,extra,location,name,phone,sex,verified, wallat",
 
         // 动态
-        feedbase: "++, user_id, storages, &feed_id, feed_content, feed_from, created_at, feed_comment_count, feed_digg_count, feed_view_count",
+        // feedbase: "++, user_id, storages, &feed_id, feed_content, feed_from, created_at, feed_comment_count, feed_digg_count, feed_view_count",
 
         // 评论
-        commentsbase: "++, body, created_at, &id, reply_to_user_id, user_id, source_id",
+        // commentsbase: "++, body, created_at, &id, reply_to_user_id, user_id, source_id",
 
         // ImMessage
         messagebase: "++, txt, cid, uid, hash, mid, seq, time, owner, [cid+mid], [cid+owner]",
 
         // chatroom
         chatroom: "++, cid, user_id, name, pwd, type, uids, last_message_time, owner, [cid+owner], newMessage",
-
-        // 被关注 uid 主用户id， following 为1表示uuid关注uid， follower为1 表示uid关注uuid [uid+uuid]组合查询组件
-        relationship: '++, uid, uuid, follower, following, [uid+uuid]',
 
         // 对我的评论[消息]
         commentslist: "++, user_id, uid, [user_id+uid]",
@@ -87,30 +83,17 @@
 
       // 保存
       window.TS_WEB.dataBase = db;
-
-      let currentUser = localEvent.getLocalItem('UserLoginInfo');
+      
+      let currentUser = this.$storeLocal.get('UserLoginInfo');
 
       if(lodash.keys(currentUser).length > 0) {
         window.TS_WEB.currentUserId = currentUser.user_id;
-        // 提交用户到vuex
-        window.TS_WEB.dataBase.transaction('rw?', window.TS_WEB.dataBase.userbase, () => {
-          window.TS_WEB.dataBase.userbase.where('user_id').equals(currentUser.user_id).first().then( user => {
-            if(user === undefined) {
-              getLoggedUserInfo().then( serverUser => {
-                this.$store.dispatch(USERS_APPEND, cb =>{
-                  cb(serverUser)
-                });
-              });
-            } else {
-              this.$store.dispatch(USERS_APPEND, cb =>{
-                cb(user)
-              });
-            }
-          });
-        });
+        // 获取当前登录用户信息
+        getLoggedUserInfo();
+
         // 设置消息提示查询时间
         let time = 0;
-        time = localEvent.getLocalItem('messageFlushTime');
+        time = this.$storeLocal.get('messageFlushTime');
         let nowtime = parseInt(new window.Date().getTime() / 1000);
         if(!time) {
           time = nowtime - 86400;
@@ -221,23 +204,23 @@
                         user_id = uids[0];
                       }
                       room.user_id = user_id;
-                      getLocalDbUser(user_id).then( item => {
-                        if(item === undefined) {
-                          getUserInfo(user_id).then( user => {
-                            room.name = user.name;
-                            room.avatar = user.avatar;
-                            this.$store.dispatch(MESSAGEROOMS, cb => {
-                              cb(room);
-                            })
-                          })
-                        } else {
-                          room.name = item.name;
-                          room.avatar = item.avatar;
+
+                      let user = this.$storeLocal.get(`user_${user_id}`);
+                      if(user === undefined) {
+                        getUserInfo(user_id).then( user => {
+                          room.name = user.name;
+                          room.avatar = user.avatar;
                           this.$store.dispatch(MESSAGEROOMS, cb => {
                             cb(room);
                           })
-                        }
-                      });
+                        })
+                      } else {
+                        room.name = item.name;
+                        room.avatar = item.avatar;
+                        this.$store.dispatch(MESSAGEROOMS, cb => {
+                          cb(room);
+                        })
+                      }
                     }
                   });
                 })
