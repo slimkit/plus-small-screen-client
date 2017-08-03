@@ -16,14 +16,6 @@ import {
 } from './resource';
 const defaultAvatar = resolveImage(require('../statics/images/defaultAvatarx2.png'));
 
-function getLocalDbUser(user_id) {
-  // return window.TS_WEB.dataBase.transaction('rw?', window.TS_WEB.dataBase.userbase, () => {
-  //   return window.TS_WEB.dataBase.userbase.where('user_id').equals(parseInt(user_id)).toArray().then(array => {
-  //     return array.pop();
-  //   });
-  // })
-};
-
 function followingUser(user_id, cb) {
   return new Promise((resolve, reject) => {
     addAccessToken().put(
@@ -190,6 +182,5 @@ export {
   getUsersInfo,
   unFollowingUser,
   followingUser,
-  getLocalDbUser,
   getLoggedUserInfo
 };

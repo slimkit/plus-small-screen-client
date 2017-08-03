@@ -213,7 +213,7 @@
   import { createAPI, addAccessToken, createOldAPI } from '../../utils/request';
   import errorCodes from '../../stores/errorCodes';
   import localEvent from '../../stores/localStorage';
-  import { getUserInfo, getLocalDbUser } from '../../utils/user';
+  import { getUserInfo } from '../../utils/user';
   import { NOTICE, CONFIRM } from '../../stores/types';
   import { friendNum } from '../../utils/friendNum';
   import Comfirm from '../../utils/Comfirm';

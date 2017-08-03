@@ -356,7 +356,6 @@
                             user_id = uids[0];
                           }
                           room.user_id = user_id;
-                          // getLocalDbUser(user_id).then( item => {
                           let item = this.$storeLocal.get(user_id);
                           if(item === undefined) {
                             getUserInfo(user_id).then( user => {

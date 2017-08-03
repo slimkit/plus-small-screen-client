@@ -316,34 +316,33 @@
                       messageBody = {};
                     });
                   }
-                  getLocalDbUser(user_id).then( item => {
-                    if(!item) {
-                      getUserInfo(user_id).then( user => {
-                        li.name = user.name;
-                        li.avatar = user.avatar;
-                        li.lists = messageList;
-                        li.cid = result.cid;
-                        li.user_id = user_id;
-                        this.$store.dispatch(MESSAGELISTS, cb => {
-                          cb(li);
-                        });
-                        li = {};
-                      });
-
-                    } else {
-                      li.name = item.name;
-                      li.avatar = item.avatar;
+                  let item = this.$storeLocal.get(`user_${user_id}`);
+                  if(!item) {
+                    getUserInfo(user_id).then( user => {
+                      li.name = user.name;
+                      li.avatar = user.avatar;
                       li.lists = messageList;
                       li.cid = result.cid;
                       li.user_id = user_id;
-                      // li.count = 0;
                       this.$store.dispatch(MESSAGELISTS, cb => {
                         cb(li);
                       });
-                      // 
                       li = {};
-                    }
-                  });
+                    });
+
+                  } else {
+                    li.name = item.name;
+                    li.avatar = item.avatar;
+                    li.lists = messageList;
+                    li.cid = result.cid;
+                    li.user_id = user_id;
+                    // li.count = 0;
+                    this.$store.dispatch(MESSAGELISTS, cb => {
+                      cb(li);
+                    });
+                    // 
+                    li = {};
+                  }
                 });
               });
             }
