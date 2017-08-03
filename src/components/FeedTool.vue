@@ -73,7 +73,7 @@
               {{ getUserName(comment.reply_user) }}
             </router-link> 
             <span
-              v-if="comment.user_id  != currentUser.user_id"
+              v-if="comment.user_id  != currentUser"
               @click.stop="handleCommentInput(true, comment.user_id)"
               :class="$style.commentContent"
             > 
@@ -320,7 +320,7 @@
         return this.feed.has_like;
       },
       currentUser () {
-        return localEvent.getLocalItem('UserLoginInfo');
+        return window.TS_WEB.currentUserId;
       },
       validComment () {
         return this.commentAbout.body.length > 0;

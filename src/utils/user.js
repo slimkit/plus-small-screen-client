@@ -94,9 +94,6 @@ function getLoggedUserInfo() {
         let user = response.data;
         user.user_id = user.id;
 
-        delete user.id;
-        delete user.created_at;
-        delete user.updated_at;
         delete user.follower;
         delete user.following;
 
@@ -122,8 +119,6 @@ function getUserInfo(user_id) {
         let user = response.data;
 
         user.user_id = user.id;
-        
-        delete user.id;
           
         app.$storeLocal.set(`user_${user.user_id}`, user);
 
@@ -156,8 +151,10 @@ function getUsersInfo(user_ids) {
                 ...user
               };
               current_local_user.user_id = user.id;
+
               delete current_local_user.follower;
               delete current_local_user.following;
+              
               app.$storeLocal.set(`user_${current_local_user.user_id}`, current_local_user);
 
               user.avatar = user.avatar || defaultAvatar;

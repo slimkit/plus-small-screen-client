@@ -291,10 +291,10 @@
              feed.date = timestamp.getDate();
           }
           if(createDate == yesterday) {
-            feed.created_at = '昨天';
+            feed.date = '昨天';
           }
           if(createDate == today) {
-            feed.created_at = '今天';
+            feed.date = '今天';
           }
           dayFeeds.push(feed);
           max_id = feed.id;
