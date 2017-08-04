@@ -1,3 +1,4 @@
+
 <template>
   <div :class="$style.newsIndex">
     <div id="spinner" v-show="showSpinner">
@@ -20,7 +21,7 @@
       </Row>
       <nav :class="$style.newsIndexNav">
         <ul>
-          <li :class="{ actived: currentNewsCateId === -1 }" @click="handleCateId(-1)">
+          <li :class="{ actived: currentNewsCateId === 0 }" @click="handleCateId(0)">
             <span>推荐</span>
           </li>
           <li 
@@ -61,22 +62,22 @@
           <ul :class="$style.newsLists">
             <li
               class="newsIndex-container-newslist"
-              v-for="(list, index) in newsLists"
+              v-for="(news, index) in newsLists"
               :key="index"
               :class="$style.new"
-              @click="changeUrl(`news/${list.id}/detail`)"
+              @click="changeUrl(`news/${news.id}/detail`)"
             >
               <div :class="$style.sourceTitle">
-                <h4>{{ list.title }}</h4>
+                <h4>{{ news.title }}</h4>
                 <section :class="$style.sourceFrom">
                   <i>
-                    <timeago :class="$style.timer" :since="timers(list.created_at, 8, false)" locale="zh-CN" :auto-update="60"></timeago>
+                    <timeago :class="$style.timer" :since="timers(news.created_at, 8, false)" locale="zh-CN" :auto-update="60"></timeago>
                   </i>
-                  <i v-if="list.from">来自 {{ list.from }}</i>
+                  <i v-if="news.from">来自 {{ news.from }}</i>
                 </section>
               </div>
               <figure :class="$style.sourceImg">
-                <img v-lazy="getImg(list.storage.id)" :alt="list.title">
+                <img v-if="news.image" v-lazy="getImg(news.image.id)" :alt="news.title">
               </figure>
             </li>
           </ul>
@@ -140,7 +141,6 @@
 <script>
   import { createAPI, addAccessToken, createOldAPI } from '../../utils/request';
   import lodash from 'lodash';
-  import localEvent from '../../stores/localStorage';
   import { changeUrl, goTo } from '../../utils/changeUrl';
   import { getUserInfo } from '../../utils/user';
   import timers from '../../utils/timer';
@@ -154,6 +154,7 @@
   import buildUrl from 'axios/lib/helpers/buildURL';
 
   const defaultNothing = resolveImage(require('../../statics/images/defaultNothingx2.png'));
+
   const newsIndex = {
     components: {
       BackIcon,
@@ -164,29 +165,40 @@
     data: () => ({
       isWeiXin: TS_WEB.isWeiXin,
       myCates: [], // 我订阅的分类
-      oldMyCates: [],
       moreCates: [], // 其他分类
+      oldMyCates: [],
       oldMoreCates: [],
       newsLists: [], // 首页数据
-      recommendLists: [], // banner内容
       max_id: 0, // 查询条件之一,
-      showSpinner: false,
+      showSpinner: false, // 等待。。。
       bottomAllLoaded: false,
       topAllLoaded: false,
-      bottomStatus: '',
       topStatus: '',
+      bottomStatus: '',
       newsListIds: [], // 资讯id集合
-      recommendListIds: [], // 推荐id集合
-      showEditBox: false,
-      canEdit: false
+      canEdit: false,
+      key: "",   // 查询关键字
+      limit: 5, // 每页显示条数
+      showEditBox: false
     }),
     computed: {
       nothing () {
-        return (this.newsLists.length || this.recommendLists.length) ? false : defaultNothing;
+        return (this.newsLists.length) ? false : defaultNothing;
       },
       ...mapState({
         currentNewsCateId: state => state.newsAbout.newsAbout.currentnewscateid
-      })
+      }),
+      searchParams(){
+        let 
+            cate_id = this.currentNewsCateId || 0, // 分类ID
+            recommend = 0;  // 是否推荐
+            recommend = cate_id === 0 ? 1 : 0;
+        return {
+          limit: this.limit || 15,
+          cate_id,
+          recommend
+        }
+      }
     },
     methods: {
       timers,
@@ -233,7 +245,7 @@
           cates += cate.id + ',';
         });
         cates = cates.substring(0, cates.length -1);
-        addAccessToken().post(createOldAPI(`news/cates/follow`),
+        addAccessToken().patch(createAPI(`news/categories/follows`),
           {
             follows: cates
           },
@@ -245,181 +257,136 @@
           this.oldMyCates = this.myCates;
           this.oldMoreCates = this.moreCates;
           this.$store.dispatch(CURRENTNEWSCATEID, cb => {
-            cb(-1);
+            cb(0);
           });
-          this.getList();
+          this.getUserCates();
+          this.getNewsList();
         })
       },
+
       bottomStatusChange(status) {
         this.bottomStatus = status;
       },
+
+      // 上拉加载
       loadBottom () {
-        this.getList(true);
+        this.getNewsList(true);
       },
+      // 下拉刷新
       loadTop () {
-        this.getNewList();
+        this.getNewsList();
       },
-      getNewList () {
-        let query = `cate_id=${this.currentNewsCateId}`;
-        addAccessToken().get(createOldAPI(`news?cate_id=${this.currentNewsCateId}`),{},
-        {
+
+      // 请求数据
+      getNewsList (loadMore = false) {
+        if(!loadMore) {
+          this.max_id = 0
+        };
+        addAccessToken().get(createAPI(`news?after=${this.max_id}`),{
+          params: this.searchParams
+        },{
           validateStatus: status => status === 200
         })
-        .then( response => {
-          let data = response.data.data;
-          let newList = [];
-          let newRecommend = [];
-          data.list.forEach( list => {
-            if(!this.newsListIds.includes(list.id)) {
-              newList = [ ...newList, list ];
-              this.newsListIds.push(list.id);
-            }
+        .then(({ data = [] }) => {
+
+          let length = data.length;
+
+          // 判断是否有下一页
+          if( length < this.limit ) {
+            this.bottomAllLoaded = true;
+          } else {
+            this.bottomAllLoaded = false;
+          }
+
+          data.forEach( nwes => {
+            this.newsListIds.push(nwes.id);
           });
-          data.recommend.forEach( list => {
-            if(!this.recommendListIds.includex(list.id)) {
-              newRecommend = [list, ...newRecommend ];
-              this.recommendListIds.push(list.id);
-            }
-          });
+
+          // 判断 刷新 OR 加载更多
+          if( !loadMore ) {
+            this.newsLists = [ ...data ]; // 刷新
+          } else {
+            this.newsLists = [ ...this.newsLists, ...data ]; // 加载更多
+          }
+
+          // 最后一条的 ID
+          if(data.length) this.max_id = data[data.length - 1].id;
+
           setTimeout(() => {
             if(this.$refs.loadmore)
-              this.$refs.loadmore.onTopLoaded();
+              loadMore ? this.$refs.loadmore.onBottomLoaded() : this.$refs.loadmore.onTopLoaded();
           }, 500);
+
+          this.showSpinner = false;
         });
       },
+
+      // 改变分类ID
       handleCateId (cateId) {
-        if(cateId === this.currentCateId) return;
+        if(cateId === this.currentNewsCateId) return;
         this.$store.dispatch(CURRENTNEWSCATEID, cb => {
           cb(cateId);
         })
         this.showSpinner = true;
         this.newsListIds = []; // 清除资讯数据
         this.recommendListIds = []; // 清除推荐数据
-        this.getList();
+        this.getNewsList();
       },
-      getList (loadMore = false) {
-        if(!loadMore) this.max_id = 0;
-        let query = `cate_id=${this.currentNewsCateId}`;
-        if(this.max_id > 1) {
-          query += `&max_id=${this.max_id}`;
-        }
-        addAccessToken().get(createOldAPI(`news?${query}`),{},
-        {
-          validateStatus: status => status === 200
-        })
+
+      // 获取用户订阅分类信息
+      getUserCates(){
+      
+        this.showSpinner = true;
+        
+        // 获取资讯分类
+        addAccessToken().get(createAPI('news/cates'),
+          {},
+          {
+            validateStatus: status => status === 200
+          }
+        )
         .then( response => {
-          let data = response.data.data;
-          let length = data.list.length;
-          if( length < 15 ) {
-            this.bottomAllLoaded = true;
-          } else {
-            this.bottomAllLoaded = false;
+          let {
+            my_cates = [],
+            more_cates = []
+          } = response.data || {};
+
+          // 未订阅时 截取全部分类的前5个
+          my_cates = my_cates.length > 0 ? my_cates : more_cates.splice(0, 5);
+
+          this.myCates = [ ...my_cates ]; // 我订阅的频道
+          this.oldMyCates = [...my_cates];
+          this.moreCates = [ ...more_cates ]; // 其他频道
+          this.oldMoreCates = [ ...more_cates ];
+        })
+        .catch(error => {
+          if(error.response) {
+            const { status = 0 } = error.response;
+            if(status === 404){
+              this.myCates = [] // 我订阅的频道
+              this.moreCates = []; // 其他频道
+              this.oldMyCates = [];
+              this.oldMoreCates = [];
+              console.log('none');
+            }
           }
-          data.list.forEach( list => {
-            this.newsListIds.push(list.id);
-          });
-          if( !loadMore ) {
-            this.recommendLists = data.recommend; // 推荐banner数据
-            this.newsLists = data.list; // 首页数据
-            data.recommend.forEach( list => {
-              this.recommendListIds.push(list.id);
-            });
-          } else {
-            this.newsLists = [ ...this.newsLists, ...data.list ]; // 加载更多
-          }
-          if(data.list.length) this.max_id = data.list[data.list.length - 1].id;
-          setTimeout(() => {
-            if(this.$refs.loadmore)
-              loadMore ? this.$refs.loadmore.onBottomLoaded() : this.$refs.loadmore.onTopLoaded();
-          }, 500)
-          this.showSpinner = false;
         });
+
+        this.showSpinner = false;
       }
     },
     created () {
-      this.showSpinner = true;
-      // 获取资讯分类
-      addAccessToken().get(createAPI('news/cates'),
-        {},
-        {
-          validateStatus: status => status === 200
-        }
-      )
-      .then( response => {
-        let {
-          more_cates = []
-          // 未订阅时 截取全部分类的前5个
-          my_cates = more_cates.splice(0, 5) || [],
-        } = response.data || {};
+      // 获取用户订阅分类信息
+      this.getUserCates();
 
-        this.myCates = [ ...my_cates ]; // 我订阅的频道
-        this.oldMyCates = [...my_cates];
-        this.moreCates = [ ...more_cates ]; // 其他频道
-        this.oldMoreCates = [ ...more_cates ];
-        
-      })
-      .catch(error => {
-        if(error.response) {
-          const { status = 0 } = error.response;
-          if(status === 404){
-            this.myCates = [] // 我订阅的频道
-            this.moreCates = []; // 其他频道
-            this.oldMyCates = [];
-            this.oldMoreCates = [];
-          }
-          console.log('none');
-        }
-      })
-      
-      // 获取推荐资讯
-      let cate_id = this.currentNewsCateId || -1;
-      addAccessToken().get(createAPI(`news/cates/pinneds`),
-        {},
-        {
-          validateStatus: status => status === 200
-        }
-      )
-      .then( response => {
-        let data = response.data;
-
-        if(data.list.length) {
-          data.forEach(list => {
-            this.newsListIds.push(list.id);
-          });
-          this.newsLists = [ ...data.list ] // 推荐banner数据
-          this.max_id = data.list[data.list.length - 1].id;
-        }
-        if(data.list.length < 15) {
-          this.bottomAllLoaded = true;
-        }
-        if(data.recommend.length) {
-          data.recommend.forEach( list => {
-            this.recommendListIds.push(list.id);
-          });
-          this.recommendLists = [ ...data.recommend ]; // 推荐banner数据
-        }
-        if(this.$refs.loadmore) {
-          setTimeout( () => {
-            this.$refs.loadmore.onTopLoaded();
-          }, 800)
-        }
-      })
-      .catch(error => {
-        console.log(error);
-        if(error.response) {
-          const { status = 0 } = error.response;
-          if(status === 404){
-
-          }
-          console.log('none');
-        }
-      });
-      this.showSpinner = false;
+      // 获取资讯列表 默认请求推荐资讯
+      this.getNewsList(true);
     }
   }
 
   export default newsIndex;
 </script>
+
 <style lang="less" scoped>
   .commonHeader {
     height: 87px;
@@ -602,7 +569,6 @@
     }
   }
 </style>
-
 <style scoped lang="less">
   .endChild {
     margin-right: 0!important;
