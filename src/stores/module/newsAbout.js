@@ -2,7 +2,7 @@ import { CURRENTNEWSCATEID, NEWSSEARCHKEY, NEWSSEARCHRESULT, APPENDNEWSTORESULT,
 
 const state = {
   newsAbout: {
-    currentnewscateid: -1,
+    currentnewscateid: 0,
     searchKey: '',
     searchResult: [],
     resultIds: [],

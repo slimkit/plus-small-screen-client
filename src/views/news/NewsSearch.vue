@@ -41,22 +41,22 @@
           <ul :class="$style.newsLists">
             <li
               class="newsIndex-container-newslist"
-              v-for="(list, index) in storeSearchResult"
+              v-for="(news, index) in storeSearchResult"
               :key="index"
               :class="$style.new"
-              @click="changeUrl(`/news/${list.id}/detail`)"
+              @click="changeUrl(`/news/${news.id}/detail`)"
             >
               <div :class="$style.sourceTitle">
-                <h4>{{ list.title }}</h4>
+                <h4>{{ news.title }}</h4>
                 <section :class="$style.sourceFrom">
                   <i>
-                    <timeago :class="$style.timer" :since="timers(list.created_at, 8, false)" locale="zh-CN" :auto-update="60"></timeago>
+                    <timeago :class="$style.timer" :since="timers(news.created_at, 8, false)" locale="zh-CN" :auto-update="60"></timeago>
                   </i>
-                  <i v-if="list.from">来自 {{ list.from }}</i>
+                  <i v-if="news.from">来自 {{ news.from }}</i>
                 </section>
               </div>
               <figure :class="$style.sourceImg">
-                <img v-lazy="getImg(list.storage.id)" :alt="list.title">
+                <img v-if="news.image" v-lazy="getImg(news.image.id)" :alt="news.title">
               </figure>
             </li>
           </ul>
@@ -78,18 +78,19 @@
   import { CURRENTNEWSCATEID, NEWSSEARCHKEY, NEWSSEARCHRESULT, APPENDNEWSTORESULT, PREPENDNEWSTORESULT, RESETKEYWORD, RESULTIDS } from '../../stores/types';
   import BackIcon from '../../icons/Back';
   import CloseIcon from '../../icons/Close';
-  import { createAPI, createOldAPI, addAccessToken } from '../../utils/request';
+  import { createAPI, addAccessToken } from '../../utils/request';
   import lodash from 'lodash';
   import timers from '../../utils/timer';
   import { changeUrl, goTo } from '../../utils/changeUrl';
   import { mapState } from 'vuex';
   import { resolveImage } from '../../utils/resource';
+  import buildURL from 'axios/lib/helpers/buildURL';
 
   const defaultNothing = resolveImage(require('../../statics/images/defaultNothingx2.png'));
   const newsSearch = {
     created () {
-      this.resultList = [ ...this.storeSearchResult ];
       this.keyword = this.storeKeyWord;
+      this.resultList = [ ...this.storeSearchResult ];
       this.resultListIds = [ ...this.storeResultIds ];
     },
     components: {
@@ -105,135 +106,8 @@
       topAllLoaded: false,
       bottomStatus: '',
       topStatus: '',
+      limit: 15,
     }),
-    methods: {
-      changeUrl,
-      leaveSearch() {
-        this.$store.dispatch(RESETKEYWORD);
-        goTo(-1);
-      },
-      timers,
-      getImg (id) {
-        return buildUrl(createAPI(`files/${id}`), {w: 200, height: 200});
-      },
-      bottomStatusChange(status) {
-        this.bottomStatus = status;
-      },
-      cleanKeyword () {
-        this.keyword = '';
-      },
-      doSearch () {
-        if(!this.keywordCount) return;
-        addAccessToken().get(createOldAPI(`news/search?limit=15&key=${this.keyword}`),
-          {},
-          {
-            validateStatus: status => status === 200
-          }
-        )
-        .then( response => {
-          this.resultList = response.data.data;
-          if(response.data.data.length) {
-            this.max_id = response.data.data[response.data.data.length - 1].id;
-            response.data.data.forEach( news => {
-              if(!this.resultListIds.includes(news.id)) {
-                this.resultListIds.push(news.id);
-              }
-            });
-          }
-          this.$store.dispatch(NEWSSEARCHKEY, cb => {
-            cb(this.keyword);
-          });
-          this.$store.dispatch(NEWSSEARCHRESULT, cb => {
-            cb(this.resultList);
-          });
-          this.$store.dispatch(RESULTIDS, cb => {
-            cb(this.resultListIds);
-          })
-
-          if(response.data.data.length < 15) {
-            this.bottomAllLoaded = true;
-          }
-          if(this.$refs.searchNewsLoadmore) {
-            setTimeout( () => {
-              this.$refs.searchNewsLoadmore.onTopLoaded();
-            }, 800)
-          }
-        });
-      },
-      loadTop () {
-        if(!this.keywordCount) return;
-        addAccessToken().get(createOldAPI(`news/search?limit=15&key=${this.keyword}`),
-          {},
-          {
-            validateStatus: status => status === 200
-          }
-        )
-        .then( response => {
-          this.resultList = response.data.data;
-          if(response.data.data.length) {
-            response.data.data.forEach( news => {
-              if(!this.resultListIds.includes(news.id)) {
-                this.resultListIds.push(news.id);
-                this.resultList = { news, ...this.resultList };
-              }
-            });
-          }
-          this.$store.dispatch(NEWSSEARCHRESULT, cb => {
-            cb(this.resultList);
-          })
-          this.$store.dispatch(RESULTIDS, cb => {
-            cb(this.resultListIds);
-          });
-          this.$store.dispatch(NEWSSEARCHKEY, cb => {
-            cb(this.keyword);
-          });
-          if(this.$refs.searchNewsLoadmore) {
-            setTimeout( () => {
-              this.$refs.searchNewsLoadmore.onTopLoaded();
-            }, 800)
-          }
-        });
-      },
-      /**
-       * 加载更多
-       * @return {[type]} [description]
-       */
-      loadBottom () {
-        if(!this.keywordCount) return;
-        addAccessToken().get(createOldAPI(`news/search?limit=15&key=${this.keyword}&max_id=${this.max_id}`),
-          {},
-          {
-            validateStatus: status => status === 200
-          }
-        )
-        .then( response => {
-          this.resultList = { ...this.resultList, ...response.data.data };
-          if(response.data.data.length) {
-            this.max_id = response.data.data[response.data.data.length - 1].id;
-            response.data.data.forEach( news => {
-              this.resultListIds.push(news.id);
-            });
-          }
-          this.$store.dispatch(NEWSSEARCHRESULT, cb => {
-            cb(this.resultList);
-          })
-          this.$store.dispatch(RESULTIDS, cb => {
-            cb(this.resultListIds);
-          });
-          this.$store.dispatch(NEWSSEARCHKEY, cb => {
-            cb(this.keyword);
-          });
-          if(response.data.data.length < 15) {
-            this.bottomAllLoaded = true;
-          }
-          if(this.$refs.searchNewsLoadmore) {
-            setTimeout( () => {
-              this.$refs.searchNewsLoadmore.onBottomLoaded();
-            }, 800)
-          }
-        });
-      }
-    },
     computed: {
       keywordCount () {
         return this.keyword.length;
@@ -247,6 +121,81 @@
         storeResultIds: state => state.newsAbout.newsAbout.resultIds,
         storeSearched: state => state.newsAbout.newsAbout.storeSearched
       })
+    },
+    methods: {
+      changeUrl,
+      leaveSearch() {
+        this.$store.dispatch(RESETKEYWORD);
+        goTo(-1);
+      },
+      timers,
+      getImg (id) {
+        return buildURL(createAPI(`files/${id}`), {w: 200, height: 200});
+      },
+      bottomStatusChange(status) {
+        this.bottomStatus = status;
+      },
+      cleanKeyword () {
+        this.keyword = '';
+      },
+      doSearch ( loadMore = true ) {
+        if(!this.keywordCount) return;
+
+        if(!loadMore){
+          this.max_id = 0;
+        }
+        addAccessToken().get(createAPI(`news?limit=${ this.limit }&key=${ this.keyword }&after=${ this.max_id }`),{},
+          {
+            validateStatus: status => status === 200
+          }
+        )
+        .then( ({data = []}) => {
+          const len = data.length;
+          if(len) {
+            if(loadMore){
+              this.resultList = [ ...this.resultList, ...data ];
+            }else{
+              this.resultList = [ ...data ];
+            }
+            // 最后一条数据.ID
+            this.max_id = data[len - 1].id;
+
+            data.forEach( news => {
+              if(!this.resultListIds.includes(news.id)) {
+                this.resultListIds.push(news.id);
+              }
+            });
+          }
+          // 存储 搜索关键字
+          this.$store.dispatch(NEWSSEARCHKEY, cb => {
+            cb(this.keyword);
+          });
+          // 存储 搜索结果
+          this.$store.dispatch(NEWSSEARCHRESULT, cb => {
+            cb(this.resultList);
+          });
+          this.$store.dispatch(RESULTIDS, cb => {
+            cb(this.resultListIds);
+          })
+
+          // 判断是否有下一页
+          if(len < this.limit) {
+            this.bottomAllLoaded = true;
+          }
+
+          if(this.$refs.searchNewsLoadmore) {
+            setTimeout( () => {
+              this.$refs.searchNewsLoadmore.onTopLoaded();
+            }, 800)
+          }
+        });
+      },
+      loadTop () {
+        this.doSearch(false);
+      },
+      loadBottom () {
+        this.doSearch();
+      }
     }
   };
 
