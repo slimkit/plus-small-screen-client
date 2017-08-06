@@ -6,4 +6,3 @@ vendor/
 yarn.lock
 yarn-error.log
 composer.lock
-dist/

@@ -15,17 +15,21 @@ export default function (commentsSource) {
     comment.user = localEvent.getLocalItem(`user_${comment.user_id}`);
     if(!lodash.keys(comment.user).length) {
       getUserInfo(comment.user_id, 30).then( localUser => {
+        localUser.avatar = localUser.avatar || defaultAvatar;
         comment.user = localUser;
       });
     }
+    comment.user.avatar = comment.user.avatar || defaultAvatar;
     // 被回复的用户
-    if(comment.reply_to_user_id) {
-      comment.replyToUser = localEvent.getLocalItem(`user_${comment.reply_to_user_id}`);
+    if(comment.reply_user) {
+      comment.replyToUser = localEvent.getLocalItem(`user_${comment.reply_user}`);
       if(!lodash.keys(comment.replyToUser).length) {
-        getUserInfo(comment.reply_to_user_id, 30).then( localUser => {
+        getUserInfo(comment.reply_user_id).then( localUser => {
+          localUser.avatar = localUser.avatar || defaultAvatar;
           comment.replyToUser = localUser;
         });
       }
+      comment.replyToUser.avatar = comment.replyToUser.avatar || defaultAvatar;
     }
     newComment.push(comment);
     max_id = comment.id;

@@ -49,7 +49,7 @@
                   :minlength='1' 
                   :maxlength='255'
                   :autofocus="true"
-                  v-model="commentContent"
+                  v-model="commentBody"
                   :placeholder="placeholder"
                   v-childfocus
                 />
@@ -88,7 +88,7 @@
                   <Row :gutter="24" :class="$style.perComment">
                     <Col span="4">
                       <div class="grid-content bg-purple">
-                        <img @click="changeUrl(`/users/feeds/${comment.user.user_id}`)" :src="comment.user.avatar[30]" alt="" style="width:100%; border-radius:50%">
+                        <img @click="changeUrl(`/users/feeds/${comment.user.user_id}`)" :src="comment.user.avatar" alt="" style="width:100%; border-radius:50%">
                       </div>
                     </Col>
                     <Col span="20">
@@ -136,7 +136,7 @@
                         :minlength='1' 
                         :maxlength='255'
                         :autofocus="true"
-                        v-model="commentContent"
+                        v-model="commentBody"
                         :placeholder="placeholder"
                       />
                     </li>
@@ -173,7 +173,7 @@
     <div id="feed-footer" class="feed-container-tool-operation feed-background-color">
       <Row :gutter="24" style="display: flex; justify-content: center; align-items: center; height: 100%;">
         <Col span="6" class="operation">
-          <div v-if="!detail.is_digg_news" @click="handleDiggFeed(detail.id)">
+          <div v-if="!detail.has_like" @click="handleDiggFeed(detail.id)">
             <UnDiggIcon height="20" width="20" color="#999" />
             <i>喜欢</i>
           </div>
@@ -195,7 +195,7 @@
           </div>
         </Col>
         <Col span="6" class="operation">
-          <div v-if="!detail.is_collection_news" @click="handleCollection(detail.id)">
+          <div v-if="!detail.has_collect" @click="handleCollection(detail.id)">
             <ConnectionIcon height="20" width="20" color="#999" />
             <i>收藏</i>
           </div>
@@ -278,14 +278,14 @@
       commentFeed: false,
       commentToUserId: 0,
       placeholder: '',
-      commentContent: '',
       loading: false,
       commentedUser: {},
-      commentIndex: -1
+      commentIndex: -1,
+      commentBody: ''
     }),
     computed: {
       commentCount () {
-        return this.commentContent.length;
+        return this.commentBody.length;
       },
       newsTimer () {
         return this.timers(this.detail.created_at, 8, false);
@@ -312,36 +312,36 @@
         }
       },
       handleCollection (news_id) {
-        addAccessToken().post(createOldAPI(`news/${news_id}/collection`), {}, {
+        addAccessToken().post(createAPI(`news/${news_id}/collection`), {}, {
           validateStatus: status => status === 201
         })
         .then(response => {
           let data = response.data;
-          this.detail.is_collection_news = 1;
+          this.detail.has_collect = true;
         })
       },
       handleUnCollection (news_id) {
-        addAccessToken().delete(createOldAPI(`news/${news_id}/collection`), {}, {
+        addAccessToken().delete(createAPI(`news/${news_id}/collection`), {}, {
           validateStatus: status => status === 204
         })
         .then(response => {
-          this.detail.is_collection_news = 0;
+          this.detail.has_collect = false;
         })
       },
       handleDiggFeed (news_id) {
-        addAccessToken().post(createOldAPI(`news/${news_id}/digg`), {}, {
+        addAccessToken().post(createAPI(`news/${news_id}/like`), {}, {
           validateStatus: status => status === 201
         })
-        .then(response => {
-          this.detail.is_digg_news = 1;
+        .then( () => {
+          this.detail.has_like = true;
         })
       },
       handleUnDiggFeed (news_id) {
-        addAccessToken().delete(createOldAPI(`news/${news_id}/digg`), {}, {
+        addAccessToken().delete(createAPI(`news/${news_id}/like`), {}, {
           validateStatus: status => status === 204
         })
         .then(response => {
-          this.detail.is_digg_news = 0;
+          this.detail.has_like = false;
         })
       },
       loadBottom() {
@@ -349,21 +349,21 @@
         let limit = 15;
         this.bottomStatus = 'loading';
         addAccessToken().get(
-          createOldAPI(`news/${this.detail.id}/comments?max_id=${max_id}&limit=${limit}`),
+          createAPI(`news/${this.detail.id}/comments?after=${max_id}&limit=${limit}`),
           {},
           {
             validateStatus: status => status === 200
           }
         )
-        .then(response => {
-          let data = response.data.data;
+        .then( ({ data = {} }) => {
+          let comments = data.comments;
           let addComments = [];
           let formatedAddComments = [];
           let bottomAllLoaded = false;
-          if(data.length < 15) {
+          if(comments.length < 15) {
             bottomAllLoaded = true;
           }
-          data.forEach((comment) => {
+          comments.forEach((comment) => {
             this.comments.push(comment);
           });
           setTimeout(() => {
@@ -384,38 +384,41 @@
         this.placeholder = '';
         this.commentIndex = -1;
         this.commentedUser = {};
-        this.commentContent = '';
+        this.commentBody = '';
       },
       /**
        * 发表评论
        * @return {[type]} [description]
        */
       sendComment () {
-        if(!this.commentContent.length && this.loading) return;
+        if(!this.commentBody.length && this.loading) return;
         this.loading = true;
-        addAccessToken().post(createOldAPI(`news/${this.detail.id}/comment`), {
-            body: this.body,
-            reply_to_user_id: this.commentToUserId
+        addAccessToken().post(createAPI(`news/${this.detail.id}/comments`), {
+            body: this.commentBody,
+            reply_user: this.commentToUserId
           },
           {
             validateStatus: status => status === 201
           }
         )
-        .then( response => {
-          let feed = this.feedData;
-          let newComment = {
-            body: this.body,
-            comment_mark: null,
-            created_at: getLocalTime(),
-            id: response.data.data,
-            reply_to_user_id: this.commentToUserId,
-            user_id: window.TS_WEB.currentUserId,
-            reply_to_user: {},
-            user: {}
-          };
+        .then( ({ data = {}}) => {
+          // let feed = this.feedData;
+          // console.log(data);return;
+          // let newComment = {
+          //   body: this.commentBody,
+          //   comment_mark: null,
+          //   created_at: getLocalTime(),
+          //   id: response.data.data,
+          //   reply_user: this.commentToUserId,
+          //   user_id: window.TS_WEB.currentUserId,
+          //   reply_to_user: {},
+          //   user: {}
+          // };
+          let newComment = { ...data.comment };
           // current logged user
           
           let item = this.$storeLocal.get(window.TS_WEB.currentUserId);
+
             // don't find local db user
           if(item === undefined) {
             getUserInfo(window.TS_WEB.currentUserId).then( user => {
@@ -499,7 +502,7 @@
         })
       },
       deleteComment (close, data) {
-        addAccessToken().delete(createOldAPI(`news/${data.news_id}/comment/${data.comment_id}`), {}, {
+        addAccessToken().delete(createAPI(`news/${data.news_id}/comments/${data.comment_id}`), {}, {
           validateStatus: status => status === 204
         })
         .then(response => {
@@ -559,25 +562,25 @@
       }
         // 获取动态详情
         addAccessToken().get(
-          createOldAPI(`news/${news_id}?accept=json`),
+          createAPI(`news/${news_id}`),
           {},
           {
             validateStatus: status => status === 200
           }
         )
-        .then(({ data: { data = {} } = {} }) => {
+        .then(({ data = {}}) => {
           this.detail = { ... data };
           // 获取动态评论 前15条
           addAccessToken().get(
-            createOldAPI(`news/${news_id}/comments`),
+            createAPI(`news/${news_id}/comments`),
             {},
             {
               validateStatus: status => status === 200
             }
           )
-          .then(({ data: { data = {} } = {} }) => {
+          .then(({ data = {} }) => {
             // 格式化评论列表
-            this.comments = data;
+            this.comments = data.comments;
             if(this.comments.length < 15) {
               this.bottomAllLoaded = true;
             }
