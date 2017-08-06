@@ -231,6 +231,7 @@
       },
 
       handleShowEditBox( status = true ) {
+        console.log(status);
         this.showEditBox = status;
         if(!status) {
           this.canEdit = false;

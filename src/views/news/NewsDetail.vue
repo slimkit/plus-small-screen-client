@@ -104,8 +104,8 @@
                         <Row>
                           <Col span="24">
                             <div style="color: #ccc;">
-                              <span v-if="comment.reply_to_user_id">回复 </span>
-                              <router-link :class="$style.profileLink" :to="{ path: `/profile/${comment.reply_to_user_id}` }">{{ comment.replyToUser.name }} </router-link>
+                              <span v-if="comment.reply_user">回复 </span>
+                              <router-link :class="$style.profileLink" :to="{ path: `/profile/${comment.reply_user}` }">{{ comment.replyToUser.name }} </router-link>
                               <span
                                 v-if="comment.user_id  != currentUser"
                                 @click.stop="focusInput(comment.user_id, index)"
@@ -473,7 +473,7 @@
           
           let item = this.$storeLocal.get(reply_to_user_id);
           if(item === undefined) {
-            getUserInfo( reply_to_user_id, 30 ).then( user => {
+            getUserInfo( reply_to_user_id ).then( user => {
               this.placeholder = `回复： ${user.name}`;
               this.commentedUser = { ...user };
             })
