@@ -151,7 +151,7 @@
         let type = this.feedType[this.option.type];
         let currentType = this.option.type; // 区分当前为哪种列表分类
         let ids = this.$store.getters[type.ids];
-        addAccessToken().get(createAPI(`${api}${limiterSend}`), {}, 
+        addAccessToken().get(createAPI(`${api}${limiterSend}&limit=15`), {}, 
           {
             validate: status  => status === 200
           }
