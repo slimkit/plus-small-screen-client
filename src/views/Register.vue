@@ -208,20 +208,27 @@
             phone
           },
           {
-            validateStatus: status => status === 201
+            validateStatus: status => status === 202
           }
         )
-        .then( ({ data = {} }) => {
+        .then( () => {
           // 删除网络问题
           this.cleanErrors();
           this.time = 60;
           this.timer();
         })
-        .catch(({ response: { data = {} } = {} } ) => {
+        .catch( error => {
+          let code = error.response.status;
           this.isCanGetCode = true;
-          const { code = 'xxxx' } = data;
           this.isLoading = false;
-          this.errors = { ...this.errors, code: errorCodes[code] };
+          if( code === 500 ) {
+            this.errors = { ...this.errors, phone: '网络错误,请联系管理员' };
+            return;
+          }
+          if( code === 422) {
+            const { response: { data: { phone: [phone] = [] }  = {} } = {} } = error;
+            this.errors = { ...this.errors, phone: phone };
+          }
         })
       },
       // 注册
@@ -270,17 +277,24 @@
           }
         )
         .then(({ data = {} }) => {
-          window.TS_WEB.currentUserId = data.user_id;
-          localEvent.setLocalItem('UserLoginInfo', data);
+          let loggedData = {
+            token: data.token,
+            user_id: 0
+          };
+          
           this.isLoading = false;
+
           getLoggedUserInfo().then(user => {
-            console.log(user);
+            loggedData.user_id = user.id;
+            window.TS_WEB.currentUserId = user.id;
+            this.$storeLocal.set('UserLoginInfo', loggedData);
+
             this.$store.dispatch(USERS_APPEND, cb =>{
               cb(user)
             });
             // 设置消息提示查询时间
             let time = 0;
-            time = localEvent.getLocalItem('messageFlushTime');
+            time = this.$storeLocal.get('messageFlushTime');
             let nowtime = parseInt(new window.Date().getTime() / 1000);
             if(!time) {
               time = nowtime - 86400;

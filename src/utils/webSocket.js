@@ -6,6 +6,7 @@ import {
 import {
 	app
 } from '../index';
+import storeLocal from 'store';
 import {
 	getImMessageItem
 } from './localDatabase';
@@ -107,7 +108,7 @@ function onMessage(message) {
 												user_id = uids[0];
 											}
 
-											let item = this.$storeLocal.get(`user_${user_id}`);
+											let item = storeLocal.get(`user_${user_id}`);
 											if (item === undefined) {
 												getUserInfo(user_id).then(user => {
 													// 未读数 
@@ -177,7 +178,7 @@ function onMessage(message) {
 										}
 										// 未读数
 										// 获取目标用户
-										let item = this.$storeLocal.get(`user_${user_id}`);
+										let item = storeLocal.get(`user_${user_id}`);
 
 										if (item === undefined) {
 											getUserInfo(user_id).then(user => {
@@ -299,7 +300,7 @@ function onMessage(message) {
 			})
 		});
 		// 提交到vuex
-		let item = this.$storeLocal.get(`user_${dbMsg.uid}`);
+		let item = storeLocal.get(`user_${dbMsg.uid}`);
 
 		if (item !== undefined) {
 			app.$store.dispatch(UNREAD, cb => {

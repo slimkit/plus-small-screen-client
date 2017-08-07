@@ -157,24 +157,25 @@
             this.oldPassword = '';
             this.newPassword = '';
             this.repeatNewPassword = '';
-
+            setTimeout( () => {
+              this.$router.go(-1);
+            }, 1500);
             // 密码修改成功后 // 1. 清除localLoginInfo 并 退回至登录页面 // 2. 直接退出
 
             // 1.
-            // localEvent.clearLocalItem('localLoginInfo');
+            // this.$storeLocal.set('localLoginInfo', {});
             // this.changeUrl('/login');
 
             // 2.
-            if(TS_WEB.webSocket){
-              TS_WEB.webSocket.close();
-            }
-            this.$store.dispatch(CLEANUSERFEEDS);
-            localEvent.setLocalItem('UserLoginInfo', {});
-            this.changeUrl('/login');
+            // if(TS_WEB.webSocket){
+            //   TS_WEB.webSocket.close();
+            // }
+            // this.$store.dispatch(CLEANUSERFEEDS);
+            // this.$storeLocal.set('UserLoginInfo', {});
+            // this.changeUrl('/login');
           }
         })
         .catch( error => {
-          console.log(error);
           const { response = {} } = error;
           const { status = 0, data = {error: "修改密码失败，未知错误"}} = response;
           if( status && status === 422){

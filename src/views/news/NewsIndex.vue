@@ -178,7 +178,7 @@
       newsListIds: [], // 资讯id集合
       canEdit: false,
       key: "",   // 查询关键字
-      limit: 5, // 每页显示条数
+      limit: 15, // 每页显示条数
       showEditBox: false
     }),
     computed: {
@@ -231,7 +231,6 @@
       },
 
       handleShowEditBox( status = true ) {
-        console.log(status);
         this.showEditBox = status;
         if(!status) {
           this.canEdit = false;
@@ -352,9 +351,6 @@
             more_cates = []
           } = response.data || {};
 
-          // 未订阅时 截取全部分类的前5个
-          my_cates = my_cates.length > 0 ? my_cates : more_cates.splice(0, 5);
-
           this.myCates = [ ...my_cates ]; // 我订阅的频道
           this.oldMyCates = [...my_cates];
           this.moreCates = [ ...more_cates ]; // 其他频道
@@ -368,7 +364,6 @@
               this.moreCates = []; // 其他频道
               this.oldMyCates = [];
               this.oldMoreCates = [];
-              console.log('none');
             }
           }
         });

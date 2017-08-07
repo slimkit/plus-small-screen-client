@@ -171,28 +171,28 @@
       // 获取验证码
       getCode () {
         let phone = this.phone;
-        let type = 'change';
         this.isCanGetCode = false;
-        request.post(createAPI('auth/phone/send-code'), {
-            phone,
-            type
+        request.post(createAPI('verifycodes'), {
+            phone
           },
           {
-            validateStatus: status => status === 201
+            validateStatus: status => status === 202
           }
         )
-        .then(response => {
-          if(response.data.code === 0 || response.data.status) {
-            // 删除网络问题
-            this.cleanErrors();
-            this.time = 60;
-            this.timer();
-          }
+        .then( ({ data = {} }) => {
+          console.log(data);
         })
-        .catch(({ response: { data = {} } = {} }) => {
+        .catch( error => {
+          const code = error.response.status;
           this.isCanGetCode = true;
-          const { code = 'xxxx' } = data;
-          this.errors = { ...this.errors, serverError: errorCodes[code] };
+          if( code === 500 ) {
+            this.errors = { ...this.errors, 500: '系统错误,请联系管理员' }
+            return;
+          }
+          if( code === 422 ) {
+            const { response: { data: { phone: [phone] = [] }  = {} } = {} } = error;
+            this.errors = { ...this.errors, phone: phone };
+          }
         })
       },
       submit () {
