@@ -18,7 +18,10 @@
           </div>
         </div>
         <div :class="$style.userCover">
-          <img :class="$style.coverImg" :src="coverImg" :alt="userInfo.name"/>
+          <img :class="$style.coverImg" @click="chooseImg" :src="coverImg" :alt="userInfo.name"/>
+          <input ref="bgInput" style="width:0;height:0;opacity:0;" type="file" name="image" accept="image/*"
+          @change="changeBG"
+        />
         </div>
         <div :class="$style.userProfile">
           <div :class="$style.avatar">
@@ -51,6 +54,7 @@
           <img style="padding-top: 6vh" :src="nothing" />
         </div>
       </div>
+
       <div slot="bottom" v-if="!nothing" class="loadMoreBottom" :class="{hasNoMore: loadMoreBottomStyle == 0, noMore: loadMoreBottomStyle == 1, hasHalfMore: loadMoreBottomStyle == 2}">
         <span v-if="bottomAllLoaded && bottomStatus !== 'loading' && !nothing && hasNoMore">没有更多了</span>
         <section v-else>
@@ -72,6 +76,27 @@
         <span class="noFollowing"> 聊天 </span>
       </div>
     </div>
+    <transition name="custom-classes-transition" enter-active-class="animated slideInUp" leave-active-class="animated slideOutDown">
+      <div :class="$style.avatarSelect" v-show="isShowCropper">
+          <div class="avatarOp commonHeader">
+              <Row :gutter="24" style="display: flex; align-items: center;">
+                  <Col span="5" style="display: flex; justify-content: flex-start;" @click.native="handleHideAvatarSelect">
+                  <BackIcon height="21" width="21" color="#999" />
+                  </Col>
+                  <Col span="14" class="title-col"> 更换背景
+                  </Col>
+                  <Col span="5" style="display: flex; justify-content: flex-end">
+                  <LoadingWhiteIcon height="21" width="21" v-if="loading" />
+                  <span v-else @click="getCropData" class="operate avatarDone">完成</span>
+                  </Col>
+              </Row>
+          </div>
+          <div :class="$style.cropper">
+              <vue-cropper :aspectRatio="(2/1)" class="canvasAvatar" ref="cropper" :aspect-ratio="1" :view-mode="1" :auto-crop="true" :auto-crop-area="0.5" :minContainerWidth="minContainerWidth" :minContainerHeight="minContainerHeight" :minCanvasWidth="minContainerWidth" :minCanvasHeight="minContainerHeight" :minCropBoxWidth="200" :minCropBoxHeigh="200" drag-mode="move" :background="true" :src="imgSrc" :guides="false">
+              </vue-cropper>
+          </div>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -96,6 +121,10 @@
   import { resolveImage } from '../utils/resource';
   import buildUrl from 'axios/lib/helpers/buildURL';
 
+  import { createUploadTask, uploadFile, noticeTask, dataURItoBlob } from '../utils/upload';
+  import LoadingWhiteIcon from '../icons/LoadingWhite';
+
+
   const defaultNothing =  resolveImage(require('../statics/images/defaultNothingx3.png'));
   const defaultBackgroundPic = resolveImage(require('../statics/images/default_cover.png'));
   const defaultAvatar = resolveImage(require('../statics/images/defaultAvatarx2.png'));
@@ -108,7 +137,8 @@
       EachFollowingIcon,
       BackIcon,
       ShareIcon,
-      CommentIcon
+      CommentIcon,
+      LoadingWhiteIcon
     },
     data: () => ({
       currentUser: window.TS_WEB.currentUserId, // 当前登录用户
@@ -118,7 +148,12 @@
       bottomStatus: '',
       max_id: 0,
       hasNoMore: false,
-      im_token: window.TS_WEB.im_token
+      im_token: window.TS_WEB.im_token,
+      loading: false,
+      isShowCropper: false,
+      imgSrc: '',
+      minContainerWidth: window.innerWidth,
+      minContainerHeight: window.innerHeight - 46
 
     }),
     methods: {
@@ -300,7 +335,95 @@
           max_id = feed.id;
         });
         return dayFeeds;
-      }
+      },
+
+      // chooseImg
+      chooseImg(){
+        this.$refs.bgInput.click();
+      },
+
+      // 修改背景图片
+      changeBG(e){
+      const file = e.target.files[0];
+        if (!file.type.includes('image/')) {
+          this.$store.dispatch(NOTICE, cb => {
+            cb({
+              show: true,
+              status: false,
+              text: '请选择图片',
+              time: 1500
+            })
+          });
+          return;
+        }
+
+        if (typeof FileReader === 'function') {
+          const reader = new window.FileReader();
+          reader.onload = (event) => {
+            this.imgSrc = event.target.result;
+            this.$refs.cropper.replace(event.target.result);
+            this.showCropper();
+          };
+          reader.readAsDataURL(file);
+        } else {
+          this.$store.dispatch(NOTICE, cb => {
+            cb({
+              show: true,
+              status: false,
+              text: '系统太老了...',
+              time: 1500
+            })
+          });
+          return;
+        }      
+      },
+      handleHideAvatarSelect () {
+        this.isShowCropper = false;
+        this.imgSrc = '';
+        this.$refs.bgInput.value = '';
+        this.loading = false;
+      },
+      // 显示裁剪窗口
+       showCropper () {
+        this.isShowCropper = true;
+      },
+      // 获取裁剪后的图片信息
+      getCropData () {
+        let reg = /data:(.*?);/;
+        let base64Reg = /^data:(.*?);base64,/;
+        let fileUpload = {};
+        let fileName = this.$refs.bgInput.value;
+
+        // 检测选中图片的mime-type;
+        let mime_type = this.$refs.cropper.$refs.img.currentSrc.match(reg)[1];
+        // 获取本地文件名
+        fileUpload.origin_filename = fileName.replace('C:\\fakepath\\', '');
+        let fileStreamData = this.$refs.cropper.getCroppedCanvas({width: 500, height: 500}).toDataURL(mime_type);
+        this.loading = true;
+        const formdata = new FormData();
+        formdata.append('image', dataURItoBlob(fileStreamData));
+        addAccessToken().post(createAPI('user/bg'),
+          formdata,
+          {
+            validateStatus: status => status === 204
+          }
+        )
+        .then( ({ data = {} }) => {
+          this.coverImg = "";
+          // 刷新用户数据
+          getUserInfo(this.user_id).then(user => {
+            this.userInfo = { ...user};
+          });
+          this.handleHideAvatarSelect();
+          this.$store.dispatch(NOTICE, cb => {
+            cb({
+              text: '背景修改成功',
+              time: 2500,
+              status: true
+            });
+          });
+        })
+      },
     },
     computed: {
       // 根据关注按钮来确认loadmore的样式
@@ -386,8 +509,9 @@
       },
       // 封面
       coverImg () {
+        console.log(123)
         const { bg = '' } = this.userInfo;
-        return bg ? bg : defaultBackgroundPic;
+        return bg ? bg + "?" + (new Date()).getTime() : defaultBackgroundPic;
       },
       feedList () {
         let feeds = [ ...this.$store.getters[GETUSERFEEDS]];
@@ -540,6 +664,23 @@
     bottom: 0;
     left: 0;
     right: 0;
+  }
+
+  .avatarSelect {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    overflow: hidden;
+    margin: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 3;
+    .cropper {
+      height: calc(100% - 46px);
+      width: 100%;
+    }
   }
 </style>
 <style lang="scss" scope>
