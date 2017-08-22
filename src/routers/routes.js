@@ -30,7 +30,7 @@ import ChannelIndex from '../views/channel/ChannelIndex';
 import ChannelFeeds from '../views/channel/ChannelFeeds';
 
 import AboutUs from '../views/AboutUs';
-// import FeedBack from '../views/FeedBack';
+import FeedBack from '../views/FeedBack';
 
 const routes = [
   {
@@ -303,7 +303,7 @@ const routes = [
     beforeEnter: (to, from, next) => {
       requestAuth(to, from, next);
     }
-  },/*{
+  },{
     path: '/users/feedback',
     component: FeedBack,
     name: 'feedBack',
@@ -314,7 +314,7 @@ const routes = [
     beforeEnter: (to, from, next) => {
       requestAuth(to, from, next);
     }
-  },*/{
+  },{
     path: '/about',
     component: AboutUs,
     name: 'aboutUs',

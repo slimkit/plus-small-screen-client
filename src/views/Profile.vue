@@ -74,18 +74,18 @@
       </Row>
     </div>
     <div :class="$style.entry">
-      <!-- <Row :gutter="16" :class="$style.entryMenu">
+      <Row :gutter="24" :class="$style.entryMenu" @click.native="changeUrl('/users/feedback')">
         <Col span="3">
           <FeedbackIcon :height="21" :width="21" color="#59b6d7" />
         </Col>
-        <Col span="19" :class="$style.menuText">
+        <Col span="16" :class="$style.menuText">
           意见反馈
         </Col>
-        <Col span="2"  :class="$style.rightIcon">
-          <Icon type="ios-arrow-right"></Icon>
+        <Col span="5" :class="$style.rightIcon">
+          <RightArrowIcon height="18" width="18" color="#999" />
         </Col>
       </Row>
-      <Row :gutter="16" :class="$style.entryMenu">
+      <!-- <Row :gutter="16" :class="$style.entryMenu">
         <Col span="3">
           <QuestionIcon :height="21" :width="21" color="#59b6d7" />
         </Col>

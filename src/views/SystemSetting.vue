@@ -30,14 +30,6 @@
           <RightArrowIcon height="18" width="18" color="#999" />
         </Col>
       </Row>
-<!--       <Row :gutter="24" :class="$style.entryMenu" @click.native="changeUrl('/users/feedback')">
-        <Col span="22">
-          问题反馈
-        </Col>
-        <Col span="2" :class="$style.rightIcon">
-          <RightArrowIcon height="18" width="18" color="#999" />
-        </Col>
-      </Row> -->
       <Row :gutter="24" :class="$style.entryMenu" @click.native="changeUrl('/about')">
         <Col span="22">
           关于我们

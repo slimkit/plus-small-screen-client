@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="aboutUs">
         <div class="commonHeader" v-if="!isWeiXin">
             <Row :gutter="24">
                 <Col span="5" style="display: flex; justify-content: flex-start" @click.native="goTo(-1)">
@@ -7,9 +7,8 @@
                 </Col>
                 <Col span="14" class="title-col">关于我们</Col>
             </Row>
-
-            <div v-show="!loading" class="aboutContent" v-html="content"></div>
         </div>
+        <div v-show="!loading" class="aboutContent" v-html="content"></div>
     </div>
 </template>
 <script>
@@ -43,7 +42,7 @@ export default aboutUs;
 </script>
 <style>
 .aboutContent{
-    margin-top: -19px;
+    margin-top: -20px;
     padding-bottom: 1rem;
     text-align: left;
     background-color: #fff;
