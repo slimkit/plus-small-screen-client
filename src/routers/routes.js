@@ -29,6 +29,9 @@ import NewsSearch from '../views/news/NewsSearch';
 import ChannelIndex from '../views/channel/ChannelIndex';
 import ChannelFeeds from '../views/channel/ChannelFeeds';
 
+import AboutUs from '../views/AboutUs';
+// import FeedBack from '../views/FeedBack';
+
 const routes = [
   {
     path: '/',
@@ -296,6 +299,28 @@ const routes = [
     meta: {
       title: '个人资料',
       keywords: '个人资料'
+    },
+    beforeEnter: (to, from, next) => {
+      requestAuth(to, from, next);
+    }
+  },/*{
+    path: '/users/feedback',
+    component: FeedBack,
+    name: 'feedBack',
+    meta: {
+      title: '意见反馈',
+      keywords: '意见反馈'
+    },
+    beforeEnter: (to, from, next) => {
+      requestAuth(to, from, next);
+    }
+  },*/{
+    path: '/about',
+    component: AboutUs,
+    name: 'aboutUs',
+    meta: {
+      title: '关于我们',
+      keywords: '关于我们'
     },
     beforeEnter: (to, from, next) => {
       requestAuth(to, from, next);
