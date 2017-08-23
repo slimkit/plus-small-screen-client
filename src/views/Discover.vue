@@ -40,6 +40,20 @@
           </i>
         </li>
       </ul>
+
+      <ul class="component-lists">
+        <li class="component-list" @click="changeUrl(`/findsomeone`)">
+          <i class="component-icon">
+            <FindsomeOne height="21" width="21" />
+          </i>
+          <section class="component-title">
+            找人
+          </section>
+          <i class="component-entry">
+            <RightArrowIcon height="18" width="18" color="#999" />
+          </i>
+        </li>
+      </ul>
     </section>
     <!--组件列表结束-->
     <ToolBar/>
@@ -51,6 +65,7 @@
   import BackIcon from '../icons/Back';
   import NewsIcon from '../icons/News';
   import ChannelIcon from '../icons/Channel';
+  import FindsomeOne from '../icons/FindsomeOne';
   import RightArrowIcon from '../icons/RightArrow';
   import { resolveImage } from '../utils/resource';
   const defaultNothing = resolveImage(require('../statics/images/defaultNothingx2.png'));
@@ -62,6 +77,7 @@
     components: {
       BackIcon,
       ToolBar,
+      FindsomeOne,
       RightArrowIcon,
       NewsIcon,
       ChannelIcon
@@ -82,6 +98,9 @@
 </script>
 
 <style lang="less" scoped>
+  .component-lists {
+    margin-bottom: 20px;
+  }
   .component-list {
     display: flex;
     align-items: center;

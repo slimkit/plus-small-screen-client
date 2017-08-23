@@ -32,6 +32,12 @@ import ChannelFeeds from '../views/channel/ChannelFeeds';
 import AboutUs from '../views/AboutUs';
 import FeedBack from '../views/FeedBack';
 
+import FindSomeOne from '../views/findsomeone/FindSomeOne';
+import FindNew from '../views/findsomeone/FindNew';
+import FindHot from '../views/findsomeone/FindHot';
+import FindRec from '../views/findsomeone/FindRec';
+import FindNear from '../views/findsomeone/FindNear';
+
 const routes = [
   {
     path: '/',
@@ -325,6 +331,41 @@ const routes = [
     beforeEnter: (to, from, next) => {
       requestAuth(to, from, next);
     }
+  },
+  {
+    path: '/findsomeone',
+    component: FindSomeOne,
+    meta: {
+      title: '找人'
+    },
+    children: [{
+      path: 'new',
+      component: FindNew,
+      meta: {
+        title: '最新'
+      }
+    },
+    {
+      path: 'hot',
+      component: FindHot,
+      meta: {
+        title: '热门'
+      }
+    },
+    {
+      path: 'rec',
+      component: FindRec,
+      meta: {
+        title: '推荐'
+      }
+    },
+    {
+      path: 'near',
+      component: FindNear,
+      meta: {
+        title: '附近'
+      }
+    }]
   },
   { path: '*', redirect: '/' }
 ];
