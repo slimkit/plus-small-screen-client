@@ -2,7 +2,7 @@
     <div>
         <header class="commonHeader" style="position: fixed; top:0; width:100%" v-if="!isWeiXin">
             <Row :gutter="24">
-                <Col span="4" style="display: flex; justify-content: flex-start" @click.native="goTo(-1)">
+                <Col span="4" style="display: flex; justify-content: flex-start" @click.native="changeUrl(`/discover`)">
                 <BackIcon height="21" width="21" color="#999" />
                 </Col>
                 <Col span="11" style="padding-left: 0">
@@ -22,16 +22,16 @@
         <nav :class="$style.findNavBar">
             <Row :gutter="0 " :class="$style.NavRow">
                 <Col :span="5" :class="$style.NavCol">
-                    <router-link :class="$style.navLink" to="/findsomeone/hot">热门</router-link>
+                    <router-link :class="$style.navLink" to="/findsomeone/list/populars">热门</router-link>
                 </Col>
                 <Col :span="5" :class="$style.NavCol">
-                    <router-link :class="$style.navLink" to="/findsomeone/new">最新</router-link>
+                    <router-link :class="$style.navLink" to="/findsomeone/list/latests">最新</router-link>
                 </Col>
                 <Col :span="5" :class="$style.NavCol">
-                    <router-link :class="$style.navLink" to="/findsomeone/rec">推荐</router-link>
+                    <router-link :class="$style.navLink" to="/findsomeone/list/find-by-tags">推荐</router-link>
                 </Col>
                 <Col :span="5" :class="$style.NavCol">
-                    <router-link :class="$style.navLink" to="/findsomeone/near">附近</router-link>
+                    <router-link :class="$style.navLink" to="/findsomeone/list/near">附近</router-link>
                 </Col>
             </Row>
         </nav>
@@ -43,7 +43,7 @@
 <script>
 import BackIcon from '../../icons/Back';
 import Search from '../../icons/Search';
-import { goTo } from '../../utils/changeUrl';
+import { goTo, changeUrl } from '../../utils/changeUrl';
 const FindSomeOne = {
     name: "FindSomeOne",
     components: {
@@ -56,6 +56,7 @@ const FindSomeOne = {
     }),
     methods: {
         goTo,
+        changeUrl
     }
 }
 
@@ -81,14 +82,14 @@ export default FindSomeOne;
 
 .findNavBar {
     font-size: 14px;
-    height: 32px;
-    line-height: 31px;
+    height: 45px;
+    line-height: 44px;
     border-bottom: 1px #ededed solid;
     background-color: #fff;
     position: fixed;
     top: 46px;
     width: 100%;
-    z-index: 3;
+    z-index: 9;
     &:active {
         background-color: #fff;
     }
@@ -115,6 +116,6 @@ export default FindSomeOne;
     border-bottom: 2px solid transparent;
 }
 .findContent{
-    padding-top: 32+46px;
+    padding-top: 45+46px;
 }
 </style>
