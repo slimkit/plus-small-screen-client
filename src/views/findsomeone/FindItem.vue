@@ -8,7 +8,7 @@
             <p :class="$style.itemBio">{{item.bio || "这家伙很懒，什么也没有留下"}}</p>
         </div>
         <div :class="$style.itemFollow">
-            <div class="actionButton" @click="handleFollowingStatus(followAction.status ? true : false)">
+            <div class="actionButton" @click.stop="handleFollowingStatus(followAction.status)">
                 <FollowingIcon v-if="followAction.text == '已关注'" height="48" width="48" color="#59b6d7"/>
                 <UnFollowingIcon v-if="followAction.text == '关注'" height="48" width="48" color="#333"/>
                 <EachFollowingIcon v-if="followAction.text == '相互关注'" height="48" width="48" color="#59b6d7"/>
@@ -24,6 +24,7 @@ import UnFollowingIcon from '../../icons/UnFollowing';
 import EachFollowingIcon from '../../icons/EachFollowing';
 import { goTo, changeUrl } from '../../utils/changeUrl';
 import { resolveImage } from '../../utils/resource';
+import { followingUser, unFollowingUser, getLoggedUserInfo, getUserInfo } from '../../utils/user';
 
 const defaultAvatar = resolveImage(require('../../statics/images/defaultAvatarx2.png'));
 
@@ -40,9 +41,51 @@ const FindItem = {
     }),
     methods: {
         changeUrl,
-        handleFollowingStatus(){
-
-        }
+        handleFollowingStatus(status){
+            console.log(status);
+            // 关注操作
+            if(status){
+                // 取关
+                this.handleUnfollowing();
+            }else{
+                // 加关注
+                this.handleFollowing();
+            }
+        },
+        // 取关操作
+      handleUnfollowing () {
+        unFollowingUser(this.item.id)
+        .then( status => {
+          if (status) {
+            this.item.follower = false;
+          } else {
+            this.$store.dispatch(NOTICE, cb => {
+              cb({
+                text: '取关失败,可能是还没关注',
+                time: 1500,
+                status: true
+              });
+            });
+          }
+        });
+      },
+      // 关注操作
+      handleFollowing() {
+        followingUser(this.item.id)
+        .then( status => {
+          if (status) {
+            this.item.follower = true;
+          } else {
+            this.$store.dispatch(NOTICE, cb => {
+              cb({
+                text: '关注失败,可能是已经关注了',
+                time: 1500,
+                status: true
+              });
+            });
+          }
+        })
+      },
     },
     computed: {
       followAction () {

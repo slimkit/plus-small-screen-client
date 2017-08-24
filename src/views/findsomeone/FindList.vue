@@ -5,7 +5,7 @@
             <ul :class="$style.findlist">
                 <FindItem v-for="(item, index) in dataList" :item="item" :key="index" />
             </ul>
-            <div slot="bottom" class="mint-loadmore-bottom":class="$style.mb0">
+            <div slot="bottom" class="mint-loadmore-bottom" :class="{mb0: bottomAllLoaded}">
                 <span v-if="bottomAllLoaded">没有更多了</span>
                 <section v-else>
                     <span v-show="bottomStatus === 'pull' && !bottomAllLoaded">上拉加载更多</span>
@@ -16,7 +16,7 @@
         </mt-loadmore>
         <!-- /list -->
         <!-- nothing -->
-        <div v-else class="nothingDefault">
+        <div v-if="nothing" class="nothingDefault">
             <img :src="nothingImg" />
         </div>
         <!-- /nothing -->
@@ -51,8 +51,12 @@ const FindList = {
         type: "populars",
     }),
     methods: {
+        /**
+         * 加载数据
+         * @param  {Boolean} merge 是否合并数据
+         * @return {[type]}       [description]
+         */
         loadData(merge) {
-            this.showSpinner = true;
             let type = this.type,
                 params = this.searchData;
             request.get(createAPI(`user/${type}`), { params })
@@ -60,6 +64,8 @@ const FindList = {
 
                     if (data.length < params.limit) {
                         this.bottomAllLoaded = true;
+                    }else{
+                        this.bottomAllLoaded = false;
                     }
 
                     if (merge) {
@@ -70,6 +76,10 @@ const FindList = {
                         // 刷新操作
                         this.dataList = [...data];
                     }
+                    this.showSpinner = false;
+                })
+                .catch(error=>{
+                    this.dataList = [];
                     this.showSpinner = false;
                 })
         },
@@ -102,7 +112,9 @@ const FindList = {
             this.bottomStatus = "";
             this.topAllLoaded = false;
             this.bottomAllLoaded = false;
-            this.type = this.$route.params.type || "populars";
+            this.showSpinner  = true;
+            // 默认 热门
+            this.type = this.$route.params.type;
             this.dataList = [];
             this.loadData();
         }
@@ -137,6 +149,8 @@ export default FindList;
     min-height: 100%;
     background-color: #fff;
 }
+</style>
+<style>
 .mb0{
   margin-bottom: 0 !important;
 }
