@@ -1,30 +1,28 @@
 <template>
-    <li :class="$style.findItem" @click="changeUrl(`/users/feeds/${item.id}`)">
+    <li :class="$style.findItem" @click="changeUrl(`/users/feeds/${id}`)">
         <div :class="$style.itemHeader">
-            <img :src="item.avatar || defaultAvatar" :alt="item.name">
+            <img :src="avatar" :alt="name">
         </div>
         <div :class="$style.iteminfo">
-            <p :class="$style.itemName">{{item.name}}</p>
-            <p :class="$style.itemBio">{{item.bio || "这家伙很懒，什么也没有留下"}}</p>
+            <p :class="$style.itemName">{{name}}</p>
+            <p :class="$style.itemBio">{{bio}}</p>
         </div>
         <div :class="$style.itemFollow">
             <div class="actionButton" @click.stop="handleFollowingStatus(followAction.status)">
-                <FollowingIcon v-if="followAction.text == '已关注'" height="48" width="48" color="#59b6d7"/>
-                <UnFollowingIcon v-if="followAction.text == '关注'" height="48" width="48" color="#333"/>
-                <EachFollowingIcon v-if="followAction.text == '相互关注'" height="48" width="48" color="#59b6d7"/>
+                <FollowingIcon v-if="followAction.text == '已关注'" height="48" width="48" color="#59b6d7" />
+                <UnFollowingIcon v-if="followAction.text == '关注'" height="48" width="48" color="#333" />
+                <EachFollowingIcon v-if="followAction.text == '相互关注'" height="48" width="48" color="#59b6d7" />
             </div>
         </div>
     </li>
 </template>
-
 <script>
-
 import FollowingIcon from '../../icons/Following';
 import UnFollowingIcon from '../../icons/UnFollowing';
 import EachFollowingIcon from '../../icons/EachFollowing';
 import { goTo, changeUrl } from '../../utils/changeUrl';
 import { resolveImage } from '../../utils/resource';
-import { followingUser, unFollowingUser, getLoggedUserInfo, getUserInfo } from '../../utils/user';
+import { followingUser, unFollowingUser } from '../../utils/user';
 
 const defaultAvatar = resolveImage(require('../../statics/images/defaultAvatarx2.png'));
 
@@ -37,93 +35,115 @@ const FindItem = {
     },
     props: ["item"],
     data: () => ({
-        defaultAvatar,
+        id: null,
+        bio: null,
+        name: null,
+        avatar: null,
+        follower: false,
+        following: false,
     }),
     methods: {
         changeUrl,
-        handleFollowingStatus(status){
-            console.log(status);
+        handleFollowingStatus(status) {
             // 关注操作
-            if(status){
+            if (status) {
                 // 取关
                 this.handleUnfollowing();
-            }else{
+            } else {
                 // 加关注
                 this.handleFollowing();
             }
         },
         // 取关操作
-      handleUnfollowing () {
-        unFollowingUser(this.item.id)
-        .then( status => {
-          if (status) {
-            this.item.follower = false;
-          } else {
-            this.$store.dispatch(NOTICE, cb => {
-              cb({
-                text: '取关失败,可能是还没关注',
-                time: 1500,
-                status: true
-              });
-            });
-          }
-        });
-      },
-      // 关注操作
-      handleFollowing() {
-        followingUser(this.item.id)
-        .then( status => {
-          if (status) {
-            this.item.follower = true;
-          } else {
-            this.$store.dispatch(NOTICE, cb => {
-              cb({
-                text: '关注失败,可能是已经关注了',
-                time: 1500,
-                status: true
-              });
-            });
-          }
-        })
-      },
+        handleUnfollowing() {
+            unFollowingUser(this.id)
+                .then(status => {
+                    if (status) {
+                        this.follower = false;
+                    } else {
+                        this.$store.dispatch(NOTICE, cb => {
+                            cb({
+                                text: '取关失败,可能是还没关注',
+                                time: 1500,
+                                status: true
+                            });
+                        });
+                    }
+                });
+        },
+        // 关注操作
+        handleFollowing() {
+            followingUser(this.id)
+                .then(status => {
+                    if (status) {
+                        this.follower = true;
+                    } else {
+                        this.$store.dispatch(NOTICE, cb => {
+                            cb({
+                                text: '关注失败,可能是已经关注了',
+                                time: 1500,
+                                status: true
+                            });
+                        });
+                    }
+                })
+        },
     },
     computed: {
-      followAction () {
-        if(this.item.following && this.item.follower) {
-          return {
-            status: true,
-            text: '相互关注'
-          };
-        }
-        if(!this.item.follower) {
-          return {
-            status: false,
-            text: '关注'
-          }
-        }
-        if(!this.item.following && this.item.follower) {
-          return {
-            status: true,
-            text: '已关注'
-          }
-        }
-      },
+        header() {
+            return this.avatar || this.defaultAvatar;
+        },
+        followAction() {
+            if (this.following && this.follower) {
+                return {
+                    status: true,
+                    text: '相互关注'
+                };
+            }
+            if (!this.follower) {
+                return {
+                    status: false,
+                    text: '关注'
+                }
+            }
+            if (!this.following && this.follower) {
+                return {
+                    status: true,
+                    text: '已关注'
+                }
+            }
+        },
     },
-    created() {}
+    created() {
+        const {
+            id,
+            bio,
+            name,
+            avatar,
+            follower,
+            following
+        } = this.item;
+        this.id = id;
+        this.bio = bio || "这家伙很懒，什么也没有留下";
+        this.name = name;
+        this.avatar = avatar || defaultAvatar;
+        this.follower = follower;
+        this.following = following;
+    }
 }
 
 export default FindItem;
 </script>
-
 <style lang="less" module>
-.findItem{
+.findItem {
     display: flex;
     align-items: center;
     padding: 20px;
     height: 100px;
     border-bottom: 1px solid #ededed;
 }
-.itemHeader{
+
+.itemHeader {
     overflow: hidden;
     width: 50px;
     height: 50px;
@@ -132,30 +152,32 @@ export default FindItem;
     border-radius: 50%;
     text-align: center;
     background-color: #ededed;
-    >img{
+    >img {
         width: 100%;
     }
 }
-.iteminfo{
+
+.iteminfo {
     overflow: hidden;
     flex-grow: 1;
     margin-left: 25px;
     font-size: 16px;
-    > p{
+    >p {
         overflow: hidden;
         width: 100%;
         white-space: nowrap;
         text-overflow: ellipsis;
     }
-    .itemName{
+    .itemName {
         color: #333;
     }
-    .itemBio{
+    .itemBio {
         font-size: 14px;
         color: #999;
     }
 }
-.itemFollow{
+
+.itemFollow {
     display: flex;
     justify-content: center;
 }

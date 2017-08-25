@@ -509,7 +509,6 @@
       },
       // 封面
       coverImg () {
-        console.log(123)
         const { bg = '' } = this.userInfo;
         return bg ? bg + "?" + (new Date()).getTime() : defaultBackgroundPic;
       },

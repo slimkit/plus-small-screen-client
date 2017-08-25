@@ -33,11 +33,8 @@ import AboutUs from '../views/AboutUs';
 import FeedBack from '../views/FeedBack';
 
 import FindSomeOne from '../views/findsomeone/FindSomeOne';
-// import FindNew from '../views/findsomeone/FindNew';
-// import FindHot from '../views/findsomeone/FindHot';
-// import FindRec from '../views/findsomeone/FindRec';
-// import FindNear from '../views/findsomeone/FindNear';
-import FindList from '../views/findsomeone/FindList';
+import FindContent from '../views/findsomeone/FindContent';
+import FindSearch from '../views/findsomeone/FindSearch';
 
 const routes = [
   {
@@ -343,14 +340,19 @@ const routes = [
       requestAuth(to, from, next);
     },
     redirect: '/findsomeone/list/populars',
-    children: [
-    {
+    children: [{
       path: 'list/:type',
-      component: FindList,
+      component: FindContent,
       meta: {
-        title: '附近'
+        title: '找人'
       }
     }]
+  },{
+    path: '/findsomeone/search',
+    component: FindSearch,
+    meta: {
+      title: '搜索'
+    }
   },
   { path: '*', redirect: '/' }
 ];

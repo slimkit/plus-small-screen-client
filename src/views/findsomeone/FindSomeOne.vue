@@ -1,62 +1,85 @@
 <template>
-    <div>
+    <div class="findSomeOne" :class="{noScroll: isShowSearch}">
         <header class="commonHeader" style="position: fixed; top:0; width:100%" v-if="!isWeiXin">
             <Row :gutter="24">
                 <Col span="4" style="display: flex; justify-content: flex-start" @click.native="changeUrl(`/discover`)">
                 <BackIcon height="21" width="21" color="#999" />
                 </Col>
                 <Col span="11" style="padding-left: 0">
-                <div :class="$style.input">
-                    <Search style="position: absolute; top: 50%; left: 5px; margin-top:-8px" height="16" width="16" color="#999" />
-                    <input type="text" placeholder="搜索">
+                <!-- <div :class="$style.input" @click="changeUrl(`/findsomeone/search`)"> -->
+                <div :class="$style.input" @click="showSearch">
+                    <Search style="position: absolute; top: 50%; left: 5px; margin-top:-8px" height="16" width="16" color="#999" /> 搜索
+                    <!-- <input type="text" placeholder="搜索"> -->
                 </div>
                 </Col>
-                <Col span="4" style="display: flex; justify-content: flex-start">
-                <BackIcon height="21" width="21" color="#999" />
+                <Col span="3" style="display: flex; justify-content: flex-start">
+                <Contacts height="24" width="24" color="#999" />
                 </Col>
-                <Col span="5" style="display: flex; justify-content: flex-start">
-                <BackIcon height="21" width="21" color="#999" />
+                <Col span="6" style="display: flex; justify-content: flex-start">
+                <Location height="24" width="24" color="#999" />成都市
                 </Col>
             </Row>
         </header>
-        <nav :class="$style.findNavBar">
-            <Row :gutter="0 " :class="$style.NavRow">
-                <Col :span="5" :class="$style.NavCol">
-                    <router-link :class="$style.navLink" to="/findsomeone/list/populars">热门</router-link>
+        <nav class="findNavBar">
+            <Row :gutter="0 " class="NavRow">
+                <Col :span="5" class="NavCol">
+                <router-link class="navLink" to="/findsomeone/list/populars">热门</router-link>
                 </Col>
-                <Col :span="5" :class="$style.NavCol">
-                    <router-link :class="$style.navLink" to="/findsomeone/list/latests">最新</router-link>
+                <Col :span="5" class="NavCol">
+                <router-link class="navLink" to="/findsomeone/list/latests">最新</router-link>
                 </Col>
-                <Col :span="5" :class="$style.NavCol">
-                    <router-link :class="$style.navLink" to="/findsomeone/list/find-by-tags">推荐</router-link>
+                <Col :span="5" class="NavCol">
+                <router-link class="navLink" to="/findsomeone/list/find-by-tags">推荐</router-link>
                 </Col>
-                <Col :span="5" :class="$style.NavCol">
-                    <router-link :class="$style.navLink" to="/findsomeone/list/near">附近</router-link>
+                <Col :span="5" class="NavCol">
+                <router-link class="navLink" to="/findsomeone/list/near">附近</router-link>
                 </Col>
             </Row>
         </nav>
-        <div :class="$style.findContent">
+        <div class="findContent">
             <router-view></router-view>
         </div>
+        <!-- search -->
+        <transition name="custom-classes-transition" enter-active-class="animated slideInUp" leave-active-class="animated slideOutDown">
+            <FindSearch v-if="isShowSearch" @cancel="()=>{showSearch()}" />
+        </transition>
+        <!-- /search -->
     </div>
 </template>
 <script>
-import BackIcon from '../../icons/Back';
 import Search from '../../icons/Search';
+import BackIcon from '../../icons/Back';
+import Contacts from '../../icons/Contacts';
+import Location from '../../icons/Location';
+import FindSearch from './FindSearch';
+import LoadMore from './LoadMore';
 import { goTo, changeUrl } from '../../utils/changeUrl';
 const FindSomeOne = {
     name: "FindSomeOne",
     components: {
+        LoadMore,
+        FindSearch,
         BackIcon,
+        Contacts,
+        Location,
         Search,
     },
     data: () => ({
+        isShowSearch: false,
         isWeiXin: window.TS_WEB.isWeiXin,
-        selected: 1
     }),
     methods: {
         goTo,
-        changeUrl
+        changeUrl,
+        showSearch() {
+            this.isShowSearch = !this.isShowSearch;
+        }
+    },
+    created(){
+        const key = this.$storeLocal.get("FindSomeOne_Key");
+        if(key){
+            this.isShowSearch = true;
+        }
     }
 }
 
@@ -67,7 +90,9 @@ export default FindSomeOne;
     position: relative;
     height: 27px;
     line-height: 27px;
+    padding-left: 27px;
     background-color: #ededed;
+    color: #ccc;
     border-radius: 6px;
     >input {
         width: 100%;
@@ -78,6 +103,21 @@ export default FindSomeOne;
         padding-right: 10px;
         background: none;
     }
+}
+</style>
+<style lang="scss">
+.findSomeOne {
+    width: 100%;
+}
+
+.findSearch {
+    position: fixed;
+    width: 100%;
+    height: 100vh;
+    background-color: #123;
+    top: 0;
+    left: 0;
+    z-index: 999;
 }
 
 .findNavBar {
@@ -115,7 +155,15 @@ export default FindSomeOne;
     bottom: -1px;
     border-bottom: 2px solid transparent;
 }
+
+.noScroll{
+    height: 100vh !important;
+    overflow-y: hidden !important;
+}
+
+
 .findContent{
-    padding-top: 45+46px;
+    width: 100%;
+    margin-top: 91px;
 }
 </style>
