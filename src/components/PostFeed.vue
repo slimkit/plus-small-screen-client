@@ -98,7 +98,7 @@ import piexif from 'piexifjs';
 
 const base64Reg = /^data:(.*?);base64,/;
 let reg = /data:(.*?);/;
-const UserLoginInfo = storeLocal.get('UserLoginInfo');
+const UserLoginInfo = storeLocal.get('UserLoginInfo') || {};
 //
 const postFeed = {
   components: {
