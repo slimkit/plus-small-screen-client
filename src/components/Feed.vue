@@ -77,7 +77,7 @@
   import { NOTICE, USERS_APPEND } from '../stores/types';
   import storeLocal from 'store';
   const defaultAvatar =  resolveImage(require('../statics/images/defaultAvatarx2.png'));
-  console.log(defaultAvatar);
+  
   const feedinfo = {
     props: [
       'feed'
