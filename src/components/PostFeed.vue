@@ -112,7 +112,7 @@ const postFeed = {
     uploadList: [],
     visible: false,
     uploadUri: createAPI('files'),
-    headers: { Authorization: `Bearer ${UserLoginInfo.token}` },
+    headers: { Authorization: `Bearer ${UserLoginInfo.token || ''}` },
     images: [],
     format: ['jpg', 'jpeg', 'png', 'gif', 'svg', 'bmp'],
     maxSize: 5120,
