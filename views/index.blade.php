@@ -92,6 +92,7 @@
       </div>
     </div>
   </section>
+  <script src="http://webapi.amap.com/maps?v=1.3&key=abb777bcccf278aa589076944112267e"></script>
   <script>
     function hideLoading () {
       document.getElementById('root-loading').style.display = 'none';
@@ -109,6 +110,7 @@
       TS_WEB.isWeiXin = true;
     }
   </script>
+
   <script src="{{ mix('js/app.js', 'zhiyi/h5') }}"></script>
 </body>
 </html>

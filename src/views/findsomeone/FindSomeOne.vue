@@ -2,21 +2,20 @@
     <div class="findSomeOne" :class="{noScroll: isShowSearch}">
         <header class="commonHeader" style="position: fixed; top:0; width:100%" v-if="!isWeiXin">
             <Row :gutter="24">
-                <Col span="4" style="display: flex; justify-content: flex-start" @click.native="changeUrl(`/discover`)">
+                <Col span="4" style="display: flex; justify-content:flex-start;align-items: center" @click.native="changeUrl(`/discover`)">
                 <BackIcon height="21" width="21" color="#999" />
                 </Col>
                 <Col span="11" style="padding-left: 0">
-                <!-- <div :class="$style.input" @click="changeUrl(`/findsomeone/search`)"> -->
                 <div :class="$style.input" @click="showSearch">
                     <Search style="position: absolute; top: 50%; left: 5px; margin-top:-8px" height="16" width="16" color="#999" /> 搜索
-                    <!-- <input type="text" placeholder="搜索"> -->
                 </div>
                 </Col>
-                <Col span="3" style="display: flex; justify-content: flex-start">
+                <Col span="3" style="display:flex;justify-content:center;align-items:center">
                 <Contacts height="24" width="24" color="#999" />
                 </Col>
-                <Col span="6" style="display: flex; justify-content: flex-start">
-                <Location height="24" width="24" color="#999" />成都市
+                <Col span="6" style="display: flex; justify-content: flex-start; align-items:center">
+                    <Location height="24" width="24" color="#999"style="flex-grow:0;flex-shrink:0;margin-right:5px;"  />
+                    <span>{{location}}</span>
                 </Col>
             </Row>
         </header>
@@ -44,6 +43,7 @@
             <FindSearch v-if="isShowSearch" @cancel="()=>{showSearch()}" />
         </transition>
         <!-- /search -->
+
     </div>
 </template>
 <script>
@@ -54,6 +54,11 @@ import Location from '../../icons/Location';
 import FindSearch from './FindSearch';
 import LoadMore from './LoadMore';
 import { goTo, changeUrl } from '../../utils/changeUrl';
+
+import getCurLocation from '../../utils/getLocation';
+
+const AMap = window.AMap;
+
 const FindSomeOne = {
     name: "FindSomeOne",
     components: {
@@ -67,17 +72,37 @@ const FindSomeOne = {
     data: () => ({
         isShowSearch: false,
         isWeiXin: window.TS_WEB.isWeiXin,
+        location: '定位中'
     }),
     methods: {
         goTo,
         changeUrl,
+        getCurLocation,
         showSearch() {
             this.isShowSearch = !this.isShowSearch;
+        },
+        locationSuccess(data){
+            console.log(data);
+        },
+        locationError(error) {
+            switch (error.code) {
+                case error.TIMEOUT:
+                    return console.warn("获取定位信息超时，请稍后重试");
+                case error.POSITION_UNAVAILABLE:
+                    return console.warn('定位失败，当前位置信息不可用，请稍后重试');
+                case error.PERMISSION_DENIED:
+                    return console.warn('定位失败，系统拒绝了定位请求，请打开GPS定位功能');
+                case error.UNKNOWN_ERROR:
+                    return console.warn('定位失败，出现未知错误');
+                default:
+                    return console.warn(error);
+            }
         }
     },
-    created(){
+    created() {
+        this.getCurLocation({success: this.locationSuccess, error: this.locationError});
         const key = this.$storeLocal.get("FindSomeOne_Key");
-        if(key){
+        if (key) {
             this.isShowSearch = true;
         }
     }
@@ -156,13 +181,13 @@ export default FindSomeOne;
     border-bottom: 2px solid transparent;
 }
 
-.noScroll{
+.noScroll {
     height: 100vh !important;
     overflow-y: hidden !important;
 }
 
 
-.findContent{
+.findContent {
     width: 100%;
     margin-top: 91px;
 }
