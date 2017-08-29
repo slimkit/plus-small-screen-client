@@ -85,18 +85,7 @@ const FindSomeOne = {
             console.log(data);
         },
         locationError(error) {
-            switch (error.code) {
-                case error.TIMEOUT:
-                    return console.warn("获取定位信息超时，请稍后重试");
-                case error.POSITION_UNAVAILABLE:
-                    return console.warn('定位失败，当前位置信息不可用，请稍后重试');
-                case error.PERMISSION_DENIED:
-                    return console.warn('定位失败，系统拒绝了定位请求，请打开GPS定位功能');
-                case error.UNKNOWN_ERROR:
-                    return console.warn('定位失败，出现未知错误');
-                default:
-                    return console.warn(error);
-            }
+            console.log(error);
         }
     },
     created() {

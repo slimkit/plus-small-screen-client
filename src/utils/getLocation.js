@@ -4,6 +4,20 @@ const fuc = () => {};
 // 从 window 上取 高德api
 const AMap = window.AMap;
 
+const errorFormat = (error)=>{
+        switch (error.code) {
+        case error.TIMEOUT:
+            return ('获取定位信息超时，请稍后重试');
+        case error.POSITION_UNAVAILABLE:
+            return ('定位失败，当前位置信息不可用，请稍后重试');
+        case error.PERMISSION_DENIED:
+            return ('定位失败，系统拒绝了定位请求，请打开GPS定位功能');
+        case error.UNKNOWN_ERROR:
+            return ('定位失败，出现未知错误');
+        default:
+            return (error);
+    }
+};
 const getLocation = ({
     success = fuc,
     error = fuc
@@ -21,11 +35,14 @@ const getLocation = ({
             MyMap.addControl(geolocation);
             geolocation.getCurrentPosition();
             AMap.event.addListener(geolocation, 'complete', success); //返回定位信息
-            AMap.event.addListener(geolocation, 'error', error); //返回定位出错信息
+            AMap.event.addListener(geolocation, 'error', (data)=>{
+                error(errorFormat(data));
+            }); //返回定位出错信息
         });
     }else{
         error("你的浏览器不支持定位");
     }
+
 };
 
 
