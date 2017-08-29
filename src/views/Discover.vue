@@ -65,7 +65,7 @@
   import BackIcon from '../icons/Back';
   import NewsIcon from '../icons/News';
   import ChannelIcon from '../icons/Channel';
-  import FindsomeOne from '../icons/FindsomeOne';
+  import FindsomeOne from '../icons/FindSomeOne';
   import RightArrowIcon from '../icons/RightArrow';
   import { resolveImage } from '../utils/resource';
   const defaultNothing = resolveImage(require('../statics/images/defaultNothingx2.png'));
