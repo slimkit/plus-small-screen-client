@@ -5,7 +5,7 @@ import {
   SHOWPOST,
   SHOWFEEDDIGGSLISTS
 } from '../stores/types';
-import app from '../index';
+import { app } from '../index';
 import storeLocal from 'store';
 
 const {
