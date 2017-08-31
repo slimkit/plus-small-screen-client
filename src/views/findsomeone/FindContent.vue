@@ -1,12 +1,12 @@
 <template>
-    <LoadMore :ListBox="ListBox" :nothingImg="nothingImg" :URL="LoadMoreURL" :params="searchParams" :offsetTop="`-91px`" />
+    <LoadMore :listComponent="listComponent" :nothingImg="nothingImg" :URL="LoadMoreURL" :offsetTop="`-91px`" />
 </template>
 
 <script>
     import LoadMore from "./LoadMore";
-    import FindList from "./FindList";
+    import FindPersonList from "./FindPersonList";
     import { resolveImage } from '../../utils/resource';
-    const nothingImg = resolveImage(require('../../statics/images/defaultNothingx3.png'));
+    const nothingImg = resolveImage(require('../../statics/images/img_default_nobody@2x.png'));
 
     const FindContent = {
         name: "FindContent",
@@ -14,7 +14,7 @@
             LoadMore
         },
         data:()=>({
-            ListBox: FindList,
+            listComponent: FindPersonList,
             nothingImg,
             LoadMoreURL: '',
             searchParams: {}

@@ -1,85 +1,122 @@
 <template>
-    <div class="findSomeOne" :class="{noScroll: isShowSearch}">
+    <div class="findSomeOne" :class="{noScroll: pop.open}">
+
+        <!-- header -->
         <header class="commonHeader" style="position: fixed; top:0; width:100%" v-if="!isWeiXin">
             <Row :gutter="24">
                 <Col span="4" style="display: flex; justify-content:flex-start;align-items: center" @click.native="changeUrl(`/discover`)">
                 <BackIcon height="21" width="21" color="#999" />
                 </Col>
                 <Col span="11" style="padding-left: 0">
-                <div :class="$style.input" @click="showSearch">
+                <div :class="$style.input" @click="showPop(1)">
                     <Search style="position: absolute; top: 50%; left: 5px; margin-top:-8px" height="16" width="16" color="#999" /> 搜索
                 </div>
                 </Col>
                 <Col span="3" style="display:flex;justify-content:center;align-items:center">
                 <Contacts height="24" width="24" color="#999" />
                 </Col>
-                <Col span="6" style="display: flex; justify-content: flex-start; align-items:center">
+                <Col span="6" style="display: flex; justify-content: flex-start; align-items:center;padding-left:0;" @click.native="showPop(2)">
                     <Location height="24" width="24" color="#999"style="flex-grow:0;flex-shrink:0;margin-right:5px;"  />
-                    <span>{{location}}</span>
+                    <span style="overflow:hidden; text-overflow:ellipsis;white-space:nowrap;">{{location}}</span>
                 </Col>
             </Row>
         </header>
+        <!-- /header -->
+
+        <!-- nav -->
         <nav class="findNavBar">
             <Row :gutter="0 " class="NavRow">
                 <Col :span="5" class="NavCol">
-                <router-link class="navLink" to="/findsomeone/list/populars">热门</router-link>
+                    <router-link class="navLink" to="/findsomeone/list/populars">热门</router-link>
                 </Col>
                 <Col :span="5" class="NavCol">
-                <router-link class="navLink" to="/findsomeone/list/latests">最新</router-link>
+                    <router-link class="navLink" to="/findsomeone/list/latests">最新</router-link>
                 </Col>
                 <Col :span="5" class="NavCol">
-                <router-link class="navLink" to="/findsomeone/list/find-by-tags">推荐</router-link>
+                    <router-link class="navLink" to="/findsomeone/list/find-by-tags">推荐</router-link>
                 </Col>
                 <Col :span="5" class="NavCol">
-                <router-link class="navLink" to="/findsomeone/list/near">附近</router-link>
+                    <router-link class="navLink" to="/findsomeone/list/near">附近</router-link>
                 </Col>
             </Row>
         </nav>
+        <!-- /nav -->
+        
+        <!-- content -->
         <div class="findContent">
             <router-view></router-view>
         </div>
-        <!-- search -->
+        <!-- /content -->
+
+        <!-- Model-Pop -->
         <transition name="custom-classes-transition" enter-active-class="animated slideInUp" leave-active-class="animated slideOutDown">
-            <FindSearch v-if="isShowSearch" @cancel="()=>{showSearch()}" />
+            <FindModelPop v-if="pop.open" 
+            @cancel="()=>{showPop()}"
+            :listComponent="pop.list"
+            :baseURL="pop.URL"
+            />
         </transition>
-        <!-- /search -->
+        <!-- /Model-Pop -->
 
     </div>
 </template>
 <script>
+import { goTo, changeUrl } from '../../utils/changeUrl';
+
 import Search from '../../icons/Search';
 import BackIcon from '../../icons/Back';
 import Contacts from '../../icons/Contacts';
-import Location from '../../icons/Location';
-import FindSearch from './FindSearch';
-import LoadMore from './LoadMore';
-import { goTo, changeUrl } from '../../utils/changeUrl';
 
+import FindModelPop from './FindModelPop';
+import LoadMore from './LoadMore';
+
+import FindPersonList from './FindPersonList';
+import FindCityList from './FindCityList';
+
+import Location from '../../icons/Location';
 import getCurLocation from '../../utils/getLocation';
 
-const AMap = window.AMap;
+
 
 const FindSomeOne = {
     name: "FindSomeOne",
     components: {
         LoadMore,
-        FindSearch,
+        FindModelPop,
         BackIcon,
         Contacts,
         Location,
         Search,
     },
     data: () => ({
-        isShowSearch: false,
+
+        // 弹框相关属性
+        pop: {
+            open: false,
+            URL: "",
+            list: FindPersonList,
+        },
+        
+        isShowModel: false,
         isWeiXin: window.TS_WEB.isWeiXin,
-        location: '定位中'
+        location: '选择城市'
     }),
     methods: {
         goTo,
         changeUrl,
         getCurLocation,
-        showSearch() {
-            this.isShowSearch = !this.isShowSearch;
+        showPop(type) {
+            this.pop.open = !this.pop.open;
+            switch (type){
+                case 1:
+                    this.pop.URL = 'user/search?keyword=';
+                    return this.pop.list = FindPersonList;
+                case 2:
+                    this.pop.URL = 'locations/search?name=';
+                    return this.pop.list = FindCityList;
+                default:
+                return false;
+            }
         },
         locationSuccess(data){
             console.log(data);
@@ -90,9 +127,9 @@ const FindSomeOne = {
     },
     created() {
         this.getCurLocation({success: this.locationSuccess, error: this.locationError});
-        const key = this.$storeLocal.get("FindSomeOne_Key");
+        const key = this.$storeLocal.get("FindModelPop_Keyword");
         if (key) {
-            this.isShowSearch = true;
+            this.pop.open = true;
         }
     }
 }
@@ -122,16 +159,6 @@ export default FindSomeOne;
 <style lang="scss">
 .findSomeOne {
     width: 100%;
-}
-
-.findSearch {
-    position: fixed;
-    width: 100%;
-    height: 100vh;
-    background-color: #123;
-    top: 0;
-    left: 0;
-    z-index: 999;
 }
 
 .findNavBar {

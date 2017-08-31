@@ -34,7 +34,6 @@ import FeedBack from '../views/FeedBack';
 
 import FindSomeOne from '../views/findsomeone/FindSomeOne';
 import FindContent from '../views/findsomeone/FindContent';
-import FindSearch from '../views/findsomeone/FindSearch';
 
 const routes = [
   {
@@ -347,12 +346,6 @@ const routes = [
         title: '找人'
       }
     }]
-  },{
-    path: '/findsomeone/search',
-    component: FindSearch,
-    meta: {
-      title: '搜索'
-    }
   },
   { path: '*', redirect: '/' }
 ];

@@ -7,7 +7,7 @@ import 'iview/dist/styles/iview.css';
 import VueLazyload from 'vue-lazyload';
 import store from './stores/store';
 import App from './App';
-import 'mint-ui/lib/style.css'
+import 'mint-ui/lib/style.css';
 import loading_img from './statics/images/image-loading.png';
 import { TabContainer, TabContainerItem, Loadmore, Popup, Picker } from 'mint-ui';
 import storeLocal from 'store';
@@ -32,6 +32,7 @@ Vue.use(TimeAgo, {
     'zh-CN': require('vue-timeago/locales/zh-CN.json')
   }
 });
+
 // mint ui组件的3个块
 Vue.component(Loadmore.name, Loadmore);
 Vue.component(Popup.name, Popup);
@@ -44,19 +45,22 @@ Vue.directive('focus', {
   // 当绑定元素插入到 DOM 中。
   inserted: function (el) {
     // 聚焦元素
-    el.focus()
+    el.focus();
   }
-})
+});
 
 // 注册一个全局自定义指令 v-focus
 Vue.directive('childfocus', {
   // 当绑定元素插入到 DOM 中。
   inserted: function (el) {
     // 聚焦元素
-    el.firstChild.focus()
+    el.firstChild.focus();
   }
-})
+});
+
+// 定义 localStorage 组件
 Vue.prototype.$storeLocal = storeLocal;
+
 const app = new Vue({
   router,
   store,

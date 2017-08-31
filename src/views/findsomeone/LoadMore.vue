@@ -20,7 +20,7 @@
             <div v-if="nothing && !showSpinner" :style="{'margin-top': offsetTop || 0}" :class="$style.nothing">
                 <img :src="nothingImg" alt="空空如也">
             </div>
-            <component v-else :is="ListBox" :dataList="dataList" />
+            <component v-else :is="listComponent" :dataList="dataList" />
             <div v-show="bottomAllLoaded && !nothing" :class="$style.bottmAll">没有更多了</div>       
         </mt-loadmore>
     </div>
@@ -30,7 +30,7 @@
 import request, { createAPI, addAccessToken } from '../../utils/request';
     const LoadMore = {
         name: "LoadMore",
-        props: ["ListBox", "nothingImg", "URL", "params", "offsetTop"],
+        props: ["listComponent", "nothingImg", "URL", "params", "offsetTop"],
         data: () => ({
             dataList: [],
             showSpinner: false,
@@ -52,7 +52,6 @@ import request, { createAPI, addAccessToken } from '../../utils/request';
                       params = {
                         limit: this.limit,
                         offset: this.offset,
-                        ...this.params
                     };
                 request.get(createAPI(URL), { params })
                 .then(({data = []})=>{
@@ -104,13 +103,14 @@ import request, { createAPI, addAccessToken } from '../../utils/request';
         },
         watch:{
             URL(val){
-                this.dataList = [];
+                console.log("LoadMore.URL changed");
                 this.showSpinner = true;
                 this.loadData();
             }
         },
         created(){
             if(this.URL){
+                this.dataList = [];
                 this.showSpinner = true;
                 this.loadData();
             }
@@ -130,6 +130,7 @@ import request, { createAPI, addAccessToken } from '../../utils/request';
         justify-content: center;
         text-align: center;
         height: 100vh;
+        color:#ccc;
         >img{
             margin:30%;
             width: 70%;
