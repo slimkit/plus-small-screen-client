@@ -37,9 +37,9 @@
             <div class="demo-upload-list" v-for="(item, index) in uploadList">
               <template v-if="item.status === 'finished'">
                   <img :src="item.url" :alt="item.name" >
-                  <div class="demo-upload-list-cover">
-                    <CloseIcon height="21" width="21" color="#f00" style="position: absolute; right:0; top: 0;" @click.native="handleRemove(index)" />
-                    <EyeOpenIcon height="21" width="21" color="#59b6d7" @click.native="handleView(index)" />
+                  <div class="demo-upload-list-cover" style="postion: relative">
+                    <CloseIcon height="18" width="18" color="rgba(200,200,200,1)" style="position: absolute; right:3px; top:3px;" @click.native="handleRemove(index)" />
+                    <EyeOpenIcon height="26" width="26" style="position: absolute;top:50%; left:50%;transform: translate(-50%, -50%)" color="#59b6d7" @click.native="handleView(item.url)" />
                   </div>
               </template>
               <template v-else>
@@ -69,7 +69,7 @@
               </div>
             </Upload>
             <Modal title="查看图片" v-model="visible">
-                <img :src="ids[uploadList[imgName].name].url" v-if="visible" style="width: 100%">
+                <img :src="curImgSrc" v-if="visible" style="width: 100%">
             </Modal>
           </div>
         </template>
@@ -114,6 +114,7 @@ const postFeed = {
     uploadUri: createAPI('files'),
     headers: { Authorization: `Bearer ${UserLoginInfo.token || ''}` },
     images: [],
+    curImgSrc: '',
     format: ['jpg', 'jpeg', 'png', 'gif', 'svg', 'bmp'],
     maxSize: 5120,
     loading: false,
@@ -225,8 +226,8 @@ const postFeed = {
       });
     },
     
-    handleView (index) {
-        this.imgName = index;
+    handleView (src) {
+        this.curImgSrc = src;
         this.visible = true;
     },
 
@@ -237,7 +238,7 @@ const postFeed = {
     },
     handleRemove (index) {
       // 从 upload 实例删除数据
-      let fileName = this.$refs.upload.fileList[index].name;
+      // let fileName = this.$refs.upload.fileList[index].name;
       this.$refs.upload.fileList.splice(index, 1);
       this.images.splice(index, 1);
     },
