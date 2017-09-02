@@ -42,6 +42,28 @@ axios.interceptors.response.use(
     return response;
   },
   function (error) {
+
+    // token过期 提示: 重新登录
+    if(error.response.status === 500){
+      app.$store.dispatch(NOTICE, cb => {
+        cb({
+          show: true,
+          time: 1500,
+          status: false,
+          text: "登录失效，请重新登录！"
+        });
+      });
+
+      // 清除本地保存的 token
+      storeLocal.remove('UserLoginInfo');
+
+      // setTimeout( () => {
+      //   app.$router.push('/login');
+      // }, 1500);
+      
+      return false;
+    }
+
     if (error.response.status === 401) {
       app.$store.dispatch(NOTICE, cb => {
         cb({

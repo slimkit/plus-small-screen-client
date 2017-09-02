@@ -7,7 +7,7 @@ const AMap = window.AMap;
 const errorFormat = (error)=>{
         switch (error.code) {
         case error.TIMEOUT:
-            return ('获取定位信息超时，请稍后重试');
+            return ('获取定位信息超时，请手动选择城市');
         case error.POSITION_UNAVAILABLE:
             return ('定位失败，当前位置信息不可用，请稍后重试');
         case error.PERMISSION_DENIED:
@@ -29,7 +29,8 @@ const getLocation = ({
             let geolocation = new AMap.Geolocation({
                 enableHighAccuracy: true, //是否使用高精度定位，默认:true
                 timeout: 10000, //超过10秒后停止定位，默认：无穷大
-                maximumAge: 0, //定位结果缓存0毫秒，默认：0
+                GeoLocationFirst: true, // 默认为false，设置为true的时候可以调整PC端为优先使用浏览器定位，失败后使用IP定位
+                maximumAge: 30000, //定位结果缓存0毫秒，默认：0
                 convert: true, //自动偏移坐标，偏移后的坐标为高德坐标，默认：true
             });
             MyMap.addControl(geolocation);
@@ -44,7 +45,6 @@ const getLocation = ({
     }
 
 };
-
 
 export default getLocation;
 

@@ -34,6 +34,7 @@ import FeedBack from '../views/FeedBack';
 
 import FindSomeOne from '../views/findsomeone/FindSomeOne';
 import FindContent from '../views/findsomeone/FindContent';
+import FindNear from '../views/findsomeone/FindNear';
 
 const routes = [
   {
@@ -342,6 +343,12 @@ const routes = [
     children: [{
       path: 'list/:type',
       component: FindContent,
+      meta: {
+        title: '找人'
+      }
+    },{
+      path: 'near',
+      component: FindNear,
       meta: {
         title: '找人'
       }

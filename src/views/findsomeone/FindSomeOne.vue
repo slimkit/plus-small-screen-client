@@ -16,7 +16,8 @@
                 <Contacts height="24" width="24" color="#999" />
                 </Col>
                 <Col span="6" style="display: flex; justify-content: flex-start; align-items:center;padding-left:0;" @click.native="showPop(2)">
-                    <Location height="24" width="24" color="#999"style="flex-grow:0;flex-shrink:0;margin-right:5px;"  />
+                    <LoadingBlack v-if="locationing" height="21" width="24" color="#999"style="flex-grow:0;flex-shrink:0;margin-right:5px;"  />
+                    <Location v-else height="24" width="24" color="#999"style="flex-grow:0;flex-shrink:0;margin-right:5px;"  />
                     <span style="overflow:hidden; text-overflow:ellipsis;white-space:nowrap;">{{location}}</span>
                 </Col>
             </Row>
@@ -36,7 +37,7 @@
                     <router-link class="navLink" to="/findsomeone/list/find-by-tags">推荐</router-link>
                 </Col>
                 <Col :span="5" class="NavCol">
-                    <router-link class="navLink" to="/findsomeone/list/near">附近</router-link>
+                    <router-link class="navLink" :to="{ path: '/findsomeone/near/', query: { longitude, latitude }}">附近</router-link>
                 </Col>
             </Row>
         </nav>
@@ -74,9 +75,10 @@ import FindPersonList from './FindPersonList';
 import FindCityList from './FindCityList';
 
 import Location from '../../icons/Location';
+import LoadingBlack from '../../icons/LoadingBlack';
 import getCurLocation from '../../utils/getLocation';
 
-
+import { NOTICE } from '../../stores/types';
 
 const FindSomeOne = {
     name: "FindSomeOne",
@@ -85,6 +87,7 @@ const FindSomeOne = {
         FindModelPop,
         BackIcon,
         Contacts,
+        LoadingBlack,
         Location,
         Search,
     },
@@ -99,6 +102,11 @@ const FindSomeOne = {
         
         isShowModel: false,
         isWeiXin: window.TS_WEB.isWeiXin,
+
+        // 定位
+        locationing: true,
+        longitude: 0,
+        latitude: 0,
         location: '选择城市'
     }),
     methods: {
@@ -115,21 +123,51 @@ const FindSomeOne = {
                     this.pop.URL = 'locations/search?name=';
                     return this.pop.list = FindCityList;
                 default:
-                return false;
+                    return false;
             }
         },
         locationSuccess(data){
+
             console.log(data);
+
+            this.locationing = false;
+            const {
+                addressComponent:{
+                    city = "北京"
+                } = {},
+                position:{
+                    lat = 0,
+                    lng = 0
+                } = {}
+            } = data;
+
+            this.longitude = lng;
+            this.latitude = lat;
+            this.location = city;
         },
         locationError(error) {
-            console.log(error);
+        this.locationing = false;
+          this.$store.dispatch(NOTICE, cb => {
+            cb({
+              show: true,
+              time: 2000,
+              status: false,
+              text: error
+            });
+          });
         }
     },
     created() {
-        this.getCurLocation({success: this.locationSuccess, error: this.locationError});
+
+        setTimeout(()=> {
+            this.getCurLocation({success: this.locationSuccess, error: this.locationError});        
+        }, 500);
+
         const key = this.$storeLocal.get("FindModelPop_Keyword");
-        if (key) {
+        const baseURL = this.$storeLocal.get("FindModelPop_BaseURL");
+        if (key && baseURL) {
             this.pop.open = true;
+            this.pop.URL = baseURL;
         }
     }
 }
@@ -201,7 +239,6 @@ export default FindSomeOne;
     height: 100vh !important;
     overflow-y: hidden !important;
 }
-
 
 .findContent {
     width: 100%;

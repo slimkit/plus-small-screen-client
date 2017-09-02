@@ -3,7 +3,7 @@
         <header class="findModelPop_header">
             <Row :gutter="12">
                 <Col span="20" style="positoin: relative;">
-                    <Input v-model="keyword" :class="$style.plr20" :autofocus="true" @on-enter="doSearch()" />
+                    <Input v-model="keyword" placeholder="搜索" :class="$style.plr20" :autofocus="true" @on-enter="doSearch()" />
                     <Search style="position: absolute; top: 50%; left: 15px; margin-top:-10px" height="20" width="20" color="#999"/>
                     <CloseIcon @click.native="cleanKeyword();" height="20" width="20" color="#999" v-if="keywordCount" style="position: absolute; top: 13px; right: 15px;" />
                 </Col>
@@ -11,7 +11,7 @@
             </Row>
         </header>
         <div class="findModelPop_content">
-            <LoadMore :listComponent="listComponent" :nothingImg="nothingImg" :URL="URL" :params="searchParams" :offsetTop="`-46px`" />
+            <LoadMore :listComponent="listComponent" :nothingImg="nothingImg" :URL="URL" :offsetTop="`-46px`" />
         </div>
     </div>
 </template>
@@ -36,13 +36,10 @@ const FindModelPop = {
         keyword: "",
         URL: ""
     }),
-
     watch:{
         keyword(val){
-            console.log('POP.keyword changed');
+            this.URL = this.baseURL + val;
             this.$storeLocal.set("FindModelPop_Keyword", val);
-            this.URL = baseURL + val;
-
         }
     },
     computed:{
@@ -59,17 +56,20 @@ const FindModelPop = {
         },
         closeSearch(){
             this.$storeLocal.remove("FindModelPop_Keyword");
+            this.$storeLocal.remove("FindModelPop_BaseURL");
             this.$emit('cancel');
         }
     },
     created(){
-        const key = this.$storeLocal.get("FindModelPop_Keyword");
-        if(key){
-            this.keyword = key;
+        if(this.baseURL){
+            this.$storeLocal.set("FindModelPop_BaseURL", this.baseURL);
         }
-    },
-    beforeDestroy(){
-        console.log("destroy");
+        const key = this.$storeLocal.get("FindModelPop_Keyword");
+        const URL = this.$storeLocal.get("FindModelPop_BaseURL");
+        if(key && URL){
+            this.keyword = key;
+            this.URL = URL;
+        }
     }
 }
 
