@@ -28,7 +28,7 @@
             <RightArrowIcon height="18" width="18" color="#999" />
           </i>
         </li>
-        <li class="component-list" @click="changeUrl(`/channel`)">
+        <!-- <li class="component-list" @click="changeUrl(`/channel`)">
           <i class="component-icon">
             <ChannelIcon height="21" width="21" />
           </i>
@@ -38,7 +38,7 @@
           <i class="component-entry">
             <RightArrowIcon height="18" width="18" color="#999" />
           </i>
-        </li>
+        </li> -->
       </ul>
 
       <ul class="component-lists">
