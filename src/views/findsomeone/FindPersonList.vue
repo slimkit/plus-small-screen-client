@@ -1,16 +1,16 @@
 <template>
     <!-- list -->
     <ul :class="$style.findlist">
-        <FindItem v-for="(item, index) in dataList" :item="item" :key="index" />
+        <FindPersonItem v-for="(item, index) in dataList" :item="item" :key="index" />
     </ul>
     <!-- /list -->
 </template>
 <script>
-import FindItem from './FindItem.vue';
+import FindPersonItem from './FindPersonItem.vue';
 const FindPersonList = {
     name: "FindPersonList",
     components: {
-        FindItem
+        FindPersonItem
     },
     props:["dataList"],
     data: () => ({}),

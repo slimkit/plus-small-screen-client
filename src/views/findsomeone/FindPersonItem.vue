@@ -1,5 +1,5 @@
 <template>
-    <li :class="$style.findItem" @click="changeUrl(`/users/feeds/${id}`)">
+    <li v-if="!noData" :class="$style.findItem" @click="changeUrl(`/users/feeds/${id}`)">
         <div :class="$style.itemHeader">
             <img :src="avatar" :alt="name">
         </div>
@@ -21,13 +21,14 @@ import FollowingIcon from '../../icons/Following';
 import UnFollowingIcon from '../../icons/UnFollowing';
 import EachFollowingIcon from '../../icons/EachFollowing';
 import { goTo, changeUrl } from '../../utils/changeUrl';
+import { getUserInfo } from '../../utils/user';
 import { resolveImage } from '../../utils/resource';
 import { followingUser, unFollowingUser } from '../../utils/user';
 
 const defaultAvatar = resolveImage(require('../../statics/images/defaultAvatarx2.png'));
 
-const FindItem = {
-    name: "findItem",
+const FindPersonItem = {
+    name: "FindPersonItem",
     components: {
         FollowingIcon,
         UnFollowingIcon,
@@ -41,6 +42,7 @@ const FindItem = {
         avatar: null,
         follower: false,
         following: false,
+        noData: false
     }),
     methods: {
         changeUrl,
@@ -116,23 +118,46 @@ const FindItem = {
     },
     created() {
         const {
+            user_id,
+
             id,
             bio,
             name,
             avatar,
             follower,
-            following
-        } = this.item;
-        this.id = id;
-        this.bio = bio || "这家伙很懒，什么也没有留下";
-        this.name = name;
-        this.avatar = avatar || defaultAvatar;
-        this.follower = follower;
-        this.following = following;
+            following,
+        } = this.item || {};
+
+        if (typeof user_id !== "undefined" && typeof id === 'undefined') {
+
+            getUserInfo(user_id)
+            .then((user) => {
+                console.log(user);
+                const { id, bio, name, avatar, follower, following } = user;
+                this.id = id;
+                this.bio = bio || "这家伙很懒，什么也没有留下";
+                this.name = name;
+                this.avatar = avatar || defaultAvatar;
+                this.follower = follower;
+                this.following = following;
+            })
+            .catch((error)=>{
+                console.log(error);
+            });
+        }else if(typeof id !== "undefined" && typeof user_id === 'undefined'){
+            this.id = id;
+            this.bio = bio || "这家伙很懒，什么也没有留下";
+            this.name = name;
+            this.avatar = avatar || defaultAvatar;
+            this.follower = follower;
+            this.following = following;
+        }else{
+            this.noData = true;
+        }
     }
 }
 
-export default FindItem;
+export default FindPersonItem;
 </script>
 <style lang="less" module>
 .findItem {
