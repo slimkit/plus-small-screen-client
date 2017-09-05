@@ -38,9 +38,11 @@ const FindModelPop = {
     }),
     watch:{
         keyword(val){
-            this.URL = this.baseURL + val;
+            if(val){
+                this.URL = this.baseURL + val;
+            }
             this.$storeLocal.set("FindModelPop_Keyword", val);
-        }
+        },
     },
     computed:{
         keywordCount(){
@@ -55,21 +57,14 @@ const FindModelPop = {
             this.keyword = "";
         },
         closeSearch(){
+            this.$storeLocal.remove("FindModelPop_type");
             this.$storeLocal.remove("FindModelPop_Keyword");
-            this.$storeLocal.remove("FindModelPop_BaseURL");
             this.$emit('cancel');
         }
     },
     created(){
-        if(this.baseURL){
-            this.$storeLocal.set("FindModelPop_BaseURL", this.baseURL);
-        }
-        const key = this.$storeLocal.get("FindModelPop_Keyword");
-        const URL = this.$storeLocal.get("FindModelPop_BaseURL");
-        if(key && URL){
-            this.keyword = key;
-            this.URL = URL;
-        }
+        this.keyword = this.$storeLocal.get("FindModelPop_Keyword") || '';
+        this.URL = this.baseURL + this.keyword;
     }
 }
 
@@ -92,7 +87,7 @@ export default FindModelPop;
     z-index: 11;
     width: 100%;
     height: 100%;
-    background-color: #fff;
+    background-color: #f4f5f5;
 }
 .findModelPop_header{
     position: fixed;

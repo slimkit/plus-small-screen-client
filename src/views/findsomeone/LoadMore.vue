@@ -31,6 +31,7 @@ const LoadMore = {
     name: "LoadMore",
     props: ["listComponent", "nothingImg", "URL", "offsetTop"],
     data: () => ({
+        formateURL: "",
         dataList: [],
         showSpinner: false,
         bottomStatus: "",
@@ -43,15 +44,14 @@ const LoadMore = {
         loadData(merge) {
 
             this.offset = merge ? this.dataList.length : 0;
-
-            let URL = this.URL,
-                params = {
+            let params = {
                     limit: this.limit,
                     offset: this.offset,
                 };
 
-            if (URL) {
-                request.get(createAPI(URL), { params })
+                console.log(this.formateURL);
+            if (this.formateURL) {
+                request.get(createAPI(this.formateURL), { params })
                 .then(({ data = [] }) => {
 
                     this.showSpinner = false;
@@ -88,7 +88,6 @@ const LoadMore = {
         },
         loadBottom() {
             // 下拉加载
-            console.warn("load bottom");
             this.loadData(true);
             // 延时隐藏
             setTimeout(() => {
@@ -104,12 +103,15 @@ const LoadMore = {
     },
     watch: {
         URL(val) {
+            this.formateURL = val.endsWith("name=")? "locations/hots" : val;
             this.showSpinner = true;
             this.loadData();
         }
     },
     created() {
+        
         if (this.URL) {
+            this.formateURL = this.URL.endsWith("name=")? "locations/hots" : this.URL;
             this.dataList = [];
             this.offset = 0;
             this.showSpinner = true;
