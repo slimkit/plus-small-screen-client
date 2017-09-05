@@ -18,7 +18,7 @@
                 <Col span="6" style="display: flex; justify-content: flex-start; align-items:center;padding-left:0;" @click.native="showPop(2)">
                     <LoadingBlack v-if="locationing" height="21" width="24" color="#999"style="flex-grow:0;flex-shrink:0;margin-right:5px;"  />
                     <Location v-else height="24" width="24" color="#999"style="flex-grow:0;flex-shrink:0;margin-right:5px;"  />
-                    <span style="overflow:hidden; text-overflow:ellipsis;white-space:nowrap;">{{location}}</span>
+                    <span style="overflow:hidden; text-overflow:ellipsis;white-space:nowrap;">{{location.city}}</span>
                 </Col>
             </Row>
         </header>
@@ -37,7 +37,7 @@
                     <router-link class="navLink" to="/findsomeone/list/find-by-tags">推荐</router-link>
                 </Col>
                 <Col :span="5" class="NavCol">
-                    <router-link class="navLink" :to="{ path: '/findsomeone/near/', query: { longitude, latitude }}">附近</router-link>
+                    <router-link class="navLink" :to="{ name: 'near', params: { longitude:location.lng ||'', latitude:location.lat ||''}}">附近</router-link>
                 </Col>
             </Row>
         </nav>
@@ -55,6 +55,7 @@
             @cancel="()=>{showPop()}"
             :listComponent="pop.list"
             :baseURL="pop.URL"
+            :nothingImg="pop.nothingImg"
             />
         </transition>
         <!-- /Model-Pop -->
@@ -63,6 +64,7 @@
 </template>
 <script>
 import { goTo, changeUrl } from '../../utils/changeUrl';
+import { resolveImage } from '../../utils/resource';
 
 import Search from '../../icons/Search';
 import BackIcon from '../../icons/Back';
@@ -79,6 +81,8 @@ import LoadingBlack from '../../icons/LoadingBlack';
 import getCurLocation from '../../utils/getLocation';
 
 import { NOTICE } from '../../stores/types';
+
+const defaultNothing =  resolveImage(require('../../statics/images/defaultNothingx3.png'));
 
 const FindSomeOne = {
     name: "FindSomeOne",
@@ -98,16 +102,20 @@ const FindSomeOne = {
             open: false,
             URL: "",
             list: FindPersonList,
+            nothingImg: defaultNothing
         },
         
         isShowModel: false,
         isWeiXin: window.TS_WEB.isWeiXin,
 
-        // 定位
+        // 定位相关
         locationing: true,
-        longitude: 0,
-        latitude: 0,
-        location: '选择城市'
+        location: {
+            lat: "",
+            lng: "",
+            city: '选择城市'
+        }
+        
     }),
     methods: {
         goTo,
@@ -115,60 +123,73 @@ const FindSomeOne = {
         getCurLocation,
         showPop(type) {
             this.pop.open = !this.pop.open;
-            switch (type){
-                case 1:
-                    this.pop.URL = 'user/search?keyword=';
-                    return this.pop.list = FindPersonList;
-                case 2:
-                    this.pop.URL = 'locations/search?name=';
-                    return this.pop.list = FindCityList;
-                default:
-                    return false;
+            if(type){
+                this.$storeLocal.set("FindModelPop_type", type);
+                switch (type){
+                    case 1:
+                        this.pop.URL = 'user/search?keyword=';
+                        return this.pop.list = FindPersonList;
+                    case 2:
+                        this.pop.URL = 'locations/search?name=';
+                        return this.pop.list = FindCityList;
+                    default:
+                        return false;
+                }
             }
         },
         locationSuccess(data){
-
-            console.log(data);
-
+            
             this.locationing = false;
             const {
                 addressComponent:{
                     city = "北京"
                 } = {},
                 position:{
-                    lat = 0,
-                    lng = 0
+                    lat = "",
+                    lng = ""
                 } = {}
             } = data;
 
-            this.longitude = lng;
-            this.latitude = lat;
-            this.location = city;
+            this.location = {
+                lat,
+                lng,
+                city
+            };
+
+            this.$storeLocal.set("LocationObj", this.location);
         },
         locationError(error) {
-        this.locationing = false;
-          this.$store.dispatch(NOTICE, cb => {
-            cb({
-              show: true,
-              time: 2000,
-              status: false,
-              text: error
+            this.locationing = false;
+            this.$store.dispatch(NOTICE, cb => {
+                cb({
+                    show: true,
+                    time: 2000,
+                    status: false,
+                    text: error
+                });
             });
-          });
         }
     },
     created() {
+        const type = this.$storeLocal.get("FindModelPop_type");
+        const { lat, lng, city} = this.$storeLocal.get("LocationObj") || {};
 
-        setTimeout(()=> {
-            this.getCurLocation({success: this.locationSuccess, error: this.locationError});        
-        }, 500);
-
-        const key = this.$storeLocal.get("FindModelPop_Keyword");
-        const baseURL = this.$storeLocal.get("FindModelPop_BaseURL");
-        if (key && baseURL) {
-            this.pop.open = true;
-            this.pop.URL = baseURL;
+        if(!isNaN(lat + lng) && typeof city === "string"){
+            this.location = { lat, lng, city };
+            this.locationing = false;
+        }else{
+            // 延迟 .5s 定位
+            setTimeout(()=> {
+                this.getCurLocation({success: this.locationSuccess, error: this.locationError});        
+            }, 500);
         }
+
+        if (!isNaN(type)) {
+            this.showPop(type);
+        }
+    },
+    destroyed(){
+        this.$storeLocal.remove("LocationObj");
     }
 }
 

@@ -346,7 +346,9 @@ const routes = [
       meta: {
         title: '找人'
       }
-    },{
+    },
+    {
+      name:"near",
       path: 'near',
       component: FindNear,
       meta: {
