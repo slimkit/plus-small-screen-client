@@ -17,19 +17,13 @@
             listComponent: FindPersonList,
             nothingImg,
             LoadMoreURL: '',
+            longitude: 0,
+            latitude: 0,
             searchParams: {}
         }),
-        watch: {
-            "$route": function() {
-                this.LoadMoreURL = `around-amap?${this.$route.params.str || ""}`;
-            }
-        },
         created(){
-            let {
-                longitude, 
-                latitude
-            } = this.$route.query;
-            this.LoadMoreURL = `around-amap?longitude=${longitude || 0}&latitude=${latitude || 0}`;
+            const { lat, lng} = this.$storeLocal.get("LocationObj") || {};
+            this.LoadMoreURL = isNaN(lat + lng) ? '' : `around-amap?longitude=${lat}&latitude=${lng}`;
         }
     }
 
