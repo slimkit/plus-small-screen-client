@@ -48,8 +48,6 @@ const LoadMore = {
                     limit: this.limit,
                     offset: this.offset,
                 };
-
-                console.log(this.formateURL);
             if (this.formateURL) {
                 request.get(createAPI(this.formateURL), { params })
                 .then(({ data = [] }) => {

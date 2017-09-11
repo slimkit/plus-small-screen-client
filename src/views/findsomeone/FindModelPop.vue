@@ -38,9 +38,7 @@ const FindModelPop = {
     }),
     watch:{
         keyword(val){
-            if(val){
-                this.URL = this.baseURL + val;
-            }
+            this.URL = this.baseURL + val;
             this.$storeLocal.set("FindModelPop_Keyword", val);
         },
     },
