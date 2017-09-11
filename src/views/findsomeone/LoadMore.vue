@@ -1,5 +1,5 @@
 <template>
-    <div v-if="URL">
+    <div style="height:100%" v-if="URL">
         <div id="spinner" v-if="showSpinner">
             <div id="spinner-parent">
                 <div class="spinner-double-bounce-bounce2" />
@@ -130,6 +130,7 @@ export default LoadMore;
     text-align: center;
     height: 100vh;
     color: #ccc;
+    background-color: #fff;
     >img {
         margin: 30%;
         width: 70%;
