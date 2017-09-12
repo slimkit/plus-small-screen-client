@@ -12,6 +12,8 @@ import loading_img from './statics/images/image-loading.png';
 import { TabContainer, TabContainerItem, Loadmore, Popup, Picker } from 'mint-ui';
 import storeLocal from 'store';
 
+import "babel-polyfill";
+
 // iview ui
 Vue.use(iView);
 
