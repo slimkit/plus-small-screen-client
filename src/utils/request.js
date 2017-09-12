@@ -43,8 +43,14 @@ axios.interceptors.response.use(
   },
   function (error) {
 
+    const {
+      response:{
+        status
+      }
+    } = error;
+
     // token过期 提示: 重新登录
-    if(error.response.status === 500){
+    if(status === 500){
       app.$store.dispatch(NOTICE, cb => {
         cb({
           show: true,
@@ -64,7 +70,7 @@ axios.interceptors.response.use(
       return false;
     }
 
-    if (error.response.status === 401) {
+    if (status === 401) {
       app.$store.dispatch(NOTICE, cb => {
         cb({
           show: true,

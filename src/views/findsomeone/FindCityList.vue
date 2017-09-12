@@ -33,6 +33,8 @@ import LoadingBlack from '../../icons/LoadingBlack';
 // import Feedback from '../../icons/Feedback';
 import getCurLocation from '../../utils/getLocation';
 
+import { NOTICE } from '../../stores/types';
+
 const FindCityList = {
     name: 'FindCityList',
     props: ["dataList"],

@@ -42,7 +42,7 @@
           return {
             speed: 200,
             autoplay: 0,
-            setWrapperSize :true,
+            setWrapperSize :false,
             direction : 'horizontal',
             initialSlide: state.imageSwiper.imageSwiper.value,
             pagination : '.swiper-pagination',
@@ -78,15 +78,15 @@
 
 <style lang="scss">
   .swiperRoot {
+    overflow: auto;
     position: fixed!important;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    margin: 0;
-    overflow: auto;
-    background-color: #000;
     z-index: 9!important;
+    margin: auto;
+    background-color: #000;
     transition: transform .9s;
     transform:scale(1);
     .swiperSlide {

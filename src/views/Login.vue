@@ -84,7 +84,6 @@
   import router from '../routers/index';
   import detecdOS from '../utils/detecdOS';
   import formatError from '../utils/errorTips';
-  import errorCodes from '../stores/errorCodes';
   import deleteObjectItems from '../utils/deleteObjectItems';
   import { getUserInfo, getLoggedUserInfo } from '../utils/user';
   import { USERS_APPEND, MESSAGELISTS, MESSAGENOTICE, MESSAGEROOMS } from '../stores/types';

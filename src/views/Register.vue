@@ -226,7 +226,7 @@
             return;
           }
           if( code === 422) {
-            const { response: { data: { phone: [phone] = [] }  = {} } = {} } = error;
+            const { response: { data: { errors: {phone: [phone] = []} = {} }  = {} } = {} } = error;
             this.errors = { ...this.errors, phone: phone };
           }
         })

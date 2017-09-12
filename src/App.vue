@@ -116,7 +116,7 @@
             },
             notice: 0
           }
-          let data = response.data.data;
+          let data = response.data.data || {};
           for( let index in data ) {
             if(data[index].key == "follows") {
               count.fans = data[index].count;
