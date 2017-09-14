@@ -31,7 +31,7 @@ const buildAssetsRoot = path.join(__dirname, 'dist');
 
 // 入口配置
 const entry = {
-  app: path.resolve(assetsRoot, 'index.js')
+  app: ['babel-polyfill', path.resolve(assetsRoot, 'index.js')]
 };
 
 function cssLoaders (options = {}) {

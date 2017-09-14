@@ -1,3 +1,4 @@
+import "babel-polyfill";
 import Vue from 'vue';
 import VueWechatTitle from 'vue-wechat-title';
 import TimeAgo from 'vue-timeago';
@@ -11,8 +12,6 @@ import 'mint-ui/lib/style.css';
 import loading_img from './statics/images/image-loading.png';
 import { TabContainer, TabContainerItem, Loadmore, Popup, Picker } from 'mint-ui';
 import storeLocal from 'store';
-
-import "babel-polyfill";
 
 // iview ui
 Vue.use(iView);
@@ -35,12 +34,17 @@ Vue.use(TimeAgo, {
   }
 });
 
-// mint ui组件的3个块
-Vue.component(Loadmore.name, Loadmore);
-Vue.component(Popup.name, Popup);
-Vue.component(Picker.name, Picker);
-Vue.component(TabContainer.name, TabContainer);
-Vue.component(TabContainerItem.name, TabContainerItem);
+const components = [
+  Popup,
+  Picker,
+  Loadmore,
+  TabContainer,
+  TabContainerItem
+];
+
+components.map(component =>{
+  Vue.component(component.name, component);
+});
 
 // 注册一个全局自定义指令 v-focus
 Vue.directive('focus', {
