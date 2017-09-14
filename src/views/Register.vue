@@ -5,8 +5,11 @@
         <Col span="5" @click.native="goTo(-1)">
           <BackIcon height="21" width="21" color="#999" />
         </Col>
-        <Col span="14" class="title-col">
-          注册
+        <Col span="16" class="title-col">
+          {{reg_type}}注册
+        </Col>
+        <Col span="3" style="color: #59b6d7; padding-left: 0">
+          <span @click="changeType">{{reg_type === "手机" ? "邮箱" : "手机"}}</span>
         </Col>
       </Row>
     </div>
@@ -21,12 +24,12 @@
               <input v-focus type="text" maxlength="12" autocomplete="off" placeholder="输入您的用户名" v-model.trim="username" id="username" name="username" />
             </Col>
             <Col span="3" class="flexend">
-              <div @click="cleanUsername" v-show="isShowUserClean">
+              <div @click="username = ''" v-show="username.length > 0">
                 <CloseIcon height="21" width="21" color="#999" />
               </div>
             </Col>
           </Row>
-          <Row :gutter="24" class="formChildrenRow bottom-border">
+          <Row v-if="verifiable_type === 'sms'" :gutter="24" class="formChildrenRow bottom-border">
             <Col span="5">
               <label for="phone" class="loginFormTitle">手机号</label>
             </Col>
@@ -34,7 +37,20 @@
               <input type="tel" maxlength="11" autocomplete="off" placeholder="输入手机号码" v-model.trim.num="phone" id="phone" name="phone" />
             </Col>
             <Col span="5" class="flexend">
-              <div @click="cleanPhone" v-show="isShowClean">
+              <div @click="phone = ''" v-show="phone.length > 0">
+                <CloseIcon height="21" width="21" color="#999" />
+              </div>
+            </Col>
+          </Row>
+          <Row v-else :gutter="24" class="formChildrenRow bottom-border">
+            <Col span="5">
+              <label for="email" class="loginFormTitle">邮箱</label>
+            </Col>
+            <Col span="14">
+              <input type="email" autocomplete="off" placeholder="输入邮箱账号" v-model.trim.num="email" id="email" name="email" />
+            </Col>
+            <Col span="5" class="flexend">
+              <div @click="email = ''" v-show="email.length > 0">
                 <CloseIcon height="21" width="21" color="#999" />
               </div>
             </Col>
@@ -44,7 +60,7 @@
               <label for="verifiable_code" class="loginFormTitle">验证码</label>
             </Col>
             <Col :span="11">
-              <input type="tel"maxlength="6" autocomplete="off" placeholder="输入验证码" v-model.trim.num="verifiable_code" id="verifiable_code" name="verifiable_code" />
+              <input type="tel" maxlength="6" autocomplete="off" placeholder="输入验证码" v-model.trim.num="verifiable_code" id="verifiable_code" name="verifiable_code" />
             </Col>
             <Col class="flexend" span="8">
               <Button 
@@ -64,15 +80,13 @@
               <label for="password" class="loginFormTitle">密码</label>
             </Col>
             <Col span="14">
-              <input type="password" autocomplete="off" v-show="isShowPassword" v-model.trim="password" placeholder="请输入6位以上密码" id="password" name="password" />
-              <input type="text" autocomplete="off" v-model.trim="passwordText" v-show="isShowPasswordText" value="" placeholder="请输入6位以上密码" />
+              <input v-if="isShowPassword" type="password" autocomplete="off" v-model.trim="password" placeholder="请输入6位以上密码" id="password" name="password" />
+              <input v-else type="text" autocomplete="off" v-model.trim="password" placeholder="请输入6位以上密码" id="password" name="password" />
             </Col>
             <Col span="5" class="flexend">
-              <div @click="showPassword" v-show="isShowPasswordText">
-                <EyeOpenIcon height="21" width="21" color="#999" />
-              </div>
-              <div @click="showPassword" v-show="isShowPassword">
-                <EyeCloseIcon height="21" width="21" color="#999" />
+              <div @click="isShowPassword = !isShowPassword">
+                <EyeCloseIcon v-if="isShowPassword" height='21' width="21" />
+                <EyeOpenIcon v-else height='21' width="21" />
               </div>
             </Col>
           </Row>
@@ -100,62 +114,73 @@
 </template>
 
 <script>
-  import router from '../routers/index';
-  import { addAccessToken, createAPI, createOldAPI } from '../utils/request';
-  import detecdOS from '../utils/detecdOS';
-  import localEvent from '../stores/localStorage';
-  import errorCodes from '../stores/errorCodes';
-  import deleteObjectItems from '../utils/deleteObjectItems';
-  import { getUserInfo, getLoggedUserInfo} from '../utils/user';
-  import { USERS_APPEND, MESSAGENOTICE } from '../stores/types';
-  import EyeCloseIcon from '../icons/EyeClose';
-  import EyeOpenIcon from '../icons/EyeOpen';
-  import CloseIcon from '../icons/Close';
-  import BackIcon from '../icons/Back';
   import lodash from 'lodash';
+  import router from '../routers/index';
+  import { USERS_APPEND, MESSAGENOTICE } from '../stores/types';
+
+  import BackIcon from '../icons/Back';
+  import CloseIcon from '../icons/Close';
+  import EyeOpenIcon from '../icons/EyeOpen';
+  import EyeCloseIcon from '../icons/EyeClose';
   import LoadingWhiteIcon from '../icons/LoadingWhite';
-  import { connect } from '../utils/webSocket';
+
+  import PlusMessageBundle from '../utils/es';
+  import detecdOS from '../utils/detecdOS';
   import { goTo } from '../utils/changeUrl';
   import strLength from '../utils/strLength';
+  import { connect } from '../utils/webSocket';
+  import { getUserInfo, getLoggedUserInfo} from '../utils/user';
+  import { addAccessToken, createAPI, createOldAPI } from '../utils/request';
 
   // 手机号码规则
   const phoneReg = /^(((13[0-9]{1})|14[0-9]{1}|(15[0-9]{1})|17[0-9]{1}|(18[0-9]{1}))+\d{8})$/;
+  // 邮箱验证
+  const emailReg = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/;
+  // 用户名验证
   const usernameReg = /^[a-zA-Z_\u4E00-\u9FA5\uF900-\uFA2D][a-zA-Z0-9_\u4E00-\u9FA5\uF900-\uFA2D]*$/;
+  // 验证码
   const codeReg = /^[0-9]{4,6}$/;
+
   const register = {
     components: {
-      EyeCloseIcon,
-      EyeOpenIcon,
+      BackIcon,
       CloseIcon,
+      EyeOpenIcon,
+      EyeCloseIcon,
       LoadingWhiteIcon,
-      BackIcon
     },
     data: () => ({
       phone: '', // 手机号码 
+      email: '', // 邮箱 
       password: '', // 密码
       username: '', // 昵称
       verifiable_code: '', // 手机验证码
-      passwordText: '', // 明文密码
-      isDisabled: true, // 提交按钮disabled状态
-      isShowClean: false, // 是否显示清除手机号按钮
-      isShowUserClean: false,
-      isShowPasswordText: false, // 是否显示明文密码
+      verifiable_type: 'sms',
+      reg_type: "手机",
+
       isShowPassword: true, // 是否显示真实密码
       isCanGetCode: false,
+
       errors: {}, // 错误对象
       // isValidCode: false, // 验证码合法性
+
+      isValidEmail: false, // 邮箱号验证
       isValidPhone: false, // 是否合法手机号
-      isValidPassword: false, // 是否合法密码
       isValidUsername: true, // 用户名是否合法
+      isValidPassword: false, // 是否合法密码
+
       CodeText: '获取验证码', // 获取验证码按钮文字
+
       time: 0, // 时间倒计时
+
       isLoading: false, // 登录loading
+      isDisabled: false,
+
       isWeiXin: TS_WEB.isWeiXin
     }),
     computed: {
       error: function () {
-        let errors = lodash.values(this.errors);
-        return errors[0] || '';
+        return PlusMessageBundle(this.errors).getMessage();
       },
       getCodeText () {
         return this.time == 0 ? '获取验证码' : this.time + '秒后重发';
@@ -163,17 +188,7 @@
     },
     methods: {
       goTo,
-      // 清理请求错误
-      cleanErrors () {
-        let errors = this.errors;
-        let newErrors = deleteObjectItems(errors, [
-          'code'
-        ]);
-        this.errors = { ...newErrors };
-      },
-      checkIsDisabled () {
-         return !(this.isValidPassword && this.isValidPhone  && this.isValidUsername);
-      },
+
       timer () {
         if (this.time > 0) {
           this.isCanGetCode = false;
@@ -185,35 +200,28 @@
           setTimeout(this.timer, 1000)
         }
       },
-      cleanPhone () {
-        this.phone = '';
-      },
-      cleanUsername () {
-        this.username = '';
-      },
-      showPassword () {
-        if(this.isShowPassword) {
-          this.isShowPassword = false;
-          this.isShowPasswordText = true;
-        } else {
-          this.isShowPassword = true;
-          this.isShowPasswordText = false;
-        }
+
+      changeType(){
+        this.verifiable_type = this.verifiable_type === "sms" ?
+          "mail" : "sms";
       },
       // 获取验证码
       getCode () {
-        let phone = this.phone;
         this.isCanGetCode = false;
-        addAccessToken().post(createAPI('verifycodes/register'), {
-            phone
-          },
+        let param = {
+          phone: this.phone,
+          email: this.email
+        }
+
+        this.verifiable_type === "sms" ?
+        delete param.email : delete param.phone;
+
+        addAccessToken().post(createAPI('verifycodes/register'), param,
           {
             validateStatus: status => status === 202
           }
         )
-        .then( () => {
-          // 删除网络问题
-          this.cleanErrors();
+        .then(() => {
           this.time = 60;
           this.timer();
         })
@@ -222,56 +230,86 @@
           this.isCanGetCode = true;
           this.isLoading = false;
           if( code === 500 ) {
-            this.errors = { ...this.errors, phone: '网络错误,请联系管理员' };
+            this.errors = { phone: '网络错误,请联系管理员' };
             return;
           }
           if( code === 422) {
-            const { response: { data: { errors: {phone: [phone] = []} = {} }  = {} } = {} } = error;
-            this.errors = { ...this.errors, phone: phone };
+            const { response: { data: { errors = {} }  = {} } = {} } = error;
+            this.errors = { errors };
           }
         })
       },
+
+      checkIsDisabled(){
+        return (this.verifiable_type === 'sms' ? !(this.isValidPassword && this.isValidPhone  && this.isValidUsername) :!(this.isValidPassword && this.isValidEmail  && this.isValidUsername));
+      },
       // 注册
       register () {
-        let { username, phone, verifiable_code, password } = this;
-        let verifiable_type = 'sms';
-        let errors = this.errors;
-        // 判断首字符是否为数字
-        if(!isNaN(username[0])) {
-          this.errors = { ...errors, username: '用户名不能以数字开头' };
-          this.isValidUsername = false;
-          return false;
-        }
-        // 判断特殊字符及空格
-        if(!usernameReg.test(username)) {
-          this.errors = { ...errors, username: '用户名不能包含特殊符号以及空格' };
-          this.isValidUsername = false;
-          return false;
-          // 判断字节数
-        } else if( strLength(username) > 48 || strLength(username) < 4) {
-          this.errors = { ...errors, username: '用户名不能少于2个中文或4个英文' };
-          this.isValidUsername = false;
-          return false;
-        }
-        if(!phoneReg.test(phone)) {
-          this.errors = { ...errors, phone: '请输入正确的手机号码' };
-          return false;
-        }
-        if(password.length < 6) {
-          this.errors = { ...errors, password: '密码长度必须大于6位' };
-          return false;
-        }
-        let device_code = detecdOS();
         this.isLoading = true;
         this.isDisabled = true;
-        addAccessToken().post(createAPI('users'), {
+        console.log(this);
+        const { username, phone, email, verifiable_code, password, verifiable_type } = this._data;
+
+        let errors = this.errors;
+
+        // 判断特殊字符及空格
+        if(!usernameReg.test(username)) {
+          this.errors = { username: '用户名不能包含特殊符号以及空格' };
+          this.isValidUsername = false;
+          return this.isLoading = false;
+        }
+
+        // 判断首字符是否为数字
+        if(!isNaN(username[0])) {
+          this.errors = { username: '用户名不能以数字开头' };
+          this.isValidUsername = false;
+          return this.isLoading = false;
+        }
+        
+        // 判断字节数
+        if( strLength(username) > 48 || strLength(username) < 4) {
+          this.errors = { username: '用户名不能少于2个中文或4个英文' };
+          this.isValidUsername = false;
+          return this.isLoading = false;
+        }
+
+        // 手机号
+        if( verifiable_type==="sms" && !phoneReg.test(phone)) {
+          this.errors = { phone: '请输入正确的手机号码' };
+          return this.isLoading = false;
+        }
+
+        console.log(email);
+        console.log(!emailReg.test(email));
+        // 邮箱
+        if( verifiable_type !=="sms" && !emailReg.test(email)) {
+          this.errors = { email: '请输入正确的邮箱号码' };
+          return this.isLoading = false;
+        }
+
+        // 密码长度
+        if(password.length < 6) {
+          this.errors = { password: '密码长度必须大于6位' };
+          return this.isLoading = false;
+        }
+
+        // 获取设备码
+        let device_code = detecdOS();
+
+        let param = {
             name: username,
             phone,
+            email,
             verifiable_code,
             password,
             device_code,
             verifiable_type
-          },
+          };
+
+          this.verifiable_type === "sms" ?
+        delete param.email : delete param.phone;
+
+        addAccessToken().post(createAPI('users'), param ,
           {
             validateStatus: status => status === 201
           }
@@ -287,19 +325,23 @@
           getLoggedUserInfo().then(user => {
             loggedData.user_id = user.id;
             window.TS_WEB.currentUserId = user.id;
+
+            // 注册成功，保存用户信息至本地
             this.$storeLocal.set('UserLoginInfo', loggedData);
 
+            // 注册成功，保存用户信息至 vuex
             this.$store.dispatch(USERS_APPEND, cb =>{
-              cb(user)
+              cb(user);
             });
+
             // 设置消息提示查询时间
-            let time = 0;
-            time = this.$storeLocal.get('messageFlushTime');
+            let time = this.$storeLocal.get('messageFlushTime') || 0;
             let nowtime = parseInt(new window.Date().getTime() / 1000);
             if(!time) {
               time = nowtime - 86400;
             }
             let types = 'diggs,comments,follows';
+
             // 查询新消息
             addAccessToken().get(createOldAPI(`users/flushmessages?key=${types}&time=${time+1}`), {} , {
                 validateStatus: status => status === 200
@@ -340,30 +382,35 @@
             // 注册im用户， 
             connect();
 
+            // 注册成功 跳转至 feeds 
             router.push({ path: 'feeds' });
           });
         })
-        .catch(({ response: { data = {} } = {} } ) => {
+        .catch(({ response: { data:{ errors = { other: "未知错误" }} = {} } = {} } ) => {
           this.isDisabled = false;
-          const { code = 'xxxx' } = data;
           this.isLoading = false;
-          this.errors = { ...this.errors, code: errorCodes[code] };
+          this.errors = { errors };
         })
       }
     },
     watch: {
+      verifiable_type: function(val){
+        if(val === 'sms'){
+          this.email = "";
+          this.reg_type = "手机";
+        }else{
+          this.phone = "";
+          this.reg_type = "邮箱";
+        }
+      },
       username: function (newUsername) {
-        this.cleanErrors();
-        this.isShowUserClean = newUsername.length > 0 ? true : false;
         let errors = this.errors;
         delete errors['username'];
         this.errors = { ...errors };
         this.isValidUsername = true;
-        this.isDisabled = this.checkIsDisabled();
+        this.checkIsDisabled();
       },
       phone: function (newPhone) {
-        this.cleanErrors();
-        this.isShowClean = (newPhone > 0) > 0 ? true : false;
         let errors = this.errors;
         if(!phoneReg.test(newPhone)) {
           this.isValidPhone = false;
@@ -375,10 +422,24 @@
           this.errors = { ...errors };
         }
 
-        this.isDisabled = this.checkIsDisabled();
+        this.checkIsDisabled();
+      },
+      email: function (newEmail) {
+        let errors = this.errors;
+        if(!emailReg.test(newEmail)) {
+          this.isValidEmail = false;
+          this.isCanGetCode = false;
+        } else {
+          this.isValidEmail = true;
+          this.isCanGetCode = true;
+          delete errors['email'];
+          this.errors = { ...errors };
+        }
+
+        this.checkIsDisabled();
+
       },
       password: function (newPassword) {
-        this.cleanErrors();
         let errors = this.errors;
         if(newPassword.length < 6) {
           this.isValidPassword = false;
@@ -387,35 +448,8 @@
           delete errors['password'];
           this.errors = { ...errors };
         }
-        this.passwordText = newPassword;
-        this.isDisabled = this.checkIsDisabled();
-      },
-      passwordText: function (newPasswordText) {
-        this.cleanErrors();
-        let errors = this.errors;
-        if(newPasswordText.length < 6) {
-          this.isValidPassword = false;
-        } else {
-          this.isValidPassword = true;
-          delete errors['password'];
-          this.errors = { ...errors };
-        }
-        this.password = newPasswordText;
-        this.isDisabled = this.checkIsDisabled();
+        this.checkIsDisabled();
       }
-      // ,
-      // code: function (newCode) {
-      //   this.cleanErrors();
-      //   let errors = this.errors;
-      //   if(!codeReg.test(newCode)) {
-      //     this.isValidCode = false;
-      //   } else {
-      //     this.isValidCode = true;
-      //     delete errors['code'];
-      //     this.errors = { ...errors };
-      //   }
-      //   this.isDisabled = this.checkIsDisabled();
-      // }
     }
   }
 
