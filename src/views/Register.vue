@@ -141,6 +141,10 @@
   // 验证码
   const codeReg = /^[0-9]{4,6}$/;
 
+  // 验证方式
+  const SMS = "sms", // 手机
+        EMAIL = "mail"; // 邮箱
+
   const register = {
     components: {
       BackIcon,
@@ -155,18 +159,20 @@
       password: '', // 密码
       username: '', // 昵称
       verifiable_code: '', // 手机验证码
-      verifiable_type: 'sms',
+      verifiable_type: SMS,
       reg_type: "手机",
 
       isShowPassword: true, // 是否显示真实密码
       isCanGetCode: false,
 
       errors: {}, // 错误对象
+      error: "", // 错误提示
+      errorKey: "", // 错误类型
       // isValidCode: false, // 验证码合法性
 
       isValidEmail: false, // 邮箱号验证
       isValidPhone: false, // 是否合法手机号
-      isValidUsername: true, // 用户名是否合法
+      isValidUsername: false, // 用户名是否合法
       isValidPassword: false, // 是否合法密码
 
       CodeText: '获取验证码', // 获取验证码按钮文字
@@ -174,14 +180,11 @@
       time: 0, // 时间倒计时
 
       isLoading: false, // 登录loading
-      isDisabled: false,
+      isDisabled: true,
 
       isWeiXin: TS_WEB.isWeiXin
     }),
     computed: {
-      error: function () {
-        return PlusMessageBundle(this.errors).getMessage();
-      },
       getCodeText () {
         return this.time == 0 ? '获取验证码' : this.time + '秒后重发';
       }
@@ -189,32 +192,40 @@
     methods: {
       goTo,
 
-      timer () {
-        if (this.time > 0) {
-          this.isCanGetCode = false;
-          this.time -= 1;
-          if(this.time == 0) {
-            this.isCanGetCode = true;
-            return;
-          }
-          setTimeout(this.timer, 1000)
+      clearError(key){
+        key = key || this.errorKey;
+        let errors = this.errors;
+        if(errors[key]){
+          delete errors[key];
+          this.errors = { ...errors };
         }
+      },
+      timer () {
+
+        this.isCanGetCode = false;
+        this.time--;
+
+        return this.time > 0 ?
+          setTimeout(this.timer, 1000):
+          this.isCanGetCode = true;
       },
 
       changeType(){
-        this.verifiable_type = this.verifiable_type === "sms" ?
-          "mail" : "sms";
+        this.verifiable_type = (this.verifiable_type === SMS) ?
+          EMAIL : SMS;
       },
+
       // 获取验证码
       getCode () {
         this.isCanGetCode = false;
+        const phone = this.phone,
+              email = this.email;
         let param = {
-          phone: this.phone,
-          email: this.email
-        }
+          phone,
+          email
+        };
 
-        this.verifiable_type === "sms" ?
-        delete param.email : delete param.phone;
+        (this.verifiable_type === SMS) ? delete param.email : delete param.phone;
 
         addAccessToken().post(createAPI('verifycodes/register'), param,
           {
@@ -225,71 +236,69 @@
           this.time = 60;
           this.timer();
         })
-        .catch( error => {
-          let code = error.response.status;
+        .catch( ({response:{ status = null, data:{ errors = {} } = {}} = {}}) => {
           this.isCanGetCode = true;
           this.isLoading = false;
-          if( code === 500 ) {
-            this.errors = { phone: '网络错误,请联系管理员' };
+          if( status === 500 ) {
+            this.errors = { phone: '网络错误,请联系管理员', ...this.errors };
             return;
           }
-          if( code === 422) {
-            const { response: { data: { errors = {} }  = {} } = {} } = error;
-            this.errors = { errors };
+          if( status === 422) {
+            this.errors = { ...errors, ...this.errors };
           }
         })
       },
 
       checkIsDisabled(){
-        return (this.verifiable_type === 'sms' ? !(this.isValidPassword && this.isValidPhone  && this.isValidUsername) :!(this.isValidPassword && this.isValidEmail  && this.isValidUsername));
+        return !((this.isValidPassword && this.isValidUsername) ? ((this.verifiable_type === SMS) ? this.isValidPhone : this.isValidEmail) : false);
       },
+
       // 注册
       register () {
+        this.clearError();
         this.isLoading = true;
         this.isDisabled = true;
-        console.log(this);
+
         const { username, phone, email, verifiable_code, password, verifiable_type } = this._data;
 
         let errors = this.errors;
 
         // 判断特殊字符及空格
         if(!usernameReg.test(username)) {
-          this.errors = { username: '用户名不能包含特殊符号以及空格' };
+          this.errors = { name: '用户名不能包含特殊符号以及空格', ...this.errors };
           this.isValidUsername = false;
           return this.isLoading = false;
         }
 
         // 判断首字符是否为数字
         if(!isNaN(username[0])) {
-          this.errors = { username: '用户名不能以数字开头' };
+          this.errors = { name: '用户名不能以数字开头', ...this.errors };
           this.isValidUsername = false;
           return this.isLoading = false;
         }
         
         // 判断字节数
         if( strLength(username) > 48 || strLength(username) < 4) {
-          this.errors = { username: '用户名不能少于2个中文或4个英文' };
+          this.errors = { name: '用户名不能少于2个中文或4个英文', ...this.errors };
           this.isValidUsername = false;
           return this.isLoading = false;
         }
 
         // 手机号
-        if( verifiable_type==="sms" && !phoneReg.test(phone)) {
-          this.errors = { phone: '请输入正确的手机号码' };
+        if( verifiable_type === SMS && !phoneReg.test(phone)) {
+          this.errors = { phone: '请输入正确的手机号码', ...this.errors };
           return this.isLoading = false;
         }
 
-        console.log(email);
-        console.log(!emailReg.test(email));
         // 邮箱
-        if( verifiable_type !=="sms" && !emailReg.test(email)) {
-          this.errors = { email: '请输入正确的邮箱号码' };
+        if( verifiable_type !== SMS && !emailReg.test(email)) {
+          this.errors = { email: '请输入正确的邮箱号码', ...this.errors };
           return this.isLoading = false;
         }
 
         // 密码长度
         if(password.length < 6) {
-          this.errors = { password: '密码长度必须大于6位' };
+          this.errors = { password: '密码长度必须大于6位', ...this.errors };
           return this.isLoading = false;
         }
 
@@ -306,7 +315,7 @@
             verifiable_type
           };
 
-          this.verifiable_type === "sms" ?
+          this.verifiable_type === SMS ?
         delete param.email : delete param.phone;
 
         addAccessToken().post(createAPI('users'), param ,
@@ -314,20 +323,18 @@
             validateStatus: status => status === 201
           }
         )
-        .then(({ data = {} }) => {
-          let loggedData = {
-            token: data.token,
-            user_id: 0
-          };
+        .then(({ data:{ token } = {} }) => {
+
+          this.$storeLocal.set('UserLoginInfo', { token });
           
           this.isLoading = false;
 
           getLoggedUserInfo().then(user => {
-            loggedData.user_id = user.id;
-            window.TS_WEB.currentUserId = user.id;
 
+            window.TS_WEB.currentUserId = user.id;
+            
             // 注册成功，保存用户信息至本地
-            this.$storeLocal.set('UserLoginInfo', loggedData);
+            this.$storeLocal.set('UserLoginInfo', { token, user_id: user.id });
 
             // 注册成功，保存用户信息至 vuex
             this.$store.dispatch(USERS_APPEND, cb =>{
@@ -389,13 +396,18 @@
         .catch(({ response: { data:{ errors = { other: "未知错误" }} = {} } = {} } ) => {
           this.isDisabled = false;
           this.isLoading = false;
-          this.errors = { errors };
+          this.errors = { ...errors };
         })
       }
     },
     watch: {
+      errors: function(val){
+        const Messageable = PlusMessageBundle(val);
+        this.error = Messageable.getMessage();
+        this.errorKey = Messageable.getInputKey();
+      },
       verifiable_type: function(val){
-        if(val === 'sms'){
+        if(val === SMS){
           this.email = "";
           this.reg_type = "手机";
         }else{
@@ -404,51 +416,52 @@
         }
       },
       username: function (newUsername) {
-        let errors = this.errors;
-        delete errors['username'];
-        this.errors = { ...errors };
-        this.isValidUsername = true;
-        this.checkIsDisabled();
+        this.clearError("name");
+        this.isDisabled = true
+
+        this.isValidUsername = usernameReg.test(newUsername);
+
+        this.isDisabled = this.checkIsDisabled();
       },
       phone: function (newPhone) {
-        let errors = this.errors;
+        this.clearError("phone");
+        this.isDisabled = true
+
         if(!phoneReg.test(newPhone)) {
           this.isValidPhone = false;
           this.isCanGetCode = false;
         } else {
           this.isValidPhone = true;
           this.isCanGetCode = true;
-          delete errors['phone'];
-          this.errors = { ...errors };
         }
 
-        this.checkIsDisabled();
+        this.isDisabled = this.checkIsDisabled();
       },
       email: function (newEmail) {
-        let errors = this.errors;
+        this.clearError("email");
+        this.isDisabled = true
+
         if(!emailReg.test(newEmail)) {
           this.isValidEmail = false;
           this.isCanGetCode = false;
         } else {
           this.isValidEmail = true;
           this.isCanGetCode = true;
-          delete errors['email'];
-          this.errors = { ...errors };
         }
 
-        this.checkIsDisabled();
-
+        this.isDisabled = this.checkIsDisabled();
       },
       password: function (newPassword) {
-        let errors = this.errors;
+        this.clearError("password");
+        this.isDisabled = true
+
         if(newPassword.length < 6) {
           this.isValidPassword = false;
         } else {
           this.isValidPassword = true;
-          delete errors['password'];
-          this.errors = { ...errors };
         }
-        this.checkIsDisabled();
+
+        this.isDisabled = this.checkIsDisabled();
       }
     }
   }

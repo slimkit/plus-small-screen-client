@@ -51,6 +51,7 @@ axios.interceptors.response.use(
 
     // token过期 提示: 重新登录
     if(status === 500){
+      
       app.$store.dispatch(NOTICE, cb => {
         cb({
           show: true,
