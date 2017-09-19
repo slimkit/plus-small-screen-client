@@ -233,7 +233,8 @@
           connect();
         }
       }
-    }
+    },
+    beforeMount(){}
   }
 
   export default App;

@@ -11,8 +11,8 @@
           <img v-lazy="avatar" :class="$style.avatar" alt="name">
         </Col>
         <!--昵称+简介-->
-        <Col span="15">
-          <h4>{{ name }}</h4>
+        <Col span="15" style="height: 56px">
+          <h4 style="height: 21px;">{{ username }}</h4>
           <p style="word-break: break-all">{{ intro }}</p>
         </Col>
         <Col span="3" :class="$style.rightIcon">
@@ -165,7 +165,7 @@
         const { avatar = defaultAvatar } = this.userInfo;
         return avatar;
       },
-      name () {
+      username () {
         const { name = '' } = this.userInfo;
         return name;
       },

@@ -45,12 +45,17 @@ axios.interceptors.response.use(
 
     const {
       response:{
-        status
+        status,
+        data:{
+          message = "",
+        } = {}
       }
     } = error;
 
     // token过期 提示: 重新登录
-    if(status === 500){
+    if(status === 500 && message === "Token has expired"){
+      // 清除本地保存的 token
+      storeLocal.remove('UserLoginInfo');
       
       app.$store.dispatch(NOTICE, cb => {
         cb({
@@ -60,13 +65,12 @@ axios.interceptors.response.use(
           text: "登录失效，请重新登录！"
         });
       });
+      
+      setTimeout( () => {
+        app.$router.push('/login');
+      }, 1500);
 
-      // 清除本地保存的 token
-      storeLocal.remove('UserLoginInfo');
 
-      // setTimeout( () => {
-      //   app.$router.push('/login');
-      // }, 1500);
       
       return false;
     }

@@ -1,65 +1,56 @@
 <template>
-    <div class="findSomeOne" :class="{noScroll: pop.open}">
-
+    <div class="findSomeOne" :class="{noScroll: search.open}">
         <!-- header -->
         <header class="commonHeader" style="position: fixed; top:0; width:100%" v-if="!isWeiXin">
             <Row :gutter="24">
                 <Col span="4" style="display: flex; justify-content:flex-start;align-items: center" @click.native="changeUrl(`/discover`)">
                 <BackIcon height="21" width="21" color="#999" />
                 </Col>
-                <Col span="11" style="padding-left: 0">
+                <Col span="14" style="padding-left: 0">
                 <div :class="$style.input" @click="showPop(1)">
                     <Search style="position: absolute; top: 50%; left: 5px; margin-top:-8px" height="16" width="16" color="#999" /> 搜索
                 </div>
                 </Col>
-                <Col span="3" style="padding:0;display:flex;justify-content:center;align-items:center">
+                <!-- 通讯录 -->
+                <!-- <Col span="3" style="padding:0;display:flex;justify-content:center;align-items:center">
                 <Contacts height="24" width="24" color="#999" />
-                </Col>
+                </Col> -->
+                <!-- /通讯录 -->
                 <Col span="6" style="display: flex; justify-content: flex-start; align-items:center;padding-left:0;" @click.native="showPop(2)">
-                    <LoadingBlack v-if="locationing" height="21" width="24" color="#999"style="flex-grow:0;flex-shrink:0;margin-right:5px;"  />
-                    <Location v-else height="24" width="24" color="#999"style="flex-grow:0;flex-shrink:0;margin-right:5px;"  />
-                    <span style="overflow:hidden; text-overflow:ellipsis;white-space:nowrap;">{{location.city}}</span>
+                <LoadingBlack v-if="locationing" height="21" width="24" color="#999" style="flex-grow:0;flex-shrink:0;margin-right:5px;" />
+                <Location v-else height="24" width="24" color="#999" style="flex-grow:0;flex-shrink:0;margin-right:5px;" />
+                <span style="overflow:hidden; text-overflow:ellipsis;white-space:nowrap;">{{location.city}}</span>
                 </Col>
             </Row>
         </header>
         <!-- /header -->
-
         <!-- nav -->
         <nav class="findNavBar">
             <Row :gutter="0 " class="NavRow">
                 <Col :span="5" class="NavCol">
-                    <router-link class="navLink" to="/findsomeone/list/populars">热门</router-link>
+                <router-link class="navLink" to="/findsomeone/list/populars">热门</router-link>
                 </Col>
                 <Col :span="5" class="NavCol">
-                    <router-link class="navLink" to="/findsomeone/list/latests">最新</router-link>
+                <router-link class="navLink" to="/findsomeone/list/latests">最新</router-link>
                 </Col>
                 <Col :span="5" class="NavCol">
-                    <router-link class="navLink" to="/findsomeone/list/find-by-tags">推荐</router-link>
+                <router-link class="navLink" to="/findsomeone/list/find-by-tags">推荐</router-link>
                 </Col>
                 <Col :span="5" class="NavCol">
-                    <router-link class="navLink" :to="{ name: 'near', params: { longitude:location.lng ||'', latitude:location.lat ||''}}">附近</router-link>
+                <router-link class="navLink" :to="{ name: 'near', params: { longitude:location.lng ||'', latitude:location.lat ||''}}">附近</router-link>
                 </Col>
             </Row>
         </nav>
         <!-- /nav -->
-        
         <!-- content -->
         <div class="findContent">
             <router-view></router-view>
         </div>
         <!-- /content -->
-
-        <!-- Model-Pop -->
-        <transition name="custom-classes-transition" enter-active-class="animated slideInUp" leave-active-class="animated slideOutDown">
-            <FindModelPop v-if="pop.open" 
-            @cancel="()=>{showPop()}"
-            :listComponent="pop.list"
-            :baseURL="pop.URL"
-            :nothingImg="pop.nothingImg"
-            />
-        </transition>
-        <!-- /Model-Pop -->
-
+        <!-- 搜索弹窗 -->
+        <search-pop v-model="search.open" :searchUrl="search.searchUrl" :searchfor="search.searchType" :searchList="search.list">
+        </search-pop>
+        <!-- /搜索弹窗 -->
     </div>
 </template>
 <script>
@@ -76,35 +67,28 @@ import LoadMore from './LoadMore';
 import FindPersonList from './FindPersonList';
 import FindCityList from './FindCityList';
 
+import SearchPop from '../SearchPop/SearchPop';
+
 import Location from '../../icons/Location';
 import LoadingBlack from '../../icons/LoadingBlack';
 import getCurLocation from '../../utils/getLocation';
 
 import { NOTICE } from '../../stores/types';
 
-const defaultNothing =  resolveImage(require('../../statics/images/defaultNothingx3.png'));
+const defaultNothing = resolveImage(require('../../statics/images/defaultNothingx3.png'));
 
 const FindSomeOne = {
     name: "FindSomeOne",
     components: {
         LoadMore,
-        FindModelPop,
         BackIcon,
         Contacts,
         LoadingBlack,
         Location,
         Search,
+        SearchPop,
     },
     data: () => ({
-
-        // 弹框相关属性
-        pop: {
-            open: false,
-            URL: "",
-            list: FindPersonList,
-            nothingImg: defaultNothing
-        },
-        
         isShowModel: false,
         isWeiXin: window.TS_WEB.isWeiXin,
 
@@ -114,37 +98,72 @@ const FindSomeOne = {
             lat: "",
             lng: "",
             city: '选择城市'
-        }
-        
+        },
+
+        // 搜索弹窗
+        search: {
+            open: false,
+            keyword: "",
+            searchUrl: "",
+            searchType: "",
+            list: FindCityList,
+        },
+
     }),
+    computed: {
+        open() {
+            return this.search.open;
+        }
+    },
+    watch: {
+        open(val) {
+            // 弹窗关闭的时候执行 父组件刷新
+            if (val === false) {
+                // 刷新定位
+                this.updateLocation();
+                // 清除弹窗信息
+                this.$storeLocal.remove("FindModelPop_type");
+            }
+        }
+    },
     methods: {
         goTo,
         changeUrl,
         getCurLocation,
         showPop(type) {
-            this.pop.open = !this.pop.open;
-            if(type){
+            this.search.open = true;
+            if (type) {
                 this.$storeLocal.set("FindModelPop_type", type);
-                switch (type){
+                switch (type) {
                     case 1:
-                        this.pop.URL = 'user/search?keyword=';
-                        return this.pop.list = FindPersonList;
+                        this.search.searchType = "USER";
+                        this.search.list = FindPersonList;
+                        this.search.searchUrl = 'user/search?keyword=';
+                        return;
                     case 2:
-                        this.pop.URL = 'locations/search?name=';
-                        return this.pop.list = FindCityList;
+                        this.search.searchType = "CITY";
+                        this.search.list = FindCityList;
+                        this.search.searchUrl = 'locations/search?name=';
+                        return;
                     default:
                         return false;
                 }
             }
         },
-        locationSuccess(data){
-            
+
+        updateLocation() {
+            this.location = this.$storeLocal.get("LocationObj") || this.location;
+        },
+
+        // 定位成功回调
+        locationSuccess(data) {
+
             this.locationing = false;
             const {
-                addressComponent:{
+                addressComponent: {
                     city = "北京"
                 } = {},
-                position:{
+                position: {
                     lat = "",
                     lng = ""
                 } = {}
@@ -158,6 +177,8 @@ const FindSomeOne = {
 
             this.$storeLocal.set("LocationObj", this.location);
         },
+
+        // 定位失败回调
         locationError(error) {
             this.locationing = false;
             this.$store.dispatch(NOTICE, cb => {
@@ -172,15 +193,15 @@ const FindSomeOne = {
     },
     created() {
         const type = this.$storeLocal.get("FindModelPop_type");
-        const { lat, lng, city} = this.$storeLocal.get("LocationObj") || {};
+        const { lat, lng, city } = this.$storeLocal.get("LocationObj") || {};
 
-        if(!isNaN(lat + lng) && typeof city === "string"){
+        if (!isNaN(lat + lng) && typeof city === "string") {
             this.location = { lat, lng, city };
             this.locationing = false;
-        }else{
+        } else {
             // 延迟 .5s 定位
-            setTimeout(()=> {
-                this.getCurLocation({success: this.locationSuccess, error: this.locationError});        
+            setTimeout(() => {
+                this.getCurLocation({ success: this.locationSuccess, error: this.locationError });
             }, 500);
         }
 
@@ -188,7 +209,7 @@ const FindSomeOne = {
             this.showPop(type);
         }
     },
-    destroyed(){
+    destroyed() {
         this.$storeLocal.remove("LocationObj");
     }
 }
@@ -254,6 +275,11 @@ export default FindSomeOne;
     position: relative;
     bottom: -1px;
     border-bottom: 2px solid transparent;
+}
+
+.findpop {
+    width: 100%;
+    height: 100%;
 }
 
 .noScroll {

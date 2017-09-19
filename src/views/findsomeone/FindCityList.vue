@@ -1,11 +1,7 @@
 <template>
     <div class="findCityList">
-        <div v-if="showList" class="cityList">
-            <ul>
-                <li v-for="(name, index) in formatList" key="key">{{ name }}</li>
-            </ul>
-        </div>
-        <div v-else class="hotCity">
+        <!-- 热门城市 -->
+        <div v-if="showHotList" class="hotCity">
             <Row :gutter="12" class="curLocation">
                 <Col :span="5" style="padding-left:0">
                 <label>当前定位</label>
@@ -15,32 +11,45 @@
                 </Col>
                 <Col :span="4" style="display: flex; text-align:center; align-items: center; justify-content: center;">
                 <LoadingBlack v-if="locationing" height="21" width="21" color="#999" />
-                <Location2 v-else height="21" width="21" color="#999" />
+                <Location2 v-else height="21" width="21" color="#999" @click.native="getLocation()" />
                 </Col>
             </Row>
             <p class="labelForHot">热门城市</p>
             <Row :gutter="12" class="hotCityList">
                 <ul>
-                    <li v-for="(item, index) in dataList" key="key">{{ item }}</li>
+                    <li v-for="(item, index) in hotCityList" key="key" @click="selectCity(item)">{{ item }}</li>
                 </ul>
             </Row>
         </div>
+        <!-- /热门城市 -->
+        <!-- 搜索列表 -->
+        <div v-else class="cityList">
+            <ul>
+                <li v-for="(name, index) in formatList" :key="index" @click="selectCity(name)">{{ name }}</li>
+            </ul>
+        </div>
+        <!-- 搜索列表 -->
     </div>
 </template>
 <script>
 import Location2 from '../../icons/Location2';
 import LoadingBlack from '../../icons/LoadingBlack';
-// import Feedback from '../../icons/Feedback';
 import getCurLocation from '../../utils/getLocation';
+
+import request, { createAPI } from '../../utils/request';
 
 import { NOTICE } from '../../stores/types';
 
 const FindCityList = {
     name: 'FindCityList',
-    props: ["dataList"],
+    props: {
+        dataList: {
+            type: Array,
+            default: []
+        }
+    },
     components: {
         Location2,
-        // Feedback,
         LoadingBlack,
     },
     data: () => ({
@@ -50,34 +59,27 @@ const FindCityList = {
             lng: "",
             city: '未定位'
         },
-        formatList: [],
-        showList: false
+        hotCityList: [],
     }),
-    created() {
-
-        this.showList = !(typeof [...this.dataList][0] === "string");
-
-        const { lat, lng, city } = this.$storeLocal.get("LocationObj") || {};
-
-        if (!this.showList) {
-            if (!isNaN(lat + lng) && typeof city === "string") {
-                this.location = { lat, lng, city };
-                this.locationing = false;
-            } else {
-                // 延迟 .5s 定位
-                setTimeout(() => {
-                    getCurLocation({ success: this.locationSuccess, error: this.locationError });
-                }, 500);
-            }
-        } else {
-            this.formatList = this.dataList.map((item, index)=>{
+    computed: {
+        showHotList() {
+            return !(this.dataList.length > 0);
+        },
+        formatList() {
+            return this.dataList.map((item, index) => {
                 return item.tree.name;
             });
         }
     },
     methods: {
+        getLocation() {
+            this.locationing = true;
+            getCurLocation({
+                success: this.locationSuccess,
+                error: this.locationError
+            });
+        },
         locationSuccess(data) {
-
             this.locationing = false;
             const {
                 addressComponent: {
@@ -107,8 +109,49 @@ const FindCityList = {
                     text: error
                 });
             });
+        },
+        selectCity(city) {
+
+            if (city !== this.city) {
+                request.get(createAPI(`around-amap/geo?address=${city.replace(/[\s\uFEFF\xA0]+/g,"")}`))
+                .then(res => {
+                    const { data: { geocodes: [{ location = "0,0" } = {}] = [] } = {} } = res;
+                    const [lng, lat] = location.split(",");
+                    this.location = {
+                        city,
+                        lng,
+                        lat,
+                    };
+
+                    this.$storeLocal.set("LocationObj", this.location);
+                    this.key = '';
+                    this.$emit("closeSearch");
+                    this.$router.push({ name: 'near', params: { longitude:lng, latitude:lat}})
+                })
+            }
         }
-    }
+    },
+    created() {
+
+        const { lat, lng, city } = this.$storeLocal.get("LocationObj") || {};
+
+        if (!isNaN(lat + lng) && typeof city === "string") {
+            this.location = { lat, lng, city };
+            this.locationing = false;
+        } else {
+            // 延迟 .5s 定位
+            setTimeout(() => {
+                this.getLocation();
+            }, 500);
+        }
+
+        if (this.showHotList) {
+            request.get(createAPI(`locations/hots`))
+                .then(({ data = [] }) => {
+                    this.hotCityList = [...data];
+                })
+        }
+    },
 }
 
 export default FindCityList;
@@ -119,7 +162,6 @@ export default FindCityList;
 }
 
 .findCityList {
-    height: 100vh;
     background-color: #fff;
 }
 
@@ -155,7 +197,6 @@ export default FindCityList;
                 margin-bottom: 15px;
                 padding: 5px;
                 border-radius: 4px;
-                width: 75px;
                 height: 30px;
                 font-size: 14px;
                 text-align: center;

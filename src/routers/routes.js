@@ -2,39 +2,54 @@
 import Login from '../views/Login.vue';
 import Register from '../views/Register.vue';
 import FindPassword from '../views/FindPassword.vue';
-import Feeds from '../views/Feeds.vue';
+
+// 动态
 import Home from '../views/Home.vue';
-import FeedFollowing from '../views/FeedFollowing';
+import Feeds from '../views/Feeds.vue';
 import FeedHot from '../views/FeedHot';
 import FeedNew from '../views/FeedNew';
 import FeedDetail from '../views/FeedDetail';
+import FeedDiggList from '../views/FeedDiggList';
+import FeedFollowing from '../views/FeedFollowing';
+
+// 我
+import Diggs from '../views/Diggs';
+import Ranking from '../views/Ranking';
 import Profile from '../views/Profile';
+import Comments from '../views/Comments';
+import UserFeeds from '../views/UserFeeds';
+import UserSetting from '../views/UserSetting';
+import Collections from '../views/Collections';
+import Relationship from '../views/Relationship';
+
+// 设置
+import AboutUs from '../views/AboutUs';
+import FeedBack from '../views/FeedBack';
 import SystemSetting from '../views/SystemSetting';
 import ChangePassword from '../views/ChangePassword';
-import UserSetting from '../views/UserSetting';
-import UserFeeds from '../views/UserFeeds';
-import Message from '../views/Message';
-import Ranking from '../views/Ranking';
-import Comments from '../views/Comments';
-import Diggs from '../views/Diggs';
-import Collections from '../views/Collections';
+
+// 发现
 import Discover from '../views/Discover';
-import FeedDiggList from '../views/FeedDiggList';
-import { requestAuth, CanNotGetInWhenLogged } from '../utils/auth';
-import ImMessage from '../views/ImMessage';
-import Relationship from '../views/Relationship';
-import NewsIndex from '../views/news/NewsIndex';
-import NewsDetail from '../views/news/NewsDetail';
-import NewsSearch from '../views/news/NewsSearch';
+
+// 频道
 import ChannelIndex from '../views/channel/ChannelIndex';
 import ChannelFeeds from '../views/channel/ChannelFeeds';
 
-import AboutUs from '../views/AboutUs';
-import FeedBack from '../views/FeedBack';
+// 资讯
+import NewsIndex from '../views/news/NewsIndex';
+import NewsDetail from '../views/news/NewsDetail';
+import NewsSearch from '../views/news/NewsSearch';
 
+// 消息
+import Message from '../views/Message';
+import ImMessage from '../views/ImMessage';
+
+// 找人相关
 import FindSomeOne from '../views/findsomeone/FindSomeOne';
 import FindContent from '../views/findsomeone/FindContent';
 import FindNear from '../views/findsomeone/FindNear';
+
+import { requestAuth, CanNotGetInWhenLogged } from '../utils/auth';
 
 const routes = [
   {
