@@ -149,11 +149,13 @@ const login = {
             this.errorKey = Messageable.getInputKey();
         },
         account: function(val) {
+
             this.clearError("login");
             this.isValidAccount = this.checkAccount();
 
         },
         password: function(val) {
+
             this.clearError("password");
             this.isValidPassword = val.length >= 6;
         },
@@ -199,9 +201,8 @@ const login = {
             addAccessToken().post(createAPI('tokens'), param, {
                 validateStatus: status => status === 201
             }).then(response => {
-                console.log(response);
+                // 清空错误
                 this.errors = {};
-
                 const {
                     data: {
                         token = "",
@@ -214,7 +215,7 @@ const login = {
 
                 // 本地存储 登陆信息
                 this.$storeLocal.set('UserLoginInfo', { token: token, user_id: user.id });
-                window.TS_WEB.currentUserId = data.user.id;
+                window.TS_WEB.currentUserId = user.id;
 
                 // 写入vuex
                 this.$store.dispatch(USERS_APPEND, cb => {
@@ -231,11 +232,13 @@ const login = {
 
                 // 跳转到动态页面
                 router.push({ path: this.redirect });
-               
+
                 this.isLoading = false;
                 this.isDisabled = false;
-            }).catch(error => {
-                console.log(error);
+            }).catch(({ response: { data = { message: ["登录失败"] } } }) => {
+                this.errors = { ...data, ...this.errors };
+                this.isLoading = false;
+                this.isDisabled = true;
             });
         },
 

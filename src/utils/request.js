@@ -3,6 +3,9 @@ import { app } from '../index';
 import storeLocal from 'store';
 import { NOTICE, SHOWPOST, SHOWFEEDDIGGSLISTS } from '../stores/types';
 
+// 消息处理
+import PlusMessageBundle from '../utils/es';
+
 const { apiv1, api, url: baseURL } = window.TS_WEB;
 
 // Export a method to create the requested address.
@@ -36,48 +39,53 @@ axios.interceptors.response.use(
     // 错误请求处理
     function(error) {
 
-      console.log(error);
+        if(error.response) {
+            const { status, data = {} } = error.response;
+            const message = PlusMessageBundle(data).getMessage();
+            console.log(message);
 
-        const { response: { status, data: { message = "", } = {} } } = error;
+            // token过期 提示: 重新登录
+            if(status === 500 && message === "Token has expired") {
+                // 清除本地保存的 token
+                storeLocal.remove('UserLoginInfo');
 
-        // token过期 提示: 重新登录
-        if(status === 500 && message === "Token has expired") {
-            // 清除本地保存的 token
-            storeLocal.remove('UserLoginInfo');
-
-            app.$store.dispatch(NOTICE, cb => {
-                cb({
-                    show: true,
-                    time: 1500,
-                    status: false,
-                    text: "登录失效，请重新登录！"
+                app.$store.dispatch(NOTICE, cb => {
+                    cb({
+                        show: true,
+                        time: 1500,
+                        status: false,
+                        text: "登录失效，请重新登录！"
+                    });
                 });
-            });
 
-            setTimeout(() => {
-                app.$router.push('/login');
-            }, 1500);
+                setTimeout(() => {
+                    app.$router.push('/login');
+                }, 1500);
 
-            return false;
-        }
+                return false;
+            }
 
-        // 获取授权失败 
-        if(status === 401) {
+            // 获取授权失败 
+            if(status === 401) {
 
-            app.$store.dispatch(NOTICE, cb => {
-                cb({
-                    show: true,
-                    time: 1500,
-                    status: false,
-                    text: '请登录...'
+                app.$store.dispatch(NOTICE, cb => {
+                    cb({
+                        show: true,
+                        time: 1500,
+                        status: false,
+                        text: `${message}，请登录...`
+                    });
                 });
-            });
 
-            setTimeout(() => {
-                app.$router.push('/login');
-            }, 1500);
+                setTimeout(() => {
+                    app.$router.push('/login');
+                }, 1500);
 
-            return false;
+            }
+        } else if(error.request) {
+            console.log(error.request);
+        } else {
+            console.log('Error', error.message);
         }
 
         return Promise.reject(error);
