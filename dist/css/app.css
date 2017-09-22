@@ -4141,6 +4141,10 @@ input {
   border-radius: 50%;
   text-align: center;
   background-color: #ededed;
+  -webkit-box-flex: 0;
+  -webkit-flex: 0 0 auto;
+      -ms-flex: 0 0 auto;
+          flex: 0 0 auto;
 }
 ._367LlNrewH_PZNFGetrrKH_0 > img {
   width: 100%;

@@ -1,5 +1,5 @@
 <template>
-    <LoadMore :listComponent="listComponent" :nothingImg="nothingImg" :URL="LoadMoreURL" :offsetTop="offset" />
+    <LoadMore :listComponent="listComponent" :nothingImg="nothingImg" :URL="LoadMoreURL" :offsetTop="`-91px`" />
 </template>
 <script>
 import LoadMore from "./LoadMore";
@@ -18,7 +18,6 @@ const FindContent = {
             listComponent: FindPersonList,
             nothingImg,
             LoadMoreURL: '',
-            offset: `-91px`
         } );
     },
     watch: {
