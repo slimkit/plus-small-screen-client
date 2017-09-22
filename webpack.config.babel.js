@@ -26,12 +26,13 @@ const isHot = process.argv.includes('--hot');
 const isProd = NODE_ENV === 'production';
 
 // 各项资源地址定义
-const assetsRoot = path.resolve(__dirname, /*'asset'*/ 'src');
-const buildAssetsRoot = path.join(__dirname, 'dist');
+const assetsRoot = path.resolve(__dirname, 'src');
+const buildAssetsRoot = path.resolve(__dirname, 'dist');
 
 // 入口配置
 const entry = {
-  app: ['babel-polyfill', path.resolve(assetsRoot, 'index.js')]
+  // app: ['babel-polyfill', path.resolve(assetsRoot, 'index.js')]
+  app: [path.resolve(assetsRoot, 'index.js')]
 };
 
 function cssLoaders (options = {}) {

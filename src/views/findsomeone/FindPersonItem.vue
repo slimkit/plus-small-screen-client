@@ -177,6 +177,7 @@ export default FindPersonItem;
     border-radius: 50%;
     text-align: center;
     background-color: #ededed;
+    flex: 0 0 auto;
     >img {
         width: 100%;
     }

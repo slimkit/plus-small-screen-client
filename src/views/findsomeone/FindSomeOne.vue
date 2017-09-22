@@ -1,7 +1,7 @@
 <template>
     <div class="findSomeOne" :class="{noScroll: search.open}">
         <!-- header -->
-        <header class="commonHeader" style="position: fixed; top:0; width:100%" v-if="!isWeiXin">
+        <header class="commonHeader" style="position: fixed; top:0; width:100%">
             <Row :gutter="24">
                 <Col span="4" style="display: flex; justify-content:flex-start;align-items: center" @click.native="changeUrl(`/discover`)">
                 <BackIcon height="21" width="21" color="#999" />
@@ -88,28 +88,29 @@ const FindSomeOne = {
         Search,
         SearchPop,
     },
-    data: () => ({
-        isShowModel: false,
-        isWeiXin: window.TS_WEB.isWeiXin,
+    data() {
+        return({
+            isShowModel: false,
 
-        // 定位相关
-        locationing: true,
-        location: {
-            lat: "",
-            lng: "",
-            city: '选择城市'
-        },
+            // 定位相关
+            locationing: true,
+            location: {
+                lat: "",
+                lng: "",
+                city: '选择城市'
+            },
 
-        // 搜索弹窗
-        search: {
-            open: false,
-            keyword: "",
-            searchUrl: "",
-            searchType: "",
-            list: FindCityList,
-        },
+            // 搜索弹窗
+            search: {
+                open: false,
+                keyword: "",
+                searchUrl: "",
+                searchType: "",
+                list: FindCityList,
+            },
 
-    }),
+        })
+    },
     computed: {
         open() {
             return this.search.open;
@@ -118,7 +119,7 @@ const FindSomeOne = {
     watch: {
         open(val) {
             // 弹窗关闭的时候执行 父组件刷新
-            if (val === false) {
+            if(val === false) {
                 // 刷新定位
                 this.updateLocation();
                 // 清除弹窗信息
@@ -132,9 +133,9 @@ const FindSomeOne = {
         getCurLocation,
         showPop(type) {
             this.search.open = true;
-            if (type) {
+            if(type) {
                 this.$storeLocal.set("FindModelPop_type", type);
-                switch (type) {
+                switch(type) {
                     case 1:
                         this.search.searchType = "USER";
                         this.search.list = FindPersonList;
@@ -195,7 +196,7 @@ const FindSomeOne = {
         const type = this.$storeLocal.get("FindModelPop_type");
         const { lat, lng, city } = this.$storeLocal.get("LocationObj") || {};
 
-        if (!isNaN(lat + lng) && typeof city === "string") {
+        if(!isNaN(lat + lng) && typeof city === "string") {
             this.location = { lat, lng, city };
             this.locationing = false;
         } else {
@@ -205,7 +206,7 @@ const FindSomeOne = {
             }, 500);
         }
 
-        if (!isNaN(type)) {
+        if(!isNaN(type)) {
             this.showPop(type);
         }
     },
