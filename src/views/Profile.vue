@@ -174,12 +174,15 @@
         return bio;
       },
       following () {
-        const { extra: { followings_count = 0 } = {} } = this.userInfo;
-        return followings_count;
+        const { extra = {} } = this.userInfo;
+        console.log(extra);
+
+        return (extra ? extra.followings_count : 0);
       },
       followed () {
-        const { extra: { followers_count = 0 } = {} } = this.userInfo;
-        return followers_count;
+        const { extra = {} } = this.userInfo;
+
+        return (extra ? extra.followers_count : 0);
       }
     },
     created () {
