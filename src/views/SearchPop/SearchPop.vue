@@ -40,7 +40,7 @@ export default {
         },
         position: {
             type: String,
-            default: "right"
+            default: "left"
         },
         searchUrl: String,
         searchList: Object,
