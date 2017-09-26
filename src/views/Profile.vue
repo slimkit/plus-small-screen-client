@@ -175,8 +175,7 @@
       },
       following () {
         const { extra = {} } = this.userInfo;
-        console.log(extra);
-
+        
         return (extra ? extra.followings_count : 0);
       },
       followed () {
