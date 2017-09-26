@@ -45,7 +45,7 @@ axios.interceptors.response.use(
             console.log(message);
 
             // token过期 提示: 重新登录
-            if(status === 500 && message === "Token has expired") {
+            if((status === 500 && message === "Token has expired") || (status === 401 && message === "The token has been blacklisted")) {
                 // 清除本地保存的 token
                 storeLocal.remove('UserLoginInfo');
 
@@ -63,6 +63,11 @@ axios.interceptors.response.use(
                 }, 1500);
 
                 return false;
+            }
+
+            // 多设备登录
+            if(status === 401 && message === "The token has been blacklisted") {
+
             }
 
             // 获取授权失败 
