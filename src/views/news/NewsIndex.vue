@@ -112,8 +112,9 @@
         <p :class="$style.allCatesTitle">我的订阅</p>
         <section :class="$style.allCatesBox">
           <span :class="[$style.allCatesChild, $style.recommendCate]" > 推荐 </span>
+          <!-- :class="[ $style.allCatesChild, { endChild: (index + 2) % 4 === 0 }]"  -->
           <span 
-            :class="[ $style.allCatesChild, { endChild: (index + 2) % 4 === 0 }]" 
+            :class="$style.allCatesChild" 
             v-for="(cate, index) in myCates" 
             :key="index"
             @click="deleteMyCates(index)"
@@ -546,7 +547,7 @@
             &.recommendCate {
               background-color: #d9eef6;
             }
-            width: calc(~"91% / 4");
+            // width: calc(~"91% / 4");
             padding: 8px 2.5vw;
             background-color: #eee;
             display: inline-flex;
