@@ -610,8 +610,8 @@
   export default newsDetail;
 </script>
 <style>
-  .feedContainerContentTextNoPadding p, feedContainerContentText p {
-    margin: 10px 0;
+  .feedContainerContentTextNoPadding pre, feedContainerContentText pre {
+    overflow-x: scroll; 
   }
   .feedContainerContentTextNoPadding img, feedContainerContentText img {
     width: 100%!important;
