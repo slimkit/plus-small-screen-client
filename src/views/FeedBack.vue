@@ -1,7 +1,7 @@
 <template>
 <transition name="custom-classes-transition" enter-active-class="animated slideInRight" leave-active-class="animated slideOutRight">
     <div class="feedBack" :class="$style.postRoot">
-        <header class="commonHeader" v-if="!isWeiXin">
+        <header class="commonHeader">
             <Row :gutter="24">
                 <Col span="5" style="display: flex; justify-content: flex-start" @click.native="goTo(-1)">
                 <BackIcon height="21" width="21" color="#999" />
@@ -47,7 +47,6 @@ const feedBack = {
     },
     data: () => ({
         loading: false,
-        isWeiXin: window.TS_WEB.isWeiXin,
         content: ''
     }),
     methods:{
