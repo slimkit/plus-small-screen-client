@@ -312,7 +312,7 @@
         }
       },
       handleCollection (news_id) {
-        addAccessToken().post(createAPI(`news/${news_id}/collection`), {}, {
+        addAccessToken().post(createAPI(`news/${news_id}/collections`), {}, {
           validateStatus: status => status === 201
         })
         .then(response => {
@@ -321,7 +321,7 @@
         })
       },
       handleUnCollection (news_id) {
-        addAccessToken().delete(createAPI(`news/${news_id}/collection`), {}, {
+        addAccessToken().delete(createAPI(`news/${news_id}/collections`), {}, {
           validateStatus: status => status === 204
         })
         .then(response => {
@@ -329,7 +329,7 @@
         })
       },
       handleDiggFeed (news_id) {
-        addAccessToken().post(createAPI(`news/${news_id}/like`), {}, {
+        addAccessToken().post(createAPI(`news/${news_id}/likes`), {}, {
           validateStatus: status => status === 201
         })
         .then( () => {
@@ -337,7 +337,7 @@
         })
       },
       handleUnDiggFeed (news_id) {
-        addAccessToken().delete(createAPI(`news/${news_id}/like`), {}, {
+        addAccessToken().delete(createAPI(`news/${news_id}/likes`), {}, {
           validateStatus: status => status === 204
         })
         .then(response => {
