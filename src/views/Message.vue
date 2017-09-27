@@ -18,7 +18,7 @@
             </div>
           </Col>
 
-          <Col span="15" style="padding: 0;" v-if="messageCount.comments.count">
+          <Col span="14" style="padding: 0;" v-if="messageCount.comments.count">
             <h4 style="font-weight: 400;">评论的</h4>
             <div v-if="commentLists" style="color: #999; font-size: 12px">{{ commentsText }} <span v-show="messageCount.comments.count > 3">等人</span>评论了我</div>
             <div v-else style="color: #999; font-size: 12px;">还没有人评论我</div>
@@ -30,7 +30,7 @@
             <div v-else style="color: #999; font-size: 12px;">还没有人评论我</div>
           </Col>
 
-          <Col span="5" v-if="messageCount.comments.count">
+          <Col span="6" v-if="messageCount.comments.count">
             <timeago :class=$style.time :since="commentTime" locale="zh-CN" :auto-update="60"></timeago>
             <i :class="$style.messageCount">{{ messageCount.comments.count }}</i>
           </Col>
@@ -45,7 +45,7 @@
               </div>
             </div>
           </Col>
-          <Col span="15" style="padding: 0;" v-if="messageCount.diggs.count">
+          <Col span="14" style="padding: 0;" v-if="messageCount.diggs.count">
             <h4 style="font-weight: 400;">赞过的</h4>
             <div v-if="diggLists" style="color: #999; font-size: 12px;">{{ diggsText }} <span v-show="messageCount.diggs.count > 3">等人</span>赞了我</div>
             <div v-else style="color: #999; font-size: 12px;">还没有人赞我</div>
@@ -55,7 +55,7 @@
             <div v-if="diggLists" style="color: #999; font-size: 12px;">{{ diggsText }} <span v-show="messageCount.diggs.count > 3">等人</span>赞过我</div>
             <div v-else style="color: #999; font-size: 12px;">还没有人赞我</div>
           </Col>
-          <Col span="5" v-if="messageCount.diggs.count">
+          <Col span="6" v-if="messageCount.diggs.count">
             <timeago :class=$style.time :since="diggTime" locale="zh-CN" :auto-update="60"></timeago>
             <i :class="$style.messageCount">{{messageCount.diggs.count}}</i>
           </Col>
@@ -68,13 +68,13 @@
               <img :class="$style.avatar" :src="message.avatar" />
             </div>
           </Col>
-          <Col span="15" style="padding: 0;">
+          <Col span="14" style="padding: 0;">
             <h4 style="font-weight: 400;">{{ message.name }}</h4>
             <div v-if="message.lists.length" :class="$style.messagePreview">
               {{ message.lists.length ?  message.lists[message.lists.length - 1].txt  : '' }}
             </div>
           </Col>
-          <Col span="5" v-if="message.lists.length" style="padding-top: 4px">
+          <Col span="6" v-if="message.lists.length" style="padding-top: 4px">
             <timeago :class="$style.timer" :since="message.lists[message.lists.length - 1].time" locale="zh-CN" :auto-update="60"></timeago>
             <i v-if="message.count" :class="$style.messageCount">{{message.count || 0}}</i>
           </Col>
