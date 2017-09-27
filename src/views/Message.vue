@@ -1,6 +1,6 @@
 <template>
   <div class="messageList">
-    <div class="commonHeader" v-if="!isWeiXin">
+    <div class="commonHeader">
       <Row :gutter="24">
         <Col span="14" offset="5" class="title-col">
           消息

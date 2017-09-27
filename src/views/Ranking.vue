@@ -1,6 +1,6 @@
 <template>
   <div class="Ranking">
-    <div class="commonHeader" v-if="!isWeiXin">
+    <div class="commonHeader">
       <Row :gutter="24">
         <Col span="5">
           <BackIcon height="21" width="21" color="#999" @click.native="goTo(-1)" />

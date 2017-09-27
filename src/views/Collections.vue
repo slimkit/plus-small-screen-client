@@ -1,6 +1,6 @@
 <template>
   <div class="collections">
-    <div class="commonHeader" v-if="!isWeiXin">
+    <div class="commonHeader">
       <Row :gutter="24">
         <Col span="5" @click.native="goBack(-1)">
           <BackIcon height="21" width="21" color="#999" />
