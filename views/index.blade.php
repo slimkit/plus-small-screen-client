@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <title>ThinkSNS+</title>
-  <script src="http://webapi.amap.com/maps?v=1.3&key=abb777bcccf278aa589076944112267e"></script>
+  <script src="https://webapi.amap.com/maps?v=1.3&key=abb777bcccf278aa589076944112267e"></script>
   <link rel="stylesheet" href="{{ mix('css/app.css', 'zhiyi/h5') }}" />
   <style>
     #spinner-root {
