@@ -1,17 +1,25 @@
-import "babel-polyfill";
 import Vue from 'vue';
-import VueWechatTitle from 'vue-wechat-title';
-import TimeAgo from 'vue-timeago';
-import router from './routers/index';
-import iView from 'iview';
-import 'iview/dist/styles/iview.css';
-import VueLazyload from 'vue-lazyload';
 import store from './stores/store';
-import App from './App';
-import 'mint-ui/lib/style.css';
+import router from './routers/index';
+import VueLazyload from 'vue-lazyload';
 import loading_img from './statics/images/image-loading.png';
+
+// 时区
+import TimeAgo from 'vue-timeago';
+
+// html title
+import VueWechatTitle from 'vue-wechat-title';
+
+// UI库
+import 'mint-ui/lib/style.css';
+import 'iview/dist/styles/iview.css';
+import iView from 'iview';
 import { TabContainer, TabContainerItem, Loadmore, Popup, Picker } from 'mint-ui';
+
+// 本地存储插件
 import storeLocal from 'store';
+
+import App from './App';
 
 // iview ui
 Vue.use(iView);
