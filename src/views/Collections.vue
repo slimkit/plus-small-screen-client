@@ -104,6 +104,7 @@
   import lodash from 'lodash';
   import { resolveImage } from '../utils/resource';
   import timers from '../utils/timer';
+  import buildURL from 'axios/lib/helpers/buildURL';
 
   const nothingImg = resolveImage(require('../statics/images/defaultNothingx3.png'));
 
@@ -132,7 +133,7 @@
     methods: {
       timers,
       getImg (id) {
-        return buildUrl(createAPI(`files/${id}`));
+        return buildURL(createAPI(`files/${id}`));
       },
       changeUrl,
       goBack (num) {
