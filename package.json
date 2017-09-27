@@ -48,7 +48,7 @@
     "mint-ui": "^2.2.9",
     "piexifjs": "^1.0.3",
     "vue": "^2.3.4",
-    "vue-awesome-swiper": "^2.4.0",
+    "vue-awesome-swiper": "^2.6.5",
     "vue-cropperjs": "^2.1.0",
     "vue-recyclist": "^1.0.8",
     "vue-router": "^2.4.0",
