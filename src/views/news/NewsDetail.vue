@@ -235,6 +235,8 @@
 
   // markdown 解析
   import marked from "../../utils/markdown.js";
+  // 引入样式库
+  import 'highlight.js/styles/monokai-sublime.css';
 
   const noCommentImage = resolveImage(require('../../statics/images/defaultNothingx2.png'));
   const newsDetail = {
