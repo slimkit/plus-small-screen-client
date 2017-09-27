@@ -6,7 +6,7 @@
         <div class="spinner-double-bounce-bounce1" />
       </div>
     </div>
-    <header class="commonHeader" id="feed-header" v-if="!isWeixin">
+    <header class="commonHeader" id="feed-header">
       <Row :gutter="24">
         <Col span="5" style="display: flex; justify-content: flex-start">
           <BackIcon @click.native="goBack()" height="21" width="21" color="#999" />
@@ -32,7 +32,7 @@
             <div>
               <section 
                 class="feedContainerContentTextNoPadding"
-                v-html="detail.content"
+                v-html="MarkedContent"
               >
               </section>
             </div>
@@ -233,6 +233,9 @@
   import { changeUrl, goTo } from '../../utils/changeUrl';
   import getLocalTime from '../../utils/getLocalTime';
 
+  // markdown 解析
+  import marked from "../../utils/markdown.js";
+
   const noCommentImage = resolveImage(require('../../statics/images/defaultNothingx2.png'));
   const newsDetail = {
     components: {
@@ -284,6 +287,9 @@
       commentBody: ''
     }),
     computed: {
+      MarkedContent(){
+        return (marked(this.detail.content));
+      },
       commentCount () {
         return this.commentBody.length;
       },
