@@ -3,6 +3,10 @@ import store from './stores/store';
 import router from './routers/index';
 import VueLazyload from 'vue-lazyload';
 import loading_img from './statics/images/image-loading.png';
+import 'swiper/dist/css/swiper.css';
+import VueAwesomeSwiper from 'vue-awesome-swiper';
+
+Vue.use(VueAwesomeSwiper);
 
 // 时区
 import TimeAgo from 'vue-timeago';
