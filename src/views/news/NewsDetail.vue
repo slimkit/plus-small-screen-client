@@ -232,13 +232,21 @@
   import { resolveImage } from '../../utils/resource';
   import { changeUrl, goTo } from '../../utils/changeUrl';
   import getLocalTime from '../../utils/getLocalTime';
+  import markdownIt from 'markdown-it';
+  import plusImageSyntax from 'markdown-it-plus-image';
+  import hljs from 'highlight.js';
 
   // markdown 解析
-  import marked from "../../utils/markdown.js";
+  const md = markdownIt({
+    html: false,
+    highlight: function(code) {
+        return hljs ? hljs.highlightAuto(code).value : code;
+    }
+  }).use(plusImageSyntax, `api/v2/files/`);
   // 引入样式库
-  import 'highlight.js/styles/github.css';
   import "github-markdown-css";
-
+  import 'highlight.js/styles/github.css';
+  
   const noCommentImage = resolveImage(require('../../statics/images/defaultNothingx2.png'));
   const newsDetail = {
     components: {
@@ -292,10 +300,10 @@
     }),
     computed: {
       markedSubject(){
-        return (marked(this.detail.subject));
+        return (md.render(this.detail.subject));
       },
       markedContent(){
-        return (marked(this.detail.content));
+        return (md.render(this.detail.content));
       },
       commentCount () {
         return this.commentBody.length;
