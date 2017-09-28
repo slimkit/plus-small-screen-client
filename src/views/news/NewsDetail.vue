@@ -18,7 +18,7 @@
         </Col>
       </Row>
     </header>
-    <div :class="{headerPadding: !isWeixin, headerNoPadding: isWeixin}">
+    <div class="headerPadding">
       <mt-loadmore 
         :bottom-method="loadBottom"
         :bottom-all-loaded="bottomAllLoaded"
@@ -27,12 +27,12 @@
         :bottomDistance="40"
       >
         <div class="feed-container">
-          <div class="feed-container-content feed-background-color">
-            <h3 v-if="detail.title" style="text-align: center; padding: 15px 8px 8px 8px; font-weight: 400; color: #59b6d7">{{ detail.title }}</h3>
+          <div class="feed-container-content feed-background-color markdown-body">
+            <h1 v-if="detail.title" style="text-align: left; padding: 15px 8px 8px 8px; font-weight: 400; color: #59b6d7">{{ detail.title }}</h1>
             <div>
               <section 
                 class="feedContainerContentTextNoPadding"
-                v-html="MarkedContent"
+                v-html="`${markedSubject + markedContent}`"
               >
               </section>
             </div>
@@ -236,7 +236,8 @@
   // markdown 解析
   import marked from "../../utils/markdown.js";
   // 引入样式库
-  import 'highlight.js/styles/monokai-sublime.css';
+  import 'highlight.js/styles/github.css';
+  import "github-markdown-css";
 
   const noCommentImage = resolveImage(require('../../statics/images/defaultNothingx2.png'));
   const newsDetail = {
@@ -258,6 +259,7 @@
       detail: {
         comment_count: 0,
         content: '',
+        subject: '',
         created_at: '',
         digg_count: 0,
         from: '',
@@ -289,7 +291,10 @@
       commentBody: ''
     }),
     computed: {
-      MarkedContent(){
+      markedSubject(){
+        return (marked(this.detail.subject));
+      },
+      markedContent(){
         return (marked(this.detail.content));
       },
       commentCount () {
@@ -781,6 +786,19 @@
   }
 </style>
 <style lang="less" module>
+  .markdown-body {
+    box-sizing: border-box;
+    min-width: 200px;
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 45px;
+  }
+
+  @media (max-width: 767px) {
+    .markdown-body {
+      padding: 15px;
+    }
+  }
   .comment {
       padding: 0 12px;
       li {

@@ -42,6 +42,7 @@
     "dexie": "^2.0.0-beta",
     "exif-js": "^2.2.1",
     "exif-orient": "^0.0.5",
+    "github-markdown-css": "^2.8.0",
     "highlight.js": "^9.12.0",
     "iview": "^2.0.0-rc.15",
     "js-base64": "^2.1.9",
