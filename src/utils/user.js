@@ -14,6 +14,8 @@ import { NOTICE, USERS_APPEND, USERS } from '../stores/types';
 import {
   resolveImage
 } from './resource';
+// 消息处理
+import PlusMessageBundle from '../utils/es';
 const defaultAvatar = resolveImage(require('../statics/images/defaultAvatarx2.png'));
 
 function followingUser(user_id, cb) {
@@ -41,8 +43,13 @@ function followingUser(user_id, cb) {
           }, 1500);
           return;
         }
-
-        resolve(false);
+        app.$store.dispatch(NOTICE, cb => {
+            cb({
+              text: PlusMessageBundle(error.response.data).getMessage(),
+              time: 1500,
+              status: false
+            });
+          });
       })
   })
 };
@@ -73,7 +80,7 @@ function unFollowingUser(user_id) {
         } else {
           app.$store.dispatch(NOTICE, cb => {
             cb({
-              text: '操作失败',
+              text: PlusMessageBundle(error.response.data).getMessage(),
               time: 1500,
               status: false
             });
