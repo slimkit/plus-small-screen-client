@@ -64,10 +64,11 @@ import Contacts from '../../icons/Contacts';
 import FindModelPop from './FindModelPop';
 import LoadMore from './LoadMore';
 
-import FindPersonList from './FindPersonList';
 import FindCityList from './FindCityList';
+import FindPersonList from './FindPersonList';
 
 import SearchPop from '../SearchPop/SearchPop';
+import SearchCity from '../SearchPop/SearchCity';
 
 import Location from '../../icons/Location';
 import LoadingBlack from '../../icons/LoadingBlack';
@@ -143,7 +144,7 @@ const FindSomeOne = {
                         return;
                     case 2:
                         this.search.searchType = "CITY";
-                        this.search.list = FindCityList;
+                        this.search.list = SearchCity;
                         this.search.searchUrl = 'locations/search?name=';
                         return;
                     default:
@@ -203,7 +204,7 @@ const FindSomeOne = {
             // 延迟 .5s 定位
             setTimeout(() => {
                 this.getCurLocation({ success: this.locationSuccess, error: this.locationError });
-            }, 500);
+            }, 2000);
         }
 
         if(!isNaN(type)) {
@@ -240,6 +241,9 @@ export default FindSomeOne;
 <style lang="scss">
 .findSomeOne {
     width: 100%;
+    .mint-loadmore-bottom{
+        margin-bottom: -50px;
+    }
 }
 
 .findNavBar {

@@ -23,12 +23,15 @@
         </div>
         <!-- /热门城市 -->
         <!-- 搜索列表 -->
-        <div v-else class="cityList">
+        <div v-else-if="!showHotList && formatList.length > 0" class="cityList">
             <ul>
                 <li v-for="(name, index) in formatList" :key="index" @click="selectCity(name)">{{ name }}</li>
             </ul>
         </div>
         <!-- /搜索列表 -->
+        <div v-else :class="$style.nothing">
+            <img :src="nothingImg" alt="空空如也">
+        </div>
     </div>
 </template>
 <script>
@@ -39,46 +42,50 @@ import getCurLocation from '../../utils/getLocation';
 import { NOTICE } from '../../stores/types';
 
 import request, { createAPI, addAccessToken } from '../../utils/request';
+import { resolveImage } from '../../utils/resource';
+const nothingImg = resolveImage(require('../../statics/images/defaultNothingx3.png'))
+
 
 export default {
-    name: "SearchCity",
+    name: 'SearchCity',
     props: {
-        keyword: String,
+        keyword: String
     },
     components: {
         Location2,
-        LoadingBlack,
+        LoadingBlack
     },
     data() {
-        return ({
-            key: "",
+        return({
+            key: '',
             locationing: true,
             location: {
-                city: "",
+                city: '',
                 lat: null,
-                lng: null,
+                lng: null
             },
             hotCityList: [],
-            cityList: []
-        });
+            cityList: [],
+            nothingImg
+        })
     },
     computed: {
         showHotList() {
-            return !(this.cityList.length > 0);
+            return !(this.keyword.length > 0)
         },
         formatList() {
             return this.cityList.map((item, index) => {
-                return item.tree.name;
-            });
+                return item.tree.name
+            })
         }
     },
     watch: {
         keyword(val) {
-            this.key = val;
+            this.key = val
         },
         key(val) {
-            if (val) {
-                this.doSearch();
+            if(val) {
+                this.doSearch()
             }
         }
     },
@@ -88,90 +95,110 @@ export default {
                 name: this.key,
                 limit: 10
             }
-            request.get(createAPI(`locations/search`), { params })
+            request.get(createAPI(`locations/search`), {
+                    params
+                })
                 .then(({ data = [] }) => {
                     this.cityList = data
                 })
         },
 
         getLocation() {
-            this.locationing = true;
+            this.locationing = true
+            this.$storeLocal.remove('LocationObj')
             getCurLocation({
                 success: this.locationSuccess,
                 error: this.locationError
-            });
+            })
         },
         locationSuccess(data) {
-            this.locationing = false;
-            const {
-                addressComponent: {
-                    city = ""
-                } = {},
-                position: {
-                    lat = "",
-                    lng = ""
-                } = {}
-            } = data;
+            this.locationing = false
+            const { addressComponent: { city = '' } = {}, position: { lat = '', lng = '' } = {} } = data
 
             this.location = {
                 lat,
                 lng,
                 city
-            };
+            }
 
-            this.$storeLocal.set("LocationObj", this.location);
+            this.$storeLocal.set('LocationObj', this.location)
         },
         locationError(error) {
-            this.locationing = false;
+            this.locationing = false
             this.$store.dispatch(NOTICE, cb => {
                 cb({
                     show: true,
                     time: 2000,
                     status: false,
                     text: error
-                });
-            });
+                })
+            })
         },
         selectCity(city) {
-            if (city !== this.city) {
-                request.get(createAPI(`around-amap/geo?address=${city.replace(" ","")}`))
-                .then(res => {
-                    const { data: { geocodes: [{ location = "0,0" } = {}] = [] } = {} } = res;
-                    const [lng, lat] = location.split(",");
-                    this.location = {
-                        city,
-                        lng,
-                        lat,
-                    };
+            if(city !== this.city) {
+                request.get(createAPI(`around-amap/geo?address=${city.replace(/[\s\uFEFF\xA0]+/g, '')}`))
+                    .then(res => {
+                        const { data: { geocodes: [{ location = '0,0' } = {}] = [] } = {} } = res
+                        const [lng, lat] = location.split(',')
+                        this.location = {
+                            city,
+                            lng,
+                            lat
+                        }
 
-                    this.key = '';
-                    this.$emit("input", city);
-                })
+                        this.$storeLocal.set('LocationObj', this.location)
+
+                        this.key = ''
+                        this.$emit('input', city)
+                        this.$emit('closeSearch')
+                        this.$bus.emit('UpdateLocation')
+                    }).catch(err => {
+                        console.log(err)
+                    })
             }
         }
     },
     created() {
 
-        const { lat, lng, city } = this.$storeLocal.get("LocationObj") || {};
+        const { lat, lng, city } = this.$storeLocal.get('LocationObj') || {}
 
-        if (!isNaN(lat + lng) && typeof city === "string") {
-            this.location = { lat, lng, city };
-            this.locationing = false;
+        if(!isNaN(lat + lng) && typeof city === 'string') {
+            this.location = {
+                lat,
+                lng,
+                city
+            }
+            this.locationing = false
         } else {
             // 延迟 .5s 定位
             setTimeout(() => {
-                this.getLocation();
-            }, 500);
+                this.getLocation()
+            }, 500)
         }
 
-        if (this.showHotList) {
-            request.get(createAPI(`locations/hots`))
-                .then(({ data = [] }) => {
-                    this.hotCityList = [...data];
-                })
+        if(this.showHotList) {
+            request.get(createAPI(`locations/hots`)).then(({ data = [] }) => {
+                this.hotCityList = [
+                    ...data
+                ]
+            })
         }
-    },
+    }
 }
 </script>
-<style lang="scss" module>
+<style lang="less" module>
+
+.nothing {
+    width: 100%;
+    display: flex;
+    font-size: 24px;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #ccc; // background-color: #fff;
+    >img {
+        margin: 30%;
+        width: 70%;
+    }
+}
 </style>

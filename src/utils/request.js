@@ -42,7 +42,7 @@ axios.interceptors.response.use(
         if(error.response) {
             const { status, data = {} } = error.response;
             const message = PlusMessageBundle(data).getMessage();
-            console.log(message);
+            // console.log(message);
 
             // token过期 提示: 重新登录
             if((status === 500 && message === "Token has expired") || (status === 401 && message === "The token has been blacklisted")) {

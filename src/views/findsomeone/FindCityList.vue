@@ -126,7 +126,8 @@ const FindCityList = {
                     this.$storeLocal.set("LocationObj", this.location);
                     this.key = '';
                     this.$emit("closeSearch");
-                    this.$router.push({ name: 'near', params: { longitude:lng, latitude:lat}})
+                    this.$bus.emit("UpdateLocation");
+                    // this.$router.push({ name: 'near', params: { longitude:lng, latitude:lat}})
                 })
             }
         }

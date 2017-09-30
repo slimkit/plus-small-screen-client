@@ -23,7 +23,13 @@ import { TabContainer, TabContainerItem, Loadmore, Popup, Picker } from 'mint-ui
 // 本地存储插件
 import storeLocal from 'store';
 
+// bus
+import bus from './utils/bus';
+
 import App from './App';
+
+// bus
+Vue.use(bus);
 
 // iview ui
 Vue.use(iView);

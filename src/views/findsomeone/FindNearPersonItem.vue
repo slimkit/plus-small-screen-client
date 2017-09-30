@@ -132,6 +132,7 @@ const FindPersonItem = {
 
             getUserInfo(user_id)
             .then((user) => {
+                console.log(user);
                 const { id, bio, name, avatar, follower, following } = user;
                 this.id = id;
                 this.bio = bio || "这家伙很懒，什么也没有留下";
