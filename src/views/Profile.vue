@@ -50,7 +50,7 @@
           <RightArrowIcon height="18" width="18" color="#999" />
         </Col>
       </Row>
-      <Row :gutter="24" :class="$style.entryMenu"  @click.native="changeUrl('/users/ranking')">
+      <!-- <Row :gutter="24" :class="$style.entryMenu"  @click.native="changeUrl('/users/ranking')">
         <Col span="3">
           <RankingIcon :height="21" :width="21" color="#59b6d7" />
         </Col>
@@ -60,7 +60,7 @@
         <Col span="5"  :class="$style.rightIcon">
           <RightArrowIcon height="18" width="18" color="#999" />
         </Col>
-      </Row>
+      </Row> -->
       <Row :gutter="24" :class="$style.entryMenu" @click.native="changeUrl('/users/collections')">
         <Col span="3">
           <ConnectionIcon :height="21" :width="21" color="#59b6d7" />
