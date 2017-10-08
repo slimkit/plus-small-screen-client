@@ -18,7 +18,7 @@
         </Col>
       </Row>
     </header>
-    <div class="headerPadding">
+    <div :class="{headerPadding: !isWeixin}">
       <mt-loadmore 
         :bottom-method="loadBottom"
         :bottom-all-loaded="bottomAllLoaded"
