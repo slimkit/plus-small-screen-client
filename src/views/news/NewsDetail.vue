@@ -6,7 +6,7 @@
         <div class="spinner-double-bounce-bounce1" />
       </div>
     </div>
-    <header class="commonHeader" id="feed-header" v-if="isWeixin">
+    <header class="commonHeader" id="feed-header" v-if="!isWeixin">
       <Row :gutter="24">
         <Col span="5" style="display: flex; justify-content: flex-start">
           <BackIcon @click.native="goBack()" height="21" width="21" color="#999" />
@@ -28,7 +28,7 @@
       >
         <div class="feed-container">
           <div class="feed-container-content feed-background-color markdown-body">
-            <h1 v-if="detail.title" style="text-align: left; padding: 15px 8px 8px 8px; font-weight: 400; color: #59b6d7">{{ detail.title }}</h1>
+            <h3 v-if="detail.title" style="text-align: left; padding: 15px 8px 8px 8px; font-weight: 400; color: #59b6d7">{{ detail.title }}</h3>
             <div>
               <section 
                 class="feedContainerContentTextNoPadding"
