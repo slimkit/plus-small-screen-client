@@ -242,7 +242,7 @@
     highlight: function(code) {
         return hljs ? hljs.highlightAuto(code).value : code;
     }
-  }).use(plusImageSyntax, `api/v2/files/`);
+  }).use(plusImageSyntax, `/api/v2/files/`);
   // 引入样式库
   import "github-markdown-css";
   import 'highlight.js/styles/github.css';
