@@ -6,7 +6,7 @@
         <div class="spinner-double-bounce-bounce1" />
       </div>
     </div>
-    <header class="commonHeader" id="feed-header">
+    <header class="commonHeader" id="feed-header" v-if="isWeixin">
       <Row :gutter="24">
         <Col span="5" style="display: flex; justify-content: flex-start">
           <BackIcon @click.native="goBack()" height="21" width="21" color="#999" />
