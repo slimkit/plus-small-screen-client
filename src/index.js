@@ -26,6 +26,12 @@ import storeLocal from 'store';
 // bus
 import bus from './utils/bus';
 
+// Filters
+import * as filters from './filters';
+for (const k in filters) {
+  Vue.filter(k, filters[k]);
+}
+
 import App from './App';
 
 // bus

@@ -50,6 +50,7 @@
     "markdown-it-plus-image": "^1.0.1",
     "mint-ui": "^2.2.9",
     "piexifjs": "^1.0.3",
+    "plus-message-bundle": "0.0.5",
     "store": "^2.0.12",
     "vue": "^2.3.4",
     "vue-awesome-swiper": "^2.6.5",
