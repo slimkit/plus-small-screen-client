@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <title>ThinkSNS+</title>
   <script src="https://webapi.amap.com/maps?v=1.3&key=abb777bcccf278aa589076944112267e"></script>
-  <link rel="stylesheet" href="{{ mix('css/app.css', 'zhiyi/h5') }}" />
+  <link rel="stylesheet" href="{{ mix('css/app.css', 'assets/h5') }}" />
   <style>
     #spinner-root {
       position: fixed;
@@ -111,6 +111,6 @@
     }
   </script>
 
-  <script src="{{ mix('js/app.js', 'zhiyi/h5') }}"></script>
+  <script src="{{ mix('js/app.js', 'assets/h5') }}"></script>
 </body>
 </html>

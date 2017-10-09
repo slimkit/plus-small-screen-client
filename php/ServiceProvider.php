@@ -15,7 +15,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->registarRouter();
         $this->registarHandler();
         $this->publishes([
-            dirname(__DIR__).'/dist' => $this->app->publicPath().'/zhiyi/h5',
+            dirname(__DIR__).'/dist' => $this->app->publicPath().'/assets/h5',
         ], 'public');
         $this->loadViewsFrom(dirname(__DIR__).'/views', 'plus:h5');
     }
