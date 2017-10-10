@@ -40,7 +40,7 @@
         </span>
       </nav>
     </header>
-    <section class="nothingDefault" v-if="nothing"> 
+    <section class="nothingDefault" v-if="nothing && !showSpinner"> 
       <img :src="nothing" />
     </section>
     <!--组件列表-->
@@ -171,7 +171,7 @@
       oldMoreCates: [],
       newsLists: [], // 首页数据
       max_id: 0, // 查询条件之一,
-      showSpinner: false, // 等待。。。
+      showSpinner: true, // 等待。。。
       bottomAllLoaded: false,
       topAllLoaded: false,
       topStatus: '',
@@ -283,13 +283,16 @@
         if(!loadMore) {
           this.max_id = 0
         };
+
+        this.showSpinner = true;
+
         addAccessToken().get(createAPI(`news?after=${this.max_id}`),{
           params: this.searchParams
         },{
           validateStatus: status => status === 200
         })
         .then(({ data = [] }) => {
-
+          this.showSpinner = false;
           let length = data.length;
 
           // 判断是否有下一页
@@ -317,7 +320,8 @@
             if(this.$refs.loadmore)
               loadMore ? this.$refs.loadmore.onBottomLoaded() : this.$refs.loadmore.onTopLoaded();
           }, 500);
-
+        }).catch(err=>{
+          console.log(err);
           this.showSpinner = false;
         });
       },
@@ -328,7 +332,6 @@
         this.$store.dispatch(CURRENTNEWSCATEID, cb => {
           cb(cateId);
         })
-        this.showSpinner = true;
         this.newsListIds = []; // 清除资讯数据
         this.recommendListIds = []; // 清除推荐数据
         this.getNewsList();
@@ -336,9 +339,7 @@
 
       // 获取用户订阅分类信息
       getUserCates(){
-      
-        this.showSpinner = true;
-        
+              
         // 获取资讯分类
         addAccessToken().get(createAPI('news/cates'),
           {},
@@ -368,8 +369,6 @@
             }
           }
         });
-
-        this.showSpinner = false;
       }
     },
     created () {
