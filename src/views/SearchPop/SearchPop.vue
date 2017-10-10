@@ -68,9 +68,9 @@ export default {
         }
     },
     watch: {
-        keyword(val) {
-            this.doSearch();
-        },
+        // keyword(val) {
+        //     this.doSearch();
+        // },
         value(val) {
             this.isopen = val;
         },
@@ -80,29 +80,34 @@ export default {
     },
     methods: {
         loadTop() {
-            console.log("下拉");
+            
+            this.doSearch();
             // 延时隐藏
             setTimeout(() => {
                 this.$refs.loadMore.onTopLoaded();
             }, 700);
         },
         loadBottom() {
-            console.log("上拉");
+
+            this.doSearch(true);
             // 延时隐藏
             setTimeout(() => {
                 this.$refs.loadMore.onBottomLoaded();
             }, 700);
         },
-        doSearch() {
-            if (this.searchUrl && this.keywordCount) {
+        doSearch(merge) {
+            if(this.searchUrl && this.keywordCount) {
                 let params = {
                     limit: 10
                 }
                 this.$storeLocal.set(`search_${this.searchfor}`, this.keyword)
-                request.get(createAPI(this.searchUrl + this.keyword), { params })
-                    .then(({ data = [] }) => {
-                        this.dataList = data;
-                    })
+                request.get(createAPI(this.searchUrl + this.keyword), {
+                    params
+                }).then(({ data = [] }) => {
+                    this.dataList = merge ? [...this.dataList, ...data ] : [...data];
+                }).catch(err=>{
+                    console.log(err);
+                })
             }
 
             return;
@@ -118,14 +123,8 @@ export default {
         }
     },
     created() {
-        // this.isopen = this.open;
         this.keyword = this.$storeLocal.get(`search_${this.searchfor}`) || "";
     },
-    updated() {
-        if (this.$refs.inputs && !this.keywordCount) {
-            this.$refs.inputs.$refs.input.focus()
-        }
-    }
 }
 </script>
 <style lang="scss" module>

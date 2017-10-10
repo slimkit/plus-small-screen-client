@@ -112,23 +112,22 @@ const FindCityList = {
         },
         selectCity(city) {
 
-            if (city !== this.city) {
+            if(city !== this.city) {
                 request.get(createAPI(`around-amap/geo?address=${city.replace(/[\s\uFEFF\xA0]+/g,"")}`))
-                .then(res => {
-                    const { data: { geocodes: [{ location = "0,0" } = {}] = [] } = {} } = res;
-                    const [lng, lat] = location.split(",");
-                    this.location = {
-                        city,
-                        lng,
-                        lat,
-                    };
+                    .then(res => {
+                        const { data: { geocodes: [{ location = "0,0" } = {}] = [] } = {} } = res;
+                        const [lng, lat] = location.split(",");
+                        this.location = {
+                            city: city.split(",").reverse()[0],
+                            lng,
+                            lat
+                        }
 
-                    this.$storeLocal.set("LocationObj", this.location);
-                    this.key = '';
-                    this.$emit("closeSearch");
-                    this.$bus.emit("UpdateLocation");
-                    // this.$router.push({ name: 'near', params: { longitude:lng, latitude:lat}})
-                })
+                        this.$storeLocal.set("LocationObj", this.location);
+                        this.key = '';
+                        this.$emit("closeSearch");
+                        this.$bus.emit("UpdateLocation");
+                    })
             }
         }
     },
@@ -136,7 +135,7 @@ const FindCityList = {
 
         const { lat, lng, city } = this.$storeLocal.get("LocationObj") || {};
 
-        if (!isNaN(lat + lng) && typeof city === "string") {
+        if(!isNaN(lat + lng) && typeof city === "string") {
             this.location = { lat, lng, city };
             this.locationing = false;
         } else {
@@ -146,7 +145,7 @@ const FindCityList = {
             }, 500);
         }
 
-        if (this.showHotList) {
+        if(this.showHotList) {
             request.get(createAPI(`locations/hots`))
                 .then(({ data = [] }) => {
                     this.hotCityList = [...data];

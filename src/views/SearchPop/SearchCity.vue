@@ -7,7 +7,7 @@
                 <label>当前定位</label>
                 </Col>
                 <Col :span="15">
-                <span :class="{c_b2b2b2: location.city === '未定位'}">{{location.city}}</span>
+                <span :class="{c_b2b2b2: location.city === '未定位'}">{{location.city || "未定位"}}</span>
                 </Col>
                 <Col :span="4" style="display: flex; text-align:center; align-items: center; justify-content: center;">
                 <LoadingBlack v-if="locationing" height="21" width="21" color="#999" />
@@ -75,7 +75,14 @@ export default {
         },
         formatList() {
             return this.cityList.map((item, index) => {
-                return item.tree.name
+                let name = '';
+                item = item.tree;
+                while (item){
+                    console.log(item);
+                    name = item.name + "," + name;
+                    item = item.parent;
+                }
+                return name.substr(0, ( name.length - 1 ));
             })
         }
     },
@@ -141,7 +148,7 @@ export default {
                         const { data: { geocodes: [{ location = '0,0' } = {}] = [] } = {} } = res
                         const [lng, lat] = location.split(',')
                         this.location = {
-                            city,
+                            city: city.split(",").reverse()[0],
                             lng,
                             lat
                         }

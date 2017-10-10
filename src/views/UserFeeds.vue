@@ -409,7 +409,6 @@
           }
         )
         .then( ({ data = {} }) => {
-          this.coverImg = "";
           // 刷新用户数据
           getUserInfo(this.user_id).then(user => {
             this.userInfo = { ...user};

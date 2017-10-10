@@ -109,7 +109,7 @@
           女
         </Button>
         <Button 
-          @click="setSex(3)" 
+          @click="setSex(0)" 
           size="large" 
           :class="$style.sexOptions" 
           type="text" 
@@ -336,7 +336,9 @@
       },
       setImage (e) {
         const file = e.target.files[0];
-        if (!file.type.includes('image/')) {
+
+        // 判断上传文件是否为图片
+        if (file.type.indexOf('image/') === -1) {
           this.$store.dispatch(NOTICE, cb => {
             cb({
               show: true,
@@ -348,12 +350,16 @@
           return;
         }
 
+        console.log(typeof FileReader === 'function');
+
         if (typeof FileReader === 'function') {
+          console.time("reader.onload");
           const reader = new window.FileReader();
           reader.onload = (event) => {
             this.imgSrc = event.target.result;
             this.$refs.cropper.replace(event.target.result);
             this.showCropper();
+            console.timeEnd('reader.onload');
           };
           reader.readAsDataURL(file);
         } else {
