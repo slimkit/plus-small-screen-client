@@ -110,7 +110,7 @@
   import { getUserInfo } from '../utils/user';
   import { resolveImage } from '../utils/resource';
   import buildURL from 'axios/lib/helpers/buildURL';
-  const defaultNoBody = resolveImage(require('../statics/images/img_default_nobody@2x.png'));
+  const defaultNoBody = resolveImage(require('../statics/images/defaultNothingx2.png'));
   const defaultAvatar = resolveImage(require('../statics/images/defaultAvatarx2.png'));
   const Comments = {
     components: {
