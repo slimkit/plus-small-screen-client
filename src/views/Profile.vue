@@ -8,12 +8,12 @@
       <Row :gutter="24" :class="$style.rowCenter">
         <!-- 头像 -->
         <Col span="6" :class="$style.colCenter">
-          <img v-lazy="avatar" :class="$style.avatar" alt="name">
+          <img :src="avatar" :class="$style.avatar" alt="name">
         </Col>
         <!--昵称+简介-->
         <Col span="15" style="height: 56px">
           <h4 style="height: 21px;">{{ username }}</h4>
-          <p style="word-break: break-all">{{ intro }}</p>
+          <p style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ intro }}</p>
         </Col>
         <Col span="3" :class="$style.rightIcon">
           <RightArrowIcon height="18" width="18" color="#999" />
@@ -25,9 +25,9 @@
       <Row :gutter="24">
         <div :class="$style.followsContent">
           <Col span="12" style="border-right: 1px #ededed solid" @click.native="changeUrlFans(`/users/relationship/${currentUser}/followers`)">
-            <p  v-if="!messageCount.fans" :class="$style.contentCenter" class="followsNum">{{followed}}</p>
-            <p v-if="messageCount.fans" :class="$style.contentCenterHalf" class="followsNum">{{followed}}</p>
-            <p v-if="messageCount.fans" :class="$style.newFollowsHalf">{{messageCount.fans}}</p>
+            <p v-if="!messageCount.fans" :class="$style.contentCenter" class="followsNum">{{followed}}</p>
+            <p v-else :class="$style.contentCenterHalf" class="followsNum">{{followed}}</p>
+            <p v-show="messageCount.fans" :class="$style.newFollowsHalf">{{messageCount.fans}}</p>
             <p :class="$style.contentCenter">粉丝</p>
           </Col>
           <Col span="12" @click.native="changeUrl(`/users/relationship/${currentUser}/followings`)">

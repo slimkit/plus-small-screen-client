@@ -177,7 +177,7 @@
       <!-- 选择城市 -->
       <search-pop v-model="areaAbout.showAreaSelect" :position="`bottom`" :searchfor="`USER_CITY`">
         <template scope="search">
-          <SearchCity :keyword="search.keyword" v-model="areaAbout.location" />
+          <SearchCity :keyword="search.keyword" :datas="search.datas" v-model="areaAbout.location" />
         </template>
       </search-pop>
       <!-- /选择城市 -->
@@ -204,8 +204,6 @@
   import { resolveImage } from '../utils/resource';
 
   import SearchPop from './SearchPop/SearchPop';
-
-  import FindCityList from './findsomeone/FindCityList';
   import SearchCity from './SearchPop/SearchCity';
 
   const defaultAvatar = resolveImage(require('../statics/images/defaultAvatarx2.png'));
@@ -223,7 +221,6 @@
       SearchCity
     },
     data: () => ({
-      LIST: FindCityList,
       currentUser: 0, // 当前登录用户id
       userInfo: {},
       name: '', // nickname

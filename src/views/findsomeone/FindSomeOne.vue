@@ -61,14 +61,12 @@ import Search from '../../icons/Search';
 import BackIcon from '../../icons/Back';
 import Contacts from '../../icons/Contacts';
 
-import FindModelPop from './FindModelPop';
 import LoadMore from './LoadMore';
-
-import FindCityList from './FindCityList';
-import FindPersonList from './FindPersonList';
 
 import SearchPop from '../SearchPop/SearchPop';
 import SearchCity from '../SearchPop/SearchCity';
+import SearchPerson from '../SearchPop/SearchPerson';
+import FindPersonList from './FindPersonList';
 
 import Location from '../../icons/Location';
 import LoadingBlack from '../../icons/LoadingBlack';
@@ -107,7 +105,7 @@ const FindSomeOne = {
                 keyword: "",
                 searchUrl: "",
                 searchType: "",
-                list: FindCityList,
+                list: SearchCity,
             },
 
         })
@@ -139,7 +137,7 @@ const FindSomeOne = {
                 switch(type) {
                     case 1:
                         this.search.searchType = "USER";
-                        this.search.list = FindPersonList;
+                        this.search.list = SearchPerson;
                         this.search.searchUrl = 'user/search?keyword=';
                         return;
                     case 2:

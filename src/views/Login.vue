@@ -18,7 +18,7 @@
                         <label for="account">账号</label>
                         </Col>
                         <Col span="16">
-                        <input type="tel" v-focus size="large" :autofocus="true" autocomplete="off" placeholder="用户名/手机号/邮箱" v-model.trim="account" id="account" name="account" />
+                        <input type="text" v-focus size="large" :autofocus="true" autocomplete="off" placeholder="用户名/手机号/邮箱" v-model.trim="account" id="account" name="account" />
                         </Col>
                         <Col span="4" class="flexend">
                         <CloseIcon v-show="account.length>0" @click.native="account=''" width="21" height="21" color="#999" />

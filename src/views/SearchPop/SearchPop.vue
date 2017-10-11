@@ -4,7 +4,7 @@
             <header :class="$style.searchHeader">
                 <Row :gutter="12">
                     <Col span="20" style="positoin: relative;">
-                    <Input ref="inputs" v-model="keyword" placeholder="搜索" :class="$style.plr20" :autofocus="true" @on-enter="doSearch()" />
+                    <Input v-model="keyword" placeholder="搜索" :class="$style.plr20" :autofocus="true" @on-enter="doSearch()" />
                     <Search style="position: absolute; top: 50%; left: 15px; margin-top:-10px" height="20" width="20" color="#999" />
                     <CloseIcon @click.native="cleanKeyword()" height="20" width="20" color="#999" v-if="keywordCount" style="position: absolute; top: 13px; right: 15px;" />
                     </Col>
@@ -13,9 +13,9 @@
             </header>
         </slot>
         <div :class="$style.searchContent">
-            <slot :keyword="keyword">
+            <slot :keyword="keyword" :datas="dataList">
                 <mt-loadmore ref="loadMore" :bottomDistance="70" :top-method="loadTop" :bottom-method="loadBottom" :top-all-loaded="topAllLoaded" :bottom-all-loaded="bottomAllLoaded" :autoFill="false" :bottomPullText="`上拉加载更多`" :bottomDropText="`释放加载更多`">
-                    <component :is="searchList" :dataList="dataList" :keyword="keyword" @closeSearch="closeSearch" />
+                    <component :is="searchList" :datas="dataList" :keyword="keyword" @closeSearch="closeSearch" />
                 </mt-loadmore>
             </slot>
         </div>
@@ -68,9 +68,6 @@ export default {
         }
     },
     watch: {
-        // keyword(val) {
-        //     this.doSearch();
-        // },
         value(val) {
             this.isopen = val;
         },
@@ -97,14 +94,19 @@ export default {
         },
         doSearch(merge) {
             if(this.searchUrl && this.keywordCount) {
+                let offset = merge ? this.dataList.length : 0;
                 let params = {
-                    limit: 10
+                    limit: 10,
+                    offset
                 }
                 this.$storeLocal.set(`search_${this.searchfor}`, this.keyword)
                 request.get(createAPI(this.searchUrl + this.keyword), {
                     params
                 }).then(({ data = [] }) => {
                     this.dataList = merge ? [...this.dataList, ...data ] : [...data];
+                    if(data.length < params.limit){
+                        this.bottomAllLoaded = true;
+                    }
                 }).catch(err=>{
                     console.log(err);
                 })
@@ -114,16 +116,19 @@ export default {
         },
         cleanKeyword() {
             this.keyword = "";
+            this.dataList = [];
         },
         closeSearch() {
             this.isopen = !1;
-            this.keyword = "";
-            this.dataList = [];
+            this.cleanKeyword();
             this.$storeLocal.remove(`search_${this.searchfor}`);
         }
     },
     created() {
         this.keyword = this.$storeLocal.get(`search_${this.searchfor}`) || "";
+        if(this.keyword){
+            this.doSearch();
+        }
     },
 }
 </script>
