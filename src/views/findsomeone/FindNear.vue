@@ -7,7 +7,9 @@
             </div>
         </div>
         <mt-loadmore :autoFill="false" :bottomDistance="50" :top-method="loadTop" :bottom-method="loadBottom" :top-all-loaded="topAllLoaded" :bottom-all-loaded="bottomAllLoaded" :bottomPullText="`上拉加载更多`" :bottomDropText="`释放加载更多`" ref="loadMore">
-            <FindPersonList v-if="list.length > 0" :dataList="list"></FindPersonList>
+            <ul v-if="list.length > 0" style="background-color: #fff">
+                <FindPersonItem v-for="(item, index) in list" :item="item" :key="index"></FindPersonItem>
+            </ul>
             <div v-else :class="$style.nothing">
                 <img :src="nothingImg" alt="空空如也">
             </div>
@@ -16,14 +18,14 @@
 </template>
 <script>
 import request, { createAPI, addAccessToken } from '../../utils/request';
-import FindPersonList from './FindPersonList';
+import FindPersonItem from './FindPersonItem';
 import { resolveImage } from '../../utils/resource';
 const nothingImg = resolveImage(require('../../statics/images/defaultNothingx3.png'))
 
 const FindNear = {
     name: 'FindNear',
     components: {
-        FindPersonList
+        FindPersonItem
     },
     data() {
         return({
@@ -57,7 +59,7 @@ const FindNear = {
             }
 
             if(this.latitude + this.longitude === 0) {
-              return this.showSpinner = false;
+                return this.showSpinner = false;
             };
             const params = {
                 limit: 10,

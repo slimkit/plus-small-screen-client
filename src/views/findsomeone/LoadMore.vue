@@ -2,34 +2,33 @@
     <div style="height:100%" v-if="URL">
         <div id="spinner" v-if="showSpinner">
             <div id="spinner-parent">
-                <div class="spinner-double-bounce-bounce2" />
-                <div class="spinner-double-bounce-bounce1" />
+                <div class="spinner-double-bounce-bounce2"></div>
+                <div class="spinner-double-bounce-bounce1"></div>
             </div>
         </div>
-        <mt-loadmore 
-        v-else 
-        :autoFill="false"
-        :bottomDistance="70" 
-        :top-method="loadTop" 
-        :bottom-method="loadBottom" 
-        :top-all-loaded="topAllLoaded" 
-        :bottom-all-loaded="bottomAllLoaded" 
-        :bottomPullText="`上拉加载更多`" 
-        :bottomDropText="`释放加载更多`" 
-        ref="loadMore">
+        <mt-loadmore v-else :autoFill="false" :bottomDistance="70" :top-method="loadTop" :bottom-method="loadBottom" :top-all-loaded="topAllLoaded" :bottom-all-loaded="bottomAllLoaded" :bottomPullText="`上拉加载更多`" :bottomDropText="`释放加载更多`" ref="loadMore">
             <div v-if="nothing && !showSpinner" :style="{'margin-top': offsetTop || 0}" :class="$style.nothing">
                 <img :src="nothingImg" alt="空空如也">
             </div>
-            <component v-else :is="listComponent" :dataList="dataList" />
+            <ul v-else style="background-color: #fff">
+                <FindPersonItem v-for="(item, index) in dataList" :key="index" :item="item"></FindPersonItem>
+            </ul>
             <div v-show="bottomAllLoaded && !nothing" :class="$style.bottmAll">没有更多了</div>
         </mt-loadmore>
     </div>
 </template>
 <script>
 import request, { createAPI, addAccessToken } from '../../utils/request';
+import FindPersonItem from './FindPersonItem';
+
+if(typeof String.prototype.endsWith != 'function') {
+    String.prototype.endsWith = function(suffix) {
+        return this.indexOf(suffix, this.length - suffix.length) !== -1;
+    };
+}
 const LoadMore = {
     name: "LoadMore",
-    props: ["listComponent", "nothingImg", "URL", "offsetTop"],
+    props: ["nothingImg", "URL", "offsetTop"],
     data: () => ({
         formateURL: "",
         dataList: [],
@@ -37,40 +36,30 @@ const LoadMore = {
         bottomStatus: "",
         topAllLoaded: false,
         bottomAllLoaded: false,
-        limit: 15,
-        offset: 0,
     }),
+    components:{
+        FindPersonItem
+    },
     methods: {
         loadData(merge) {
-
-            this.offset = merge ? this.dataList.length : 0;
+            let offset = merge ? this.dataList.length : 0;
             let params = {
-                    limit: this.limit,
-                    offset: this.offset,
-                };
-            if (this.formateURL) {
+                limit: 10,
+                offset,
+            };
+            if(this.formateURL) {
                 request.get(createAPI(this.formateURL), { params })
-                .then(({ data = [] }) => {
-
-                    this.showSpinner = false;
-
-                    this.bottomAllLoaded = data.length < params.limit ? !0 : !1;
-
-                    if (merge) {
-                        // 合并操作
-                        this.dataList = [...this.dataList,...data];
-                    } else {
-                        // 刷新操作
-                        this.dataList = [...data];
-                    }
-
-                })
-                .catch(error => {
-                    this.dataList = [];
-                    this.showSpinner = false;
-                    this.bottomAllLoaded = true;
-                });
-            }else{
+                    .then(({ data = [] }) => {
+                        this.showSpinner = false;
+                        this.bottomAllLoaded = data.length < params.limit ? !0 : !1;
+                        this.dataList = merge ? Array.from(new Set([...this.dataList, ...data])) : [...data];
+                    })
+                    .catch(error => {
+                        this.dataList = [];
+                        this.showSpinner = false;
+                        this.bottomAllLoaded = true;
+                    });
+            } else {
                 this.dataList = [];
                 this.showSpinner = false;
                 this.bottomAllLoaded = true;
@@ -101,15 +90,14 @@ const LoadMore = {
     },
     watch: {
         URL(val) {
-            this.formateURL = val.endsWith("name=")? "locations/hots" : val;
+            this.formateURL = val.endsWith("name=") ? "locations/hots" : val;
             this.showSpinner = true;
             this.loadData();
         }
     },
     created() {
-        
-        if (this.URL) {
-            this.formateURL = this.URL.endsWith("name=")? "locations/hots" : this.URL;
+        if(this.URL) {
+            this.formateURL = this.URL.endsWith("name=") ? "locations/hots" : this.URL;
             this.dataList = [];
             this.offset = 0;
             this.showSpinner = true;

@@ -28,9 +28,9 @@ const getLocation = ({
         MyMap.plugin('AMap.Geolocation', function() {
             let geolocation = new AMap.Geolocation({
                 enableHighAccuracy: true, //是否使用高精度定位，默认:true
-                timeout: 10000, //超过10秒后停止定位，默认：无穷大
+                timeout: 20000, //超过10秒后停止定位，默认：无穷大
                 GeoLocationFirst: true, // 默认为false，设置为true的时候可以调整PC端为优先使用浏览器定位，失败后使用IP定位
-                maximumAge: 30000, //定位结果缓存0毫秒，默认：0
+                // maximumAge: 30000, //定位结果缓存0毫秒，默认：0
                 convert: true, //自动偏移坐标，偏移后的坐标为高德坐标，默认：true
             });
             MyMap.addControl(geolocation);

@@ -23,7 +23,6 @@ import FollowingIcon from '../../icons/Following';
 import UnFollowingIcon from '../../icons/UnFollowing';
 import EachFollowingIcon from '../../icons/EachFollowing';
 
-import { getUserInfo } from '../../utils/user';
 import { changeUrl } from '../../utils/changeUrl';
 import { resolveImage } from '../../utils/resource';
 

@@ -66,7 +66,6 @@ import LoadMore from './LoadMore';
 import SearchPop from '../SearchPop/SearchPop';
 import SearchCity from '../SearchPop/SearchCity';
 import SearchPerson from '../SearchPop/SearchPerson';
-import FindPersonList from './FindPersonList';
 
 import Location from '../../icons/Location';
 import LoadingBlack from '../../icons/LoadingBlack';
@@ -159,21 +158,13 @@ const FindSomeOne = {
         locationSuccess(data) {
 
             this.locationing = false;
-            const {
-                addressComponent: {
-                    city = "北京"
-                } = {},
-                position: {
-                    lat = "",
-                    lng = ""
-                } = {}
-            } = data;
+            const { addressComponent: { city = '', street = '', streetNumber = '' } = {}, position: { lat = '', lng = '' } = {} } = data
 
             this.location = {
                 lat,
                 lng,
-                city
-            };
+                city: street ? (street + streetNumber) : city
+            }
 
             this.$storeLocal.set("LocationObj", this.location);
         },
@@ -239,7 +230,7 @@ export default FindSomeOne;
 <style lang="scss">
 .findSomeOne {
     width: 100%;
-    .mint-loadmore-bottom{
+    .mint-loadmore-bottom {
         margin-bottom: -50px;
     }
 }

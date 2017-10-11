@@ -1,24 +1,22 @@
 <template>
-    <LoadMore :listComponent="listComponent" :nothingImg="nothingImg" :URL="LoadMoreURL" :offsetTop="`-91px`" />
+    <LoadMore :nothingImg="nothingImg" :URL="LoadMoreURL" :offsetTop="`-91px`" /></LoadMore>
 </template>
 <script>
 import LoadMore from "./LoadMore";
-import FindPersonList from "./FindPersonList";
 import { resolveImage } from '../../utils/resource';
-const nothingImg = resolveImage( require( '../../statics/images/img_default_nobody@2x.png' ) );
-
+const nothingImg = resolveImage(require('../../statics/images/img_default_nobody@2x.png'));
 
 const FindContent = {
     name: "FindContent",
     components: {
-        LoadMore
+        LoadMore,
     },
     data() {
-        return( {
-            listComponent: FindPersonList,
+        return({
+            datas: [ { id: 123 }],
             nothingImg,
             LoadMoreURL: '',
-        } );
+        });
     },
     watch: {
         "$route": function() {

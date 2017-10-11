@@ -77,7 +77,7 @@ export default {
     },
     methods: {
         loadTop() {
-            
+
             this.doSearch();
             // 延时隐藏
             setTimeout(() => {
@@ -103,11 +103,9 @@ export default {
                 request.get(createAPI(this.searchUrl + this.keyword), {
                     params
                 }).then(({ data = [] }) => {
-                    this.dataList = merge ? [...this.dataList, ...data ] : [...data];
-                    if(data.length < params.limit){
-                        this.bottomAllLoaded = true;
-                    }
-                }).catch(err=>{
+                    this.bottomAllLoaded = data.length < params.limit ? !0 : !1;
+                    this.dataList = merge ? Array.from(new Set([...this.dataList, ...data])) : [...data];
+                }).catch(err => {
                     console.log(err);
                 })
             }
@@ -126,7 +124,7 @@ export default {
     },
     created() {
         this.keyword = this.$storeLocal.get(`search_${this.searchfor}`) || "";
-        if(this.keyword){
+        if(this.keyword) {
             this.doSearch();
         }
     },

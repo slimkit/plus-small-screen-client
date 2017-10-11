@@ -7,7 +7,7 @@
                 <label>当前定位</label>
                 </Col>
                 <Col :span="15">
-                <span :class="{c_b2b2b2: location.city === '未定位'}">{{location.city || "未定位"}}</span>
+                    <span :class="{c_b2b2b2: location.city === '未定位'}">{{location.city || "未定位"}}</span>
                 </Col>
                 <Col :span="4" style="display: flex; text-align:center; align-items: center; justify-content: center;">
                 <LoadingBlack v-if="locationing" height="21" width="21" color="#999" />
@@ -100,13 +100,12 @@ export default {
         locationSuccess(data) {
             this.locationing = false;
 
-            console.log(data);
-            const { addressComponent: { city = '' } = {}, position: { lat = '', lng = '' } = {} } = data
+            const { addressComponent: { city = '', street = '', streetNumber = '' } = {}, position: { lat = '', lng = '' } = {} } = data
 
             this.location = {
                 lat,
                 lng,
-                city
+                city: street ? (street + streetNumber) : city
             }
 
             this.$storeLocal.set('LocationObj', this.location)
@@ -134,14 +133,13 @@ export default {
                         lat
                     }
 
-                    console.log(city.split(" ").reverse()[0]);
-
                     this.$storeLocal.set('LocationObj', {
-                        city: city.split(",").reverse()[0],
+                        city: city.replace(/[\s\uFEFF\xA0]+/g, ',').split(",").reverse()[0],
                         lng,
                         lat
                     });
 
+                    this.$emit('input', this.location.city);
                     this.$emit('closeSearch');
                     this.$bus.emit('UpdateLocation');
                 }).catch(err => {
