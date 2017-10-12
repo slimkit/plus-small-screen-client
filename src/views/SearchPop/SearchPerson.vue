@@ -9,7 +9,7 @@
                 <p :class="$style.itemBio">{{user.bio}}</p>
             </div>
             <div :class="$style.itemFollow">
-                <div class="actionButton" @click.stop="handleFollowingStatus(user.followAction.status)">
+                <div class="actionButton" @click.stop="handleFollowingStatus(user.followAction.status, user.id)">
                     <FollowingIcon v-if="user.followAction.text == '已关注'" height="48" width="48" color="#59b6d7" />
                     <UnFollowingIcon v-if="user.followAction.text == '关注'" height="48" width="48" color="#333" />
                     <EachFollowingIcon v-if="user.followAction.text == '相互关注'" height="48" width="48" color="#59b6d7" />
@@ -85,19 +85,19 @@ export default {
     },
     methods: {
         changeUrl,
-        handleFollowingStatus(status) {
+        handleFollowingStatus(status, id) {
             // 关注操作
             if(status) {
                 // 取关
-                this.handleUnfollowing();
+                this.handleUnfollowing(id);
             } else {
                 // 加关注
-                this.handleFollowing();
+                this.handleFollowing(id);
             }
         },
         // 取关操作
-        handleUnfollowing() {
-            unFollowingUser(this.id)
+        handleUnfollowing(id) {
+            unFollowingUser(id)
                 .then(status => {
                     if(status) {
                         this.follower = false;
@@ -113,8 +113,8 @@ export default {
                 });
         },
         // 关注操作
-        handleFollowing() {
-            followingUser(this.id)
+        handleFollowing(id) {
+            followingUser(id)
                 .then(status => {
                     if(status) {
                         this.follower = true;
