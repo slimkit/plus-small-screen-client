@@ -347,28 +347,25 @@
           return;
         }
 
-        console.log(typeof FileReader === 'function');
-
-        if (typeof FileReader === 'function') {
-          console.time("reader.onload");
+        // ios 9.3... typeof FileReader => 'object'
+        if (typeof FileReader === 'undefined') {
+            this.$store.dispatch(NOTICE, cb => {
+              cb({
+                show: true,
+                status: false,
+                text: '系统太老了...',
+                time: 1500
+              })
+            });
+            return false;
+        } else {
           const reader = new window.FileReader();
           reader.onload = (event) => {
             this.imgSrc = event.target.result;
             this.$refs.cropper.replace(event.target.result);
             this.showCropper();
-            console.timeEnd('reader.onload');
           };
           reader.readAsDataURL(file);
-        } else {
-          this.$store.dispatch(NOTICE, cb => {
-            cb({
-              show: true,
-              status: false,
-              text: '系统太老了...',
-              time: 1500
-            })
-          });
-          return;
         }
       },
       // 获取裁剪后的图片信息
@@ -428,7 +425,7 @@
         let sexObj = {
           1: '男',
           2: '女',
-          3: '保密'
+          0: '保密'
         };
         return this.sex ? sexObj[this.sex] : '选择性别';
       },
@@ -437,9 +434,7 @@
         if(this.areaAbout.location) {
           text = this.areaAbout.location;
         } else {
-          const { datas: { 
-              location: { value: location = '' } = {}
-            } = {} } = this.userInfo;
+          const { datas: { location: { value: location = '' } = {} } = {} } = this.userInfo;
           if(location) {
             text = location;
           }
