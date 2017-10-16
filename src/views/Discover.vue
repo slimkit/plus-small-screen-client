@@ -28,6 +28,17 @@
             <RightArrowIcon height="18" width="18" color="#999" />
           </i>
         </li>
+        <li class="component-list" @click="changeUrl(`/group`)">
+          <i class="component-icon">
+            <ChannelIcon height="21" width="21" />
+          </i>
+          <section class="component-title">
+            圈子
+          </section>
+          <i class="component-entry">
+            <RightArrowIcon height="18" width="18" color="#999" />
+          </i>
+        </li>
         <!-- <li class="component-list" @click="changeUrl(`/channel`)">
           <i class="component-icon">
             <ChannelIcon height="21" width="21" />
