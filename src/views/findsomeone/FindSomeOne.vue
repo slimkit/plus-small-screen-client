@@ -61,8 +61,6 @@ import Search from '../../icons/Search';
 import BackIcon from '../../icons/Back';
 import Contacts from '../../icons/Contacts';
 
-import LoadMore from './LoadMore';
-
 import SearchPop from '../SearchPop/SearchPop';
 import SearchCity from '../SearchPop/SearchCity';
 import SearchPerson from '../SearchPop/SearchPerson';
@@ -78,7 +76,6 @@ const defaultNothing = resolveImage(require('../../statics/images/defaultNothing
 const FindSomeOne = {
     name: "FindSomeOne",
     components: {
-        LoadMore,
         BackIcon,
         Contacts,
         LoadingBlack,
