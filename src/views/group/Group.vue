@@ -93,6 +93,15 @@ export default {
       }
     }
   }
+  .group-nodatas{
+    width: 100%;
+    height: auto;
+    > img{
+        display: block;
+        margin: 20%;
+        width: 60%;
+    }
+  }
   .col-back--icon {
     display: flex;
     justify-content: flex-start;
