@@ -1,17 +1,18 @@
 <template>
     <div class="group-list">
-        <div id="spinner" v-if="loading">
+        <div id="spinner" v-show="loading">
             <div id="spinner-parent">
                 <div class="spinner-double-bounce-bounce2"></div>
                 <div class="spinner-double-bounce-bounce1"></div>
             </div>
         </div>
-        <mt-loadmore v-else :auto-fill="false" :bottomPullText="`上拉加载更多`" :bottomDropText="`释放加载更多`" :top-method="loadTop" :bottom-method="loadBottom" :bottomAllLoaded="bottomAllLoaded" ref="loadmore">
+        <mt-loadmore :auto-fill="false" :bottomPullText="`上拉加载更多`" :bottomDropText="`释放加载更多`" :top-method="loadTop" :bottom-method="loadBottom" :bottomAllLoaded="bottomAllLoaded" ref="loadmore">
             <div class="group-nodatas" v-if="noDatas">
                 <img :src="nothingImg" alt="暂无数据">
             </div>
             <template v-else>
                 <group-item v-for="(item,index) in groupList" :group='item' :key="index"></group-item>
+                <div v-show="bottomAllLoaded" class="no-more">没有更多</div>
             </template>
             <div slot="top" class="mint-loadmore-top">
                 <loading-icon></loading-icon>
@@ -37,7 +38,7 @@ export default {
         return({
             nothingImg,
             loading: true,
-            type: 'mine',
+            type: this.$route.params.type,
             groupList: [],
             bottomAllLoaded: false,
         })
@@ -49,7 +50,8 @@ export default {
     },
     watch: {
         '$route': function({ params: { type } }) {
-            this.type = type || 'mine';
+            this.type = type;
+            this.loading = true;
             this.loadData();
         }
     },
@@ -59,15 +61,17 @@ export default {
          * @param  {Boolean} merge
          */
         loadData(merge = false) {
-            this.loading = true;
             let params = {
                 limit: 15,
                 after: merge ? this.groupList.length : 0,
-            }
+            },
+
+            uri = createAPI('groups');
+
             if(this.type === "mine") {
-                params.user = (this.$storeLocal.get('UserLoginInfo') || {}).user_id;
+                uri = createAPI('groups/joined');
             }
-            addAccessToken().get(createAPI('groups'), { params }).then(({ data = [] }) => {
+            addAccessToken().get(uri, { params }).then(({ data = [] }) => {
                 this.loading = false;
                 this.bottomAllLoaded = data.length < params.limit;
                 if(merge) {

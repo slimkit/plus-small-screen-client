@@ -57,7 +57,6 @@ export default {
 
 <style lang="scss">
 .group {
-  height: 100vh;
   overflow: hidden;
   .group-content {
     padding-top: 46px;
@@ -101,6 +100,10 @@ export default {
         margin: 20%;
         width: 60%;
     }
+  }
+  .no-more{
+    padding: 10px;
+    text-align: center;
   }
   .col-back--icon {
     display: flex;
