@@ -176,7 +176,7 @@
     </transition>
       <!-- 选择城市 -->
       <search-pop v-model="areaAbout.showAreaSelect" :position="`right`" :searchfor="`USER_CITY`">
-        <template scope="search">
+        <template slot-scope="search">
           <SearchCity :keyword="search.keyword" :datas="search.datas" @closeSearch="areaAbout.showAreaSelect=false" v-model="areaAbout.location" />
         </template>
       </search-pop>

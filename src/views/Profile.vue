@@ -96,6 +96,22 @@
           <Icon type="ios-arrow-right"></Icon>
         </Col>
       </Row> -->
+      <Row :gutter="24" :class="$style.entryMenu" @click.native="handleCertification">
+        <Col span="3">
+          <SystemSettingIcon height="21" width="21" color="#59b6d7" />
+        </Col>
+        <Col span="10" :class="$style.menuText">
+          认证
+        </Col>
+        <Col span="6">
+          <span v-if="userCertification && userCertification.status == 1">已认证</span>
+          <span v-else-if="userCertification && userCertification.status == 0">待审核</span>
+          <span v-else>未认证</span>
+        </Col>
+        <Col span="5" :class="$style.rightIcon">
+          <RightArrowIcon height="18" width="18" color="#999" />
+        </Col>
+      </Row>
       <Row :gutter="24" :class="$style.entryMenu" @click.native="changeUrl('/users/systemSetting')">
         <Col span="3">
           <SystemSettingIcon height="21" width="21" color="#59b6d7" />
@@ -109,6 +125,42 @@
       </Row>
     </div>
     <ToolBar/>
+    <mt-popup
+      v-model="isShowCertification"
+      position="bottom"
+      style="width: 100%;"
+      :class="$style.CertificationPopup"
+    >
+      <div>
+        <Button 
+          size="large" 
+          :class="$style.CertificationOptions" 
+          type="text" 
+          :long="true"
+          @click="selectCertification('user')"
+        >
+          个人认证
+        </Button>
+        <Button 
+          size="large" 
+          :class="$style.CertificationOptions" 
+          type="text" 
+          :long="true"
+          @click="selectCertification('org')"
+        >
+          企业认证
+        </Button>
+        <Button  
+          size="large" 
+          :class="$style.CertificationOptions" 
+          type="text" 
+          :long="true"
+          @click="hideCertificationPopup"
+        >
+          取消
+        </Button>
+      </div>
+    </mt-popup>
   </div>
 </template>
 
@@ -125,7 +177,7 @@
   import RightArrowIcon from '../icons/RightArrow';
   import { resolveImage } from '../utils/resource';
   import lodash from 'lodash';
-  import { getUserInfo, getLoggedUserInfo } from '../utils/user';
+  import { getUserInfo, getLoggedUserInfo, getUserCertification } from '../utils/user';
   import { mapState } from 'vuex';
   import { CLEANMESSAGE } from '../stores/types';
 
@@ -145,7 +197,9 @@
     data: () => ({
       currentUser: 0, // 当前登录用户id
       userInfo: {}, // 当前登录用户信息
-      isWeiXin: TS_WEB.isWeiXin
+      userCertification: {}, //用户认证信息
+      isWeiXin: TS_WEB.isWeiXin,
+      isShowCertification: false,
     }),
     methods: {
       // 跳转方法，减少使用 router-link
@@ -155,6 +209,26 @@
           cb('fans');
         });
         changeUrl(url);
+      },
+      showCertificationPopup () {
+        this.isShowCertification = true;
+      },
+      hideCertificationPopup () {
+        this.isShowCertification = false;
+      },
+      handleCertification () {
+        let cer = this.userCertification;
+        if ( (lodash.isEmpty(cer)) 
+          || (!lodash.isEmpty(cer) && cer.status==2) ) {
+          this.showCertificationPopup();
+        } else {
+          this.changeUrl(`/users/certification/show`);
+        }
+      },
+      selectCertification (type) {
+        let cer = this.userCertification;
+        let state = (!lodash.isEmpty(cer) && cer.status == 2) ? 1 : 0;
+        this.changeUrl(`/users/certification?type=${type}&state=${state}`);
       }
     },
     computed: {
@@ -182,12 +256,16 @@
         const { extra = {} } = this.userInfo;
 
         return (extra ? extra.followers_count : 0);
-      }
+      },
     },
     created () {
       this.currentUser = TS_WEB.currentUserId;
       getLoggedUserInfo().then( user => {
         this.userInfo = { ...this.userInfo, ...user };
+      });
+      // 获取认证信息
+      getUserCertification().then(data => {
+        this.userCertification = data;
       });
     }
   };
@@ -273,7 +351,19 @@
         line-height: 1;
       }
     }
-    
+    .CertificationPopup {
+      width: 100%;
+      background: rgba(0, 0, 0, 0);
+      .CertificationOptions {
+        border-bottom: 1px solid #ededed;
+        color: #333;
+        border-radius: 0;
+        font-size: 16px;
+        &:last-child {
+          margin-top: 5px;
+        }
+      }
+    }
     .rightIcon {
       display: flex!important;
       justify-content: flex-end!important;

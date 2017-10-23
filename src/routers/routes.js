@@ -21,6 +21,8 @@ import UserFeeds from '../views/UserFeeds';
 import UserSetting from '../views/UserSetting';
 import Collections from '../views/Collections';
 import Relationship from '../views/Relationship';
+import UserCertification from '../views/UserCertification';
+import ShowUserCertification from '../views/ShowUserCertification'; 
 
 // 设置
 import AboutUs from '../views/AboutUs';
@@ -333,6 +335,28 @@ const routes = [
     meta: {
       title: '意见反馈',
       keywords: '意见反馈'
+    },
+    beforeEnter: (to, from, next) => {
+      requestAuth(to, from, next);
+    }
+  },{
+    path: '/users/certification',
+    component: UserCertification,
+    name: 'certification',
+    meta: {
+      title: '认证',
+      keywords: '认证'
+    },
+    beforeEnter: (to, from, next) => {
+      requestAuth(to, from, next);
+    }
+  },
+  {
+    path: '/users/certification/show',
+    component: ShowUserCertification,
+    meta: {
+      title: '认证',
+      keywords: '认证'
     },
     beforeEnter: (to, from, next) => {
       requestAuth(to, from, next);

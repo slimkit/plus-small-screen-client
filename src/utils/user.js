@@ -181,10 +181,25 @@ function getUsersInfo(user_ids) {
   });
 };
 
+function getUserCertification() {
+  return new Promise((resolve, reject) => {
+    addAccessToken().get(createAPI('user/certification'), {}, {
+        validateStatus: status => status == 200
+    })
+    .then(({ data } = {}) => {
+      resolve(data);
+    })
+    .catch(error => {
+      reject(error);
+    });
+  })
+}
+
 export {
   getUserInfo,
   getUsersInfo,
   unFollowingUser,
   followingUser,
-  getLoggedUserInfo
+  getLoggedUserInfo,
+  getUserCertification,
 };
