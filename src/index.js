@@ -6,6 +6,9 @@ import loading_img from './statics/images/image-loading.png';
 import 'swiper/dist/css/swiper.css';
 import VueAwesomeSwiper from 'vue-awesome-swiper';
 
+// 统一message处理
+import plusMessageBundle from 'plus-message-bundle';
+
 Vue.use(VueAwesomeSwiper);
 
 // 时区
@@ -25,12 +28,6 @@ import storeLocal from 'store';
 
 // bus
 import bus from './utils/bus';
-
-// Filters
-import * as filters from './filters';
-for (const k in filters) {
-  Vue.filter(k, filters[k]);
-}
 
 import App from './App';
 
@@ -90,6 +87,8 @@ Vue.directive('childfocus', {
 
 // 定义 localStorage 组件
 Vue.prototype.$storeLocal = storeLocal;
+// 定义 plusMessageBundle组件
+Vue.prototype.$MessageBundle = plusMessageBundle;
 
 const app = new Vue({
   router,
@@ -97,5 +96,8 @@ const app = new Vue({
   el: '#app',
   render: h => h(App)
 });
+
+// iview 全局消息提示默认配置
+app.$Message.config({top: 8, duration: 3});
 
 export { app, router };
