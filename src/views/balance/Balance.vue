@@ -9,7 +9,7 @@
     <header :class="['commonHeader', $style.commonHeader]" id="balance-header">
       <Row :gutter="24">
         <Col span="5" style="display: flex; justify-content: flex-start">
-          <BackIcon v-if="!isWeixin" @click.native="goBack()" height="21" width="21" color="#fff" />
+          <BackIcon v-if="!isWeixin" @click.native="$router.push('/users/profile')" height="21" width="21" color="#fff" />
         </Col>
         <Col span="12" class="title-col">
           <div>

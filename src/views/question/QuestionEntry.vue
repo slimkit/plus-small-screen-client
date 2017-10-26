@@ -3,7 +3,7 @@
     <header class="commonHeader">
       <Row :gutter="24">
         <Col span="4">
-          <BackIcon @click.native="goBack()" height="21" width="21" color="#999" />
+          <BackIcon @click.native="$router.push('/discover')" height="21" width="21" color="#999" />
         </Col>
         <Col span="16" :class="['title-col', $style.title]">
           <router-link to="/questions/questions">问答</router-link>
@@ -68,15 +68,6 @@
     components: {
       BackIcon,
       SearchIcon
-    },
-    methods: {
-      goBack () {
-        if(window.history.length < 2) {
-          this.$router.push('/discover');
-          return;
-        }
-        this.$router.back();
-      },
     }
   };
 
