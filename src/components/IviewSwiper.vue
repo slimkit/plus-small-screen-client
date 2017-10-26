@@ -9,11 +9,12 @@
     >
       <swiper-slide class="swiperSlide" v-for="(item, index) in list" :key="index">
         <div class="swiper-zoom-container" v-if="item.paid">
-          <img :data-src="item.url" class="swiper-lazy">
+          <img :data-src="`${item.url}?token=${token}`" class="swiper-lazy">
           <div class="swiper-lazy-preloader"></div>
         </div>
-        <div class="swiper-container" v-else>
+        <div class="swiper-container noRelative" v-else>
           <LockedImageForSwiper />
+          <span class="payButton">付费购买</span>
         </div>
       </swiper-slide>
       <div v-if="list.length > 1" class="swiper-pagination swiper-pagination-bullets" slot="pagination"></div>
@@ -24,10 +25,19 @@
 <script>
   import { swiper, swiperSlide } from 'vue-awesome-swiper'
   import { mapState } from 'vuex';
-  import { IMGSWIPER } from '../stores/types';
+  import { IMGSWIPER, FEEDSLIST } from '../stores/types';
   import LockedImageForSwiper from './LockedImageForSwiper';
+  import storeLocal from 'store';
+  import { createAPI, addAccessToken } from '../utils/request';
+  import PlusMessageBundle from '../utils/es';
+  import {showAmount} from '../utils/balance';
 
   const imageSwiper = {
+    data: () => ({
+      token: '',
+      goldName: window.TS_WEB.goldName,
+      ratio: 100
+    }),
     components: {
       swiper,
       swiperSlide,
@@ -37,6 +47,8 @@
       ...mapState({
         list: state => state.imageSwiper.imageSwiper.list,
         show: state => state.imageSwiper.imageSwiper.show,
+        source: state => state.imageSwiper.imageSwiper.source,
+        sourceType: state => state.imageSwiper.imageSwiper.sourceType,
         options: function (state) {
           let _this = this;
           return {
@@ -53,15 +65,20 @@
             watchSlidesVisibility: true,
             lazyLoading : true,
             preventLinksPropagation: false,
+            preventClicks: false,
+            updateOnImagesReady: true,
             onClick(swiper){
-              _this.hideSwiper();
+              _this.hideSwiper(swiper);
             }
           };
         }
       })
     },
     methods: {
-      hideSwiper () {
+      hideSwiper (swiper) {
+        const list = this.list;
+        const { activeIndex: index } = swiper;
+        const item = list[index];
         this.$store.dispatch(IMGSWIPER, cb => {
           cb({
             list: [],
@@ -69,14 +86,51 @@
             show: false
           });
         });
+        if ( item.paid_node && !item.paid ) {
+          this.$Modal.confirm({
+            title: '付费支付',
+            content: `<p>需要支付 ${showAmount(item.amount)} ${this.goldName}</p>`,
+            okText: '确认支付',
+            loading: true,
+            onOk: () => {
+              addAccessToken().post(createAPI(`purchases/${item.paid_node}`), {
+                validateStatus: status => status === 201                
+              })
+              .then(() => {
+                this.$Modal.remove();
+                this.$Message.success('支付成功');
+                list[index].paid = true;
+                list[index].url = item.url;
+                this.$store.getters[FEEDSLIST][this.source].images[index].paid = true;
+                this.$store.dispatch(IMGSWIPER, cb => {
+                  cb({
+                    list:list,
+                    value: index,
+                    show: true,
+                    source: this.source,
+                    sourceType: this.sourceType
+                  });
+                });
+              })
+              .catch( ({ response: { data, status } = {} }) => {
+                this.$Modal.remove();
+                this.$Message.error(PlusMessageBundle(data).getMessage());
+              })
+            }
+          });
+        }
       }
+    },
+    created () {
+      const { token = '' } = this.$storeLocal.get('UserLoginInfo') || {};
+      this.token = token;
     }
   }
 
   export default imageSwiper;
 </script>
 
-<style lang="scss">
+<style lang="less">
   .swiperRoot {
     overflow: auto;
     position: fixed!important;
@@ -107,6 +161,18 @@
   }
   .swiper-lazy-loaded {
     width: 100%!important;
+  }
+  .payButton {
+    color: #fff;
+    position: absolute;
+    padding: 4px 8px;
+    background-color: #59b6d7 ;
+    border-radius: 5px;
+    bottom: 10px;
+    left: calc(~"50% - 36px");
+  }
+  .noRelative {
+    position: initial;
   }
 
 </style>

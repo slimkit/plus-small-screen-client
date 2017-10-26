@@ -50,17 +50,17 @@
           <RightArrowIcon height="18" width="18" color="#999" />
         </Col>
       </Row>
-      <!-- <Row :gutter="24" :class="$style.entryMenu"  @click.native="changeUrl('/users/ranking')">
+      <Row :gutter="24" :class="$style.entryMenu" @click.native="changeUrl('/balance')">
         <Col span="3">
-          <RankingIcon :height="21" :width="21" color="#59b6d7" />
+          <ConnectionIcon :height="21" :width="21" color="#59b6d7" />
         </Col>
-        <Col span="16" :class="$style.menuText">
-          排行榜
+        <Col span="12" :class="$style.menuText">
+          钱包
         </Col>
-        <Col span="5"  :class="$style.rightIcon">
-          <RightArrowIcon height="18" width="18" color="#999" />
+        <Col span="9"  :class="$style.rightIcon">
+          <span :class="$style.balance">{{ showAmount(balance) }} {{ goldName }}</span><RightArrowIcon height="18" width="18" color="#ccc" />
         </Col>
-      </Row> -->
+      </Row>
       <Row :gutter="24" :class="$style.entryMenu" @click.native="changeUrl('/users/collections')">
         <Col span="3">
           <ConnectionIcon :height="21" :width="21" color="#59b6d7" />
@@ -85,17 +85,6 @@
           <RightArrowIcon height="18" width="18" color="#999" />
         </Col>
       </Row>
-      <!-- <Row :gutter="16" :class="$style.entryMenu">
-        <Col span="3">
-          <QuestionIcon :height="21" :width="21" color="#59b6d7" />
-        </Col>
-        <Col span="19" :class="$style.menuText">
-          Q&A
-        </Col>
-        <Col span="2" :class="$style.rightIcon">
-          <Icon type="ios-arrow-right"></Icon>
-        </Col>
-      </Row> -->
       <Row :gutter="24" :class="$style.entryMenu" @click.native="handleCertification">
         <Col span="3">
           <SystemSettingIcon height="21" width="21" color="#59b6d7" />
@@ -180,6 +169,7 @@
   import { getUserInfo, getLoggedUserInfo, getUserCertification } from '../utils/user';
   import { mapState } from 'vuex';
   import { CLEANMESSAGE } from '../stores/types';
+  import { showAmount } from '../utils/balance';
 
   const defaultAvatar = resolveImage(require('../statics/images/defaultAvatarx2.png'));
 
@@ -195,6 +185,7 @@
       RightArrowIcon
     },
     data: () => ({
+      goldName: window.TS_WEB.goldName,
       currentUser: 0, // 当前登录用户id
       userInfo: {}, // 当前登录用户信息
       userCertification: {}, //用户认证信息
@@ -203,6 +194,7 @@
     }),
     methods: {
       // 跳转方法，减少使用 router-link
+      showAmount,
       changeUrl,
       changeUrlFans (url) {
         this.$store.dispatch(CLEANMESSAGE, cb => {
@@ -257,6 +249,10 @@
 
         return (extra ? extra.followers_count : 0);
       },
+      balance () {
+        const { userInfo: { wallet: { balance = 0 } = {} } = {} } = this;
+        return balance;
+      }
     },
     created () {
       this.currentUser = TS_WEB.currentUserId;

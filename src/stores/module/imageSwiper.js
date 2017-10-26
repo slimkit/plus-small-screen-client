@@ -4,7 +4,9 @@ const state = {
   imageSwiper: {
     list: [],
     value: 0,
-    show: false
+    show: false,
+    source: 0,
+    sourceType: ''
   }
 };
 

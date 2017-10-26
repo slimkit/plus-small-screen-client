@@ -55,6 +55,21 @@ import FindNear from '../views/findsomeone/FindNear';
 import Group from "../views/group/Group";
 import GroupList from "../views/group/GroupList";
 
+// 钱包相关
+import Balance from '../views/balance/Balance';
+import BalanceRecords from '../views/balance/BalanceRecords';
+import BalanceWithdraw from '../views/balance/BalanceWithdraw';
+
+// 问答相关
+import QuestionEntry from '../views/question/QuestionEntry';
+import Questions from '../views/question/Questions';
+import TopicsList from '../views/question/TopicsList';
+import QuestionDetail from '../views/question/QuestionDetail';
+import QuestionList from '../views/question/QuestionListComponent';
+import TopicsListComponent from '../views/question/TopicsListComponent';
+import TopicDetail from '../views/question/TopicDetail';
+import TopicDetailQuestionsList from '../views/question/TopicDetailQuestionsList';
+
 import { requestAuth, CanNotGetInWhenLogged } from '../utils/auth';
 
 const routes = [
@@ -415,6 +430,101 @@ const routes = [
     beforeEnter: (to, from, next) => {
       requestAuth(to, from, next);
     }
+  },
+  {
+    path: '/balance',
+    component: Balance,
+    meta: {
+      title: '钱包'
+    },
+    beforeEnter: (to, from, next) => {
+      requestAuth(to, from, next);
+    }
+  },
+  {
+    path: '/balance/records',
+    component: BalanceRecords,
+    meta: {
+      title: '钱包细明'
+    },
+    beforeEnter: (to, from, next) => {
+      requestAuth(to, from, next);
+    }
+  },
+  {
+    path: '/balance/withdraws',
+    component: BalanceWithdraw,
+    meta: {
+      title: '提现记录'
+    },
+    beforeEnter: (to, from, next) => {
+      requestAuth(to, from, next);
+    }
+  },
+  {
+    path: '/questions',
+    component: QuestionEntry,
+    name: 'questionEntry',
+    meta: {
+      title: '问答'
+    },
+    redirect: '/questions/questions',
+    children: [
+      {
+        path: '/questions/questions',
+        component: Questions,
+        meta: {
+          title: '问答'
+        },
+        name: 'questions',
+        redirect: '/questions/questions/hot',
+        children: [
+          {
+            path: '/questions/questions/:type',
+            component: QuestionList,
+            name: 'QuestionList',
+            meta: {
+              title: '问题列表'
+            }
+          }
+        ]
+      },
+      {
+        path: '/questions/topics',
+        component: TopicsList,
+        name: 'topicsList',
+        meta: {
+          title: '问答话题'
+        },
+        redirect: '/questions/topics/all',
+        children: [
+          {
+            path: '/questions/topics/:type',
+            component: TopicsListComponent,
+            name: 'topicslistcomponent',
+            meta: {
+              title: '问答话题'
+            }
+          }
+        ]
+      }
+    ],
+  },
+  {
+    path: '/questions/topics/:topic_id',
+    component: TopicDetail,
+    name: 'topicDetail',
+    redirect: '/questions/topics/:topic_id/hot',
+    children: [
+      {
+        path: '/questions/topics/:topic_id/:type',
+        component: TopicDetailQuestionsList,
+        name: 'TopicDetailQuestionsList',
+        meta: {
+          title: '话题详情'
+        }
+      }
+    ]
   },
   { path: '*', redirect: '/' }
 ];

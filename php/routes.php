@@ -16,3 +16,9 @@ Route::namespace('Zhiyi\\Component\\ZhiyiPlus\\PlusComponentH5\\Controllers')
         	->where('route', '.*')
             ->name('H5');
     });
+Route::namespace('Zhiyi\\Component\\ZhiyiPlus\\PlusComponentH5\\Controllers')
+    ->prefix('/alipay/callback')
+    ->group(function ($api) {
+        $api->post('/', 'AlipayController@index')
+            ->name('alipayCallback');
+    });

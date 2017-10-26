@@ -3,7 +3,7 @@ import { SHOWPOST } from '../types';
 const state = {
   showPost: {
     show: false,
-    channelId: 0
+    textOnly: false // 只发布文字动态
   }
 };
 

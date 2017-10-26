@@ -24,6 +24,7 @@ body {
   font-family: @fontStack;
   background-color: @backgroundColor;
   color: @currentColor;
+  height: 100vh;
   &:focus, &:active {
     background-color: @backgroundColor;
   }
@@ -109,6 +110,12 @@ a {
   &:active, &:hover {
     color: @currentColor;
   }
+}
+.ivu-col-span-4-8 {
+  width: 20%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 div.nothingDefault {
   display: flex; 

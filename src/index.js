@@ -21,6 +21,7 @@ import VueWechatTitle from 'vue-wechat-title';
 import 'mint-ui/lib/style.css';
 import 'iview/dist/styles/iview.css';
 import iView from 'iview';
+import './styles/theme.less';
 import { TabContainer, TabContainerItem, Loadmore, Popup, Picker } from 'mint-ui';
 
 // 本地存储插件

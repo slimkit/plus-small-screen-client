@@ -28,7 +28,7 @@
       >
         <div class="feed-container">
           <div class="feed-container-content feed-background-color markdown-body">
-            <h3 v-if="detail.title" style="text-align: left; padding: 15px 8px 8px 8px; font-weight: 400; color: #59b6d7">{{ detail.title }}</h3>
+            <h2 v-if="detail.title" style="text-align: left; padding: 15px 12px 12px; font-weight: 400; color: #59b6d7">{{ detail.title }}</h2>
             <div>
               <section 
                 class="feedContainerContentTextNoPadding"
@@ -37,6 +37,7 @@
               </section>
             </div>
           </div>
+          <RewardEntry class="feed-background-color" v-if="detail.id" component="news" :rewardableId="detail.id" api-method="rewards" :source="detail" />
           <div class="feed-container-comments feed-background-color">
            <!--input box start-->
             <ul :class="$style.comment" v-if="commentFeed" ref="commentFeedInput">
@@ -235,12 +236,24 @@
   import markdownIt from 'markdown-it';
   import plusImageSyntax from 'markdown-it-plus-image';
   import hljs from 'highlight.js';
+  import RewardEntry from '../../components/RewardEntry';
 
   // markdown 解析
   const md = markdownIt({
+    breaks: true,
     html: false,
-    highlight: function(code) {
-        return hljs ? hljs.highlightAuto(code).value : code;
+    highlight: function (str, lang) {
+      if (lang && hljs.getLanguage(lang)) {
+        try {
+          return hljs.highlight(lang, str).value;
+        } catch (__) {}
+      }
+   
+      try {
+        return hljs.highlightAuto(str).value;
+      } catch (__) {}
+   
+      return ''; // use external default escaping 
     }
   }).use(plusImageSyntax, `/api/v2/files/`);
   // 引入样式库
@@ -259,7 +272,8 @@
       CommentIcon,
       ShareIcon,
       ConnectionIcon,
-      BackIcon
+      BackIcon,
+      RewardEntry
     },
     data: () => ({
       isWeixin: window.TS_WEB.isWeiXin,
@@ -300,7 +314,7 @@
     }),
     computed: {
       markedSubject(){
-        return (md.render(this.detail.subject));
+        return (md.render(`> [摘要]${this.detail.subject}`));
       },
       markedContent(){
         return (md.render(this.detail.content));
@@ -591,10 +605,24 @@
         )
         .then(({ data = {}}) => {
           this.detail = { ... data };
+          // 获取打赏总量
+          addAccessToken().get(
+            createAPI(`news/${news_id}/rewards/sum`),
+            {
+              validateStatus: status => status === 200
+            }
+          )
+          .then(({ data }) => {
+            this.detail = {
+              ...this.detail,
+              reward: {
+                ...data
+              }
+            }
+          });
           // 获取动态评论 前15条
           addAccessToken().get(
             createAPI(`news/${news_id}/comments`),
-            {},
             {
               validateStatus: status => status === 200
             }
@@ -627,8 +655,9 @@
     overflow-x: scroll; 
   }
   .feedContainerContentTextNoPadding img, feedContainerContentText img {
-    width: 100%!important;
-    height: auto!important;
+    /*width: 100vw!important;
+    margin-left: -12px;
+    height: auto!important;*/
   }
 </style>
 <style lang="less" scoped>
@@ -704,7 +733,7 @@
       }
     }
     .feedContainerContentTextNoPadding {
-      padding: 0 12px 20px 12px;
+      padding: 0 12px;
       word-break: break-all;
       p {
         margin: 8px 0;

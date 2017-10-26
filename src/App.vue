@@ -4,20 +4,25 @@
     <router-view></router-view>
     <NoticeText/>
     <IviewSwiper/>
+    <PrePost />
     <PostFeed/>
     <Confirm />
     <ShowFeedPopup />
+    <postQuestion />
     {{ imStatus }}
+    {{ setBodyOverflew }}
   </div>
 </template>
 <script>
   import NoticeText from './components/Notice';
   import IviewSwiper from './components/IviewSwiper';
+  import PrePost from './components/PrePost';
   import PostFeed from './components/PostFeed';
   import FeedDiggList from './components/FeedDiggList';
   import CommentInput from './components/CommentInput';
   import Confirm from './components/Confirm';
   import ShowFeedPopup from './components/ShowFeedPopup';
+  import postQuestion from './components/postQuestion';
 
   // im聊天相关
   import lodash from 'lodash';
@@ -26,6 +31,7 @@
   import { connect } from './utils/webSocket';
   import { getUserInfo, getLoggedUserInfo } from './utils/user';
   import { IMSTATUS, USERS_APPEND, MESSAGENOTICE, MESSAGEROOMS } from './stores/types';
+  import { mapState } from 'vuex';
 
   // indexedDB
   import Dexie from 'dexie';
@@ -38,21 +44,50 @@
       FeedDiggList,
       CommentInput,
       Confirm,
-      ShowFeedPopup
+      ShowFeedPopup,
+      PrePost,
+      postQuestion
     },
     computed: {
       imStatus () { // im状态监测
         if(! TS_WEB.socketUrl) return;
+
         let imstatus = this.$store.getters[IMSTATUS];
         let userLoginInfo = this.$storeLocal.get('UserLoginInfo') || {};
+
         if(lodash.keys(userLoginInfo).length && !imstatus.open && TS_WEB.webSocket !== null && TS_WEB.webSocket.readyState != 1 && TS_WEB.readyState != 0) {
           connect();
         }
+        
         return '';
       },
+      ...mapState({
+        showPost: state => state.showPost.showPost.show,
+        prePost: state => state.prePost.prePost.show,
+        imageSwiper: state => state.imageSwiper.imageSwiper.show
+      }),
 
+      setBodyOverflew () {
+        if (!this.showPost && !this.prePost && !this.imageSwiper) {
+          window.document.body.style.overflow = 'auto';
+        } else {
+          window.document.body.style.overflow = 'hidden';
+        }
+        return '';
+      }
     },
     created() {
+      addAccessToken().get(
+        createAPI('bootstrappers'),
+        {
+          validateStatus: status => status === 200
+        }
+      )
+      .then( ({ data }) => {
+        const { site: { gold_name: { name = '金币' }, reward: { status = true, amounts = '' } } = {} } = data;
+        this.$storeLocal.set('goldName', name);
+        this.$storeLocal.set('rewardSetting', { status: status, items: lodash.split(amounts, ',') });
+      })
       // 创建 DB;
       let db = new Dexie('ThinkSNS');
       db.debug = 'dexie';

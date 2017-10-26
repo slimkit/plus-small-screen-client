@@ -25,10 +25,10 @@
           </Col>
         </Row>
         <Row :gutter="24" :class="$style.entryMenu">
-          <Col span="8">
-            身份证号码
+          <Col span="6">
+            身份证号
           </Col>
-          <Col span="13">
+          <Col span="15">
             <input type="text"  size="large" v-model.trim="certification.number" placeholder="输入正确身份证号码" id="number" name="number" />
           </Col>
           <Col span="3">
@@ -51,7 +51,7 @@
             认证描述
           </Col>
           <Col span="15">
-            <input type="text"  size="large" v-model.trim="certification.desc" placeholder="该描述会影响审核，请慎重填写" id="desc" name="desc" />
+            <input type="text"  size="large" v-model.trim="certification.desc" placeholder="请慎重填写" id="desc" name="desc" />
           </Col>
           <Col span="3">
             <CloseIcon v-show="showDescImputIcon" height="21" width="21" color="#999" @click.native="clearInput('desc')" />

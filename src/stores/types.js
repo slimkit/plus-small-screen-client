@@ -12,6 +12,12 @@ export const NOTICE = 'notice';
  */
 export const IMGSWIPER = 'imgswiper';
 
+/**
+ *  展示发布选项
+ */
+
+export const SHOWPREPOST = 'showprepost';
+
 /** 
  * 展示动态发送框
  */
@@ -119,3 +125,8 @@ export const PREPENDNEWSTORESULT = 'prependnewstoresult';
 export const RESETKEYWORD = 'resetkeyword';
 export const RESULTIDS = 'resultids';
 export const ADDRESULTIDS = 'addresultids';
+
+/**
+ * question about
+ */
+export const SHOWQUESTIONPOST = 'showquextionpost';

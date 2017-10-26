@@ -14,7 +14,7 @@
         </router-link>
       </Col>
       <Col :span="4" :class="$style.menuItem" class="plus-parent">
-          <PlusIcon @click.native="showPost" height="34" width="34" color="#fff" />
+          <PlusIcon @click.native="showPrePost" height="34" width="34" color="#fff" />
       </Col>
       <Col :span="5" :class="$style.menuItem">
         <router-link class="router-link" to="/users/message">
@@ -42,7 +42,7 @@
 
 <script>
   import router from '../routers/index';
-  import { SHOWPOST, TOTALMESSAGELISTS, MESSAGENOTICE } from '../stores/types';
+  import { SHOWPREPOST, TOTALMESSAGELISTS, MESSAGENOTICE } from '../stores/types';
   import HomeIcon from '../icons/Home';
   import DiscoverIcon from '../icons/Discover';
   import MessageIcon from '../icons/Message';
@@ -59,12 +59,10 @@
       PlusIcon
     },
     methods: {
-      showPost () {
-        this.$store.dispatch(SHOWPOST, cb => {
-          cb({
-            show: true
-          })
-        })
+      showPrePost () {
+        this.$store.dispatch(SHOWPREPOST, cb => {
+          cb(true)
+        });
       }
     },
     computed: {

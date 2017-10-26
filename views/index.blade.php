@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" id="html-root">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,6 +8,38 @@
   <script src="https://webapi.amap.com/maps?v=1.3&key=abb777bcccf278aa589076944112267e"></script>
   <link rel="stylesheet" href="{{ mix('css/app.css', 'assets/h5') }}" />
   <style>
+    body > textarea {
+      padding-top: 0!important;
+      display: none!important;
+    }
+    /*********************** markdown 样式重构 *******************/
+    .markdown-body {
+      font-size: 14px;
+    }
+    .markdown-body h2, .markdown-body h1 {
+      border-bottom: none;
+      margin-bottom: 8px;
+    }
+    .markdown-body blockquote {
+      background: #EAEDF1;
+      padding: .5em 1em;
+    }
+    .markdown-body img {
+      width: 100vw;
+      max-width: 100vw;
+      height: auto;
+      margin-left: -12px;
+    }
+    .markdown-body blockquote>:last-child {
+      font-size: 14px;
+    }
+    .markdown-body ol {
+      padding-left:  1em;
+    }
+    .markdown-body ol li {
+      list-style-type: decimal;
+    }
+    /********************* markdown 样式重构 end *******************/
     #spinner-root {
       position: fixed;
       top: 0;
@@ -79,11 +111,12 @@
       'loaded' => false,
       'isWeiXin' => false,
       'currentUserId' => 0,
-      'dataBase' => null
+      'dataBase' => null,
+      'goldName' => $goldName
     ]) !!}
   </script>
 </head>
-<body id="body-root" onload="hideLoading()">
+<body onload="hideLoading()">
   <div id="app"></div>
   <section id="root-loading">
     <div id="spinner-root">

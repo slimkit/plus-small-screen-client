@@ -1,222 +1,372 @@
 <template>
-  <section style="width: 68vw; position: relative; margin-bottom: 8px; display: inherit">
-    <img :style="`width: 100%; height: ${imageHeight}; object-fit: cover; max-height: 80vw;`" v-if="imageSize == 1 && imageObject[0].paid" @click.stop="showSwiper(0)"  v-lazy="imageObject[0].url" />
-    <LockedImage :single="true" v-if="imageSize==1 && !imageObject[0].paid" @click.native.stop ="showSwiper(0)"/>
+  <section 
+    style="width: 68vw; position: relative; margin-bottom: 8px; display: inherit"
+  >
+    <img 
+      :style="`width: 100%; height: ${imageHeight}; object-fit: cover; max-height: 80vw;`" 
+      v-if="imageSize == 1" 
+      @click.stop="imageObject[0].paid ? showSwiper(0) : showPayDialog(imageObject[0], 0)"  
+      v-lazy="imageObject[0].url"
+    />
     <div style="width: 100%; display: flex;" v-if="imageSize == 2">
       <div style="width: 34vw;" :class="$style.showImgBox">
-        <img v-if="imageObject[0].paid" :class="$style.perFeedImg" @click.stop="showSwiper(0)"  v-lazy="imageObject[0].url" />
-          <LockedImage v-else @click.native.stop="showSwiper(0)" />
+        <img
+          :class="$style.perFeedImg"
+          @click.stop="imageObject[0].paid ? showSwiper(0) : showPayDialog(imageObject[0], 0)"
+          v-lazy="imageObject[0].url"
+        />
       </div>
       <div style="width: 34vw;" :class="$style.showImgBox">
-        <img :class="$style.perFeedImg"  v-if="imageObject[1].paid" @click.stop="showSwiper(1)"  v-lazy="imageObject[1].url" />
-          <LockedImage v-else @click.native.stop="showSwiper(1)"/>
+        <img 
+          :class="$style.perFeedImg"
+          @click.stop="imageObject[1].paid ? showSwiper(1) : showPayDialog(imageObject[1], 1)"
+          v-lazy="imageObject[1].url"
+        />
       </div>
     </div>
     <div style="width: 100%; display: flex;" v-if="imageSize == 3">
       <div style="width: 33.3333%;" :class="$style.showImgBox">
-        <img   v-if="imageObject[0].paid" :class="$style.perFeedImg" @click.stop="showSwiper(0)"  v-lazy="imageObject[0].url" />
-          <LockedImage v-else @click.native.stop="showSwiper(0)"/>
+        <img 
+          :class="$style.perFeedImg" 
+          @click.stop="imageObject[0].paid ? showSwiper(0) : showPayDialog(imageObject[0], 0)"
+          v-lazy="imageObject[0].url" 
+        />
       </div>
       <div style="width: 33.3333%;" :class="$style.showImgBox">
-        <img :class="$style.perFeedImg"   v-if="imageObject[1].paid" @click.stop="showSwiper(1)"  v-lazy="imageObject[1].url" />
-          <LockedImage v-else @click.native.stop="showSwiper(1)"/>
+        <img 
+          :class="$style.perFeedImg"
+          @click.stop="imageObject[1].paid ? showSwiper(1) : showPayDialog(imageObject[1], 1)"
+          v-lazy="imageObject[1].url"
+        />
       </div>
       <div style="width: 33.3333%;" :class="$style.showImgBox">
-        <img :class="$style.perFeedImg"   v-if="imageObject[2].paid" @click.stop="showSwiper(2)"  v-lazy="imageObject[2].url" />
-          <LockedImage v-else @click.native.stop="showSwiper(2)" />
+        <img 
+          :class="$style.perFeedImg"
+          @click.stop="imageObject[2].paid ? showSwiper(2) : showPayDialog(imageObject[2], 2)"
+          v-lazy="imageObject[2].url" 
+        />
       </div>
     </div>
     <div style="width: 100%; display: flex; flex-wrap: wrap;" v-if="imageSize == 4">
       <div style="width: 34vw" :class="$style.showImgBox">
-        <img :class="$style.perFeedImg"   v-if="imageObject[0].paid" @click.stop="showSwiper(0)"  v-lazy="imageObject[0].url" />
-          <LockedImage v-else @click.native.stop="showSwiper(0)" />
+        <img
+          :class="$style.perFeedImg"
+          @click.stop="imageObject[0].paid ? showSwiper(0) : showPayDialog(imageObject[0], 0)"
+          v-lazy="imageObject[0].url"
+        />
       </div>
       <div style="width: 34vw;" :class="$style.showImgBox">
-        <img :class="$style.perFeedImg"   v-if="imageObject[1].paid" @click.stop="showSwiper(1)"  v-lazy="imageObject[1].url" />
-          <LockedImage v-else @click.native.stop="showSwiper(1)" />
+        <img
+          :class="$style.perFeedImg"
+          @click.stop="imageObject[1].paid ? showSwiper(1) : showPayDialog(imageObject[1], 1)"
+          v-lazy="imageObject[1].url"
+        />
       </div>
       <div style="width: 34vw;" :class="$style.showImgBox">
-        <img :class="$style.perFeedImg" v-if="imageObject[2].paid" @click.stop="showSwiper(2)"  v-lazy="imageObject[2].url" />
-          <LockedImage v-else @click.native.stop="showSwiper(2)" />
+        <img
+          :class="$style.perFeedImg"
+          @click.stop="imageObject[2].paid ? showSwiper(2) : showPayDialog(imageObject[2], 2)"
+          v-lazy="imageObject[2].url"
+        />
       </div>
       <div style="width: 34vw;" :class="$style.showImgBox">
-        <img :class="$style.perFeedImg"  v-if="imageObject[3].paid" @click.stop="showSwiper(3)"  v-lazy="imageObject[3].url" />
-          <LockedImage v-else @click.native.stop="showSwiper(3)" />
+        <img
+          :class="$style.perFeedImg"
+          @click.stop="imageObject[3].paid ? showSwiper(3) : showPayDialog(imageObject[3], 3)"
+          v-lazy="imageObject[3].url"
+        />
       </div>
     </div>
     <div style="width: 100%; display: flex; flex-wrap: wrap;" v-if="imageSize == 5">
       <div style="width: 66.6666%" :class="$style.showImgBox">
-        <img :class="$style.perFeedImg"  v-if="imageObject[0].paid" @click.stop="showSwiper(0)"  v-lazy="imageObject[0].url" />
-          <LockedImage v-else @click.native.stop="showSwiper(2)" />
+        <img
+          :class="$style.perFeedImg"
+          @click.stop="imageObject[0].paid ? showSwiper(0) : showPayDialog(imageObject[0], 0)"
+          v-lazy="imageObject[0].url"
+        />
       </div>
       <div style="width: 33.3333%">
         <div style="width: 100%; padding-bottom: 2px;" :class="$style.showImgBox">
-          <img :class="$style.perFeedImg"  v-if="imageObject[1].paid" @click.stop="showSwiper(1)"  v-lazy="imageObject[1].url" />
-          <LockedImage v-else  @click.native.stop="showSwiper(1)" />
+          <img
+            :class="$style.perFeedImg"
+            @click.stop="imageObject[1].paid ? showSwiper(1) : showPayDialog(imageObject[1], 1)"
+            v-lazy="imageObject[1].url"
+          />
         </div>
         <div style="width: 100% padding-bottom: 2px;" :class="$style.showImgBox">
-          <img :class="$style.perFeedImg"  v-if="imageObject[2].paid" @click.stop="showSwiper(2)"  v-lazy="imageObject[2].url" />
-          <LockedImage v-else  @click.native.stop="showSwiper(2)" />
+          <img
+            :class="$style.perFeedImg"
+            @click.stop="imageObject[2].paid ? showSwiper(2) : showPayDialog(imageObject[2], 2)"
+            v-lazy="imageObject[2].url"
+          />
         </div>
       </div>
       <div style="width: 34vw;" :class="$style.showImgBox">
-        <img :class="$style.perFeedImg"  v-if="imageObject[3].paid" @click.stop="showSwiper(3)"  v-lazy="imageObject[3].url" />
-          <LockedImage v-else  @click.native.stop="showSwiper(3)" />
+        <img
+          :class="$style.perFeedImg"
+          @click.stop="imageObject[3].paid ? showSwiper(3) : showPayDialog(imageObject[3], 3)"
+          v-lazy="imageObject[3].url"
+        />
       </div>
       <div style="width: 34vw;" :class="$style.showImgBox">
-        <img :class="$style.perFeedImg"  v-if="imageObject[4].paid" @click.stop="showSwiper(4)"  v-lazy="imageObject[4].url" />
-        <LockedImage v-else   @click.native.stop="showSwiper(4)" />
+        <img
+          :class="$style.perFeedImg"
+          @click.stop="imageObject[4].paid ? showSwiper(4) : showPayDialog(imageObject[4], 4)"
+          v-lazy="imageObject[4].url"
+        />
       </div>
     </div>
     <div style="width: 100%; display: flex; flex-wrap: wrap;" v-if="imageSize == 6">
       <div style="width: 66.6666%" :class="$style.showImgBox">
-        <img :class="$style.perFeedImg"  v-if="imageObject[0].paid" @click.stop="showSwiper(0)"  v-lazy="imageObject[0].url" />
-        <LockedImage v-else  @click.native.stop="showSwiper(0)" />
+        <img
+          :class="$style.perFeedImg"
+          @click.stop="imageObject[0].paid ? showSwiper(0) : showPayDialog(imageObject[0], 0)"
+          v-lazy="imageObject[0].url"
+        />
       </div>
       <div style="width: 33.3333%">
         <div style="width: 100%; padding-bottom: 2px;" :class="$style.showImgBox">
-          <img :class="$style.perFeedImg"  v-if="imageObject[1].paid" @click.stop="showSwiper(1)"  v-lazy="imageObject[1].url" />
-          <LockedImage v-else  @click.native.stop="showSwiper(1)" />
+          <img
+            :class="$style.perFeedImg"
+            @click.stop="imageObject[1].paid ? showSwiper(1) : showPayDialog(imageObject[1], 1)"
+            v-lazy="imageObject[1].url"
+          />
         </div>
         <div style="width: 100% padding-bottom: 2px;" :class="$style.showImgBox">
-          <img :class="$style.perFeedImg"  v-if="imageObject[2].paid" @click.stop="showSwiper(2)"  v-lazy="imageObject[2].url" />
-          <LockedImage v-else  @click.native.stop="showSwiper(2)" />
+          <img
+            :class="$style.perFeedImg"
+            @click.stop="imageObject[2].paid ? showSwiper(2) : showPayDialog(imageObject[2], 2)"
+            v-lazy="imageObject[2].url"
+          />
         </div>
       </div>
       <div style="width: 33.3333%;" :class="$style.showImgBox">
-        <img :class="$style.perFeedImg"  v-if="imageObject[3].paid" @click.stop="showSwiper(3)"  v-lazy="imageObject[3].url" />
-        <LockedImage v-else  @click.native.stop="showSwiper(3)" />
+        <img
+          :class="$style.perFeedImg"
+          @click.stop="imageObject[3].paid ? showSwiper(3) : showPayDialog(imageObject[3], 3)"
+          v-lazy="imageObject[3].url"
+        />
       </div>
       <div style="width: 33.3333%;" :class="$style.showImgBox">
-        <img :class="$style.perFeedImg"  v-if="imageObject[4].paid" @click.stop="showSwiper(4)"  v-lazy="imageObject[4].url" />
-        <LockedImage v-else  @click.native.stop="showSwiper(4)" />
+        <img
+          :class="$style.perFeedImg"
+          @click.stop="imageObject[4].paid ? showSwiper(4) : showPayDialog(imageObject[4], 4)"
+          v-lazy="imageObject[4].url"
+        />
       </div>
       <div style="width: 33.3333%;" :class="$style.showImgBox">
-        <img :class="$style.perFeedImg"  v-if="imageObject[5].paid" @click.stop="showSwiper(5)"  v-lazy="imageObject[5].url" />
-        <LockedImage v-else  @click.native.stop="showSwiper(5)" />
+        <img
+          :class="$style.perFeedImg"
+          @click.stop="imageObject[5].paid ? showSwiper(5) : showPayDialog(imageObject[5], 5)"
+          v-lazy="imageObject[5].url"
+        />
       </div>
     </div>
     <div style="width: 100%; display: flex; flex-wrap: wrap;" v-if="imageSize == 7">
       <div style="width: 34vw">
         <div style="width: 100%" :class="$style.showImgBox">
-          <img :class="$style.perFeedImg"  v-if="imageObject[0].paid" @click.stop="showSwiper(0)"  v-lazy="imageObject[0].url" />
-          <LockedImage v-else  @click.native.stop="showSwiper(0)" />
+          <img
+            :class="$style.perFeedImg"
+            @click.stop="imageObject[0].paid ? showSwiper(0) : showPayDialog(imageObject[0], 0)"
+            v-lazy="imageObject[0].url"
+          />
         </div>
         <div style="width: 100%" :class="$style.showImgBox">
-          <img :class="$style.perFeedImg"  v-if="imageObject[3].paid" @click.stop="showSwiper(3)"  v-lazy="imageObject[3].url" />
-          <LockedImage v-else  @click.native.stop="showSwiper(3)" />
+          <img
+            :class="$style.perFeedImg"
+            @click.stop="imageObject[3].paid ? showSwiper(3) : showPayDialog(imageObject[3], 3)"
+            v-lazy="imageObject[3].url"
+          />
         </div>
       </div>
       <div style="width: 34vw; display: flex; flex-wrap: wrap;">
         <div style="width: 50%; padding-bottom: 2px;" :class="$style.showImgBox">
-          <img :class="$style.perFeedImg" v-if="imageObject[1].paid" @click.stop="showSwiper(1)"  v-lazy="imageObject[1].url" />
-          <LockedImage v-else  @click.native.stop="showSwiper(1)" />
+          <img
+            :class="$style.perFeedImg"
+            @click.stop="imageObject[1].paid ? showSwiper(1) : showPayDialog(imageObject[1], 1)"
+            v-lazy="imageObject[1].url"
+          />
         </div>
         <div style="width: 50%; padding-bottom: 2px;" :class="$style.showImgBox">
-          <img :class="$style.perFeedImg" v-if="imageObject[2].paid" @click.stop="showSwiper(2)"  v-lazy="imageObject[2].url" />
-        <LockedImage v-else  @click.native.stop="showSwiper(2)" />
+          <img
+            :class="$style.perFeedImg"
+            @click.stop="imageObject[2].paid ? showSwiper(2) : showPayDialog(imageObject[2], 2)"
+            v-lazy="imageObject[2].url"
+          />
         </div>
         <div style="width: 100%;" :class="$style.showImgBox">
-          <img :class="$style.perFeedImg" v-if="imageObject[4].paid" @click.stop="showSwiper(4)"  v-lazy="imageObject[4].url" />
-          <LockedImage v-else  @click.native.stop="showSwiper(4)" />
+          <img
+            :class="$style.perFeedImg"
+            @click.stop="imageObject[4].paid ? showSwiper(4) : showPayDialog(imageObject[4], 4)"
+            v-lazy="imageObject[4].url"
+          />
         </div>
         <div style="width: 50%;" :class="$style.showImgBox">
-          <img :class="$style.perFeedImg" v-if="imageObject[5].paid" @click.stop="showSwiper(5)"  v-lazy="imageObject[5].url" />
-          <LockedImage v-else  @click.native.stop="showSwiper(5)" />
+          <img
+            :class="$style.perFeedImg"
+            @click.stop="imageObject[5].paid ? showSwiper(5) : showPayDialog(imageObject[5], 5)"
+            v-lazy="imageObject[5].url"
+          />
         </div>
         <div style="width: 50%;" :class="$style.showImgBox">
-          <img :class="$style.perFeedImg" v-if="imageObject[6].paid" @click.stop="showSwiper(6)"  v-lazy="imageObject[6].url" />
-          <LockedImage v-else  @click.native.stop="showSwiper(6)" />
+          <img
+            :class="$style.perFeedImg"
+            @click.stop="imageObject[6].paid ? showSwiper(6) : showPayDialog(imageObject[6], 6)"
+            v-lazy="imageObject[6].url"
+          />
         </div>
       </div>
     </div>
     <div style="width: 100%; display: flex; flex-wrap: wrap;" v-if="imageSize == 8">
       <div style="width: 33.3333%" :class="$style.showImgBox">
-        <img :class="$style.perFeedImg" v-if="imageObject[0].paid" @click.stop="showSwiper(0)"  v-lazy="imageObject[0].url" />
-        <LockedImage v-else  @click.native.stop="showSwiper(0)" />
+        <img
+          :class="$style.perFeedImg"
+          @click.stop="imageObject[0].paid ? showSwiper(0) : showPayDialog(imageObject[0], 0)"
+          v-lazy="imageObject[0].url"
+        />
       </div>
       <div style="width: 33.3333%; padding-bottom: 2px;" :class="$style.showImgBox">
-        <img :class="$style.perFeedImg" v-if="imageObject[1].paid" @click.stop="showSwiper(1)"  v-lazy="imageObject[1].url" />
-        <LockedImage v-else  @click.native.stop="showSwiper(1)" />
+        <img
+          :class="$style.perFeedImg"
+          @click.stop="imageObject[1].paid ? showSwiper(1) : showPayDialog(imageObject[1], 1)"
+          v-lazy="imageObject[1].url"
+        />
       </div>
       <div style="width: 33.3333%; padding-bottom: 2px;" :class="$style.showImgBox">
-        <img :class="$style.perFeedImg" v-if="imageObject[2].paid" @click.stop="showSwiper(2)"  v-lazy="imageObject[2].url" />
-        <LockedImage v-else  @click.native.stop="showSwiper(2)" />
+        <img
+          :class="$style.perFeedImg"
+          @click.stop="imageObject[2].paid ? showSwiper(2) : showPayDialog(imageObject[2], 2)"
+          v-lazy="imageObject[2].url"
+        />
       </div>
       <div style="width: 50%;" :class="$style.showImgBox">
-        <img :class="$style.perFeedImg" v-if="imageObject[3].paid" @click.stop="showSwiper(3)"  v-lazy="imageObject[3].url" />
-        <LockedImage v-else  @click.native.stop="showSwiper(3)" />
+        <img
+          :class="$style.perFeedImg"
+          @click.stop="imageObject[3].paid ? showSwiper(3) : showPayDialog(imageObject[3], 3)"
+          v-lazy="imageObject[3].url"
+        />
       </div>
       <div style="width: 50%;" :class="$style.showImgBox">
-        <img :class="$style.perFeedImg" v-if="imageObject[4].paid" @click.stop="showSwiper(4)"  v-lazy="imageObject[4].url" />
-        <LockedImage v-else  @click.native.stop="showSwiper(4)" />
+        <img
+          :class="$style.perFeedImg"
+          @click.stop="imageObject[4].paid ? showSwiper(4) : showPayDialog(imageObject[4], 4)"
+          v-lazy="imageObject[4].url"
+        />
       </div>
       <div style="width: 33.3333%;" :class="$style.showImgBox">
-        <img :class="$style.perFeedImg" v-if="imageObject[5].paid" @click.stop="showSwiper(5)"  v-lazy="imageObject[5].url" />
-        <LockedImage v-else  @click.native.stop="showSwiper(5)" />
+        <img
+          :class="$style.perFeedImg"
+          @click.stop="imageObject[5].paid ? showSwiper(5) : showPayDialog(imageObject[5], 5)"
+          v-lazy="imageObject[5].url"
+        />
       </div>
       <div style="width: 33.3333%;" :class="$style.showImgBox">
-        <img :class="$style.perFeedImg" v-if="imageObject[6].paid" @click.stop="showSwiper(6)"  v-lazy="imageObject[6].url" />
-        <LockedImage v-else  @click.native.stop="showSwiper(6)" />
+        <img
+          :class="$style.perFeedImg"
+          @click.stop="imageObject[6].paid ? showSwiper(6) : showPayDialog(imageObject[6], 6)"
+          v-lazy="imageObject[6].url"
+        />
       </div>
       <div style="width: 33.3333%;" :class="$style.showImgBox">
-        <img :class="$style.perFeedImg" v-if="imageObject[7].paid" @click.stop="showSwiper(7)"  v-lazy="imageObject[7].url" />
-        <LockedImage v-else  @click.native.stop="showSwiper(7)" />
+        <img
+          :class="$style.perFeedImg"
+          @click.stop="imageObject[7].paid ? showSwiper(7) : showPayDialog(imageObject[7], 7)"
+          v-lazy="imageObject[7].url"
+        />
       </div>
     </div>
     <div style="width: 100%; display: flex; flex-wrap: wrap;" v-if="imageSize == 9">
       <div style="width: 33.3333%" :class="$style.showImgBox">
-        <img :class="$style.perFeedImg" v-if="imageObject[0].paid" @click.stop="showSwiper(0)"  v-lazy="imageObject[0].url" />
-        <LockedImage v-else  @click.native.stop="showSwiper(0)" />
+        <img
+          :class="$style.perFeedImg"
+          @click.stop="imageObject[0].paid ? showSwiper(0) : showPayDialog(imageObject[0], 0)"
+          v-lazy="imageObject[0].url"
+        />
       </div>
       <div style="width: 33.3333%; padding-bottom: 2px;" :class="$style.showImgBox">
-        <img :class="$style.perFeedImg" v-if="imageObject[1].paid" @click.stop="showSwiper(1)"  v-lazy="imageObject[1].url" />
-        <LockedImage v-else  @click.native.stop="showSwiper(1)" />
+        <img
+          :class="$style.perFeedImg"
+          @click.stop="imageObject[1].paid ? showSwiper(1) : showPayDialog(imageObject[1], 1)"
+          v-lazy="imageObject[1].url"
+        />
       </div>
       <div style="width: 33.3333%; padding-bottom: 2px;" :class="$style.showImgBox">
-        <img :class="$style.perFeedImg" v-if="imageObject[2].paid" @click.stop="showSwiper(2)"  v-lazy="imageObject[2].url" />
-        <LockedImage v-else  @click.native.stop="showSwiper(2)" />
+        <img
+          :class="$style.perFeedImg"
+          @click.stop="imageObject[2].paid ? showSwiper(2) : showPayDialog(imageObject[2], 2)"
+          v-lazy="imageObject[2].url"
+        />
       </div>
       <div style="width: 33.3333%;" :class="$style.showImgBox">
-        <img :class="$style.perFeedImg" v-if="imageObject[3].paid" @click.stop="showSwiper(3)"  v-lazy="imageObject[3].url" />
-        <LockedImage v-else  @click.native.stop="showSwiper(3)" />
+        <img
+          :class="$style.perFeedImg"
+          @click.stop="imageObject[3].paid ? showSwiper(3) : showPayDialog(imageObject[3], 3)"
+          v-lazy="imageObject[3].url"
+        />
       </div>
       <div style="width: 33.3333%;" :class="$style.showImgBox">
-        <img :class="$style.perFeedImg" v-if="imageObject[4].paid" @click.stop="showSwiper(4)"  v-lazy="imageObject[4].url" />
-        <LockedImage v-else  @click.native.stop="showSwiper(4)" />
+        <img
+          :class="$style.perFeedImg"
+          @click.stop="imageObject[4].paid ? showSwiper(4) : showPayDialog(imageObject[4], 4)"
+          v-lazy="imageObject[4].url"
+        />
       </div>
       <div style="width: 33.3333%;" :class="$style.showImgBox">
-        <img :class="$style.perFeedImg" v-if="imageObject[5].paid" @click.stop="showSwiper(5)"  v-lazy="imageObject[5].url" />
-        <LockedImage v-else  @click.native.stop="showSwiper(5)" />
+        <img
+          :class="$style.perFeedImg"
+          @click.stop="imageObject[5].paid ? showSwiper(5) : showPayDialog(imageObject[5], 5)"
+          v-lazy="imageObject[5].url"
+        />
       </div>
       <div style="width: 33.3333%;" :class="$style.showImgBox">
-        <img :class="$style.perFeedImg" v-if="imageObject[6].paid" @click.stop="showSwiper(6)"  v-lazy="imageObject[6].url" />
-        <LockedImage v-else  @click.native.stop="showSwiper(6)" />
+        <img
+          :class="$style.perFeedImg"
+          @click.stop="imageObject[6].paid ? showSwiper(6) : showPayDialog(imageObject[6], 6)"
+          v-lazy="imageObject[6].url"
+        />
       </div>
       <div style="width: 33.3333%;" :class="$style.showImgBox">
-        <img v-if="imageObject[7].paid" :class="$style.perFeedImg" @click.stop="showSwiper(7)"  v-lazy="imageObject[7].url" />
-        <LockedImage v-else  @click.native.stop="showSwiper(7)" />
+        <img
+          @click.stop="imageObject[7].paid ? showSwiper(7) : showPayDialog(imageObject[7], 7)"
+          :class="$style.perFeedImg"
+          v-lazy="imageObject[7].url"
+        />
       </div>
       <div style="width: 33.3333%;" :class="$style.showImgBox">
-        <img v-if="imageObject[8].paid" :class="$style.perFeedImg" @click.stop="showSwiper(8)"  v-lazy="imageObject[8].url" />
-        <LockedImage v-else  @click.native.stop="showSwiper(8)" />
+        <img
+          @click.stop="imageObject[8].paid ? showSwiper(8) : showPayDialog(imageObject[8], 8)"
+          :class="$style.perFeedImg"
+          v-lazy="imageObject[8].url"
+        />
       </div>
     </div>
   </section>
 </template>
 
 <script>
-  import { createAPI } from '../utils/request';
-  import { IMGSWIPER } from '../stores/types';
+  import { IMGSWIPER, FEEDSLIST } from '../stores/types';
   import buildURL from 'axios/lib/helpers/buildURL';
   import LockedImage from './LockedImage';
+  import { createAPI, addAccessToken } from '../utils/request';
+  import PlusMessageBundle from '../utils/es';
+  import storeLocal from 'store';
+  import {showAmount} from '../utils/balance';
 
+  const { token = '' } = storeLocal.get('UserLoginInfo') || {};
   const feedImages = {
+    data: () => ({
+      open: false,
+      amount: 0,
+      token: '',
+      ratio: 100,
+      goldName: window.TS_WEB.goldName
+    }),
     components: {
       LockedImage
     },
     props: [
-      'storages'
+      'storages',
+      'feed'
     ],
     computed: {
       imageSize () {
@@ -229,17 +379,25 @@
           return (parseInt(68 / rate) > 80 ? 80 : parseInt(68 / rate)) + 'vw';
         }
       },
+      showAmount() {
+        return this.amount;
+      },
       imageObject() {
-        let storages = this.storages;
+        const { storages } = this;
         return storages.map( (storage) => {
           if(storage.paid_node && !storage.paid) { // 未付费
             return {
-              paid: false
+              paid: false,
+              paid_node: storage.paid_node,
+              amount: storage.amount,
+              url: buildURL(createAPI(`files/${storage.file}`), {w: 250, h: 250, token: this.token})
             };
           } else { // 已付费
             return {
               paid: true,
-              url: buildURL(createAPI(`files/${storage.file}`), {w: 200, h: 200})
+              paid_node: storage.paid_node,
+              amount: storage. amount,
+              url: buildURL(createAPI(`files/${storage.file}`), {w: 300, h: 300, token: this.token})
             };
           }
         });
@@ -257,16 +415,55 @@
           cb({
             list:images,
             value: index,
-            show: true
+            show: true,
+            source: this.feed,
+            sourceType: 'feed'
           });
         });
+      },
+
+      //展示付费
+      showPayDialog (image, index) {
+        this.$Modal.confirm({
+          title: '付费支付',
+          content: `<p>需要支付 ${showAmount(image.amount)}${this.goldName} </p>`,
+          okText: '确认支付',
+          loading: true,
+          onOk: () => {
+            addAccessToken().post(createAPI(`purchases/${image.paid_node}`), {
+              validateStatus: status => status === 201                
+            })
+            .then(() => {
+              this.$Modal.remove();
+              this.$Message.success('支付成功');
+              this.storages[index].paid = true;
+              setTimeout(() => {
+                this.showSwiper(index);
+              }, 800);
+              this.$store.getters[FEEDSLIST][this.feed].images[index].paid = true;
+            })
+            .catch( ({ response: { data, status } = {} }) => {
+              this.$Modal.remove();
+              this.$Message.error(PlusMessageBundle(data).getMessage());
+            })
+          }
+        });
       }
-    }
+    },
+    created () {
+      const { token = ''} = this.$storeLocal.get('UserLoginInfo') || {};
+      this.token = token;
+    },
   }
 
   export default feedImages;
 </script>
-
+<style scoped>
+  .ivu-icon-help-circled {
+    color: #f90!important;
+    font-size: 36px!important;
+  }
+</style>
 <style lang="scss" module>
   .FeedImages {
     width: 100%;

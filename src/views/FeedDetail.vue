@@ -36,7 +36,7 @@
           <div>
             <div v-if="imagesList.length" class="feed-container-content-images">
               <div v-for="(item, index ) in imagesList" :key="index" :style="`height: ${item.height + 'px'}`">
-                <img v-if="item.paid" v-lazy="item.url" />
+                <img v-if="item.paid" v-lazy="item.url + '?token=' + token" />
                 <LockedImageForSwiper v-else />
               </div>
             </div>
@@ -69,6 +69,7 @@
                 </div>
               </Col>
             </Row>
+            <RewardEntry v-if="feed_id" component="feeds" :rewardableId="feed_id" api-method="rewards" :source="feedData" />
           </div>
       </div>
     </div>
@@ -252,7 +253,7 @@
   </div>
 </template>
 <script>
-  import { createAPI, addAccessToken, } from '../utils/request';
+  import { createAPI, addAccessToken } from '../utils/request';
   import buildURL from 'axios/lib/helpers/buildURL';
   import errorCodes from '../stores/errorCodes';
   import localEvent from '../stores/localStorage';
@@ -277,6 +278,7 @@
   import getLocalTime from '../utils/getLocalTime';
   import LockedImageForSwiper from '../components/LockedImageForSwiper';
   import storeLocal from 'store';
+  import RewardEntry from '../components/RewardEntry';
 
   const noCommentImage = resolveImage(require('../statics/images/defaultNothingx2.png'));
   const defaultAvatar = resolveImage(require('../statics/images/defaultAvatarx2.png'));
@@ -293,7 +295,8 @@
       ShareIcon,
       ConnectionIcon,
       BackIcon,
-      LockedImageForSwiper
+      LockedImageForSwiper,
+      RewardEntry
     },
     data: () => ({
       scroll: 0,
@@ -315,7 +318,8 @@
       commentContent: '',
       loading: false,
       commentedUser: {},
-      commentIndex: -1
+      commentIndex: -1,
+      token: ''
     }),
     computed: {
       defaultImage () {
@@ -390,10 +394,10 @@
         return formated.comments;
       }
     },
+    
     methods: {
       changeUrl,
       timers,
-
       /**
        * [handleCommentInput reset comment input]
        * @return {[type]} [description]
@@ -797,6 +801,22 @@
           }
           this.scroll = window.pageYOffset;
         }
+      },
+      getRewardUsers (feed, limit) {
+        addAccessToken().get(createAPI(`feeds/${feed}/rewards`), {
+          params: {
+            limit
+          }
+        },
+        {
+          validateStatus: status => status === 200
+        })
+        .then(({ data = [] }) => {
+          this.rewardUsers = data;
+        })
+        .catch(({ response: { data } = {} }) => {
+
+        })
       }
     },
     created () {
@@ -859,6 +879,9 @@
           this.$set(this.feedData, 'likes', data);
         });
       });
+      this.getRewardUsers(feed_id, 10);
+      const { token } = this.$storeLocal.get('UserLoginInfo') || {};
+      this.token = token;
     },
     mounted () {
       window.addEventListener('scroll', this.menu);

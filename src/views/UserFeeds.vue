@@ -681,7 +681,7 @@
     }
   }
 </style>
-<style lang="scss" scope>
+<style lang="scss" scoped>
   .loadMoreBottom {
     display: flex;
     justify-content: center;

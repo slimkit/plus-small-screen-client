@@ -39,17 +39,17 @@
             <RightArrowIcon height="18" width="18" color="#999" />
           </i>
         </li>
-        <!-- <li class="component-list" @click="changeUrl(`/channel`)">
+        <li class="component-list" @click="changeUrl(`/questions`)">
           <i class="component-icon">
             <ChannelIcon height="21" width="21" />
           </i>
           <section class="component-title">
-            频道
+            问答
           </section>
           <i class="component-entry">
             <RightArrowIcon height="18" width="18" color="#999" />
           </i>
-        </li> -->
+        </li>
       </ul>
 
       <ul class="component-lists">

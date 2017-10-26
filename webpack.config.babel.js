@@ -129,12 +129,23 @@ const webpackConfig = {
             ...styleLoaders({ sourceMap: !isProd }),
             {
                 test: /\.vue$/,
-                loader: 'vue-loader',
-                options: {
-                    loaders: cssLoaders({
-                        sourceMap: !isProd
-                    })
-                }
+                use: [
+                    {
+                        loader: 'vue-loader',
+                        options: {
+                            loaders: cssLoaders({
+                                sourceMap: !isProd
+                            })
+                        }
+                    },
+                    {
+                        loader: 'iview-loader',
+                        options: {
+                            prefix: false
+                    }
+            },
+                ]
+                
             },
             {
                 test: /\.js$/,

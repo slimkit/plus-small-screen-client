@@ -127,7 +127,7 @@
 
   export default systemSetting;
 </script>
-<style scope lang="scss">
+<style scoped lang="scss">
   .systemSetting-header {
     height: 45px;
     border-bottom: 1px #ddd solid;

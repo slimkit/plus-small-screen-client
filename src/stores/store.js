@@ -7,6 +7,7 @@ Vue.use(Vuex);
 import user from './module/user';
 import notice from './module/noticeText';
 import imageSwiper from './module/imageSwiper';
+import prePost from './module/PrePost';
 import showPost from './module/showPost';
 import feedDiggsList from './module/feedDiggsList';
 import userFeeds from './module/userFeeds';
@@ -30,10 +31,17 @@ import commentInput from './module/commentInput';
 import newsAbout from './module/newsAbout';
 import collectionNews from './module/collectionNews';
 
+/**
+ * question about
+ */
+
+import showQuestionPost from './module/showQuestionPost';
+
 const modules = {
   user,
   notice,
   imageSwiper,
+  prePost,
   showPost,
   feedDiggsList,
   userFeeds,
@@ -48,7 +56,8 @@ const modules = {
   imStatus,
   messageCount,
   newsAbout,
-  collectionNews
+  collectionNews,
+  showQuestionPost
 }
 
 const store = new Vuex.Store({

@@ -41,6 +41,7 @@
           <FeedImages 
             v-show="feed.images.length" 
             :storages="feed.images"
+            :feed="feed.id"
           />
         </figure>
       </section>
@@ -74,27 +75,47 @@
   import lodash from 'lodash';
   import { changeUrl } from '../utils/changeUrl';
   import { mapState } from 'vuex';
-  import { NOTICE, USERS_APPEND } from '../stores/types';
+  import { NOTICE, USERS_APPEND, FEEDSLIST } from '../stores/types';
   import storeLocal from 'store';
   const defaultAvatar =  resolveImage(require('../statics/images/defaultAvatarx2.png'));
+  import PlusMessageBundle from '../utils/es';
   
   const feedinfo = {
     props: [
       'feed'
     ],
     data: () => ({
-      user: {}
+      user: {},
+      goldName: window.TS_WEB.goldName,
+      ratio: 100
     }),
     methods: {
       changeUrl,
       toFeedDetail(id) {
-        if(this.feed.paid_node && !this.feed.paid) {
-          this.$store.dispatch(NOTICE, cb => {
-            cb({
-              text: '请先购买动态',
-              time: 1500,
-              status: false
-            });
+        if(this.feed.paid_node && !this.feed.paid_node.paid) {
+          this.$Modal.confirm({
+            title: '付费支付',
+            content: `<p>需要支付${this.feed.paid_node.amount / 100 / 100 * this.ratio}${this.goldName}</p>`,
+            okText: '确认支付',
+            loading: true,
+            onOk: () => {
+              addAccessToken().post(createAPI(`purchases/${this.feed.paid_node.node}`), {
+                validateStatus: status => status === 201                
+              })
+              .then(() => {
+                this.$Modal.remove();
+                this.$Message.success('支付成功');
+
+                this.$store.getters[FEEDSLIST][id].paid_node.paid = true;
+                setTimeout( () => {
+                  this.changeUrl(`/feed/${id}`);
+                }, 800);
+              })
+              // .catch( ({ response: { data, status } = {} }) => {
+              //   this.$Modal.remove();
+              //   this.$Message.error(PlusMessageBundle(data).getMessage());
+              // })
+            }
           });
           return;
         }
@@ -145,6 +166,9 @@
         });
         this.user = { ...user };
       }
+    },
+    mounted () {
+      this.amount = this.$storeLocal.get('ratio') || 100;
     }
   }
 

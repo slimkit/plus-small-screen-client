@@ -195,7 +195,7 @@
 
   export default changePassword;
 </script>
-<style scope lang="scss">
+<style scoped lang="scss">
   .changePassword-header {
     height: 45px;
     border-bottom: 1px #ddd solid;
