@@ -18,7 +18,7 @@ class HomeController extends Controller
     public function index(ImServeRepsitory $repository, GoldType $goldType)
     {
         // 金币设置
-        $goldName = $goldType->where('status', 1)->select('name', 'unit')->first() ?? collect(['name' => '金币', 'unit' => '个']);
+        $gold = $goldType->where('status', 1)->select('name', 'unit')->first();
         // 签到开关
         $configs = config('site');
 
@@ -26,7 +26,7 @@ class HomeController extends Controller
             'base_url'   => url('/'),
             'api' => url('api/v2'),
             'apiv1' => url('api/v1'),
-            'goldName' => $goldName->name,
+            'goldName' => $gold->name ?? '金币',
             'webSocktUrl' => config('im.open') === true ? $repository->get() : '', // 如果 im 开启，则返回地址，否则返回空。
         ]);
     }
