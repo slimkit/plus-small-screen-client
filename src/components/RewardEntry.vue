@@ -23,7 +23,7 @@
       <div style="text-align:center">
         <Row :gutter="24" style="border-bottom: 1px solid #e9eaec; padding-bottom: 16px;">
           <Col span="8" v-for="(item, index) in items" :key="index">
-            <Button @click.native="setAmount(item * ratio)" :class="['ivu-btn', 'ivu-btn-ghost', {active: amount/ratio === item && customAmount === ''}]">{{ item }} </Button>
+            <Button @click.native="setAmount(trueAmount(item))" :class="['ivu-btn', 'ivu-btn-ghost', {active: amount === item && customAmount === ''}]">{{ item }} </Button>
           </Col>
         </Row>
         <Row :gutter="24" type="flex" justify="space-around" style="padding-top: 8px; font-size: 14px;">
@@ -189,7 +189,7 @@
   import { resolveImage } from '../utils/resource';
   import _ from 'lodash';
   import timers from '../utils/timer';
-  import { showAmount }from '../utils/balance';
+  import { showAmount, trueAmount }from '../utils/balance';
   import storeLocal from 'store';
 
   const defaultNobody = resolveImage(require('../statics/images/img_default_nobody@2x.png'));
@@ -275,6 +275,7 @@
 
     methods: {
       showAmount,
+      trueAmount,
       timers,
       loadBottom () {
         this.getRewardUsers(this.rewardableId, 'loadMore');
@@ -365,7 +366,7 @@
 
         let postAmount = 0;
 
-        if (customAmount ) postAmount = customAmount * 100;
+        if (customAmount ) postAmount = trueAmount(customAmount);
         if (amount) postAmount = amount;
         this.modal_loading = true;
 

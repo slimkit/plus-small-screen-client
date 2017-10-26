@@ -85,7 +85,6 @@
       )
       .then( ({ data }) => {
         const { site: { gold_name: { name = '金币' }, reward: { status = true, amounts = '' } } = {} } = data;
-        this.$storeLocal.set('goldName', name);
         this.$storeLocal.set('rewardSetting', { status: status, items: lodash.split(amounts, ',') });
       })
       // 创建 DB;
@@ -269,7 +268,22 @@
         }
       }
     },
-    beforeMount(){}
+    methods: {
+      wallet () {
+        addAccessToken().get(
+          createAPI('wallet'),
+          {
+            validataStatus: status => status === 200
+          }
+        )
+        .then(({ data = {} }) => {
+          this.$storeLocal.set('ratio', data.ratio);
+        })
+      }
+    },
+    beforeMount(){
+      this.wallet();
+    }
   }
 
   export default App;

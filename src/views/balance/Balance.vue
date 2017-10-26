@@ -209,7 +209,7 @@
   import RightArrowIcon from '../../icons/RightArrow';
   import _ from 'lodash';
   import PlusMessageBundle from '../../utils/es';
-  import {showAmount} from '../../utils/balance';
+  import {showAmount, trueAmount} from '../../utils/balance';
   
   const Balance = {
     components: {
@@ -310,7 +310,7 @@
         }
 
         let data = {};
-        if (customRecharge ) data.amount = customRecharge * 100;
+        if (customRecharge ) data.amount = trueAmount(customRecharge);
         if (rechargeNum) data.amount = rechargeNum;
 
         data.type = rechargeType;
@@ -359,7 +359,7 @@
           {
             account,
             type: withdrawType,
-            value: withdrawNum * this.system.ratio
+            value: trueAmount(withdrawNum)
           },
           {
             validataStatus: status => status === 201

@@ -7,7 +7,7 @@ import storeLocal from 'store';
  */
 function showAmount (amount) {
   const ratio = storeLocal.get('ratio');
-  return (amount * ratio / 10000).toFixed(2);
+  return (amount * ratio / 10000);
 } 
 
 /**
