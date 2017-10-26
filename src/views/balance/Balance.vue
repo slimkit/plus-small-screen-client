@@ -247,7 +247,7 @@
       let charge = this.$storeLocal.get('chargeId');
       if (charge) {
         addAccessToken().get(
-          createAPI(`wallet/charges/${charge}`),
+          createAPI(`wallet/charges/${charge}?mode=retrieve`),
           {
             validataStatus: status => status === 200
           }
