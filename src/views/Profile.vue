@@ -92,12 +92,10 @@
         <Col span="10" :class="$style.menuText">
           认证
         </Col>
-        <Col span="6">
+        <Col span="11" :class="$style.rightIcon">
           <span v-if="userCertification && userCertification.status == 1">已认证</span>
           <span v-else-if="userCertification && userCertification.status == 0">待审核</span>
           <span v-else>未认证</span>
-        </Col>
-        <Col span="5" :class="$style.rightIcon">
           <RightArrowIcon height="18" width="18" color="#999" />
         </Col>
       </Row>
