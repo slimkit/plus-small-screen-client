@@ -195,6 +195,11 @@
       }
     }
   }
+  .ivu-modal-confirm-body {
+    div {
+      word-break: break-all;
+    }
+  }
 </style>
 
 <script>
@@ -412,17 +417,7 @@
           }
         })
       },
-      /**
-       * 回到上一页
-       * @return {[type]} [description]
-       */
-      goBack () {
-        if(window.history.length < 2) {
-          this.$router.push('/users/profile');
-          return;
-        }
-        this.$router.back();
-      },
+
       /**
        * 重置充值金额
        * @return {[type]} [description]
