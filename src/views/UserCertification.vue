@@ -342,14 +342,7 @@
         this.upload.back = res.id;
       },
       handleOnFormatError (file) {
-        this.$store.dispatch(NOTICE, cb => {
-          cb({
-            show: true,
-            time: 2000,
-            status: false,
-            text: `不支持的图片格式，请上传:jpg，jpeg，png格式的图片`,
-          });
-        });
+        this.$Message.warning('不支持的图片格式，请上传:jpg，jpeg，png格式的图片');
       },
       /**
        * 返回上一步
@@ -384,14 +377,7 @@
               this.$router.go(-1);
             }, 1500);
           }).catch(({ response: { data: { message = ['更新认证失败，请稍后再试试'] } } = {} }) => {
-            this.$store.dispatch(NOTICE, cb => {
-              cb({
-                show: true,
-                time: 1500,
-                status: false,
-                text: message,
-              });
-            });
+              this.$Message.warning(message);
           });
         } else {
           // 未提交过认证 进行创建操作
@@ -412,14 +398,7 @@
               this.$router.go(-1);
             }, 1500);
           }).catch(({ response: { data: { message = ['提交认证失败，请稍后再试试'] } } = {} }) => {
-            this.$store.dispatch(NOTICE, cb => {
-              cb({
-                show: true,
-                time: 1500,
-                status: false,
-                text: message,
-              });
-            });
+              this.$Message.warning(message);
           });
         }
       }

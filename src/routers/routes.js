@@ -70,6 +70,11 @@ import TopicsListComponent from '../views/question/TopicsListComponent';
 import TopicDetail from '../views/question/TopicDetail';
 import TopicDetailQuestionsList from '../views/question/TopicDetailQuestionsList';
 
+// 排行榜
+import Rank from '../views/rank/Rank';
+import RankList from '../views/rank/RankList';
+import RankShow from '../views/rank/RankShow';
+
 import { requestAuth, CanNotGetInWhenLogged } from '../utils/auth';
 
 const routes = [
@@ -413,8 +418,27 @@ const routes = [
         title: '找人'
       }
     }]
-  },
-  {
+  },{
+    path: '/rank',
+    component: Rank,
+    meta: {
+      title: '排行榜'
+    },
+    redirect: '/rank/list/user',
+    children: [{
+      path: 'list/:type',
+      component: RankList,
+      meta: {
+        title: '排行榜'
+      }
+    },{
+      path: 'show',
+      component: RankShow,
+      meta: {
+        title: '排行榜详情'
+      }
+    }]
+  },{
     path: '/group',
     component: Group,
     name: 'group',

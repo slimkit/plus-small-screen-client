@@ -51,7 +51,19 @@
           </i>
         </li>
       </ul>
-
+      <ul class="component-lists">
+        <li class="component-list" @click="changeUrl(`/rank`)">
+          <i class="component-icon">
+            <FindsomeOne height="21" width="21" />
+          </i>
+          <section class="component-title">
+            排行榜
+          </section>
+          <i class="component-entry">
+            <RightArrowIcon height="18" width="18" color="#999" />
+          </i>
+        </li>
+      </ul>
       <ul class="component-lists">
         <li class="component-list" @click="changeUrl(`/findsomeone`)">
           <i class="component-icon">
