@@ -69,6 +69,7 @@ import QuestionList from '../views/question/QuestionListComponent';
 import TopicsListComponent from '../views/question/TopicsListComponent';
 import TopicDetail from '../views/question/TopicDetail';
 import TopicDetailQuestionsList from '../views/question/TopicDetailQuestionsList';
+import AnswerDetail from '../views/question/AnswerDetail';
 
 // 排行榜
 import Rank from '../views/rank/Rank';
@@ -549,6 +550,22 @@ const routes = [
         }
       }
     ]
+  },
+  {
+    path: '/questions/answers/:answer_id',
+    component: AnswerDetail,
+    name: 'AnswerDetail',
+    meta: {
+      title: '答案详情'
+    }
+  },
+  {
+    path: '/questions/:question_id/detail',
+    component: QuestionDetail,
+    name: 'questionDetail',
+    meta: {
+      title: '问题详情'
+    }
   },
   { path: '*', redirect: '/' }
 ];

@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <title>ThinkSNS+</title>
   <script src="https://webapi.amap.com/maps?v=1.3&key=abb777bcccf278aa589076944112267e"></script>
+  <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet">
   <link rel="stylesheet" href="{{ mix('css/app.css', 'assets/h5') }}" />
   <style>
     body > textarea {

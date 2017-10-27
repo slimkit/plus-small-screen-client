@@ -145,6 +145,9 @@ img.avatar {
   border-radius: 50%;
   width: 100%;
 }
+.component-avatar {
+  width: 100%;
+}
 .commonHeader {
   height: 46px;
   background-color: #fff;
@@ -164,9 +167,32 @@ img.avatar {
   font-size: 14px;
   justify-content: flex-end;
   display: flex;
+  align-items: center;
 }
 .commentInput {
   border: none;
+}
+.followAboutButton {
+  line-height: 1;
+  &.ivu-btn-ghost {
+    color: #ccc;
+    border: 1px solid #ccc;
+  }
+  span{
+    display: inline-flex;
+    align-items: center;
+    svg {
+      margin-right: 1vw;
+    }
+  }
+}
+.IconWithText {
+  display: flex;
+  font-size: 14px;
+  color: #646464;
+  svg {
+    margin: 0 2vw;
+  }
 }
 .sendButton {
   font-size: 14px;

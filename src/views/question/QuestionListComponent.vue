@@ -24,6 +24,7 @@
           <section 
             v-for="question in questions" :key="question.id"
             :class="$style.question"
+            @click="$router.push({name: 'questionDetail', params: {question_id: question.id}})"
           >
             <h3>{{ question.subject }}</h3>
             <img :class="$style.answerImg" v-if="question.answer && getFile(question.answer.body)" v-lazy="getFile(question.answer.body)" />

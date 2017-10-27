@@ -119,11 +119,14 @@
        */
       postTextFeed () {
         this.$store.dispatch(SHOWPOST, cb => {
-        cb ({
-          show: true,
-          textOnly: true
+          cb ({
+            show: true,
+            textOnly: true
+          });
         });
-      });
+        setTimeout( () => {
+          this.close();
+        }, 300)
       },
       /**
        * 打开图片动态发布
@@ -135,6 +138,10 @@
             show: true
           });
         });
+        setTimeout( () => {
+          this.close();
+        }, 300)
+        
       },
 
       /**
@@ -145,6 +152,9 @@
         this.$store.dispatch(SHOWQUESTIONPOST, cb => {
           cb(true);
         });
+        setTimeout( () => {
+          this.close();
+        }, 300)
       }
     },
     computed: {
@@ -152,16 +162,6 @@
         show: state => state.prePost.prePost.show
       }),
     },
-
-    // watch: {
-    //   show: function(newShow) {
-    //     if (newShow) {
-    //       window.document.body.style.overflow = 'hidden';
-    //       return;
-    //     }
-    //     window.document.body.style.overflow = 'auto';
-    //   }
-    // }
   };
 
   export default PrePost;

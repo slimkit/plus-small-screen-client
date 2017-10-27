@@ -36,6 +36,7 @@ import collectionNews from './module/collectionNews';
  */
 
 import showQuestionPost from './module/showQuestionPost';
+import showPostAnswer from './module/postAnswer';
 
 const modules = {
   user,
@@ -57,7 +58,8 @@ const modules = {
   messageCount,
   newsAbout,
   collectionNews,
-  showQuestionPost
+  showQuestionPost,
+  showPostAnswer
 }
 
 const store = new Vuex.Store({

@@ -38,6 +38,16 @@
         </Col>
       </Row>
     </section>
+    <section :class="$style.experts">
+      <Row :gutter="24">
+        <Col span="8">
+          {{topic.experts_count}}位相关专家  
+        </Col>
+        <Col span="16" style="position: relative;">
+          <img :style="styleCompute(index)" v-lazy="expert.avatar || defaultAvatar" alt="" v-for="(expert, index) in topic.experts" :key="index">
+        </Col>
+      </Row>
+    </section>
     <Row :gutter="24" :class="[$style.nav, 'nav']">
       <Col span="4-8">
         <router-link :to="{name: 'TopicDetailQuestionsList', params: {topic_id: topic.id, type: 'hot'}}">热门</router-link>
@@ -103,6 +113,12 @@
         }
       }
     }
+    .experts {
+      padding-top: 12px;
+      padding-bottom: 12px;
+      background-color: #fff;
+      border-bottom: 1px solid #efefef;
+    }
     .nav {
       width: 100vw;
       padding-bottom: 12px;
@@ -149,9 +165,14 @@
         id: 0
       },
       questions: [],
-      showAll: false
+      showAll: false,
+      defaultAvatar
     }),
     methods: {
+      styleCompute(index) {
+        let right = (index !== 0 ? `${(this.topic.experts_count * index)}vw` : '12px');
+        return `top: -14px; z-index: ${this.topic.experts_count - index}; width: 7vw; position: absolute; right: ${right}`;
+      },
       goBack () {
         if(window.history.length < 2) {
           this.$router.push('/questions/topics');
@@ -184,7 +205,6 @@
       }
     },
     mounted () {
-      console.log(this.$route, this.$router);
       this.topic.id = this.$route.params.topic_id || 0;
       this.getTopic();
     }

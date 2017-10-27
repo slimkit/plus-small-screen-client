@@ -1,8 +1,8 @@
 <template>
   <transition-group name="custom-classes-transition" enter-active-class="animated slideInRight" leave-active-class="animated slideOutRight">
-    <div :class="$style.postRoot" v-if="show" key="root">
+    <div :class="$style.postRoot" v-show="show" key="root">
       <transition :key="step" name="custom-classes-transition" enter-active-class="animated slideInRight" leave-active-class="animated slideOutRight">
-        <section :class="$style.stepOne" v-if="step=== 1">
+        <section :class="$style.stepOne" v-show="step=== 1">
           <header class="commonHeader">
             <Row :gutter="24">
               <Col span="5">
@@ -27,7 +27,7 @@
         </section>
       </transition>
       <transition :key="step" name="custom-classes-transition" enter-active-class="animated slideInRight" leave-active-class="animated slideOutRight">
-        <section :class="$style.stepTwo" v-if="step === 2">
+        <section :class="$style.stepTwo" v-show="step === 2">
           <header class="commonHeader">
             <Row :gutter="24">
               <Col span="5">
@@ -44,7 +44,7 @@
           <section>
             <Row :gutter="24" :class="$style.contentRow">
               <Col span="24">
-                <Input
+                <!-- <Input
                   v-model="body"
                   type="textarea"
                   :autosize="{ minRows: 8, maxRows: 16}"
@@ -52,7 +52,8 @@
                   placeholder="详细描述你的问题，有助于收到准确的回答"
                   v-childfocus
                 >
-                </Input>
+                </Input> -->
+                <textarea ref="questionBody"></textarea>
               </Col>
             </Row>
           </section>
@@ -87,7 +88,7 @@
         </section>
       </transition>
       <transition :key="step" name="custom-classes-transition" enter-active-class="animated slideInRight" leave-active-class="animated slideOutRight">
-        <section :class="$style.stepThree" v-if="step === 3">
+        <section :class="$style.stepThree" v-show="step === 3">
           <header class="commonHeader">
             <Row :gutter="24">
               <Col span="5">
@@ -124,7 +125,7 @@
         </section>
       </transition>
       <transition :key="step" name="custom-classes-transition" enter-active-class="animated slideInRight" leave-active-class="animated slideOutRight">
-        <section :class="$style.stepFour" v-if="step === 4">
+        <section :class="$style.stepFour" v-show="step === 4">
           <header class="commonHeader">
             <Row :gutter="24">
               <Col span="5">
@@ -365,6 +366,8 @@
 </style>
 <script>
   import _ from 'lodash';
+  import mdEditor from 'plus-editor.md';
+  import 'plus-editor.md/dist/pluseditor.css';
   import { showAmount, trueAmount } from '../utils/balance';
   import { mapState } from 'vuex';
   import { SHOWQUESTIONPOST } from '../stores/types';
@@ -408,17 +411,23 @@
       action: createAPI('files'),
       headers: {
         Authorization: `Bearer ${token}`
-      }
+      },
+      editor: {}
     }),
     watch: {
       customAmount: function (amount) {
         this.customAmount = amount;
         this.amount = 0;
-      }
+      },
     },
     methods: {
       showAmount,
       trueAmount,
+      listenEditorInput () {
+        this.editor.codemirror.on('change', () => {
+          this.body = this.editor.value();
+        })
+      },
       publish () {
         const { rewardOpen, subject, body, topics, amount, customAmount, invitations, automaticity, look, anonymity } = this;
         let data = {};
@@ -428,15 +437,15 @@
             data.look = true;
           }
 
-          if (amount) {
-            data.amount = amount;
-          }
-
-          if (customAmount) {
-            data.amount = trueAmount(customAmount);
-          }
-
           data.automaticity = automaticity;
+        }
+
+        if (amount) {
+          data.amount = amount;
+        }
+
+        if (customAmount) {
+          data.amount = trueAmount(customAmount);
         }
 
         data.anonymity = anonymity;
@@ -457,20 +466,24 @@
             validataStatus: status => status === 201
           }
         )
-        .then(({ data: { id } }) => {
+        .then(({ data: { question: {  id } = {} } }) => {
           this.$Message.success({
             content: '发布成功',
             duration: 2
           });
+          this.$store.dispatch(SHOWQUESTIONPOST, cb => {
+           cb(false);
+          })
           setTimeout( () => {
-            this.$router.push(`questions/${id}`);
-          }, 2000);
+            this.$router.push(`/questions/${id}/detail`);
+          }, 1000);
         })
         .catch(({ response: { data } }) => {
           console.log(data);
         })
       },
       setExpertsOpen () {
+        console.log('xxcv');
         this.expertsOpen = true;
       },
       setExpertsClose (user) {
@@ -623,6 +636,17 @@
           this.body && 
           this.topics.length > 0
         );
+      }
+    },
+    mounted () {
+      if (_.keys(this.editor).length === 0) {
+        this.editor = new mdEditor({
+          element: this.$refs.questionBody,
+          placeholder: "详细描述你的问题，有助于收到准确的回答",
+          fileApiPath: '/api/v2/files',
+          initialValue: this.body
+        });
+        this.listenEditorInput();
       }
     }
   };

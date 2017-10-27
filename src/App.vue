@@ -9,6 +9,7 @@
     <Confirm />
     <ShowFeedPopup />
     <postQuestion />
+    <PostAnswer />
     {{ imStatus }}
     {{ setBodyOverflew }}
   </div>
@@ -23,6 +24,7 @@
   import Confirm from './components/Confirm';
   import ShowFeedPopup from './components/ShowFeedPopup';
   import postQuestion from './components/postQuestion';
+  import PostAnswer from './components/PostAnswer';
 
   // im聊天相关
   import lodash from 'lodash';
@@ -46,7 +48,8 @@
       Confirm,
       ShowFeedPopup,
       PrePost,
-      postQuestion
+      postQuestion,
+      PostAnswer
     },
     computed: {
       imStatus () { // im状态监测
@@ -84,8 +87,9 @@
         }
       )
       .then( ({ data }) => {
-        const { site: { gold_name: { name = '金币' }, reward: { status = true, amounts = '' } } = {} } = data;
+        const {site: { gold_name: { name = '金币' }, reward: { status = true, amounts = '' } } = {} } = data;
         this.$storeLocal.set('rewardSetting', { status: status, items: lodash.split(amounts, ',') });
+        this.$storeLocal.set('onlookers_amount', data['question:onlookers_amount']);
       })
       // 创建 DB;
       let db = new Dexie('ThinkSNS');

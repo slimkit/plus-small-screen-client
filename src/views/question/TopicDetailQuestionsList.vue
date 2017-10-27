@@ -24,6 +24,7 @@
           <section 
             v-for="question in questions" :key="question.id"
             :class="$style.question"
+            @click="$router.push({name: 'questionDetail', params: {question_id: question.id}})"
           >
             <h3>{{ question.subject }}</h3>
             <img :class="$style.answerImg" v-if="question.answer && getFile(question.answer.body)" v-lazy="getFile(question.answer.body)" />
@@ -152,6 +153,7 @@
   import { createAPI, addAccessToken } from '../../utils/request';
   import { resolveImage } from '../../utils/resource';
   import timer from '../../utils/timer';
+  import getContent from '../../utils/getPureContent';
   const defaultAvatar = resolveImage(require('../../statics/images/defaultAvatarx2.png'));
   const nothingImage = resolveImage(require('../../statics/images/defaultNothingx2.png'));
   
@@ -170,6 +172,7 @@
     }),
     methods: {
       timer,
+      getContent,
       topStatusChange (status) {
         this.topStatus = status;
       },
@@ -260,10 +263,6 @@
         let file = str.match(/@!\[.*?]\((\d+)\)/);
         return file ? createAPI(`files/${file[1]}`) : 0;
       },
-      getContent (str) {
-        let content = str.replace(/@!\[.*?]\((\d+)\)/, "[图片]");
-        return content
-      }
     },
     watch: {
       '$route': function (route) {

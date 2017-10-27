@@ -130,3 +130,4 @@ export const ADDRESULTIDS = 'addresultids';
  * question about
  */
 export const SHOWQUESTIONPOST = 'showquextionpost';
+export const SHOWPOSTANSWER = 'showpostanswer';

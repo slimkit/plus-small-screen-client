@@ -1,6 +1,6 @@
 <template>
   <section v-show="existsQuestions.length || !title">
-    <Row :gutter="24" v-for="(question, index) in existsQuestions" :key="index" :class="$style.question">
+    <Row @click.native="$router.push({name: 'questionDetail', params: {question_id: question.id}})" :gutter="24" v-for="(question, index) in existsQuestions" :key="index" :class="$style.question">
       <Col span="24">
         <router-link :class="$style.link" :to="`question/${question.id}`">{{ question.subject }}</router-link> 
       </Col>

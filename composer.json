@@ -22,5 +22,6 @@
                 "Zhiyi\\Component\\ZhiyiPlus\\PlusComponentH5\\ServiceProvider"
             ]
         }
-    }
+    },
+    "version": "5.0.0"
 }

@@ -142,10 +142,9 @@ const webpackConfig = {
                         loader: 'iview-loader',
                         options: {
                             prefix: false
+                        }
                     }
-            },
                 ]
-                
             },
             {
                 test: /\.js$/,

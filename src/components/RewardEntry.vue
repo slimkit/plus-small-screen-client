@@ -214,13 +214,12 @@
       customAmount: '', // 自定义金额
       modal_loading: false,
       rewardUsers: [], // 打赏用户列表
-      bottomAllLoaded: false,
+      bottomAllLoaded: true,
       topAllLoaded: false,
       bottomStatus: '',
       topStatus: '',
-      order_type: 'date', // 根据打赏金额进行查询
+      order_type: 'amount', // 根据打赏金额进行查询
       limit: 20,
-      since: 0, // 金额查询节点
       order: 'desc' // 排序方式
     }),
 
@@ -239,7 +238,6 @@
         })
         return formated;
       },
-
       nothing () {
         const { rewardUsers } = this;
         return rewardUsers.length === 0 ? defaultNobody : 0;
@@ -290,14 +288,15 @@
         this.rewardListOpen = true;
       },
       getRewardUsers (rewardable_id, type = 'new') {
-        const { limit, since, order_type, order } = this;
+        if (type === 'loadMore' && this.bottomAllLoaded) return;
+        const { limit, order_type, order, rewardUsers: { length = 0 } = [] } = this;
         let params = {
           limit,
           order_type,
           order
         };
 
-        if (type === 'loadMore') params.since = since;
+        if (type === 'loadMore') params.offset = length;
 
         addAccessToken().get(createAPI(`${this.component}/${this.rewardableId}/${this.apiMethod}`), {
           params
@@ -309,17 +308,23 @@
 
           if (type === 'new') {
             this.rewardUsers = data;
-            this.since = _.last(data)['id'] || 0;
-            if (data.length < limit) this.bottomAllLoaded = true;
+            if (data.length === limit) { 
+              this.bottomAllLoaded = false;
+            } else {
+              this.bottomAllLoaded = true;
+            }
           }
 
           if (type === 'loadMore') {
             this.rewardUsers = _.uniqBy([ ...this.rewardUsers, ...data ], 'id');
-            this.since = _.last(data)['id'] || 0;
-            if (data.length < limit) this.bottomAllLoaded = true;
-            setTimeout( () => {
-              this.$refs.loadMoreLists.onBottomLoaded();
-            }, 800);
+
+            if (data.length === limit) {
+              this.bottomAllLoaded = false;
+            } else {
+              this.bottomAllLoaded = true;
+            }
+            
+            this.$refs.loadMoreLists.onBottomLoaded();
           }
 
           if (type === 'loadNew') {
@@ -327,14 +332,11 @@
               ...data,
               ...this.rewardUsers
             ], 'id');
-            setTimeout( () => {
-              this.$refs.loadMoreLists.onTopLoaded();
-            }, 800);
+            
+            this.$refs.loadMoreLists.onTopLoaded();
           }
         })
-        .catch(({ response: { data } = {} }) => {
-          console.log(data);
-        })
+        
       },
       // 重置打赏金额
       resetReward () {
