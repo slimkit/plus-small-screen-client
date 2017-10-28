@@ -281,13 +281,13 @@
           </div>
         </Col>
         <Col span="6" class="operation">
-          <div v-if="!question.has_collect" @click="handleCollection(question.id)">
+          <div v-if="!question.has_collect" @click="">
             <EditIcon height="20" width="20" color="#999" />
             <i>编辑</i>
           </div>
         </Col>
         <Col span="6" class="operation">
-          <div v-if="!question.has_collect" @click="handleCollection(question.id)">
+          <div v-if="!question.has_collect" @click="showPopup">
             <MoreIcon height="20" width="20" color="#999" />
             <i>更多</i>
           </div>
@@ -320,7 +320,7 @@
       </h3>
       <div style="text-align:center">
         <h1 style="color: #FCA205">{{showAmount(onlookers_amount)}}</h1>
-        <p style="color: #949494; padding: 5vw 10vw;">您只需要{{showAmount(onlookers_amount)}}{{goldName}}就即可围观该答案</p>
+        <p style="color: #949494; padding: 5vw 10vw;">您只需要{{showAmount(onlookers_amount)}}{{goldName}}即可围观该答案</p>
       </div>
       <div slot="footer">
           <Button @click.native="lookAnswer(lookAnswerId)" type="primary" size="large" long :loading="payLoading" @click="">支付</Button>
@@ -329,19 +329,19 @@
           <Button type="ghost" size="large" @click="cannelPay" long>返回</Button>
       </div>
     </Modal>
-    <Modal v-model="openExcelle" width="70">
+    <Modal v-model="openExcellet" width="70">
       <h3 slot="header" style="color: #333; text-align:center">
         精选问题支付
       </h3>
       <div style="text-align:center">
-        <h1 style="color: #FCA205">{{showAmount(onlookers_amount)}}</h1>
-        <p style="color: #949494; padding: 5vw 10vw;">您只需要{{showAmount(onlookers_amount)}}{{goldName}}就即可围观该答案</p>
+        <h1 style="color: #FCA205">{{showAmount(apply_amount)}}</h1>
+        <p style="color: #949494; padding: 5vw 10vw;">您只需要{{showAmount(apply_amount)}}{{goldName}}就可以使问题成为精选问答</p>
       </div>
       <div slot="footer">
-          <Button @click.native="lookAnswer(lookAnswerId)" type="primary" size="large" long :loading="payLoading" @click="">支付</Button>
+          <Button @click.native="doAskExcellet" type="primary" size="large" long :loading="payLoading" @click="">支付</Button>
           <br />
           <br />
-          <Button type="ghost" size="large" @click="cannelPay" long>返回</Button>
+          <Button type="ghost" size="large" @click="handleCloseExcellt" long>返回</Button>
       </div>
     </Modal>
     <template v-if="showComments">
@@ -454,10 +454,62 @@
         </div>
       </section>
     </template>
+    <mt-popup
+      v-model="isShowPopup"
+      position="bottom"
+      style="width: 100%;"
+      :class="$style.popup"
+    >
+      <div>
+        <Button 
+          @click="handleOpenExcellet" 
+          size="large" 
+          :class="[$style.askForexCellent, $style.popupButton]" 
+          type="text" :long="true"
+        >
+          申请为精选问答
+        </Button>
+        <Button
+          type=""
+          @click="comfirmDelete" 
+          size="large" 
+          :class="[$style.deleteQuestion, $style.popupButton]" 
+          type="text" 
+          :long="true"
+        >
+          删除问题
+        </Button>
+        <Button 
+          @click="hidePopup" 
+          size="large" 
+          :class="$style.popupButton" 
+          type="text" 
+          :long="true"
+        >
+          取消
+        </Button>
+      </div>
+    </mt-popup>
   </section>
 </template>
 <style lang="less" module>
   .QuestionDetail {
+    .popup {
+      width: 100%;
+      background: rgba(0, 0, 0, 0);
+      .popupButton {
+        border-bottom: 1px solid #ededed;
+        color: #333;
+        border-radius: 0;
+        font-size: 16px;
+        &.deleteQuestion {
+          color: #f00;
+        }
+        &:last-child {
+          margin-top: 5px;
+        }
+      }
+    }
     .commentsRoot {
       position: fixed;
       top: 0;
@@ -702,6 +754,7 @@
   const noCommentImage = resolveImage(require('../../statics/images/defaultNothingx2.png'));
   const defaultAvatar = resolveImage(require('../../statics/images/defaultAvatarx2.png'));
   const onlookers_amount = storeLocal.get('onlookers_amount');
+  const apply_amount = storeLocal.get('apply_amount');
   // markdown 解析
   const md = markdownIt({
     breaks: true,
@@ -743,7 +796,8 @@
     data: () => ({
       user_id: 0,
       goldName: window.TS_WEB.goldName,
-      onlookers_amount,
+      onlookers_amount, // 围观金额
+      apply_amount, // 申精金额
       loading: false,
       showAll: false,
       question: {
@@ -768,7 +822,10 @@
       commentsBottomAllLoaded: true,
       commentsBottomStatus: '',
       placeholder: '随便说说',
-      max_id: 0
+      max_id: 0,
+      isShowPopup: false,
+      showAskforExcellent: false,
+      openExcellet: false, // 设置精华窗口开关
     }),
 
     mounted () {
@@ -780,6 +837,73 @@
       showAmount,
       trueAmount,
       getUserInfo,
+      doAskExcellet () {
+        const { question: { id } } = this;
+        addAccessToken().post(
+          createAPI(`user/question-application/${id}`),
+          {
+            validataStatus: status => status === 201
+          }
+        )
+        .then( () => {
+          this.$Message.info({
+            content: '申请成功,请等待审核'
+          });
+          this.question = {
+            ...this.question,
+            ...{
+              excellent: true
+            }
+          };
+          this.openExcellet = false;
+        })
+        .catch(({ response: { data } }) => {
+          this.openExcellet = false;
+          this.$Message.error(this.$MessageBundle(data).getMessage());
+        })
+      },
+      deleteQuestion () {
+        this.hidePopup();
+        const { question: { id } } = this;
+        addAccessToken().delete(
+          createAPI(`questions/${id}`),
+          {
+            validataStatus: status => status === 204
+          }
+        )
+        .then( () => {
+          this.$Message.success({
+            content: '删除成功,跳转中...',
+            duration: 2
+          });
+          setTimeout( () => {
+            this.$router.push('/questions');
+          }, 2000)
+        })
+      },
+      comfirmDelete () {
+        this.hidePopup();
+        this.$Modal.confirm({
+            title: '删除问题',
+            content: '问题删除后将无法复原，确认删除该问题',
+            onOk: () => {
+              this.deleteQuestion();
+            }
+        });
+      },
+      hidePopup () {
+        this.isShowPopup = false;
+      },
+      showPopup () {
+        this.isShowPopup = true;
+      },
+      handleCloseExcellt() {
+        this.openExcellet = false;
+      },
+      handleOpenExcellet () {
+        this.hidePopup();
+        this.openExcellet = true;
+      },
       /**
        * 打开评论输入框
        * @param  {Number} comment_to_uid [回复某个用户ID]
@@ -905,7 +1029,7 @@
         .then(({ data = [] }) => {
           const { length } = data;
           if(type !== 'loadNew') {
-            console.log(length === limit);
+            
             if(length === limit) {
               this.commentsBottomAllLoaded = false;
             } else {

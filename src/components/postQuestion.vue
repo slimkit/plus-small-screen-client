@@ -576,8 +576,8 @@
         this.customAmount = '';
         this.rewardOpen = false;
         this.invitations = [];
-        this.anonymity = false;
-        this.look = false;
+        this.anonymity = 0;
+        this.look = 0;
         this.invitation_name = '';
       },
       /**
