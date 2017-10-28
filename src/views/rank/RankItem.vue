@@ -1,5 +1,5 @@
 <template>
-	<div class="rank-item">
+	<div class="rank-item" @click="changeUrl(`/users/feeds/${userInfo.id}`)">
 		<i class="rank-index">{{ rankIndex }}</i>
 		<div class="rank-info">
 			<div class="user-header">
@@ -12,9 +12,9 @@
 		</div>
 		<div class="rank-follow">
             <div class="actionButton" @click.stop="handleFollowingStatus(followAction.status)">
-                <FollowingIcon v-if="followAction.text == '已关注'" height="16" width="16" color="#59b6d7" />
-                <UnFollowingIcon v-if="followAction.text == '关注'" height="16" width="16" color="#333" />
-                <EachFollowingIcon v-if="followAction.text == '相互关注'" height="16" width="16" color="#59b6d7" />
+                <FollowingIcon v-if="followAction.text == '已关注'" height="20" width="20" color="#59b6d7" />
+                <UnFollowingIcon v-if="followAction.text == '关注'" height="20" width="20" color="#333" />
+                <EachFollowingIcon v-if="followAction.text == '相互关注'" height="20" width="20" color="#59b6d7" />
             </div>
         </div>
 	</div>
@@ -26,6 +26,8 @@ import UnFollowingIcon from '../../icons/UnFollowing';
 import EachFollowingIcon from '../../icons/EachFollowing';
 import { followingUser, unFollowingUser } from '../../utils/user';
 import { resolveImage } from '../../utils/resource';
+import { changeUrl } from '../../utils/changeUrl';
+
 const defaultAvatar = resolveImage(require('../../statics/images/defaultAvatarx2.png'));
 	export default {
 		name: 'rank-item',
@@ -47,9 +49,9 @@ const defaultAvatar = resolveImage(require('../../statics/images/defaultAvatarx2
 				return rank;
 			},
 			userInfo(){
-				let { avatar, name, extra } = this.person;
+				let { id, avatar, name, extra } = this.person;
 				avatar = avatar || defaultAvatar;
-				return ({ avatar, name, extra }); 
+				return ({ id, avatar, name, extra }); 
 			},
 			followAction() {
 				let { following, follower } = this;
@@ -95,6 +97,7 @@ const defaultAvatar = resolveImage(require('../../statics/images/defaultAvatarx2
         	}
 		},
 		methods: {
+			changeUrl,
 			handleFollowingStatus(status) {
 	            // 关注操作
 	            if (status) {
@@ -162,6 +165,7 @@ const defaultAvatar = resolveImage(require('../../statics/images/defaultAvatarx2
 			flex: 1 1 auto;
 			display: flex;
 			padding: 0 25px;
+			align-items: center;
 			.user-header{
 				overflow: hidden;
 				width: 38px;

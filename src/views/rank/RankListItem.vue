@@ -7,7 +7,7 @@
     </span>
   </div>
   <div :class="$style.content">
-    <div :class="$style.user"  v-for="item in items">
+    <div :class="$style.user"  v-for="item in items" @click="changeUrl(`/users/feeds/${item.id}`)">
       <div :class="$style.userImageContainer">
         <img v-lazy="item.avatar ? item.avatar : defaultAvatar" :class="$style.userAvatar">
         <img v-if="item.verified" :src="item.verified.icon" :class="$style.userIcon">
