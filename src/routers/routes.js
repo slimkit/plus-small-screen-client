@@ -52,8 +52,7 @@ import FindContent from '../views/findsomeone/FindContent';
 import FindNear from '../views/findsomeone/FindNear';
 
 // 圈子
-import Group from "../views/group/Group";
-import GroupList from "../views/group/GroupList";
+import groupRouter from './group.router';
 
 // 钱包相关
 import Balance from '../views/balance/Balance';
@@ -440,23 +439,6 @@ const routes = [
       }
     }]
   },{
-    path: '/group',
-    component: Group,
-    name: 'group',
-    meta: {
-      title: '圈子',
-      keywords: '圈子'
-    },
-    redirect: '/group/list/mine',
-    children: [{
-      path: 'list/:type',
-      component: GroupList
-    }],
-    beforeEnter: (to, from, next) => {
-      requestAuth(to, from, next);
-    }
-  },
-  {
     path: '/balance',
     component: Balance,
     meta: {
