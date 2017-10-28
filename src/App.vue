@@ -253,8 +253,8 @@
                           })
                         })
                       } else {
-                        room.name = item.name;
-                        room.avatar = item.avatar;
+                        room.name = user.name;
+                        room.avatar = user.avatar;
                         this.$store.dispatch(MESSAGEROOMS, cb => {
                           cb(room);
                         })

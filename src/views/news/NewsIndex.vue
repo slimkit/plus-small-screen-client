@@ -271,21 +271,19 @@
 
       // 上拉加载
       loadBottom () {
-        this.getNewsList(true);
+        this.getNewsList('loadMore');
       },
       // 下拉刷新
       loadTop () {
-        this.getNewsList();
+        this.getNewsList('loadNew');
       },
 
       // 请求数据
-      getNewsList (loadMore = false) {
-        if(!loadMore) {
+      getNewsList (type = 'new') {
+        if(type === 'new') this.spinner = true;
+        if(type === 'new') {
           this.max_id = 0
         };
-
-        this.showSpinner = true;
-
         addAccessToken().get(createAPI(`news?after=${this.max_id}`),{
           params: this.searchParams
         },{
@@ -296,34 +294,40 @@
           let length = data.length;
 
           // 判断是否有下一页
-          if( length < this.limit ) {
-            this.bottomAllLoaded = true;
-          } else {
-            this.bottomAllLoaded = false;
+          if( type !== 'loadNew') {
+            if( length === this.limit ) {
+              this.bottomAllLoaded = false;
+            } else {
+              this.bottomAllLoaded = true;
+            }
+            if(length) this.max_id = data[data.length - 1].id;
           }
-
+            
           data.forEach( nwes => {
             this.newsListIds.push(nwes.id);
           });
 
           // 判断 刷新 OR 加载更多
-          if( !loadMore ) {
-            this.newsLists = [ ...data ]; // 刷新
-          } else {
+          if( type === 'new' ) {
+            this.newsLists = data; // 刷新
+          }
+          if (type === 'loadMore') {
             this.newsLists = [ ...this.newsLists, ...data ]; // 加载更多
+            this.$refs.loadmore.onBottomLoaded();
           }
 
-          // 最后一条的 ID
-          if(data.length) this.max_id = data[data.length - 1].id;
-
-          setTimeout(() => {
-            if(this.$refs.loadmore)
-              loadMore ? this.$refs.loadmore.onBottomLoaded() : this.$refs.loadmore.onTopLoaded();
-          }, 500);
-        }).catch(err=>{
-          console.log(err);
-          this.showSpinner = false;
-        });
+          if (type === 'loadNew') {
+            this.newsLists = lodash.uniqBy([
+              ...data,
+              ...this.newsLists
+            ], 'id');
+            this.$refs.loadmore.onTopLoaded();
+          }
+        })
+        // .catch(err=>{
+        //   console.log(err);
+        //   this.showSpinner = false;
+        // });
       },
 
       // 改变分类ID
@@ -376,7 +380,7 @@
       this.getUserCates();
 
       // 获取资讯列表 默认请求推荐资讯
-      this.getNewsList(true);
+      this.getNewsList('new');
     }
   }
 

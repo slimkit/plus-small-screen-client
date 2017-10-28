@@ -41,7 +41,7 @@
 <style lang="scss" module>
   .comfirm {
     background-color: rgba(0, 0, 0, 0.3);
-    z-index: 6;
+    z-index: 10;
     bottom: 0px;
     left: 0px;
     position: fixed;

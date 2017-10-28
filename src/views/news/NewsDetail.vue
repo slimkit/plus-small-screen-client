@@ -257,8 +257,8 @@
     }
   }).use(plusImageSyntax, `/api/v2/files/`);
   // 引入样式库
-  import "github-markdown-css";
-  import 'highlight.js/styles/github.css';
+  
+  // import 'highlight.js/styles/github.css';
   
   const noCommentImage = resolveImage(require('../../statics/images/defaultNothingx2.png'));
   const newsDetail = {
@@ -437,18 +437,7 @@
           }
         )
         .then( ({ data = {}}) => {
-          // let feed = this.feedData;
-          // console.log(data);return;
-          // let newComment = {
-          //   body: this.commentBody,
-          //   comment_mark: null,
-          //   created_at: getLocalTime(),
-          //   id: response.data.data,
-          //   reply_user: this.commentToUserId,
-          //   user_id: window.TS_WEB.currentUserId,
-          //   reply_to_user: {},
-          //   user: {}
-          // };
+
           let newComment = { ...data.comment };
           // current logged user
           
@@ -667,9 +656,6 @@
   .feed-container {
     background-color: #f4f5f5;
   }
-  #feed-footer {
-    transition: bottom .2s;
-  }
   .headerNoPadding {
     padding-top: 0;
   }
@@ -759,31 +745,6 @@
       font-size: 12px;
       color: #ccc;
       text-align: right;
-    }
-  }
-  .feed-container-tool-operation {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 55px;
-    z-index: 6;
-    .operation {
-      div { 
-        display: flex;
-        justify-content: center;
-        flex-wrap: wrap;
-        svg {
-          width: 100%;
-        }
-        i {
-          font-style: normal;
-          color: #999;
-        }
-        i.did {
-          color: #f4504d;
-        }
-      }
     }
   }
   .feed-container-comments {

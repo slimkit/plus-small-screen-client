@@ -27,7 +27,7 @@
             @click="$router.push({name: 'questionDetail', params: {question_id: question.id}})"
           >
             <h3>{{ question.subject }}</h3>
-            <img :class="$style.answerImg" v-if="question.answer && getFile(question.answer.body)" v-lazy="getFile(question.answer.body)" />
+            <img :class="$style.answerImg" v-if="question.answer && getFile(answerBody(question))" v-lazy="getFile(answerBody(question))" />
             <Row :gutter="24" v-if="question.answer">
               <Col span="24">
                 <section :class="$style.answerBody">
@@ -39,7 +39,8 @@
                     <img v-lazy="question.answer.user.avatar || defaultAvatar" :alt="question.answer.user.name">
                     <i>{{ question.answer.user.name }}：</i>
                   </div>
-                  {{ getContent(question.answer.body) }}
+                  <span v-if="question.look && !question.answer.could" class="blur">这个回答的内容是不可见的哦，你需要先围观该答案才能看到详情的问答情况，请尊重答主的劳动成果，谢谢啦</span>
+                  <span v-else>{{ getPureContent(answerBody(question)) }}</span>
                 </section>
               </Col>
             </Row>
@@ -69,7 +70,7 @@
     </template>
 
     <!-- Question is empty. -->
-    <img v-else style="width: 80vw; left: 10vw;  position: fixed; top: 30vh;" v-lazy="nothingImage" alt="" />
+    <img v-else style="width: 80vw; left: 10vw;  position: fixed; top: 30vh;" :src="nothingImage" alt="" />
   </div>
 </template>
 <style lang="less" module>
@@ -106,7 +107,7 @@
           -webkit-line-clamp: 3;  
           -webkit-box-orient: vertical;
           word-break: break-all;
-          font-size: 16px;
+          font-size: 14px;
           div {
             justify-content: center;
             align-items: center;
@@ -131,7 +132,7 @@
         .tool {
           padding-top: 12px;
           color: #bfbfbf;
-          font-size: 16px;
+          font-size: 14spx;
           span {
             color: #59b6d7;
           }
@@ -152,6 +153,7 @@
   import _ from 'lodash';
   import { createAPI, addAccessToken } from '../../utils/request';
   import { resolveImage } from '../../utils/resource';
+  import getPureContent from '../../utils/getPureContent';
   import timer from '../../utils/timer';
   const defaultAvatar = resolveImage(require('../../statics/images/defaultAvatarx2.png'));
   const nothingImage = resolveImage(require('../../statics/images/defaultNothingx2.png'));
@@ -170,6 +172,7 @@
     }),
     methods: {
       timer,
+      getPureContent,
       topStatusChange (status) {
         this.topStatus = status;
       },
@@ -256,14 +259,15 @@
           }
         });
       },
+      answerBody (question) {
+        const { look = 0, answer: { body = ''} } = question;
+        return body;
+      },
       getFile (str) {
+        if(!str) return 0;
         let file = str.match(/@!\[.*?]\((\d+)\)/);
         return file ? createAPI(`files/${file[1]}`) : 0;
       },
-      getContent (str) {
-        let content = str.replace(/@!\[.*?]\((\d+)\)/, "[图片]");
-        return content
-      }
     },
     watch: {
       '$route': function (route) {

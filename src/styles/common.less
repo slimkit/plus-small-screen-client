@@ -204,6 +204,41 @@ img.avatar {
     color: #fff!important;
   }
 }
+.feed-container-tool-operation {
+  &#feed-footer {
+    transition: bottom .2s;
+  }
+  &.feed-background-color {
+    background-color: #fff;
+  }
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 55px;
+  z-index: 6;
+  .operation {
+    div { 
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      svg {
+        width: 100%;
+      }
+      i {
+        font-style: normal;
+        color: #999;
+      }
+      i.did {
+        color: #f4504d;
+      }
+    }
+  }
+}
+p.blur, span.blur {
+  color: transparent!important;
+  text-shadow: 0 0 15px #666;
+}
 .mint-loadmore-content .mint-loadmore-top {
   height: 48px;
   line-height: 48px;

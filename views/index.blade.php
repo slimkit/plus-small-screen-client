@@ -17,6 +17,9 @@
     .markdown-body {
       font-size: 14px;
     }
+    .markdown-body * {
+      box-sizing: border-box;
+    }
     .markdown-body h2, .markdown-body h1 {
       border-bottom: none;
       margin-bottom: 8px;
@@ -24,6 +27,12 @@
     .markdown-body blockquote {
       background: #EAEDF1;
       padding: .5em 1em;
+    }
+    .markdown-body blockquote>:first-child {
+      margin-top: 0;
+    }
+    .markdown-body blockquote>:last-child {
+      margin-bottom: 0;
     }
     .markdown-body img {
       width: 100vw;
@@ -37,9 +46,45 @@
     .markdown-body ol {
       padding-left:  1em;
     }
+    .markdown-body ul {
+      padding-left: 1.2em;
+    }
     .markdown-body ol li {
       list-style-type: decimal;
     }
+    .markdown-body ul li {
+      list-style-type: disc;
+    }
+    .markdown-body .highlight pre, .markdown-body pre {
+      padding: 1em;
+      overflow: auto;
+      font-size: 100%;
+      line-height: 1.45;
+      background-color: #f6f8fa;
+      border-radius: 3px;
+    }
+    .markdown-body p {
+      margin-top: 0;
+      margin-bottom: 16px;
+    }
+    .markdown-body table {
+      display: block;
+      width: 100%;
+      overflow: auto;
+    }
+    .markdown-body blockquote, .markdown-body dl, .markdown-body ol, .markdown-body p, .markdown-body pre, .markdown-body table, .markdown-body ul {
+      margin-top: 0;
+      margin-bottom: 16px;
+    }
+    .markdown-body table tr {
+      background-color: #fff;
+      border-top: 1px solid #c6cbd1;
+    }
+    .markdown-body table td, .markdown-body table th {
+      padding: 6px 13px;
+      border: 1px solid #dfe2e5;
+    }
+
     /********************* markdown 样式重构 end *******************/
     #spinner-root {
       position: fixed;

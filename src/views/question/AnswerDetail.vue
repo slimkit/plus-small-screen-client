@@ -37,9 +37,18 @@
               <p :class="$style.bio">{{ name.bio }}</p>
             </Col>
             <Col span="6" class="header-end-col">
-              <Button v-if="!following" type="ghost" @click.native="doFollow">+ 关注</Button>
-              <Button v-else-if="following && !follower" type="ghost" @click.native="doUnFollow">√ 已关注</Button>
-              <Button v-else type="ghost" @click.native="doUnFollow">相互关注</Button>
+              <Button v-if="!following" class="followAboutButton" type="ghost" @click.native="doFollow">
+                <PlusIcon height="16" width="16" color="#ccc" />
+                关注
+              </Button>
+              <Button class="followAboutButton" v-else-if="following && !follower" type="ghost" @click.native="doUnFollow">
+                <RightIcon height="16" width="16" color="#ccc" />
+                已关注
+              </Button>
+              <Button class="followAboutButton" v-else type="ghost" @click.native="doUnFollow">
+                <EachFollowingIcon height="16" width="16" color="#ccc" />
+                相互关注
+              </Button>
             </Col>
           </Row>
         </section>
@@ -262,6 +271,9 @@
   import hljs from 'highlight.js';
   import RewardEntry from '../../components/RewardEntry';
   import { unFollowingUser, followingUser } from '../../utils/user';
+  import PlusIcon from '../../icons/Plus';
+  import RightIcon from '../../icons/Right';
+  import EachFollowIcon from '../../icons/EachFollowing';
 
   const defaultAvatar = resolveImage(require('../../statics/images/defaultAvatarx2.png'))
   // markdown 解析
@@ -289,6 +301,9 @@
   const defaultImage = resolveImage(require('../../statics/images/defaultNothingx2.png'));
   const AnswerDetail = {
     components: {
+      EachFollowIcon,
+      PlusIcon,
+      RightIcon,
       Comfirm,
       UnFollowingIcon,
       FollowingIcon,
