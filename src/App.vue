@@ -87,7 +87,7 @@
         }
       )
       .then( ({ data }) => {
-        const {site: { gold_name: { name = '金币' }, reward: { status = true, amounts = '' } } = {} } = data;
+        const {site: { gold_name: { name = '金币' }, reward: { status = true, amounts = '' } = {} } = {} } = data;
         this.$storeLocal.set('rewardSetting', { status: status, items: lodash.split(amounts, ',') });
         this.$storeLocal.set('onlookers_amount', data['question:onlookers_amount']);
         this.$storeLocal.set('apply_amount', data['question:apply_amount']);
