@@ -149,11 +149,11 @@ const defaultAvatar = resolveImage(require('../../statics/images/defaultAvatarx2
 		> {
 			flex: 0 0 auto;
 		}
-		&:nth-child(1),
 		&:nth-child(2),
-		&:nth-child(3){
+		&:nth-child(3),
+		&:nth-child(4){
 			.rank-index{
-				color: #59b6d7;					
+				color: #59b6d7;
 			}
 		}
 		.rank-index{
