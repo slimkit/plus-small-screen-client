@@ -1,7 +1,9 @@
 <template>
     <Modal
-        v-model="show"
-        :styles="{top: '90px'}" width="250">
+        v-model="modalStatus"
+        :styles="{top: '90px'}"
+        @on-ok="handleOffModal"
+        @on-cancel="handleOffModal">
         <div>
 
           <h2>+{{ attach_balance }}</h2>
@@ -17,37 +19,37 @@
 
 <script>
 import { mapState } from 'vuex';
-import SHOWCHECKIN from '../stores/types';
-import { createAPI, addAccessToken } from '../utils/request';
+import { SHOWCHECKIN } from '../stores/types';
 import { resolveImage } from '../utils/resource';
+import { createAPI, addAccessToken } from '../utils/request';
 
 const defaultAvatar = resolveImage(require('../statics/images/defaultAvatarx2.png'));
 
 const checkinLayer = {
   data: () => ({
+    modalStatus: false,
     // 当日签到状态 true 已签到 false 未签到
     checked_in: false,
     // 当日前五签到用户，按照签到时间顺序排列
     rank_users: [],
     // 当前用户签到总天数
     checkin_count: 0,
-    // 当前用户连续签到天数
-    attach_balance: 0,
     // 签到用户积分增加值，单位是真实货币「分」单位
+    attach_balance: 0,
+    // 当前用户连续签到天数
     last_checkin_count: 0,
     // 默认显示头像
     defaultAvatar: defaultAvatar
   }),
   computed: {
-    ...mapState({
-      show: state => state.showCheckin.showCheckin.show,
-    }),
+    show () {
+      return this.$store.state.showCheckin.showCheckin.show;
+    }
   },
   watch:{
     show (val) {
-      if (val) {
-       this.getUserCheckin();
-      }
+      this.modalStatus = val;
+      if (val) this.getUserCheckin();
     }
   },
   methods: {
@@ -81,6 +83,12 @@ const checkinLayer = {
         .catch(({ response: { data = { message: '' } } }) => {
           this.$Message.error(this.$MessageBundle(data).getMessage());
         });
+    },
+    // 关闭签到框
+    handleOffModal () {
+      this.$store.dispatch(SHOWCHECKIN, cb => {
+        cb(false);
+      });
     }
   }
 };
