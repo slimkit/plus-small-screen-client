@@ -10,7 +10,7 @@
     <ShowFeedPopup />
     <postQuestion />
     <PostAnswer />
-    <CheckinLayer :config="prePostConfig.checkin"/>
+    <CheckinLayer/>
     {{ imStatus }}
     {{ setBodyOverflew }}
   </div>

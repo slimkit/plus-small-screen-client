@@ -2,15 +2,15 @@
     <Modal
         v-model="show"
         :styles="{top: '90px'}" width="250">
-        <div :class="$style.checkinContainer">
+        <div>
 
-        <h2>+{{ attach_balance }}</h2>
-        <h2>累计签到 {{ checkin_count }}</h2>
-        <Button @click.native="handleCheckin" :disabled="checked_in">{{ checked_in ? '已签到' : '签到' }}</Button>
-        <div v-for="(user, index) in rank_users">
-          <b>{{ index+1 }}</b>
-          <img :src="user.avatar" style="height:50px;width:50px;">
-        </div>
+          <h2>+{{ attach_balance }}</h2>
+          <h2>累计签到 {{ checkin_count }}</h2>
+          <Button @click.native="handleCheckin" :disabled="checked_in">{{ checked_in ? '已签到' : '签到' }}</Button>
+          <div v-for="(user, index) in rank_users">
+            <b>{{ index+1 }}</b>
+            <img :src="user.avatar ? user.avatar : defaultAvatar" style="height:50px;width:50px;">
+          </div>
         </div>
     </Modal>
 </template>
@@ -19,8 +19,9 @@
 import { mapState } from 'vuex';
 import SHOWCHECKIN from '../stores/types';
 import { createAPI, addAccessToken } from '../utils/request';
-import storeLocal from 'store';
-const UserLoginInfo = storeLocal.get('UserLoginInfo') || {};
+import { resolveImage } from '../utils/resource';
+
+const defaultAvatar = resolveImage(require('../statics/images/defaultAvatarx2.png'));
 
 const checkinLayer = {
   data: () => ({
@@ -34,8 +35,9 @@ const checkinLayer = {
     attach_balance: 0,
     // 签到用户积分增加值，单位是真实货币「分」单位
     last_checkin_count: 0,
+    // 默认显示头像
+    defaultAvatar: defaultAvatar
   }),
-  props:['config'],
   computed: {
     ...mapState({
       show: state => state.showCheckin.showCheckin.show,
@@ -56,7 +58,7 @@ const checkinLayer = {
           { validateStatus: status => status === 204 }
         )
         .then(response => {
-          this.checked_in = true;
+          this.getUserCheckin();
         })
         .catch(({ response: { data = { message: '' } } }) => {
           this.$Message.error(this.$MessageBundle(data).getMessage());
@@ -82,11 +84,5 @@ const checkinLayer = {
     }
   }
 };
-
 export default checkinLayer;
 </script>
-<style lang="less" module>
-  .checkinContainer {
-
-  }
-</style>
