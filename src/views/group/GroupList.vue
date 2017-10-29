@@ -11,7 +11,7 @@
                 <img :src="nothingImg" alt="暂无数据">
             </div>
             <template v-else>
-                <group-item v-for="(item,index) in groupList" :group='item' :key="index"></group-item>
+                <group-item v-for="(item,index) in groupList" :group='item' :updateData="loadTop" :key="`${item.id +'?' + new Date().getTime()}`"></group-item>
                 <div v-show="bottomAllLoaded" class="no-more">没有更多</div>
             </template>
             <div slot="top" class="mint-loadmore-top">
@@ -63,13 +63,13 @@ export default {
         loadData(merge = false) {
             let params = {
                 limit: 15,
-                after: merge ? this.groupList.length : 0,
+                after: merge ? this.groupList.length : 0
             },
 
             uri = createAPI('groups');
 
             if(this.type === "mine") {
-                uri = createAPI('groups/joined');
+                uri = createAPI(`groups/joined`);
             }
             addAccessToken().get(uri, { params }).then(({ data = [] }) => {
                 this.loading = false;

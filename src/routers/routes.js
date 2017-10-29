@@ -438,7 +438,10 @@ const routes = [
         title: '排行榜详情'
       }
     }]
-  },{
+  },
+  // 圈子
+  ...groupRouter,
+  {
     path: '/balance',
     component: Balance,
     meta: {
