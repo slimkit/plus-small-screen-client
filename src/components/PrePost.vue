@@ -3,7 +3,7 @@
     <div class="post-feed" :class="$style.prePostRoot" v-show="show">
       <section :class="$style.container">
         <Row :gutter="24" :class="$style.entryRow">
-          <Col span="8" :class="$style.entryCol" @click.native="checkin">
+          <Col span="8" :class="$style.entryCol" @click.native="checkin" v-show="config.checkin.status">
             <img :src="checkInPic" alt="签到">
             <span>签到</span>
           </Col>
@@ -83,7 +83,7 @@
 </style>
 <script>
   import { mapState } from 'vuex';
-  import { SHOWPREPOST, SHOWPOST, NOTICE, SHOWQUESTIONPOST } from '../stores/types';
+  import { SHOWPREPOST, SHOWPOST, NOTICE, SHOWQUESTIONPOST, SHOWCHECKIN } from '../stores/types';
   import { resolveImage } from '../utils/resource';
 
   const checkInPic = resolveImage(require('../statics/images/ico_attendance.png'));
@@ -102,7 +102,7 @@
       textFeecPic,
       livePic
     }),
-
+    props: ['config'],
     methods: {
       /**
        * 关闭prepost
@@ -155,7 +155,19 @@
         setTimeout( () => {
           this.close();
         }, 300)
-      }
+      },
+      /**
+       * 打开签到框
+       * @return {[type]} [description]
+       */
+      checkin () {
+        this.$store.dispatch(SHOWCHECKIN, cb => {
+          cb(true);
+        });
+        setTimeout( () => {
+          this.close();
+        }, 300)
+      },
     },
     computed: {
       ...mapState({

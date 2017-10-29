@@ -38,6 +38,12 @@ import collectionNews from './module/collectionNews';
 import showQuestionPost from './module/showQuestionPost';
 import showPostAnswer from './module/postAnswer';
 
+/**
+ * checkin about
+ */
+ 
+import showCheckin from './module/showCheckin';
+
 const modules = {
   user,
   notice,
@@ -59,7 +65,8 @@ const modules = {
   newsAbout,
   collectionNews,
   showQuestionPost,
-  showPostAnswer
+  showPostAnswer,
+  showCheckin
 }
 
 const store = new Vuex.Store({

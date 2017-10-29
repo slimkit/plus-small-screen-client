@@ -131,3 +131,8 @@ export const ADDRESULTIDS = 'addresultids';
  */
 export const SHOWQUESTIONPOST = 'showquextionpost';
 export const SHOWPOSTANSWER = 'showpostanswer';
+
+/**
+ * checkin about
+ */
+export const SHOWCHECKIN = 'showcheckin';

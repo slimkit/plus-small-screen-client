@@ -4,12 +4,13 @@
     <router-view></router-view>
     <NoticeText/>
     <IviewSwiper/>
-    <PrePost />
+    <PrePost :config="prePostConfig" />
     <PostFeed/>
     <Confirm />
     <ShowFeedPopup />
     <postQuestion />
     <PostAnswer />
+    <CheckinLayer :config="prePostConfig.checkin"/>
     {{ imStatus }}
     {{ setBodyOverflew }}
   </div>
@@ -25,6 +26,7 @@
   import ShowFeedPopup from './components/ShowFeedPopup';
   import postQuestion from './components/postQuestion';
   import PostAnswer from './components/PostAnswer';
+  import CheckinLayer from './components/CheckinLayer';
 
   // im聊天相关
   import lodash from 'lodash';
@@ -49,8 +51,18 @@
       ShowFeedPopup,
       PrePost,
       postQuestion,
-      PostAnswer
+      PostAnswer,
+      CheckinLayer
     },
+    data: () => ({
+      prePostConfig: {
+        // 签到应用状态
+        checkin: {
+          status: false,
+          amount: 0,
+        }
+      },
+    }),
     computed: {
       imStatus () { // im状态监测
         if(! TS_WEB.socketUrl) return;
@@ -91,6 +103,7 @@
         this.$storeLocal.set('rewardSetting', { status: status, items: lodash.split(amounts, ',') });
         this.$storeLocal.set('onlookers_amount', data['question:onlookers_amount']);
         this.$storeLocal.set('apply_amount', data['question:apply_amount']);
+        this.prePostConfig.checkin = { status: data.checkin, amount: data['checkin:attach_balance'] };
       })
       // 创建 DB;
       let db = new Dexie('ThinkSNS');
