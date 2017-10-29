@@ -23,7 +23,7 @@ function followingUser(user_id, cb) {
     addAccessToken().put(
         createAPI(`user/followings/${user_id}`), {},
         {
-          validate: status => status === 204
+          validateStatus: status => status === 204
         }
       )
       .then(response => {
