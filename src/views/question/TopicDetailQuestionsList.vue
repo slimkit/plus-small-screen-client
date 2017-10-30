@@ -36,7 +36,7 @@
                     <i>匿名用户：</i>
                   </div>
                   <div v-else :clas="$style.anybody">
-                    <img v-lazy="question.answer.user.avatar || defaultAvatar" :alt="question.answer.user.name">
+                    <img  class="component-avatar" v-lazy="question.answer.user.avatar || defaultAvatar" :alt="question.answer.user.name">
                     <i>{{ question.answer.user.name }}：</i>
                   </div>
                   {{ getContent(question.answer.body) }}

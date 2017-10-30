@@ -36,7 +36,7 @@
                     <i>匿名用户：</i>
                   </div>
                   <div v-else :clas="$style.anybody">
-                    <img v-lazy="question.answer.user.avatar || defaultAvatar" :alt="question.answer.user.name">
+                    <img class="component-avatar" v-lazy="question.answer.user.avatar || defaultAvatar" :alt="question.answer.user.name">
                     <i>{{ question.answer.user.name }}：</i>
                   </div>
                   <span v-if="question.look && !question.answer.could" class="blur">这个回答的内容是不可见的哦，你需要先围观该答案才能看到详情的问答情况，请尊重答主的劳动成果，谢谢啦</span>

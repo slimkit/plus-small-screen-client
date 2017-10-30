@@ -48,7 +48,7 @@
           <Poptip placement="bottom" style="display: flex">
             <span class="IconWithText"><RewardIcon height="21" width="21" />已设置悬赏</span>
             <div :class="$style.api" slot="content">
-              <img style="width: 8vw; vertical-align: middle; margin-right: 3vw;" v-lazy="question.invitations[0].avatar || defaultAvatar" alt="">{{question.invitations[0].name}}
+              <img  class="component-avatar" style="width: 8vw; vertical-align: middle; margin-right: 3vw;" v-lazy="question.invitations[0].avatar || defaultAvatar" alt="">{{question.invitations[0].name}}
             </div>
           </Poptip>
         </Col>
@@ -93,7 +93,7 @@
             <section v-if="question.invitation_answers.length" :class="$style.answerContainer" v-for="(invitation_answer, index) in question.invitation_answers" @click="checkAnswer(invitation_answer.could , invitation_answer.id)">
               <Row :class="$style.answer" :gutter="24" :key="invitation_answer.id">
                 <Col span="4">
-                  <img @click.stop="$router.push({name: 'userSpace', params: { user_id: invitation_answer.user.id}})" v-lazy="invitation_answer.user.avatar || defaultAvatar" style="width: 100%" alt="">
+                  <img class="component-avatar" @click.stop="$router.push({name: 'userSpace', params: { user_id: invitation_answer.user.id}})" v-lazy="invitation_answer.user.avatar || defaultAvatar" style="width: 100%" alt="">
                 </Col>
                 <Col span="20">
                   <div :class="$style.userTime">
@@ -155,7 +155,7 @@
             <section v-if="question.adoption_answers.length" :class="$style.answerContainer" v-for="(adoption_answer, index) in question.adoption_answers" @click="$router.push({name: 'AnswerDetail', params: {answer_id: adoption_answer.id}})">
               <Row :class="$style.answer" :gutter="24" :key="adoption_answer.id">
                 <Col span="4">
-                  <img @click.stop="$router.push({name: 'userSpace', params: { user_id: adoption_answer.user.id}})" v-lazy="adoption_answer.user.avatar || defaultAvatar" style="width: 100%" alt="">
+                  <img  class="component-avatar" @click.stop="$router.push({name: 'userSpace', params: { user_id: adoption_answer.user.id}})" v-lazy="adoption_answer.user.avatar || defaultAvatar" style="width: 100%" alt="">
                 </Col>
                 <Col span="20">
                   <div :class="$style.userTime">
@@ -206,7 +206,7 @@
             <section :class="$style.answerContainer" @click="$router.push({name: 'AnswerDetail', params: {answer_id: answer.id}})" v-for="(answer, index) in answers" :key="answer.id">
               <Row :class="$style.answer" :gutter="24">
                 <Col span="4">
-                  <img @click.stop="$router.push({name: 'userSpace', params: { user_id: answer.user.id}})" v-lazy="answer.user.avatar || defaultAvatar" style="width: 100%" alt="">
+                  <img  class="component-avatar" @click.stop="$router.push({name: 'userSpace', params: { user_id: answer.user.id}})" v-lazy="answer.user.avatar || defaultAvatar" style="width: 100%" alt="">
                 </Col>
                 <Col span="20">
                   <div :class="$style.userTime">
@@ -373,7 +373,7 @@
                 <Row :gutter="24" :class="$style.perComment">
                   <Col span="4">
                     <div class="grid-content bg-purple">
-                      <img @click="changeUrl(`/users/feeds/${comment.user.user_id}`)" :src="comment.user.avatar" alt="" style="width:100%; border-radius:50%">
+                      <img @click="changeUrl(`/users/feeds/${comment.user.user_id}`)" :src="comment.user.avatar" alt="" class="component-avatar">
                     </div>
                   </Col>
                   <Col span="20">

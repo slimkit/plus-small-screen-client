@@ -44,7 +44,7 @@
           {{topic.experts_count}}位相关专家  
         </Col>
         <Col span="16" style="position: relative;">
-          <img :style="styleCompute(index)" v-lazy="expert.avatar || defaultAvatar" alt="" v-for="(expert, index) in topic.experts" :key="index">
+          <img  class="component-avatar" :style="styleCompute(index)" v-lazy="expert.avatar || defaultAvatar" alt="" v-for="(expert, index) in topic.experts" :key="index">
         </Col>
       </Row>
     </section>

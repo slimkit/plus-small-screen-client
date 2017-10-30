@@ -123,7 +123,7 @@
                   <Row :gutter="24" :class="$style.perComment">
                     <Col span="4">
                       <div class="grid-content bg-purple">
-                        <img @click="changeUrl(`/users/feeds/${comment.user.user_id}`)" :src="comment.user.avatar" alt="" style="width:100%; border-radius:50%">
+                        <img class="component-avatar" @click="changeUrl(`/users/feeds/${comment.user.user_id}`)" :src="comment.user.avatar" />
                       </div>
                     </Col>
                     <Col span="20">

@@ -33,7 +33,7 @@
            @click.native="$router.push({name: 'userSpace', params: {user_id: user.id}})"
         >
           <Col span="6" :class="$style.avatar">
-            <img v-lazy="user.avatar" :alt="user.uname">
+            <img component-avatar v-lazy="user.avatar" :alt="user.uname">
           </Col>
           <Col span="18" :class="$style.userBody">
             <h3>{{ user.name }}</h3>

@@ -58,7 +58,7 @@
           >
             <Row @click.native="$router.push({ name: 'topicDetail', params: { topic_id: topic.id }})" :gutter="24" :class="$style.listContainer" v-for="(topic, index) in topics" :key="index">
               <Col span="6">
-                <img :class="$style.topicImg" v-lazy="topic.avatar" :alt="topic.name" />
+                <img  :class="$style.topicImg" v-lazy="topic.avatar" :alt="topic.name" />
               </Col>
               <Col span="12">
                 <section>
