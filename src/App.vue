@@ -65,7 +65,7 @@
     }),
     computed: {
       imStatus () { // im状态监测
-        if(! TS_WEB.socketUrl) return;
+        if(! TS_WEB.socketUrl.serve) return;
 
         let imstatus = this.$store.getters[IMSTATUS];
         let userLoginInfo = this.$storeLocal.get('UserLoginInfo') || {};
@@ -100,7 +100,7 @@
       )
       .then( ({ data }) => {
         const {site: { gold_name: { name = '金币' }, reward: { status = true, amounts = '' } = {} } = {}, feed = {} } = data;
-        
+
         this.$storeLocal.set('feedReward', feed.reward);
         this.$storeLocal.set('feedPayControl', feed.paycontrol);
         this.$storeLocal.set('feedPayItems', feed.items);

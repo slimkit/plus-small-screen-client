@@ -28,7 +28,7 @@ const currentUser = localEvent.getLocalItem('UserLoginInfo');
 
 function connect() {
 	// 链接IM
-	if (window.TS_WEB.socketUrl) { // 判断是否配置im聊天服务器,
+	if (window.TS_WEB.socketUrl.serve) { // 判断是否配置im聊天服务器,
 		if (TS_WEB.webSocket && TS_WEB.webSocket.readyState != 1) { // 已经连接过,但是处于非链接状态
 			try {
 				window.TS_WEB.webSocket = new window.WebSocket(TS_WEB.webSocket.url);
@@ -44,7 +44,7 @@ function connect() {
 			} catch (e) {
 				window.console.log(e);
 			}
-		} else if (TS_WEB.webSocket == null && TS_WEB.socketUrl) { // 还没有连接过, 直接新建链接
+		} else if (TS_WEB.webSocket == null && TS_WEB.socketUrl.serve) { // 还没有连接过, 直接新建链接
 			addAccessToken().get(createOldAPI('im/users'), {}, {
 					validateStatus: status => status === 200
 				})
@@ -52,7 +52,7 @@ function connect() {
 					let data = response.data.data;
 					window.TS_WEB.im_token = data.im_password; // 保存im口令
 					if (window.TS_WEB.socketUrl) {
-						let socketUrl = `ws://${window.TS_WEB.socketUrl}?token=${data.im_password}`;
+						let socketUrl = `${window.TS_WEB.socketUrl.serve}?token=${data.im_password}`;
 						try {
 							window.TS_WEB.webSocket = new window.WebSocket(socketUrl);
 							window.TS_WEB.webSocket.onopen = evt => {
