@@ -45,12 +45,12 @@
 <script>
 import PlusIcon from '../../icons/Plus';
 import axios, { createAPI, addAccessToken } from '../../utils/request';
-import imagesMange from './imgUpload';
+// import imagesMange from './imgUpload';
 export default {
   name: 'group-post-feed',
   components: {
     'icon-plus': PlusIcon,
-    'image-upload': imagesMange,
+    // 'image-upload': imagesMange,
   },
   data() {
     return ({
