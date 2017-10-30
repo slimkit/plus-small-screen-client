@@ -116,6 +116,7 @@
         this.$storeLocal.set('rewardSetting', { status: status, items: lodash.split(amounts, ',') });
         this.$storeLocal.set('onlookers_amount', data['question:onlookers_amount']);
         this.$storeLocal.set('apply_amount', data['question:apply_amount']);
+        this.$storeLocal.set('ratio', data['wallet:ratio']);
         this.prePostConfig.checkin = { status: data.checkin, amount: data['checkin:attach_balance'] };
       })
       // 创建 DB;
@@ -298,22 +299,6 @@
           connect();
         }
       }
-    },
-    methods: {
-      wallet () {
-        addAccessToken().get(
-          createAPI('wallet'),
-          {
-            validataStatus: status => status === 200
-          }
-        )
-        .then(({ data = {} }) => {
-          this.$storeLocal.set('ratio', data.ratio);
-        })
-      }
-    },
-    beforeMount(){
-      this.wallet();
     }
   }
 
