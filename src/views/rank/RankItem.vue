@@ -86,7 +86,7 @@ const defaultAvatar = resolveImage(require('../../statics/images/defaultAvatarx2
         		} else if (type === 'likes') {
         			title = `问答点赞量：${ extra.likes_count }`;
         		} else if (type === 'dayQuestion' || type === "weekQuestion" || type === "monthQuestion") {
-        			title = `回答量：${ extra.question_count }`;
+        			title = `回答量：${ extra.answers_count }`;
         		} else if (type === 'dayFeed' || type === "weekFeed" || type === "monthFeed") {
         			title = `点赞量：${ extra.likes_count }`;
         		} else if (type === 'dayNews' || type === "weekNews" || type === "monthNews") {
