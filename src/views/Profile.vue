@@ -52,7 +52,7 @@
       </Row>
       <Row :gutter="24" :class="$style.entryMenu" @click.native="changeUrl('/balance')">
         <Col span="3">
-          <ConnectionIcon :height="21" :width="21" color="#59b6d7" />
+          <WalletIcon :height="21" :width="21" color="#59b6d7" />
         </Col>
         <Col span="12" :class="$style.menuText">
           钱包
@@ -72,7 +72,7 @@
           <RightArrowIcon height="18" width="18" color="#999" />
         </Col>
       </Row>
-      <Row :gutter="24" :class="$style.entryMenu" @click.native="changeUrl('/users/collections')">
+      <!-- <Row :gutter="24" :class="$style.entryMenu" @click.native="changeUrl('/users/collections')">
         <Col span="3">
           <ConnectionIcon :height="21" :width="21" color="#59b6d7" />
         </Col>
@@ -82,7 +82,7 @@
         <Col span="5"  :class="$style.rightIcon">
           <RightArrowIcon height="18" width="18" color="#999" />
         </Col>
-      </Row>
+      </Row> -->
     </div>
     <div :class="$style.entry">
       <Row :gutter="24" :class="$style.entryMenu" @click.native="changeUrl('/users/feedback')">
@@ -173,6 +173,7 @@
   import SystemSettingIcon from '../icons/SystemSetting';
   import SapceIcon from '../icons/Space';
   import RightArrowIcon from '../icons/RightArrow';
+  import WalletIcon from '../icons/Wallet';
   import { resolveImage } from '../utils/resource';
   import lodash from 'lodash';
   import { getUserInfo, getLoggedUserInfo, getUserCertification } from '../utils/user';
@@ -191,7 +192,8 @@
       QuestionIcon,
       SystemSettingIcon,
       SapceIcon,
-      RightArrowIcon
+      RightArrowIcon,
+      WalletIcon
     },
     data: () => ({
       goldName: window.TS_WEB.goldName,

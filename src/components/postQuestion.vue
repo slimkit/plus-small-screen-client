@@ -63,16 +63,6 @@
                 <DownArrowIcon height="21" width="21" color="#bfbfbf" />
               </Col>
               <Col span="20" class="header-end-col">
-                <Upload
-                  :class="$style.upload"
-                  :action="action"
-                  :show-upload-list="false"
-                  :headers="headers"
-                  :on-success="handleSuccess"
-                  :on-error="handleError"
-                >
-                    <DownArrowIcon height="21" width="21" color="#bfbfbf" />
-                </Upload>
                 <Poptip
                   :class="$style.poptip"
                   confirm
@@ -80,7 +70,7 @@
                   @on-ok="setAnonymity(anonymity)"
                   placement="left-end"
                 >
-                  <DownArrowIcon style="margin-left: 16px;" height="21" width="21" :color="anonymity ? '#59b6d7' : '#bfbfbf'" />
+                  <NobodySetting height="21" width="21" :color="anonymity ? '#59b6d7' : '#bfbfbf'" />
                 </Poptip>
               </Col>
             </Row>
@@ -383,6 +373,7 @@
   import RightArrowIcon from '../icons/RightArrow';
   import Experts from '../views/question/Experts';
   import fileUpload from '../utils/uploadFile';
+  import NobodySetting from '../icons/NobodySetting';
   
   const { token = ''} = storeLocal.get('UserLoginInfo') || {};
   const postQuestion = {
@@ -393,7 +384,8 @@
       SearchIcon,
       Topics,
       RightArrowIcon,
-      Experts
+      Experts,
+      NobodySetting
     },
     data: () => ({
       goldName: window.TS_WEB.goldName,

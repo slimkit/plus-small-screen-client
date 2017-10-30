@@ -41,7 +41,7 @@
         </li>
         <li class="component-list" @click="changeUrl(`/questions`)">
           <i class="component-icon">
-            <ChannelIcon height="21" width="21" />
+            <QuestionIcon height="21" width="21" />
           </i>
           <section class="component-title">
             问答
@@ -54,7 +54,7 @@
       <ul class="component-lists">
         <li class="component-list" @click="changeUrl(`/rank`)">
           <i class="component-icon">
-            <FindsomeOne height="21" width="21" />
+            <RankingIcon height="21" width="21" />
           </i>
           <section class="component-title">
             排行榜
@@ -90,6 +90,8 @@
   import ChannelIcon from '../icons/Channel';
   import FindsomeOne from '../icons/FindSomeOne';
   import RightArrowIcon from '../icons/RightArrow';
+  import RankingIcon from '../icons/RankingCon';
+  import QuestionIcon from '../icons/QuestionCon';
   import { resolveImage } from '../utils/resource';
   const defaultNothing = resolveImage(require('../statics/images/defaultNothingx2.png'));
 
@@ -103,7 +105,9 @@
       FindsomeOne,
       RightArrowIcon,
       NewsIcon,
-      ChannelIcon
+      ChannelIcon,
+      RankingIcon,
+      QuestionIcon
     },
     computed: {
       nothing () {

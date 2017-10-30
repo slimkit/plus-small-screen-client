@@ -8,9 +8,6 @@
         <Col span="16" :class="['title-col', $style.title]">
           {{ topic.name }}
         </Col>
-        <Col span="4" class="header-end-col">
-          <SearchIcon height="21" width="21" color="#999" />
-        </Col>
       </Row>
     </header>
     <section :class="$style.topicDetail">
