@@ -25,8 +25,8 @@
           </section>
         </Col>
         <Col span="6" class="header-end-col">
-          <Button v-if="!topic.has_follow" :class="$style.unfollow" type="ghost" @click="follow(topic.id, index)"> + 关注</Button>
-          <Button v-else type="ghost" @click="unFollow(topic.id, index)"> √ 已关注</Button>
+          <Button v-if="!topic.has_follow" class="followAboutButton"  :class="$style.unfollow" type="ghost" @click="follow(topic.id)"><PlusIcon height="16" width="16" color="#59b6d7" />关注</Button>
+          <Button v-else type="ghost" class="followAboutButton"  @click="unFollow(topic.id)"><RightIcon height="16" width="16" color="#ccc" />已关注</Button>
         </Col>
       </Row>
     </section>
@@ -152,13 +152,17 @@
   import timer from '../../utils/timer';
   import BackIcon from '../../icons/Back';
   import SearchIcon from '../../icons/Search';
+  import RightIcon from '../../icons/Right';
+  import PlusIcon from '../../icons/Plus';
   const defaultAvatar = resolveImage(require('../../statics/images/defaultAvatarx2.png'));
   const nothingImage = resolveImage(require('../../statics/images/defaultNothingx2.png'));
   
   const TopicDetail = {
     components: {
       BackIcon,
-      SearchIcon
+      SearchIcon,
+      PlusIcon,
+      RightIcon
     },
     data: () => ({
       topic: {
@@ -169,6 +173,28 @@
       defaultAvatar
     }),
     methods: {
+      follow (id) {
+        addAccessToken().put(
+          createAPI(`user/question-topics/${id}`),
+          {
+            validataStatus: status => status === 201
+          }
+        )
+        .then( () => {
+          this.topic.has_follow = true;
+        })
+      },
+      unFollow (id) {
+        addAccessToken().delete(
+          createAPI(`user/question-topics/${id}`),
+          {
+            validataStatus: status => status === 204
+          }
+        )
+        .then( () => {
+          this.topic.has_follow = false;
+        })
+      },
       styleCompute(index) {
         let right = (index !== 0 ? `${(this.topic.experts_count * index)}vw` : '12px');
         return `top: -14px; z-index: ${this.topic.experts_count - index}; width: 7vw; position: absolute; right: ${right}`;
