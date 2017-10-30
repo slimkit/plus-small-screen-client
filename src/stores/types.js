@@ -65,6 +65,12 @@ export const CLOSEPOPUP = 'closepopup';
 export const SHOWPOPUP = 'showpopup';
 
 /**
+ * 置顶窗口控制
+ */
+export const SHOWPINNEDMODAL = 'showpinnedmodal';
+export const CLOSEPINNEDMODAL = 'closepinnedmodal';
+
+/**
  * 总的动态列表
  */
 export const FEEDSLIST = 'feedslist';

@@ -44,6 +44,11 @@ import showPostAnswer from './module/postAnswer';
  
 import showCheckin from './module/showCheckin';
 
+/**
+ * pinned modal
+ */
+ import showPinnedModal from './module/showPinnedModal';
+
 const modules = {
   user,
   notice,
@@ -66,8 +71,9 @@ const modules = {
   collectionNews,
   showQuestionPost,
   showPostAnswer,
-  showCheckin
-}
+  showCheckin,
+  showPinnedModal
+},
 
 const store = new Vuex.Store({
   modules
