@@ -98,7 +98,7 @@
       </Row>
       <Row :gutter="24" :class="$style.entryMenu" @click.native="handleCertification">
         <Col span="3">
-          <SystemSettingIcon height="21" width="21" color="#59b6d7" />
+          <AuthIcon height="21" width="21" color="#59b6d7" />
         </Col>
         <Col span="10" :class="$style.menuText">
           认证
@@ -180,6 +180,7 @@
   import { mapState } from 'vuex';
   import { CLEANMESSAGE } from '../stores/types';
   import { showAmount } from '../utils/balance';
+  import AuthIcon from '../icons/Auth';
 
   const defaultAvatar = resolveImage(require('../statics/images/defaultAvatarx2.png'));
 
@@ -193,7 +194,8 @@
       SystemSettingIcon,
       SapceIcon,
       RightArrowIcon,
-      WalletIcon
+      WalletIcon,
+      AuthIcon
     },
     data: () => ({
       goldName: window.TS_WEB.goldName,
