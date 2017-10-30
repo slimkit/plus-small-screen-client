@@ -228,7 +228,7 @@ export default {
     },
 }
 </script>
-<style lang="less">
+<style lang="less" scoped>
 	.content {
     padding-top: 46px;
     height: 100vh;

@@ -31,7 +31,7 @@
   </nav>
   <!-- /nav -->
   <!-- content -->
-  <div :class="$style.RankList">
+  <div class="RankList">
     <!-- 用户综合排行 -->
     <div v-if="type == 'user'">
       <rank-list-item type="followers" :items="user.followers" title="全站粉丝排行榜"></rank-list-item>
@@ -160,7 +160,7 @@ const RankList = {
 
 export default RankList;
 </script>
-<style lang="less" module>
+<style lang="less" scoped>
   .RankList {
     margin-top: 91px;
     min-height: 100%;

@@ -10,10 +10,10 @@
         </Col>
       </Row>
     </div>
-    <div class="changePassword-content changePassword-bakcground-color" :class="$style.entry">
+    <div class="changePassword-content changePassword-bakcground-color entry">
        <!-- 个人认证 -->
       <template  v-if="certification.type == 'user'">
-        <Row :gutter="24" :class="$style.entryMenu">
+        <Row :gutter="24" class="entryMenu">
           <Col span="6">
             真实姓名
           </Col>
@@ -24,7 +24,7 @@
             <CloseIcon v-show="showNameImputIcon" height="21" width="21" color="#999" @click.native="clearInput('name')" />
           </Col>
         </Row>
-        <Row :gutter="24" :class="$style.entryMenu">
+        <Row :gutter="24" class="entryMenu">
           <Col span="6">
             身份证号
           </Col>
@@ -35,7 +35,7 @@
             <CloseIcon v-show="showNumberImputIcon" height="21" width="21" color="#999" @click.native="clearInput('number')" />
           </Col>
         </Row>
-        <Row :gutter="24" :class="$style.entryMenu">
+        <Row :gutter="24" class="entryMenu">
           <Col span="6">
             手机号
           </Col>
@@ -46,7 +46,7 @@
             <CloseIcon v-show="showPhoneImputIcon" height="21" width="21" color="#999" @click.native="clearInput('phone')" />
           </Col>
         </Row>
-        <Row :gutter="24" :class="$style.entryMenu">
+        <Row :gutter="24" class="entryMenu">
           <Col span="6">
             认证描述
           </Col>
@@ -60,7 +60,7 @@
       </template>
       <!-- 企业认证 -->
       <template v-else>
-        <Row :gutter="24" :class="$style.entryMenu">
+        <Row :gutter="24" class="entryMenu">
           <Col span="6">
             机构名称
           </Col>
@@ -71,7 +71,7 @@
             <CloseIcon v-show="showOrgNameImputIcon" height="21" width="21" color="#999" @click.native="clearInput('org_name')" />
           </Col>
         </Row>
-        <Row :gutter="24" :class="$style.entryMenu">
+        <Row :gutter="24" class="entryMenu">
           <Col span="6">
             机构地址
           </Col>
@@ -82,7 +82,7 @@
             <CloseIcon v-show="showOrgAddressImputIcon" height="21" width="21" color="#999" @click.native="clearInput('org_address')" />
           </Col>
         </Row>
-        <Row :gutter="24" :class="$style.entryMenu">
+        <Row :gutter="24" class="entryMenu">
           <Col span="6">
             负责人
           </Col>
@@ -93,7 +93,7 @@
             <CloseIcon v-show="showNameImputIcon" height="21" width="21" color="#999" @click.native="clearInput('name')" />
           </Col>
         </Row>
-        <Row :gutter="24" :class="$style.entryMenu">
+        <Row :gutter="24" class="entryMenu">
           <Col span="8">
             身份证号码
           </Col>
@@ -104,7 +104,7 @@
             <CloseIcon v-show="showNumberImputIcon" height="21" width="21" color="#999" @click.native="clearInput('number')" />
           </Col>
         </Row>
-        <Row :gutter="24" :class="$style.entryMenu">
+        <Row :gutter="24" class="entryMenu">
           <Col span="8">
             负责人电话
           </Col>
@@ -115,7 +115,7 @@
             <CloseIcon v-show="showPhoneImputIcon" height="21" width="21" color="#999" @click.native="clearInput('phone')" />
           </Col>
         </Row>
-        <Row :gutter="24" :class="$style.entryMenu">
+        <Row :gutter="24" class="entryMenu">
           <Col span="6">
             认证描述
           </Col>
@@ -133,7 +133,7 @@
         <p class="notice error">{{ error }}</p>
       </Col>
     </Row>
-    <div :class="$style.next">
+    <div class="next">
       <Col span="20" offset="2">
         <Button type="primary" size="large"  @click="handleNext" v-if="validateBasicInfo" long>下一步</Button>
         <Button size="large" v-else disabled long>下一步</Button>
@@ -411,7 +411,7 @@
   };
   export default certification;
 </script>
-<style lang="scss" module>
+<style lang="less" scoped>
   .entry {
     background-color: #fff;
     .entryMenu {

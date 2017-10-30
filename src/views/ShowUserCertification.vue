@@ -12,43 +12,43 @@
     </div>
     <div>
       <!-- 认证审核显示提示 -->
-      <div :class="$style.certificationState" v-show="parseInt(certification.status) === 0">
+      <div class="ertificationState" v-show="parseInt(certification.status) === 0">
       	认证信息审核中，我们会在7个工作日内给你答复
       </div>
-      <Row :gutter="24" :class="$style.row" v-show="certification.certification_name == 'org'">
-      	<Col span="8" :class="$style.rowTitle">
+      <Row :gutter="24" class="row" v-show="certification.certification_name == 'org'">
+      	<Col span="8" class="rowTitle">
       		机构名称
       	</Col>
       	<Col span="16">
       		{{ certification.data.org_name }}
       	</Col>
       </Row>
-      <Row :gutter="24" :class="$style.row" v-show="certification.certification_name == 'org'">
-      	<Col span="8" :class="$style.rowTitle">
+      <Row :gutter="24" class="row" v-show="certification.certification_name == 'org'">
+      	<Col span="8" class="rowTitle">
       		机构地址
       	</Col>
       	<Col span="16">
       		{{ certification.data.org_address }}
       	</Col>
       </Row>
-      <Row :gutter="24" :class="$style.row">
-      	<Col span="8" :class="$style.rowTitle">
+      <Row :gutter="24" class="row">
+      	<Col span="8" class="rowTitle">
       		{{ certification.certification_name == 'user' ? '真实姓名' : '负责人' }} 
       	</Col>
       	<Col span="16">
       		{{ certification.data.name }}
       	</Col>
       </Row>
-      <Row :gutter="24" :class="$style.row">
-      	<Col span="8" :class="$style.rowTitle">
+      <Row :gutter="24" class="row">
+      	<Col span="8" class="rowTitle">
       		身份证号码
       	</Col>
       	<Col span="16">
       		{{ certification.data.number }}
       	</Col>
       </Row>
-      <Row :gutter="24" :class="$style.row">
-      	<Col span="8" :class="$style.rowTitle">
+      <Row :gutter="24" class="row">
+      	<Col span="8" class="rowTitle">
       		
       	{{ certification.certification_name == 'user' ? '手机号' : '负责人电话' }} 
       	</Col>
@@ -56,21 +56,21 @@
       		{{ certification.data.phone }}
       	</Col>
       </Row>
-      <Row :gutter="24" :class="$style.row">
-      	<Col span="8" :class="$style.rowTitle">
+      <Row :gutter="24" class="row">
+      	<Col span="8" class="rowTitle">
       		认证描述
       	</Col>
       	<Col span="16">
       		{{ certification.data.desc }}
       	</Col>
       </Row>
-      <Row :gutter="24" :class="$style.row">
-      	<Col span="6" :class="$style.rowTitle">
+      <Row :gutter="24" class="row">
+      	<Col span="6" class="rowTitle">
       		认证资料
       	</Col>
       	<template v-for="file in files">
 	      	<Col span="9">
-	      	  <img v-lazy="getImage(file)" :class="$style.rowImage">
+	      	  <img v-lazy="getImage(file)" class="rowImage">
 	      	</Col>
       	</template>
       </Row>
@@ -138,7 +138,7 @@
   };
   export default showCertification;
 </script>
-<style lang="scss" module>
+<style lang="less" scoped>
 	.row {
 		height: 50px;
 		line-height: 50px;

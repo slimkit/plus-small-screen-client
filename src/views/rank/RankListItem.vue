@@ -1,18 +1,18 @@
 <template>
-<div :class="$style.rankContainer" v-show="items.length">
-  <div :class="$style.header">
-    <span :class="$style.headerTitle">{{ title }}</span>
-    <span :class="$style.headerAllbtn">
+<div class="rankContainer" v-show="items.length">
+  <div class="header">
+    <span class="headerTitle">{{ title }}</span>
+    <span class="headerAllbtn">
       <span @click='changeUrl(`/rank/show?type=${type}`)'>全部 <RightArrowIcon height="12" width="12" color="#999" /></span>
     </span>
   </div>
-  <div :class="$style.content">
-    <div :class="$style.user"  v-for="item in items" @click="changeUrl(`/users/feeds/${item.id}`)">
-      <div :class="$style.userImageContainer">
-        <img v-lazy="item.avatar ? item.avatar : defaultAvatar" :class="$style.userAvatar">
-        <img v-if="item.verified" :src="item.verified.icon" :class="$style.userIcon">
+  <div class="content">
+    <div class="user"  v-for="item in items" @click="changeUrl(`/users/feeds/${item.id}`)">
+      <div class="userImageContainer">
+        <img v-lazy="item.avatar ? item.avatar : defaultAvatar" class="userAvatar">
+        <img v-if="item.verified" :src="item.verified.icon" class="userIcon">
       </div>
-      <span :class="$style.userName">{{ item.name }}</span>
+      <span class="userName">{{ item.name }}</span>
     </div>
   </div>
 </div>
@@ -39,12 +39,10 @@
     methods: {
       changeUrl
     },
-    created(){
-    }
   }
 </script>
 </script>
-<style lang="less" module>
+<style lang="less" scoped>
   .rankContainer {
     background-color: #fff;
     padding: 10px;
