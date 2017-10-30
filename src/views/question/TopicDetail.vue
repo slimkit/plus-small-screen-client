@@ -44,7 +44,7 @@
           {{topic.experts_count}}位相关专家  
         </Col>
         <Col span="16" style="position: relative;">
-          <img  class="component-avatar" :style="styleCompute(index)" v-lazy="expert.avatar || defaultAvatar" alt="" v-for="(expert, index) in topic.experts" :key="index">
+          <img  class="component-avatar" style="border: 1px solid #fff" :style="styleCompute(index)" v-lazy="expert.avatar || defaultAvatar" alt="" v-for="(expert, index) in topic.experts" :key="index">
         </Col>
       </Row>
     </section>
@@ -196,7 +196,7 @@
         })
       },
       styleCompute(index) {
-        let right = (index !== 0 ? `${(this.topic.experts_count * index)}vw` : '12px');
+        let right = (index !== 0 ? `${(this.topic.experts_count * index)}vw` : '20px');
         return `top: -14px; z-index: ${this.topic.experts_count - index}; width: 7vw; position: absolute; right: ${right}`;
       },
       goBack () {
