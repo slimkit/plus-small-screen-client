@@ -73,7 +73,7 @@ const modules = {
   showPostAnswer,
   showCheckin,
   showPinnedModal
-},
+};
 
 const store = new Vuex.Store({
   modules
