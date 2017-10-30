@@ -69,7 +69,7 @@
                 </div>
               </Col>
             </Row>
-            <RewardEntry v-if="feed_id" component="feeds" :rewardableId="feed_id" api-method="rewards" :source="feedData" />
+            <RewardEntry v-if="feed_id && showReward" component="feeds" :rewardableId="feed_id" api-method="rewards" :source="feedData" />
           </div>
       </div>
     </div>
@@ -319,7 +319,8 @@
       loading: false,
       commentedUser: {},
       commentIndex: -1,
-      token: ''
+      token: '',
+      showReward: false
     }),
     computed: {
       defaultImage () {
@@ -882,6 +883,9 @@
       this.getRewardUsers(feed_id, 10);
       const { token } = this.$storeLocal.get('UserLoginInfo') || {};
       this.token = token;
+    },
+    beforeMount () {
+      this.showReward = this.$storeLocal.get('feedReward');
     },
     mounted () {
       window.addEventListener('scroll', this.menu);

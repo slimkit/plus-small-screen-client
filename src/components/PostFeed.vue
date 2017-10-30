@@ -70,7 +70,7 @@
             </Upload>
           </div>
         </template>
-        <section :class="$style.imageAmountSet">
+        <section :class="$style.imageAmountSet" v-if="setting.payControl">
           <Row :gutter="24" :class="$style.amountSet">
             <Col span="12">
               是否收费
@@ -81,7 +81,7 @@
           </Row>
         </section>
       </div>
-      <template v-if="textOnly">
+      <template v-if="textOnly && setting.payControl">
         <section :class="$style.textAmountSet">
           <Row :gutter="24" :class="$style.amountSet">
             <Col span="12">
@@ -98,14 +98,8 @@
               </Col>
             </Row>
             <Row :gutter="24" style="padding: 4px 0 14px 0;">
-              <Col span="8" :class="$style.defaultAmount">
-                <Button @click.native="setTextAmountNum(trueAmount(1))" :class="[$style.amount, 'ivu-btn', 'ivu-btn-ghost', {active: showAmount(amount) == 1 && customAmount === ''}]">1.00</Button>
-              </Col>
-              <Col span="8" :class="$style.defaultAmount">
-                <Button @click.native="setTextAmountNum(trueAmount(5))" :class="[$style.amount,'ivu-btn', 'ivu-btn-ghost', {active: showAmount(amount) == 5 && customAmount === ''}]">5.00</Button>
-              </Col>
-              <Col span="8" :class="$style.defaultAmount">
-                <Button @click.native="setTextAmountNum(trueAmount(10))" :class="[$style.amount,'ivu-btn', 'ivu-btn-ghost', {active: showAmount(amount) == 10 && customAmount === ''}]">10.00</Button>
+              <Col span="8" :class="$style.defaultAmount"  v-for="(item, index) in setting.feedPayItems" :key="index">
+                <Button @click.native="setTextAmountNum(item)" :class="[$style.amount, 'ivu-btn', 'ivu-btn-ghost', {active: amount == item && customAmount === ''}]">{{showAmount(item)}}</Button>
               </Col>
             </Row>
             <Row :gutter="24" style="padding: 12px 0; border-top: 1px solid #ededed;">
@@ -118,7 +112,7 @@
             </Row>
             <Row :gutter="24" style="padding: 12px 0; border-top: 1px solid #ededed;">
               <Col span="24">
-                <p style="color: #bfbfbf;">注: 超过50字部分内容收费</p>
+                <p style="color: #bfbfbf;">注: 超过{{setting.feedLimit}}字部分内容收费</p>
               </Col>
             </Row>
           </section>
@@ -188,14 +182,8 @@
               </Col>
             </Row>
             <Row :gutter="24" style="padding-top: 12px;">
-              <Col span="8">
-                <Button long @click.native="setImageAmountInfo(trueAmount(1))" :class="['ivu-btn', 'ivu-btn-ghost', {active: showAmount(currentImageSetting.amount) == 1 && !currentImageSetting.customAmount}]">{{ 1.00 }} </Button>
-              </Col>
-              <Col span="8">
-                <Button long @click.native="setImageAmountInfo(trueAmount(5))" :class="['ivu-btn', 'ivu-btn-ghost', {active: showAmount(currentImageSetting.amount) == 5 && !currentImageSetting.customAmount}]">{{ 5.00 }} </Button>
-              </Col>
-              <Col span="8">
-                <Button long @click.native="setImageAmountInfo(trueAmount(10))" :class="['ivu-btn', 'ivu-btn-ghost', {active: showAmount(currentImageSetting.amount) == 10 && !currentImageSetting.customAmount}]">{{ 10.00 }} </Button>
+              <Col span="8" v-for="(item, index) in setting.feedPayItems" :key="index">
+                <Button long @click.native="setImageAmountInfo(item)" :class="['ivu-btn', 'ivu-btn-ghost', {active: showAmount(currentImageSetting.amount) == item && !currentImageSetting.customAmount}]">{{ showAmount(item) }} </Button>
               </Col>
             </Row>
             <Row :gutter="24" type="flex" justify="space-around" style="padding-top: 12px; margin-top: 12px; font-size: 14px; border-top: 1px solid #e9eaec">
@@ -267,7 +255,8 @@ const postFeed = {
       type: '',
       amount: 0,
       customAmount: ''
-    }
+    },
+    setting: {} // 后台配置
   }),
   computed: {
     ...mapState({
@@ -278,7 +267,7 @@ const postFeed = {
       return !(this.feedContent.length || this.images.length);
     },
     canSetPinned () {
-      return this.feedContent.length > 50;
+      return this.feedContent.length > this.setting.feedLimit;
     },
     /**
      * swiper参数
@@ -416,10 +405,9 @@ const postFeed = {
           return feed_data;
         }
 
-        if(feed_data.feed_content.length <= 50) {
-          this.$Notice.warning({
-            title: '说明',
-            desc: '内容超出50字部分才能设置收费'
+        if(feed_data.feed_content.length <= this.setting.feedLimit) {
+          this.$Message.warning({
+            content: `内容超出${this.setting.feedLimit}字部分才能设置收费`
           });
           this.loading = false;
 
@@ -840,6 +828,10 @@ const postFeed = {
   },
   mounted () {
     this.ratio = this.$storeLocal.get('ratio') || 100;
+    this.setting.feedPayItems = this.$storeLocal.get('feedPayItems');
+    this.setting.payControl = this.$storeLocal.get('feedPayControl');
+    this.setting.feedReward = this.$storeLocal.get('feedReward');
+    this.setting.feedLimit = this.$storeLocal.get('feedLimit');
   }
 };
 

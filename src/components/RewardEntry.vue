@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="showComponent">
     <Row :gutter="24" type="flex" align="middle" justify="center">
       <Col class-name="center" span="6">
         <Button @click.native="openReward" type="error" size="small">打赏</Button>
@@ -23,7 +23,7 @@
       <div style="text-align:center">
         <Row :gutter="24" style="border-bottom: 1px solid #e9eaec; padding-bottom: 16px;">
           <Col span="8" v-for="(item, index) in items" :key="index">
-            <Button @click.native="setAmount(trueAmount(item))" :class="['ivu-btn', 'ivu-btn-ghost', {active: amount === item && customAmount === ''}]">{{ item }} </Button>
+            <Button @click.native="setAmount(item)" :class="['ivu-btn', 'ivu-btn-ghost', {active: amount === item && customAmount === ''}]">{{ showAmount(item) }} </Button>
           </Col>
         </Row>
         <Row :gutter="24" type="flex" justify="space-around" style="padding-top: 8px; font-size: 14px;">
@@ -220,7 +220,8 @@
       topStatus: '',
       order_type: 'amount', // 根据打赏金额进行查询
       limit: 20,
-      order: 'desc' // 排序方式
+      order: 'desc', // 排序方式
+      showComponent: false
     }),
 
     created () {
@@ -395,6 +396,7 @@
     },
 
     mounted () {
+      this.showComponent = storeLocal.get('rewardSetting')['status'] || false;
       this.items = storeLocal.get('rewardSetting')['items'] || [];
       this.ratio = storeLocal.get('ratio') || 100;
     }

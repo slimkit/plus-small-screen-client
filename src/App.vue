@@ -99,7 +99,12 @@
         }
       )
       .then( ({ data }) => {
-        const {site: { gold_name: { name = '金币' }, reward: { status = true, amounts = '' } = {} } = {} } = data;
+        const {site: { gold_name: { name = '金币' }, reward: { status = true, amounts = '' } = {} } = {}, feed = {} } = data;
+        
+        this.$storeLocal.set('feedReward', feed.reward);
+        this.$storeLocal.set('feedPayControl', feed.paycontrol);
+        this.$storeLocal.set('feedPayItems', feed.items);
+        this.$storeLocal.set('feedLimit', feed.limit);
         this.$storeLocal.set('rewardSetting', { status: status, items: lodash.split(amounts, ',') });
         this.$storeLocal.set('onlookers_amount', data['question:onlookers_amount']);
         this.$storeLocal.set('apply_amount', data['question:apply_amount']);
