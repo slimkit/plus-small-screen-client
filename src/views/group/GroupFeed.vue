@@ -15,7 +15,24 @@
             </div>
         </div>
         <div class="feed-footer">
-            <feed-tool :user="user" :feed="feed" :isOwn='isOwn' :has_collection='has_collection' :openInput="feed.id == commentFeed ? true : false" :upvote='upvote' :viewFeed='viewFeed' :handleComment='handleComment' :handleCollection='handleCollection' :deleteFeed='deleteFeed' :deleteComment='deleteComment' />
+            <feed-tools 
+            :user="user" 
+            :feed="feed" 
+
+            :isOwn='isOwn' 
+            :isDigg='isDigg'
+            :has_collection='has_collection' 
+            :openInput="feed.id == commentFeed ? true : false" 
+
+            :upvote='upvote' 
+            :viewFeed='viewFeed' 
+
+            :handleComment='handleComment' 
+            :handleCollection='handleCollection' 
+
+            :deleteFeed='deleteFeed' 
+            :deleteComment='deleteComment' 
+            />
         </div>
     </div>
 </template>
@@ -26,7 +43,7 @@ import { changeUrl } from '../../utils/changeUrl';
 import axios, { createAPI, addAccessToken } from '../../utils/request';
 
 import { mapState } from 'vuex';
-import GroupFeedTool from './GroupFeedTool';
+import FeedTools from './FeedTools/FeedTool';
 import FeedImages from '../../components/FeedImages';
 
 import { USERS_APPEND, } from '../../stores/types';
@@ -37,8 +54,8 @@ const defaultAvatar = resolveImage(require('../../statics/images/defaultAvatarx2
 export default {
     name: 'group-feed',
     components: {
+        FeedTools,
         'feed-images': FeedImages,
-        'feed-tool': GroupFeedTool
     },
     props: {
         feed: { type: Object },
@@ -173,6 +190,9 @@ export default {
         isOwn() {
             return this.feed.user_id === window.TS_WEB.currentUserId;
         },
+        isDigg(){
+            return this.feed.has_like;
+        },
         has_collection() {
             return this.feed.has_collection;
         },
@@ -235,6 +255,9 @@ export default {
             }
         }
     }
-    .feed-footer {}
+    .feed-footer {
+        padding: 10px 10px 10px 48px;
+        border-top: 1px #ededed solid;
+    }
 }
 </style>

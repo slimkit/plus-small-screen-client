@@ -1,13 +1,18 @@
 <template>
   <div class="container-fluid" id="app">
     <div v-wechat-title="$route.meta.title"></div>
-    <router-view></router-view>
+
+    <div class="app-views">
+      <router-view></router-view>
+      <FeedMoreAction />
+      <PinnedPop />
+    </div>
+
     <NoticeText/>
     <IviewSwiper/>
     <PrePost :config="prePostConfig" />
     <PostFeed/>
     <Confirm />
-    <ShowFeedPopup />
     <postQuestion />
     <PostAnswer />
     <CheckinLayer/>
@@ -20,13 +25,15 @@
   import IviewSwiper from './components/IviewSwiper';
   import PrePost from './components/PrePost';
   import PostFeed from './components/PostFeed';
-  import FeedDiggList from './components/FeedDiggList';
   import CommentInput from './components/CommentInput';
+  import FeedDiggList from './components/FeedDiggList';
   import Confirm from './components/Confirm';
-  import ShowFeedPopup from './components/ShowFeedPopup';
   import postQuestion from './components/postQuestion';
   import PostAnswer from './components/PostAnswer';
   import CheckinLayer from './components/CheckinLayer';
+
+  import FeedMoreAction from './components/FeedMoreAction';
+  import PinnedPop from './components/PinnedPop';
 
   // im聊天相关
   import lodash from 'lodash';
@@ -48,10 +55,11 @@
       FeedDiggList,
       CommentInput,
       Confirm,
-      ShowFeedPopup,
       PrePost,
       postQuestion,
       PostAnswer,
+      FeedMoreAction,
+      PinnedPop,
       CheckinLayer
     },
     data: () => ({
@@ -312,11 +320,20 @@
   export default App;
 </script>
 <style lang="less">
-  @import './styles/common.less';
-</style>
-<style lang="css">
   @import './styles/font.css';
+  @import './styles/common.less';
   @import '~animate.css/animate.min.css';
+
+  #app{
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    .app-views{
+      overflow-y: auto;
+      width: 100%;
+      height: 100%;
+    }
+  }
   .animated {
     -webkit-animation-duration: .3s;
     animation-duration: .3s;

@@ -1,5 +1,5 @@
 <template>
-    <div class="group-feed-tool">
+    <div class="feed-tool">
         <div class="tool">
             <div class="tool-item">
                 <feed-like :feedID='feed.id' :isDigg='isDigg' :count="feedLikeCount" :upvote='upvote' />
@@ -19,13 +19,9 @@
         :feedID='feed.id' 
         :comments='feed.comments' 
         :handleComment='handleComment' 
-        :handleCommentInput='handleCommentInput'
-        :handleDeleteComment='handleDeleteComment'
+        :handleCommentInput='handleCommentInput' 
+        :handleDeleteComment='handleDeleteComment' 
         />
-        <feed-more-action ref='moreAction' 
-        :deleteComment='deleteComment'
-        :deleteFeed='deleteFeed'
-        :handleCollection='handleCollection' />
     </div>
 </template>
 <script>
@@ -34,25 +30,29 @@ import {
     CLOSEPOPUP,
     COMMENTINPUT,
     CLOSECOMMENTINPUT,
-} from '../../stores/types';
+    SHOWPINNEDMODAL,
+} from '../../../stores/types';
 
 import { mapState } from 'vuex';
 
 import lodash from 'lodash';
-import { friendNum } from '../../utils/friendNum';
-import { goTo, changeUrl } from '../../utils/changeUrl';
-import { createAPI, addAccessToken } from '../../utils/request';
-import { getUsersInfo, getUserInfo } from '../../utils/user';
+import { friendNum } from '../../../utils/friendNum';
+import { goTo, changeUrl } from '../../../utils/changeUrl';
+import { createAPI, addAccessToken } from '../../../utils/request';
+import { getUsersInfo, getUserInfo } from '../../../utils/user';
 
-import FeedView from './FeedTools/FeedView';
-import FeedLike from './FeedTools/FeedLike';
-import FeedComment from './FeedTools/FeedComment';
-import FeedComments from './FeedTools/FeedComments';
-import FeedMoreAction from './FeedTools/FeedMoreAction';
+import FeedView from './FeedView';
+import FeedLike from './FeedLike';
+import FeedComment from './FeedComment';
+import FeedComments from './FeedComments';
+import FeedMoreAction from './FeedMoreAction';
 
-import MoreIcon from '../../icons/More';
+import MoreIcon from '../../../icons/More';
+
+const FUNC = function(){};
 
 export default {
+    name: 'feed-tools',
     components: {
         FeedLike,
         FeedView,
@@ -66,8 +66,22 @@ export default {
 
         user: { type: Object },
 
+        /**
+         * 是否为自己的动态
+         * @type {Object}
+         */
         isOwn: { type: Boolean },
 
+        /**
+         * 当前用户是否对当前资讯点赞
+         * @type {Boolean}
+         */
+        isDigg: { type: Boolean },
+
+        /**
+         * 是否已收藏
+         * @type {Boolean}
+         */
         has_collection: { type: Boolean },
 
         /**
@@ -89,8 +103,8 @@ export default {
         viewFeed: { type: Function, required: true },
 
         /**
-         * 删除评论
-         * @type {Object}
+         * 删除动态
+         * @type {Function}
          */
         deleteFeed: { type: Function, required: true },
 
@@ -105,6 +119,18 @@ export default {
          * @type {Function}
          */
         handleCollection: { type: Function, required: true },
+
+        /**
+         * 置顶资讯
+         * @type {Function}
+         */
+        pinnedFeed: { type: Function, default: FUNC },
+
+        /**
+         * 置顶评论
+         * @type {Function}
+         */
+        pinnedComment: { type: Function, default: FUNC },
     },
     data: () => ({}),
     methods: {
@@ -114,20 +140,58 @@ export default {
          * 显示更多操作
          */
         handleShowPopup(options) {
-            options = options || {
-                type: 'feed',
+            options = Object.assign({}, {
+                feedID: this.feed.id || null,
+                type: '',
                 isOwn: this.isOwn,
-                has_collection: this.has_collection
-            };
-            this.$refs.moreAction.handleShowPop(options);
+                has_collection: this.has_collection,
+                deleteFeed: this.deleteFeed,
+                deleteComment: this.deleteComment,
+                handleCollection: this.handleCollection,
+
+                pinnedFeed: this.handelFeedPinned,
+                pinnedComment: this.handelCommentPinned,
+            }, options) || {};
+
+            this.$store.dispatch(SHOWPOPUP, cb => {
+                cb({
+                    show: true,
+                    ...options,
+                });
+            })
         },
 
         /**
-         * 关闭更多操作
+         * 显示置顶窗口
          */
-        handleClosePop(){
-            this.$refs.moreAction.handleClosePop();
+        handelShowPinnedModal(options){
+            this.$store.dispatch(SHOWPINNEDMODAL, cb =>{
+                cb({
+                    show: true,
+                    ...options
+                });
+            })
         },
+
+        /**
+         * 显示资讯置顶
+         */
+         handelFeedPinned(ID){
+            this.handelShowPinnedModal({
+                ID,
+                pinned: this.pinnedFeed
+            });
+         },
+
+         /**
+         * 显示评论置顶
+         */
+         handelCommentPinned(ID){
+            this.handelShowPinnedModal({
+                ID,
+                pinned: this.pinnedComment
+            });
+         },
 
         /**
          * 显示回复框 
@@ -146,7 +210,7 @@ export default {
         /**
          * 删除评论
          */
-        handleDeleteComment(id){
+        handleDeleteComment(id) {
             this.handleShowPopup({
                 type: 'comment',
                 commentID: id
@@ -193,14 +257,6 @@ export default {
         },
 
         /**
-         * 当前用户是否对当前资讯点赞
-         * @return {Boolean}
-         */
-        isDigg() {
-            return this.feed.has_like;
-        },
-
-        /**
          * 当前输入框
          * @type {Number}
          */
@@ -220,13 +276,8 @@ export default {
 }
 </script>
 <style lang='scss'>
-.group-feed-tool {
-    padding-left: 15vw;
-    padding-right: 2vw;
-    padding-top: 3vw;
-    padding-bottom: 3vw;
-    border-top: 1px #ededed solid;
-    width: 100vw;
+.feed-tool {
+    width: 100%;
     .tool {
         display: flex;
         align-items: center;

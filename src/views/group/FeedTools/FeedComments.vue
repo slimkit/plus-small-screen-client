@@ -2,16 +2,31 @@
     <div class="feed-comments">
         <ul class="feed-comments-list" v-if='comments.length > 0'>
             <li v-for='(comment, index) in formatComment' :key="`feed-${feedID}-comment-${comment.id}`">
-                <p>
-                    <router-link v-if="comment.user_id" class="userName" :to="{ path: `/users/feeds/${comment.user_id}` }">
+                <p 
+                class="feed-comment-row">
+                    
+                    <!-- 回复用户 -->
+                    <router-link 
+                    class="userName" 
+                    :to="{ path: `/users/feeds/${comment.user_id}` }">
                         {{ getUserName(comment.user_id) }}
                     </router-link>
-                    <span v-if="comment.reply_user" class="commentContent">回复</span>
-                    <router-link v-if="comment.reply_user" class="userName" :to="{ path: `/users/feeds/${comment.reply_user}` }">
-                        {{ getUserName(comment.reply_user) }}
-                    </router-link>
-                    <span v-if="comment.user_id  != currentUser" @click.stop="replySomeOne(comment.user_id)" class="commentContent">: {{ comment.body }}</span>
-                    <span v-else @click.stop="handleDeleteComment(comment.id)" class="commentContent">: {{ comment.body }}</span>
+                    
+                    <!-- 被回复用户 -->
+                    <span 
+                    v-if="comment.reply_user" 
+                    >
+                        回复
+                        <router-link 
+                        class="userName" 
+                        :to="{ path: `/users/feeds/${comment.reply_user}` }">
+                            {{ getUserName(comment.reply_user) }}
+                        </router-link>
+                    </span>
+
+                    <!-- 回复他人 或者 删除自己的评论 -->
+                    <span v-if="comment.user_id  != currentUser" @click.stop="replySomeOne(comment.user_id)" >: {{ comment.body }}</span>
+                    <span v-else @click.stop="handleDeleteComment(comment.id)" >: {{ comment.body }}</span>
                 </p>
             </li>
         </ul>
@@ -35,13 +50,13 @@ export default {
          * 动态ID
          * @type {Number}
          */
-        feedID: {required: true },
+        feedID: { required: true },
 
         /**
          * 动态评论列表
          * @type {Array}
          */
-        comments: {type: Array, required: true },
+        comments: { type: Array, required: true },
 
         /**
          * 输入框显示状态
@@ -129,6 +144,20 @@ export default {
 </script>
 <style lang='scss'>
 .feed-comments {
+    .feed-comment-row {
+        overflow: hidden;
+        max-width: 100%;
+        max-height: 55px;
+        font-size: 14px;
+        line-height: 1.3;
+        .user-name{
+            color: #333;
+            &:not(:first-chlid){
+                margin-left: 3px;
+                margin-right: 3px;
+            }
+        }
+    }
     .feed-comments-input {
         textarea {
             border: 0;
