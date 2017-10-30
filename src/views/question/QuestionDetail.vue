@@ -161,7 +161,7 @@
                   <div :class="$style.userTime">
                     <section :class="$style.user">
                       <router-link :to="{name: 'userSpace', params: { user_id: adoption_answer.user.id}}">{{adoption_answer.user.name}}</router-link> 
-                      <AdoptionIcon height="21" width="auto" color="#56BC9A" />
+                      <AdoptionIcon height="21" width="45" color="#56BC9A" />
                     </section>
                     <timeago 
                       :class="$style.time" 
