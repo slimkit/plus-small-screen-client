@@ -391,6 +391,11 @@ const postFeed = {
 
           feed_data.images = this.images;
         }
+        else {
+          if(this.images.length) {
+            feed_data.images = this.images;
+          }
+        }
 
         return feed_data;
       }

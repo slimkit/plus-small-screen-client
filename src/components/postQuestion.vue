@@ -98,7 +98,8 @@
                 所属话题,至少一个
               </Col>
               <Col span="5" class="header-end-col">
-                <Button :disabled="!nextStepThree" @click.native="setStep(4)" type="text">下一步</Button>
+                <Button v-if="canSetAmount" :disabled="!nextStepThree" @click.native="setStep(4)" type="text">下一步</Button>
+                <Button v-else @click.native="doEdit" type="text">发布</Button>
               </Col>
             </Row>
           </header>
@@ -180,7 +181,7 @@
               </Col>
             </Row>
           </section>
-          <section :class="$style.setReward">
+          <section :class="$style.setReward" v-if="question_id === 0">
             <Row :gutter="24" :class="$style.rewardRow">
               <Col span="12">
                 悬赏邀请
@@ -214,7 +215,8 @@
           </Row>
           <Row :gutter="24" :class="$style.publish">
             <Col span="24">
-              <Button :disabled="!canPublish" @click="publish" type="primary" long size="large">发布</Button>
+              <Button v-if="question_id === 0" :disabled="!canPublish" @click="publish" type="primary" long size="large">发布</Button>
+              <Button v-else @click="doEdit" type="primary" long size="large">发布</Button>
             </Col>
           </Row>
         </section>
@@ -380,6 +382,7 @@
   import storeLocal from 'store';
   import RightArrowIcon from '../icons/RightArrow';
   import Experts from '../views/question/Experts';
+  import fileUpload from '../utils/uploadFile';
   
   const { token = ''} = storeLocal.get('UserLoginInfo') || {};
   const postQuestion = {
@@ -412,14 +415,9 @@
       headers: {
         Authorization: `Bearer ${token}`
       },
-      editor: {}
+      editor: {},
+      adoption_answers: []
     }),
-    watch: {
-      customAmount: function (amount) {
-        this.customAmount = amount;
-        this.amount = 0;
-      },
-    },
     methods: {
       showAmount,
       trueAmount,
@@ -436,18 +434,14 @@
           if (look) {
             data.look = true;
           }
-
           data.automaticity = automaticity;
         }
-
         if (amount) {
           data.amount = amount;
         }
-
         if (customAmount) {
           data.amount = trueAmount(customAmount);
         }
-
         data.anonymity = anonymity;
         data.subject = subject;
         data.body = body;
@@ -456,7 +450,6 @@
             id: topic.id
           }
         });
-
         addAccessToken().post(
           createAPI('questions'),
           {
@@ -471,9 +464,7 @@
             content: '发布成功',
             duration: 2
           });
-          this.$store.dispatch(SHOWQUESTIONPOST, cb => {
-           cb(false);
-          })
+          this.closePost();
           setTimeout( () => {
             this.$router.push(`/questions/${id}/detail`);
           }, 1000);
@@ -482,8 +473,52 @@
           console.log(data);
         })
       },
+      doEdit () {
+        const { subject, body, topics, amount, customAmount, anonymity } = this.$data;
+        const { question_id } = this;
+        let data = {};
+
+        if(this.canSetAmount){
+          if (amount) {
+            data.amount = amount;
+          }
+
+          if (customAmount) {
+            data.amount = trueAmount(customAmount);
+          }
+        }
+
+        data.anonymity = anonymity;
+        data.subject = subject;
+        data.body = body;
+        data.topics = topics.map( topic => {
+          return {
+            id: topic.id
+          }
+        });
+
+        addAccessToken().patch(
+          createAPI(`questions/${question_id}`),
+          {
+            ...data
+          },
+          {
+            validataStatus: status => status === 204
+          }
+        )
+        .then(() => {
+          this.$Message.success({
+            content: '编辑成功',
+            duration: 2
+          });
+          this.closePost();
+          this.callback();
+        })
+        .catch(({ response: { data } }) => {
+          this.$Message.error(this.$MessageBundle(data).getMessage());
+        })
+      },
       setExpertsOpen () {
-        console.log('xxcv');
         this.expertsOpen = true;
       },
       setExpertsClose (user) {
@@ -599,17 +634,67 @@
         this.invitation_name = '';
         this.rewardOpen = false;
         this.$store.dispatch(SHOWQUESTIONPOST, cb => {
-          cb(false);
+          cb({
+            show: false,
+            id: 0
+          });
         });
       },
       setStep(step) {
         this.step = step;
       }
     },
+    watch: {
+      customAmount: function (amount) {
+        this.customAmount = amount;
+        this.amount = 0;
+      },
+      question_id (newid) {
+        if (newid !== 0 ) {
+          addAccessToken().get(
+            createAPI(`questions/${newid}`),
+            {
+              validataStatus: status => status === 200
+            }
+          )
+          .then(({ data }) => {
+            this.step = 1;
+            this.subject = data.subject;
+            this.body = data.body;
+            this.editor.value(data.body);
+            this.topics = data.topics;
+            this.amount = 0;
+            this.invitations = data.invitations;
+            this.automaticity = data.automaticity;
+            this.anonymity = data.anonymity;
+            this.look = data.look;
+            this.customAmount = showAmount(data.amount);
+            this.adoption_answers = data.adoption_answers,
+            this.rewardOpen = false;
+          })
+          .catch(({ response: { data } }) => {
+            this.$Message.error(this.$MessageBundle(data).getMessage())
+          })
+        }
+      }
+    },
     computed: {
       ...mapState({
         show: state => state.showQuestionPost.showQuestionPost.show,
+        question_id: state => state.showQuestionPost.showQuestionPost.id,
+        callback: state => state.showQuestionPost.showQuestionPost.callback,
       }),
+      canSetAmount () {
+        const { question_id, invitations, adoption_answers } = this;
+        
+        if(question_id === 0) return true;
+        if (question_id !== 0 && (invitations.length > 0 || adoption_answers.length > 0 )) {
+          return false;
+        }
+        if (question_id !== 0 && (invitations.length === 0 && adoption_answers.length === 0)) {
+          return true;
+        }
+      },
       nextStepOne () {
         return (this.subject.length > 0 && (_.last(this.subject) === '?' || _.last(this.subject) === '？'));
       },
@@ -643,8 +728,13 @@
         this.editor = new mdEditor({
           element: this.$refs.questionBody,
           placeholder: "详细描述你的问题，有助于收到准确的回答",
-          fileApiPath: '/api/v2/files',
-          initialValue: this.body
+          fileApiPath: '/api/v2/files/',
+          initialValue: this.body,
+          uploadFile (file, callback) {
+            fileUpload(file, (id) => {
+              callback(id);
+            })
+          }
         });
         this.listenEditorInput();
       }

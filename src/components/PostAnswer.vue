@@ -57,6 +57,7 @@
   import 'plus-editor.md/dist/pluseditor.css';
   import { SHOWPOSTANSWER } from '../stores/types';
   import { createAPI, addAccessToken } from '../utils/request';
+  import fileUpload from '../utils/uploadFile';
   
   const PostAnswer = {
     data: () => ({
@@ -85,16 +86,20 @@
           }
         )
         .then(({ data }) => {
-          console.log(data);
+          this.callback();
+          this.body = '';
+          this.anonymity = 0;
+          this.callback();
           this.$store.dispatch(SHOWPOSTANSWER, cb => {
             cb({
               show: false,
-              question: 0
+              question: 0,
+              id: 0
             })
           })
         })
         .catch(({ response: { data } }) => {
-          console.log(data);
+          this.$Message.error(this.$MessageBundle(data).getMessage());
         })
       },
       close () {
@@ -116,7 +121,9 @@
     computed: {
       ...mapState({
         show: state => state.showPostAnswer.showPostAnswer.show,
-        question: state => state.showPostAnswer.showPostAnswer.question // 被回答的问题id
+        question: state => state.showPostAnswer.showPostAnswer.question, // 被回答的问题id
+        answer_id: state => state.showPostAnswer.showPostAnswer.answer_id,
+        callback: state => state.showPostAnswer.showPostAnswer.callback
       })
     },
     mounted () {
@@ -124,8 +131,13 @@
         this.editor = new mdEditor({
           element: this.$refs.answerBody,
           placeholder: "请输入你的回答",
-          fileApiPath: '/api/v2/files',
-          initialValue: this.body
+          fileApiPath: '/api/v2/files/',
+          initialValue: this.body,
+          uploadFile (file, callback) {
+            fileUpload(file, (id) => {
+              callback(id);
+            })
+          }
         });
         this.listenEditorInput();
       }

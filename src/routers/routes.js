@@ -69,6 +69,8 @@ import TopicsListComponent from '../views/question/TopicsListComponent';
 import TopicDetail from '../views/question/TopicDetail';
 import TopicDetailQuestionsList from '../views/question/TopicDetailQuestionsList';
 import AnswerDetail from '../views/question/AnswerDetail';
+import ExpertsList from '../views/question/ExpertsList';
+import SearchComponent from '../views/question/Search';
 
 // 排行榜
 import Rank from '../views/rank/Rank';
@@ -550,6 +552,22 @@ const routes = [
     name: 'questionDetail',
     meta: {
       title: '问题详情'
+    }
+  },
+  {
+    path: '/questions/topics/experts/:topic_id/all',
+    component: ExpertsList,
+    name: 'expertlist',
+    meta: {
+      title: '话题专家列表'
+    }
+  },
+  {
+    path: '/questions/search',
+    component: SearchComponent,
+    name: 'questionSearch',
+    meta: {
+      title: '搜索'
     }
   },
   { path: '*', redirect: '/' }

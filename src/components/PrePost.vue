@@ -150,7 +150,10 @@
        */
       postQuestion () {
         this.$store.dispatch(SHOWQUESTIONPOST, cb => {
-          cb(true);
+          cb({
+            show: true,
+            id: 0
+          });;
         });
         setTimeout( () => {
           this.close();

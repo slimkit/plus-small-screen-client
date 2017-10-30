@@ -35,8 +35,7 @@
   const imageSwiper = {
     data: () => ({
       token: '',
-      goldName: window.TS_WEB.goldName,
-      ratio: 100
+      goldName: window.TS_WEB.goldName
     }),
     components: {
       swiper,

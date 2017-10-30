@@ -14,6 +14,9 @@
       display: none!important;
     }
     /*********************** markdown 样式重构 *******************/
+    .editor-preview img {
+      width: 100%;
+    }
     .markdown-body {
       font-size: 14px;
     }

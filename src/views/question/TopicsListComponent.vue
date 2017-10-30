@@ -35,9 +35,9 @@
                 </section>
               </Col>
               <Col span="6" class="header-end-col">
-                <Button v-if="type !== 'follow' && !topic.has_follow" :class="$style.unfollow" type="ghost" @click.stop="follow(topic.id, index)"> + 关注</Button>
-                <Button v-else-if="type === 'follow'" type="ghost" @click.stop="unFollow(topic.id, index)">√ 已关注</Button>
-                <Button v-else type="ghost" @click.stop="unFollow(topic.id, index)"> √ 已关注</Button>
+                <Button class="followAboutButton" v-if="type !== 'follow' && !topic.has_follow" :class="$style.unfollow" type="ghost" @click.stop="follow(topic.id, index)"> <PlusIcon height="16" width="16" color="#59b6d7" />关注</Button>
+                <Button class="followAboutButton" v-else-if="type === 'follow'" type="ghost" @click.stop="unFollow(topic.id, index)"><RightIcon height="16" width="16" color="#ccc" />已关注</Button>
+                <Button class="followAboutButton" v-else type="ghost" @click.stop="unFollow(topic.id, index)"><RightIcon height="16" width="16" color="#ccc" />已关注</Button>
               </Col>
             </Row>
           </section>
@@ -95,9 +95,15 @@
   import _ from 'lodash';
   import { createAPI, addAccessToken } from '../../utils/request';
   import { resolveImage } from '../../utils/resource';
+  import PlusIcon from '../../icons/Plus';
+  import RightIcon from '../../icons/Right';
 
   const nothingImage = resolveImage(require('../../statics/images/defaultNothingx2.png'));
   const TopicsListComponent = {
+    components: {
+      PlusIcon,
+      RightIcon
+    },
     data: () => ({
       type: 'all',
       loading: false,

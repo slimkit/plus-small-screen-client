@@ -358,7 +358,6 @@
       open: false,
       amount: 0,
       token: '',
-      ratio: 100,
       goldName: window.TS_WEB.goldName
     }),
     components: {
@@ -379,9 +378,7 @@
           return (parseInt(68 / rate) > 80 ? 80 : parseInt(68 / rate)) + 'vw';
         }
       },
-      showAmount() {
-        return this.amount;
-      },
+      
       imageObject() {
         const { storages } = this;
         return storages.map( (storage) => {

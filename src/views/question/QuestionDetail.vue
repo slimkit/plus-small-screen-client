@@ -28,7 +28,7 @@
       <Row :gutter="24">
         <Col span="24">
           <h2 style="padding: 12px 0; color: #323232;">{{question.subject}}</h2>
-          <div @click="showAll = true;" v-if="!showAll" :class="$style.someDesc">{{ getContent(question.body || '') }}</div>
+          <div @click="showAll = true;" v-if="!showAll" :class="$style.someDesc">{{ getPureText(getHtmlFalse) }}</div>
           <div v-else @click="showAll = false" :class="$style.allDesc" v-html="getHtml" />
         </Col>
       </Row>
@@ -90,7 +90,7 @@
             :bottomDistance="70"
             @bottom-status-change="bottomStatusChange"
           >
-            <section v-if="question.invitation_answers.length" :class="$style.answerContainer" v-for="(invitation_answer, index) in question.invitation_answers" @click="checkAnswer(invitation_answer.could, invitation_answer.id)">
+            <section v-if="question.invitation_answers.length" :class="$style.answerContainer" v-for="(invitation_answer, index) in question.invitation_answers" @click="checkAnswer(invitation_answer.could , invitation_answer.id)">
               <Row :class="$style.answer" :gutter="24" :key="invitation_answer.id">
                 <Col span="4">
                   <img @click.stop="$router.push({name: 'userSpace', params: { user_id: invitation_answer.user.id}})" v-lazy="invitation_answer.user.avatar || defaultAvatar" style="width: 100%" alt="">
@@ -109,13 +109,13 @@
                       :auto-update="60"
                     />
                   </div>
-                  <p v-if="question.look && !invitation_answer.could" :class="$style.answerBodyHide" class="blur">
+                  <p v-if="question.look && (!invitation_answer.could !== undefined && !invitation_answer.could)" :class="$style.answerBodyHide" class="blur">
                     这个回答的内容是不可见的哦，你需要先围观该答案才能看到详情的问答情况，请尊重答主的劳动成果，谢谢啦
                   </p>
                   <p 
                     v-else
                     :class="$style.answerBody"
-                    v-html="getContent(answerBody(invitation_answer))"
+                    v-html="answerBody(invitation_answer)"
                   />
                 </Col>
               </Row>
@@ -281,7 +281,7 @@
           </div>
         </Col>
         <Col span="6" class="operation">
-          <div v-if="!question.has_collect" @click="">
+          <div @click="editQuestion">
             <EditIcon height="20" width="20" color="#999" />
             <i>编辑</i>
           </div>
@@ -719,7 +719,7 @@
   }
 </style>
 <script>
-  import { SHOWPOSTANSWER, CONFIRM  } from '../../stores/types';
+  import { SHOWPOSTANSWER, CONFIRM, SHOWQUESTIONPOST  } from '../../stores/types';
   import BackIcon from '../../icons/Back';
   import time from '../../utils/timer';
   import getContent from '../../utils/getPureContent';
@@ -837,6 +837,23 @@
       showAmount,
       trueAmount,
       getUserInfo,
+      updateQ( ){
+        this.getQuestion();
+      },
+      editQuestion () {
+        const { id } = this.question;
+        const u = this.updateQ;
+        this.$store.dispatch(SHOWQUESTIONPOST, cb => {
+          cb({
+            show: true,
+            id,
+            callback: u
+          })
+        })
+      },
+      getPureText (str) {
+        return (str.replace(/<\/?.+?>/g,"")).replace(/ /g,"");
+      },
       doAskExcellet () {
         const { question: { id } } = this;
         addAccessToken().post(
@@ -980,7 +997,7 @@
           this.placeholder = '随便说说'
         })
         .catch(({ response: { data } }) => {
-          console.log(data);
+          this.$Message.error(this.$MessageBundle(data).getMessage())
         })
       },
       commentsBottomStatusChange (status) {
@@ -1061,15 +1078,12 @@
         })
       },
       menu() {
-        // let header = document.getElementById('feed-header');
         let footer = document.getElementById('feed-footer');
         if(footer) {
           if(this.scroll > 55) {
             if(this.scroll > window.pageYOffset) {
-              // if(header) header.style.top = 0;
               if(footer) footer.style.bottom = 0;
             } else {
-              // if(header) header.style.top = '-55px';
               if(footer) footer.style.bottom = '-55px';
             }
           }
@@ -1099,15 +1113,19 @@
       },
       answerBody (answer) {
         const { body = '' } = answer;
-
-        return body;
+        return this.getPureText(md.render(this.getContent(body)));
       },
       cannelPay () {
         this.openPay = false;
         this.lookAnswerId = 0;
       },
       checkAnswer( could, id ) {
-        if(!could) {
+        if (this.question.look === 0) {
+          this.$router.push({name: 'AnswerDetail', params: {answer_id: id}});
+
+          return;
+        }
+        if(!could && could !== undefined) {
           this.openPay = true;
           this.lookAnswerId = id;
           return;
@@ -1147,9 +1165,10 @@
           }
           this.locked = false;
         })
-        // .catch(({ response: { data }}) => {
-        //   this.locked = false;
-        // });
+        .catch(({ response: { data }}) => {
+          this.locked = false;
+          this.$Message.error(this.$MessageBundle(data).getMessage())
+        });
       },
 
       diggAnswer (id, index, data) {
@@ -1177,9 +1196,10 @@
           }
           this.locked = false;
         })
-        // .catch(({ response: { data }}) => {
-        //   this.locked = false;
-        // });
+        .catch(({ response: { data }}) => {
+          this.locked = false;
+          this.$Message.error(this.$MessageBundle(data).getMessage())
+        });
       },
       /**
        * 打开回答界面
@@ -1187,10 +1207,12 @@
        */
       answerQuestion () {
         const { id: question } = this.question;
+        const update = this.getQuestion;
         this.$store.dispatch(SHOWPOSTANSWER, cb => {
           cb({
             show: true,
-            question
+            question,
+            callback: update
           })
         })
       },
@@ -1240,9 +1262,16 @@
         .then(({ data }) => {
           this.question = {...data};
           this.loading = false;
+          this.getAnswers();
         })
-        .catch(({ response: { data } }) => {
-          console.log(data);
+        .catch(({ response: {status, data } }) => {
+          if(status === 404) {
+            this.$Message.error('该问题已被删除');
+            this.$router.push('/questions');
+
+            return;
+          }
+          this.$Message(this.$MessageBundle(data).getMessage());
         })
       },
 
@@ -1309,6 +1338,10 @@
       canSend () {
         return this.commentBody.length > 0;
       },
+      getHtmlFalse () {
+        const { body = '' } = this.question;
+        return md.render(this.getContent(body));
+      },
       getHtml() {
         const { body = '' } = this.question;
         return md.render(body);
@@ -1335,7 +1368,6 @@
     beforeMount() {
       this.loading = true;
       this.getQuestion();
-      this.getAnswers();
       const { user_id } = this.$storeLocal.get('UserLoginInfo') || {};
       this.user_id = user_id;
     }

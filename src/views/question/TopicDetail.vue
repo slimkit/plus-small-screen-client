@@ -38,7 +38,7 @@
         </Col>
       </Row>
     </section>
-    <section :class="$style.experts">
+    <section :class="$style.experts" @click="$router.push({name: 'expertlist', params: {topic_id: topic.id}})">
       <Row :gutter="24">
         <Col span="8">
           {{topic.experts_count}}位相关专家  

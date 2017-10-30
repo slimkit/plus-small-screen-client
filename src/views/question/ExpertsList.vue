@@ -1,28 +1,15 @@
 <template>
-  <Modal 
-    v-model="show"
-    v-if="show"
-    :class="[$style.root, show ? $style.show : '']" 
-    width="100%"
-    :closable="false"
-    :mask-closable="false"
-    class-name="expertList"
-    :transfer="false"
-  >
-    <div slot="header" style="color:#f60;text-align:center">
+  <section :class="$style.root">
+    <header class="commonHeader">
       <Row :gutter="24">
-        <Col span="20">
-          <Input v-model.trim="key">
-            <span slot="prepend">
-              <SearchIcon height="20" width="20" color="#bfbfbf" />
-            </span>
-          </Input>
+        <Col span="5">
+          <BackIcon height="21" @click.native="goBack()" width="21" color="#979797" />
         </Col>
-        <Col span="4">
-          <Button type="text" @click.native="closeExpert">取消</Button>
+        <Col span="14" class="title-col">
+          专家列表
         </Col>
       </Row>
-    </div>
+    </header>
     <div class="nothingDefault" v-if="nothing"> 
       <img :src="nothing" />
     </div>
@@ -43,7 +30,7 @@
           v-for="(user, index) in formatedUsers"
           :key="index"
           :class="$style.userList"
-          @click.native="selectUser(user)"
+           @click.native="$router.push({name: 'userSpace', params: {user_id: user.id}})"
         >
           <Col span="6" :class="$style.avatar">
             <img v-lazy="user.avatar" :alt="user.uname">
@@ -54,7 +41,7 @@
               <span>{{user.extra.answers_count}}</span> 回答 . 
               <span>{{user.extra.likes_count}}</span> 赞
             </section>
-            <section v-if="user.tags">
+            <section v-if="user.tags.length">
               <Tag type="border" v-for="tag in user.tags" :key="tag.id">{{tag.name}}</Tag>
             </section>
           </Col>
@@ -69,8 +56,7 @@
         </section>
       </div>
     </mt-loadmore>
-    <div slot="footer"></div>
-  </Modal>
+  </section>
 </template>
 <style lang="less" module>
   .root {
@@ -158,134 +144,58 @@
   }
 </style>
 <script>
-  import SearchIcon from '../../icons/Search';
   import _ from 'lodash';
   import { createAPI, addAccessToken, createRequestURI } from '../../utils/request';
   import { resolveImage } from '../../utils/resource';
+  import BackIcon from '../../icons/Back';
 
   const nothingImg = resolveImage(require('../../statics/images/defaultNothingx3.png'));
   const noAvatar = resolveImage(require('../../statics/images/defaultAvatarx2.png'));
-  const expert = {
+  const ExpertsList = {
     components: {
-      SearchIcon
+      BackIcon
     },
-    props: [
-      'selectExpert',
-      "open",
-      'topics'
-    ],
     data: () => ({
       showSpinner: false,
-      key: '',
       users: [],
       bottomAllLoaded: true,
       topAllLoaded: false,
       bottomStatus: '',
       topStatus: '',
       limit: 20,
-      show: false
+      show: false,
+      topic_id: 0
     }),
-    watch: {
-      key (newKey) {
-        if(newKey !== '') {
-          this.getUsers('new');
-        }
-
-        if(newKey === '') {
-          this.getExperts('new');
-        }
-      }
-    },
     methods: {
-      selectUser(user) {
-        this.show = false;
-        this.$emit('selectExpert', user);
-      },
-      closeExpert () {
-        this.show = false;
-        this.$emit('selectExpert', {});
+      goBack() {
+        if(window.history.length < 2) {
+          this.$router.push(`/questions/topics/${this.topic}`);
+          return;
+        }
+        this.$router.back();
       },
       loadNew () {
-        const { key } = this;
-        if (key) {
-          this.getUsers('loadNew');
-        } else {
-          this.getExperts('loadNew');
-        }
+        this.getExperts('loadNew');
       },
       loadMore () {
-        const { key } = this;
-        if (key) {
-          this.getUsers('loadMore');
-        } else {
-          this.getExperts('loadMore');
-        }
+        this.getExperts('loadMore');
       },
       bottomStatusChange (status) {
         this.bottomStatus = status;
       },
 
-      getUsers (type = 'new') {
-        if ( type === 'loadMore' && this.bottomAllLoaded ) {
-          this.$refs.loadmore.onBottomLoaded();
-
-          return
-        }
-        const { key, users: { length = 0 }, limit } = this;
-        let data = { keyword: key, limit };
-        if (type === 'loadMore') {
-          data.offset = length;
-        }
-        addAccessToken().get(
-          createAPI(`user/search`),
-          {
-            params: {
-              ...data
-            }
-          },
-          {
-            validataStatus: status => status === 200
-          }
-        )
-        .then(({ data }) => {
-          if (type === 'loadMore') {
-            this.users = [
-              ...this.users,
-              ...data
-            ];
-            if (data.length === limit) this.bottomAllLoaded = false;
-            this.$refs.loadmore.onBottomLoaded();
-
-            return
-          }
-          if (type === 'new') {
-            this.users = data;
-            if (data.length === limit) this.bottomAllLoaded = false;
-
-            return;
-          }
-          if (type === 'loadNew') {
-            this.users = _.uniqBy([
-              ...data,
-              ...this.users
-            ], 'id');
-
-            this.$refs.loadmore.onTopLoaded();
-          }
-        })
-      },
-
       getExperts ( type = 'loadNew') {
-        const { users, key, tops, limit } = this;
-        let params = {};
-
-        if ( type === 'loadMore' ) {
-          params.offset = users.length;
+        if (type === 'loadMore' && this.bottomAllLoaded) {
+          this.$refs.loadmore.onBottomLoaded();
+          return;
         }
-        params.topics = _.join(this.tops, ',');
+        const { topic_id, limit } = this;
+        let params = {
+          limit
+        };
 
         addAccessToken().get(
-          createAPI('question-experts'),
+          createAPI(`question-topics/${topic_id}/experts`),
           {
             params: {
               ...params
@@ -301,14 +211,20 @@
               ...this.users,
               ...data
             ];
-            if (data.length === limit) this.bottomAllLoaded = false;
+            if (data.length === limit) {
+              this.bottomAllLoaded = false;
+            } else this.bottomAllLoaded = true;
             this.$refs.loadmore.onBottomLoaded();
 
             return
           }
           if (type === 'new') {
             this.users = data;
-            if (data.length === limit) this.bottomAllLoaded = false;
+            if (data.length === limit) {
+              this.bottomAllLoaded = false;
+            } else {
+              this.bottomAllLoaded = true;
+            }
 
             return;
           }
@@ -319,25 +235,26 @@
             ], 'id');
 
             this.$refs.loadmore.onTopLoaded();
+            
+            return;
           }
         })
       }
     },
 
     created () {
-      this.show = this.open;
+      this.topic_id = this.$route.params.topic_id || 0;
       this.getExperts('new');
     },
 
     computed: {
-      tops () {
-        let ids = this.topics.map( topic => {
-          return topic.id
-        });
-        return ids;
-      },
       nothing () {
         return this.users.length == 0 ? nothingImg : 0;
+      },
+      after () {
+        const { users: { length = 0 } } = this;
+        if (!length) return 0;
+        return _.last(this.users)['id'];
       },
       formatedUsers () {
         const { users } = this;
@@ -350,5 +267,5 @@
     }
   };
 
-  export default expert;
+  export default ExpertsList;
 </script>

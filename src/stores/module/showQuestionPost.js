@@ -2,20 +2,22 @@ import { SHOWQUESTIONPOST } from '../types';
 
 const state ={
   showQuestionPost: {
-    show: false
+    show: false,
+    id: 0,
+    callback: null
   }
 };
 
 const mutations = {
-  [SHOWQUESTIONPOST] (state, show) {
-    state.showQuestionPost = { ...state.showQuestionPost, ...{ show }};
+  [SHOWQUESTIONPOST] (state, data) {
+    state.showQuestionPost = { ...state.showQuestionPost, ...data};
   }
 };
 
 const actions = {
   [SHOWQUESTIONPOST] (context, cb) {
-    cb ( (show) => {
-      context.commit(SHOWQUESTIONPOST, show);
+    cb ( data => {
+      context.commit(SHOWQUESTIONPOST, data);
     })
   }
 };

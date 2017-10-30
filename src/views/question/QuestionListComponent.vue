@@ -26,7 +26,7 @@
             :class="$style.question"
             @click="$router.push({name: 'questionDetail', params: {question_id: question.id}})"
           >
-            <h3>{{ question.subject }}</h3>
+            <h3>{{ question.subject }} <ExcellentIcon v-if="question.excellent" width="21" height="21" color="#FCB02B" /></h3>
             <img :class="$style.answerImg" v-if="question.answer && getFile(answerBody(question))" v-lazy="getFile(answerBody(question))" />
             <Row :gutter="24" v-if="question.answer">
               <Col span="24">
@@ -47,6 +47,7 @@
             <Row :gutter="24" :class="$style.tool">
               <Col span="16">
                 <span>{{question.watchers_count}}</span> 关注 · <span>{{ question.answers_count }}</span> 回答
+                <span :class="$style.special" v-if="question.amount"> · <RewardCon color="#FCA92B" height="14" width="14" /><i>{{showAmount(question.amount)}}</i></span>
               </Col>
               <Col span="8" class="header-end-col">
                 <timeago 
@@ -94,6 +95,10 @@
         h3 {
           padding: 8px 12px;
           font-weight: 500;
+          display: flex;
+          svg {
+            margin-left: 2vw;
+          }
         }
         .answerImg {
           width: 100vw;
@@ -135,6 +140,18 @@
           font-size: 14spx;
           span {
             color: #59b6d7;
+            &.special {
+              display: inline-flex;
+              align-items: center;
+              i {
+                color: #FCA92B;
+                font-style: normal;
+              }
+              svg {
+                margin-left: 1vw;
+                margin-right: 1vw;
+              }
+            }
           }
         }
       }
@@ -155,10 +172,40 @@
   import { resolveImage } from '../../utils/resource';
   import getPureContent from '../../utils/getPureContent';
   import timer from '../../utils/timer';
+  import ExcellentIcon from '../../icons/Excellent';
+  import RewardCon from '../../icons/RewardCon';
+  import { showAmount } from '../../utils/balance';
+  import markdownIt from 'markdown-it';
+  import plusImageSyntax from 'markdown-it-plus-image';
+  import hljs from 'highlight.js';
+  import "github-markdown-css";
+  import 'highlight.js/styles/github.css';
+
   const defaultAvatar = resolveImage(require('../../statics/images/defaultAvatarx2.png'));
   const nothingImage = resolveImage(require('../../statics/images/defaultNothingx2.png'));
+  const md = markdownIt({
+    breaks: true,
+    html: false,
+    highlight: function (str, lang) {
+      if (lang && hljs.getLanguage(lang)) {
+        try {
+          return hljs.highlight(lang, str).value;
+        } catch (__) {}
+      }
+   
+      try {
+        return hljs.highlightAuto(str).value;
+      } catch (__) {}
+   
+      return ''; // use external default escaping 
+    }
+  }).use(plusImageSyntax, `/api/v2/files/`);
   
   const QuestionListComponent = {
+    components: {
+      ExcellentIcon,
+      RewardCon
+    },
     data: () => ({
       type: 'hot',
       questions: [],
@@ -172,7 +219,11 @@
     }),
     methods: {
       timer,
+      showAmount,
       getPureContent,
+      getPureText (str) {
+        return ( (md.render(str)).replace(/<\/?.+?>/g,"") ).replace(/ /g,"");
+      },
       topStatusChange (status) {
         this.topStatus = status;
       },
@@ -261,7 +312,7 @@
       },
       answerBody (question) {
         const { look = 0, answer: { body = ''} } = question;
-        return body;
+        return this.getPureText(body);
       },
       getFile (str) {
         if(!str) return 0;

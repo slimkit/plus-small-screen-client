@@ -229,17 +229,137 @@
           </div>
         </Col>
         <Col span="6" class="operation">
-          <div v-if="!answer.collected" @click="handleCollection(answer.id)">
-            <ConnectionIcon height="20" width="20" color="#999" />
-            <i>收藏</i>
-          </div>
-          <div v-else @click="handleUnCollection(answer.id)">
-            <ConnectionIcon height="20" width="20" color="#f4504d" />
-            <i class="did">收藏</i>
+          <div @click="showPopup">
+            <MoreIcon height="20" width="20" color="#999" />
+            <i>更多</i>
           </div>
         </Col>
       </Row>
     </div>
+    <mt-popup
+      v-model="isShowPopup"
+      position="bottom"
+      style="width: 100%;"
+      :class="$style.popup"
+      v-if="questionUser === user_id"
+    >
+      <div>
+        <Button 
+          @click="deleteAnswer" 
+          size="large" 
+          :class="[$style.deleteQuestion, $style.popupButton]" 
+          type="text" :long="true"
+          v-if="userId === user_id"
+        >
+          删除
+        </Button>
+        <Button 
+          @click="answer.adoption ? adoptionAnswer : ''" 
+          size="large" 
+          :class="[$style.askForexCellent, $style.popupButton]" 
+          type="text" :long="true"
+        >
+          {{ answer.adoption ? '已采纳' : '采纳答案'}}
+        </Button>
+        <Button
+          @click.native="handleCollection(answer.id)" 
+          size="large" 
+          :class="[$style.popupButton]" 
+          type="text" 
+          :long="true"
+          v-if="!answer.collected"
+        >
+          收藏
+        </Button>
+        <Button
+          v-else
+          @click.native="handleUnCollection(answer.id)" 
+          size="large" 
+          :class="$style.popupButton" 
+          type="text" 
+          :long="true"
+        >
+          取消收藏
+        </Button>
+        <Button
+          v-if="userId === user_id"
+          @click="editorAnswer" 
+          size="large" 
+          :class="[$style.deleteQuestion, $style.popupButton]" 
+          type="text" 
+          :long="true"
+        >
+          编辑
+        </Button>
+        <Button 
+          @click="hidePopup" 
+          size="large" 
+          :class="$style.popupButton" 
+          type="text" 
+          :long="true"
+        >
+          取消
+        </Button>
+      </div>
+    </mt-popup>
+    <mt-popup
+      v-model="isShowPopup"
+      position="bottom"
+      style="width: 100%;"
+      :class="$style.popup"
+      v-else
+    >
+      <div>
+        <Button 
+          @click.native="deleteAnswer" 
+          size="large" 
+          :class="[$style.deleteQuestion, $style.popupButton]" 
+          type="text" :long="true"
+          v-if="userId === user_id"
+        >
+          删除
+        </Button>
+        <Button
+          @click.native="handleCollection(answer.id)" 
+          size="large" 
+          :class="[$style.popupButton]" 
+          type="text" 
+          :long="true"
+          v-if="!answer.collected"
+        >
+          收藏
+        </Button>
+        <Button
+          v-else
+          @click.native="handleUnCollection(answer.id)" 
+          size="large" 
+          :class="$style.popupButton" 
+          type="text" 
+          :long="true"
+        >
+          取消收藏
+        </Button>
+        <Button
+          v-if="userId === user_id"
+          @click.native="editorAnswer" 
+          size="large" 
+          :class="$style.popupButton" 
+          type="text" 
+          :long="true"
+        >
+          编辑
+        </Button>
+        <Button 
+          @click.native="hidePopup" 
+          size="large" 
+          :class="$style.popupButton" 
+          type="text" 
+          :long="true"
+        >
+          取消
+        </Button>
+      </div>
+    </mt-popup>
   </div>
   <!-- </transition> -->
 </template>
@@ -274,6 +394,7 @@
   import PlusIcon from '../../icons/Plus';
   import RightIcon from '../../icons/Right';
   import EachFollowIcon from '../../icons/EachFollowing';
+  import MoreIcon from '../../icons/More';
 
   const defaultAvatar = resolveImage(require('../../statics/images/defaultAvatarx2.png'))
   // markdown 解析
@@ -301,6 +422,7 @@
   const defaultImage = resolveImage(require('../../statics/images/defaultNothingx2.png'));
   const AnswerDetail = {
     components: {
+      MoreIcon,
       EachFollowIcon,
       PlusIcon,
       RightIcon,
@@ -318,6 +440,7 @@
     },
     data: () => ({
       defaultAvatar,
+      isShowPopup: false,
       isWeixin: window.TS_WEB.isWeiXin,
       scroll: 0,
       answer: {
@@ -343,9 +466,11 @@
       commentIndex: -1,
       commentBody: '',
       reward: {},
-      limit: 20
+      limit: 20,
+      user_id: 0
     }),
     computed: {
+
       answerBody () {
         const { body = '' } = this.answer;
         return body;
@@ -367,6 +492,10 @@
       subject () {
         const { question: { subject = '' } = {} } = this.answer;
         return subject;
+      },
+      questionUser () {
+        const { question: { user_id = 0 } = {} } = this.answer;
+        return user_id;
       },
       userId () {
         const { answer: { user_id = 0 } = {} } = this;
@@ -402,6 +531,41 @@
       timers,
       unFollowingUser,
       followingUser,
+      /**
+       * 编辑答案
+       * @return {[type]} [description]
+       */
+      editorAnswer () {
+
+      },
+      /**
+       * 删除答案
+       * @return {[type]} [description]
+       */
+      deleteAnswer () {
+        
+        let id = this.answer.question.id;
+        let aid = this.answer.id;
+        addAccessToken().delete(
+          createAPI(`question-answers/${aid}`),
+          {
+            validateStatus: status => status === 204
+          }
+        )
+        .then( () => {
+          this.$Message.success('删除成功');
+          this.$router.push({ name: 'questionDetail', params: { question_id: id } });
+        })
+        .catch(({ response: { data } }) => {
+          this.$Message.error(this.$MessageBundle(data).getMessage());
+        });
+      },
+      hidePopup () {
+        this.isShowPopup = false;
+      },
+      showPopup () {
+        this.isShowPopup = true;
+      },
       doFollow() {
         const { answer: { user } } = this;
         let newUser = user;
@@ -637,7 +801,6 @@
         })
       },
       deleteComment (close, data) {
-        console.log(data);
         addAccessToken().delete(createAPI(`question-answers/${data.id}/comments/${data.comment_id}`), {}, {
           validateStatus: status => status === 204
         })
@@ -679,6 +842,8 @@
     },
     beforeMount () {
       const { limit } = this;
+      const { user_id = 0 } = this.$storeLocal.get('UserLoginInfo');
+      this.user_id = user_id;
       let answer_id = parseInt(this.$route.params.answer_id) || 0;
       if ( !answer_id ) {
         this.$store.dispatch(NOTICE, cb => {
@@ -729,9 +894,14 @@
             if(this.$refs.loadmore)
               this.$refs.loadmore.onTopLoaded();
             this.showSpinner = false;
+          });
+        })
+        .catch(({response: { data, status } }) => {
+          if( status === 404 ) {
+            this.$Message.error('该回答已经找不到了...');
+            this.$router.push('/questions');
+          }
         });
-        });
-      // }
     },
     mounted () {
       window.addEventListener('scroll', this.menu);
@@ -743,11 +913,6 @@
 <style>
   .feedContainerContentTextNoPadding pre, feedContainerContentText pre {
     overflow-x: scroll; 
-  }
-  .feedContainerContentTextNoPadding img, feedContainerContentText img {
-    /*width: 100vw!important;
-    margin-left: -12px;
-    height: auto!important;*/
   }
 </style>
 <style lang="less" scoped>
@@ -914,6 +1079,22 @@
   }
 </style>
 <style lang="less" module>
+  .popup {
+    width: 100%;
+    background: rgba(0, 0, 0, 0);
+    .popupButton {
+      border-bottom: 1px solid #ededed;
+      color: #333!important;
+      border-radius: 0;
+      font-size: 16px!important;
+      &.deleteQuestion {
+        color: #f00;
+      }
+      &:last-child {
+        border-top: 5px solid #efefef;
+      }
+    }
+  }
   .answerUser {
     padding-top: 12px;
     padding-bottom: 12px;

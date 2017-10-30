@@ -10,7 +10,7 @@
           <router-link to="/questions/topics">话题</router-link>
         </Col>
         <Col span="4" class="header-end-col">
-          <SearchIcon height="21" width="21" color="#999" />
+          <SearchIcon height="21" @click.native="$router.push({ name: 'questionSearch' })" width="21" color="#999" />
         </Col>
       </Row>
     </header>

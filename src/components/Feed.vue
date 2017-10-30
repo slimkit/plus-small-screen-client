@@ -78,7 +78,8 @@
   import { NOTICE, USERS_APPEND, FEEDSLIST } from '../stores/types';
   import storeLocal from 'store';
   const defaultAvatar =  resolveImage(require('../statics/images/defaultAvatarx2.png'));
-  import PlusMessageBundle from '../utils/es';
+
+  import { showAmount } from '../utils/balance';
   
   const feedinfo = {
     props: [
@@ -86,8 +87,7 @@
     ],
     data: () => ({
       user: {},
-      goldName: window.TS_WEB.goldName,
-      ratio: 100
+      goldName: window.TS_WEB.goldName
     }),
     methods: {
       changeUrl,
@@ -95,7 +95,7 @@
         if(this.feed.paid_node && !this.feed.paid_node.paid) {
           this.$Modal.confirm({
             title: '付费支付',
-            content: `<p>需要支付${this.feed.paid_node.amount / 100 / 100 * this.ratio}${this.goldName}</p>`,
+            content: `<p>需要支付${showAmount(this.feed.paid_node.amount)}${this.goldName}</p>`,
             okText: '确认支付',
             loading: true,
             onOk: () => {
@@ -111,10 +111,10 @@
                   this.changeUrl(`/feed/${id}`);
                 }, 800);
               })
-              // .catch( ({ response: { data, status } = {} }) => {
-              //   this.$Modal.remove();
-              //   this.$Message.error(PlusMessageBundle(data).getMessage());
-              // })
+              .catch( ({ response: { data, status } = {} }) => {
+                this.$Modal.remove();
+                this.$Message.error(this.$MessageBundle(data).getMessage());
+              })
             }
           });
           return;
@@ -166,9 +166,6 @@
         });
         this.user = { ...user };
       }
-    },
-    mounted () {
-      this.amount = this.$storeLocal.get('ratio') || 100;
     }
   }
 
