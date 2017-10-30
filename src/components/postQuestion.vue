@@ -368,7 +368,7 @@
 </style>
 <script>
   import _ from 'lodash';
-  import mdEditor from 'plus-editor.md';
+  import mdEditor from 'plus-editor.md/dist/pluseditor.min';
   import 'plus-editor.md/dist/pluseditor.css';
   import { showAmount, trueAmount } from '../utils/balance';
   import { mapState } from 'vuex';

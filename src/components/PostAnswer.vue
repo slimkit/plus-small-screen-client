@@ -53,7 +53,7 @@
 </style>
 <script>
   import { mapState } from 'vuex';
-  import mdEditor from 'plus-editor.md';
+  import mdEditor from 'plus-editor.md/dist/pluseditor.min';
   import 'plus-editor.md/dist/pluseditor.css';
   import { SHOWPOSTANSWER } from '../stores/types';
   import { createAPI, addAccessToken } from '../utils/request';
