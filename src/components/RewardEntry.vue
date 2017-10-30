@@ -1,5 +1,5 @@
 <template>
-  <div v-if="showComponent">
+  <div v-if="showComponent" class="rewardRoot">
     <Row :gutter="24" type="flex" align="middle" justify="center">
       <Col class-name="center" span="6">
         <Button @click.native="openReward" type="error" size="small">打赏</Button>
@@ -12,8 +12,8 @@
     </Row>
     <Row :gutter="24" type="flex" align="middle" justify="center" >
       <Col span="24" class-name="center" @click.native="openRewardList">
-        <img v-lazy="rewardUser" class="rewardUser" alt="" v-for="(rewardUser, index) in formatedRewardUsers">
-        <i v-show="rewardUsers.length"> ></i>
+        <img  v-lazy="rewardUser" class="rewardUser avatar-component" alt="" v-for="(rewardUser, index) in formatedRewardUsers">
+        <i v-show="rewardUsers.length"><RightArrowIcon height="16" width="16" color="#ccc" /></i>
       </Col>
     </Row>
     <Modal v-model="rewardOpen" width="80vw">
@@ -67,7 +67,7 @@
           justify="center"
         >
           <Col span="4" class-name="content">
-            <img v-lazy="user.avatar" :alt="user.uname" />
+            <img v-lazy="user.avatar" class="avatar-component" :alt="user.uname" />
           </Col>
           <Col span="14" class-name="content">
             <span>{{ user.uname }} </span>打赏了文章
@@ -105,7 +105,7 @@
     text-align: center;
     font-size:12px;
     padding: 4px 0;
-    display: flex;
+    display: flex!important;
     align-items: center;
     justify-content: center;
     span {
@@ -187,6 +187,7 @@
   import { createAPI, addAccessToken } from '../utils/request';
   import PlusMessageBundle from '../utils/es';
   import { resolveImage } from '../utils/resource';
+  import RightArrowIcon from '../icons/RightArrow';
   import _ from 'lodash';
   import timers from '../utils/timer';
   import { showAmount, trueAmount }from '../utils/balance';
@@ -203,6 +204,9 @@
       'rewardableId': Number, // 被打赏的资源 例如 5
       'apiMethod': String, // API方法 例如 rewards/rewarders
       'source': Object // 被打赏的数据源
+    },
+    components: {
+      RightArrowIcon
     },
     data: () => ({
       items: [],
