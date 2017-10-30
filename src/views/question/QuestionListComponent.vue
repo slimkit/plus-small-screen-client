@@ -32,7 +32,7 @@
               <Col span="24">
                 <section :class="$style.answerBody">
                   <div v-if="question.answer.anonymity" :class="$style.nobody">
-                    <span>匿</span>
+                    
                     <i>匿名用户：</i>
                   </div>
                   <div v-else :clas="$style.anybody">
@@ -312,6 +312,7 @@
       },
       answerBody (question) {
         const { look = 0, answer: { body = ''} } = question;
+        if(!body) return '';
         return this.getPureText(body);
       },
       getFile (str) {
