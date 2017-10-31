@@ -3,8 +3,17 @@
       <ul>
         <li v-for="(comment, commentIndex) in commentsData" :key="comment.id" v-if="commentIndex < 3">
           <p>
-            <router-link v-if="comment.user_id" :class="$style.userName" :to="{ path: `/users/feeds/${comment.user_id}` }">{{ getUserName(comment.user_id) }}</router-link> 
-            <span v-if="comment.reply_to_user_id" :class="$style.commentContent">
+            <router-link
+              v-if="comment.user_id" 
+              :class="$style.userName" 
+              :to="{ path: `/users/feeds/${comment.user_id}` }"
+            >
+              {{ getUserName(comment.user_id) }}
+            </router-link> 
+            <span 
+              v-if="comment.reply_to_user_id"
+              :class="$style.commentContent"
+            >
               回复
             </span>
             <router-link v-if="comment.reply_to_user_id" :class="$style.userName" :to="{ path: `/users/feeds/${comment.reply_to_user_id}` }">{{ getUserName(comment.reply_to_user_id) }}</router-link> 
@@ -113,7 +122,7 @@
         })
       },
       getUserName (user_id) {
-        let { [user_id]: { name = '' } = {} } = this.users;
+        const { [`user_${user_id}`]: { name = '' } = {} } = this.users;
         return name;
       }
     },
@@ -135,9 +144,16 @@
       let user_ids_obj = {};
       this.feed.comments.forEach( (comment, index) => {
         if(comment.reply_to_user_id) {
-          user_ids_obj = { ...user_ids_obj, [comment.user_id]: comment.user_id, [comment.reply_to_user_id]: comment.reply_to_user_id };
+          user_ids_obj = { 
+            ...user_ids_obj, 
+            [comment.user_id]: comment.user_id, 
+            [comment.reply_to_user_id]: comment.reply_to_user_id 
+          };
         } else {
-          user_ids_obj = { ...user_ids_obj, [comment.user_id]: comment.user_id };
+          user_ids_obj = { 
+            ...user_ids_obj, 
+            [comment.user_id]: comment.user_id 
+          };
         }
       });
       let user_ids = lodash.values(user_ids_obj);

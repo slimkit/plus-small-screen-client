@@ -147,7 +147,7 @@
     methods: {
       changeUrl,
       getUserName (user_id) {
-        let { [user_id]: { name = '' } = {} } = this.users;
+        let { [`user_${user_id}`]: { name = '' } = {} } = this.users;
         return name;
       },
       handleCommentInput (open, reply_user = 0) {

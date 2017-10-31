@@ -11,13 +11,13 @@ const state = {
 const mutations = {
   // 增加单个用户
   [USERS_APPEND] (state, user) {
-    const users = { ...state.users, [user.user_id]: user };
+    const users = { ...state.users, [`user_${user.user_id}`]: user };
     state.users = users;
   },
   // 修改单个用户信息
   [USERS_ITEM_UPDATE] (state, user) {
     let { [user.user_id]: oldUser = {} } = state.users;
-    state.users[user.user_id] = { ...oldUser, ...user };
+    state.users[`user_${user.user_id}`] = { ...oldUser, ...user };
   },
   // 批量增加用户信息
   [USERS] (state, users) {

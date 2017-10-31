@@ -115,8 +115,8 @@ export default {
     },
     methods: {
         getUserName(user_id) {
-            let {
-                [user_id]: { name = '' } = {}
+            const {
+                [`user_${user_id}`]: { name = '' } = {}
             } = this.users;
             return name;
         },

@@ -94,6 +94,7 @@
   .rewardUser {
     width: 8vw;
     padding: 0 1vw;
+    border-radius: 100%;
   }
   .text-align-left {
     text-align: left;
