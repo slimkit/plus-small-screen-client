@@ -180,7 +180,8 @@
           }
         )
         .then( ({ data = {} }) => {
-          console.log(data);
+          this.time = 60;
+          this.timer();
         })
         .catch( error => {
           const code = error.response.status;
@@ -211,10 +212,11 @@
         }
         this.isLoading = true;
         this.isDisabled = true;
-        request.patch(createAPI('auth/forgot'), {
+        request.put(createAPI('user/retrieve-password'), {
             phone,
-            code,
-            password
+            verifiable_code: code,
+            password,
+            verifiable_type: 'sms'
           },
           {
             validateStatus: status => status === 201
@@ -242,7 +244,7 @@
           this.isDisabled = false;
           const { code = 'xxxx' } = data;
           this.isLoading = false;
-          this.errors = { ...this.errors, serverError: errorCodes[code] };
+          this.errors = { ...this.errors, serverError: this.$MessageBundle(data).getMessage() };
         })
       }
     },
