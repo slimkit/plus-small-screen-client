@@ -42,10 +42,9 @@ axios.interceptors.response.use(
         if(error.response) {
             const { status, data = {} } = error.response;
             const message = PlusMessageBundle(data).getMessage();
-            // console.log(message);
 
-            // token过期 提示: 重新登录
-            if((status === 500 && message === "Token has expired") || (status === 401 && message === "The token has been blacklisted")) {
+            // token失效 提示: 重新登录
+            if((status === 401) {
                 // 清除本地保存的 token
                 storeLocal.remove('UserLoginInfo');
 
@@ -63,29 +62,6 @@ axios.interceptors.response.use(
                 }, 1500);
 
                 return false;
-            }
-
-            // 多设备登录
-            if(status === 401 && message === "The token has been blacklisted") {
-
-            }
-
-            // 获取授权失败 
-            if(status === 401) {
-
-                app.$store.dispatch(NOTICE, cb => {
-                    cb({
-                        show: true,
-                        time: 1500,
-                        status: false,
-                        text: `${message}，请登录...`
-                    });
-                });
-
-                setTimeout(() => {
-                    app.$router.push('/login');
-                }, 1500);
-
             }
         } else if(error.request) {
             console.log(error.request);
