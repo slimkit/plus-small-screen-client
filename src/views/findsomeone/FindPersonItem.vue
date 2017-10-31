@@ -9,9 +9,9 @@
         </div>
         <div :class="$style.itemFollow">
             <div class="actionButton" @click.stop="handleFollowingStatus(followAction.status)">
-                <FollowingIcon v-if="followAction.text == '已关注'" height="48" width="48" color="#59b6d7" />
-                <UnFollowingIcon v-if="followAction.text == '关注'" height="48" width="48" color="#333" />
-                <EachFollowingIcon v-if="followAction.text == '相互关注'" height="48" width="48" color="#59b6d7" />
+                <FollowingIcon v-if="followAction.text == '已关注'" height="24" width="24" color="#59b6d7" />
+                <UnFollowingIcon v-if="followAction.text == '关注'" height="24" width="24" color="#333" />
+                <EachFollowingIcon v-if="followAction.text == '相互关注'" height="24" width="24" color="#59b6d7" />
             </div>
         </div>
     </li>
