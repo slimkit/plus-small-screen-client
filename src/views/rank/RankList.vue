@@ -30,6 +30,13 @@
       </Row>
   </nav>
   <!-- /nav -->
+  <!-- loading -->
+  <div id="spinner" v-show="loading">
+    <div id="spinner-parent">
+      <div class="spinner-double-bounce-bounce2" />
+      <div class="spinner-double-bounce-bounce1" />
+    </div>
+  </div>
   <!-- content -->
   <div class="RankList">
     <!-- 用户综合排行 -->
@@ -79,6 +86,7 @@ const RankList = {
     },
     data() {
       return({
+        loading: false,
         user: {
           followers: [],
           balance: [],
@@ -118,13 +126,15 @@ const RankList = {
       changeUrl,
       goTo,
       requestRankApi(param, type, uri) {
+        this.loading = true;
         let params = { limit: 5, offset: 0 };
         addAccessToken().get(createAPI(uri), { params })
         .then(({ data = [] }) => {
+          this.loading = false;
           this[param][type] = data;
         })
         .catch(err => {
-          console.log(err);
+          this.loading = false;
         });
       },
       byRouteParamTypeGetData (type) {

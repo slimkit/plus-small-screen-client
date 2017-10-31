@@ -63,7 +63,7 @@ export default {
         nothingImage,
         rankList: [],
         bottomAllLoaded: false,
-        loading: false,
+        loading: true,
         bottomStatus: '',
         topStatus: '',
         rankInfo: {

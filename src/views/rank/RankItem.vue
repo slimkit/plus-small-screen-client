@@ -12,9 +12,9 @@
 		</div>
 		<div class="rank-follow">
             <div class="actionButton" @click.stop="handleFollowingStatus(followAction.status)">
-                <FollowingIcon v-if="followAction.text == '已关注'" height="20" width="20" color="#59b6d7" />
-                <UnFollowingIcon v-if="followAction.text == '关注'" height="20" width="20" color="#333" />
-                <EachFollowingIcon v-if="followAction.text == '相互关注'" height="20" width="20" color="#59b6d7" />
+                <FollowingIcon v-if="followAction.text == '已关注'" height="24" width="24" color="#59b6d7" />
+                <UnFollowingIcon v-if="followAction.text == '关注'" height="24" width="24" color="#333" />
+                <EachFollowingIcon v-if="followAction.text == '相互关注'" height="24" width="24" color="#59b6d7" />
             </div>
         </div>
 	</div>
