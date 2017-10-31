@@ -219,18 +219,11 @@
             verifiable_type: 'sms'
           },
           {
-            validateStatus: status => status === 201
+            validateStatus: status => status === 204
           }
         )
         .then(response => {
-          this.$store.dispatch(NOTICE, cb => {
-            cb({
-              show: true,
-              status: true,
-              time: 1500,
-              text: '密码重置成功'
-            })
-          });
+          this.$Message.success('密码重置成功,请登录');
           this.phone = '';
           this.password = '';
           this.code = '';
