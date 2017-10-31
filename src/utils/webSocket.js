@@ -47,8 +47,7 @@ function connect() {
 			addAccessToken().get(createAPI('im/users'), {}, {
 					validateStatus: status => status === 200
 				})
-				.then(response => {
-					let data = response.data.data;
+				.then(({ data: { data }}) => {
 					window.TS_WEB.im_token = data.im_password; // 保存im口令
 					if (window.TS_WEB.socketUrl) {
 						let socketUrl = `${window.TS_WEB.socketUrl.serve}?token=${data.im_password}`;
