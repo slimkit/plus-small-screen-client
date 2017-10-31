@@ -44,7 +44,7 @@ axios.interceptors.response.use(
             const message = PlusMessageBundle(data).getMessage();
 
             // token失效 提示: 重新登录
-            if((status === 401) {
+            if(status === 401) {
                 // 清除本地保存的 token
                 storeLocal.remove('UserLoginInfo');
 
