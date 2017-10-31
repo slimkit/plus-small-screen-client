@@ -1,8 +1,6 @@
 <template>
     <li v-if="!noData" :class="$style.findItem" @click="changeUrl(`/users/feeds/${id}`)">
-        <div :class="$style.itemHeader">
-            <img :src="avatar" :alt="name">
-        </div>
+        <user-avatar :sex='sex' :src='avatar || null' />
         <div :class="$style.iteminfo">
             <p :class="$style.itemName">{{name}}</p>
             <p :class="$style.itemBio">{{bio}}</p>
@@ -36,6 +34,7 @@ const FindPersonItem = {
     },
     props: ["item"],
     data: () => ({
+        sex: 0,
         id: null,
         bio: null,
         name: null,
@@ -92,9 +91,6 @@ const FindPersonItem = {
         },
     },
     computed: {
-        header() {
-            return this.avatar || this.defaultAvatar;
-        },
         followAction() {
             if (this.following && this.follower) {
                 return {
@@ -122,6 +118,7 @@ const FindPersonItem = {
 
             id,
             bio,
+            sex,
             name,
             avatar,
             follower,
@@ -135,8 +132,9 @@ const FindPersonItem = {
                 const { id, bio, name, avatar, follower, following } = user;
                 this.id = id;
                 this.bio = bio || "这家伙很懒，什么也没有留下";
+                this.sex = sex;
                 this.name = name;
-                this.avatar = avatar || defaultAvatar;
+                this.avatar = avatar;
                 this.follower = follower;
                 this.following = following;
             })
@@ -146,8 +144,9 @@ const FindPersonItem = {
         }else if(typeof id !== "undefined" && typeof user_id === 'undefined'){
             this.id = id;
             this.bio = bio || "这家伙很懒，什么也没有留下";
+            this.sex = sex;
             this.name = name;
-            this.avatar = avatar || defaultAvatar;
+            this.avatar = avatar;
             this.follower = follower;
             this.following = following;
         }else{

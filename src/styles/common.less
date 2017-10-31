@@ -458,3 +458,34 @@ input {
     }
   }
 }
+
+// 用户头像
+.ivu-avatar.ivu-avatar-large{
+    width: 60px;
+    height: 60px;
+    line-height: 60px;
+    border-radius: 30px;
+}
+
+// 用户默认头像
+
+[class*='icon-avatar']{
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+}
+.ivu-icon-avatar-secret{
+  background-image: data-uri('../statics/images/pic_default_secret.png');
+}
+
+.ivu-icon-avatar-man{
+  background-image: data-uri('../statics/images/pic_default_man.png');
+
+}
+
+.ivu-icon-avatar-woman{
+  background-image: data-uri('../statics/images/pic_default_woman.png');
+
+}

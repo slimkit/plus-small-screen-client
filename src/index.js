@@ -5,7 +5,7 @@ import VueLazyload from 'vue-lazyload';
 import loading_img from './statics/images/image-loading.png';
 import 'swiper/dist/css/swiper.css';
 import VueAwesomeSwiper from 'vue-awesome-swiper';
-
+import UserAvatar from './components/user/UserAvatar';
 // 统一message处理
 import plusMessageBundle from 'plus-message-bundle';
 
@@ -60,6 +60,7 @@ const components = [
   Popup,
   Picker,
   Loadmore,
+  UserAvatar,
   TabContainer,
   TabContainerItem
 ];
