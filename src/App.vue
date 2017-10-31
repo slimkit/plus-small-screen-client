@@ -237,7 +237,7 @@
         // 如果配置了im服务器
         if(TS_WEB.socketUrl) {
           // 获取会话列表
-          addAccessToken().get(createOldAPI('im/conversations/list/all'), {}, {
+          addAccessToken().get(createAPI('im/conversations/list/all'), {}, {
             validateStatus: status => status === 200
           })
           .then( response => {

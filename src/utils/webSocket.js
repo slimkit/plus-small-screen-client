@@ -17,8 +17,7 @@ import {
 } from './user';
 import {
 	addAccessToken,
-	createAPI,
-	createOldAPI
+	createAPI
 } from './request';
 
 const url = window.TS_WEB.socketUrl;
@@ -45,7 +44,7 @@ function connect() {
 				window.console.log(e);
 			}
 		} else if (TS_WEB.webSocket == null && TS_WEB.socketUrl.serve) { // 还没有连接过, 直接新建链接
-			addAccessToken().get(createOldAPI('im/users'), {}, {
+			addAccessToken().get(createAPI('im/users'), {}, {
 					validateStatus: status => status === 200
 				})
 				.then(response => {
