@@ -9,7 +9,7 @@
   <div class="content">
     <div class="user"  v-for="item in items" @click="changeUrl(`/users/feeds/${item.id}`)">
       <div class="userImageContainer">
-        <img v-lazy="item.avatar ? item.avatar : defaultAvatar" class="userAvatar">
+        <user-avatar :sex='item.sex' :src='item.avatar || null' />
         <img v-if="item.verified" :src="item.verified.icon" class="userIcon">
       </div>
       <span class="userName">{{ item.name }}</span>

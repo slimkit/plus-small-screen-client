@@ -2,9 +2,7 @@
 	<div class="rank-item" @click="changeUrl(`/users/feeds/${userInfo.id}`)">
 		<i class="rank-index">{{ rankIndex }}</i>
 		<div class="rank-info">
-			<div class="user-header">
-				<img :src="userInfo.avatar">
-			</div>
+			<user-avatar :sex='userInfo.sex' :src='userInfo.avatar || null' />
 			<div class="user-info">
 				<p class="user-name">{{ userInfo.name }}</p>
 				<p class="user-num">{{ `${countTitle}` }}</p>
@@ -49,9 +47,8 @@ const defaultAvatar = resolveImage(require('../../statics/images/defaultAvatarx2
 				return rank;
 			},
 			userInfo(){
-				let { id, avatar, name, extra } = this.person;
-				avatar = avatar || defaultAvatar;
-				return ({ id, avatar, name, extra }); 
+				let { id, avatar, name, extra, sex } = this.person;
+				return ({ id, avatar, name, sex, extra }); 
 			},
 			followAction() {
 				let { following, follower } = this;
