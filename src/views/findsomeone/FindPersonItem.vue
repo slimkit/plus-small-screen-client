@@ -169,7 +169,7 @@ export default FindPersonItem;
 
 .iteminfo {
     overflow: hidden;
-    flex-grow: 1;
+    flex: 1 1 auto;
     padding: 0 15px;
     font-size: 16px;
     >p {
