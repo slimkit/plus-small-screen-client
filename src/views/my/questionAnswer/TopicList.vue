@@ -1,5 +1,5 @@
 <template>
-<div>
+<div style="margin-top:6px;">
 	<!-- Loadding -->
     <div id="spinner" v-if="loading">
       <div id="spinner-parent">

@@ -1,5 +1,5 @@
 <template>
-	<div sadadsa>
+	<div sadadsa style="margin-top:6px;">
 		<!-- loading -->
 	    <div id="spinner" v-show="loading">
 	      <div id="spinner-parent">
