@@ -28,7 +28,19 @@
       RightArrowIcon,
     },
     name: 'rank-show-item',
-    props: ['items', 'type', 'title'],
+    props: {
+      items: {
+        type: [Array, Object],
+      },
+      type: {
+        type: String,
+        required: true
+      },
+      title: {
+        type: String,
+        required: true
+      }
+    },
     data(){
       return({
         defaultAvatar,
