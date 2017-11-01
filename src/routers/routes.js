@@ -85,7 +85,7 @@ import { requestAuth, CanNotGetInWhenLogged } from '../utils/auth';
 
 const routes = [{
         path: '/',
-        redirect: '/login',
+        redirect: '/feeds',
         meta: {
             title: 'ThinkSNS+'
         }
