@@ -11,11 +11,6 @@
                     <Search style="position: absolute; top: 50%; left: 5px; margin-top:-8px" height="16" width="16" color="#999" /> 搜索
                 </div>
                 </Col>
-                <!-- 通讯录 -->
-                <!-- <Col span="3" style="padding:0;display:flex;justify-content:center;align-items:center">
-                <Contacts height="24" width="24" color="#999" />
-                </Col> -->
-                <!-- /通讯录 -->
                 <Col span="6" style="display: flex; justify-content: flex-start; align-items:center;padding-left:0;" @click.native="showPop(2)">
                 <LoadingBlack v-if="locationing" height="21" width="24" color="#999" style="flex-grow:0;flex-shrink:0;margin-right:5px;" />
                 <Location v-else height="24" width="24" color="#999" style="flex-grow:0;flex-shrink:0;margin-right:5px;" />

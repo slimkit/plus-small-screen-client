@@ -133,30 +133,18 @@ export default {
 .findItem {
     display: flex;
     align-items: center;
-    padding: 20px;
+    padding: 15px;
     height: 100px;
     border-bottom: 1px solid #ededed;
-}
-
-.itemHeader {
-    overflow: hidden;
-    width: 50px;
-    height: 50px;
-    font-size: 10px;
-    line-height: 50px;
-    border-radius: 50%;
-    text-align: center;
-    background-color: #ededed;
-    flex: 0 0 auto;
-    >img {
-        width: 100%;
+    > * {
+        flex: 0 0 auto;
     }
 }
 
 .iteminfo {
     overflow: hidden;
     flex-grow: 1;
-    margin-left: 25px;
+    padding: 0 15px;
     font-size: 16px;
     >p {
         overflow: hidden;

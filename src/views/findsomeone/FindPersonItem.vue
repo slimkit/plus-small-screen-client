@@ -159,10 +159,10 @@ export default FindPersonItem;
 .findItem {
     display: flex;
     align-items: center;
-    padding: 20px;
+    padding: 15px;
     height: 100px;
     border-bottom: 1px solid #ededed;
-    > {
+    > *{
         flex: 0 0 auto;
     }
 }
@@ -170,7 +170,7 @@ export default FindPersonItem;
 .iteminfo {
     overflow: hidden;
     flex-grow: 1;
-    margin-left: 25px;
+    padding: 0 15px;
     font-size: 16px;
     >p {
         overflow: hidden;

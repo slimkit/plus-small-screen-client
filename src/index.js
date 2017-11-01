@@ -87,6 +87,17 @@ Vue.directive('childfocus', {
   }
 });
 
+Vue.directive('fixed', {
+  bind: (el, binding, vnode) => {
+    const ot = el.offsetTop;
+    document.onscroll = () => {
+      const st = document.body.scrollTop || document.documentElement.scrollTop;
+      el.setAttribute('data-fixed', st > ot ? 'fixed': '');
+    };
+  }
+});
+
+
 // 定义 localStorage 组件
 Vue.prototype.$storeLocal = storeLocal;
 // 定义 plusMessageBundle组件
