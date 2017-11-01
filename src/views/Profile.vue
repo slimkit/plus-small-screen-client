@@ -77,7 +77,7 @@
           <ConnectionIcon :height="21" :width="21" color="#59b6d7" />
         </Col>
         <Col span="16" :class="$style.menuText">
-          问答
+          我的问答
         </Col>
         <Col span="5"  :class="$style.rightIcon">
           <RightArrowIcon height="18" width="18" color="#999" />
