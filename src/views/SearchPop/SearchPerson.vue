@@ -1,18 +1,16 @@
 <template>
     <ul style="background-color: #fff">
         <li :class="$style.findItem" @click="changeUrl(`/users/feeds/${user.id}`)" v-for="user in formatDatas" :key="user.id">
-            <div :class="$style.itemHeader">
-                <img :src="user.avatar" :alt="user.name">
-            </div>
+            <user-avatar :sex='user.sex' :src='user.avatar || null' />
             <div :class="$style.iteminfo">
                 <p :class="$style.itemName">{{user.name}}</p>
                 <p :class="$style.itemBio">{{user.bio}}</p>
             </div>
             <div :class="$style.itemFollow">
                 <div class="actionButton" @click.stop="handleFollowingStatus(user.followAction.status, user.id)">
-                    <FollowingIcon v-if="user.followAction.text == '已关注'" height="48" width="48" color="#59b6d7" />
-                    <UnFollowingIcon v-if="user.followAction.text == '关注'" height="48" width="48" color="#333" />
-                    <EachFollowingIcon v-if="user.followAction.text == '相互关注'" height="48" width="48" color="#59b6d7" />
+                    <FollowingIcon v-if="user.followAction.text == '已关注'" height="24" width="24" color="#59b6d7" />
+                    <UnFollowingIcon v-if="user.followAction.text == '关注'" height="24" width="24" color="#333" />
+                    <EachFollowingIcon v-if="user.followAction.text == '相互关注'" height="24" width="24" color="#59b6d7" />
                 </div>
             </div>
         </li>
@@ -57,7 +55,6 @@ export default {
                         text: "关注"
                     };
 
-                avatar = avatar || defaultAvatar;
                 bio = bio || "这家伙很懒，什么也没有留下";
 
                 if(this.following && this.follower) {

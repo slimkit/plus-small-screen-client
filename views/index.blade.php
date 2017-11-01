@@ -104,29 +104,29 @@
       background: #fff;
     }
     #spinner-root-parent {
-      padding-top: 46px;
-      display: flex;
-      -webkit-justify-content: flex-start;
-      justify-content: flex-start;
       position: relative;
       width: 6vw;
       height: 6vw;
-      -webkit-align-items: center;
-      align-items: center;
     }
-    .spinner-root-double-bounce-bounce1, .spinner-root-double-bounce-bounce2 {
-      width: 6vw;
-      height: 6vw;
-      border-radius: 50%;
-      opacity: 0.6;
+    .spinner-root-double-bounce-bounce1, 
+    .spinner-root-double-bounce-bounce2 {
       position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      margin: auto;
+      width: 100%;
+      height: 100%;
+      border-radius: 100%;
+      opacity: 0.6;
       background-color: #59b6d7;
       -webkit-animation: mint-root-spinner-double-bounce 2.0s infinite ease-in-out;
               animation: mint-root-spinner-double-bounce 2.0s infinite ease-in-out;
     }
     .spinner-root-double-bounce-bounce2 {
-      -webkit-animation-delay: -1.0s;
-              animation-delay: -1.0s;
+      -webkit-animation-delay: 1.0s;
+              animation-delay: 1.0s;
     }
     @-webkit-keyframes mint-spinner-root-double-bounce {
       0%, 100% {

@@ -18,12 +18,10 @@
 import FollowingIcon from '../../icons/Following';
 import UnFollowingIcon from '../../icons/UnFollowing';
 import EachFollowingIcon from '../../icons/EachFollowing';
-import { goTo, changeUrl } from '../../utils/changeUrl';
-import { getUserInfo } from '../../utils/user';
-import { resolveImage } from '../../utils/resource';
-import { followingUser, unFollowingUser } from '../../utils/user';
 
-const defaultAvatar = resolveImage(require('../../statics/images/defaultAvatarx2.png'));
+import { getUserInfo } from '../../utils/user';
+import { goTo, changeUrl } from '../../utils/changeUrl';
+import { followingUser, unFollowingUser } from '../../utils/user';
 
 const FindPersonItem = {
     name: "FindPersonItem",
@@ -157,27 +155,15 @@ const FindPersonItem = {
 
 export default FindPersonItem;
 </script>
-<style lang="less" module>
+<style lang="scss" module>
 .findItem {
     display: flex;
     align-items: center;
     padding: 20px;
     height: 100px;
     border-bottom: 1px solid #ededed;
-}
-
-.itemHeader {
-    overflow: hidden;
-    width: 50px;
-    height: 50px;
-    font-size: 10px;
-    line-height: 50px;
-    border-radius: 50%;
-    text-align: center;
-    background-color: #ededed;
-    flex: 0 0 auto;
-    >img {
-        width: 100%;
+    > {
+        flex: 0 0 auto;
     }
 }
 

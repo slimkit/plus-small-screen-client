@@ -35,7 +35,6 @@ function CanNotGetInWhenLogged (to, from, next) {
 // 退出登录
 function logout () {
   storeLocal.set('UserLoginInfo', {});
-  debugger;
   router.push({ path: '/login' });
 }
 
