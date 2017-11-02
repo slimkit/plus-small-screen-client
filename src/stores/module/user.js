@@ -4,7 +4,7 @@
 
 import _ from 'lodash';
 import { addAccessToken, createAPI } from '../../utils/request';
-import { USERS, USERS_APPEND, USERS_ITEM_UPDATE, GET_USER_BY_ID, GET_SINGLE_USER } from '../types';
+import { USERS, USERS_APPEND, USERS_ITEM_UPDATE } from '../types';
 
 const state = {
     users: {}
@@ -42,30 +42,6 @@ const actions = {
         cb(users => {
             context.commit(USERS, users);
         })
-    },
-
-    async [GET_SINGLE_USER]({ dispatch, commit, state }, id) {
-        let user = _.filter(state.users, (u) => u.id === id);
-        if(user.length === 0) {
-            let user = await addAccessToken().get(createAPI(`users/${id}`)).then(({data}) => {
-                commit(USERS_APPEND, data);
-                return data;
-            }).catch(err => {
-                console.log(err);
-            });
-
-            return user;
-        }
-        return user;
-    },
-
-    async [GET_USER_BY_ID]({ dispatch, commit, state }, id) {
-        if(_.isNumber(id)) {
-            const cache = await dispatch(GET_SINGLE_USER, id);
-            return cache;
-        } else if(_.isArray(id)) {
-            console.log('批量获取用户');
-        }
     }
 };
 
