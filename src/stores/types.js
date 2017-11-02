@@ -2,6 +2,9 @@ export const USERS = 'users';
 export const USERS_APPEND = 'user/append';
 export const USERS_ITEM_UPDATE = 'users/item/update';
 
+export const GET_SINGLE_USER = 'GET_SINGLE_USER';
+export const GET_USER_BY_ID = 'GET_USER_BY_ID';
+
 /**
  notice全局提示
  */

@@ -9,14 +9,13 @@ import {
 import errorCodes from '../stores/errorCodes';
 import getImage from './getImage';
 import lodash from 'lodash';
-import buildURL from 'axios/lib/helpers/buildURL';
-import { NOTICE, USERS_APPEND, USERS } from '../stores/types';
+
+import { USERS_APPEND, USERS } from '../stores/types';
 import {
   resolveImage
 } from './resource';
 // 消息处理
-import PlusMessageBundle from '../utils/es';
-const defaultAvatar = resolveImage(require('../statics/images/defaultAvatarx2.png'));
+import plusMessageBundle from '../utils/es';
 
 function followingUser(user_id, cb) {
   return new Promise((resolve, reject) => {
@@ -30,29 +29,12 @@ function followingUser(user_id, cb) {
         resolve(true);
       })
       .catch(error => {
-        if(error.response.status === 401) {
-          app.$store.dispatch(NOTICE, cb => {
-            cb({
-              text: '请先登录',
-              time: 1500,
-              status: true
-            });
-          });
-          setTimeout(() => {
-            app.$router.push('/login');
-          }, 1500);
-          return;
+        if(error.response){
+           app.$Message.error(plusMessageBundle(error.response.data).getMessage());
         }
-        app.$store.dispatch(NOTICE, cb => {
-            cb({
-              text: PlusMessageBundle(error.response.data).getMessage(),
-              time: 1500,
-              status: false
-            });
-          });
-      })
-  })
-};
+      });
+  });
+}
 
 function unFollowingUser(user_id) {
   return new Promise((resolve, reject) => {
@@ -65,30 +47,10 @@ function unFollowingUser(user_id) {
         resolve(true);
       })
       .catch(error => {
-        if(error.response.status === 401) {
-          app.$store.dispatch(NOTICE, cb => {
-            cb({
-              text: '请先登录',
-              time: 1500,
-              status: false
-            });
-          });
-          setTimeout(() => {
-            app.$router.push('/login');
-          }, 1500);
-          return;
-        } else {
-          app.$store.dispatch(NOTICE, cb => {
-            cb({
-              text: PlusMessageBundle(error.response.data).getMessage(),
-              time: 1500,
-              status: false
-            });
-          });
-        }
+        app.$Message.error(plusMessageBundle(error.response.data).getMessage());
       });
   });
-};
+}
 
 // 获取当前登录用户信息
 function getLoggedUserInfo() {
@@ -106,18 +68,19 @@ function getLoggedUserInfo() {
 
         app.$storeLocal.set(`user_${user.user_id}`, user);
 
-        user.avatar = user.avatar ? user.avatar : defaultAvatar;
+        user.avatar = user.avatar;
         app.$store.dispatch(USERS_APPEND, cb =>{
-          cb(user)
+          cb(user);
         });
 
         resolve(user);
-      })
-  })
+      });
+  });
 }
 
 function getUserInfo(user_id) {
   return new Promise((resolve, reject) => {
+
     const currentUserId = TS_WEB.currentUserId;
     addAccessToken().get(createAPI(`users/${user_id}?following=${currentUserId}&follower=${currentUserId}`), {}, {
         validate: status => status === 200
@@ -129,15 +92,15 @@ function getUserInfo(user_id) {
           
         app.$storeLocal.set(`user_${user.user_id}`, user);
 
-        user.avatar = user.avatar || defaultAvatar;
+        user.avatar = user.avatar;
         app.$store.dispatch(USERS_APPEND, cb =>{
-          cb(user)
+          cb(user);
         });
 
         resolve(user);
-      })
-  })
-};
+      });
+  });
+}
 
 function getUsersInfo(user_ids) {
   return new Promise((resolve, reject) => {
@@ -156,7 +119,8 @@ function getUsersInfo(user_ids) {
             users_service.map((user) => {
               let current_local_user = {
                 ...user
-              };
+              }
+
               current_local_user.user_id = user.id;
 
               delete current_local_user.follower;
@@ -164,14 +128,14 @@ function getUsersInfo(user_ids) {
               
               app.$storeLocal.set(`user_${current_local_user.user_id}`, current_local_user);
 
-              user.avatar = user.avatar || defaultAvatar;
+              user.avatar = user.avatar;
               users[user.id] = user;
 
             });
           });
           app.$store.dispatch(USERS, cb => {
             cb(users);
-          })
+          });
           resolve(users);
         });
     } else {
