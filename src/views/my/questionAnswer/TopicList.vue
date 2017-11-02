@@ -53,19 +53,6 @@ export default {
     })
   },
   computed: {
-    iconType() {
-      return this.loading ? {
-        type: `load-b`,
-        txt: `请求中`
-      } :
-        (this.is_member ? {
-          type: `checkmark`,
-          txt: `已关注`
-        } : {
-          type: `plus`,
-          txt: `关注`
-        })
-    },
     itemLength () {
     	const { length } = this.items;
     	return length;
@@ -103,21 +90,14 @@ export default {
       		item.follows_count++;
       	}
       }).catch(({response: {data: {message}}}) => {
-        this.$store.dispatch(NOTICE, cb => {
-          cb({
-            show: true,
-            time: 1500,
-            status: false,
-            text: message
-          })
-        })
+        this.$Message.error(message);
       })
   	},
   	icon (followed) {
   	  if (followed) {
-		return { type: `checkmark`, txt: `已关注` };
+		      return { type: `checkmark`, txt: `已关注` };
   	  } else {
-		return { type: `plus`, txt: `关注` };
+		      return { type: `plus`, txt: `关注` };
   	  }
   	}
   },

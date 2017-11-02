@@ -128,11 +128,6 @@
         </Row>
       </template>
     </div>
-    <Row :gutter="24">
-      <Col span="24">
-        <p class="notice error">{{ error }}</p>
-      </Col>
-    </Row>
     <div class="next">
       <Col span="20" offset="2">
         <Button type="primary" size="large"  @click="handleNext" v-if="validateBasicInfo" long>下一步</Button>
@@ -222,12 +217,12 @@
       isDisabled: true,
       certification: {
         type: '',
-        name: '',
-        desc: '',
-        number: '',
-        phone: '',
-        org_name: '',
-        org_address: '',
+        name: '姓名',
+        desc: '认证描述',
+        number: '513722199302158074',
+        phone: '18382274309',
+        org_name: '姓名',
+        org_address: '姓名',
         files: [],
       },
       upload: {
@@ -318,15 +313,14 @@
         const { name, number, phone, desc } = this.certification;
 
         if (!this.validateIDCard(number)) {
-          this.error = '请填写正确的身份证号码';
+          this.$Message.error('请填写正确的身份证号码');
           return false;
         }
         if (!this.validatePhone(phone)) {
-          this.error = '请填写正确的手机号';
+          this.$Message.error('请填写正确的手机号');
           return false;
         }
 
-        this.error = null;
         this.nextState = 1;
       },
       /**
@@ -359,48 +353,18 @@
         const { front, back } = this.upload;
         this.certification.files = (type == 'user') ? [front, back] : [front];
         // 提交过认证被拒绝 进行更新操作
-        if (parseInt(this.state) === 1) {
-          addAccessToken().patch(
-            createAPI('user/certification'),
-            { ...this.certification },
-            { validateStatus: status => status === 201 },
-          ).then(({ data: { message: [ message ] = [] } }) => {
-            this.$store.dispatch(NOTICE, cb => {
-              cb({
-                show: true,
-                time: 1500,
-                status: true,
-                text: message,
-              });
-            });
-            setTimeout( () => {
-              this.$router.go(-1);
-            }, 1500);
-          }).catch(({ response: { data: { message = ['更新认证失败，请稍后再试试'] } } = {} }) => {
-              this.$Message.warning(message);
-          });
-        } else {
-          // 未提交过认证 进行创建操作
-          addAccessToken().post(
-            createAPI('user/certification'),
-            { ...this.certification },
-            { validateStatus: status => status === 201 },
-          ).then(({ data: { message: [ message ] = [] } }) => {
-            this.$store.dispatch(NOTICE, cb => {
-              cb({
-                show: true,
-                time: 1500,
-                status: true,
-                text: message,
-              });
-            });
-            setTimeout( () => {
-              this.$router.go(-1);
-            }, 1500);
-          }).catch(({ response: { data: { message = ['提交认证失败，请稍后再试试'] } } = {} }) => {
-              this.$Message.warning(message);
-          });
-        }
+        let method = parseInt(this.state) ? 'patch' : 'post';
+        addAccessToken()({
+          method,
+          url: createAPI('user/certification'),
+          data: { ...this.certification },
+          validateStatus: status => status === 201,
+        }).then(({ data: { message: [ message ] = [] } }) => {
+          this.$Message.success(message);
+          setTimeout( () => { this.$router.go(-1); }, 1500);
+        }).catch(({ response: { data: { message = ['更新认证失败，请稍后再试试'] } } = {} }) => {
+            this.$Message.warning(message);
+        });
       }
     },
     created () {

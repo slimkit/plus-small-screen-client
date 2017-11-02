@@ -12,7 +12,7 @@
     </div>
     <div>
       <!-- 认证审核显示提示 -->
-      <div class="ertificationState" v-show="parseInt(certification.status) === 0">
+      <div class="certificationState" v-show="parseInt(certification.status) === 0">
       	认证信息审核中，我们会在7个工作日内给你答复
       </div>
       <Row :gutter="24" class="row" v-show="certification.certification_name == 'org'">
