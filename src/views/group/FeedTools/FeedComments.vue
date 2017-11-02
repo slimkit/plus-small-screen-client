@@ -41,7 +41,7 @@
     </div>
 </template>
 <script>
-import { USERS } from '../../../stores/types';
+import { USERS, GET_USER_BY_ID } from '../../../stores/types';
 export default {
     name: 'feed-comments',
     props: {
@@ -115,10 +115,7 @@ export default {
     },
     methods: {
         getUserName(user_id) {
-            const {
-                [`user_${user_id}`]: { name = '' } = {}
-            } = this.users;
-            return name;
+            return this.$store.dispatch(GET_USER_BY_ID, user_id).name;
         },
         sendComment() {
             this.handleComment({
