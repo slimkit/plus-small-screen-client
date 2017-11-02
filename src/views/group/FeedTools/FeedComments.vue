@@ -2,38 +2,29 @@
     <div class="feed-comments">
         <ul class="feed-comments-list" v-if='comments.length > 0'>
             <li v-for='(comment, index) in formatComment' :key="`feed-${feedID}-comment-${comment.id}`">
-                <p 
-                class="feed-comment-row">
-                    
+                <p class="feed-comment-row">
                     <!-- 回复用户 -->
-                    <router-link 
-                    class="userName" 
-                    :to="{ path: `/users/feeds/${comment.user_id}` }">
+                    <router-link class="userName" :to="{ path: `/users/feeds/${comment.user_id}` }">
                         {{ getUserName(comment.user_id) }}
                     </router-link>
-                    
                     <!-- 被回复用户 -->
-                    <span 
-                    v-if="comment.reply_user" 
-                    >
+                    <span v-if="comment.reply_user">
                         回复
-                        <router-link 
-                        class="userName" 
-                        :to="{ path: `/users/feeds/${comment.reply_user}` }">
+                        <router-link class="userName" :to="{ path: `/users/feeds/${comment.reply_user}` }">
                             {{ getUserName(comment.reply_user) }}
                         </router-link>
                     </span>
-
                     <!-- 回复他人 或者 删除自己的评论 -->
-                    <span v-if="comment.user_id  != currentUser" @click.stop="replySomeOne(comment.user_id)" >: {{ comment.body }}</span>
-                    <span v-else @click.stop="handleDeleteComment(comment.id)" >: {{ comment.body }}</span>
+                    <span v-if="comment.user_id  != currentUser" @click.stop="replySomeOne(comment.user_id)">: {{ comment.body }}</span>
+                    <span v-else @click.stop="handleDeleteComment(comment.id)">: {{ comment.body }}</span>
                 </p>
             </li>
         </ul>
         <div class="feed-comments-input" v-show='typing'>
             <textarea :placeholder="placeholder" v-model='comment_content' maxlength="255"></textarea>
             <div class="feed-comments-action">
-                <p class="feed-comments-count-tips" v-if='comment_content.length > 200'><span>{{comment_content.length}}</span>/255</p>
+                <p class="feed-comments-count-tips" v-if='comment_content.length > 200'>
+                    <span>{{comment_content.length}}</span>/255</p>
                 <Button type="ghost" size="small" @click="handleCommentInput">取消</Button>
                 <Button type="primary" size="small" :disable='!(len > 0)' @click.stop='sendComment'>发送</Button>
             </div>
@@ -41,7 +32,8 @@
     </div>
 </template>
 <script>
-import { USERS } from '../../../stores/types';
+import { USERS, ADD_USER_TO_VUEX } from '../../../stores/types';
+import { getUserInfoFromVuex } from '../../../utils/user2';
 export default {
     name: 'feed-comments',
     props: {
@@ -115,7 +107,10 @@ export default {
     },
     methods: {
         getUserName(user_id) {
-
+            const {
+                [`user_${user_id}`]: { name = '' } = {}
+            } = this.users;
+            return name;
         },
         sendComment() {
             this.handleComment({
@@ -136,6 +131,15 @@ export default {
             this.reply_user = id;
             this.handleCommentInput();
         }
+    },
+    beforeMount() {
+        this.comments.forEach(({ user_id, target_user, reply_user }) => {
+            getUserInfoFromVuex([user_id, target_user, reply_user], (users) => {
+                this.$store.commit(ADD_USER_TO_VUEX, users);
+            }, (err) => {
+                console.log(err);
+            });
+        })
     }
 }
 </script>
@@ -147,9 +151,9 @@ export default {
         max-height: 55px;
         font-size: 14px;
         line-height: 1.3;
-        .user-name{
+        .user-name {
             color: #333;
-            &:not(:first-chlid){
+            &:not(:first-chlid) {
                 margin-left: 3px;
                 margin-right: 3px;
             }

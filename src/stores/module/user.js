@@ -4,7 +4,7 @@
 
 import _ from 'lodash';
 import { addAccessToken, createAPI } from '../../utils/request';
-import { USERS, USERS_APPEND, USERS_ITEM_UPDATE } from '../types';
+import { USERS, USERS_APPEND, USERS_ITEM_UPDATE, ADD_USER_TO_VUEX } from '../types';
 
 const state = {
     users: {}
@@ -25,9 +25,14 @@ const mutations = {
     },
     // 批量增加用户信息
     [USERS](state, users) {
-        const new_users = { ...state.users, ...users };
+        const new_users = { ...state.users, ..._.keyBy(users, (o) => { return (`user_${o.id}`); }) };
         state.users = new_users;
     },
+
+    [ADD_USER_TO_VUEX](state, users) {
+        const new_users = { ...state.users, ..._.keyBy(users, (o) => { return (`user_${o.id}`); }) };
+        state.users = new_users;
+    }
 };
 
 const actions = {
@@ -42,6 +47,10 @@ const actions = {
         cb(users => {
             context.commit(USERS, users);
         })
+    },
+
+    [ADD_USER_TO_VUEX]({ commit }, users) {
+        commit(USERS, users)
     }
 };
 

@@ -1,6 +1,7 @@
 export const USERS = 'users';
 export const USERS_APPEND = 'user/append';
 export const USERS_ITEM_UPDATE = 'users/item/update';
+export const ADD_USER_TO_VUEX = 'ADD_USER_TO_VUEX';
 
 /**
  notice全局提示
