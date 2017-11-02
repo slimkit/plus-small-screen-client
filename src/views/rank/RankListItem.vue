@@ -22,7 +22,6 @@
   import { resolveImage } from '../../utils/resource';
   import RightArrowIcon from '../../icons/RightArrow';
 
-  const defaultAvatar = resolveImage(require('../../statics/images/defaultAvatarx2.png'));
   export default {
     components: {
       RightArrowIcon,
@@ -42,9 +41,7 @@
       }
     },
     data(){
-      return({
-        defaultAvatar,
-      })
+      return({})
     },
     computed: {
     },

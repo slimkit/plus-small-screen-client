@@ -46,7 +46,6 @@
 import { goTo, changeUrl } from '../../utils/changeUrl';
 import { resolveImage } from '../../utils/resource';
 import BackIcon from '../../icons/Back';
-import LoadingBlack from '../../icons/LoadingBlack';
 import RankItem from './RankItem';
 import { addAccessToken, createAPI } from '../../utils/request';
 const nothingImage = resolveImage(require('../../statics/images/defaultNothingx2.png'));

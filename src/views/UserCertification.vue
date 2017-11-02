@@ -200,10 +200,8 @@
   import storeLocal from 'store';
   import BackIcon from '../icons/Back';
   import CloseIcon from '../icons/Close';
-  import { NOTICE } from '../stores/types';
   import { goTo, changeUrl } from '../utils/changeUrl';
   import { createAPI, addAccessToken } from '../utils/request';
-  import { getUserCertification } from '../utils/user';
 
   const certification = {
     components: {
