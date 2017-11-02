@@ -14,25 +14,25 @@
             <form role="form" @submit.prevent="submit" autocomplete="off">
                 <div class="loginForm">
                     <Row class="bottom-border formChildrenRow" :gutter="24">
-                        <Col span="4" class="t_c">
-                        <label for="account">账号</label>
+                        <Col span="5" class="t_c">
+                            <label for="account">账号</label>
                         </Col>
                         <Col span="16">
-                        <input type="text" v-focus size="large" :autofocus="true" autocomplete="off" placeholder="用户名/手机号/邮箱" v-model.trim="account" id="account" name="account" />
+                            <input type="text" v-focus :autofocus="true" autocomplete="off" placeholder="用户名/手机号/邮箱" v-model.trim="account" id="account" name="account" />
                         </Col>
-                        <Col span="4" class="flexend">
-                        <CloseIcon v-show="account.length>0" @click.native="account=''" width="21" height="21" color="#999" />
+                        <Col span="3" class="flexend">
+                            <CloseIcon v-show="account.length>0" @click.native="account=''" width="21" height="21" color="#999" />
                         </Col>
                     </Row>
                     <Row class="formChildrenRow" :gutter="24">
-                        <Col span="4" class="t_c">
+                        <Col span="5" class="t_c">
                         <label for="password">密码</label>
                         </Col>
                         <Col span="16">
-                        <input v-if="isShowPassword" size="large" type="password" autocomplete="off" v-model.trim="password" placeholder="请输入6位以上密码" id="password" name="password" />
-                        <input v-else type="text" size="large" autocomplete="off" v-model.trim="password" placeholder="请输入6位以上密码" id="password" name="password" />
+                        <input v-if="isShowPassword" type="password" autocomplete="off" v-model.trim="password" placeholder="请输入6位以上密码" id="password" name="password" />
+                        <input v-else type="text" autocomplete="off" v-model.trim="password" placeholder="请输入6位以上密码" id="password" name="password" />
                         </Col>
-                        <Col span="4" class="flexend" @click.native="isShowPassword = !isShowPassword">
+                        <Col span="3" class="flexend" @click.native="isShowPassword = !isShowPassword">
                         <EyeCloseIcon v-if="isShowPassword" height='21' width="21" />
                         <EyeOpenIcon v-else height='21' width="21" />
                         </Col>

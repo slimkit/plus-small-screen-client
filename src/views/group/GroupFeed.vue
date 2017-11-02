@@ -2,10 +2,10 @@
     <div class="feed" :id="`feed-${feed.id}`">
         <div class="feed-main">
             <div class="user-header">
-                <img :src="user.avatar" @click.stop="changeUrl(`/users/feeds/${user.user_id}`)">
+                <img :src="user.avatar" @click.stop="changeUrl(`/users/feeds/${user.id}`)">
             </div>
             <div class="feed-content" @click.stop="changeUrl(`/groups/${$route.params.id}/feed/${feed.id}`)">
-                <p class="user-info" @click.stop="changeUrl(`/users/feeds/${user.user_id}`)">
+                <p class="user-info" @click.stop="changeUrl(`/users/feeds/${user.id}`)">
                     {{user.name}}
                     <timeago class="feed-time" :since="timer" locale="zh-CN" :auto-update="60" />
                 </p>

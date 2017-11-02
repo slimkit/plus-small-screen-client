@@ -3,7 +3,9 @@
 namespace Zhiyi\Component\ZhiyiPlus\PlusComponentH5\Controllers;
 
 use Zhiyi\Plus\Models\GoldType;
+use Zhiyi\Plus\Models\CommonConfig;
 use Zhiyi\Plus\Http\Controllers\Controller;
+use Illuminate\Contracts\Config\Repository;
 use Zhiyi\Component\ZhiyiPlus\PlusComponentIm\Repository\ImServe as ImServeRepsitory;
 
 class HomeController extends Controller
@@ -15,14 +17,19 @@ class HomeController extends Controller
      * @return mixed
      * @author Seven Du <shiweidu@outlook.com>
      */
-    public function index(ImServeRepsitory $repository, GoldType $goldType)
+    public function index(ImServeRepsitory $repository, GoldType $goldType, Repository $config, CommonConfig $common)
     {
         // 金币设置
         $gold = $goldType->where('status', 1)->select('name', 'unit')->first();
-        // 签到开关
-        $configs = config('site');
+        $siteConfig = config('site');
+        $siteSetting = config('app');
+        $jssdkAmap = config('around-amap.amap-jssdk');
 
         return view('plus:h5::index', [
+            'jssdkAmap' => $jssdkAmap,
+            'siteName' => $siteSetting['name'],
+            'siteKeywords' => $siteSetting['keywords'],
+            'siteDescription' => $siteSetting['description'],
             'base_url'   => url('/'),
             'api' => url('api/v2'),
             'apiv1' => url('api/v1'),

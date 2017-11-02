@@ -17,10 +17,10 @@
             <Col span="5">
               <label for="phone" class="loginFormTitle">手机号</label>
             </Col>
-            <Col span="14">
+            <Col span="16">
               <input v-focus type="tel" maxlength="12" autocomplete="off" placeholder="输入手机号码" v-model.trim.num="phone" id="phone" name="phone" />
             </Col>
-            <Col span="5" class="flexend">
+            <Col span="3" class="flexend">
               <div @click="cleanPhone" v-show="isShowClean">
                 <CloseIcon height="21" width="21" color="#999" />
               </div>
@@ -50,11 +50,11 @@
             <Col span="5">
               <label for="password" class="loginFormTitle">新密码</label>
             </Col>
-            <Col span="14">
+            <Col span="16">
               <input type="password" v-show="isShowPassword" v-model.trim="password" placeholder="登录密码至少6位" id="password" name="password" />
               <input type="text"  v-model.trim="passwordText" v-show="isShowPasswordText" value="" placeholder="登录密码至少6位" />
             </Col>
-            <Col span="5" class="flexend">
+            <Col span="3" class="flexend">
               <div @click="showPassword" v-show="isShowPasswordText">
                 <EyeOpenIcon height="21" width="21" color="#999" />
               </div>

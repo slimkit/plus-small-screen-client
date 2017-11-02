@@ -10,7 +10,7 @@
         :src="avatar" 
         :alt="user.name" 
         :class="$style.detailAvatar"
-        @click="changeUrl(`/users/feeds/${user.user_id}`)"
+        @click="changeUrl(`/users/feeds/${user.id}`)"
       >
       <section 
         style="padding: 0 2vw; width: 86vw;"
@@ -18,7 +18,7 @@
         <section :class="$style.detailContentBefore">
           <router-link 
             :class="$style.detailUsername" 
-            :to='`/users/feeds/${user.user_id}`'
+            :to='`/users/feeds/${user.id}`'
           >
             {{ user.name }}
           </router-link>
@@ -171,15 +171,15 @@
         handleComment({ content, reply_user, success, error }) {
             if(content) {
                 const group_post_comment_mark = new Date().getTime() + '' + this.user.id,
-                    params =
-                    reply_user ? {
-                        body: content,
-                        reply_user,
-                        group_post_comment_mark,
-                    } : {
-                        body: content,
-                        group_post_comment_mark,
-                    }
+                  params =
+                  reply_user ? {
+                      body: content,
+                      reply_user,
+                      group_post_comment_mark,
+                  } : {
+                      body: content,
+                      group_post_comment_mark,
+                  };
                 addAccessToken().post(createAPI(`feeds/${this.feed.id}/comments`), {
                     ...params
                 }).then(({ data: { comment } }) => {

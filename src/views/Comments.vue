@@ -120,7 +120,7 @@
       max_id: 0,
       comments: [],
       ids: [],
-      bottomAllLoaded: false,
+      bottomAllLoaded: true,
       topAllLoaded: false,
       bottomStatus: '',
       topStatus: '',
@@ -129,7 +129,8 @@
       openId: -1,
       commentsContent: '',
       placeholder: '',
-      commentLoading: false
+      commentLoading: false,
+      limit: 20
     }),
     methods: {
       sendComment() {
@@ -189,7 +190,12 @@
       changeUrl,
       goTo,
       loadTop () {
-        addAccessToken().get(createAPI(`user/comments?limit=15`),{},
+        addAccessToken().get(createAPI(`user/comments`),
+        {
+          params: {
+            limit
+          }
+        },
           {
             validateStatus: status => status === 200
           }
@@ -197,6 +203,7 @@
         .then(({data = []}) => {
           let comments = data;
           let newcomments = [];
+
           comments.forEach( comment => {
             if( this.ids.findIndex(function(value, index, arr) {
               return value == comment.id;
@@ -214,9 +221,21 @@
       bottomStatusChange(status) {
         this.bottomStatus = status;
       },
+
       loadBottom () {
+        const { limit, bottomAllLoaded } = this;
+        if(bottomAllLoaded) {
+          this.$refs.loadmoreComments.onBottomLoaded();
+
+          return;
+        }
         if(!this.max_id) return;
-        addAccessToken().get(createAPI(`user/comments?limit=15&after=${this.max_id}`),{},
+        addAccessToken().get(createAPI(`user/comments?limit=15&after=${this.max_id}`),
+          {
+            params: {
+              limit
+            }
+          },
           {
             validateStatus: status => status === 200
           }
@@ -225,16 +244,18 @@
           let comments = data;
           this._loadTopFormatedComments(comments, false);
           let length = comments.length;
-          if(length < 15) {
+          if(length === limit) {
+            this.bottomAllLoaded = false;
+          } else {
             this.bottomAllLoaded = true;
-          };
+          }
           this.max_id = comments[length -1].id;
-          setTimeout( () => {
-            if(this.$refs.loadmoreComments)
-              this.$refs.loadmoreComments.onBottomLoaded();
-          }, 500)
+          
+          if(this.$refs.loadmoreComments)
+            this.$refs.loadmoreComments.onBottomLoaded();
         })
       },
+
       _initFormatedComments () {
         let comments = this.comments;
         comments.forEach(comment => {
@@ -262,6 +283,7 @@
           this.formated = lodash.uniq([...this.formated, comment], 'id');
         })
       },
+
       _loadTopFormatedComments (comments = [], top = true) {
         comments.forEach(comment => {
           // 去重
@@ -308,10 +330,19 @@
       }
     },
     created () {
+      const { limit } = this;
+
+      // 清空未读评论消息数量
       this.$store.dispatch(CLEANMESSAGE, cb => {
         cb('comments');
       });
-      addAccessToken().get(createAPI(`user/comments?limit=15&after=${this.max_id}`),{},
+
+      addAccessToken().get(createAPI(`user/comments`),
+      {
+        params: {
+          limit
+        }
+      },
         {
           validateStatus: status => status === 200
         }
@@ -338,16 +369,15 @@
           }
         );
         let length = this.comments.length;
-        if(length < 15) {
+        if(length === limit) {
+          this.bottomAllLoaded = false;
+        } else  {
           this.bottomAllLoaded = true;
-          setTimeout( () => {
-            if(this.$refs.loadmoreComments)
-              this.$refs.loadmoreComments.onTopLoaded();
-          }, 500)
-        };
+        }
+
         if(length)
           this.max_id = this.comments[length - 1].id;
-        this._initFormatedComments();
+          this._initFormatedComments();
       })
     }
   };

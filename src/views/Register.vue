@@ -33,10 +33,10 @@
             <Col span="5">
               <label for="phone" class="loginFormTitle">手机号</label>
             </Col>
-            <Col span="14">
+            <Col span="16">
               <input type="tel" maxlength="11" autocomplete="off" placeholder="输入手机号码" v-model.trim.num="phone" id="phone" name="phone" />
             </Col>
-            <Col span="5" class="flexend">
+            <Col span="3" class="flexend">
               <div @click="phone = ''" v-show="phone.length > 0">
                 <CloseIcon height="21" width="21" color="#999" />
               </div>
@@ -46,10 +46,10 @@
             <Col span="5">
               <label for="email" class="loginFormTitle">邮箱</label>
             </Col>
-            <Col span="14">
+            <Col span="16">
               <input type="email" autocomplete="off" placeholder="输入邮箱账号" v-model.trim.num="email" id="email" name="email" />
             </Col>
-            <Col span="5" class="flexend">
+            <Col span="3" class="flexend">
               <div @click="email = ''" v-show="email.length > 0">
                 <CloseIcon height="21" width="21" color="#999" />
               </div>
@@ -79,11 +79,11 @@
             <Col span="5">
               <label for="password" class="loginFormTitle">密码</label>
             </Col>
-            <Col span="14">
+            <Col span="16">
               <input v-if="isShowPassword" type="password" autocomplete="off" v-model.trim="password" placeholder="请输入6位以上密码" id="password" name="password" />
               <input v-else type="text" autocomplete="off" v-model.trim="password" placeholder="请输入6位以上密码" id="password" name="password" />
             </Col>
-            <Col span="5" class="flexend">
+            <Col span="3" class="flexend">
               <div @click="isShowPassword = !isShowPassword">
                 <EyeCloseIcon v-if="isShowPassword" height='21' width="21" />
                 <EyeOpenIcon v-else height='21' width="21" />
