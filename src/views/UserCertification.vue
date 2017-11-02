@@ -94,10 +94,10 @@
           </Col>
         </Row>
         <Row :gutter="24" class="entryMenu">
-          <Col span="8">
+          <Col span="6">
             身份证号码
           </Col>
-          <Col span="13">
+          <Col span="15">
             <input type="text"  size="large" v-model.trim="certification.number" placeholder="输入正确身份证号码" id="number" name="number" />
           </Col>
           <Col span="3">
@@ -105,10 +105,10 @@
           </Col>
         </Row>
         <Row :gutter="24" class="entryMenu">
-          <Col span="8">
+          <Col span="6">
             负责人电话
           </Col>
-          <Col span="13">
+          <Col span="15">
             <input type="text"  size="large" v-model.trim="certification.phone" placeholder="输入11位手机号" id="phone" name="phone" />
           </Col>
           <Col span="3">
@@ -217,12 +217,12 @@
       isDisabled: true,
       certification: {
         type: '',
-        name: '姓名',
-        desc: '认证描述',
-        number: '513722199302158074',
-        phone: '18382274309',
-        org_name: '姓名',
-        org_address: '姓名',
+        name: '',
+        desc: '',
+        number: '',
+        phone: '',
+        org_name: '',
+        org_address: '',
         files: [],
       },
       upload: {
