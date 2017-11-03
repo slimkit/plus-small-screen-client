@@ -15,8 +15,8 @@
                         </router-link>
                     </span>
                     <!-- 回复他人 或者 删除自己的评论 -->
-                    <span v-if="comment.user_id  != currentUser" @click.stop="replySomeOne(comment.user_id)">: {{ comment.body }}</span>
-                    <span v-else @click.stop="handleDeleteComment(comment.id)">: {{ comment.body }}</span>
+                    <span class="comment_content" v-if="comment.user_id  != currentUser" @click.stop="replySomeOne(comment.user_id)">: {{ comment.body }}</span>
+                    <span class="comment_content" v-else @click.stop="handleDeleteComment(comment.id)">: {{ comment.body }}</span>
                 </p>
             </li>
         </ul>
@@ -143,7 +143,7 @@ export default {
     }
 }
 </script>
-<style lang='scss'>
+<style lang='less' scoped>
 .feed-comments {
     .feed-comment-row {
         overflow: hidden;
@@ -151,12 +151,17 @@ export default {
         max-height: 55px;
         font-size: 14px;
         line-height: 1.3;
-        .user-name {
+        .userName {
             color: #333;
+            font-size: 14px;
             &:not(:first-chlid) {
                 margin-left: 3px;
                 margin-right: 3px;
             }
+        }
+        .comment_content {
+            color: #999;
+            font-size: 14px;
         }
     }
     .feed-comments-input {
