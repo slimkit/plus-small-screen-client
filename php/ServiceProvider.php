@@ -2,6 +2,9 @@
 
 namespace Zhiyi\Component\ZhiyiPlus\PlusComponentH5;
 
+use Zhiyi\Plus\Support\BootstrapAPIsEventer;
+use Illuminate\Contracts\Config\Repository as ConfigRepository;
+
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
     /**
@@ -14,9 +17,19 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     {
         $this->registarRouter();
         $this->registarHandler();
-        $this->publishes([
-            dirname(__DIR__).'/dist' => $this->app->publicPath().'/assets/h5',
-        ], 'public');
+        $this->publishes(
+            [
+                dirname(__DIR__).'/dist' => $this->app->publicPath().'/assets/h5',
+            ], 
+            'public'
+        );
+        $this->publishes(
+            [
+                dirname(__DIR__).'/config/h5.php' => $this->app->configPath('h5.php'),
+            ]
+            ,'config'
+        ); 
+        
         $this->loadViewsFrom(dirname(__DIR__).'/views', 'plus:h5');
     }
 
