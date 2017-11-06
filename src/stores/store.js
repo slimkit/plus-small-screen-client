@@ -49,7 +49,12 @@ import showCheckin from './module/showCheckin';
  */
  import showPinnedModal from './module/showPinnedModal';
 
+
+ import users from './module/user/';
+
 const modules = {
+  users,
+  
   user,
   notice,
   imageSwiper,

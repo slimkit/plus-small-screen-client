@@ -1,19 +1,17 @@
 <template>
   <div :class="$style.profile">
-    <div :class="$style.header" v-if="!isWeiXin">
-      我
-    </div>
+    <div :class="$style.header" v-if="!isWeiXin">我</div>
     <!-- 头像+昵称+简介-->
     <div :class="$style.simpleInfo" @click="changeUrl('/users/setting')">
       <Row :gutter="24" :class="$style.rowCenter">
         <!-- 头像 -->
         <Col span="6" :class="$style.colCenter">
-          <img :src="avatar" :class="$style.avatar" alt="name">
+          <user-avatar :src='mine.avatar' :sex='mine.sex' />
         </Col>
         <!--昵称+简介-->
-        <Col span="15" style="height: 56px">
-          <h4 style="height: 21px;">{{ username }}</h4>
-          <p style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ intro }}</p>
+        <Col span="15" class='mine-info'>
+          <h4>{{ mine.name }}</h4>
+          <p>{{ mine.intro || '还没有简介呢' }}</p>
         </Col>
         <Col span="3" :class="$style.rightIcon">
           <RightArrowIcon height="18" width="18" color="#999" />
@@ -83,17 +81,6 @@
           <RightArrowIcon height="18" width="18" color="#999" />
         </Col>
       </Row>
-      <!-- <Row :gutter="24" :class="$style.entryMenu" @click.native="changeUrl('/users/collections')">
-        <Col span="3">
-          <ConnectionIcon :height="21" :width="21" color="#59b6d7" />
-        </Col>
-        <Col span="16" :class="$style.menuText">
-          我的问答
-        </Col>
-        <Col span="5"  :class="$style.rightIcon">
-          <RightArrowIcon height="18" width="18" color="#999" />
-        </Col>
-      </Row> -->
     </div>
     <div :class="$style.entry">
       <Row :gutter="24" :class="$style.entryMenu" @click.native="changeUrl('/users/feedback')">
@@ -211,7 +198,6 @@
     data: () => ({
       goldName: window.TS_WEB.goldName,
       currentUser: 0, // 当前登录用户id
-      userInfo: {}, // 当前登录用户信息
       userCertification: {}, //用户认证信息
       isWeiXin: TS_WEB.isWeiXin,
       isShowCertification: false,
@@ -249,28 +235,15 @@
     },
     computed: {
       ...mapState({
-        messageCount: state => state.messageCount.messageCount
+        messageCount: state => state.messageCount.messageCount,
+        mine: state => state.users.mine
       }),
-      avatar () {
-        const { avatar = defaultAvatar } = this.userInfo;
-        return avatar;
-      },
-      username () {
-        const { name = '' } = this.userInfo;
-        return name;
-      },
-      intro () {
-        const { bio = '还没有简介呢' } = this.userInfo;
-        return bio;
-      },
       following () {
-        const { extra = {} } = this.userInfo;
-        
+        const { extra = {} } = this.mine;
         return (extra ? extra.followings_count : 0);
       },
       followed () {
-        const { extra = {} } = this.userInfo;
-
+        const { extra = {} } = this.mine;
         return (extra ? extra.followers_count : 0);
       },
       balance () {
@@ -279,10 +252,10 @@
       }
     },
     created () {
-      this.currentUser = TS_WEB.currentUserId;
-      getLoggedUserInfo().then( user => {
-        this.userInfo = { ...this.userInfo, ...user };
-      });
+      // this.currentUser = TS_WEB.currentUserId;
+      // getLoggedUserInfo().then( user => {
+      //   this.mine = { ...this.mine, ...user };
+      // });
       // 获取认证信息
       getUserCertification().then(data => {
         this.userCertification = data;
@@ -390,7 +363,18 @@
     }
   }
 </style>
-<style scope>
+<style lang='scss'>
+  .mine-info{
+    display: flex !important;
+    flex-direction: column;
+    justify-content: center;
+    p{
+        margin-top: 5px;
+        white-space: nowrap; 
+        overflow: hidden; 
+        text-overflow: ellipsis;
+    }
+  }
   .followsNum {
     color: #59b6d7;
   }

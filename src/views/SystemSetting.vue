@@ -120,6 +120,7 @@
         this.cannel();
         this.$store.dispatch(CLEANUSERFEEDS);
         this.$storeLocal.set('UserLoginInfo', {});
+        this.$sotre.dispatch('LOGOUT');
         this.changeUrl('/login');
       }
     }

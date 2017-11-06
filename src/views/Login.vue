@@ -15,13 +15,13 @@
                 <div class="loginForm">
                     <Row class="bottom-border formChildrenRow" :gutter="24">
                         <Col span="5" class="t_c">
-                            <label for="account">账号</label>
+                        <label for="account">账号</label>
                         </Col>
                         <Col span="16">
-                            <input type="text" v-focus :autofocus="true" autocomplete="off" placeholder="用户名/手机号/邮箱" v-model.trim="account" id="account" name="account" />
+                        <input type="text" v-focus :autofocus="true" autocomplete="off" placeholder="用户名/手机号/邮箱" v-model.trim="account" id="account" name="account" />
                         </Col>
                         <Col span="3" class="flexend">
-                            <CloseIcon v-show="account.length>0" @click.native="account=''" width="21" height="21" color="#999" />
+                        <CloseIcon v-show="account.length>0" @click.native="account=''" width="21" height="21" color="#999" />
                         </Col>
                     </Row>
                     <Row class="formChildrenRow" :gutter="24">
@@ -210,9 +210,6 @@ const login = {
                     } = {}
                 } = response;
 
-                // 替换头像
-                user.avatar = user.avatar || defaultAvatar;
-
                 // 本地存储 登陆信息
                 this.$storeLocal.set('UserLoginInfo', { token: token, user_id: user.id });
                 window.TS_WEB.currentUserId = user.id;
@@ -221,6 +218,9 @@ const login = {
                 this.$store.dispatch(USERS_APPEND, cb => {
                     cb(user);
                 });
+
+                // 保存登录用户信息
+                this.$store.dispatch('UPDATE_INFO_OF_MINE', user);
 
                 // do something
 
@@ -235,7 +235,7 @@ const login = {
 
                 this.isLoading = false;
                 this.isDisabled = false;
-            }).catch(({ response: { data = { message: ["登录失败"] } } }) => {
+            }).catch(({ response: { data = { message: ["登录失败"] } } = {} }) => {
                 this.errors = { ...data, ...this.errors };
                 this.isLoading = false;
                 this.isDisabled = true;
