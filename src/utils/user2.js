@@ -3,14 +3,16 @@ import _ from 'lodash';
 const FUNC = () => {};
 let timer = null,
     ids = [];
-export const getUserInfoFromVuex = (id, success = FUNC, error = FUNC) => {
+export const getUserByApi = (id, success = FUNC, error = FUNC) => {
     ids = Array.from(new Set([...ids, ...id]));
     const params = _.filter(ids, (u) => typeof u === 'number' && u > 0);
     clearTimeout(timer);
 
     timer = setTimeout(() => {
         let str = params.join(',');
-        axios.get(`/api/v2/users?id=${str}`).then(({data}) => {
+        axios.get(`/api/v2/users?id=${str}`, {
+            validateStatus: status => status === 200
+        }).then(({ data }) => {
             ids = [];
             success(data);
         }).catch(err => {

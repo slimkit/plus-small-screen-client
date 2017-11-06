@@ -206,7 +206,7 @@
       },
       feedsList() {
         let type = this.feedType[this.option.type];
-        return this.$store.getters[type.feeds];
+        return lodash.orderBy(this.$store.getters[type.feeds], ['pinned', 'updated_at'], ['asc', 'desc']);
       }
     },
     mounted () {

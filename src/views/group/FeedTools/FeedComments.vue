@@ -33,7 +33,6 @@
 </template>
 <script>
 import { USERS, ADD_USER_TO_VUEX } from '../../../stores/types';
-import { getUserInfoFromVuex } from '../../../utils/user2';
 export default {
     name: 'feed-comments',
     props: {
@@ -107,10 +106,7 @@ export default {
     },
     methods: {
         getUserName(user_id) {
-            const {
-                [`user_${user_id}`]: { name = '' } = {}
-            } = this.users;
-            return name;
+            return this.$store.getters.getUserById(user_id).name || '';
         },
         sendComment() {
             this.handleComment({
@@ -134,12 +130,10 @@ export default {
     },
     beforeMount() {
         this.comments.forEach(({ user_id, target_user, reply_user }) => {
-            getUserInfoFromVuex([user_id, target_user, reply_user], (users) => {
-                this.$store.commit(ADD_USER_TO_VUEX, users);
-            }, (err) => {
-                console.log(err);
+            [user_id, target_user, reply_user].forEach((uid) => {
+                this.$store.dispatch('GET_USER_BY_ID', uid);
             });
-        })
+        });
     }
 }
 </script>

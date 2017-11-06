@@ -6,12 +6,9 @@
     <section 
       style="display: flex; align-items: flex-start;"
     >
-      <img 
-        :src="avatar" 
-        :alt="user.name" 
-        :class="$style.detailAvatar"
-        @click="changeUrl(`/users/feeds/${user.id}`)"
-      >
+      <div :class="$style.detailAvatar">
+        <user-avatar :sex='sex' :src='avatar' size='small' @click.native="changeUrl(`/users/feeds/${user.id}`)" />
+      </div>
       <section 
         style="padding: 0 2vw; width: 86vw;"
       >
@@ -22,12 +19,15 @@
           >
             {{ user.name }}
           </router-link>
-          <timeago 
-            :class="$style.detailTimer" 
-            :since="timer" 
-            locale="zh-CN" 
-            :auto-update="60"
-          />
+          <div>
+            <i class="pinned-icon" v-if='feed.pinned > 0'>置顶</i>
+            <timeago 
+              :class="$style.detailTimer" 
+              :since="timer" 
+              locale="zh-CN" 
+              :auto-update="60"
+            />
+          </div>
         </section>
         <figure 
           :class="$style.detailFeedContent"
@@ -106,8 +106,8 @@
       'feed'
     ],
     data: () => ({
-      user: {},
-      goldName: window.TS_WEB.goldName
+      goldName: window.TS_WEB.goldName,
+      user: {}
     }),
     methods: {
       changeUrl,
@@ -288,6 +288,12 @@
         }
     },
     computed: {
+      sex(){
+        return this.user.sex;
+      },
+      avatar(){
+        return this.user.avatar;
+      },
       isOwn(){ 
         return this.feed.user_id === window.TS_WEB.currentUserId;
       },
@@ -296,11 +302,6 @@
       },
       has_collection() {
         return this.feed.has_collect;
-      },
-      avatar () {
-        let { avatar = defaultAvatar } = this.user;
-        // avatar = avatar || ;
-        return avatar;
       },
       timer () {
         return this.timers(this.feed.created_at, 8, false);
@@ -311,26 +312,12 @@
         showPopup: state => state.commentInput.showPopup
       })
     },
-    created () {
-      let user = storeLocal.get(`user_${this.feed.user_id}`);
-      if(!user) {
-        if(this.feed.user_id !== TS_WEB.currentUserId) {
-          getUserInfo(this.feed.user_id).then( user => {
-            this.user = { ...user };
-          });
-        } else {
-          getLoggedUserInfo().then( user => {
-            this.user = { ...user };
-          });
-        }
-          
-      } else {
-        user.avatar = user.avatar ? user.avatar : defaultAvatar;
-        this.$store.dispatch(USERS_APPEND, cb =>{
-          cb(user)
-        });
-        this.user = { ...user };
-      }
+    created(){
+      this.$store.dispatch('GET_USER_BY_ID', [this.feed.user_id]).then((user)=>{
+        this.user = {...this.user, ...user}
+      }, (err)=>{
+        console.log(err);
+      });
     }
   }
 
@@ -347,9 +334,6 @@
     }
     .detailAvatar {
       padding: 0 2vw; 
-      width: 14vw; 
-      height: 10vw; 
-      border-radius: 100%;
     }
     .detailContentBefore {
       display: flex;
@@ -387,5 +371,13 @@
       .feed-footer {
         padding: 10px 10px 10px 48px;
         border-top: 1px #ededed solid;
+    }
+    .pinned-icon{
+      display: inline-block;
+      border: 1px solid #4bb893;
+      padding: 0 5px;
+      color: #4bb893;
+      font-style: normal;
+      font-size: 12px;
     }
 </style>
