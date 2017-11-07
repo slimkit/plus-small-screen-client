@@ -13,7 +13,7 @@ export default {
         const old = state.mine;
         try {
             const id = mine.id;
-            if(_.isEmpty(old) || id === old.id) {
+            if(_.isEmpty(old) || _.isEmpty(mine) || id === old.id) {
                 state.mine = Object.assign({}, old, mine);
                 localEvent.set('mine', state.mine);
             }

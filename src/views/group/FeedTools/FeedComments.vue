@@ -15,8 +15,8 @@
                         </router-link>
                     </span>
                     <!-- 回复他人 或者 删除自己的评论 -->
-                    <span class="comment_content" v-if="comment.user_id  != currentUser" @click.stop="replySomeOne(comment.user_id)">: {{ comment.body }}</span>
-                    <span class="comment_content" v-else @click.stop="handleDeleteComment(comment.id)">: {{ comment.body }}</span>
+                    <span class="comment_content" v-if="comment.user_id  != currentUser" @click.stop="replySomeOne(comment.user_id)">: {{ comment.body }} <i class="pinned-icon" v-if='comment.pinned'>置顶</i></span>
+                    <span class="comment_content" v-else @click.stop="handleDeleteComment(comment.id)">: {{ comment.body }} <i class="pinned-icon" v-if='comment.pinned'>置顶</i></span>
                 </p>
             </li>
         </ul>
@@ -32,6 +32,7 @@
     </div>
 </template>
 <script>
+import _ from 'lodash';
 import { USERS, ADD_USER_TO_VUEX } from '../../../stores/types';
 export default {
     name: 'feed-comments',
@@ -77,6 +78,7 @@ export default {
         return({
             comment_content: '',
             reply_user: null,
+            comment_users: {}
         });
     },
     computed: {
@@ -89,11 +91,8 @@ export default {
         currentUser() {
             return(this.$storeLocal.get('UserLoginInfo') || {}).user_id;
         },
-        users() {
-            return this.$store.getters[USERS];
-        },
         formatComment() {
-            return this.comments.slice(0, 5);
+            return _.orderBy(this.comments, []).slice(0, 5);
         }
     },
     watch: {
@@ -105,8 +104,8 @@ export default {
         }
     },
     methods: {
-        getUserName(user_id) {
-            return this.$store.getters.getUserById(user_id).name || '';
+        getUserName(uid) {
+            return(this.comment_users[`user_${uid}`] || {}).name || '';
         },
         sendComment() {
             this.handleComment({
@@ -128,10 +127,15 @@ export default {
             this.handleCommentInput();
         }
     },
-    beforeMount() {
+    created() {
         this.comments.forEach(({ user_id, target_user, reply_user }) => {
             [user_id, target_user, reply_user].forEach((uid) => {
-                this.$store.dispatch('GET_USER_BY_ID', uid);
+                this.$store.dispatch('GET_USER_BY_ID', uid).then(data => {
+                    this.comment_users = {
+                        ...this.comment_users,
+                        [`user_${uid}`]: data,
+                    };
+                });
             });
         });
     }

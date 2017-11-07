@@ -110,7 +110,7 @@ export default {
   bottom: 25px;
   left: 50%;
   margin-left: -20px;
-  z-index: 5;
+  z-index: 7;
   .editPage {
     z-index: 11;
     overflow: hidden;

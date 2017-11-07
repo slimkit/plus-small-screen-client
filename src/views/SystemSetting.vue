@@ -118,9 +118,9 @@
           TS_WEB.webSocket.close();
         }
         this.cannel();
+        this.$store.dispatch('LOGOUT');
         this.$store.dispatch(CLEANUSERFEEDS);
         this.$storeLocal.set('UserLoginInfo', {});
-        this.$sotre.dispatch('LOGOUT');
         this.changeUrl('/login');
       }
     }

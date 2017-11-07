@@ -145,7 +145,7 @@ export default {
     top: 0;
     width: 100%;
     height: 46px;
-    z-index: 9;
+    z-index: 6;
     font-size: 16px;
     transition: background 0.5s linear;
     background-color: rgba(255, 255, 255, 0);
@@ -204,7 +204,7 @@ export default {
           position: absolute;
           top: 0;
           left: 0;
-          z-index: 7;
+          z-index: 5;
           transform: scale(1.5);
         }
       }
@@ -217,7 +217,7 @@ export default {
       padding: 46px 15px 0;
       width: 100%;
       height: 100%;
-      z-index: 8;
+      z-index: 5;
       color: #fff;
       > {
         flex: 0 0 auto;

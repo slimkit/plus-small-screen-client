@@ -10,26 +10,21 @@
       <img v-if="nothing" :src="nothing" />
     </div>
     <mt-loadmore
-      v-if="!nothing"
-      :bottom-method="loadBottom"
-      :top-method="loadTop"
-      :bottom-all-loaded="bottomAllLoaded"
-      :top-all-loaded="topAllLoaded"
       ref="loadmore"
+      v-if="!nothing"
+      :autoFill='false'
       :bottomDistance="70"
-      @bottom-status-change="bottomStatusChange"
+      :top-method="loadTop"
+      :bottom-method="loadBottom"
+      :top-all-loaded="topAllLoaded"
+      :bottom-all-loaded="bottomAllLoaded"
+      :bottomPullText="`上拉加载更多`" 
+      :bottomDropText="`释放加载更多`" 
     >
       <ul class="feed-list" v-if="!nothing">
         <Feed v-for="(feed, index) in feedsList" :feed="feed" :key="feed.id"></Feed>
       </ul>
-      <div slot="bottom" class="mint-loadmore-bottom">
-        <span v-if="bottomAllLoaded">没有更多了</span>
-        <section v-else>
-          <span v-show="bottomStatus === 'pull' && !bottomAllLoaded" :class="{ 'rotate': topStatus === 'drop' }">上拉加载更多</span>
-          <span v-show="bottomStatus === 'loading'">加载中...</span>
-          <span v-show="bottomStatus === 'drop' && !bottomAllLoaded">释放加载更多</span>
-        </section>
-      </div>
+      <div class="t_c" v-if="bottomAllLoaded">没有更多了</div>
     </mt-loadmore>
   </div>
 </template>
@@ -158,13 +153,8 @@
         )
         .then( response => {
           let feeds = response.data.feeds;
+          this.$refs.loadmore.onTopLoaded();
           if(feeds.length == 0) {
-            setTimeout(() => {
-              if(this.$refs.loadmore)
-              {
-                this.$refs.loadmore.onTopLoaded();
-              }
-            }, 500)
             return;
           }
           let newIds = [];
@@ -206,7 +196,7 @@
       },
       feedsList() {
         let type = this.feedType[this.option.type];
-        return lodash.orderBy(this.$store.getters[type.feeds], ['pinned', 'updated_at'], ['asc', 'desc']);
+        return this.$store.getters[type.feeds];
       }
     },
     mounted () {
@@ -293,7 +283,6 @@
 <style scoped lang="less">
   .feedParentContainer {
     padding-top: 46px;
-    .mint-loadmore {padding-bottom: 60px}
     .mint-loadmore-content-parent-no-trans .mint-loadmore-content {
       transform: inherit;
     }

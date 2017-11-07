@@ -112,7 +112,6 @@
     methods: {
       changeUrl,
 
-
       toFeedDetail(id) {
         if(this.feed.paid_node && !this.feed.paid_node.paid) {
           this.$Modal.confirm({
@@ -373,11 +372,13 @@
         border-top: 1px #ededed solid;
     }
     .pinned-icon{
-      display: inline-block;
-      border: 1px solid #4bb893;
-      padding: 0 5px;
-      color: #4bb893;
-      font-style: normal;
-      font-size: 12px;
+        display: inline-block;
+        border: 1px solid #4bb893;
+        padding: 0 5px;
+        color: #4bb893;
+        font-style: normal;
+        font-size: 12px;
+        line-height: 14px;
+        vertical-align: middle;
     }
 </style>
