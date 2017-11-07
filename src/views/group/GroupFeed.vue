@@ -165,25 +165,11 @@ export default {
 
         timers,
         getUser() {
-            let user = this.$storeLocal.get(`user_${this.feed.user_id}`);
-            if(!user) {
-                if(this.feed.user_id !== TS_WEB.currentUserId) {
-                    getUserInfo(this.feed.user_id).then(user => {
-                        this.user = { ...user };
-                    });
-                } else {
-                    getLoggedUserInfo().then(user => {
-                        this.user = { ...user };
-                    });
-                }
-
-            } else {
-                user.avatar = user.avatar ? user.avatar : defaultAvatar;
-                this.$store.dispatch(USERS_APPEND, cb => {
-                    cb(user)
-                });
+            this.$store.dispatch('GET_USER_BY_ID', this.feed.user_id).then(user=>{
                 this.user = { ...user };
-            }
+            }).catch(({response: { data = {message: '获取用户失败'}} = {}})=>{
+                this.$Message.error(this.$MessageBundle(data));
+            })
         }
     },
     computed: {
