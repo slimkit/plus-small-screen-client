@@ -29,6 +29,7 @@ export default {
         let rs = getters.getUserById(id);
         if(!rs) {
             dispatch('GET_USER_BY_API', id);
+            return getters.getUserById(id);
         }
         return rs;
     },

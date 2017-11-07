@@ -313,6 +313,7 @@
     },
     created(){
       this.$store.dispatch('GET_USER_BY_ID', [this.feed.user_id]).then((user)=>{
+        console.log('Feed init:',this.feed.user_id, user);
         this.user = {...this.user, ...user}
       }, (err)=>{
         console.log(err);
