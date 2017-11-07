@@ -22,13 +22,13 @@
     <div :class="$style.follows">
       <Row :gutter="24">
         <div :class="$style.followsContent">
-          <Col span="12" style="border-right: 1px #ededed solid" @click.native="changeUrlFans(`/users/relationship/${currentUser}/followers`)">
+          <Col span="12" style="border-right: 1px #ededed solid" @click.native="changeUrlFans(`/users/relationship/${mine.id}/followers`)">
             <p v-if="!messageCount.fans" :class="$style.contentCenter" class="followsNum">{{followed}}</p>
             <p v-else :class="$style.contentCenterHalf" class="followsNum">{{followed}}</p>
             <p v-show="messageCount.fans" :class="$style.newFollowsHalf">{{messageCount.fans}}</p>
             <p :class="$style.contentCenter">粉丝</p>
           </Col>
-          <Col span="12" @click.native="changeUrl(`/users/relationship/${currentUser}/followings`)">
+          <Col span="12" @click.native="changeUrl(`/users/relationship/${mine.id}/followings`)">
             <p :class="$style.contentCenter" class="followsNum">{{following}}</p>
             <p :class="$style.contentCenter">关注</p>
           </Col>
@@ -37,7 +37,7 @@
     </div>
     <!-- 入口菜单 -->
     <div :class="$style.entry">
-      <Row :gutter="24" :class="$style.entryMenu" @click.native="changeUrl(`/users/feeds/${currentUser}`)">
+      <Row :gutter="24" :class="$style.entryMenu" @click.native="changeUrl(`/users/feeds/${mine.id}`)">
         <Col span="3">
           <SapceIcon :height="21" :width="21" color="#59b6d7" />
         </Col>
@@ -197,7 +197,6 @@
     },
     data: () => ({
       goldName: window.TS_WEB.goldName,
-      currentUser: 0, // 当前登录用户id
       userCertification: {}, //用户认证信息
       isWeiXin: TS_WEB.isWeiXin,
       isShowCertification: false,
