@@ -54,7 +54,7 @@ export default {
         } else if(+ids) {
             let u = getters.getUserById(ids);
             if(u.length === 0) {
-                u = await addAccessToken().get(createAPI(`users?id=${id}`), {
+                u = await addAccessToken().get(createAPI(`users?id=${+ids}`), {
                     validateStatus: s => s === 200
                 }).then(({ data = [] }) => {
                     commit('ADD_USER_TO_VUEX', data);
