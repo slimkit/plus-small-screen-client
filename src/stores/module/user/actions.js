@@ -4,7 +4,7 @@
  */
 import _ from 'lodash';
 import localEvent from 'store';
-import { getUserByApi } from '../../../utils/user2';
+import { addAccessToken, createAPI } from '../../../utils/request';
 export default {
     UPDATE_USER_INFO({ commit, dispatch, getters, state }, user) {
         commit('ADD_USER_TO_VUEX', user);
@@ -25,19 +25,45 @@ export default {
     LOGOUT({ commit, dispatch, getters, state }) {
         dispatch('UPDATE_INFO_OF_MINE', {});
     },
-    GET_USER_BY_ID({ commit, dispatch, getters, state }, id) {
-        let rs = getters.getUserById(id);
-        if(!rs) {
-            dispatch('GET_USER_BY_API', id);
-            return getters.getUserById(id);
+    async GET_USER_BY_ID({ commit, dispatch, getters, state }, ids) {
+        if(_.isArray(ids)) {
+            let _ids = [],
+                users2 = [],
+                users1 = ids.map(id => {
+                    if(+id) {
+                        let u = getters.getUserById(id);
+                        if(u.length === 0) {
+                            _ids = Array.from(new Set([..._ids, id]));
+                        };
+                        return u;
+
+                    }
+                });
+            if(_ids.length > 0) {
+                users2 = await addAccessToken().get(createAPI(`users?id=${_ids.join(',')}`), {
+                    validateStatus: s => s === 200
+                }).then(({ data = [] }) => {
+                    commit('ADD_USER_TO_VUEX', data);
+                    return data;
+                }).catch(err => {
+                    throw new Error('catch error at request `user?id=xxxx`');
+                });
+            }
+
+            return [...users1, ...users2];
+        } else if(+ids) {
+            let u = getters.getUserById(ids);
+            if(u.length === 0) {
+                u = await addAccessToken().get(createAPI(`users?id=${id}`), {
+                    validateStatus: s => s === 200
+                }).then(({ data = [] }) => {
+                    commit('ADD_USER_TO_VUEX', data);
+                    return data;
+                }).catch(err => {
+                    throw new Error('catch error at request `user?id=xxxx`');
+                });
+            }
+            return u;
         }
-        return rs;
-    },
-    GET_USER_BY_API({ commit, dispatch, getters, state }, id) {
-        getUserByApi(id, (data) => {
-            commit('ADD_USER_TO_VUEX', data);
-        }, (err) => {
-            console.log(err);
-        });
-    },
+    }
 };

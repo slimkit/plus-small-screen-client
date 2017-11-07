@@ -312,9 +312,9 @@
       })
     },
     created(){
-      this.$store.dispatch('GET_USER_BY_ID', [this.feed.user_id]).then((user)=>{
-        console.log('Feed init:',this.feed.user_id, user);
-        this.user = {...this.user, ...user}
+      this.$store.dispatch('GET_USER_BY_ID', this.feed.user_id).then((user)=>{
+        // console.log('feed init: ', this.feed.user_id, user);
+        this.user = user[0];
       }, (err)=>{
         console.log(err);
       });

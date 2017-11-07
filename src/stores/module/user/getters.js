@@ -1,7 +1,6 @@
-import { getUserByApi } from '../../../utils/user2';
+import _ from 'lodash';
 export default {
-    getUserById: (state) => (id) => {
-        let rs = state.users[`user_${id}`];
-        return rs;
+    getUserById: ({ users }) => (id) => {
+        return _.filter(users, _.conforms({ id: (_id) => _id === id }));
     },
 };

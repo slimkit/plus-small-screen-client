@@ -15,8 +15,12 @@
                         </router-link>
                     </span>
                     <!-- 回复他人 或者 删除自己的评论 -->
-                    <span class="comment_content" v-if="comment.user_id  != currentUser" @click.stop="replySomeOne(comment.user_id)">: {{ comment.body }} <i class="pinned-icon" v-if='comment.pinned'>置顶</i></span>
-                    <span class="comment_content" v-else @click.stop="handleDeleteComment(comment.id)">: {{ comment.body }} <i class="pinned-icon" v-if='comment.pinned'>置顶</i></span>
+                    <span class="comment_content" v-if="comment.user_id  != currentUser" @click.stop="replySomeOne(comment.user_id)">: {{ comment.body }}
+                        <i class="pinned-icon" v-if='comment.pinned'>置顶</i>
+                    </span>
+                    <span class="comment_content" v-else @click.stop="handleDeleteComment(comment.id)">: {{ comment.body }}
+                        <i class="pinned-icon" v-if='comment.pinned'>置顶</i>
+                    </span>
                 </p>
             </li>
         </ul>
@@ -78,7 +82,7 @@ export default {
         return({
             comment_content: '',
             reply_user: null,
-            comment_users: {}
+            users: {}
         });
     },
     computed: {
@@ -105,7 +109,7 @@ export default {
     },
     methods: {
         getUserName(uid) {
-            return(this.comment_users[`user_${uid}`] || {}).name || '';
+            return (this.$store.getters.getUserById(uid)[0]).name || '';
         },
         sendComment() {
             this.handleComment({
@@ -128,16 +132,11 @@ export default {
         }
     },
     created() {
+        let ids = [];
         this.comments.forEach(({ user_id, target_user, reply_user }) => {
-            [user_id, target_user, reply_user].forEach((uid) => {
-                this.$store.dispatch('GET_USER_BY_ID', uid).then(data => {
-                    this.comment_users = {
-                        ...this.comment_users,
-                        [`user_${uid}`]: data,
-                    };
-                });
-            });
+            ids = Array.from(new Set([...ids, user_id, target_user, reply_user]));
         });
+        this.$store.dispatch('GET_USER_BY_ID', ids);
     }
 }
 </script>
