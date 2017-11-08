@@ -1,21 +1,20 @@
 <template>
-  <FeedList :option="option"></FeedList>
+    <FeedList :option="option"></FeedList>
 </template>
-
 <script>
-  import FeedList from '../components/FeedList';
+import FeedList from '../components/FeedList';
 
-  const FeedFollowing = {
+const FeedFollowing = {
     components: {
-      FeedList
+        FeedList
     },
     data: () => ({
-      option: {
-        uri: 'feeds?type=follow',
-        limiter: 'max_id',
-        type: 'following'
-      }
+        option: {
+            uri: 'feeds?type=follow',
+            limiter: 'max_id',
+            type: 'following'
+        }
     })
-  }
-  export default FeedFollowing;
+}
+export default FeedFollowing;
 </script>

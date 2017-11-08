@@ -4,9 +4,10 @@
 
     <div class="app-views">
       <router-view></router-view>
-      <FeedMoreAction />
-      <PinnedPop />
     </div>
+
+    <FeedMoreAction />
+    <PinnedPop />
 
     <NoticeText/>
     <IviewSwiper/>
@@ -310,13 +311,14 @@
   @import '~animate.css/animate.min.css';
 
   #app{
-    // overflow: hidden;
+    overflow: hidden;
     width: 100%;
     height: 100%;
     .app-views{
-      // overflow-y: auto;
+      overflow: auto;
       width: 100%;
       height: 100%;
+      -webkit-overflow-scrolling: touch;
     }
   }
   .animated {

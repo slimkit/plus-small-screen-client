@@ -1,36 +1,33 @@
 <template>
-  <div class="container" :class="$style.manContent">
-    <FeedNavBar/>
-    <router-view></router-view>
-    <ToolBar/>
-  </div>
+    <div class="feeds-container">
+        <FeedNavBar/>
+        <div class="feeds-main-content">
+            <router-view></router-view>
+        </div>
+        <ToolBar/>
+    </div>
 </template>
-
 <script>
-  import { logout } from '../utils/auth.js';
-  import FeedNavBar from '../components/feedNavBar';
-  import ToolBar from '../components/ToolBar';
+import FeedNavBar from '../components/feedNavBar';
+import ToolBar from '../components/ToolBar';
 
-  const feeds = {
-    data: () => ({
-
-    }),
+export default {
+    name: 'feeds',
     components: {
-      FeedNavBar,
-      ToolBar
-    },
-    method: {
-      doLogout () {
-        logout();
-      }
+        FeedNavBar,
+        ToolBar
     }
-  }
-
-  export default feeds;
+}
 </script>
-
-<style lang="scss" module>
-  .manContent {
-    padding:  0;
-  }
+<style lang="scss">
+.feeds-container{
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+}
+.feeds-main-content {
+  overflow: auto;
+  padding: 46px 0 54px 0;
+  height: 100%;
+}
 </style>
