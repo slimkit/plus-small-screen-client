@@ -309,18 +309,6 @@
   @import './styles/font.css';
   @import './styles/common.less';
   @import '~animate.css/animate.min.css';
-
-  #app{
-    overflow: hidden;
-    width: 100%;
-    height: 100%;
-    .app-views{
-      overflow: auto;
-      width: 100%;
-      height: 100%;
-      -webkit-overflow-scrolling: touch;
-    }
-  }
   .animated {
     -webkit-animation-duration: .3s;
     animation-duration: .3s;

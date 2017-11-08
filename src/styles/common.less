@@ -24,7 +24,8 @@ body {
   font-family: @fontStack;
   background-color: @backgroundColor;
   color: @currentColor;
-  height: 100vh;
+  height: 100%;
+  overflow: hidden;
   &:focus, &:active {
     background-color: @backgroundColor;
   }
@@ -463,6 +464,61 @@ input {
       width: 100%;
       border-radius: 0;
       text-align: left;
+    }
+  }
+}
+
+// 主框架
+
+#app{
+  width: 100%;
+  height: 100%;
+  -webkit-overflow-scrolling: touch;
+  .app-views{
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    .views-header,
+    .views-footer{
+      position: absolute;
+      left: 0;
+    }
+    .views-header{
+      z-index: 4;
+      top: 0;
+      width: 100%;
+      height: 46px;
+      background-color: #fff;
+      border-bottom: 1px solid #ededed;
+      .views-header-title{
+        height: 100%;
+        line-height: 45px;
+        text-align: center;
+        font-size: 18px;
+        font-weight: 400;
+      }
+    }
+    .views-footer{
+      z-index: 4;
+      bottom: 0;
+      width: 100%;
+      height: 54px;
+      background-color: #fff;
+    }
+    .views-content{
+      height: 100%;
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
+      &.ptb{
+        padding: 46px 0 54px; 
+      }
+      &.pt{
+        padding-top: 46px; 
+      }
+      &.pb{
+        padding-bottom: 54px;
+      }
     }
   }
 }
