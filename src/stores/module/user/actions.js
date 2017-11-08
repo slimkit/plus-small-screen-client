@@ -13,11 +13,15 @@ export default {
         const old = state.mine;
         try {
             const id = mine.id;
-            if(_.isEmpty(old) || _.isEmpty(mine) || id === old.id) {
+
+            if(_.isEmpty(old) && (id && !_.isEmpty(mine)) || _.isEmpty(mine)) {
+                state.mine = mine;
+            }else if(!_.isEmpty(old) && id === old.id){
                 state.mine = Object.assign({}, old, mine);
-                localEvent.set('mine', state.mine);
             }
-            commit('ADD_USER_TO_VUEX', [mine]);
+
+            localEvent.set('mine', state.mine);
+            commit('ADD_USER_TO_VUEX', [state.mine]);
         } catch(e) {
             state.mine = old;
         }
