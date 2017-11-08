@@ -2,7 +2,7 @@
     <div class="feed" :id="`feed-${feed.id}`">
         <div class="feed-main">
             <div class="user-header">
-                <img :src="user.avatar" @click.stop="changeUrl(`/users/feeds/${user.id}`)">
+                <user-avatar :sex='user.sex' :src='user.avatar' size='small' />
             </div>
             <div class="feed-content" @click.stop="changeUrl(`/groups/${$route.params.id}/feed/${feed.id}`)">
                 <p class="user-info" @click.stop="changeUrl(`/users/feeds/${user.id}`)">
@@ -166,7 +166,7 @@ export default {
         timers,
         getUser() {
             this.$store.dispatch('GET_USER_BY_ID', this.feed.user_id).then(user=>{
-                this.user = { ...user };
+                this.user = { ...user[0] };
             }).catch(({response: { data = {message: '获取用户失败'}} = {}})=>{
                 this.$Message.error(this.$MessageBundle(data));
             })

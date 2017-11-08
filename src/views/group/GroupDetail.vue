@@ -27,7 +27,6 @@
   <div class="gd-content">
     <div class="gd-cover">
       <div class="blur-box">
-        <!-- :style="{'--bg': `url(${cover})`}" -->
         <div class="blur"
              :style="{'background-image': `url(${cover})`}"></div>
         <div class="gd-cover-container">
@@ -129,9 +128,9 @@ export default {
     this.getGroupById()
   },
   mounted() {
-    window.addEventListener('scroll', (e) => {
-      this.scrollTop = document.documentElement.scrollTop || document.body.scrollTop
-    })
+    this.$el.addEventListener('scroll', (e) => {
+      this.scrollTop = this.$el.scrollTop;
+    });
   }
 }
 
@@ -139,9 +138,11 @@ export default {
 
 <style lang="scss">
 .group-detail {
+  height: 100%;
+  overflow: auto;
   .gd-header {
     overflow: hidden;
-    position: fixed;
+    position: absolute;
     top: 0;
     width: 100%;
     height: 46px;
