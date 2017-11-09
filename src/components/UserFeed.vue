@@ -1,13 +1,13 @@
 <template>
   <li :class="$style.detail" :id="`feed-${feed.id}`">
     <Row :gutter="16" :class="$style.userFeed">
-      <Col span="3">
+      <Col span="4">
         <div class="grid-content bg-purple" style="line-height: 150%;">
           <span style="text-align: center; font-weight: 400; font-size: 18px;display: flex; justify-content: center; padding-bottom: 8px;" v-if="feed.date">{{feed.date}}</span>
-          <span style="text-align: center; font-size: 14px;display: flex; justify-content: center;" v-if="feed.month">{{feed.month}}月</span>
+          <span style="text-align: center; font-size: 12px;display: flex; justify-content: center;" v-if="feed.month">{{feed.month}}月</span>
         </div>
       </Col>
-      <Col span="21">
+      <Col span="20">
         <div :class="$style.content" @click="router(`/feed/${feed.id}`)">
           {{ feed.feed_content }}
         </div>
@@ -84,7 +84,7 @@
   export default feedinfo;
 </script>
 
-<style lang="scss" module>
+<style lang="less" module>
   .detail {
     background-color: #fff;
     margin-bottom: 6px;
@@ -95,6 +95,9 @@
     .userFeed {
       display: block;
       margin-bottom: 8px;
+      &:last-child {
+        margin-bottom: 0;
+      }
     }
   }
   .toolTop {
