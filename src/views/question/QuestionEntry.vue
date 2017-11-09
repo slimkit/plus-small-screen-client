@@ -1,6 +1,6 @@
 <template>
   <section :class="[$style.QuestionEntryRoot, 'QuestionEntryRoot']">
-    <header class="commonHeader">
+    <!-- <header class="commonHeader">
       <Row :gutter="24">
         <Col span="4">
           <BackIcon @click.native="$router.push('/discover')" height="21" width="21" color="#999" />
@@ -12,6 +12,17 @@
         <Col span="4" class="header-end-col">
           <SearchIcon height="21" @click.native="$router.push({ name: 'questionSearch' })" width="21" color="#999" />
         </Col>
+      </Row>
+    </header> -->
+    <header class="commonHeader">
+      <Row :gutter="24">
+          <Col span="4">
+            <BackIcon @click.native="$router.push('/discover')" height="21" width="21" color="#999" />
+          </Col>
+          <Col span="16" class="title">
+            <router-link to="/questions/questions">问答</router-link>
+            <router-link to="/questions/topics">话题</router-link>
+          </Col>
       </Row>
     </header>
     <section>
@@ -56,6 +67,30 @@
           background-color: #59b6d7;
           color: #fff;
         } 
+      }
+      .title {
+        display: flex;
+      }
+      a {
+        flex: 1 1 auto;
+        border: 1px solid #59b6d7;
+        padding: 5px 0;
+        text-align: center;
+        color: #59b6d7;
+        +a {
+            border-left: 0;
+        }
+        &:first-child {
+            border-left: 1px solid #59b6d7;
+            border-radius: 3px 0 0 3px;
+        }
+        &:last-child {
+            border-radius: 0 3px 3px 0;
+        }
+        &.router-link-active {
+            background-color: #59b6d7;
+            color: #fff;
+        }
       }
     }
   }

@@ -109,7 +109,9 @@ export default {
     },
     methods: {
         getUserName(uid) {
-            return (this.$store.getters.getUserById(uid)[0]).name || '';
+            const [ user ] = this.$store.getters.getUserById(uid);
+            const { name = '' } = user;
+            return name;
         },
         sendComment() {
             this.handleComment({

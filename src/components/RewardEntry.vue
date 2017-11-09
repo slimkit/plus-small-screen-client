@@ -12,8 +12,8 @@
     </Row>
     <Row :gutter="24" type="flex" align="middle" justify="center" >
       <Col span="24" class-name="center" @click.native="openRewardList">
-        <img  v-lazy="rewardUser" class="rewardUser avatar-component" alt="" v-for="(rewardUser, index) in formatedRewardUsers">
-        <i v-show="rewardUsers.length"><RightArrowIcon height="16" width="16" color="#ccc" /></i>
+        <user-avatar style="margin: 0 4px;" v-for="(rewardUser, index) in formatedRewardUsers" :src="rewardUser.avatar" :key="index" size="tiny" />
+        <i v-show="rewardUsers.length"><RightArrowIcon height="12" width="12" color="#ccc" /></i>
       </Col>
     </Row>
     <Modal v-model="rewardOpen" width="80vw">
@@ -67,7 +67,8 @@
           justify="center"
         >
           <Col span="4" class-name="content">
-            <img v-lazy="user.avatar" class="avatar-component" :alt="user.uname" />
+            <!-- <img v-lazy="user.avatar" class="avatar-component" :alt="user.uname" /> -->
+            <user-avatar :src="user.avatar" :sex="user.sex" size="small" />
           </Col>
           <Col span="14" class-name="content">
             <span>{{ user.uname }} </span>打赏了文章
@@ -240,7 +241,10 @@
         let formated = [];
         twentyUser.reverse().forEach( rewardUser => {
 
-          formated.push( rewardUser.user.avatar ? rewardUser.user.avatar : defaultAvatar);
+          formated.push({
+            avatar: rewardUser.user.avatar,
+            sex: rewardUser.user.sex
+          });
         })
         return formated;
       },
@@ -255,7 +259,7 @@
         rewardUsers.forEach( rewardUser => {
 
           formated.push({
-            avatar: rewardUser.user.avatar ? rewardUser.user.avatar : defaultAvatar,
+            avatar: rewardUser.user.avatar,
             uname: rewardUser.user.name,
             time: rewardUser.created_at
           });
@@ -388,7 +392,7 @@
           this.modal_loading = false;
           this.rewardOpen = false;
           this.resetReward();
-          this.source.reward.amount = oldAmount === null ? postAmount : parseInt(oldAmount) + postAmount;
+          this.source.reward.amount = oldAmount === null ? postAmount : parseInt(oldAmount) + parseInt(postAmount);
           this.source.reward.count  = oldCount + 1;
           this.$Message.success(PlusMessageBundle(data).getMessage());
           this.getRewardUsers(this.rewardableId);

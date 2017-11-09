@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :class="$style.feedDetailRoot">
     <div id="spinner" v-show="showSpinner">
       <div id="spinner-parent">
         <div class="spinner-double-bounce-bounce2" />
@@ -15,7 +15,7 @@
           <div>
             <router-link :to="`/users/feeds/${userInfo.user_id}`" class="avatar">
               <div class="avatar-content">
-                <img class="avatar" v-lazy="avatar" alt="">
+                <user-avatar :src="avatar" :sex="sex" size="small" />
               </div>
               <span style="font-size: 18px; padding: 0 5px">{{userInfo.name}}</span>
             </router-link>
@@ -54,7 +54,14 @@
                 <div style="display: flex; align-items: center;">
                   <div :style="`width: ${digglistWidth}`">
                     <div class="digg-digg-list" v-if="diggList.length" >
-                      <img v-lazy="digg.avatar" :style="`left: ${20 * (index) + 'px'}; z-index: ${5 - (1 * index)}`" :alt="digg.name" v-for="(digg, index) in diggList" :key="index" >
+                      <user-avatar
+                        v-for="(digg, index) in diggList" 
+                        :key="index" 
+                        :src="digg.avatar"
+                        :sex="digg.sex"
+                        :style="`left: ${15 * (index) + 'px'}; z-index: ${5 - (1 * index)}`"
+                        size="tiny"
+                      />
                     </div>
                   </div>
                   <div class="digg_counter">
@@ -279,6 +286,7 @@
   import LockedImageForSwiper from '../components/LockedImageForSwiper';
   import storeLocal from 'store';
   import RewardEntry from '../components/RewardEntry';
+  import { mapState } from 'vuex';
 
   const noCommentImage = resolveImage(require('../statics/images/defaultNothingx2.png'));
   const defaultAvatar = resolveImage(require('../statics/images/defaultAvatarx2.png'));
@@ -306,11 +314,10 @@
       likes: [],
       userInfo: {},
       // 上拉加载更多相关
-      bottomAllLoaded: false,
+      bottomAllLoaded: true,
       max_id: 0,
       bottomStatus: '',
       showSpinner: true,
-      currentUser: TS_WEB.currentUserId,
       // 输入框有关
       commentFeed: false,
       commentToUserId: 0,
@@ -320,7 +327,8 @@
       commentedUser: {},
       commentIndex: -1,
       token: '',
-      showReward: false
+      showReward: false,
+      limit: 20
     }),
     computed: {
       defaultImage () {
@@ -334,8 +342,12 @@
         return this.timers(created_at, 8, false);
       },
       avatar () {
-        const { avatar = defaultAvatar } = this.userInfo;
+        const { avatar } = this.userInfo;
         return avatar;
+      },
+      sex () {
+        const { sex } = this.userInfo;
+        return sex;
       },
       // 计算图片跳转地址
       imagesList () {
@@ -374,15 +386,16 @@
               digg_users.push({
                 avatar: user.avatar,
                 user_id: user.user_id,
-                name: user.name
+                name: user.name,
+                sex: user.sex
               });
             });
           } else {
-            userLocal.avatar = userLocal.avatar || defaultAvatar;
             digg_users.push({
               avatar: userLocal.avatar,
               user_id: userLocal.user_id,
-              name: userLocal.name
+              name: userLocal.name,
+              sex: userLocal.sex
             });
           }
           userLocal = {};
@@ -393,7 +406,11 @@
         let formated = formateFeedComments(this.comments);
         this.max_id = formated.max_id;
         return formated.comments;
-      }
+      },
+      ...mapState({
+        currentUser: state => state.users.mine.id,
+        currentUserInfo: state => state.users.mine
+      })
     },
     
     methods: {
@@ -504,7 +521,7 @@
         })
         .then(response => {
           this.feedData.has_like = true;
-          this.feedData.likes.push({ user_id: TS_WEB.currentUserId });
+          this.feedData.likes.push({ user_id: this.currentUser });
           this.feedData.like_count++;
           this.$store.dispatch(UPDATEFEED, cb => {
             cb(this.feedData);
@@ -542,7 +559,7 @@
           this.feedData.has_like = false;
           this.feedData.likes.splice(
             this.feedData.likes.findIndex( value => {
-              value = TS_WEB.currentUserId
+              value = this.currentUser
             }),
           1);
 
@@ -587,6 +604,12 @@
         })
       },
       loadBottom() {
+        const { limit, max_id } = this;
+        if (this.bottomAllLoaded) {
+          this.$refs.loadmore.onBottomLoaded();
+
+          return;
+        }
         if( !this.max_id > 1 ) {
           setTimeout(() => {
             // 若数据已全部获取完毕
@@ -595,26 +618,32 @@
             this.$refs.loadmore.onBottomLoaded();
           }, 500);
         }
-        let limit = 15;
+
         this.bottomStatus = 'loading';
         addAccessToken().get(
-          createAPI(`feeds/${this.feed_id}/comments?after=${this.max_id}&limit=${limit}`),
-          {},
+          createAPI(`feeds/${this.feed_id}/comments`),
+          {
+            params: {
+              limit,
+              after: max_id 
+            }
+          },
           {
             validateStatus: status => status === 200
           }
         )
-        .then(response => {
-          let data = response.data.data;
+        .then(({ data: { data } = {} }) => {
           let addComments = [];
           let formatedAddComments = [];
-          let bottomAllLoaded = false;
-          if(data.length < 15) {
+
+          if (data.length === limit) {
+            bottomAllLoaded = false;
+          } else {
             bottomAllLoaded = true;
           }
-          data.forEach((comment) => {
-            this.comments.push(comment);
-          });
+
+          this.comments = [ ...this.comments, ...data ];
+
           setTimeout(() => {
             // 若数据已全部获取完毕
             this.bottomStatus = '';
@@ -657,22 +686,14 @@
             user_id: comment.user_id,
             reply_to_user: {}
           };
-          // current logged user
-          let currentUser = storeLocal.get(`user_${TS_WEB.currentUserId}`);
-            // don't find local db user
-            if(!currentUser) {
-              getUserInfo(window.TS_WEB.currentUserId).then( user => {
-                newComment.user = { ...user };
-                // commented user
-                if(this.commentToUserId) {
-                  newComment.reply_to_user = { ...this.commentedUser };
-                  this.$store.getters[FEEDSLIST][this.feed_id].comments.unshift(newComment);
-                } else {
-                  this.$store.getters[FEEDSLIST][this.feed_id].comments.unshift(newComment);
-                }
-              });
+
+            if(!this.currentUserInfo) {
+              this.$Message.error('请先登陆');
+              this.$router.push('/login');
+
+              return;
             } else { // find local db user
-              newComment.user = { ...currentUser };
+              newComment.user = { ...this.currentUserInfo };
 
               // commented user
               if(this.commentToUserId) {
@@ -774,6 +795,7 @@
       friendNum,
       unFollowingUser,
       followingUser,
+
       goBack () {
         if(window.history.length < 2) {
           this.$router.push('/feeds');
@@ -781,12 +803,14 @@
         }
         this.$router.back();
       },
+
       // 获取当前动态用户的用户信息
       getUser (user_id) {
         getUserInfo(user_id).then(user => {
           this.userInfo = { ...user };
         });
       },
+
       menu() {
         let header = document.getElementById('feed-header');
         let footer = document.getElementById('feed-footer');
@@ -834,8 +858,10 @@
         setTimeout(() => {
           this.goBack();
         }, 1500);
+
         return;
       }
+
       // 获取动态详情
       addAccessToken().get(
         createAPI(`feeds/${feed_id}`),
@@ -901,6 +927,7 @@
   .feed-container {
     background-color: #f4f5f5;
     padding-top: 46px;
+
   }
   #feed-footer {
     transition: bottom .2s;
@@ -922,7 +949,6 @@
       height: 100%;
       justify-content: center;
       align-items: center;
-      padding: 5px 0;
       .avatar-content {
         height: 100%;
         display: flex;
@@ -968,14 +994,13 @@
   .digg-digg-list {
     position: relative;
     height: 30px;
-    img {
+    span {
       position: absolute;
-      height: 100%;
-      border: 2px #fff solid;
-      border-radius: 50%;
-      &[lazy="loading"] {
-        height: 100%;
-        width: auto;
+      img {
+        &[lazy="loading"] {
+          height: 100%;
+          width: auto;
+        }
       }
     }
   }
@@ -1056,6 +1081,10 @@
   }
 </style>
 <style lang="less" module>
+.feedDetailRoot{
+  height: calc(~"100% - 55px");
+  overflow: scroll;
+  -webkit-overflow-scrolling: touch;
   .comment {
     padding: 0 12px 12px 12px;
     background-color: #fff;
@@ -1121,4 +1150,5 @@
       font-style: normal;
     }
   }
+}
 </style>
