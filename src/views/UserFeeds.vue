@@ -18,7 +18,7 @@
         </div>
         <div :class="$style.userCover">
           <img :class="$style.coverImg" @click="chooseImg" :src="coverImg" :alt="userInfo.name"/>
-          <input ref="bgInput" style="width:0;height:0;opacity:0;" type="file" name="image" accept="image/*"
+          <input v-if="canSetBg" ref="bgInput" style="width:0;height:0;opacity:0;" type="file" name="image" accept="image/*"
           @change="changeBG"
         />
         </div>
@@ -475,6 +475,9 @@
         feeds: state => state.userFeeds.userFeeds,
         currentUser: state => state.users.mine.id
       }),
+      canSetBg () {
+        return this.currentUser === this.user_id;
+      },
       followAction () {
         const { following, follower } = this.userInfo;
         if(following && follower) {
