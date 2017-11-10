@@ -220,15 +220,11 @@ const profile = {
             return(extra ? extra.followers_count : 0);
         },
         balance() {
-            const { userInfo: { wallet: { balance = 0 } = {} } = {} } = this;
+            const {  wallet: { balance = 0 } = {} } = this.mine;
             return balance;
         }
     },
     created() {
-        // this.currentUser = TS_WEB.currentUserId;
-        // getLoggedUserInfo().then( user => {
-        //   this.mine = { ...this.mine, ...user };
-        // });
         // 获取认证信息
         getUserCertification().then(data => {
             this.userCertification = data;
@@ -237,7 +233,7 @@ const profile = {
 };
 export default profile;
 </script>
-<style lang="scss">
+<style lang="less">
 .profile {
     height: 100%;
     overflow: hidden;
@@ -326,7 +322,7 @@ export default profile;
     }
 }
 </style>
-<style lang='scss'>
+<style lang='less'>
 .mine-info {
     display: flex !important;
     flex-direction: column;

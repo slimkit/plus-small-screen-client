@@ -1,5 +1,5 @@
 <template>
-	<div sadadsa style="margin-top:6px;">
+	<div root>
 		<!-- loading -->
 	    <div id="spinner" v-show="loading">
 	      <div id="spinner-parent">
@@ -8,30 +8,31 @@
 	      </div>
 	    </div>
 	    <!-- loading end -->
+      <div style="height: 100%; overflow: auto;">
         <mt-loadmore :auto-fill="false" :bottomPullText="`上拉加载更多`" :bottomDropText="`释放加载更多`" :top-method="loadTop" :bottom-method="loadBottom" :bottomAllLoaded="bottomAllLoaded" ref="loadmore" v-show="itemsLength">
-			<div class="answer-container" v-for="item in items" :key='item.id'>
-				<div class="answer-content">
-					<p>{{ stringLimit(item.body) }}</p>
-				</div>
-				<div class="answer-operation">
-				    <div class="answer-action">
-				    	<div class="feed-tool-item feed-like">
-				        	<DiggIcon v-if="item.liked" width="21" height="21" color="#f4504d" @click.native="handleDigg(item.liked, item.id)"/>
-				        	<UnDiggIcon v-else width="21" height="21" color="#999" @click.native="handleDigg(item.liked, item.id)"/>
-				        	<span class="count feed-like-count">{{ item.likes_count }}</span>
-					    </div>
-					    <div class="feed-tool-item feed-comment" @click="handleClickComment(item.id)">
-					        <CommentIcon width="21" height="21" color="#999" />
-					        <span class="count feed-comment-count">{{ item.comments_count }}</span>
-					    </div>
-				    </div>
-				    <span>
-		                <timeago style="color: #ccc; font-size: 12px;" :since="timers(item.created_at, 8, false)" locale="zh-CN" :auto-update="60"></timeago>
-					</span>
-				</div>
-			</div>
-		</mt-loadmore>	
-		<!-- Topic is empty. -->
+    			<div class="answer-container" v-for="item in items" :key='item.id'>
+    				<div @click="handleClickComment(item.id)" class="answer-content">
+  			       {{answerBody( getPureContent(item.body) ) }}
+    				</div>
+    				<div class="answer-operation">
+  				    <div class="answer-action">
+  				    	<div class="feed-tool-item feed-like">
+  				        	<DiggIcon v-if="item.liked" width="21" height="21" color="#f4504d" @click.native="handleDigg(item.liked, item.id)"/>
+  				        	<UnDiggIcon v-else width="21" height="21" color="#999" @click.native="handleDigg(item.liked, item.id)"/>
+  				        	<span class="count feed-like-count">{{ item.likes_count }}</span>
+  					    </div>
+  					    <div class="feed-tool-item feed-comment" @click="handleClickComment(item.id)">
+  					        <CommentIcon width="21" height="21" color="#999" />
+  					        <span class="count feed-comment-count">{{ item.comments_count }}</span>
+  					    </div>
+  				    </div>
+  				    <span>
+  		          <timeago style="color: #ccc; font-size: 12px;" :since="timers(item.created_at, 8, false)" locale="zh-CN" :auto-update="60" />
+    					</span>
+    				</div>
+    			</div>
+    		</mt-loadmore>
+      </div>	
 	    <img v-show="!loading && !itemsLength"style="width: 80vw; left: 10vw;  position: fixed; top: 30vh;" :src="nothingImage"/>
 	</div>
 </template>
@@ -42,7 +43,11 @@ import CommentIcon from '../../../icons/Comment';
 import DiggIcon from '../../../icons/Digg';
 import UnDiggIcon from '../../../icons/UnDigg';
 import { resolveImage } from '../../../utils/resource';
+import getPureContent from '../../../utils/getPureContent';
+import markdownIt from 'markdown-it';
+import _ from 'lodash';
 
+const md = markdownIt();
 const nothingImage = resolveImage(require('../../../statics/images/defaultNothingx2.png'));
 
 export default {
@@ -57,7 +62,7 @@ export default {
       	loading: false,
       	items: [],
       	type: null,
-      	limit: 10,
+      	limit: 20,
       	nothingImage,
         bottomAllLoaded: false,
       })
@@ -79,6 +84,14 @@ export default {
     },
     methods: {
    	  timers,
+      getPureContent,
+      getPureText (str) {
+        return ( (md.render(str)).replace(/<\/?.+?>/g,"") ).replace(/ /g,"");
+      },
+      answerBody (body) {
+        if(!body) return '';
+        return this.getPureText(body);
+      },
       stringLimit (str){
       	return str.length > 75 ? 
       	str.substring(0, 71) + "..." :
@@ -115,62 +128,89 @@ export default {
       handleClickComment(id) {
       	this.$router.push({path:`/questions/answers/${id}`});
       },
-        /**
-         * 加载数据
-         * @param  {Boolean} merge
-         */
-        loadData(merge = false) {
-        	this.loading = true;
-        	const { type, limit, items } = this;
-        	let params = { type, limit };
-        	if (merge) params.after = items[items.length-1].id;
-            let uri = createAPI('user/question-answer');
-            addAccessToken().get(uri, { params }).then(({ data = [] }) => {
-                this.loading = false;
-             	this.bottomAllLoaded = data.length < params.limit;
-                if(merge) {
-                    this.items = Array.from(new Set([...data, ...this.items]));
-                    this.$refs.loadmore.onBottomLoaded();
-                } else {
-                    this.items = [...data];
-                    this.$refs.loadmore.onTopLoaded();
-                }
-            }).catch(err => {
-                this.loading = false;
-                console.log(err);
-            })
+      /**
+       * 加载数据
+       * @param  {Boolean} merge
+       */
+      loadData(u = 'new') {
+        if (u === 'loadmore' && this.bottomAllLoaded) {
+          this.$refs.loadmore.onBottomLoaded();
+
+          return;
+        }
+
+        if (u === 'new') this.loading = true;
+      	const { type, limit, items } = this;
+
+      	let params = { type, limit };
+
+      	if (u === 'loadmore') params.after = items[items.length-1].id ;
+
+        let uri = createAPI('user/question-answer');
+        addAccessToken().get(uri, { params }).then(({ data = [] }) => {
+
+          this.loading = false;
+         	this.bottomAllLoaded = (data.length < params.limit) ? true : false;
+
+            if (u === 'loadnew') {
+                this.items = _.uniqBy([...data, ...this.items], 'id');
+                this.$refs.loadmore.onTopLoaded();
+            } else if ( u === 'new') {
+                this.items = [...data];
+            } else {
+              this.items = [
+                ...this.items,
+                ...data
+              ];
+              this.$refs.loadmore.onBottomLoaded();
+            }
+          }).catch(err => {
+              this.loading = false;
+              console.log(err);
+          })
         },
 
         loadTop() {
-            this.loadData();
+            this.loadData('loadnew');
         },
 
         loadBottom() {
-            this.loadData(true);
+            this.loadData('loadmore');
         }
     },
     created() {
    	   this.type = this.$route.params.type || 'all';
-   	   this.loadData();
+   	   this.loadData('new');
     }
 }
 </script>
-<style lang="scss">
-		[sadadsa] {
-		.mint-loadmore-bottom {
-		    margin-bottom: -50px;
-		}
-	}
-</style>
 <style lang="less">
+  [root] {
+    height: calc(~"100vh - 86px");
+    overflow: scroll;
+    -webkit-overflow-scrolling: touch;
+    .mint-loadmore-bottom {
+        margin-bottom: -50px;
+    }
+  }
 	.answer-container {
-		border-top: 2px #ededed solid; 
+    padding-top: 10px;
+		border-bottom: 5px #f4f5f5 solid; 
 		background-color: #ffffff;
+    &:last-child {
+      border-bottom: none;
+    }
 		.answer-content {
-			color: #666666;
+			color: #666;
 			font-size: 14px;
-			padding: 10px 15px;
-			min-height: 28px;
+			margin: 0 15px 10px 15px;
+      text-align: initial;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      word-break: break-all;
 			p{
 				margin: 0;
 				line-height: 1;
@@ -178,7 +218,7 @@ export default {
 			}
 		}
 		.answer-operation {
-			padding: 10px;
+			padding: 10px 15px;
 			border-top: 1px #ededed solid; 
 			display: flex;
 			justify-content: space-between;

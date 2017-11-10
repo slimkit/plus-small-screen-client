@@ -252,7 +252,7 @@ const FeedLists = {
 };
 export default FeedLists;
 </script>
-<style lang="scss" module>
+<style lang="less" module>
 .notice {
     padding: 10px 0;
     height: 18px;

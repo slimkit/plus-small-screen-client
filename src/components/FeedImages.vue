@@ -455,13 +455,13 @@
 
   export default feedImages;
 </script>
-<style scoped>
+<style scoped >
   .ivu-icon-help-circled {
     color: #f90!important;
     font-size: 36px!important;
   }
 </style>
-<style lang="scss" module>
+<style lang="less" module>
   .FeedImages {
     width: 100%;
     img {

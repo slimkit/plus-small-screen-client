@@ -108,7 +108,7 @@ const LoadMore = {
 
 export default LoadMore;
 </script>
-<style lang="scss" module>
+<style lang="less" module>
 .nothing {
     width: 100%;
     display: flex;

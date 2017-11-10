@@ -73,7 +73,7 @@ export default {
     }
 }
 </script>
-<style lang="scss">
+<style lang="less">
 .vertical-center-modal {
     display: flex;
     align-items: center;
@@ -98,7 +98,7 @@ export default {
     margin-top: 10px;
     display: flex;
     justify-content: space-around;
-    > {
+    &> {
         flex: 1 1 auto;
     }
 }

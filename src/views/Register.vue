@@ -470,7 +470,7 @@
 
 </script>
 
-<style scoped lang="scss">
+<style scoped lang="less">
   input {
     padding: 5px 0
   }

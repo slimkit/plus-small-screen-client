@@ -307,7 +307,6 @@
 </script>
 <style lang="less">
   @import './styles/font.css';
-  @import './styles/common.less';
   @import '~animate.css/animate.min.css';
   .animated {
     -webkit-animation-duration: .3s;

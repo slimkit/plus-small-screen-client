@@ -96,7 +96,7 @@ export default {
 
 </script>
 
-<style lang="scss">
+<style lang="less">
 .group-post-feed {
   width: 40px;
   height: 40px;

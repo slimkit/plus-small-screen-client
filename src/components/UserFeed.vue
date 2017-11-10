@@ -95,9 +95,9 @@
     .userFeed {
       display: block;
       margin-bottom: 8px;
-      &:last-child {
-        margin-bottom: 0;
-      }
+    }
+    &:last-child {
+      margin-bottom: 0;
     }
   }
   .toolTop {

@@ -176,7 +176,7 @@
   };
   export default Ranking;
 </script>
-<style lang="scss" module>
+<style lang="less" module>
   .rankingContent {
     background-color: #fff;
     .ranking {

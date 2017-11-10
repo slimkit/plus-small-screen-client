@@ -191,7 +191,7 @@ export default {
     }
 }
 </style>
-<style lang="scss">
+<style lang="less">
 .t_c {
     text-align: center;
 }

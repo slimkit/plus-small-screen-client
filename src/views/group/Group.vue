@@ -53,7 +53,7 @@ export default {
 
 </script>
 
-<style lang="scss">
+<style lang="less">
 .group {
   overflow: hidden;
   .group-content {

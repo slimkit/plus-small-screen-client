@@ -80,7 +80,7 @@ export default {
     }
 }
 </script>
-<style lang="scss">
+<style lang="less">
 .toolBar {
     position: absolute!important;
     bottom: 0;

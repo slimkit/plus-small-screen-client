@@ -18,7 +18,7 @@ export default {
     name: 'feeds-nav-bar',
 }
 </script>
-<style lang="scss">
+<style lang="less">
 .feeds-nav-bar {
     font-size: 18px;
     height: 46px;

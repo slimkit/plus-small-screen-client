@@ -195,7 +195,7 @@
 
   export default changePassword;
 </script>
-<style scoped lang="scss">
+<style scoped lang="less">
   .changePassword-header {
     height: 45px;
     border-bottom: 1px #ddd solid;
@@ -226,7 +226,7 @@
     width: 100%;
   }
 </style>
-<style lang="scss" module>
+<style lang="less" module>
   .entry {
     background-color: #fff;
     .entryMenu {

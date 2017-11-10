@@ -7,10 +7,10 @@
             <Button type="text" @click.natice="close">取消</Button>
           </Col>
           <Col span="16" :class="['title-col', $style.title]">
-            添加回答
+            {{ ifEdit ? '修改回答' : '添加回答' }}
           </Col>
           <Col span="4" class="header-end-col">
-            <Button @click.native="doAnswer" type="text" :disabled="body.length == 0">发布</Button>
+            <Button @click.native="doAnswer" type="text" :disabled="body.length == 0">{{ ifEdit ? '更新' : '发布' }}</Button>
           </Col>
         </Row>
       </header>
@@ -123,8 +123,19 @@
         show: state => state.showPostAnswer.showPostAnswer.show,
         question: state => state.showPostAnswer.showPostAnswer.question, // 被回答的问题id
         answer_id: state => state.showPostAnswer.showPostAnswer.answer_id,
-        callback: state => state.showPostAnswer.showPostAnswer.callback
-      })
+        callback: state => state.showPostAnswer.showPostAnswer.callback,
+        oldBody: state => state.showPostAnswer.showPostAnswer.body
+      }),
+      ifEdit () {
+        return this.oldBody !== '';
+      }
+    },
+    watch: {
+      show (status) {
+        if (status) {
+          this.body = this.oldBody;
+        }
+      }
     },
     mounted () {
       if((_.keys(this.editor).length === 0)) {

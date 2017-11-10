@@ -32,6 +32,7 @@ export default {
 </script>
 <style lang="less" scoped>
 .QuestionEntryRoot {
+    height: 100%;
     .title {
         display: flex;
     }
@@ -60,6 +61,6 @@ export default {
 
 .QuestionViews {
     width: 100%;
-    height: calc(100% - 46px);
+    height: calc(~"100% - 46px");
 }
 </style>

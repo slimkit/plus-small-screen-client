@@ -13,7 +13,7 @@
           <div class="swiper-lazy-preloader"></div>
         </div>
         <div class="swiper-container noRelative" v-else>
-          <LockedImageForSwiper />
+          <img v-lazy="item.url"  />
           <span class="payButton">付费购买</span>
         </div>
       </swiper-slide>
@@ -129,7 +129,7 @@
   export default imageSwiper;
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
   .swiperRoot {
     overflow: auto;
     position: fixed!important;
@@ -167,11 +167,17 @@
     padding: 4px 8px;
     background-color: #59b6d7 ;
     border-radius: 5px;
-    bottom: 10px;
+    bottom: 8vh;
     left: calc(~"50% - 36px");
   }
   .noRelative {
     position: initial;
+    height: 100%;
+    img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
   }
 
 </style>

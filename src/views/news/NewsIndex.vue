@@ -48,7 +48,7 @@
       <section class="newsIndexContainerRecommend">
         
       </section>
-      <section class="newsIndexContainerNewsLists">
+      <section :class="$style.newsIndexContainerNewsLists">
         <mt-loadmore
           v-if="!nothing"
           :bottom-method="loadBottom"
@@ -421,6 +421,7 @@
 </style>
 <style lang="less" module>
   .newsIndex {
+    height: 100%;
     .newsIndexNav {
       width: 100vw;
       overflow: hidden;
@@ -460,61 +461,68 @@
     }
     .newsIndexContainer {
       padding-top: 87px;
-      .newsLists{
-        background-color: #fff;
-        .new {
-          padding: 12px;
-          display: flex;
-          align-items: flex-start;
-          border-bottom: 1px solid #e2e3e3;
-          .sourceTitle {
-            width: 75vw;
-            height: 18vw;
-            padding-right: 8px;
-            position: relative;
-            h4 {
-              color: #333;
-              font-weight: 400;
-              text-align: initial;
-              overflow: hidden;
-              text-overflow: ellipsis;  
-              display: -webkit-box;  
-              -webkit-line-clamp: 2;  
-              -webkit-box-orient: vertical;
-              word-break: break-all;
-            }
-            .sourceFrom {
-              position: absolute;
-              bottom: 0;
-              line-height: 1;
-              i {
-                vertical-align: sub;
-                color: #999;
-                font-style: normal;
-                font-size: 12px;
-                &:last-child {
-                  margin-left: 16px;
-                }
-                &:first-child {
-                  margin-left: 0;
+      height: 100%;
+      .newsIndexContainerNewsLists {
+        height: 100%;
+        overflow: scroll;
+        -webkit-overflow-scrolling: touch;
+        .newsLists{
+          background-color: #fff;
+          .new {
+            padding: 12px;
+            display: flex;
+            align-items: flex-start;
+            border-bottom: 1px solid #e2e3e3;
+            .sourceTitle {
+              width: 75vw;
+              height: 18vw;
+              padding-right: 8px;
+              position: relative;
+              h4 {
+                color: #333;
+                font-weight: 400;
+                text-align: initial;
+                overflow: hidden;
+                text-overflow: ellipsis;  
+                display: -webkit-box;  
+                -webkit-line-clamp: 2;  
+                -webkit-box-orient: vertical;
+                word-break: break-all;
+              }
+              .sourceFrom {
+                position: absolute;
+                bottom: 0;
+                line-height: 1;
+                i {
+                  vertical-align: sub;
+                  color: #999;
+                  font-style: normal;
+                  font-size: 12px;
+                  &:last-child {
+                    margin-left: 16px;
+                  }
+                  &:first-child {
+                    margin-left: 0;
+                  }
                 }
               }
             }
-          }
-          .sourceImg {
-            width: 25vw;
-            height: 18vw;
-            img {
-              width: 100%;
+            .sourceImg {
+              width: 25vw;
               height: 18vw;
-              object-fit: cover;
+              img {
+                width: 100%;
+                height: 18vw;
+                object-fit: cover;
+              }
             }
-          }
-          &:last-child {
-            border-bottom: none;
+            &:last-child {
+              border-bottom: none;
+            }
           }
         }
       }
+      
     }
     .editBox {
       position: fixed;

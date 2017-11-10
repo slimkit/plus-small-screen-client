@@ -108,7 +108,7 @@ export default {
 
 </script>
 
-<style lang="scss">
+<style lang="less">
 @keyframes loadingB {
   0% {
     -webkit-transform: rotate(0deg);

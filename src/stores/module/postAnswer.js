@@ -5,7 +5,8 @@ const state = {
     show: false,
     question: 0,
     answer_id: 0,
-    callback: null
+    callback: null,
+    body: ''
   }
 };
 

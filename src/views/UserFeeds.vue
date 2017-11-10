@@ -1,5 +1,51 @@
 <template>
-  <div class="userFeeds loadMoreContainer">
+  <div :class="['userFeeds', 'loadMoreContainer', {nobottom: currentUser === user_id}]">
+    <div>
+      <div ref="navBar" :class="$style.navBar">
+        <div :class="$style.back" @click="goBack">
+          <BackIcon height="24" width="24" color="#fff" />
+        </div>
+        <div style="display: none;">
+          <ShareIcon height="24" width="24" color="#fff" />
+        </div>
+      </div>
+      <div :class="$style.userCover">
+        <img :class="$style.coverImg" @click="chooseImg" :src="coverImg" :alt="userInfo.name"/>
+        <input v-if="canSetBg" ref="bgInput" style="width:0;height:0;opacity:0;" type="file" name="image" accept="image/*"
+        @change="changeBG"
+      />
+      </div>
+      <div :class="$style.userProfile">
+        <div :class="$style.avatar">
+          <user-avatar :src="avatar" :sex="sex" />
+        </div>
+        <h4 :class="$style.name">{{userInfo.name}}</h4>
+        <div :class="$style.intro">
+          <p>
+            {{introText}}
+          </p>
+        </div>
+        <div :class="$style.follows">
+          <Row :gutter="24">
+            <Col span="12" :class="$style.followed" @click.native="changeUrl(`/users/relationship/${user_id}/followers`)">
+              粉丝 <span :class="$style.counts">{{followed}}</span>
+            </Col>
+            <Col span="12" :class="$style.following" @click.native="changeUrl(`/users/relationship/${user_id}/followings`)">
+              关注 <span :class="$style.counts">{{following}}</span>
+            </Col>
+          </Row>
+        </div>
+      </div>
+      <div :class="$style.feeds" v-if="!nothing">
+        <div style="padding: 8px; background: #f4f5f5; color: #999;">{{feedCounts}}条动态</div>
+        <div :class="$style.feedContainer">
+          <UserFeed v-for="feed in feedList" :feed="feed" :key="feed.id" />
+        </div>
+      </div>
+      <div v-if="nothing" :class="$style.nothingDefault">
+        <img style="padding-top: 6vh" :src="nothing" />
+      </div>
+    </div>
     <mt-loadmore
       :bottom-method="loadBottom"
       :bottom-all-loaded="bottomAllLoaded"
@@ -7,54 +53,6 @@
       :bottomDistance="50"
       @bottom-status-change="bottomStatusChange"
     >
-      <div>
-        <div :class="$style.navBar">
-          <div :class="$style.back" @click="goBack">
-            <BackIcon height="24" width="24" color="#fff" />
-          </div>
-          <div :class="$style.share">
-            <ShareIcon height="24" width="24" color="#fff" />
-          </div>
-        </div>
-        <div :class="$style.userCover">
-          <img :class="$style.coverImg" @click="chooseImg" :src="coverImg" :alt="userInfo.name"/>
-          <input v-if="canSetBg" ref="bgInput" style="width:0;height:0;opacity:0;" type="file" name="image" accept="image/*"
-          @change="changeBG"
-        />
-        </div>
-        <div :class="$style.userProfile">
-          <div :class="$style.avatar">
-            <!-- <img v-lazy="avatar" :alt="userInfo.name"> -->
-            <user-avatar :src="avatar" :sex="sex" />
-          </div>
-          <h4 :class="$style.name">{{userInfo.name}}</h4>
-          <div :class="$style.intro">
-            <p>
-              {{introText}}
-            </p>
-          </div>
-          <div :class="$style.follows">
-            <Row :gutter="24">
-              <Col span="12" :class="$style.followed" @click.native="changeUrl(`/users/relationship/${user_id}/followers`)">
-                粉丝 <span :class="$style.counts">{{followed}}</span>
-              </Col>
-              <Col span="12" :class="$style.following" @click.native="changeUrl(`/users/relationship/${user_id}/followings`)">
-                关注 <span :class="$style.counts">{{following}}</span>
-              </Col>
-            </Row>
-          </div>
-        </div>
-        <div :class="$style.feeds" v-if="!nothing">
-          <div style="padding: 8px; background: #f4f5f5; color: #999;">{{feedCounts}}条动态</div>
-          <div :class="$style.feedContainer">
-            <UserFeed v-for="feed in feedList" :feed="feed" :key="feed.id" />
-          </div>
-        </div>
-        <div v-if="nothing" :class="$style.nothingDefault">
-          <img style="padding-top: 6vh" :src="nothing" />
-        </div>
-      </div>
-
       <div slot="bottom" v-if="!nothing" class="mint-loadmore-bottom" :class="{hasNoMore: loadMoreBottomStyle == 0, noMore: loadMoreBottomStyle == 1, hasHalfMore: loadMoreBottomStyle == 2}">
         <span v-if="bottomAllLoaded && bottomStatus !== 'loading' && !nothing && hasNoMore">没有更多了</span>
         <section v-else>
@@ -120,6 +118,7 @@
   import { goTo, changeUrl } from '../utils/changeUrl';
   import { resolveImage } from '../utils/resource';
   import buildUrl from 'axios/lib/helpers/buildURL';
+  import lodash from 'lodash';
 
   import { createUploadTask, uploadFile, noticeTask, dataURItoBlob } from '../utils/upload';
   import LoadingWhiteIcon from '../icons/LoadingWhite';
@@ -153,8 +152,8 @@
       imgSrc: '',
       minContainerWidth: window.innerWidth,
       minContainerHeight: window.innerHeight - 46,
-      limit: 20
-
+      limit: 20,
+      scroll: 0
     }),
     methods: {
       changeUrl,  
@@ -605,6 +604,15 @@
 
         this.$refs.loadmore.onTopLoaded();
       })
+    },
+    mounted () {
+      this.$el.addEventListener('scroll', lodash.throttle(() => { 
+        if(this.$el.scrollTop > 150) {
+          this.$refs.navBar.style.background = "rgba(0,0,0,.2)";
+        } else {
+          this.$refs.navBar.style.background = "rgba(0,0,0,0)";
+        }
+      }, 200 ));
     }
   };
 
@@ -621,7 +629,9 @@
     top: 0; 
     left: 0;
     right: 0;
-    height: 55px;
+    height: 46px;
+    z-index: 9;
+    transition: all .5s;
   }
   .userCover {
     width: 100%;
@@ -651,10 +661,6 @@
       justify-content: center;
       align-items: center;
       min-height: 30vw;
-      img {
-        width: 25%;
-        border-radius: 50%;
-      }
     }
     .name {
        text-align: center; 
@@ -715,6 +721,11 @@
   }
 </style>
 <style lang="less" scoped>
+  .userFeeds {
+    &.nobottom {
+      height: 100%;
+    }
+  }
   .loadMoreBottom {
     display: flex;
     justify-content: center;

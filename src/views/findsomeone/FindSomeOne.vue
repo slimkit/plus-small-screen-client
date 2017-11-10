@@ -199,7 +199,7 @@ const FindSomeOne = {
 
 export default FindSomeOne;
 </script>
-<style lang="scss" module>
+<style lang="less" module>
 .input {
     position: relative;
     height: 27px;
@@ -219,7 +219,7 @@ export default FindSomeOne;
     }
 }
 </style>
-<style lang="scss">
+<style lang="less">
 .findSomeOne {
     width: 100%;
     .mint-loadmore-bottom {

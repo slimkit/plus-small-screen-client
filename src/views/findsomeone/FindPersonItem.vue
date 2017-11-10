@@ -155,7 +155,7 @@ const FindPersonItem = {
 
 export default FindPersonItem;
 </script>
-<style lang="scss" module>
+<style lang="less" module>
 .findItem {
     display: flex;
     align-items: center;

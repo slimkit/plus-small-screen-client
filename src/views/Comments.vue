@@ -13,90 +13,92 @@
     <div v-if="nothing" class="nothingDefault"> 
       <img :src="nothing" />
     </div>
-    <mt-loadmore
-      v-if="!nothing"
-      :bottom-method="loadBottom"
-      :top-method="loadTop"
-      :bottom-all-loaded="bottomAllLoaded"
-      :top-all-loaded="topAllLoaded"
-      @bottom-status-change="bottomStatusChange"
-      ref="loadmoreComments"
-      :bottomDistance="70"
-    >
-      <section class="commentContent">
-        <ul :class="$style.comments">
-          <li v-for="(comment, index) in formated" :key="index" :class="$style.comment">
-            <div :class="$style.commentContent">
-              <div class="avatar-parent-col" style="width: 16vw">
-                <img @click="changeUrl(`/users/feeds/${comment.user_id}`)" class="avatar" :src="comment.avatar" :alt="comment.name" />
-              </div>
-              <div span="16" style="width: 68vw; padding: 0 12px;">
-                <!-- 评论者 -->
-                <h4 @click="changeUrl(`/users/feeds/${comment.user_id}`)">{{comment.name}}</h4>
-                <!-- 第三+评论者 -->
-                <div class="gray-color">
-                  <span v-if="comment.replyUser">回复</span>
-                  <span @click="changeUrl(`/users/feeds/${comment.replyUser.user_id}`)" class="primary-color" style="padding: 0 4px;" v-if="comment.replyUser">{{comment.replyUser.name}}: </span>
-                  {{comment.body}}
+    <div class="loadMoreContainer">
+      <mt-loadmore
+        v-if="!nothing"
+        :bottom-method="loadBottom"
+        :top-method="loadTop"
+        :bottom-all-loaded="bottomAllLoaded"
+        :top-all-loaded="topAllLoaded"
+        @bottom-status-change="bottomStatusChange"
+        ref="loadmoreComments"
+        :bottomDistance="70"
+      >
+        <section class="commentContent">
+          <ul :class="$style.comments">
+            <li v-for="(comment, index) in formated" :key="index" :class="$style.comment">
+              <div :class="$style.commentContent">
+                <div class="avatar-parent-col" style="width: 16vw">
+                  <user-avatar @click.native="changeUrl(`/users/feeds/${comment.user_id}`)" :src="comment.avatar" :sex="comment.sex" size="small" />
                 </div>
-                <timeago style="font-size: 14px; color: #999;" :since="comment.time" locale="zh-CN" :auto-update="60"></timeago>
-              </div>
-              <div style="width: 16vw">
-                <div :class="$style.sourceContent">
-                  <img v-if="comment.cover" @click="openCommentBox(index)" :src="comment.cover" />
-                  <div v-if="!comment.cover" @click="openCommentBox(index)" :class="$style.source">
-                    <div :class="$style.content">
-                      {{comment.source_content}}
+                <div span="16" style="width: 68vw; padding: 0 12px;">
+                  <!-- 评论者 -->
+                  <h4 @click="changeUrl(`/users/feeds/${comment.user_id}`)">{{comment.name}}</h4>
+                  <!-- 第三+评论者 -->
+                  <div class="gray-color">
+                    <span v-if="comment.replyUser">回复</span>
+                    <span @click="changeUrl(`/users/feeds/${comment.replyUser.user_id}`)" class="primary-color" style="padding: 0 4px;" v-if="comment.replyUser">{{comment.replyUser.name}}: </span>
+                    {{comment.body}}
+                  </div>
+                  <timeago style="font-size: 14px; color: #999;" :since="comment.time" locale="zh-CN" :auto-update="60"></timeago>
+                </div>
+                <div style="width: 16vw">
+                  <div :class="$style.sourceContent">
+                    <img v-if="comment.cover" @click="openCommentBox(index, comment.commentable, comment.commentable_id, comment.name)" :src="comment.cover" />
+                    <div v-if="!comment.cover" @click="openCommentBox(index, comment.commentable, comment.commentable_id, comment.name)" :class="$style.source">
+                      <div :class="$style.content">
+                        {{comment.source_content}}
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <!-- 评论框 -->
-            <section :class="$style.commentBox" v-if="openId === index" ref="commentInput" style="width: 100%;">
-              <li>
-                <Input 
-                  type="textarea" 
-                  ref="commentInput"
-                  class="commentInput"
-                  :autosize="{ minRows: 1, maxRows: 4 }" 
-                  :minlength='1' 
-                  :maxlength='255'
-                  :autofocus="true"
-                  v-model="commentsContent"
-                  :placeholder="placeholder"
-                  v-childfocus
-                />
-              </li>
-              <li :class="$style.commentOperations">
-                <p :class="$style.commentOperation" v-show="commentCount > 100">
-                  <span :class="{ inputFull: commentCount > 100 }">{{ commentCount }}</span>/255
-                </p>
-                <Button :class="$style.commentOperation" type="text" class="sendButton" size="small" @click.native="closeCommentBox()">取消</Button>
-                <Button 
-                  :class="$style.commentOperation" 
-                  type="primary" 
-                  class="sendButton" 
-                  :disabled="!commentCount" 
-                  size="small" 
-                  @click.native="sendComment()"
-                >
-                  发送
-                </Button>
-              </li>
-            </section>
-          </li>
-        </ul>
-      </section>
-      <section slot="bottom" class="mint-loadmore-bottom">
-        <span v-if="bottomAllLoaded">没有更多了</span>
-        <section v-else>
-          <span v-show="bottomStatus === 'pull' && !bottomAllLoaded" :class="{ 'rotate': topStatus === 'drop' }">上拉加载更多</span>
-          <span v-show="bottomStatus === 'loading' && !bottomAllLoaded">加载中...</span>
-          <span v-show="bottomStatus === 'drop' && !bottomAllLoaded">释放加载更多</span>
+              <!-- 评论框 -->
+              <section :class="$style.commentBox" v-if="openId === index" ref="commentInput" style="width: 100%;">
+                <li>
+                  <Input 
+                    type="textarea" 
+                    ref="commentInput"
+                    class="commentInput"
+                    :autosize="{ minRows: 1, maxRows: 4 }" 
+                    :minlength='1' 
+                    :maxlength='255'
+                    :autofocus="true"
+                    v-model="commentsContent"
+                    :placeholder="placeholder"
+                    v-childfocus
+                  />
+                </li>
+                <li :class="$style.commentOperations">
+                  <p :class="$style.commentOperation" v-show="commentCount > 100">
+                    <span :class="{ inputFull: commentCount > 100 }">{{ commentCount }}</span>/255
+                  </p>
+                  <Button :class="$style.commentOperation" type="text" class="sendButton" size="small" @click.native="closeCommentBox()">取消</Button>
+                  <Button 
+                    :class="$style.commentOperation" 
+                    type="primary" 
+                    class="sendButton" 
+                    :disabled="!commentCount" 
+                    size="small" 
+                    @click.native="sendComment()"
+                  >
+                    发送
+                  </Button>
+                </li>
+              </section>
+            </li>
+          </ul>
         </section>
-      </section>
-    </mt-loadmore>
+        <section slot="bottom" class="mint-loadmore-bottom">
+          <span v-if="bottomAllLoaded">没有更多了</span>
+          <section v-else>
+            <span v-show="bottomStatus === 'pull' && !bottomAllLoaded" :class="{ 'rotate': topStatus === 'drop' }">上拉加载更多</span>
+            <span v-show="bottomStatus === 'loading' && !bottomAllLoaded">加载中...</span>
+            <span v-show="bottomStatus === 'drop' && !bottomAllLoaded">释放加载更多</span>
+          </section>
+        </section>
+      </mt-loadmore>
+    </div>
   </div>
 </template>
 <script>
@@ -141,6 +143,10 @@
         let api = `feeds/${source.commentable_id}/comments`;
         if(source.commentable_type === 'news') {
           api = `news/${source.commentable_id}/comment`;
+        } else if (source.commentable_type === 'questions') {
+          api = `questions/${source.commentable_id}/comments`
+        } else if (source.commentable_type === 'question-answers') {
+          api = `question-answers/${source.commentable_id}/comments`;
         }
         
         let comment_data = {
@@ -156,31 +162,20 @@
         {
           validateStatus: status => status === 201
         })
-        .then( response => {
+        .then( () => {
           this.commentsContent = '';
           this.loading = false;
           this.closeCommentBox();
-          this.$store.dispatch(NOTICE, cb => {
-            cb({
-              text: '评论成功',
-              time: 1500,
-              status: true
-            });
-          });
+          this.$Message.success('评论成功');
         })
+        .catch(({ response: { data } = {} }) => {
+          this.$Message.error(this.$MessageBundle(data).getMessage());
+        });
       },
-      openCommentBox (id) {
+      openCommentBox (id, type, commentable_id, name) {
         this.openId = id;
-        let user_id = this.formated[id].user_id;
 
-        let item = this.$storeLocal.get(`user_${user_id}`);
-        if(item === undefined) {
-          getUserInfo( user_id, 30).then( user => {
-            this.placeholder = `回复: ${user.name}`;
-          })
-        } else {
-          this.placeholder = `回复: ${item.name}`;
-        }
+        this.placeholder = `回复: ${name}`;
       },
       closeCommentBox () {
         this.openId = -1;
@@ -190,6 +185,7 @@
       changeUrl,
       goTo,
       loadTop () {
+        const { limit } = this;
         addAccessToken().get(createAPI(`user/comments`),
         {
           params: {
@@ -203,6 +199,12 @@
         .then(({data = []}) => {
           let comments = data;
           let newcomments = [];
+
+          let uids = data.map( comment => {
+            return [comment.user_id, comment.target_user, comment.reply_user];
+          });
+
+          this.$store.dispatch('GET_USER_BY_ID', uids);
 
           comments.forEach( comment => {
             if( this.ids.findIndex(function(value, index, arr) {
@@ -223,17 +225,19 @@
       },
 
       loadBottom () {
-        const { limit, bottomAllLoaded } = this;
+        const { limit, bottomAllLoaded, max_id } = this;
         if(bottomAllLoaded) {
           this.$refs.loadmoreComments.onBottomLoaded();
 
           return;
         }
-        if(!this.max_id) return;
-        addAccessToken().get(createAPI(`user/comments?limit=15&after=${this.max_id}`),
+        if(!max_id) return;
+
+        addAccessToken().get(createAPI(`user/comments`),
           {
             params: {
-              limit
+              limit,
+              after: max_id
             }
           },
           {
@@ -242,7 +246,12 @@
         )
         .then(({data = []}) => {
           let comments = data;
-          this._loadTopFormatedComments(comments, false);
+          let uids = data.map( comment => {
+            return [comment.user_id, comment.target_user, comment.reply_user];
+          });
+
+          this.$store.dispatch('GET_USER_BY_ID', uids);
+
           let length = comments.length;
           if(length === limit) {
             this.bottomAllLoaded = false;
@@ -253,71 +262,103 @@
           
           if(this.$refs.loadmoreComments)
             this.$refs.loadmoreComments.onBottomLoaded();
+          this._loadTopFormatedComments(comments, false);
         })
       },
 
+      getFile (str) {
+        if(!str) return 0;
+        let file = str.match(/@!\[.*?]\((\d+)\)/);
+        return file ? buildURL(createAPI(`files/${file[1]}`), {w: 100, h: 100}) : 0;
+      },
+
       _initFormatedComments () {
-        let comments = this.comments;
+        let comments = this.comments, com = {};
+
         comments.forEach(comment => {
-          let user= this.$storeLocal.get(`user_${comment.user_id}`);
-          let comment_source = { ...comment.commentable};
+          if (!comment.commentable) return;
+          let user= this.$store.getters.getUserById(comment.user_id)[0];
+
+          const { commentable: { images = [], body = '', subject='', feed_content = '', content = ''  } = {} } = comment;
+
           if(comment.reply_user) {
-            let replyUser = this.$storeLocal.get(`user_${comment.reply_user}`);
-            if(!replyUser) {
-              getUserInfo(comment.reply_user).then( user => {
-                comment.replyUser = { ...user };
-              });
+            let replyUser = this.$store.getters.getUserById(comment.reply_user)[0];
+            com.replyUser = { ...replyUser };
+          }
+
+          const { name = '' } = user;
+          if (comment.commentable_type == 'questions' || comment.commentable_type == 'question-answers') {
+            let img = this.getFile(body);
+            console.log(img);
+            if (img) {
+              com.cover = img;
             } else {
-              comment.replyUser = { ...replyUser };
+              com.source_content = comment.commentable_type == 'questions' ? subject : '回答回答';
+            }
+          } else {
+            if(images.length > 0) {
+              com.cover = buildURL(createAPI(`files/${images[0].id}`), {w: 100, h: 100});
+            } else if(content || feed_content){
+              com.source_content = content || feed_content;
             }
           }
-          const { name = '' } = user;
-          if(comment_source.images.length > 0) {
-            comment.cover = buildURL(createAPI(`files/${comment_source.images[0].id}`), {w: 100, h: 100});
-          }else if(comment_source.feed_content){
-            comment.source_content = comment_source.feed_content;
-          }
-          comment.name = name;
-          comment.avatar = comment.avatar || defaultAvatar;
-          comment.time = timers(comment.created_at, 8, false);
-          this.formated = lodash.uniq([...this.formated, comment], 'id');
+          com.user_id = comment.user_id;
+          com.commentable_id = comment.commentable_id;
+          com.body = comment.body
+          com.id = comment.id;
+          com.name = name;
+          com.avatar = comment.avatar;
+          com.commentable = comment.commentable_type;
+          com.time = timers(comment.created_at, 8, false);
+          this.formated = lodash.uniq([...this.formated, com], 'id');
+          com = {};
         })
       },
 
       _loadTopFormatedComments (comments = [], top = true) {
+        let com = {};
         comments.forEach(comment => {
+          if (!comment.commentable) return;
           // 去重
           if(lodash.findIndex(this.formated, { id: comment.id }) !== -1) return;
 
-          let comment_source = { ...comment.commentable};
-          let user = this.$storeLocal.get(`user_${comment.user_id}`);
+          const { commentable: { images = [], body = '', subject='', feed_content = '', content = ''  } = {} } = comment;
+          let user = this.$store.getters.getUserById(comment.user_id)[0];
 
           if(comment.reply_user) {
-            let replyUser = this.$storeLocal.get(`user_${comment.reply_user}`)
-            if(!replyUser) {
-              getUserInfo(comment.reply_user).then( replyUser => {
-                comment.replyUser = replyUser;
-              });
-            } else {
-              comment.replyUser = { ...replyUser };
-            }
+            let replyUser = this.$store.getters.getUserById(comment.reply_user)[0];
+            com.replyUser = { ...replyUser };
           }
 
           const { name = '' } = user;
-          if(comment_source.images.length > 0) {
-            comment.cover = buildURL(createAPI(`files/${comment_source.images[0].id}`), {w: 100, h: 100});
-          }else if(comment_source.feed_content){
-            comment.source_content = comment_source.feed_content;
-          }
 
-          comment.name = name;
-          comment.avatar = comment.avatar || defaultAvatar;
-          comment.time = timers(comment.created_at, 8, false);
-          if( top ) {
-            this.formated = [ comment, ...this.formated ];
+          if (comment.commentable_type == 'questions' || comment.commentable_type == 'question-answers') {
+            let img = this.getFile(body);
+            if (img) {
+              com.cover = img;
+            } else {
+              com.source_content = comment.commentable_type == 'questions' ? subject : '回答回答';
+            }
           } else {
-            this.formated = [ ...this.formated, comment ];
+            if(images.length > 0) {
+              com.cover = buildURL(createAPI(`files/${images[0].id}`), {w: 100, h: 100});
+            } else if(content || feed_content){
+              com.source_content = content || feed_content;
+            }
           }
+          com.user_id = comment.user_id;
+          com.commentable_id = comment.commentable_id;
+          com.body = comment.body;
+          com.name = name;
+          com.commentable = comment.commentable_type;
+          com.avatar = comment.avatar;
+          com.time = timers(comment.created_at, 8, false);
+          if( top ) {
+            this.formated = [ com, ...this.formated ];
+          } else {
+            this.formated = [ ...this.formated, com ];
+          }
+          com = {};
         });
       }
     },
@@ -350,6 +391,13 @@
       .then(({data = []}) => {
 
         this.comments = data;
+        const { length } = data;
+
+        let uids = data.map( comment => {
+          return lodash.compact([comment.user_id, comment.target_user, comment.reply_user]);
+        });
+
+        this.$store.dispatch('GET_USER_BY_ID', lodash.uniq(lodash.flatten(uids, true)));
 
         window.TS_WEB.dataBase.transaction('rw?',
           window.TS_WEB.dataBase.commentslist,
@@ -368,7 +416,7 @@
             });
           }
         );
-        let length = this.comments.length;
+
         if(length === limit) {
           this.bottomAllLoaded = false;
         } else  {
@@ -457,8 +505,12 @@
   }
 </style>
 <style scoped>
+  .gray-color {
+    word-break: break-all;
+  }
   .comments {
     position: relative;
+    height: 100%;
   }
   .row-container {
     align-items: flex-start;

@@ -136,7 +136,7 @@ export default {
 
 </script>
 
-<style lang="scss">
+<style lang="less">
 .group-detail {
   height: 100%;
   overflow: auto;
@@ -220,9 +220,9 @@ export default {
       height: 100%;
       z-index: 5;
       color: #fff;
-      > {
+      &> {
         flex: 0 0 auto;
-        * {
+        &* {
           opacity: .7;
         }
       }

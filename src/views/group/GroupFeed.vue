@@ -195,7 +195,7 @@ export default {
     }
 }
 </script>
-<style lang="scss" scoped>
+<style lang="less" scoped>
 .feed {
     margin-bottom: 6px;
     overflow: hidden;

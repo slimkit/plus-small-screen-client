@@ -1,12 +1,12 @@
 <template>
-  <div>
+  <div style="height: 100%;">
     <div id="spinner" v-show="showSpinner">
       <div id="spinner-parent">
         <div class="spinner-double-bounce-bounce2" />
         <div class="spinner-double-bounce-bounce1" />
       </div>
     </div>
-    <header class="commonHeader" id="feed-header" v-if="!isWeixin">
+    <header class="commonHeader" ref="feed-header" v-if="!isWeixin">
       <Row :gutter="24">
         <Col span="5" style="display: flex; justify-content: flex-start">
           <BackIcon @click.native="goBack()" height="21" width="21" color="#999" />
@@ -18,13 +18,14 @@
         </Col>
       </Row>
     </header>
-    <div :class="{headerPadding: !isWeixin}">
+    <div :class="[{headerPadding: !isWeixin}]" class="loadMoreContainer">
       <mt-loadmore 
+        :top-method="loadTop"
         :bottom-method="loadBottom"
         :bottom-all-loaded="bottomAllLoaded"
         ref="loadmore"
         @bottom-status-change="bottomStatusChange"
-        :bottomDistance="40"
+        :bottomDistance="70"
       >
         <div class="feed-container">
           <div class="feed-container-content feed-background-color markdown-body">
@@ -89,7 +90,7 @@
                   <Row :gutter="24" :class="$style.perComment">
                     <Col span="4">
                       <div class="grid-content bg-purple">
-                        <img @click="changeUrl(`/users/feeds/${comment.user.user_id}`)" :src="comment.user.avatar" alt="" style="width:100%; border-radius:50%">
+                        <user-avatar :src="comment.user.avatar" :sex="comment.user.sex" size="small"  @click.native="changeUrl(`/users/feeds/${comment.user.user_id}`)"/>
                       </div>
                     </Col>
                     <Col span="20">
@@ -163,7 +164,7 @@
             </div>
           </div>
         </div>
-        <div slot="bottom" style="display: flex; justify-content: center; align-items: center; padding: 10px 0;">
+        <div slot="bottom" v-if="!comments.length" style="display: flex; justify-content: center; align-items: center; padding: 10px 0;">
           <span v-show="bottomAllLoaded && bottomStatus !== 'loading' && comments.length > 15">没有更多了</span>
           <span v-show="bottomStatus === 'loading'">加载中...</span>
           <span v-show="bottomStatus === 'pull' && !bottomAllLoaded">上拉加载更多评论</span>
@@ -171,7 +172,7 @@
         </div>
       </mt-loadmore>
     </div>
-    <div id="feed-footer" class="feed-container-tool-operation feed-background-color">
+    <div id="feed-footer" ref="feed-footer" class="feed-container-tool-operation feed-background-color">
       <Row :gutter="24" style="display: flex; justify-content: center; align-items: center; height: 100%;">
         <Col span="6" class="operation">
           <div v-if="!detail.has_like" @click="handleDiggFeed(detail.id)">
@@ -299,7 +300,7 @@
       defaultImage: noCommentImage,
       currentUser: window.TS_WEB.currentUserId,
       // 上拉加载更多相关
-      bottomAllLoaded: false,
+      bottomAllLoaded: true,
       max_comment_id: 0,
       bottomStatus: '',
       showSpinner: true,
@@ -310,7 +311,8 @@
       loading: false,
       commentedUser: {},
       commentIndex: -1,
-      commentBody: ''
+      commentBody: '',
+      limit: 20
     }),
     computed: {
       markedSubject(){
@@ -379,34 +381,68 @@
           this.detail.has_like = false;
         })
       },
-      loadBottom() {
-        let max_id = this.max_id;
-        let limit = 15;
-        this.bottomStatus = 'loading';
+      loadTop () {
+        const { limit, detail: { id } = {} } = this;
         addAccessToken().get(
-          createAPI(`news/${this.detail.id}/comments?after=${max_id}&limit=${limit}`),
-          {},
+          createAPI(`news/${id}/comments`),
+          {
+            params: {
+              limit
+            }
+          },
           {
             validateStatus: status => status === 200
           }
         )
-        .then( ({ data = {} }) => {
-          let comments = data.comments;
-          let addComments = [];
-          let formatedAddComments = [];
-          let bottomAllLoaded = false;
-          if(comments.length < 15) {
-            bottomAllLoaded = true;
+        .then( ({ data: { comments } = {} }) => {
+          this.comments = lodash.uniqBy([
+            ...this.comments,
+            ...comments
+          ], 'id');
+          this.$refs.loadmore.onTopLoaded();
+        })
+        .catch(({ repoonse: { data } }) => {
+          this.$Message.error(this.$MessageBundle(data).getMessage());
+        })
+      },
+      loadBottom() {
+        if (this.bottomAllLoaded) {
+          this.$refs.loadmore.onBottomLoaded();
+
+          return;
+        }
+        const { limit, max_id, detail: { id } = {} } = this;
+
+        this.bottomStatus = 'loading';
+        addAccessToken().get(
+          createAPI(`news/${id}/comments`),
+          {
+            params: {
+              after: max_id,
+              limit
+            }
+          },
+          {
+            validateStatus: status => status === 200
           }
-          comments.forEach((comment) => {
-            this.comments.push(comment);
-          });
+        )
+        .then( ({ data: { comments } = {} }) => {
+          const { length } = comments;
+
+          this.comments = [
+            ...this.comments,
+            ...comments
+          ];
+
           setTimeout(() => {
             // 若数据已全部获取完毕
             this.bottomStatus = '';
-            this.bottomAllLoaded = bottomAllLoaded;
+            this.bottomAllLoaded = (length === limit) ? false : true;
             this.$refs.loadmore.onBottomLoaded();
           }, 500);
+        })
+        .catch(({ repoonse: { data } }) => {
+          this.$Message.error(this.$MessageBundle(data).getMessage());
         })
       },
       /**
@@ -469,13 +505,7 @@
           
           // 本地数据更新
           this.detail.comment_count += 1;
-          this.$store.dispatch(NOTICE, cb => {
-            cb({
-              text: '已发送',
-              time: 1500,
-              status: true
-            });
-          });
+          this.$Message.success('已发送');
           // reset comment input
           this.handleCommentInput();
 
@@ -569,71 +599,62 @@
       }
     },
     created () {
+      const { limit } = this;
       let serviceFeed = {};
       let news_id = parseInt(this.$route.params.news_id);
       if ( !news_id ) {
-        this.$store.dispatch(NOTICE, cb => {
-          cb({
-            text: '发生一些错误',
-            time: 1500,
-            status: false
-          });
-        });
+        this.$Message.error('发生一些错误')
         setTimeout(() => {
           goTo(-1);
         }, 1500);
+
         return;
       }
-        // 获取动态详情
+      // 获取动态详情
+      addAccessToken().get(
+        createAPI(`news/${news_id}`),
+        {
+          validateStatus: status => status === 200
+        }
+      )
+      .then(({ data = {}}) => {
+        this.detail = { ... data };
+        
+        // 获取动态评论 前20条
         addAccessToken().get(
-          createAPI(`news/${news_id}`),
-          {},
+          createAPI(`news/${news_id}/comments`),
+          {
+            params: {
+              limit
+            }
+          },
           {
             validateStatus: status => status === 200
           }
         )
-        .then(({ data = {}}) => {
-          this.detail = { ... data };
-          // 获取打赏总量
-          addAccessToken().get(
-            createAPI(`news/${news_id}/rewards/sum`),
-            {
-              validateStatus: status => status === 200
-            }
-          )
-          .then(({ data }) => {
-            this.detail = {
-              ...this.detail,
-              reward: {
-                ...data
-              }
-            }
-          });
-          // 获取动态评论 前15条
-          addAccessToken().get(
-            createAPI(`news/${news_id}/comments`),
-            {
-              validateStatus: status => status === 200
-            }
-          )
-          .then(({ data = {} }) => {
-            // 格式化评论列表
-            this.comments = data.comments;
-            if(this.comments.length < 15) {
-              this.bottomAllLoaded = true;
-            }
-            setTimeout( () => {
-              if(this.$refs.loadmore) {
-                this.$refs.loadmore.onTopLoaded();
-              }
-              this.showSpinner = false;
-            }, 800);
-          });
+        .then(({ data: { comments } = {} }) => {
+          // 格式化评论列表
+          const { length } = comments;
+          this.comments = comments;
+          this.bottomAllLoaded = (length === limit) ? false : true;
+          this.showSpinner = false;
         });
-      // }
+      });
     },
     mounted () {
-      window.addEventListener('scroll', this.menu);
+      this.$el.addEventListener('scroll', lodash.throttle(() => { 
+        const { scroll } = this;
+        const header = this.$refs['feed-header'];
+        const footer = this.$refs['feed-footer'];
+        if(this.$el.scrollTop > scroll) {
+          header.style.top = '-55px';
+          footer.style.bottom = '-55px';
+        } else {
+          header.style.top = 0;
+          footer.style.bottom = 0;
+        }
+        this.scroll = this.$el.scrollTop;
+      }, 200 ));
     }
   }; 
 

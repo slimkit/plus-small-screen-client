@@ -324,7 +324,7 @@
   export default feedinfo;
 </script>
 
-<style lang="scss" module>
+<style lang="less" module>
   .detail {
     background-color: #fff;
     margin-bottom: 6px;

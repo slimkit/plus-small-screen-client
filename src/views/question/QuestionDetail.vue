@@ -494,6 +494,7 @@
 </template>
 <style lang="less" module>
   .QuestionDetail {
+    height: 100%;
     .popup {
       width: 100%;
       background: rgba(0, 0, 0, 0);
@@ -556,6 +557,9 @@
     }
     .detail {
       background-color: #fff;
+      height: calc(~"100% - 46px");
+      -webkit-overflow-scrolling: touch;
+      overflow: auto;
       .topics {
         padding-top: 12px;
         .topicContainer {

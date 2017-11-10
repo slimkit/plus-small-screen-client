@@ -32,7 +32,7 @@
   export default noticeText;
 </script>
 
-<style lang="scss" module>
+<style lang="less" module>
   .content {
     padding: 10px 15px;
     background: #fff;

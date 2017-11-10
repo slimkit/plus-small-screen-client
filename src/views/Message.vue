@@ -189,7 +189,8 @@
                   oldIds.push(res.uid);
                 });
                 count.comments.count = 0;
-                count.comments.uids = Array.from(new Set(oldIds));
+                count.comments.uids = lodash.uniq(oldIds);
+                this.$store.dispatch('GET_USER_BY_ID', uids);
                 this.$store.dispatch(MESSAGENOTICE, cb => {
                   cb(count);
                 });
@@ -199,24 +200,17 @@
           return 0;
         }
 
-        Array.from(new Set(uids)).slice(0,3).forEach((comment, index) => {
+        uids.slice(0,3).forEach((comment, index) => {
           count ++;
           
           if(count > 3) return;
           
-          let user = this.$storeLocal.get(`user_${comment}`);
-          if(user === undefined) {
-            getUserInfo(comment, 30).then(user => {
-              const { name = '' } = user;
-              users += name + '、';
-              this.commentsText = users.substr(0, users.length - 1);
-            });
-          } else {
-            const { name = '' } = user;
-            users += (name + '、');
-            this.commentsText = users.substr(0, users.length - 1);
-          }    
+          let user = this.$store.getters.getUserById(comment)[0];
+          const { name } = user;
+          users += (name + '、');
+          this.commentsText = users.substr(0, users.length - 1); 
         });
+        return uids.length > 0
       }
     },
     methods: {
@@ -355,7 +349,7 @@
   };
   export default MessageList;
 </script>
-<style lang="scss" module>
+<style lang="less" module>
   .timer {
     font-size: 12px;
     float: right;

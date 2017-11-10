@@ -130,7 +130,7 @@ export default {
     },
 }
 </script>
-<style lang="scss" module>
+<style lang="less" module>
 .plr20 {
     >input[type="text"] {
         padding-left: 35px;

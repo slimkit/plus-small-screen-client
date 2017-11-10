@@ -136,16 +136,13 @@ const defaultAvatar = resolveImage(require('../../statics/images/defaultAvatarx2
 	}
 </script>
 
-<style lang="scss">
+<style lang="less">
 	.rank-item{
 		display: flex;
 		align-items: center;
 		background-color: #fff;
 		border-bottom: 1px solid #ededed;
 		padding: 15px;
-		> {
-			flex: 0 0 auto;
-		}
 		&:nth-child(2),
 		&:nth-child(3),
 		&:nth-child(4){

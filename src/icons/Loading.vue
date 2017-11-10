@@ -13,9 +13,9 @@ export default {
     }
 }
 </script>
-<style lang="scss">
+<style lang="less">
 .loading {
-    >span {
+    &>span {
         background-color: #59b6d7;
         width: 10px;
         height: 10px;

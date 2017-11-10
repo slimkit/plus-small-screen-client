@@ -15,25 +15,26 @@ export default {
     computed: {}
 }
 </script>
-<style lang="scss">
-.my-question-nav {
-    height: 40px;
-    text-align: center;
-    background: #fff;
-    justify-content: space-around;
-    .my-question-nav-item {
-        font-size: 14px;
-        a {
-            border-bottom: 2px solid transparent;
-            padding: 0 5px;
-            display: block;
-            line-height: 39px;
-            color: #999;
-            &.router-link-active {
-                color: #333;
-                border-bottom-color: #59b6d7;
+<style lang="less">
+    .my-question-nav {
+        height: 40px!important;
+        text-align: center;
+        background: #fff;
+        justify-content: space-around;
+        border-bottom: 1px solid #f4f5f5;
+        .my-question-nav-item {
+            font-size: 14px;
+            a {
+                border-bottom: 2px solid transparent;
+                padding: 0 5px;
+                display: block;
+                line-height: 39px;
+                color: #999;
+                &.router-link-active {
+                    color: #333;
+                    border-bottom-color: #59b6d7;
+                }
             }
         }
     }
-}
 </style>

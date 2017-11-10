@@ -35,7 +35,7 @@
 
 </script>
 
-<style lang="scss" module>
+<style lang="less" module>
   .comfirm {
     background-color: rgba(0, 0, 0, 0.3);
     z-index: 6;

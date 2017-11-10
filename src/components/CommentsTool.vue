@@ -164,7 +164,7 @@
   export default commentsTool;
 </script>
 
-<style lang="scss" module>
+<style lang="less" module>
   .userName {
     font-size: 13px;
     color: #333;

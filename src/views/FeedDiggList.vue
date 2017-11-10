@@ -227,7 +227,7 @@
 
   export default FeedDiggsLists;
 </script>
-<style lang="scss" module>
+<style lang="less" module>
   .diggListsRoot {
     position: fixed;
     top: 0;
@@ -260,7 +260,7 @@
   }
   
 </style>
-<style lang="scss" scoped>
+<style lang="less" scoped>
   .feed-diggs-container-header {
     height: 45px;
     border-bottom: 1px #ddd solid;

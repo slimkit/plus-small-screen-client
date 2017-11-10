@@ -19,7 +19,7 @@ export default {
     }
 }
 </script>
-<style lang="scss">
+<style lang="less">
 .feeds-container{
   position: relative;
   height: 100%;

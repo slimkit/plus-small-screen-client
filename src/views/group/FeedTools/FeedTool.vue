@@ -275,7 +275,7 @@ export default {
     created() {}
 }
 </script>
-<style lang='scss'>
+<style lang='less'>
 .feed-tool {
     width: 100%;
     .tool {

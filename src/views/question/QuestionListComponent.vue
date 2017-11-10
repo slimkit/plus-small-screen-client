@@ -27,7 +27,7 @@
             @click="$router.push({name: 'questionDetail', params: {question_id: question.id}})"
           >
             <h3>{{ question.subject }} <ExcellentIcon v-if="question.excellent" width="21" height="21" color="#FCB02B" /></h3>
-            <img :class="$style.answerImg" v-if="question.answer && getFile(answerBody(question))" v-lazy="getFile(answerBody(question))" />
+            <img :class="$style.answerImg" v-if="question.answer && getFile(question.answer.body)" v-lazy="getFile(question.answer.body)" />
             <Row :gutter="24" v-if="question.answer">
               <Col span="24">
                 <section :class="$style.answerBody">
@@ -40,7 +40,7 @@
                     <i>{{ question.answer.user.name }}：</i>
                   </div>
                   <span v-if="question.look && !question.answer.could" class="blur">这个回答的内容是不可见的哦，你需要先围观该答案才能看到详情的问答情况，请尊重答主的劳动成果，谢谢啦</span>
-                  <span v-else>{{ getPureContent(answerBody(question)) }}</span>
+                  <span v-else>{{ answerBody(getPureContent(question.answer.body)) }}</span>
                 </section>
               </Col>
             </Row>
@@ -310,8 +310,7 @@
           }
         });
       },
-      answerBody (question) {
-        const { look = 0, answer: { body = ''} } = question;
+      answerBody (body) {
         if(!body) return '';
         return this.getPureText(body);
       },

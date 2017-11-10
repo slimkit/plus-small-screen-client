@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section style="height: 100%">
     <MyQuestionNav :navs='navs' />
     <router-view></router-view>
   </section>

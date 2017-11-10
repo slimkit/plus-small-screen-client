@@ -128,7 +128,7 @@
 
   export default systemSetting;
 </script>
-<style scoped lang="scss">
+<style scoped lang="less">
   .systemSetting-header {
     height: 45px;
     border-bottom: 1px #ddd solid;
@@ -156,7 +156,7 @@
     background-color: #fff;
   }
 </style>
-<style lang="scss" module>
+<style lang="less" module>
   .entry {
     background-color: #fff;
     .entryMenu {

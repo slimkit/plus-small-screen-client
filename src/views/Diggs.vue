@@ -13,51 +13,53 @@
     <div v-if="nothing" class="nothingDefault"> 
       <img :src="nothing" />
     </div>
-    <mt-loadmore
-      v-if="!nothing"
-      :bottom-method="loadBottom"
-      :top-method="loadTop"
-      :bottom-all-loaded="bottomAllLoaded"
-      :top-all-loaded="topAllLoaded"
-      @bottom-status-change="bottomStatusChange"
-      ref="loadmoreDiggs"
-      :bottomDistance="70"
-    >
-      <div class="commentContent">
-        <div :class="$style.comments">
-          <Row :gutter="16" v-for="(digg, index) in formated" :key="index" :class="$style.comment">
-            <Col span="4" class="avatar-parent-col">
-              <img @click="changeUrl(`/users/feeds/${digg.user_id}`)" class="avatar" :src="digg.avatar" :alt="digg.name" />
-            </Col>
-            <Col span="13">
-              <h4 @click="changeUrl(`/users/feeds/${digg.user_id}`)">{{digg.name}}</h4>
-              <timeago style="font-size: 14px; color: #999;" :since="digg.time" locale="zh-CN" :auto-update="60"></timeago>
-            </Col>
-            <Col span="2">
-              <DiggIcon height="21" width="21" color="#f4504d" />
-            </Col>
-            <Col span="5">
-              <div :class="$style.sourceContent" @click="changeUrl(`/feed/${digg.likeable_id}`)">
-                <img v-show="digg.cover" :src="digg.cover" />
-                <div v-show="!digg.cover" :class="$style.source">
-                  <div :class="$style.content">
-                    {{digg.source_content}}
+    <div class="loadMoreContainer">
+      <mt-loadmore
+        v-if="!nothing"
+        :bottom-method="loadBottom"
+        :top-method="loadTop"
+        :bottom-all-loaded="bottomAllLoaded"
+        :top-all-loaded="topAllLoaded"
+        @bottom-status-change="bottomStatusChange"
+        ref="loadmoreDiggs"
+        :bottomDistance="70"
+      >
+        <div class="commentContent">
+          <div :class="$style.comments">
+            <Row :gutter="16" v-for="(digg, index) in formated" :key="index" :class="$style.comment">
+              <Col span="4" class="avatar-parent-col">
+                <user-avatar  @click.native="changeUrl(`/users/feeds/${digg.user_id}`)" :src="digg.avatar" :sex="digg.sex" size="small" />
+              </Col>
+              <Col span="13">
+                <h4 @click="changeUrl(`/users/feeds/${digg.user_id}`)">{{digg.name}}</h4>
+                <timeago style="font-size: 14px; color: #999;" :since="digg.time" locale="zh-CN" :auto-update="60"></timeago>
+              </Col>
+              <Col span="2">
+                <DiggIcon height="21" width="21" color="#f4504d" />
+              </Col>
+              <Col span="5">
+                <div :class="$style.sourceContent" @click="goToSource(digg.likeable_id, digg.likeable_type)">
+                  <img v-show="digg.cover" :src="digg.cover" />
+                  <div v-show="!digg.cover" :class="$style.source">
+                    <div :class="$style.content">
+                      {{digg.source_content}}
+                    </div>
                   </div>
                 </div>
-              </div>
-            </Col>
-          </Row>
+              </Col>
+            </Row>
+          </div>
         </div>
-      </div>
-      <div slot="bottom" class="mint-loadmore-bottom">
-        <span v-if="bottomAllLoaded">没有更多了</span>
-        <section v-else>
-          <span v-show="bottomStatus === 'pull' && !bottomAllLoaded" :class="{ 'rotate': topStatus === 'drop' }">上拉加载更多</span>
-          <span v-show="bottomStatus === 'loading'">加载中...</span>
-          <span v-show="bottomStatus === 'drop' && !bottomAllLoaded">释放加载更多</span>
-        </section>
-      </div>
-    </mt-loadmore>
+        <div slot="bottom" class="mint-loadmore-bottom">
+          <span v-if="bottomAllLoaded">没有更多了</span>
+          <section v-else>
+            <span v-show="bottomStatus === 'pull' && !bottomAllLoaded" :class="{ 'rotate': topStatus === 'drop' }">上拉加载更多</span>
+            <span v-show="bottomStatus === 'loading'">加载中...</span>
+            <span v-show="bottomStatus === 'drop' && !bottomAllLoaded">释放加载更多</span>
+          </section>
+        </div>
+      </mt-loadmore>
+    </div>
   </div>
 </template>
 <script>
@@ -68,7 +70,7 @@
   import BackIcon from '../icons/Back';
   import DiggIcon from '../icons/Digg';
   import { resolveImage } from '../utils/resource';
-  import buildUrl from 'axios/lib/helpers/buildURL';
+  import buildURL from 'axios/lib/helpers/buildURL';
   import lodash from 'lodash';
 
   const defaultNobody = resolveImage(require('../statics/images/img_default_nobody@2x.png'));
@@ -83,18 +85,44 @@
       max_id: 0,
       diggs: [],
       ids: [],
-      bottomAllLoaded: false,
+      bottomAllLoaded: true,
       topAllLoaded: false,
       bottomStatus: '',
       topStatus: '',
       isWeiXin: TS_WEB.isWeiXin,
-      formated: []
+      formated: [],
+      limit: 20
     }),
     methods: {
       changeUrl,
       goTo,
+      goToSource(id, type) {
+        let url = '';
+        switch(type) {
+          case 'news':
+            url = `/news/${id}/detail`;
+            break;
+          case 'groups':
+            url = '';
+            break;
+          case 'question-answers':
+            url = `/questions/answers/${id}`;
+            break;
+          case 'feeds':
+            url = `/feed/${id}`;
+            break;  
+        }
+
+        this.$router.push(url);
+      },
       loadTop () {
-        addAccessToken().get(createAPI(`user/likes?limit=15`),{},
+        const { limit } = this;
+        addAccessToken().get(createAPI(`user/likes`),
+        {
+          params: {
+            limit
+          }
+        },
           {
             validateStatus: status => status === 200
           }
@@ -105,6 +133,12 @@
             this.max_id = diggs[0].id;
           }
           let newdiggs = [];
+          let uids = data.map( digg => {
+            return digg.user_id;
+          });
+
+          this.$store.dispatch('GET_USER_BY_ID', lodash.uniq(uids));
+
           diggs.forEach( digg => {
             if( this.ids.findIndex(function(value, index, arr) {
               return value == digg.id;
@@ -124,66 +158,112 @@
         this.bottomStatus = status;
       },
       loadBottom () {
-        if(!this.max_id) return ;
-        addAccessToken().get(createAPI(`user/likes?limit=15&after=${this.max_id}`),{},
+        const { max_id, bottomAllLoaded, limit } = this;
+        if (bottomAllLoaded) {
+          this.$refs.loadmoreDiggs.onBottomLoaded();
+
+          return;
+        }
+
+        addAccessToken().get(createAPI(`user/likes`),
+          {
+            params: {
+              limit,
+              max_id
+            }
+          },
           {
             validateStatus: status => status === 200
           }
         )
         .then(({data = []}) => {
-          let diggs = data;
-          if(diggs.length) {
-            this.diggs = [ ...this.diggs, diggs ];
-            this._loadFormateDiggs(diggs, false);
-            if(diggs.length < 15) {
-              this.bottomAllLoaded = true;
-            };
-            setTimeout( () => {
-              if(this.$refs.loadmoreDiggs)
-                this.$refs.loadmoreDiggs.onBottomLoaded();
-            }, 500);
+          const { length } = data;
+          if(data) {
+            let uids = data.map( digg => {
+              return digg.user_id;
+            });
+
+            this.$store.dispatch('GET_USER_BY_ID', lodash.uniq(uids, true));
+
+            this.diggs = [ ...this.diggs, ...data ];
+            this._loadFormateDiggs(data, false);
+            this.bottomAllLoaded = (length === limit) ? false : true;
+            if(this.$refs.loadmoreDiggs)
+              this.$refs.loadmoreDiggs.onBottomLoaded();
             this.max_id = diggs[diggs.length - 1].id;
           }
         })
       },
       _loadFormateDiggs( diggs, top = true) {
+        // if(!top) {
+        //   this.formated = lodash.uniqBy([ ...this.formated, ...diggs ], 'id');
+        // } else {
+        //   this.formated = lodash.uniqBy([ ...diggs, ...this.formated ], 'id');
+        // }
         diggs.forEach(digg => {
-          if(lodash.findIndex(this.formated, { id: digg.id }) !== -1) return;
+          if (!digg.likeable) return;
+          if (lodash.findIndex(this.ids, digg.id) !== -1) return ;
           let 
-            digg_source = {...digg.likeable},
-            user = this.$storeLocal.get(`user_${digg.user_id}`);
-          const { avatar = defaultAvatar, name = '' } = user;
-          if(digg_source.images.length > 0) {
-            digg.cover = buildUrl(createAPI(`files/${digg_source.images[0].id}`), {w: 100, h: 100});
-          }else if(digg_source.feed_content){
-            digg.source_content = digg_source.feed_content;
-          }
-          digg.name = name;
-          digg.avatar = avatar;
-          digg.time = timers(digg.created_at, 8, false);
-          if(!top) {
-            this.formated = [ ...this.formated, digg ];
-          } else {
-            this.formated = [ digg, ...this.formated ];
-          }
+            user = this.$store.getters.getUserById(digg.user_id)[0], dig = {};
+            const { likeable: { images = [], feed_content = '', body = '', content = '' } = {} } = digg;
+            const { avatar, name, sex } = user;
+
+            if (digg.likeable_type === 'question-answers') {
+              let img = this.getFile(body);
+              if (img) {
+                dig.cover = img;
+              } else {
+                dig.source_content = body;
+              }
+            } else {
+              if(images.length > 0) {
+                dig.cover = buildURL(createAPI(`files/${images[0].id}`), {w: 100, h: 100});
+              }else if(feed_content){
+                dig.source_content = feed_content;
+              }
+            }
+            dig.likeable_type = digg.likeable_type;
+            dig.likeable_id = digg.likeable_id;
+            dig.name = name;
+            dig.avatar = avatar;
+            dig.sex = sex;
+            dig.time = timers(digg.created_at, 8, false)
+            this.formated = [ dig, ...this.formated ];
         });
+      },
+      getFile (str) {
+        if(!str) return 0;
+        let file = str.match(/@!\[.*?]\((\d+)\)/);
+        return file ? buildURL(createAPI(`files/${file[1]}`), {w: 100, h: 100}) : 0;
       },
       _initFormatedDiggs () {
         this.diggs.forEach(digg => {
           let
-            digg_source = {...digg.likeable},
-            user = this.$storeLocal.get(`user_${digg.user_id}`);
-            const { avatar = defaultAvatar, name = '' } = user;
-            
-            if(digg_source.images.length > 0) {
-              digg.cover = buildUrl(createAPI(`files/${digg_source.images[0].id}`), {w: 100, h: 100});
-            }else if(digg_source.feed_content){
-              digg.source_content = digg_source.feed_content;
+            user = this.$store.getters.getUserById(digg.user_id)[0], dig = {};
+            const { likeable: { images = [], feed_content = '', body = '', content = '' } = {} } = digg;
+            const { avatar, name, sex } = user;
+
+            if (digg.likeable_type === 'question-answers') {
+              let img = this.getFile(body);
+              if (img) {
+                dig.cover = img;
+              } else {
+                dig.source_content = body;
+              }
+            } else {
+              if(images.length > 0) {
+                dig.cover = buildURL(createAPI(`files/${images[0].id}`), {w: 100, h: 100});
+              }else if(feed_content){
+                dig.source_content = feed_content;
+              }
             }
-            digg.name = name;
-            digg.avatar = avatar;
-            digg.time = timers(digg.created_at, 8, false)
-            this.formated = [ ...this.formated, digg ];
+            dig.likeable_type = digg.likeable_type;
+            dig.likeable_id = digg.likeable_id;
+            dig.name = name;
+            dig.avatar = avatar;
+            dig.sex = sex;
+            dig.time = timers(digg.created_at, 8, false)
+            this.formated = [ ...this.formated, dig ];
         });
       }
     },
@@ -193,17 +273,29 @@
       }
     },
     created () {
+      const { limit } = this;
       this.$store.dispatch(CLEANMESSAGE, cb => {
         cb('diggs');
       });
-      addAccessToken().get(createAPI(`user/likes?limit=15&after=${this.max_id}`),{},
+      addAccessToken().get(createAPI(`user/likes`),
+      {
+        params: {
+          limit
+        }
+      },
         {
           validateStatus: status => status === 200
         }
       )
       .then(({data = []}) => {
         this.diggs = data;
-        let length = this.diggs.length;
+        let uids = data.map( digg => {
+          return digg.user_id;
+        });
+
+        this.$store.dispatch('GET_USER_BY_ID', lodash.uniq(uids, true));
+        const { length } = data;
+        this.bottomAllLoaded = (length === limit) ? false : true;
         if( length ) {
           this.max_id = this.diggs[length - 1].id;
         }
@@ -226,20 +318,12 @@
           }
         );
         this._initFormatedDiggs();
-        if(length < 15) {
-          this.bottomAllLoaded = true;
-          setTimeout( () => {
-            if(this.$refs.loadmoreDiggs) {
-              this.$refs.loadmoreDiggs.onBottomLoaded();
-            }
-          })
-        }
       })
     }
   };
   export default Diggs;
 </script>
-<style lang="scss" module>
+<style lang="less" module>
   .comments {
     .comment {
       border-bottom: 1px #ededed solid;
@@ -292,8 +376,9 @@
     }
   }
 </style>
-<style scoped lang="scss">
+<style scoped lang="less">
   .comments {
+    height: 100%;
     .commonHeader {
       position: relative;
       z-index: 2;

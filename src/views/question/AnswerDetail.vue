@@ -1,24 +1,24 @@
 <template>
-  <div>
+  <div style="height: 100%;">
     <div id="spinner" v-show="showSpinner">
       <div id="spinner-parent">
         <div class="spinner-double-bounce-bounce2" />
         <div class="spinner-double-bounce-bounce1" />
       </div>
     </div>
-    <header class="commonHeader" id="feed-header" v-if="!isWeixin">
+    <header class="commonHeader" ref="feed-header" id="feed-header" v-if="!isWeixin">
       <Row :gutter="24">
         <Col span="5" style="display: flex; justify-content: flex-start">
           <BackIcon @click.native="goBack()" height="21" width="21" color="#999" />
         </Col>
         <Col span="14" class="title-col">
           <div>
-            <span :class="$style.newsTitle" style="font-size: 18px; padding: 0 5px">{{ subject }}</span>
+            <span @click="$router.push(`/questions/${questionId}/detail`)" :class="$style.newsTitle" style="font-size: 18px; padding: 0 5px">{{ subject }}</span>
           </div>
         </Col>
       </Row>
     </header>
-    <div :class="{headerPadding: !isWeixin}">
+    <div :class="{headerPadding: !isWeixin}" class="loadMoreContainer">
         <section :class="$style.answerUser">
           <Row :gutter="24" v-if="answer.anonymity">
             <Col span="5"> 
@@ -36,7 +36,7 @@
               <h3>{{ name.name }}</h3>
               <p :class="$style.bio">{{ name.bio }}</p>
             </Col>
-            <Col span="6" class="header-end-col">
+            <Col span="6" class="header-end-col" v-if="currentUser !== userId">
               <Button v-if="!following" class="followAboutButton" type="ghost" @click.native="doFollow">
                 <PlusIcon height="16" width="16" color="#ccc" />
                 关注
@@ -123,7 +123,8 @@
                   <Row :gutter="24" :class="$style.perComment">
                     <Col span="4">
                       <div class="grid-content bg-purple">
-                        <img class="component-avatar" @click="changeUrl(`/users/feeds/${comment.user.user_id}`)" :src="comment.user.avatar" />
+                        <!-- <img class="component-avatar" @click="changeUrl(`/users/feeds/${comment.user.user_id}`)" :src="comment.user.avatar" /> -->
+                        <user-avatar @click.native="changeUrl(`/users/feeds/${comment.user.user_id}`)"  :src="comment.user.avatar" :sex="comment.user.sex" size="small" />
                       </div>
                     </Col>
                     <Col span="20">
@@ -204,7 +205,7 @@
         </div>
       </div>
     </div>
-    <div id="feed-footer" class="feed-container-tool-operation feed-background-color">
+    <div id="feed-footer" ref="feed-footer" class="feed-container-tool-operation feed-background-color">
       <Row :gutter="24" style="display: flex; justify-content: center; align-items: center; height: 100%;">
         <Col span="6" class="operation">
           <div v-if="!answer.liked" @click="handleDiggFeed(answer.id)">
@@ -253,8 +254,9 @@
         >
           删除
         </Button>
-        <Button 
-          @click="answer.adoption ? adoptionAnswer : ''" 
+        <Button
+          v-if="status"
+          @click="doAdoption" 
           size="large" 
           :class="[$style.askForexCellent, $style.popupButton]" 
           type="text" :long="true"
@@ -281,7 +283,7 @@
         >
           取消收藏
         </Button>
-        <Button
+        <!-- <Button
           v-if="userId === user_id"
           @click="editorAnswer" 
           size="large" 
@@ -290,7 +292,7 @@
           :long="true"
         >
           编辑
-        </Button>
+        </Button> -->
         <Button 
           @click="hidePopup" 
           size="large" 
@@ -339,7 +341,7 @@
         >
           取消收藏
         </Button>
-        <Button
+        <!-- <Button
           v-if="userId === user_id"
           @click.native="editorAnswer" 
           size="large" 
@@ -348,7 +350,7 @@
           :long="true"
         >
           编辑
-        </Button>
+        </Button> -->
         <Button 
           @click.native="hidePopup" 
           size="large" 
@@ -368,7 +370,7 @@
   import errorCodes from '../../stores/errorCodes';
   import localEvent from '../../stores/localStorage';
   import { getUserInfo } from '../../utils/user';
-  import { NOTICE, CONFIRM } from '../../stores/types';
+  import { NOTICE, CONFIRM, SHOWPOSTANSWER } from '../../stores/types';
   import { friendNum } from '../../utils/friendNum';
   import Comfirm from '../../utils/Comfirm';
   import formateFeedComments from '../../utils/formateFeedComments';
@@ -395,6 +397,7 @@
   import RightIcon from '../../icons/Right';
   import EachFollowIcon from '../../icons/EachFollowing';
   import MoreIcon from '../../icons/More';
+  import { mapState } from 'vuex';
 
   const defaultAvatar = resolveImage(require('../../statics/images/defaultAvatarx2.png'))
   // markdown 解析
@@ -439,6 +442,7 @@
       RewardEntry
     },
     data: () => ({
+      scroll: 0,
       defaultAvatar,
       isShowPopup: false,
       isWeixin: window.TS_WEB.isWeiXin,
@@ -451,7 +455,6 @@
       },
       comments: [],
       defaultImage,
-      currentUser: window.TS_WEB.currentUserId,
       // 上拉加载更多相关
       bottomAllLoaded: true,
       max_comment_id: 0,
@@ -470,7 +473,9 @@
       user_id: 0
     }),
     computed: {
-
+      ...mapState({
+        currentUser: state => state.users.mine.id
+      }),
       answerBody () {
         const { body = '' } = this.answer;
         return body;
@@ -497,6 +502,14 @@
         const { question: { user_id = 0 } = {} } = this.answer;
         return user_id;
       },
+      status () {
+        const { answer: { adoption, question: status } = {} } = this;
+        if (!adoption && status) {
+          return false;
+        } else {
+          return true;
+        }
+      },
       userId () {
         const { answer: { user_id = 0 } = {} } = this;
         return user_id;
@@ -513,6 +526,14 @@
           name,
           bio
         }
+      },
+      questionId () {
+        const { answer: { question : { id = 0} = {} } = {} } = this;
+        return id;
+      },
+      answerId () {
+        const { answer: { id = 0} } = this;
+        return id;
       },
       // 是否关注答主
       following () {
@@ -536,7 +557,45 @@
        * @return {[type]} [description]
        */
       editorAnswer () {
+        const { answer: { body = ''} = {}, getAnswer } = this;
+        this.hidePopup();
+        this.$store.dispatch(SHOWPOSTANSWER, cb => {
+          cb({
+            show: true,
+            question: this.questionId,
+            answer_id: this.answerId,
+            callback: getAnswer,
+            body
+          });
+        })
+      },
 
+      doAdoption () {
+        const { answer: { adoption = 0 } = {} } = this;
+        if (adoption) {
+          return false;
+        } 
+
+        this.adoptionAnswer();
+      },
+
+      adoptionAnswer () {
+        const { questionId: question, answerId: answer } = this;
+        addAccessToken().put(
+          createAPI(`questions/${question}/adoptions/${answer}`),
+          {
+            validateStatus: status => status === 201
+          }
+        )
+        .then(({ data }) => {
+          this.$Message.success(this.$MessageBundle(data).getMessage());
+          this.answer.adoption = 1;
+          this.hidePopup();
+        })
+        .catch(({ response: { data } = {} }) => {
+          this.$Message.error(this.$MessageBundle(data).getMessage());
+          this.hidePopup();
+        })
       },
       /**
        * 删除答案
@@ -838,29 +897,12 @@
           }
           this.scroll = window.pageYOffset;
         }
-      }
-    },
-    beforeMount () {
-      const { limit } = this;
-      const { user_id = 0 } = this.$storeLocal.get('UserLoginInfo');
-      this.user_id = user_id;
-      let answer_id = parseInt(this.$route.params.answer_id) || 0;
-      if ( !answer_id ) {
-        this.$store.dispatch(NOTICE, cb => {
-          cb({
-            text: '发生一些错误',
-            time: 1500,
-            status: false
-          });
-        });
-        setTimeout(() => {
-          goTo(-1);
-        }, 1500);
-        return;
-      }
-        // 获取动态详情
+      },
+      getAnswer (answer = 0) {
+        if(!answer) answer = this.answer.id;
+        // 获取回答详情
         addAccessToken().get(
-          createAPI(`question-answers/${answer_id}`),
+          createAPI(`question-answers/${answer}`),
           {},
           {
             validateStatus: status => status === 200
@@ -872,29 +914,6 @@
             count: data.rewarder_count
           }
           this.answer = { ... data };
-
-          // 获取评论 前20条
-          addAccessToken().get(
-            createAPI(`question-answers/${answer_id}/comments`),
-            {
-              validateStatus: status => status === 200
-            }
-          )
-          .then(({ data = {} }) => {
-            // 格式化评论列表
-            this.comments = data;
-
-            if(this.comments.length === limit) {
-
-              this.bottomAllLoaded = false;
-            } else {
-              this.bottomAllLoaded = true;
-            }
-
-            if(this.$refs.loadmore)
-              this.$refs.loadmore.onTopLoaded();
-            this.showSpinner = false;
-          });
         })
         .catch(({response: { data, status } }) => {
           if( status === 404 ) {
@@ -902,9 +921,63 @@
             this.$router.push('/questions');
           }
         });
+      },
+      getComments(answer) {
+        const { limit } = this;
+        // 获取评论 前20条
+        addAccessToken().get(
+          createAPI(`question-answers/${answer}/comments`),
+          {
+            validateStatus: status => status === 200
+          }
+        )
+        .then(({ data = {} }) => {
+          // 格式化评论列表
+          this.comments = data;
+
+          if(this.comments.length === limit) {
+
+            this.bottomAllLoaded = false;
+          } else {
+            this.bottomAllLoaded = true;
+          }
+
+          if(this.$refs.loadmore)
+            this.$refs.loadmore.onTopLoaded();
+          this.showSpinner = false;
+        });
+      }
+    },
+    beforeMount () {
+      const { limit } = this;
+      const { user_id = 0 } = this.$storeLocal.get('UserLoginInfo');
+      this.user_id = user_id;
+      let answer_id = parseInt(this.$route.params.answer_id) || 0;
+      if ( !answer_id ) {
+        this.$Message.error('发生了一些错误');
+        setTimeout(() => {
+          goTo(-1);
+        }, 1500);
+        return;
+      }
+      this.getAnswer(answer_id);
+      this.getComments(answer_id);
     },
     mounted () {
-      window.addEventListener('scroll', this.menu);
+      this.$el.addEventListener('scroll', lodash.throttle(() => { 
+        const { scroll } = this;
+        const header = this.$refs['feed-header'];
+        const footer = this.$refs['feed-footer'];
+        console.log(this.$el.scrollTop, scroll)
+        if(this.$el.scrollTop > scroll) {
+          header.style.top = '-55px';
+          footer.style.bottom = '-55px';
+        } else {
+          header.style.top = 0;
+          footer.style.bottom = 0;
+        }
+        this.scroll = this.$el.scrollTop;
+      }, 200 ));
     }
   }; 
 

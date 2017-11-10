@@ -6,7 +6,7 @@
         <div class="spinner-double-bounce-bounce1" />
       </div>
     </div>
-    <header class="commonHeader" id="feed-header">
+    <header class="commonHeader" ref="feed-header">
       <Row :gutter="24">
         <Col span="5" style="display: flex; justify-content: flex-start">
           <BackIcon @click.native="goBack" height="21" width="21" color="#999" />
@@ -21,207 +21,212 @@
             </router-link>
           </div>
         </Col>
-        <Col span="5" class="header-end-col">
+        <Col span="5" class="header-end-col" v-if="showFollowButton">
           <!--未关注作者, 采用关注操作-->
-            <UnFollowingIcon @click.native="handleFollowingStatus" v-if="!userInfo.follower && (userInfo.user_id != currentUser)" height="21" width="21" color="#999" />
+            <UnFollowingIcon @click.native="handleFollowingStatus" v-if="!userInfo.follower" height="21" width="21" color="#999" />
           <!--已关注作者,但作者未关注我， 采用取消关注操作-->
-            <FollowingIcon  @click.native="handleUnFollowingStatus" height="21" width="21" color="#59b6d7" v-if="userInfo.follower && !userInfo.following && (userInfo.user_id != currentUser)" />
+            <FollowingIcon  @click.native="handleUnFollowingStatus" height="21" width="21" color="#59b6d7" v-if="userInfo.follower && !userInfo.following" />
           <!--相互关注， 采用取消关注操作-->
-            <EachFollowingIcon v-if="userInfo.follower && userInfo.following && (userInfo.user_id != currentUser)" @click.native="handleUnFollowingStatus" height="21" width="21" color="#59b6d7" />
+            <EachFollowingIcon v-if="userInfo.follower && userInfo.following " @click.native="handleUnFollowingStatus" height="21" width="21" color="#59b6d7" />
         </Col>
       </Row>
     </header>
-    <div class="feed-container">
-        <div class="feed-container-content feed-background-color">
-          <div>
-            <div v-if="imagesList.length" class="feed-container-content-images">
-              <div v-for="(item, index ) in imagesList" :key="index" :style="`height: ${item.height + 'px'}`">
-                <img v-if="item.paid" v-lazy="item.url + '?token=' + token" />
-                <LockedImageForSwiper v-else />
+    <!-- <div class="views-content pt"></div> -->
+
+      <mt-loadmore
+          :top-method="loadTop"
+          :bottom-method="loadBottom"
+          :bottom-all-loaded="bottomAllLoaded"
+          :top-all-loaded="false"
+          ref="loadmore"
+          @bottom-status-change="bottomStatusChange"
+          :bottomDistance="70"
+        >
+        <div class="feed-container">
+          <div class="feed-container-content feed-background-color">
+            <div>
+              <div v-if="imagesList.length" class="feed-container-content-images">
+                <div v-for="(item, index ) in imagesList" :key="index" :style="`height: ${item.height + 'px'}`">
+                  <img v-lazy="item.url + '?token=' + token" />
+                </div>
+              </div>
+              <p 
+                :class="{ feedContainerContentText: imagesList.length, feedContainerContentTextNoPadding: !imagesList.length }"
+                v-html="feedData.feed_content ? feedData.feed_content.replace(/\n/g,'<br/>') : feedData.feed_content"
+              >
+              </p>
+            </div>
+          </div>
+          <div class="feed-container-tool feed-background-color">
+            <div class="feed-container-tool-digg">
+              <Row :gutter="24" style="display: flex; align-items: center;">
+                <Col span="15"  @click.native="changeUrl(`/feed/${feed_id}/diggs`)">
+                  <div style="display: flex; align-items: center;">
+                    <div :style="`width: ${digglistWidth}`">
+                      <div class="digg-digg-list" v-if="diggList.length" >
+                        <user-avatar
+                          v-for="(digg, index) in diggList" 
+                          :key="index" 
+                          :src="digg.avatar"
+                          :sex="digg.sex"
+                          :style="`left: ${15 * (index) + 'px'}; z-index: ${5 - (1 * index)}`"
+                          size="tiny"
+                        />
+                      </div>
+                    </div>
+                    <div class="digg_counter">
+                      {{ friendNum(feedData.like_count) }}人点赞
+                    </div>
+                  </div>
+                </Col>
+                <Col span="9">
+                  <div class="detail-data">
+                    <p>发布于<timeago :since="feedTimer" locale="zh-CN" :auto-update="60"></timeago></p>
+                    <p>{{ friendNum(feedData.feed_view_count) }}人浏览</p>
+                  </div>
+                </Col>
+              </Row>
+              <RewardEntry v-if="feed_id && showReward" component="feeds" :rewardableId="feed_id" api-method="rewards" :source="feedData" />
+            </div>
+        </div>
+      </div>
+      <ul :class="$style.comment" v-if="commentFeed" ref="commentFeedInput">
+        <li>
+          <Input 
+            type="textarea" 
+            ref="commentInput"
+            class="commentInput"
+            :autosize="{ minRows: 1, maxRows: 4 }" 
+            :minlength='1' 
+            :maxlength='255'
+            :autofocus="true"
+            v-model="commentContent"
+            :placeholder="placeholder"
+            v-childfocus
+          />
+        </li>
+        <li :class="$style.commentOperations">
+          <p :class="$style.commentOperation" v-show="commentCount > 100">
+            <span :class="{ inputFull: commentCount > 100 }">{{ commentCount }}</span>/255
+          </p>
+          <Button :class="$style.commentOperation" type="text" class="sendButton" size="small" @click.native="handleCommentInput(false)">取消</Button>
+          <Button 
+            :class="$style.commentOperation" 
+            type="primary" 
+            class="sendButton" 
+            :disabled="!commentCount" 
+            size="small" 
+            @click.native="sendComment()"
+          >
+            发送
+          </Button>
+        </li>
+      </ul>
+      <div id="comments" class="noComment" v-if="!feedData.feed_comment_count">
+        <img v-lazy="defaultImage" />
+      </div>
+      <div id="comments" v-else>
+          <div class="feed-container-comments feed-background-color">
+            <div class="comments">
+              <Row :gutter="24" class="comments_count" style="height: 45px; display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center;">
+                <Col span="24">
+                    <span class="comments_counter">
+                      {{feedData.feed_comment_count}}人评论
+                    </span>
+                </Col>
+              </Row>
+              <div class="comments-content">
+                <section v-for="(comment, index) in formateComments" :key="comment.id"  >
+                  <Row :gutter="24" :class="$style.perComment">
+                    <Col span="4">
+                      <div class="grid-content bg-purple">
+                        <img @click="changeUrl(`/users/feeds/${comment.user.user_id}`)" :src="comment.user.avatar" alt="" style="width:100%; border-radius:50%">
+                      </div>
+                    </Col>
+                    <Col span="20">
+                      <div class="grid-content bg-purple">
+                        <Row style="padding-bottom: 5px">
+                          <Col span="17">
+                            <router-link :class="$style.profileLink" :to="{ path: `/users/feeds/${comment.user.user_id}` }">{{ comment.user.name }}</router-link>
+                          </Col>
+                          <Col span="7" style="display: flex; justify-content: flex-end;">
+                            <timeago style="color: #ccc; font-size: 12px;" :since="timers(comment.created_at, 8, false)" locale="zh-CN" :auto-update="60"></timeago>
+                          </Col>
+                        </Row>
+                        <Row>
+                          <Col span="24">
+                            <div style="color: #ccc;">
+                              <span v-if="comment.reply_user">回复 </span>
+                              <router-link :class="$style.profileLink" :to="{ path: `/profile/${comment.reply_to_user_id}` }">{{ comment.replyToUser.name }} </router-link>
+                              <span
+                                v-if="comment.user_id  != currentUser"
+                                @click.stop="focusInput(comment.user_id, index)"
+                                :class="$style.commentContent"
+                              > 
+                               {{ comment.body }}
+                              </span>
+                              <span
+                                v-if="comment.user_id == currentUser"
+                                @click.stop="showComfirm(comment.id, feed_id, index)"
+                                :class="$style.commentContent"
+                              > 
+                               {{ comment.body }}
+                              </span>
+                            </div>
+                          </Col>
+                        </Row>
+                      </div>
+                    </Col>
+                  </Row>
+                  <ul :class="$style.comment" v-if="index === commentIndex" ref="commentFeedInput">
+                    <li>
+                      <Input 
+                        type="textarea" 
+                        ref="commentUserInput"
+                        class="commentInput"
+                        :autosize="{ minRows: 1, maxRows: 4 }" 
+                        :minlength='1' 
+                        :maxlength='255'
+                        :autofocus="true"
+                        v-model="commentContent"
+                        :placeholder="placeholder"
+                        v-childfocus
+                      />
+                    </li>
+                    <li :class="$style.commentOperations">
+                      <p :class="$style.commentOperation" v-show="commentCount > 100">
+                        <span :class="{ inputFull: commentCount > 100 }">{{ commentCount }}</span>/255
+                      </p>
+                      <Button :class="$style.commentOperation" type="text" class="sendButton" size="small" @click.native="handleCommentInput(false)">取消</Button>
+                      <Button 
+                        :class="$style.commentOperation" 
+                        type="primary" 
+                        class="sendButton" 
+                        :disabled="!commentCount" 
+                        size="small" 
+                        @click.native="sendComment()"
+                      >
+                        发送
+                      </Button>
+                    </li>
+                  </ul>
+                </section>
               </div>
             </div>
-            <p 
-              :class="{ feedContainerContentText: imagesList.length, feedContainerContentTextNoPadding: !imagesList.length }"
-              v-html="feedData.feed_content ? feedData.feed_content.replace(/\n/g,'<br/>') : feedData.feed_content"
-            >
-            </p>
           </div>
-        </div>
-        <div class="feed-container-tool feed-background-color">
-          <div class="feed-container-tool-digg">
-            <Row :gutter="24" style="display: flex; align-items: center;">
-              <Col span="15"  @click.native="changeUrl(`/feed/${feed_id}/diggs`)">
-                <div style="display: flex; align-items: center;">
-                  <div :style="`width: ${digglistWidth}`">
-                    <div class="digg-digg-list" v-if="diggList.length" >
-                      <user-avatar
-                        v-for="(digg, index) in diggList" 
-                        :key="index" 
-                        :src="digg.avatar"
-                        :sex="digg.sex"
-                        :style="`left: ${15 * (index) + 'px'}; z-index: ${5 - (1 * index)}`"
-                        size="tiny"
-                      />
-                    </div>
-                  </div>
-                  <div class="digg_counter">
-                    {{ friendNum(feedData.like_count) }}人点赞
-                  </div>
-                </div>
-              </Col>
-              <Col span="9">
-                <div class="detail-data">
-                  <p>发布于<timeago :since="feedTimer" locale="zh-CN" :auto-update="60"></timeago></p>
-                  <p>{{ friendNum(feedData.feed_view_count) }}人浏览</p>
-                </div>
-              </Col>
-            </Row>
-            <RewardEntry v-if="feed_id && showReward" component="feeds" :rewardableId="feed_id" api-method="rewards" :source="feedData" />
-          </div>
+          
       </div>
-    </div>
-    <ul :class="$style.comment" v-if="commentFeed" ref="commentFeedInput">
-      <li>
-        <Input 
-          type="textarea" 
-          ref="commentInput"
-          class="commentInput"
-          :autosize="{ minRows: 1, maxRows: 4 }" 
-          :minlength='1' 
-          :maxlength='255'
-          :autofocus="true"
-          v-model="commentContent"
-          :placeholder="placeholder"
-          v-childfocus
-        />
-      </li>
-      <li :class="$style.commentOperations">
-        <p :class="$style.commentOperation" v-show="commentCount > 100">
-          <span :class="{ inputFull: commentCount > 100 }">{{ commentCount }}</span>/255
-        </p>
-        <Button :class="$style.commentOperation" type="text" class="sendButton" size="small" @click.native="handleCommentInput(false)">取消</Button>
-        <Button 
-          :class="$style.commentOperation" 
-          type="primary" 
-          class="sendButton" 
-          :disabled="!commentCount" 
-          size="small" 
-          @click.native="sendComment()"
-        >
-          发送
-        </Button>
-      </li>
-    </ul>
-    <div id="comments" class="noComment" v-if="!feedData.feed_comment_count">
-      <img v-lazy="defaultImage" />
-    </div>
-    <div id="comments" v-else>
-      <mt-loadmore 
-        :bottom-method="loadBottom"
-        :bottom-all-loaded="bottomAllLoaded"
-        ref="loadmore"
-        @bottom-status-change="bottomStatusChange"
-        :bottomDistance="40"
-      >
-        <div class="feed-container-comments feed-background-color">
-          <div class="comments">
-            <Row :gutter="24" class="comments_count" style="height: 45px; display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center;">
-              <Col span="24">
-                  <span class="comments_counter">
-                    {{feedData.feed_comment_count}}人评论
-                  </span>
-              </Col>
-            </Row>
-            <div class="comments-content">
-              <section v-for="(comment, index) in formateComments" :key="comment.id"  >
-                <Row :gutter="24" :class="$style.perComment">
-                  <Col span="4">
-                    <div class="grid-content bg-purple">
-                      <img @click="changeUrl(`/users/feeds/${comment.user.user_id}`)" :src="comment.user.avatar" alt="" style="width:100%; border-radius:50%">
-                    </div>
-                  </Col>
-                  <Col span="20">
-                    <div class="grid-content bg-purple">
-                      <Row style="padding-bottom: 5px">
-                        <Col span="17">
-                          <router-link :class="$style.profileLink" :to="{ path: `/users/feeds/${comment.user.user_id}` }">{{ comment.user.name }}</router-link>
-                        </Col>
-                        <Col span="7" style="display: flex; justify-content: flex-end;">
-                          <timeago style="color: #ccc; font-size: 12px;" :since="timers(comment.created_at, 8, false)" locale="zh-CN" :auto-update="60"></timeago>
-                        </Col>
-                      </Row>
-                      <Row>
-                        <Col span="24">
-                          <div style="color: #ccc;">
-                            <span v-if="comment.reply_user">回复 </span>
-                            <router-link :class="$style.profileLink" :to="{ path: `/profile/${comment.reply_to_user_id}` }">{{ comment.replyToUser.name }} </router-link>
-                            <span
-                              v-if="comment.user_id  != currentUser"
-                              @click.stop="focusInput(comment.user_id, index)"
-                              :class="$style.commentContent"
-                            > 
-                             {{ comment.body }}
-                            </span>
-                            <span
-                              v-if="comment.user_id == currentUser"
-                              @click.stop="showComfirm(comment.id, feed_id, index)"
-                              :class="$style.commentContent"
-                            > 
-                             {{ comment.body }}
-                            </span>
-                          </div>
-                        </Col>
-                      </Row>
-                    </div>
-                  </Col>
-                </Row>
-                <ul :class="$style.comment" v-if="index === commentIndex" ref="commentFeedInput">
-                  <li>
-                    <Input 
-                      type="textarea" 
-                      ref="commentUserInput"
-                      class="commentInput"
-                      :autosize="{ minRows: 1, maxRows: 4 }" 
-                      :minlength='1' 
-                      :maxlength='255'
-                      :autofocus="true"
-                      v-model="commentContent"
-                      :placeholder="placeholder"
-                      v-childfocus
-                    />
-                  </li>
-                  <li :class="$style.commentOperations">
-                    <p :class="$style.commentOperation" v-show="commentCount > 100">
-                      <span :class="{ inputFull: commentCount > 100 }">{{ commentCount }}</span>/255
-                    </p>
-                    <Button :class="$style.commentOperation" type="text" class="sendButton" size="small" @click.native="handleCommentInput(false)">取消</Button>
-                    <Button 
-                      :class="$style.commentOperation" 
-                      type="primary" 
-                      class="sendButton" 
-                      :disabled="!commentCount" 
-                      size="small" 
-                      @click.native="sendComment()"
-                    >
-                      发送
-                    </Button>
-                  </li>
-                </ul>
-              </section>
-            </div>
-          </div>
-        </div>
-        <div slot="bottom" style="display: flex; justify-content: center; align-items: center; padding: 10px 0;">
-          <span v-if="bottomAllLoaded">没有更多了</span>
-          <section v-else>
-            <span v-show="bottomStatus === 'loading'">加载中...</span>
-            <span v-show="bottomStatus === 'pull' && !bottomAllLoaded">上拉加载更多评论</span>
-            <span v-show="bottomStatus === 'drop'">释放加载更多评论</span>
-          </section>
-        </div>
-      </mt-loadmore>
-    </div>
-    <div id="feed-footer" class="feed-container-tool-operation feed-background-color">
+      <div v-if="feedData.feed_comment_count" slot="bottom" style="display: flex; justify-content: center; align-items: center; padding: 10px 0;">
+        <span v-if="bottomAllLoaded">没有更多了</span>
+        <section v-else>
+          <span v-show="bottomStatus === 'loading'">加载中...</span>
+          <span v-show="bottomStatus === 'pull' && !bottomAllLoaded">上拉加载更多评论</span>
+          <span v-show="bottomStatus === 'drop'">释放加载更多评论</span>
+        </section>
+      </div>
+    </mt-loadmore>
+    
+    <div id="feed-footer" ref="feed-footer" class="feed-container-tool-operation feed-background-color">
       <Row :gutter="24" style="display: flex; justify-content: center; align-items: center; height: 100%;">
         <Col span="6" class="operation">
           <div v-if="!feedData.has_like" @click="handleDiggFeed(feed_id)">
@@ -362,8 +367,7 @@
             {
               url: buildURL(createAPI(`files/${value.file}`)),
               width: window.innerWidth,
-              height: window.innerWidth * (size[1] / size[0]),
-              paid: (value.paid_node && !value.paid) ? false : true
+              height: window.innerWidth * (size[1] / size[0])
             }
           );
         });
@@ -410,7 +414,11 @@
       ...mapState({
         currentUser: state => state.users.mine.id,
         currentUserInfo: state => state.users.mine
-      })
+      }),
+      showFollowButton () {
+        const { userInfo: { id } = {} } = this;
+        return this.currentUser !== id;
+      }
     },
     
     methods: {
@@ -603,13 +611,31 @@
           }
         })
       },
+      loadTop () {
+        const { limit } = this;
+        addAccessToken().get(
+          createAPI(`feeds/${this.feed_id}/comments`),
+          {
+            params: {
+              limit
+            }
+          },
+          {
+            validateStatus: status => status === 200
+          }
+        )
+        .then(({ data: { comments } = {} }) => {
+          this.comments = lodash.uniqBy([ ...comments, ...this.comments ], 'id');
+          this.$refs.loadmore.onTopLoaded();
+        })
+      },
       loadBottom() {
-        const { limit, max_id } = this;
         if (this.bottomAllLoaded) {
           this.$refs.loadmore.onBottomLoaded();
 
           return;
         }
+        const { limit, max_id } = this;
         if( !this.max_id > 1 ) {
           setTimeout(() => {
             // 若数据已全部获取完毕
@@ -632,17 +658,14 @@
             validateStatus: status => status === 200
           }
         )
-        .then(({ data: { data } = {} }) => {
-          let addComments = [];
-          let formatedAddComments = [];
-
+        .then(({ data: { comments } = {} }) => {
           if (data.length === limit) {
             bottomAllLoaded = false;
           } else {
             bottomAllLoaded = true;
           }
 
-          this.comments = [ ...this.comments, ...data ];
+          this.comments = [ ...this.comments, ...comments ];
 
           setTimeout(() => {
             // 若数据已全部获取完毕
@@ -806,43 +829,11 @@
 
       // 获取当前动态用户的用户信息
       getUser (user_id) {
-        getUserInfo(user_id).then(user => {
-          this.userInfo = { ...user };
-        });
+        this.$store.dispatch('GET_USER_BY_ID', user_id).then( user => {
+          this.userInfo = { ... user[0] };
+        })
       },
 
-      menu() {
-        let header = document.getElementById('feed-header');
-        let footer = document.getElementById('feed-footer');
-        if(header && footer) {
-          if(this.scroll > 55) {
-            if(this.scroll > window.pageYOffset) {
-              header.style.top = 0;
-              footer.style.bottom = 0;
-            } else {
-              header.style.top = '-55px';
-              footer.style.bottom = '-55px';
-            }
-          }
-          this.scroll = window.pageYOffset;
-        }
-      },
-      getRewardUsers (feed, limit) {
-        addAccessToken().get(createAPI(`feeds/${feed}/rewards`), {
-          params: {
-            limit
-          }
-        },
-        {
-          validateStatus: status => status === 200
-        })
-        .then(({ data = [] }) => {
-          this.rewardUsers = data;
-        })
-        .catch(({ response: { data } = {} }) => {
-
-        })
-      }
     },
     created () {
       let serviceFeed = {};
@@ -882,11 +873,11 @@
             validateStatus: status => status === 200
           }
         )
-        .then(({ data = {} }) => {
+        .then(({ data: { comments } = {} }) => {
           // 格式化评论列表
-          let formatedComments = formateFeedComments(data.comments);
-          this.comments = data.comments;
-          this.feedData = { ...this.feedData, comments: data.comments };
+          // let formatedComments = formateFeedComments(comments);
+          this.comments = comments;
+          this.feedData = { ...this.feedData, comments };
           if(this.comments.length < 15) {
             this.bottomAllLoaded = true;
           }
@@ -906,27 +897,39 @@
           this.$set(this.feedData, 'likes', data);
         });
       });
-      this.getRewardUsers(feed_id, 10);
       const { token } = this.$storeLocal.get('UserLoginInfo') || {};
       this.token = token;
     },
+
     beforeMount () {
       this.showReward = this.$storeLocal.get('feedReward');
     },
+
     mounted () {
-      window.addEventListener('scroll', this.menu);
+      this.$el.addEventListener('scroll', lodash.throttle(() => { 
+          const { scroll } = this;
+          const header = this.$refs['feed-header'];
+          const footer = this.$refs['feed-footer'];
+          if(this.$el.scrollTop > scroll) {
+            header.style.top = '-55px';
+            footer.style.bottom = '-55px';
+          } else {
+            header.style.top = 0;
+            footer.style.bottom = 0;
+          }
+          this.scroll = this.$el.scrollTop;
+        }, 200 ));
     }
   }; 
 
   export default feedDetail;
 </script>
 <style lang="less" scoped>
-  .mint-loadmore-content-parent-no-trans .mint-loadmore-content {
-    transform: inherit!important;
+  .mint-loadmore {
+    padding-top: 46px;
   }
   .feed-container {
     background-color: #f4f5f5;
-    padding-top: 46px;
 
   }
   #feed-footer {
@@ -1082,7 +1085,7 @@
 </style>
 <style lang="less" module>
 .feedDetailRoot{
-  height: calc(~"100% - 55px");
+  height: 100%;
   overflow: scroll;
   -webkit-overflow-scrolling: touch;
   .comment {

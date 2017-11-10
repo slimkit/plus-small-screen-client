@@ -601,7 +601,7 @@
   }
   
 </style>
-<style scoped lang="scss">
+<style scoped lang="less">
   .avatarOp {
     height: 46px;
     border-bottom: 1px #ddd solid;

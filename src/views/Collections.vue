@@ -417,25 +417,13 @@
           }
         });
       }
-      // if(this.$refs.loadmoreNewsCollections) {
-      //   setTimeout( () => {
-      //     this.$refs.loadmoreNewsCollections.onTopLoaded();
-      //     this.$refs.loadmoreNewsCollections.onBottomLoaded();
-      //   }, 800);
-      // }
-      // if(this.$refs.loadmoreFeedsCollections) {
-      //   setTimeout( () => {
-      //     this.$refs.loadmoreFeedsCollections.onTopLoaded();
-      //     this.$refs.loadmoreFeedsCollections.onBottomLoaded();
-      //   }, 800);
-      // }
     }
   };
 
   export default FeedLists;
 </script>
 
-<style lang="scss" module>
+<style lang="less" module>
   .notice {
     padding: 10px 0;
     height: 18px;

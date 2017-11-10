@@ -9,10 +9,6 @@
   <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet">
   <link rel="stylesheet" href="{{ mix('css/app.css', 'assets/h5') }}" />
   <style>
-    body > textarea {
-      padding-top: 0!important;
-      display: none!important;
-    }
     /*********************** markdown 样式重构 *******************/
     .editor-preview img {
       width: 100%;

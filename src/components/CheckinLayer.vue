@@ -1,4 +1,4 @@
-<style lang="scss">
+<style lang="less">
 .checkin-modal {
     .ivu-modal-close {
         border-radius: 50%;

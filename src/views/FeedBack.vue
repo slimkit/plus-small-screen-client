@@ -96,7 +96,7 @@ export default feedBack;
     }
 </style>
 
-<style lang="scss" module>
+<style lang="less" module>
   .postRoot {
     position: fixed;
     top: 0;

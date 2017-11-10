@@ -154,7 +154,7 @@
   export default commentInput;
   
 </script>
-<style lang="scss" module>
+<style lang="less" module>
   .commentCount {
     margin-bottom: .5em;
     font-size: 12px;
