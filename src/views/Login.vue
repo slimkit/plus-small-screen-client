@@ -220,7 +220,7 @@ const login = {
                 });
 
                 // 保存登录用户信息
-                this.$store.dispatch('UPDATE_INFO_OF_MINE', user);
+                this.$store.dispatch('UPDATE_INFO_OF_MINE', {...user, token});
 
                 // do something
 
