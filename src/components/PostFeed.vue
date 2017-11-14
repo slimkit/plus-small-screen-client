@@ -242,7 +242,6 @@ const postFeed = {
     feedContent: '', // 动态内容
     uploadList: [], // 本地选中的图片列表
     uploadUri: createAPI('files'), // 图片上传的接口
-    headers: { Authorization: `Bearer ${UserLoginInfo.token || ''}` },
     images: [],
     format: ['jpg', 'jpeg', 'png', 'gif', 'svg', 'bmp'],
     maxSize: 5120,
@@ -261,8 +260,14 @@ const postFeed = {
   computed: {
     ...mapState({
       show: state => state.showPost.showPost.show,
-      textOnly: state => state.showPost.showPost.textOnly
+      textOnly: state => state.showPost.showPost.textOnly,
+      mine: state => state.users.mine,
     }),
+    headers(){ 
+      return {
+        Authorization: `Bearer ${this.mine.token || ''}`
+      } 
+    },
     isDisabled () {
       return !(this.feedContent.length || this.images.length);
     },
