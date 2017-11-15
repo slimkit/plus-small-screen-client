@@ -206,12 +206,14 @@
             <section :class="$style.answerContainer" @click="$router.push({name: 'AnswerDetail', params: {answer_id: answer.id}})" v-for="(answer, index) in answers" :key="answer.id">
               <Row :class="$style.answer" :gutter="24">
                 <Col span="4">
-                  <user-avatar :src="answer.user.avatar" :sex="answer.user.sex" size="tiny" />
+                  <user-avatar v-if="!answer.anonymity" :src="answer.user.avatar" :sex="answer.user.sex" size="tiny" />
+                  <user-avatar v-else size="tiny" />
                 </Col>
                 <Col span="20">
                   <div :class="$style.userTime">
                     <section :class="$style.user">
-                      <router-link :to="{name: 'userSpace', params: { user_id: answer.user.id}}">{{ answer.user.name || '' }}</router-link>
+                      <router-link v-if="!answer.anonymity" :to="{name: 'userSpace', params: { user_id: answer.user.id}}">{{ answer.user.name || '' }}</router-link>
+                      <router-link v-else >匿名用户</router-link>
                     </section>
                     <timeago 
                       :class="$style.time" 
