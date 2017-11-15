@@ -29,7 +29,11 @@
       >
         <div class="feed-container">
           <div class="feed-container-content feed-background-color markdown-body">
-            <h2 v-if="detail.title" style="text-align: left; padding: 15px 12px 12px; font-weight: 400; color: #59b6d7">{{ detail.title }}</h2>
+            <h2 v-if="detail.title" style="text-align: left; padding: 15px 12px 12px; font-weight: 400; color: #59b6d7;margin:0;">{{ detail.title }}</h2>
+            <div style="color: #59b6d7;margin-left:15px; pading:2px;font-size:12px;height:32px;margin-bottom:8px;">
+              <span style="border: 1px solid #59b6d7;display:inline-block;padding:1px;">{{ detail.category.name }}</span>
+              <span style="display:inline-block;color:#999;">{{ detail.from }}</span>
+            </div>  
             <div>
               <section 
                 class="feedContainerContentTextNoPadding"
