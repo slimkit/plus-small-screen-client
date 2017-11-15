@@ -210,6 +210,7 @@
   import _ from 'lodash';
   import PlusMessageBundle from '../../utils/es';
   import {showAmount, trueAmount} from '../../utils/balance';
+  import { mapState } from 'vuex';
   
   const Balance = {
     components: {
@@ -243,8 +244,7 @@
     }),
 
     mounted () {
-      const { user_id } = this.$storeLocal.get("UserLoginInfo");
-      const { wallet: { balance = 0 } } = this.$storeLocal.get(`user_${user_id}`);
+      const { wallet: { balance = 0 } } = this.user;
       this.balance = balance;
 
       this.wallet(); // 获取钱包配置
@@ -460,6 +460,9 @@
     },
 
     computed: {
+      ...mapState ({
+        user: state => state.users.mine
+      }),
       rechargeTypes () {
         let rechargeTypes = [];
         const { system: { recharge_type: types = [] } = {} } = this;
