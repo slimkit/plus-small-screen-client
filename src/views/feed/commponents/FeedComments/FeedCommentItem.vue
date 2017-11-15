@@ -24,10 +24,10 @@ export default {
     },
     computed: {
         user() {
-            return this.$store.getters.getUserById(this.comment.user_id)[0] || {}
+            return this.$store.getters.getUserById(this.comment.user_id)[0]
         },
         reply_user() {
-            return this.$store.getters.getUserById(this.comment.reply_user)[0] || {}
+            return this.$store.getters.getUserById(this.comment.reply_user)[0]
         }
     },
     methods: {

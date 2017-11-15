@@ -205,7 +205,7 @@
           
           if(count > 3) return;
           
-          let user = this.$store.getters.getUserById(comment)[0] || {};
+          let user = this.$store.getters.getUserById(comment)[0];
           const { name } = user;
           users += (name + '、');
           this.commentsText = users.substr(0, users.length - 1); 
