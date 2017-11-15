@@ -51,9 +51,11 @@ import showCheckin from './module/showCheckin';
 
 
  import users from './module/user/';
+ import feeds from './module/feeds/';
 
 const modules = {
   users,
+  feeds,
   
   user,
   notice,

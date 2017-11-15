@@ -64,7 +64,7 @@
                     <router-link to="/register">注册</router-link>
                     </Col>
                     <Col span="12" :offset="offset" class="header-end-col">
-                    <router-link to="/findpassword">忘记密码</router-link>
+                    <router-link to="/forgot">忘记密码</router-link>
                     </Col>
                 </Row>
             </div>
