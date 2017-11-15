@@ -883,6 +883,8 @@
   .commentContent{
     font-size: 14px;
     color: #999;
+    display: inline-block;
+    width: 100%;
   }
   .operation {
     i {
