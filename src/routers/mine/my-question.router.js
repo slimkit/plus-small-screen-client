@@ -19,7 +19,8 @@ export default [{
     component: MyQuestionAnswerMain,
     name: 'myQuestionAnswer',
     meta: {
-        title: '我的问答'
+        title: '我的问答',
+        requiresAuth: true
     },
     redirect: '/users/question-answer/questions',
     children: [{

@@ -1,3 +1,3 @@
 import myQuestions from './my-question.router';
 
-export default [ ...myQuestions];
+export default [ ...myQuestions ];

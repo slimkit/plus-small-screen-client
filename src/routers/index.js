@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import storeLocal from 'store';
+import localEvent from 'store';
 import VueRouter from 'vue-router';
 
 import routes from './routes';
@@ -28,29 +28,25 @@ const router = new VueRouter({
 });
 
 /**
- * 路由守卫 登录检测
+ * 路由守卫 登录检测 islogin
  *
  * 需要登录的页面路由需要添加 
  * meta.requiresAuth = true
+ *
+ * 登录后不可访问的路由需要添加
+ * meta.canEnterOrNot = true
  * 
- * @param  {[type]} to, from, next
- * @return {[type]}
  */
 router.beforeEach((to, from, next) => {
-    if(to.matched.some(record => record.meta.requiresAuth)) {
-        let UserLoginInfo = storeLocal.get('UserLoginInfo') || {};
-        if(!UserLoginInfo.token) {
-            next({
-                path: '/login',
-                query: { redirect: to.fullPath }
-            });
-        } else {
-            next();
-        }
+    const isLogin = !!((localEvent.get('mine') || {}).token),
+        meta = to.matched.some(record => record.meta) || {};
+    if(meta.requiresAuth) {
+        isLogin ? next() : next({ path: '/login', query: { redirect: to.fullPath } });
+    } else if(meta.canEnterOrNot) {
+        isLogin ? next({ path: '/feed' }) : next();
     } else {
         next();
     }
 });
-
 
 export default router;
