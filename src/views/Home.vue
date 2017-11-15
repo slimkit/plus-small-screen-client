@@ -11,7 +11,7 @@
       <router-link to="/register">
         <a href="#">to Register</a>
       </router-link>
-      <router-link to="/findpassword">
+      <router-link to="/forgot">
         <a href="#">to FindPassword</a>
       </router-link>
       <router-link to="/feeds">

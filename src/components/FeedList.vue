@@ -44,6 +44,7 @@ const FeedLists = {
         bottomStatus: '',
         topStatus: '',
         showSpinner: true,
+        pinnedFeedIds: [],
         // showTop: true,
         firstId: 0, // 下拉刷新过滤节点
         feedType: { // vuex相关action
@@ -93,7 +94,6 @@ const FeedLists = {
                     validate: status => status === 200
                 })
                 .then(({ data = {} }) => {
-                    console.log(data);
                     let type = this.feedType[this.option.type];
                     let morefeeds = data.feeds;
                     let length = morefeeds.length;
@@ -138,6 +138,7 @@ const FeedLists = {
                     validate: status => status === 200
                 })
                 .then(response => {
+                    this.pinnedFeedIds = response.data.pinned.map(f => f.id);
                     let feeds = response.data.feeds;
                     this.$refs.loadmore.onTopLoaded();
                     if(feeds.length == 0) {
@@ -182,7 +183,13 @@ const FeedLists = {
         },
         feedsList() {
             let type = this.feedType[this.option.type];
-            return this.$store.getters[type.feeds];
+            let list = this.$store.getters[type.feeds];
+            this.pinnedFeedIds.forEach(u => {
+                list.forEach(o => {
+                   if(o.id=== u) o.pinned = true;
+                });
+            });
+            return lodash.sortBy(list, ['pinned'], ['asc']);
         }
     },
     mounted() {
@@ -209,7 +216,7 @@ const FeedLists = {
                 validate: status => status === 200
             })
             .then(response => {
-
+                this.pinnedFeedIds = response.data.pinned.map(f => f.id);
                 let feeds = response.data.feeds;
                 let storeFeeds = {};
                 let ids = [];
@@ -252,7 +259,7 @@ const FeedLists = {
 };
 export default FeedLists;
 </script>
-<style lang="less" module>
+<style lang="scss" module>
 .notice {
     padding: 10px 0;
     height: 18px;

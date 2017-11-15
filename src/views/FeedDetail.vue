@@ -837,7 +837,7 @@
     },
     created () {
       let serviceFeed = {};
-      let feed_id = parseInt(this.$route.params.feed_id);
+      let feed_id = parseInt(this.$route.params.feedID);
       if ( !feed_id ) {
         this.$store.dispatch(NOTICE, cb => {
           cb({
