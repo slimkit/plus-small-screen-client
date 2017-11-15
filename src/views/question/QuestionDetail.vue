@@ -213,7 +213,7 @@
                   <div :class="$style.userTime">
                     <section :class="$style.user">
                       <router-link v-if="!answer.anonymity" :to="{name: 'userSpace', params: { user_id: answer.user.id}}">{{ answer.user.name || '' }}</router-link>
-                      <router-link v-else >匿名用户</router-link>
+                      <a href="javascript:void(0)">匿名用户</a>
                     </section>
                     <timeago 
                       :class="$style.time" 
