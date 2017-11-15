@@ -51,6 +51,7 @@ import PlusIcon from '../icons/Plus';
 import { mapState } from 'vuex';
 
 export default {
+    name: 'tool-bar',
     components: {
         HomeIcon,
         DiscoverIcon,
@@ -80,7 +81,7 @@ export default {
     }
 }
 </script>
-<style lang="less">
+<style lang="scss">
 .toolBar {
     position: absolute!important;
     bottom: 0;
@@ -107,8 +108,6 @@ export default {
         }
         .router-link {
             display: flex;
-            width: 100%;
-            height: 100%;
             line-height: 1;
             color: #999;
             flex-direction: column;

@@ -1,5 +1,5 @@
 <template>
-    <div class="feed" :id="`feed-${feed.id}`">
+    <div class="feed-item" :id="`feed-${feed.id}`">
         <div class="feed-main">
             <div class="user-header">
                 <user-avatar :sex='user.sex' :src='user.avatar' size='small' />
@@ -195,8 +195,8 @@ export default {
     }
 }
 </script>
-<style lang="less" scoped>
-.feed {
+<style lang="scss">
+.feed-item {
     margin-bottom: 6px;
     overflow: hidden;
     width: 100%;
