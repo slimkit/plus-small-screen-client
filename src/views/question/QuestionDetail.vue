@@ -206,12 +206,12 @@
             <section :class="$style.answerContainer" @click="$router.push({name: 'AnswerDetail', params: {answer_id: answer.id}})" v-for="(answer, index) in answers" :key="answer.id">
               <Row :class="$style.answer" :gutter="24">
                 <Col span="4">
-                  <img  class="component-avatar" @click.stop="$router.push({name: 'userSpace', params: { user_id: answer.user.id}})" v-lazy="answer.user.avatar || defaultAvatar" style="width: 100%" alt="">
+                  <user-avatar :src="answer.user.avatar" :sex="answer.user.sex" size="tiny" />
                 </Col>
                 <Col span="20">
                   <div :class="$style.userTime">
                     <section :class="$style.user">
-                      <router-link :to="{name: 'userSpace', params: { user_id: answer.user.id}}">{{answer.user.name}}</router-link>
+                      <router-link :to="{name: 'userSpace', params: { user_id: answer.user.id}}">{{ answer.user.name || '' }}</router-link>
                     </section>
                     <timeago 
                       :class="$style.time" 
@@ -752,6 +752,7 @@
   import storeLocal from 'store';
   import { getUserInfo } from '../../utils/user';
   import formateFeedComments from '../../utils/formateFeedComments';
+  import { mapState } from 'vuex';
   // 引入样式库
   import "github-markdown-css";
   import 'highlight.js/styles/github.css';
@@ -1363,6 +1364,9 @@
         this.max_id = formated.max_id;
         return formated.comments;
       },
+      ...mapState({
+        mine: state => state.users.mine
+      })
     },
     
     created () {
@@ -1372,8 +1376,8 @@
     beforeMount() {
       this.loading = true;
       this.getQuestion();
-      const { user_id } = this.$storeLocal.get('UserLoginInfo') || {};
-      this.user_id = user_id;
+      const { id } = this.mine;
+      this.user_id = id;
     }
   };
 
