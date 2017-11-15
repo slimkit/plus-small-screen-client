@@ -208,6 +208,7 @@
                 validateStatus: status => status === 201 || status === 204
             }).then(response => {
                 this.feed.has_collection = !this.feed.has_collection;
+                this.$Message.success(method === 'POST' ? '收藏成功' : '取消收藏成功');
             }).catch(({ response: { data = { message: "操作失败, 请刷新后重试" } } }) => {
                 this.$Message.error(this.$MessageBundle(data).getMessage());
             })
