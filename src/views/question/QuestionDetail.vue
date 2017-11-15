@@ -93,12 +93,14 @@
             <section v-if="question.invitation_answers.length" :class="$style.answerContainer" v-for="(invitation_answer, index) in question.invitation_answers" @click="checkAnswer(invitation_answer.could , invitation_answer.id)">
               <Row :class="$style.answer" :gutter="24" :key="invitation_answer.id">
                 <Col span="4">
-                  <img class="component-avatar" @click.stop="$router.push({name: 'userSpace', params: { user_id: invitation_answer.user.id}})" v-lazy="invitation_answer.user.avatar || defaultAvatar" style="width: 100%" alt="">
+                  <user-avatar :src="invitation_answer.user.avatar" :sex="invitation_answer.user.sex" size="small" v-if="!invitation_answer.anonymity" />
+                  <user-avatar v-else size="small" />
                 </Col>
                 <Col span="20">
                   <div :class="$style.userTime">
                     <section :class="$style.user">
-                      <router-link :to="{name: 'userSpace', params: { user_id: invitation_answer.user.id}}">{{invitation_answer.user.name}}</router-link> 
+                      <router-link v-if="!invitation_answer.anonymity" :to="{name: 'userSpace', params: { user_id: invitation_answer.user.id}}">{{invitation_answer.user.name}}</router-link>
+                      <a href="javascript:void(0);" v-else>匿名用户</a> 
                       <InvitedIcon height="21" width="57" color="#59B6D7" />
                       <AdoptionIcon v-if="invitation_answer.adoption" height="21" width="45" color="#56BC9A" />
                     </section>
@@ -155,12 +157,14 @@
             <section v-if="question.adoption_answers.length" :class="$style.answerContainer" v-for="(adoption_answer, index) in question.adoption_answers" @click="$router.push({name: 'AnswerDetail', params: {answer_id: adoption_answer.id}})">
               <Row :class="$style.answer" :gutter="24" :key="adoption_answer.id">
                 <Col span="4">
-                  <img  class="component-avatar" @click.stop="$router.push({name: 'userSpace', params: { user_id: adoption_answer.user.id}})" v-lazy="adoption_answer.user.avatar || defaultAvatar" style="width: 100%" alt="">
+                  <user-avatar v-if="!adoption_answer.anonymity" :src="adoption_answer.user.avatar" :sex="adoption_answer.user.sex" size="small" />
+                  <user-avatart v-else size="small" />
                 </Col>
                 <Col span="20">
                   <div :class="$style.userTime">
                     <section :class="$style.user">
-                      <router-link :to="{name: 'userSpace', params: { user_id: adoption_answer.user.id}}">{{adoption_answer.user.name}}</router-link> 
+                      <router-link v-if="!adoption_answer.anonymity" :to="{name: 'userSpace', params: { user_id: adoption_answer.user.id}}">{{adoption_answer.user.name}}</router-link> 
+                      <a href="javascript:void(0);" v-else>匿名用户</a>
                       <AdoptionIcon height="21" width="45" color="#56BC9A" />
                     </section>
                     <timeago 
@@ -206,7 +210,7 @@
             <section :class="$style.answerContainer" @click="$router.push({name: 'AnswerDetail', params: {answer_id: answer.id}})" v-for="(answer, index) in answers" :key="answer.id">
               <Row :class="$style.answer" :gutter="24">
                 <Col span="4">
-                  <user-avatar v-if="!answer.anonymity" :src="answer.user.avatar" :sex="answer.user.sex" size="tiny" />
+                  <user-avatar v-if="!answer.anonymity" :src="answer.user.avatar" :sex="answer.user.sex" size="small" />
                   <user-avatar v-else size="tiny" />
                 </Col>
                 <Col span="20">
