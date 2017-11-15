@@ -73,7 +73,7 @@
                 </Row>
                 <Row :gutter="24" class="entryMenu" @click.native="changeUrl('/users/question-answer')">
                     <Col span="3">
-                    <ConnectionIcon :height="21" :width="21" color="#59b6d7" />
+                    <QuestionIcon :height="21" :width="21" color="#59b6d7" />
                     </Col>
                     <Col span="16" class="menuText"> 我的问答
                     </Col>
