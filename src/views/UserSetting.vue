@@ -206,6 +206,8 @@
   import SearchPop from './SearchPop/SearchPop';
   import SearchCity from './SearchPop/SearchCity';
 
+  import { mapState } from 'vuex';
+
   const defaultAvatar = resolveImage(require('../statics/images/defaultAvatarx2.png'));
 
   // 昵称验证规则
@@ -221,8 +223,6 @@
       SearchCity
     },
     data: () => ({
-      currentUser: 0, // 当前登录用户id
-      userInfo: {},
       name: '', // nickname
       sex: 0, // sex
       location: '', // 地区显示字符串
@@ -294,7 +294,6 @@
         if(oldSex != newSex) {
           saveData.sex = newSex;
         }
-
         addAccessToken().patch(
           createAPI('user'),
           {
@@ -305,16 +304,12 @@
           }
         )
         .then(response => {
-          getLoggedUserInfo().then(user => {
-            this.userInfo = { ...this.userInfo, ...user };
-          });
-          this.$store.dispatch(NOTICE, cb => {
-            cb({
-              text: '资料修改成功',
-              time: 1500,
-              status: true
-            });
-          });
+          // getLoggedUserInfo().then(user => {
+          //   this.userInfo = { ...this.userInfo, ...user };
+          // });
+
+          this.$store.dispatch("UPDATE_INFO_OF_MINE", {...this.userInfo, ...saveData});
+          this.$Message.success('修改成功');
           this.cleanSetting();
         })
       },
@@ -413,6 +408,11 @@
       },
     },
     computed: {
+
+      ...mapState({
+        userInfo: s => s.users.mine,
+      }),
+      currentUser(){ return this.userInfo.id },
       avatar () {
         const { avatar = defaultAvatar } = this.userInfo;
 
@@ -483,10 +483,8 @@
       }
     },
     mounted () {
-      this.currentUser = TS_WEB.currentUserId
-      getLoggedUserInfo().then(user => {
-        this.userInfo = { ...this.userInfo, ...user };
-        this.name = user.name;
+
+      this.name = this.userInfo.name;
         const { 
                 sex = 0, 
                 bio = '',
@@ -495,8 +493,6 @@
         this.sex = sex;
         this.bio = bio;
         this.location = location;
-
-      });
     }
   };
 
