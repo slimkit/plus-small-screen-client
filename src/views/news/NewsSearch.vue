@@ -9,12 +9,12 @@
           <Input 
             v-model="keyword"
             :autofocus="true"
-            @on-enter="doSearch()"
+            @on-enter="doSearch(false)"
             v-childfocus
           />
           <CloseIcon @click.native="cleanKeyword();" height="20" width="20" color="#999" v-if="keywordCount" style="position: absolute; top: 6px; right: 8px;"/>
         </Col>
-      <Col @click.native="doSearch()" style="color: #59b6d7;" span="4" class="header-end-col">
+      <Col @click.native="doSearch(false)" style="color: #59b6d7;" span="4" class="header-end-col">
         搜索
       </Col>
       </Row>
@@ -30,6 +30,7 @@
       </section>
       <section :class="$style.newsIndexContainerNewsLists">
         <mt-loadmore
+          :auto-fill="false"
           :bottom-method="loadBottom"
           :top-method="loadTop"
           :bottom-all-loaded="bottomAllLoaded"
@@ -140,7 +141,7 @@
       },
       doSearch ( loadMore = true ) {
         if(!this.keywordCount) return;
-
+        this.resultList = [];
         if(!loadMore){
           this.max_id = 0;
         }
