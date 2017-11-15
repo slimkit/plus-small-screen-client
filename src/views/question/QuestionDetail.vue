@@ -211,7 +211,7 @@
               <Row :class="$style.answer" :gutter="24">
                 <Col span="4">
                   <user-avatar v-if="!answer.anonymity" :src="answer.user.avatar" :sex="answer.user.sex" size="small" />
-                  <user-avatar v-else size="tiny" />
+                  <user-avatar v-else size="small" />
                 </Col>
                 <Col span="20">
                   <div :class="$style.userTime">
