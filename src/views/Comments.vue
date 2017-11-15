@@ -277,12 +277,12 @@
 
         comments.forEach(comment => {
           if (!comment.commentable) return;
-          let user= this.$store.getters.getUserById(comment.user_id)[0];
+          let user= this.$store.getters.getUserById(comment.user_id)[0] || {};
 
           const { commentable: { images = [], body = '', subject='', feed_content = '', content = ''  } = {} } = comment;
 
           if(comment.reply_user) {
-            let replyUser = this.$store.getters.getUserById(comment.reply_user)[0];
+            let replyUser = this.$store.getters.getUserById(comment.reply_user)[0] || {};
             com.replyUser = { ...replyUser };
           }
 
@@ -323,10 +323,10 @@
           if(lodash.findIndex(this.formated, { id: comment.id }) !== -1) return;
 
           const { commentable: { images = [], body = '', subject='', feed_content = '', content = ''  } = {} } = comment;
-          let user = this.$store.getters.getUserById(comment.user_id)[0];
+          let user = this.$store.getters.getUserById(comment.user_id)[0] || {};
 
           if(comment.reply_user) {
-            let replyUser = this.$store.getters.getUserById(comment.reply_user)[0];
+            let replyUser = this.$store.getters.getUserById(comment.reply_user)[0] || {};
             com.replyUser = { ...replyUser };
           }
 

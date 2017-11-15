@@ -204,7 +204,7 @@
           if (!digg.likeable) return;
           if (lodash.findIndex(this.ids, digg.id) !== -1) return ;
           let 
-            user = this.$store.getters.getUserById(digg.user_id)[0], dig = {};
+            user = this.$store.getters.getUserById(digg.user_id)[0] || {}, dig = {};
             const { likeable: { images = [], feed_content = '', body = '', content = '' } = {} } = digg;
             const { avatar, name, sex } = user;
 
@@ -239,7 +239,7 @@
       _initFormatedDiggs () {
         this.diggs.forEach(digg => {
           let
-            user = this.$store.getters.getUserById(digg.user_id)[0], dig = {};
+            user = this.$store.getters.getUserById(digg.user_id)[0] || {}, dig = {};
             const { likeable: { images = [], feed_content = '', body = '', content = '' } = {} } = digg;
             const { avatar, name, sex } = user;
 
