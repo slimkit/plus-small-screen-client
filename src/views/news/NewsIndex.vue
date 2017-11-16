@@ -51,6 +51,7 @@
       <section :class="$style.newsIndexContainerNewsLists">
         <mt-loadmore
           v-if="!nothing"
+          :auto-fill="false"
           :bottom-method="loadBottom"
           :top-method="loadTop"
           :bottom-all-loaded="bottomAllLoaded"
