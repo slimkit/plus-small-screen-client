@@ -39,9 +39,10 @@ axios.interceptors.response.use(
             // token失效 提示: 重新登录
             if(status === 401) {
                 // 清除本地保存的 token
+                app.$store.dispatch('LOGOUT');
                 storeLocal.remove('UserLoginInfo');
-                app.$Message.error('登录失效 请重新登录');
-                return false;
+                app.$router.push({ path: '/login', query: { redirect: app.$route.fullPath } });
+                return Promise.reject({ response: { data: { message: "登录失效, 请重新登录" } } });
             }
         } else if(error.request) {
             console.log(error.request);

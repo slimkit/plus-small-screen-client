@@ -138,7 +138,7 @@ export default {
             }).then(() => {
                 this.feed.has_like = like;
                 this.feed.like_count = count;
-                this.$store.dispatch('UPDATE_FEED_BY_ID', this.feed);
+                // this.$store.dispatch('UPDATE_FEED_BY_ID', this.feed);
             }).catch(({ response: { data = { message: '点赞失败' } } = {} }) => {
                 this.$Message.error(this.$MessageBundle(data).getMessage());
             });

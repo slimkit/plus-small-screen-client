@@ -46,7 +46,7 @@ export default {
         '$route': function({ params: { type = 'new' } }) {
             this.feed_type = type || 'new';
             this.$store.commit('SET_FEED_TYPE', type);
-            this.getFeedList();
+            this.getFeedList(false);
         }
     },
     computed: {
@@ -59,19 +59,18 @@ export default {
     },
     methods: {
         getFeedList(addMore = true) {
-            console.count('切换路由');
             const uri = createAPI('feeds'),
                 params = {
                     limit: 10,
-                    after: this.feed_max_id || 0,
+                    after: addMore ? this.feed_max_id : 0,
                     type: this.feed_type
                 };
 
             addAccessToken().get(uri, {
                 params
-            }).then(({ data: { feeds = [], ad, pinned = [] } = { } }) => {
+            }).then(({ data: { feeds = [], ad, pinned = [] } = {} }) => {
+                this.feed_max_id = feeds[feeds.length - 1].id;
                 addMore ? this.$refs.loadmore.onBottomLoaded() : this.$refs.loadmore.onTopLoaded();
-                // const type = addMore ? 'ADD_MORE_FEEDS' : 'RELOAD_FEEDS';
                 this.$refs.loadmore.bottomAllLoaded = feeds.length < 0;
                 this.$store.dispatch('ADD_MORE_FEEDS', { feeds, ad, pinned });
             }).catch(({ response: { data = { message: '获取资讯列表失败' } } = {} }) => {
