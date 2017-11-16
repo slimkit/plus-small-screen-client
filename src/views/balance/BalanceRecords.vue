@@ -283,7 +283,24 @@
       },
 
       localDateTime(time) {
-        return (new Date(`${time}Z`)).toLocaleString();
+        
+        let date = new Date(time);
+        let y = date.getFullYear();
+        let m = date.getMonth() + 1;
+        let h = date.getHours();
+        let i = date.getMinutes();
+        let d = date.getDate();
+
+        let s = new Array("星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六");
+
+        var w = s[date.getDay()];
+
+        if (m >= 1 && m <= 9) m = "0" + m;
+        if (d >= 0 && d <= 9) d = "0" + d;
+        if (h >= 0 && h <= 9) h = "0" + h;
+        if (i >= 0 && i <= 9) i = "0" + i;
+
+        return y+ '-' + m + '-' + d + ' '+ w + ' ' + h + ':' + i;
       },
 
       localTime (dateString) {
