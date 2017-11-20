@@ -108,7 +108,7 @@
           </Row>
           <Row :gutter="24" :class="$style.recordDetail">
             <Col span="6" :class="$style.detailLabel">交易时间</Col>
-            <Col span="18">{{ localDateTime(detail.created_at) }}</Col>
+            <Col span="18">{{ time ? localDateTime(time) : '' }}</Col>
           </Row>
         </section>
         <div slot="footer"></div>
@@ -283,8 +283,7 @@
       },
 
       localDateTime(time) {
-        
-        let date = new Date(time);
+        var date = new Date(time.replace(/-/g, '/'));
         let y = date.getFullYear();
         let m = date.getMonth() + 1;
         let h = date.getHours();
@@ -304,8 +303,7 @@
       },
 
       localTime (dateString) {
-        dateString = `${dateString}Z`;
-        let newDate = new Date(dateString);
+        let newDate = new Date(dateString.replace(/-/g, '/'));
         let today = (new Date()).toLocaleDateString();
         let yesterday = (new Date(new Date()-86400000)).toLocaleDateString();
         let createdString = newDate.toLocaleDateString();
@@ -432,6 +430,8 @@
         
         return detail;
       },
+
+      time(){ return this.detail.created_at },
       /**
        * 下拉菜单文字
        * @return {[type]} [description]
