@@ -71,6 +71,7 @@
               <div :class="$style.sourceTitle">
                 <h4>{{ news.title }}</h4>
                 <section :class="$style.sourceFrom">
+                  <i class="pinned-icon" style="color: #4bb893;" v-show="isPinned(news.id)">顶</i>
                   <i>
                     <timeago :class="$style.timer" :since="timers(news.created_at, 8, false)" locale="zh-CN" :auto-update="60"></timeago>
                   </i>
@@ -181,7 +182,8 @@
       canEdit: false,
       key: "",   // 查询关键字
       limit: 15, // 每页显示条数
-      showEditBox: false
+      showEditBox: false,
+      pinneds: [],
     }),
     computed: {
       nothing () {
@@ -374,11 +376,25 @@
             }
           }
         });
+      },
+      getPinneds () {
+        addAccessToken().get(createAPI('news/categories/pinneds'),
+          {},{ validateStatus: status => status === 200 }
+        )
+        .then(({ data = {} }) => {
+          this.pinneds = data;
+        })
+      },
+      isPinned (id) {
+        return lodash.findIndex(this.pinneds, {id: id}) == -1 ? false : true;
       }
     },
     created () {
       // 获取用户订阅分类信息
       this.getUserCates();
+      
+      // 获取置顶列表
+      this.getPinneds();
 
       // 获取资讯列表 默认请求推荐资讯
       this.getNewsList('new');
