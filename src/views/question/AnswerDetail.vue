@@ -242,7 +242,7 @@
       position="bottom"
       style="width: 100%;"
       :class="$style.popup"
-      v-if="questionUser === user_id"
+      v-if="questionUser === currentUser"
     >
       <div>
         <Button 
@@ -250,7 +250,7 @@
           size="large" 
           :class="[$style.deleteQuestion, $style.popupButton]" 
           type="text" :long="true"
-          v-if="userId === user_id"
+          v-if="userId === currentUser"
         >
           删除
         </Button>
@@ -317,7 +317,7 @@
           size="large" 
           :class="[$style.deleteQuestion, $style.popupButton]" 
           type="text" :long="true"
-          v-if="userId === user_id"
+          v-if="userId === currentUser"
         >
           删除
         </Button>
@@ -950,8 +950,6 @@
     },
     beforeMount () {
       const { limit } = this;
-      const { user_id = 0 } = this.$storeLocal.get('UserLoginInfo');
-      this.user_id = user_id;
       let answer_id = parseInt(this.$route.params.answer_id) || 0;
       if ( !answer_id ) {
         this.$Message.error('发生了一些错误');
