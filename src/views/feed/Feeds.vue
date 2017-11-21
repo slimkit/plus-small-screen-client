@@ -69,12 +69,13 @@ export default {
             addAccessToken().get(uri, {
                 params
             }).then(({ data: { feeds = [], ad, pinned = [] } = {} }) => {
-                this.feed_max_id = feeds[feeds.length - 1].id;
+                this.feed_max_id = (feeds[feeds.length - 1]||{}).id || 0;
                 addMore ? this.$refs.loadmore.onBottomLoaded() : this.$refs.loadmore.onTopLoaded();
-                this.$refs.loadmore.bottomAllLoaded = feeds.length < 0;
+                this.$refs.loadmore.bottomAllLoaded = feeds.length < params.limit;
                 this.$store.dispatch('ADD_MORE_FEEDS', { feeds, ad, pinned });
             }).catch(({ response: { data = { message: '获取资讯列表失败' } } = {} }) => {
                 this.$Message.error(this.$MessageBundle(data).getMessage());
+                addMore ? this.$refs.loadmore.onBottomLoaded() : this.$refs.loadmore.onTopLoaded();
             });
         },
 

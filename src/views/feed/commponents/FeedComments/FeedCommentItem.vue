@@ -33,7 +33,7 @@ export default {
     methods: {
         changeUrl,
         handleCommentInput() {
-            return this.isMine ? console.log(1) : this.$emit('handleCommentInput', {
+            return this.isMine ? this.$emit('deleteComment', { commentID: this.comment.id, type: 'comment' }) : this.$emit('handleCommentInput', {
                 placeholder: `回复${this.user.name}`,
                 reply_user: this.user.id
             })

@@ -1,6 +1,6 @@
 <template>
     <div class="feed-comment-editor" v-if='value'>
-        <Input v-model="content" type="textarea" :maxlength='maxlength' :autosize="{minRows: 1, maxRows: 4}" :placeholder="placeholder"></Input>
+        <Input v-model="txt" type="textarea" :maxlength='maxlength' :autosize="{minRows: 1, maxRows: 4}" :placeholder="placeholder"></Input>
         <div class="feed-comment-action">
             <p class="feed-comment-count-tips" v-if='len > maxlength*4/5'>
                 <span>{{ len }}</span>/{{maxlength}}
@@ -20,13 +20,13 @@ export default {
     },
     data() {
         return({
-            content: '',
+            txt: '',
             disabled: true
         });
     },
     computed: {
         len() {
-            return this.content.length;
+            return this.txt.length;
         }
     },
     watch:{
@@ -36,17 +36,18 @@ export default {
     },
     methods: {
         handleCommentInput() {
-            this.content = '';
+            this.txt = '';
             this.$emit('handleCommentInput');
         },
         sendComment(){
+            console.log(this.txt);
             if(this.len > 0){
                 this.disabled = true;
-                this.$emit('handleCommentFeed', this.content, ()=>{
+                this.$emit('handleCommentFeed', this.txt, ()=>{
                     this.handleCommentInput();
                 });
             }else{
-                this.$Message.error('评论不能为空')
+                this.$Message.error('评论内容不能为空')
                 return false;
             }
         }

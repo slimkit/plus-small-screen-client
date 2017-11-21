@@ -19,7 +19,7 @@
                 <label>总{{goldName}}数量</label>
                 <Row :gutter="24" type="flex" justify="space-around">
                     <Col span="24" class-name="text-align-right">
-                    <input type="number" style="width: 100%;" autocomplete="off" dir="rtl" v-model.number="amount" />
+                    <input type="number" style="width: 100%;" autocomplete="off" dir="rtl" readonly v-model.number="amount" />
                     </Col>
                 </Row>
             </div>

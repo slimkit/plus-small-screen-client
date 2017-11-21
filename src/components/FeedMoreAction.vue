@@ -2,15 +2,15 @@
     <mt-popup class='feed-more-action' v-model="popConfig.show" position="bottom">
         <div @click='handleClosePop'>
             <template v-if='type==="comment"'>
-                <Button size="large" type="text" :long="true" @click='popConfig.pinnedComment(commentID) || FUNC'>申请评论置顶</Button>
+                <Button size="large" type="text" :long="true" @click='popConfig.showPinnedModal(0, commentID) || FUNC'>申请评论置顶</Button>
                 <Button size="large" type="text" :long="true" @click='popConfig.deleteComment(commentID) || FUNC'>删除评论</Button>
             </template>
             <template v-if='type.indexOf("feed") > -1'>
                 <Button v-if='has_collection' size="large" type="text" :long="true" @click='popConfig.handleCollection("uncollection") || FUNC'>取消收藏</Button>
                 <Button v-else size="large" type="text" :long="true" @click='popConfig.handleCollection("collection") || FUNC'>收藏</Button>
                 <template v-if='isOwn'>
-                    <Button v-if='type==="feed"' size="large" type="text" :long="true" @click='popConfig.pinnedFeed(feedID)'>申请动态置顶</Button>
-                    <Button size="large" type="text" :long="true" @click='popConfig.deleteFeed || FUNC'>删除动态</Button>
+                    <Button v-if='type==="feed"' size="large" type="text" :long="true" @click='popConfig.showPinnedModal(1, feedID) || FUNC'>申请动态置顶</Button>
+                    <Button size="large" type="text" :long="true" @click='popConfig.deleteFeed() || FUNC'>删除动态</Button>
                 </template>
             </template>
             <Button type="text" :long="true" @click='handleClosePop'>取消</Button>
@@ -18,23 +18,21 @@
     </mt-popup>
 </template>
 <script>
-import { SHOWPOPUP, CLOSEPOPUP } from '../stores/types';
-
-const FUNC = function() {};
+import { SHOWPOPUP, CLOSEPOPUP, SHOWPINNEDMODAL } from '../stores/types';
 
 export default {
     name: 'feed-more-action',
     props: {},
     data() {
         return({
-            FUNC,
+            FUNC() { console.log(123); },
         })
     },
     computed: {
         popConfig() {
             return this.$store.getters[SHOWPOPUP];
         },
-        feedID(){
+        feedID() {
             return this.popConfig.feedID || null;
         },
         type() {
@@ -53,7 +51,7 @@ export default {
     methods: {
         handleClosePop() {
             this.$store.dispatch(CLOSEPOPUP);
-        }
+        },
     }
 }
 </script>
