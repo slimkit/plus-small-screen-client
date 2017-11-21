@@ -1,7 +1,7 @@
 <template>
     <Row class-name="footer toolBar menu">
         <Col :span="5" class-name="menu-item">
-        <router-link class="router-link" to="/feeds">
+        <router-link class="router-link" to="/feed">
             <HomeIcon height="26" width="26" color="#999" />
             <i>首页</i>
         </router-link>
