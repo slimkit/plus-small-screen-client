@@ -42,95 +42,80 @@
             <div class="entry">
                 <Row :gutter="24" class="entryMenu" @click.native="changeUrl(`/users/feeds/${mine.id}`)">
                     <Col span="3">
-                    <SapceIcon :height="21" :width="21" color="#59b6d7" />
+                        <SapceIcon :height="21" :width="21" color="#59b6d7" />
                     </Col>
-                    <Col span="16" class="menuText"> 个人主页
-                    </Col>
+                    <Col span="16" class="menuText">个人主页</Col>
                     <Col span="5" class="rightIcon">
-                    <RightArrowIcon height="18" width="18" color="#999" />
+                        <RightArrowIcon height="18" width="18" color="#999" />
                     </Col>
                 </Row>
                 <Row :gutter="24" class="entryMenu" @click.native="changeUrl('/balance')">
                     <Col span="3">
-                    <WalletIcon :height="21" :width="21" color="#59b6d7" />
+                        <WalletIcon :height="21" :width="21" color="#59b6d7" />
                     </Col>
-                    <Col span="12" class="menuText"> 钱包
-                    </Col>
-                    <Col span="9" class="rightIcon">
-                    <span class="balance">{{ showAmount(balance) }} {{ goldName }}</span>
-                    <RightArrowIcon height="18" width="18" color="#ccc" />
+                    <Col span="5" class="menuText">钱包</Col>
+                    <Col span="16" class="rightIcon">
+                        <span class="balance">{{ showAmount(balance) }} {{ goldName }}</span>
+                        <RightArrowIcon height="18" width="18" color="#999" />
                     </Col>
                 </Row>
                 <Row :gutter="24" class="entryMenu" @click.native="changeUrl('/users/collections')">
                     <Col span="3">
-                    <ConnectionIcon :height="21" :width="21" color="#59b6d7" />
+                        <ConnectionIcon :height="21" :width="21" color="#59b6d7" />
                     </Col>
-                    <Col span="16" class="menuText"> 收藏
-                    </Col>
+                    <Col span="16" class="menuText">收藏</Col>
                     <Col span="5" class="rightIcon">
-                    <RightArrowIcon height="18" width="18" color="#999" />
+                        <RightArrowIcon height="18" width="18" color="#999" />
                     </Col>
                 </Row>
                 <Row :gutter="24" class="entryMenu" @click.native="changeUrl('/users/question-answer')">
                     <Col span="3">
-                    <QuestionIcon :height="21" :width="21" color="#59b6d7" />
+                        <QuestionIcon :height="21" :width="21" color="#59b6d7" />
                     </Col>
-                    <Col span="16" class="menuText"> 我的问答
-                    </Col>
+                    <Col span="16" class="menuText">我的问答</Col>
                     <Col span="5" class="rightIcon">
-                    <RightArrowIcon height="18" width="18" color="#999" />
+                        <RightArrowIcon height="18" width="18" color="#999" />
                     </Col>
                 </Row>
             </div>
             <div class="entry">
                 <Row :gutter="24" class="entryMenu" @click.native="changeUrl('/users/feedback')">
                     <Col span="3">
-                    <FeedbackIcon :height="21" :width="21" color="#59b6d7" />
+                        <FeedbackIcon :height="21" :width="21" color="#59b6d7" />
                     </Col>
-                    <Col span="16" class="menuText"> 意见反馈
-                    </Col>
+                    <Col span="16" class="menuText">意见反馈</Col>
                     <Col span="5" class="rightIcon">
-                    <RightArrowIcon height="18" width="18" color="#999" />
+                        <RightArrowIcon height="18" width="18" color="#999" />
                     </Col>
                 </Row>
                 <Row :gutter="24" class="entryMenu" @click.native="handleCertification">
                     <Col span="3">
-                    <AuthIcon height="21" width="21" color="#59b6d7" />
+                        <AuthIcon height="21" width="21" color="#59b6d7" />
                     </Col>
-                    <Col span="10" class="menuText"> 认证
-                    </Col>
+                    <Col span="10" class="menuText">认证</Col>
                     <Col span="11" class="rightIcon">
-                    <span v-if="userCertification && userCertification.status == 1">已认证</span>
-                    <span v-else-if="userCertification && userCertification.status == 0">待审核</span>
-                    <span v-else>未认证</span>
-                    <RightArrowIcon height="18" width="18" color="#999" />
+                        <span v-if="userCertification && userCertification.status == 1">已认证</span>
+                        <span v-else-if="userCertification && userCertification.status == 0">待审核</span>
+                        <span v-else>未认证</span>
+                        <RightArrowIcon height="18" width="18" color="#999" />
                     </Col>
                 </Row>
                 <Row :gutter="24" class="entryMenu" @click.native="changeUrl('/users/systemSetting')">
                     <Col span="3">
-                    <SystemSettingIcon height="21" width="21" color="#59b6d7" />
+                        <SystemSettingIcon height="21" width="21" color="#59b6d7" />
                     </Col>
-                    <Col span="16" class="menuText"> 设置
-                    </Col>
+                    <Col span="16" class="menuText">设置</Col>
                     <Col span="5" class="rightIcon">
-                    <RightArrowIcon height="18" width="18" color="#999" />
+                        <RightArrowIcon height="18" width="18" color="#999" />
                     </Col>
                 </Row>
             </div>
         </div>
         <ToolBar/>
         <mt-popup v-model="isShowCertification" position="bottom" style="width: 100%;" class="CertificationPopup">
-            <div>
-                <Button size="large" class="CertificationOptions" type="text" :long="true" @click="selectCertification('user')">
-                    个人认证
-                </Button>
-                <Button size="large" class="CertificationOptions" type="text" :long="true" @click="selectCertification('org')">
-                    企业认证
-                </Button>
-                <Button size="large" class="CertificationOptions" type="text" :long="true" @click="hideCertificationPopup">
-                    取消
-                </Button>
-            </div>
+                <Button size="large" class="CertificationOptions" type="text" :long="true" @click="selectCertification('user')">个人认证</Button>
+                <Button size="large" class="CertificationOptions" type="text" :long="true" @click="selectCertification('org')">企业认证</Button>
+                <Button size="large" class="CertificationOptions" type="text" :long="true" @click="hideCertificationPopup">取消</Button>
         </mt-popup>
     </div>
 </template>
