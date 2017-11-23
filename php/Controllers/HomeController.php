@@ -28,12 +28,12 @@ class HomeController extends Controller
         return view('plus:h5::index', [
             'jssdkAmap' => $jssdkAmap,
             'siteName' => $siteSetting['name'],
-            'siteKeywords' => $siteSetting['keywords'],
-            'siteDescription' => $siteSetting['description'],
+            'siteKeywords' => isset($siteSetting['keywords']) ?: 'ThinkSNS+',
+            'siteDescription' => isset($siteSetting['description']) ?: 'ThinkSNS+',
             'base_url'   => url('/'),
             'api' => url('api/v2'),
             'apiv1' => url('api/v1'),
-            'goldName' => $gold->name ?? '金币',
+            'goldName' => $gold->name ?: '金币',
             'webSocktUrl' => config('im.open') === true ? $repository->get() : '', // 如果 im 开启，则返回地址，否则返回空。
         ]);
     }
