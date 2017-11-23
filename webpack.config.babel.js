@@ -111,8 +111,9 @@ const webpackConfig = {
     entry: entry,
     output: {
         path: buildAssetsRoot,
-        publicPath: '../',
+        publicPath: '/assets/h5/',
         filename: isProd ? 'js/[chunkhash].js' : 'js/[name].js',
+        chunkFilename: '[name].bundle.js',
     },
     resolve: {
         extensions: ['.js', '.vue', '.json'],
@@ -129,8 +130,7 @@ const webpackConfig = {
             ...styleLoaders({ sourceMap: !isProd }),
             {
                 test: /\.vue$/,
-                use: [
-                    {
+                use: [{
                         loader: 'vue-loader',
                         options: {
                             loaders: cssLoaders({
@@ -175,24 +175,18 @@ const webpackConfig = {
                 'NODE_ENV': JSON.stringify(NODE_ENV),
             },
         }),
-        // extract css into its own file
         new ExtractTextPlugin({
             filename: isProd ? 'css/[chunkhash].css' : 'css/[name].css'
         }),
-        new WebpackLaravelMixManifest(),
 
         new webpack.optimize.OccurrenceOrderPlugin(),
 
         new CleanWebpackPlugin(
-            ['./*'], // 匹配删除的文件
-            {
-                root: buildAssetsRoot, // 根目录
-                verbose: true, // 开启在控制台输出信息
-                dry: false // 启用删除文件
-            }
+            ['./*'],
+            { root: buildAssetsRoot, verbose: true, dry: false }
         ),
-
         ...plugins,
+        new WebpackLaravelMixManifest(),
     ]
 };
 

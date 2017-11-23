@@ -39,7 +39,7 @@
           用户名
         </Col>
         <Col span="14">
-          <input style="padding: 0;" type="text" v-model.trim="name" :value="name" placeholder="输入新用户名" />
+          <input style="padding: 0;" type="text" v-model.trim="name" placeholder="输入新用户名" />
         </Col>
         <Col span="5" :class="$style.rightIcon"  @click.native="clean('name')">
           <CloseIcon height="18" width="18" color="#999" />

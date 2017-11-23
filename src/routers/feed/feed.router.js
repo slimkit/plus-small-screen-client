@@ -1,12 +1,14 @@
-import Feeds from '../../views/feed/Feeds';
-// import FeedDetail from '../../views/feed/FeedDetail';
-import FeedDetail from '../../views/FeedDetail.vue';
+const Feeds = () =>
+    import(/* webpackChunkName: "feed" */ '../../views/feed/Feeds');
+const FeedDetail = () =>
+    import(/* webpackChunkName: "feed" */ '../../views/FeedDetail.vue');
+    // import(/* webpackChunkName: "feed" */ '../../views/feed/FeedDetail');
 
 export default [{
     name: 'feed',
     path: '/feed/:type',
     component: Feeds,
-    meta:{
+    meta: {
         title: '动态'
     }
 }, {
