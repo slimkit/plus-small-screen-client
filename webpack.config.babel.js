@@ -27,11 +27,13 @@ const isProd = NODE_ENV === 'production';
 
 // 各项资源地址定义
 const assetsRoot = path.resolve(__dirname, 'src');
+const assetsRoot2 = path.resolve(__dirname, 'src_v2');
 const buildAssetsRoot = path.resolve(__dirname, 'dist');
 
 // 入口配置
 const entry = {
-    app: path.resolve(assetsRoot, 'index.js')
+    // app: path.resolve(assetsRoot, 'index.js')
+    app: path.resolve(assetsRoot2, 'index.js')
 };
 
 function cssLoaders(options = {}) {

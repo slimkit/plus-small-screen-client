@@ -85,7 +85,7 @@ export default {
             this.getFeedList();
         },
         loadTop() {
-            this.getFeedList(true);
+            this.getFeedList(false);
         }
     },
     created() {
