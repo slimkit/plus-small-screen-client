@@ -38,16 +38,23 @@ const entry = {
 
 function cssLoaders(options = {}) {
     const cssLoader = {
-        loader: 'css-loader',
-        options: {
-            minimize: isProd,
-            sourceMap: options.sourceMap
-        }
-    };
-
+            loader: 'css-loader',
+            options: {
+                minimize: isProd,
+                sourceMap: options.sourceMap
+            }
+        },
+        px2remLoader = {
+            loader: 'px2rem-loader',
+            options: {
+                remUnit: 100,
+                remPrecision: 8,
+                threeVersion: true
+            }
+        };
     // generate loader string to be used with extract text plugin
     function generateLoaders(loader, loaderOptions) {
-        let loaders = [cssLoader];
+        let loaders = [cssLoader, px2remLoader];
         if(loader) {
             loaders.push({
                 loader: loader + '-loader',
@@ -120,11 +127,12 @@ const webpackConfig = {
     resolve: {
         extensions: ['.js', '.vue', '.json'],
         modules: [
-            assetsRoot,
+            // assetsRoot,
+            assetsRoot2,
             path.join(__dirname, 'node_modules'),
         ],
         alias: {
-            'vue$': `vue/dist/vue.common.js`,
+            'vue$': `vue/dist/vue.common.js`
         }
     },
     module: {
@@ -151,7 +159,8 @@ const webpackConfig = {
             {
                 test: /\.js$/,
                 loader: 'babel-loader',
-                include: [assetsRoot]
+                // include: [assetsRoot]
+                include: [assetsRoot2]
             },
             {
                 test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,

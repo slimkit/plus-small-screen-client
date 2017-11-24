@@ -1,11 +1,16 @@
 <template>
-    <div id="app">
-        APP
+    <div>
+        <keep-alive>
+            <router-view v-if="$route.meta.keepAlive"></router-view>
+        </keep-alive>
+        <router-view v-if="!$route.meta.keepAlive"></router-view>
     </div>
 </template>
-
 <script>
-    export default {
-        name: 'app'
-    }
+export default {
+    name: 'app'
+}
 </script>
+<style lang="less">
+@import './style/common';
+</style>
