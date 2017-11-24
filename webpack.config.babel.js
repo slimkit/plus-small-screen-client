@@ -113,7 +113,7 @@ const webpackConfig = {
         path: buildAssetsRoot,
         publicPath: '/assets/h5/',
         filename: isProd ? 'js/[chunkhash].js' : 'js/[name].js',
-        chunkFilename: '[name].bundle.js',
+        chunkFilename: isProd ? 'js/[chunkhash].js' : 'js/[name].bundle.js',
     },
     resolve: {
         extensions: ['.js', '.vue', '.json'],
@@ -175,17 +175,28 @@ const webpackConfig = {
                 'NODE_ENV': JSON.stringify(NODE_ENV),
             },
         }),
+        new CleanWebpackPlugin(
+            ['./*'], { root: buildAssetsRoot, verbose: true, dry: false }
+        ),
         new ExtractTextPlugin({
             filename: isProd ? 'css/[chunkhash].css' : 'css/[name].css'
         }),
-
+        new webpack.optimize.CommonsChunkPlugin({
+            name: 'vendor',
+            minChunks: function(module) {
+                // any required modules inside node_modules are extracted to vendor
+                return(
+                    module.resource &&
+                    /\.js$/.test(module.resource) &&
+                    module.resource.indexOf(
+                        path.join(__dirname, './node_modules')
+                    ) === 0
+                )
+            }
+        }),
         new webpack.optimize.OccurrenceOrderPlugin(),
-
-        new CleanWebpackPlugin(
-            ['./*'],
-            { root: buildAssetsRoot, verbose: true, dry: false }
-        ),
         ...plugins,
+
         new WebpackLaravelMixManifest(),
     ]
 };

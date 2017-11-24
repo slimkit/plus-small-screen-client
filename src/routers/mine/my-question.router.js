@@ -1,18 +1,20 @@
 /**
  * 我的问答 [路由]
  */
-
-import { requestAuth } from '../../utils/auth';
-
-import MyQuestionAnswerMain from '../../views/my/questionAnswer/Main';
-import MyQuestionAnswerQuestion from '../../views/my/questionAnswer/Question';
-import MyQuestionAnswerQuestionList from '../../views/my/questionAnswer/QuestionList.vue';
-
-import MyQuestionAnswerAnswer from '../../views/my/questionAnswer/Answer';
-import MyQuestionAnswerAnswerList from '../../views/my/questionAnswer/AnswerList';
-
-import MyQuestionAnswerFollow from '../../views/my/questionAnswer/Follow';
-import MyQuestionAnswerFollowList from '../../views/my/questionAnswer/FollowList';
+const MyQuestionAnswerMain = () =>
+    import( /* webpackChunkName: 'my-questions' */ '../../views/my/questionAnswer/Main');
+const MyQuestionAnswerQuestion = () =>
+    import( /* webpackChunkName: 'my-questions' */ '../../views/my/questionAnswer/Question');
+const MyQuestionAnswerQuestionList = () =>
+    import( /* webpackChunkName: 'my-questions' */ '../../views/my/questionAnswer/QuestionList');
+const MyQuestionAnswerAnswer = () =>
+    import( /* webpackChunkName: 'my-questions' */ '../../views/my/questionAnswer/Answer');
+const MyQuestionAnswerAnswerList = () =>
+    import( /* webpackChunkName: 'my-questions' */ '../../views/my/questionAnswer/AnswerList');
+const MyQuestionAnswerFollow = () =>
+    import( /* webpackChunkName: 'my-questions' */ '../../views/my/questionAnswer/Follow');
+const MyQuestionAnswerFollowList = () =>
+    import( /* webpackChunkName: 'my-questions' */ '../../views/my/questionAnswer/FollowList');
 
 export default [{
     path: '/users/question-answer',
@@ -72,7 +74,4 @@ export default [{
             },
         }, ]
     }, ],
-    beforeEnter: (to, from, next) => {
-        requestAuth(to, from, next);
-    }
 }];

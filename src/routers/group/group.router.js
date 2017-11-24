@@ -1,8 +1,12 @@
 // 圈子
-import Group from "../../views/group/Group";
-import GroupList from "../../views/group/GroupList";
-import GroupDetail from "../../views/group/GroupDetail";
-import GroupFeedDetail from "../../views/group/GroupFeedDetail";
+const Group = () =>
+    import( /* webpackChunkName: "group" */ "../../views/group/Group");
+const GroupList = () =>
+    import( /* webpackChunkName: "group" */ "../../views/group/GroupList");
+const GroupDetail = () =>
+    import( /* webpackChunkName: "group" */ "../../views/group/GroupDetail");
+const GroupFeedDetail = () =>
+    import( /* webpackChunkName: "group" */ "../../views/group/GroupFeedDetail");
 
 export default [{
     path: '/group',

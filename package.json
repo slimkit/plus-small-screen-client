@@ -70,8 +70,7 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack --progress --hide-modules --colors",
     "watch": "npm run dev -- -w",
-    "hot": "cross-env NODE_ENV=development webpack-dev-server --hot --colors",
-    "dist": "cross-env NODE_ENV=production webpack --display-error-details --progress --colors"
+    "dist": "cross-env NODE_ENV=production webpack --progress --hide-modules --colors"
   },
   "browserslist": [
     "Android 2.3",
