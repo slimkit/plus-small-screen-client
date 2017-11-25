@@ -45,6 +45,9 @@ export default {
             this.$root.showModal();
         }
     },
+    mounted() {
+        this.$el.parentNode.style.paddingBottom = '1rem';
+    }
 }
 </script>
 <style lang="less">

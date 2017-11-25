@@ -1,5 +1,5 @@
 <template>
-    <div class="not_found" @click='$router.push("/")'>
+    <div class="not_found" @click='$router.go(-1)'>
         <svg viewBox="0 0 600 300">
             <!-- Symbol -->
             <symbol id="s-text">
@@ -11,7 +11,7 @@
             <use xlink:href="#s-text" class="text"></use>
             <use xlink:href="#s-text" class="text"></use>
             <use xlink:href="#s-text" class="text"></use>
-            <text x="50%" y="290" class='tips_text'>页面走丢了, 点击返回首页吧</text>
+            <text x="50%" y="290" class='tips_text'>页面走丢了, 点击返回上一页</text>
         </svg>
     </div>
 </template>

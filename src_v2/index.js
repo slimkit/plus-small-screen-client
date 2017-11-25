@@ -20,7 +20,6 @@ components.forEach(component => {
 
 Vue.config.productionTip = false;
 
-
 if('addEventListener' in document) {
     document.addEventListener('DOMContentLoaded', function() {
         FastClick.attach(document.body);
