@@ -11,6 +11,4 @@ export default {
     name: 'app'
 }
 </script>
-<style lang="less">
-@import './style/common';
-</style>
+<style lang="less"></style>

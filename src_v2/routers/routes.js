@@ -2,24 +2,24 @@ import App from '../App';
 import NotFound from '../page/notFound'
 
 const feed = () =>
-    import('../page/feed/feed'),
+    import(/* webpackChunkName: 'feed' */ '../page/feed/feed'),
     discover = () =>
     import('../page/discover/discover'),
     message = () =>
-    import('../page/message/message'),
+    import(/* webpackChunkName: 'message' */'../page/message/message'),
     profile = () =>
-    import('../page/profile/profile'),
+    import(/* webpackChunkName: 'profile' */ '../page/profile/profile'),
 
     news = () =>
-    import('../page/news/news'),
+    import(/* webpackChunkName: 'news' */ '../page/news/news'),
     group = () =>
-    import('../page/group/group'),
+    import(/* webpackChunkName: 'group' */'../page/group/group'),
     question = () =>
-    import('../page/question/question'),
+    import(/* webpackChunkName: 'question' */'../page/question/question'),
     rank = () =>
-    import('../page/rank/rank'),
+    import(/* webpackChunkName: 'rank' */'../page/rank/rank'),
     find = () =>
-    import('../page/find/find');
+    import(/* webpackChunkName: 'find' */'../page/find/find');
 
 const router = [{
     path: '/',
@@ -28,7 +28,6 @@ const router = [{
 
         /* 基础入口 */
         { path: '', redirect: '/feed/new' }, 
-        { path: '*', component: NotFound } /* 404 页面 */
         { path: '/profile', component: profile, meta: { title: '我' } }, /* 个人中心 */
         { path: '/discover', component: discover, meta: { title: '发现' } }, /* 发现 */
 
@@ -40,6 +39,8 @@ const router = [{
         { path: '/question', component: question, meta: { title: '问答' } }, /* 问答 */
         { path: '/feed/:type', component: feed, meta: { keepAlive: true } }, /* 动态 */
         { path: '/message/:type', component: message, meta: { keepAlive: true } }, /* 消息 */
+        
+        { path: '*', component: NotFound }, /* 404 页面 */
     ]
 }];
 

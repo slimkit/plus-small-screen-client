@@ -7,12 +7,14 @@ import './util/rem';
 // 引入 `iview` 样式
 // import 'style/them/index.less';
 // Vue.use(i_View);
+import './style/index.less';
 
 /** common components */
-import svgIcons from './components/common/svgIcon'; /* svg icons */
-import vIcon from './components/common/vIcons';
-import badge from './components/common/badge'; /* badge 徽标 */
-const components = [svgIcons, vIcon, badge];
+import svgIcons from './components/common/svgIcon'; /* Svg icons */
+import vIcon from './components/common/vIcons'; /* Icons */
+import badge from './components/common/badge'; /* Badge 徽标 */
+import userAvatar from './components/common/userAvatar'; /* Avatar 用户头像组件 */
+const components = [svgIcons, vIcon, badge, userAvatar];
 
 components.forEach(component => {
     Vue.component(component.name, component);
@@ -33,7 +35,7 @@ new Vue({
         show_modal: false
     },
     methods: {
-        showModal(){
+        showModal() {
             this.show_modal = !this.show_modal;
         }
     }

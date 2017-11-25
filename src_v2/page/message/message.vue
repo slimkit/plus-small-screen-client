@@ -30,6 +30,4 @@ export default {
     }
 }
 </script>
-<style lang="less">
-@import '../../style/mixin';
-</style>
+<style lang="less"></style>

@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="API" content="{{ $api }}" >
-  <meta name="SOCKETURL" content="{{ $webSocktUrl }}" >
-  <meta name="GOLDNAME" content="{{ $goldName }}" >
+  <meta name="api-basename" content="{{ $api }}" >
+  <meta name="socket-url" content="{{ $webSocktUrl }}" >
+  <meta name="gold-name" content="{{ $goldName }}" >
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <meta name="keywords" content="{{ $siteKeywords }}">

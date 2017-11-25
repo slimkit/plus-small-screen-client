@@ -19,6 +19,8 @@ body, div, span, header, footer, nav, section, aside, article, ul, dl, dt, dd, l
 }
 
 
+
+
 /*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
 
 ::-webkit-scrollbar {
@@ -28,6 +30,8 @@ body, div, span, header, footer, nav, section, aside, article, ul, dl, dt, dd, l
 }
 
 
+
+
 /*定义滚动条轨道 内阴影+圆角*/
 
 ::-webkit-scrollbar-track {
@@ -35,6 +39,8 @@ body, div, span, header, footer, nav, section, aside, article, ul, dl, dt, dd, l
     border-radius: 10px;
     background-color: #F5F5F5;
 }
+
+
 
 
 /*定义滑块 内阴影+圆角*/
@@ -81,9 +87,50 @@ a {
     }
 }
 
+
+
 /* 文本超出显示... */
-.ellipsis{
+
+.ellipsis {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+
+
+/* 统一入口样式 */
+
+.entry_group {
+    background: #fff;
+    padding-left: 20px;
+    padding-right: 20px;
+    +.entry_group {
+        margin-top: 20px;
+    }
+    .entry_item {
+        height: 100px;
+        display: flex;
+        align-items: center;
+        +.entry_item {
+            border-top: 1px solid #ededed;
+        }
+        .entry_title {
+            flex: 1 1 auto;
+            font-size: 30px;
+            color: #000;
+        }
+        .entry_append,
+        .entry_prepend {
+            margin-left: 10px;
+            margin-right: 10px;
+            width: 40px;
+            height: 40px;
+        }
+        .entry_append {
+            fill: #dfdfdf;
+            width: 36px;
+            height: 36px;
+        }
+    }
 }

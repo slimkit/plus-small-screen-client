@@ -1,6 +1,7 @@
 <template>
     <div>
         <head-top title='我' />
+
         <foot-guide></foot-guide>
     </div>
 </template>
@@ -12,9 +13,19 @@ export default {
     components: {
         HeadTop,
         FootGuide
+    },
+    data(){ return{
+        entrys:[{
+
+        }]
+    } },
+    methods:{
+        to(path){
+            this.$route.push({ path });
+        }
     }
 }
 </script>
 <style lang="less">
-@import '../../style/mixin';
+
 </style>

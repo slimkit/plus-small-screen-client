@@ -1,0 +1,55 @@
+// Avatar
+@avatar-prefix-cls: v-avatar;
+@avatar-size-base: 76px;
+@avatar-size-lg: 120px;
+@avatar-size-sm: 42px;
+@avatar-font-size-base: 18px;
+@avatar-font-size-lg: 24px;
+@avatar-font-size-sm: 14px;
+@avatar-bg: #ccc;
+@avatar-color: #fff;
+@avatar-border-radius: @border-radius-small;
+.@{avatar-prefix-cls} {
+    display: inline-block;
+    text-align: center;
+    background: @avatar-bg;
+    color: @avatar-color;
+    white-space: nowrap;
+    position: relative;
+    overflow: hidden;
+    vertical-align: middle;
+
+    .avatar-size(@avatar-size-base, @avatar-font-size-base);
+
+    &-large {
+        .avatar-size(@avatar-size-lg, @avatar-font-size-lg);
+    }
+
+    &-small {
+        .avatar-size(@avatar-size-sm, @avatar-font-size-sm);
+    }
+
+    &-square {
+        border-radius: @avatar-border-radius;
+    }
+
+    &>img {
+        width: 100%;
+        height: 100%;
+    }
+}
+
+.avatar-size(@size, @font-size) {
+    width: @size;
+    height: @size;
+    line-height: @size;
+    border-radius: @size / 2;
+
+    &>* {
+        line-height: @size;
+    }
+
+    &.@{avatar-prefix-cls}-icon {
+        font-size: @font-size;
+    }
+}
