@@ -1,0 +1,38 @@
+@load-more-prefix-cls: v-load-more;
+@load-more-top-height: 90px;
+@load-more-bottom-height: 100px;
+.@{load-more-prefix-cls} {
+    overflow: hidden;
+    &-wrap {
+        overflow-y: auto;
+    }
+    &-content {
+        transition: .2s;
+        &.is-dropped {
+            transition: .2s;
+        }
+    }
+    &-top, &-bottom {
+        font-size: 32px;
+        text-align: center;
+    }
+    &-top {
+        margin-top: -@load-more-top-height;
+        height: @load-more-top-height;
+        line-height: @load-more-top-height;
+    }
+    &-bottom {
+        transition: .2s;
+        margin-bottom: -@load-more-bottom-height;
+        height: @load-more-bottom-height;
+        line-height: @load-more-bottom-height;
+    }
+    &-spinner {
+        display: inline-block;
+        margin-right: .05rem;
+        vertical-align: middle;
+    }
+    &-text {
+        vertical-align: middle;
+    }
+}

@@ -63,7 +63,7 @@
     "vue-cropperjs": "^2.1.0",
     "vue-recyclist": "^1.0.8",
     "vue-router": "^2.4.0",
-    "vue-scroller": "^2.2.0",
+    "vue-scroller": "^2.2.4",
     "vue-timeago": "^3.4.0",
     "vue-wechat-title": "^2.0.4",
     "vuex": "^2.3.1",

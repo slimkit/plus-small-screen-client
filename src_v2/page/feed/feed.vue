@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div style="height: 100%">
         <head-top>
             <div slot='nav' class="head_nav">
                 <router-link class='head_nav_item' to="/feed/new">最新</router-link>
@@ -7,9 +7,11 @@
                 <router-link class='head_nav_item' to="/feed/follow">关注</router-link>
             </div>
         </head-top>
-        <div class="feed_container">
-            <feed-item v-for='feed in feeds' :feed='feed' :key='`feed-${feed_type}-${feed.id}`'></feed-item>
-        </div>
+        <load-more :topMethod='refresh' :bottomMethod='loaderMore' :bottomAllLoaded='bottomAllLoaded' ref='loadMore'>
+            <template slot='list'>
+                <feed-item v-for='feed in feeds' :feed='feed' :key='`feed-${feed_type}-${feed.id}`'></feed-item>
+            </template>
+        </load-more>
         <foot-guide></foot-guide>
     </div>
 </template>
@@ -17,9 +19,7 @@
 import HeadTop from '../../components/HeadTop';
 import FootGuide from '../../components/FootGuide';
 import components from './components/';
-
 import { getFeeds } from '../../service/getData';
-
 const types = ['new', 'hot', 'follow'];
 export default {
     name: 'feedIndex',
@@ -31,20 +31,47 @@ export default {
     data() {
         return {
             feed_type: this.$route.params.type,
-            feeds: []
+            feeds: [],
+            busy: false,
+            bottomAllLoaded: false
         }
     },
     watch: {
-        $route({params: { type }}) {
+        $route({ params: { type } }) {
             this.feed_type = type;
             this.feeds = [];
             this.getFeeds();
         }
     },
     methods: {
+        refresh() {
+            return new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    if(this.$refs.loadMore) {
+                        this.$refs.loadMore.onTopLoaded();
+                    }
+                    resolve()
+                }, 2000)
+            })
+        },
+        loaderMore() {
+            return new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    this.bottomAllLoaded = true;
+                    if(this.$refs.loadMore) {
+                        this.$refs.loadMore.onBottomLoaded();
+                    }
+                    resolve()
+                }, 2000)
+            })
+        },
+        infinite() {},
         getFeeds() {
-            getFeeds({ type: this.feed_type }).then(({ feeds = [], pinned = [], ad = [] }) => {
+            getFeeds({ type: this.feed_type, limit: 11 }).then(({ feeds = [], pinned = [], ad = [] }) => {
                 this.feeds = [...feeds, ...this.feeds];
+                if(feeds.lenght < 12) {
+                    this.bottomAllLoaded = true;
+                }
             });
         }
     },
