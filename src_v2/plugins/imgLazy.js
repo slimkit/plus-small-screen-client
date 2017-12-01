@@ -49,6 +49,10 @@ export default(Vue, options = {}) => {　　
             image.src = src;
             image.onload = () => {
                 ele.src = src;
+                const s = image.naturalHeight / image.naturalWidth;
+                if(s > 3 || s < 0.3) {
+                    ele.parentNode.classList.add('long');
+                }
                 imageCatcheList.push(src);
                 listenList.remove(item);
             }

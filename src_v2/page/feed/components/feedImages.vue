@@ -117,13 +117,28 @@ export default {
             display: block;
             padding-top: 100%;
         }
+        &.long:before {
+            content: '长图';
+            display: block;
+            position: absolute;
+            bottom: 1px;/*no*/
+            right: 1px;/*no*/
+            padding: 0 5px;
+            height: 30px;
+            border-radius: 1px; /*no*/
+            line-height: 30px;
+            font-size: 20px;
+            z-index: 1;
+            color: #fff;
+            opacity: .9;
+            background: linear-gradient(135deg, #E8D1B3 0%, #E8D1B3 38%, #C8A06C 42%, #C8A06C 100%)
+        }
     }
     &-i1 {
         .feed_img-img-w {
             width: 100%;
             background: none;
-            position: initial;
-            &:after{
+            &:after {
                 display: none;
             }
             img {
@@ -180,13 +195,15 @@ export default {
             width: calc(~'33.333% - 4px');
         }
     }
-    &-i8{        
+    &-i8 {
         .feed_img-img-w:nth-child(3),
-        .feed_img-img-w:nth-child(4){
+        .feed_img-img-w:nth-child(4) {
             width: calc(~'50% - 4px');
         }
     }
 }
+
+
 
 
 
