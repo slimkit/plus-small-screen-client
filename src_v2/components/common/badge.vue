@@ -78,19 +78,19 @@ export default {
         top: -10px;
         right: 0;
         height: 20px;
-        border-radius: 10px;
         min-width: 20px;
-        background: #ed3f14;
-        border: 1px solid transparent;
+        border-radius: 10px;
+        background: #f4504d;
+        border: 1px solid transparent; /*no*/
         color: #fff;
-        line-height: 18px;
+        line-height: 20px;
         text-align: center;
         padding: 0 6px;
-        font-size: 12px;
+        font-size: 16px;
         white-space: nowrap;
         transform-origin: -10% center;
         z-index: 10;
-        box-shadow: 0 0 0 1px #fff;
+        box-shadow: 0 0 0 1px #f4504d; /*no*/
 
         a,
         a:hover {
@@ -109,14 +109,19 @@ export default {
         position: absolute;
         transform: translateX(-50%);
         transform-origin: 0 center;
-        top: -4px;
-        right: -8px;
-        height: 8px;
-        width: 8px;
+        top: -3px;
+        /* no */
+        right: -6px;
+        /* no */
+        height: 6px;
+        /* no */
+        width: 6px;
+        /* no */
         border-radius: 100%;
-        background: #ed3f14;
+        background: #f4504d;
         z-index: 10;
-        box-shadow: 0 0 0 1px #fff;
+        box-shadow: 0 0 0 1px #f4504d;
+        /* no */
     }
 }
 </style>

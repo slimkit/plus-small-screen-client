@@ -9,17 +9,17 @@
             <span>发现</span>
         </section>
         <section @click="showPostOption" class="guide_item plus">
-            <v-icon type='foot-plus' color='#fff' class='foot_guide_icon' />
+            <v-icon type='foot-plus' class='foot_guide_icon' />
         </section>
         <section @click="to('/message/msg')" class="guide_item" :class="{active: isCurPath('/message')}">
             <v-badge :dot='has_msg'>
-                <v-icon type='foot-message' color='#fff' class='foot_guide_icon' />
+                <v-icon type='foot-message' class='foot_guide_icon' />
             </v-badge>
             <span>消息</span>
         </section>
         <section @click="to('/profile')" class="guide_item" :class="{active: isCurPath('profile')}">
             <v-badge :dot='has_fans'>
-                <v-icon type='foot-profile' color='#fff' class='foot_guide_icon' />
+                <v-icon type='foot-profile' class='foot_guide_icon' />
             </v-badge>
             <span>我</span>
         </section>
@@ -80,34 +80,29 @@ export default {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    &.plus {
-        background-color: #59b6d7;
-        margin: 0 15px;
-        .foot_guide_icon {
-            width: 70px;
-            height: 70px;
-            fill: #fff;
-        }
-    }
-    &.active {
-        span {
-            color: #59b6d7;
-        }
-        .foot_guide_icon {
-            fill: #59b6d7;
-        }
-    }
+    color: #ccc;
     .foot_guide_icon {
-        width: 50px;
-        height: 50px;
-        fill: #ccc;
+        width: 45px;
+        height: 45px;
         +.v-badge-dot {
             top: 0;
         }
     }
+    &.plus {
+        background-color: #59b6d7;
+        margin: 0 15px;
+        svg {
+            color: #fff;
+            width: 60px;
+            height: 60px;
+        }
+    }
+    &.active {
+        color: #59b6d7;
+    }
     span {
         font-size: 24px;
-        color: #ccc;
+        color: inherit;
     }
 }
 </style>

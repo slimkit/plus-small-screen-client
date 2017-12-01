@@ -1,10 +1,11 @@
 <template>
     <span :class="classes">
         <img :src="imgSrc" v-if="imgSrc" ref='img'>
-        <v-icon :type="icon" v-else-if="icon" class='avatar_icon'></v-icon>
+        <v-icon :type="icon" width='100%' height='100%' v-else-if="icon" class='avatar_icon'></v-icon>
         <span ref="children" :class="[prefixCls + '-string']" :style="childrenStyle" v-else>
             <slot></slot>
         </span>
+        <v-icon :type="badeg" v-if="badeg" class='avatar_badeg'></v-icon>
     </span>
 </template>
 <script>
@@ -27,6 +28,9 @@ export default {
         },
         src: {
             type: String
+        },
+        badeg: {
+            type: [String]
         },
         sex: {
             type: [String, Number]
@@ -107,9 +111,3 @@ export default {
     }
 };
 </script>
-<style>
-.avatar_icon {
-    width: 100%;
-    height: 100%;
-}
-</style>

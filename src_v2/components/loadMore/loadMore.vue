@@ -8,7 +8,7 @@
                         <span :class="[`${prefixCls}-text`]">{{ topText }}</span>
                     </div>
                 </slot>
-                <slot name='list'></slot>
+                <slot></slot>
                 <slot name="bottom">
                     <div :class="[`${prefixCls}-bottom`]" v-if="bottomMethod">
                         <template v-if='bottomAllLoaded'>

@@ -1,15 +1,21 @@
 <template>
     <div class="header">
-        <slot name='prepend'>
-            <section class="head_goback" v-if="goBack" @click="goBackFn">
-                <v-icon type='base-back' />
-            </section>
-        </slot>
+        <div class="head_goback">
+            <slot name='prepend'>
+                <section v-if="goBack" @click="goBackFn">
+                    <v-icon type='base-back' />
+                </section>
+            </slot>
+        </div>
         <slot name='title'>
             <div class="header_title ellipsis" v-if='title'>{{ title || $route.meta.title }}</div>
         </slot>
         <slot name='nav'></slot>
-        <slot name='append'></slot>
+        <div class="head_append" v-if="append">
+            <slot name='append'>
+                <section @click="to('/signup')">注册</section>
+            </slot>
+        </div>
     </div>
 </template>
 <script>
@@ -17,7 +23,8 @@ export default {
     name: 'HeaderTop',
     props: {
         title: String,
-        goBack: [Boolean, Function]
+        goBack: [Boolean, Function],
+        append: [Boolean, String]
     },
     computed: {},
     methods: {
@@ -25,6 +32,11 @@ export default {
             return typeof this.goBack === 'function' ?
                 this.goBack :
                 this.$router.go(-1);
+        },
+        to(path) {
+            if(path) {
+                this.$router.push({ path });
+            }
         }
     }
 }
@@ -44,7 +56,7 @@ export default {
     width: 100%;
     line-height: 90px;
     background: #fff;
-    border-bottom: 2px solid #ededed;
+    border-bottom: 1px solid #ededed; /* no */
     .header_title {
         position: absolute;
         top: 50%;
@@ -72,14 +84,14 @@ export default {
             text-align: center;
             font-size: 32px;
             width: 90px;
-            border-bottom: 3px solid transparent;
-            + .head_nav_item{
+            border-bottom: 2px solid transparent; /* no */
+            +.head_nav_item {
                 margin-left: 50px;
             }
-            &.router-link-active{
-                color: #333;
-                border-bottom-color: #59b6d7;
-            }
+        }
+        .router-link-active {
+            color: #333;
+            border-bottom-color: #59b6d7;
         }
     }
     .head_goback {
@@ -92,6 +104,14 @@ export default {
             top: 50%;
             transform: translateY(-50%);
         }
+    }
+    .head_append {
+        font-size: 32px;
+        right: 30px;
+        color: #59b6d7;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
     }
 }
 </style>

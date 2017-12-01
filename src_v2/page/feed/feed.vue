@@ -1,5 +1,5 @@
 <template>
-    <div style="height: 100%">
+    <div>
         <head-top>
             <div slot='nav' class="head_nav">
                 <router-link class='head_nav_item' to="/feed/new">最新</router-link>
@@ -7,20 +7,20 @@
                 <router-link class='head_nav_item' to="/feed/follow">关注</router-link>
             </div>
         </head-top>
-        <load-more :topMethod='refresh' :bottomMethod='loaderMore' :bottomAllLoaded='bottomAllLoaded' ref='loadMore'>
-            <template slot='list'>
-                <feed-item v-for='feed in feeds' :feed='feed' :key='`feed-${feed_type}-${feed.id}`'></feed-item>
-            </template>
-        </load-more>
+        <div>
+            <feed-item v-for='feed in feeds' :feed='feed' :key='`feed-${feed_type}-${feed.id}`'></feed-item>
+        </div>
         <foot-guide></foot-guide>
     </div>
 </template>
 <script>
+import { oneOf } from '../../util/';
+import components from './components/';
 import HeadTop from '../../components/HeadTop';
 import FootGuide from '../../components/FootGuide';
-import components from './components/';
-import { getFeeds } from '../../service/getData';
 const types = ['new', 'hot', 'follow'];
+
+import { api } from '../../http';
 export default {
     name: 'feedIndex',
     components: {
@@ -38,42 +38,36 @@ export default {
     },
     watch: {
         $route({ params: { type } }) {
-            this.feed_type = type;
-            this.feeds = [];
-            this.getFeeds();
+            /* 判断路由是否变化 */
+            if(oneOf(type, types) && type != this.feed_type) {
+                this.updateList();
+            }
         }
     },
     methods: {
-        refresh() {
-            return new Promise((resolve, reject) => {
-                setTimeout(() => {
-                    if(this.$refs.loadMore) {
-                        this.$refs.loadMore.onTopLoaded();
-                    }
-                    resolve()
-                }, 2000)
-            })
-        },
-        loaderMore() {
-            return new Promise((resolve, reject) => {
-                setTimeout(() => {
-                    this.bottomAllLoaded = true;
-                    if(this.$refs.loadMore) {
-                        this.$refs.loadMore.onBottomLoaded();
-                    }
-                    resolve()
-                }, 2000)
-            })
-        },
-        infinite() {},
         getFeeds() {
-            getFeeds({ type: this.feed_type, limit: 11 }).then(({ feeds = [], pinned = [], ad = [] }) => {
+            this.$http.get('/feeds', {
+                params: {
+                    type: this.feed_type,
+                    limit: 30
+                }
+            }).then((res) => {
+                const { data: { feeds = [], pinned = [], ad = [] } } = res;
                 this.feeds = [...feeds, ...this.feeds];
                 if(feeds.lenght < 12) {
                     this.bottomAllLoaded = true;
                 }
-            });
-        }
+            }).catch(({ response: { data = { message: '获取动态列表失败' }} })=>{
+                this.$Message.error(data)
+            })
+        },
+        updateList() {
+            const type = this.$route.params.type;
+            this.feeds = [];
+            this.feed_type = type;
+            this.$store.commit('SAVE_FEED_TYPE', type);
+            this.getFeeds();
+        },
     },
     /**
      * 组件内 路由守卫 
@@ -85,7 +79,10 @@ export default {
     },
 
     created() {
-        this.getFeeds();
+        this.updateList();
+    },
+    beforeDestroy(){
+        this.$store.commit('SAVE_FEED_TYPE', '');
     }
 }
 </script>

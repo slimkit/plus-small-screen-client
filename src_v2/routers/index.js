@@ -5,26 +5,21 @@ import VueRouter from 'vue-router';
 import routes from './routes';
 
 Vue.use(VueRouter);
-const scrollBehavior = (to, from, savedPosition) => {
-    if(savedPosition) {
-        return savedPosition;
-    } else {
-        const position = {};
-        if(to.hash) {
-            position.selector = to.hash;
-        }
-        if(to.matched.some(m => m.meta.scrollToTop)) {
-            position.x = 0;
-            position.y = 0;
-        }
-        return position;
-    }
-};
 const router = new VueRouter({
+    routes,
     mode: 'history',
     base: '/h5',
-    scrollBehavior,
-    routes
+    strict: process.env.NODE_ENV !== 'production',
+    scrollBehavior(to, from, savedPosition) {
+        if(savedPosition) {
+            return savedPosition
+        } else {
+            if(from.meta.keepAlive) {
+                from.meta.savedPosition = document.body.scrollTop || document.documentElement.scrollTop;
+            }
+            return { x: 0, y: to.meta.savedPosition || 0 }
+        }
+    },
 });
 
 /**
@@ -38,12 +33,12 @@ const router = new VueRouter({
  * 
  */
 router.beforeEach((to, from, next) => {
-    const isLogin = !!((localEvent.get('mine') || {}).token),
+    const isLogin = !!((localEvent.get('CURRENTUSER') || {}).token),
         meta = to.matched.some(record => record.meta) || {};
     if(meta.requiresAuth) {
-        isLogin ? next() : next({ path: '/login', query: { redirect: to.fullPath } });
+        isLogin ? next() : next({ path: '/signin', query: { redirect: to.fullPath } });
     } else if(meta.canEnterOrNot) {
-        isLogin ? next({ path: '/feed' }) : next();
+        isLogin ? next({ path: '/feed/new' }) : next();
     } else {
         next();
     }

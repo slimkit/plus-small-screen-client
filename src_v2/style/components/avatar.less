@@ -16,17 +16,41 @@
     color: @avatar-color;
     white-space: nowrap;
     position: relative;
-    overflow: hidden;
     vertical-align: middle;
 
     .avatar-size(@avatar-size-base, @avatar-font-size-base);
 
+    .avatar_icon {
+        display: block;
+        line-height: 0;
+        width: 100%;
+        height: 100%;
+    }
+    .avatar_badeg {
+        overflow: hidden;
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        border-radius: 50%;
+        background-color: #fff;
+        width: 30px;
+        height: 30px;
+    }
+
     &-large {
         .avatar-size(@avatar-size-lg, @avatar-font-size-lg);
+        .avatar_badeg {
+            width: 38px;
+            height: 38px;
+        }
     }
 
     &-small {
         .avatar-size(@avatar-size-sm, @avatar-font-size-sm);
+        .avatar_badeg {
+            width: 25px;
+            height: 25px;
+        }
     }
 
     &-square {
@@ -36,6 +60,8 @@
     &>img {
         width: 100%;
         height: 100%;
+        overflow: hidden;
+        border-radius: inherit
     }
 }
 

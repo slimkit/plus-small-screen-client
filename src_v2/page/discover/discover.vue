@@ -2,9 +2,14 @@
     <div>
         <head-top title='发现' />
         <transition-group tag="ul" class='entry_group' v-for='(group, index) in entrys' :key='`${prefix}-entry-group-${index}`' name="slide">
-            <li v-for='({icon,title, path}, index) in group' :key='`${prefix}-entry-${icon}`' class="entry_item" @click='to(path)'>
+            <li v-for='({icon,title, path, tips, new_tips}, index) in group' :key='`${prefix}-entry-${icon}`' class="entry_item" @click='to(path)'>
                 <v-icon :type='`${prefix}-${icon}`' class='entry_prepend' />
                 <div class="entry_title">{{ title }}</div>
+                <div class="entry_tips">
+                    <v-badge :dot='new_tips'>
+                        {{ tips }}
+                    </v-badge>
+                </div>
                 <v-icon type='base-arrow-r' class='entry_append' />
             </li>
         </transition-group>
@@ -27,25 +32,35 @@ export default {
                 [{
                     title: '资讯',
                     icon: 'news',
-                    path: '/news'
+                    path: '/news',
+                    new_tips: false,
+                    tips: ''
                 }, {
                     title: '圈子',
                     icon: 'group',
-                    path: '/group'
+                    path: '/group',
+                    new_tips: false,
+                    tips: ''
                 }, {
                     title: '问答',
                     icon: 'question',
-                    path: '/question'
+                    path: '/question',
+                    new_tips: false,
+                    tips: ''
                 }],
                 [{
                     title: '排行',
                     icon: 'rank',
-                    path: '/rank'
+                    path: '/rank',
+                    new_tips: false,
+                    tips: ''
                 }],
                 [{
                     title: '找人',
                     icon: 'find',
-                    path: '/find'
+                    path: '/find',
+                    new_tips: true,
+                    tips: '500米内有一大波玩家赶来'
                 }]
             ]
         }
@@ -57,5 +72,3 @@ export default {
     }
 }
 </script>
-<style lang="less" scoped>
-</style>
