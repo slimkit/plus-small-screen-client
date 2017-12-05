@@ -4,8 +4,9 @@ import router from './routers/';
 // import FastClick from 'fastclick'
 import TimeAgo from 'vue-timeago';
 
-import messageToast from './plugins/messageToast';
+import modal from './plugins/modal';
 import imgLazy from './plugins/imgLazy';
+import messageToast from './plugins/messageToast';
 
 import './util/rem';
 import './style/index.less';
@@ -31,6 +32,7 @@ components.forEach(component => {
 Vue.config.productionTip = false;
 
 Vue.use(Ajax);
+Vue.use(modal);
 Vue.use(imgLazy);
 Vue.use(messageToast);
 
