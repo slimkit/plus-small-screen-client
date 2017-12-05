@@ -1,6 +1,6 @@
 <template>
     <div class="feed_tool">
-        <div class="feed_tool_item" @click.stop='likeFeed'>
+        <div class="feed_tool_item" :class='{has_like}' @click.stop='likeFeed'>
             <v-icon :type='`${ has_like ? "feed-like":"feed-unlike"}`' class='feed_tool_icon'></v-icon>
             <span>{{ like_count }}</span>
         </div>
@@ -12,7 +12,7 @@
             <v-icon type='feed-eye' class='feed_tool_icon'></v-icon>
             <span>{{ like_count }}</span>
         </div>
-        <div class="feed_tool_item">
+        <div class="feed_tool_item" @click.stop='moreAction'>
             <v-icon type='feed-more' class='feed_tool_icon'></v-icon>
         </div>
     </div>
@@ -46,8 +46,11 @@ export default {
         likeFeed() {
             this.$emit('likeFeed');
         },
-        commentFeed(){
+        commentFeed() {
             this.$emit('commentFeed');
+        },
+        moreAction() {
+            this.$emit('moreAction');
         }
     }
 }
@@ -56,7 +59,7 @@ export default {
 @prefix: feed_tool;
 .@{prefix} {
     width: 100%;
-    height: 100%;
+    height: 90px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -67,6 +70,9 @@ export default {
         align-items: center;
         span {
             margin-left: 10px;
+        }
+        &.has_like{
+            color: #f4504d
         }
     }
     &_icon {

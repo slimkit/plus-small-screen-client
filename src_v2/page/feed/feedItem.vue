@@ -29,19 +29,29 @@
             </template>
         </div>
         <div class="feed_item_foot">
-            <feedTool :has_like='has_like' :like_count='like_count' :comment_count='comment_count'></feedTool>
+            <feedTool :has_like='has_like' :like_count='like_count' :comment_count='comment_count' @likeFeed='likeFeed' @moreAction='moreAction' @commentFeed='commentFeed'></feedTool>
         </div>
+        <template v-if='comment_count > 0'>
+            <div class="feed_item_comments">
+                <feed-comment-item v-for='comment in comments' v-if='comment.id' :comment='comment' :key='`feed-${feed.id}-comment-${comment.id}`' @action='commentAction' />
+            </div>
+        </template>
+        <div ref='input'></div>
     </div>
 </template>
 <script>
-import feedTool from './feedTool';
-import feedImages from './feedImages';
+import { formatNum } from '../../util/';
+import feedTool from './components/feedTool';
+import feedImages from './components/feedImages';
+import feedCommentItem from './components/feedCommentItem';
 
+import showCommentInput from './commentInput';
 export default {
     name: 'feedItem',
     components: {
         feedTool,
         feedImages,
+        feedCommentItem,
     },
     props: {
         feed: {
@@ -56,6 +66,9 @@ export default {
             type: Boolean,
             default: true
         }
+    },
+    data() {
+        return {}
     },
     computed: {
         user() {
@@ -75,10 +88,13 @@ export default {
             return this.feed.has_like || false;
         },
         like_count() {
-            return this.feed.like_count || 0;
+            return formatNum(this.feed.like_count) || 0;
+        },
+        comments() {
+            return this.feed.comments.slice(0, 5);
         },
         comment_count() {
-            return this.feed.feed_comment_count || 0
+            return formatNum(this.feed.feed_comment_count) || 0
         }
     },
     methods: {
@@ -87,6 +103,10 @@ export default {
                 this.$router.push({ path });
             }
         },
+        /**
+         * 查看动态
+         *     @author jsonleex <jsonlseex@163.com>
+         */
         viewFeed() {
             this.to(`/feed-detail/${this.feed.id}`);
         },
@@ -96,6 +116,49 @@ export default {
          */
         viewPic(id) {
             console.log('查看图片', id);
+        },
+        /**
+         * 点赞
+         *     @author jsonleex <jsonlseex@163.com>
+         */
+        likeFeed() {
+            console.log('点赞');
+        },
+        /**
+         * 评论 
+         *     @author jsonleex <jsonlseex@163.com>
+         */
+        commentFeed() {
+            this.showCommentInput();
+        },
+        /**
+         * 显示更多操作
+         *     @author jsonleex <jsonlseex@163.com>
+         */
+        moreAction() {
+            console.log('显示更多操作');
+        },
+        /**
+         * 评论操作
+         *     @author jsonleex <jsonlseex@163.com>
+         */
+        commentAction(id, name) {
+
+            // todo 判断是否位当前用户
+            const placeholder = name && id ? `回复${name}` : '随便说说';
+            this.showCommentInput({
+                placeholder,
+                onOk(txt) {
+                    console.log(12345);
+                }
+            })
+        },
+
+        /**
+         *  显示评论输入框
+         */
+        showCommentInput(options) {
+            showCommentInput.show(options);
         }
     }
 }
@@ -156,10 +219,14 @@ export default {
         margin: 20px -20px 0;
         padding: 0 20px 0 116px;
         height: 90px;
-        border-top: 1px solid #ededed; /*no*/
+        border-top: 1px solid #ededed;
+        /*no*/
+        &:last-child {
+            margin-bottom: -30px;
+        }
     }
-    >:last-child {
-        margin-bottom: -30px;
+    &_comments {
+        padding: 0 0 0 96px;
     }
 }
 </style>

@@ -14,10 +14,13 @@
     </div>
 </template>
 <script>
+import FeedItem from './feedItem';
 import { oneOf } from '../../util/';
-import components from './components/';
+import modal from '../../plugins/modal/modal'
 import HeadTop from '../../components/HeadTop';
 import FootGuide from '../../components/FootGuide';
+
+/* 有效类型 */
 const types = ['new', 'hot', 'follow'];
 
 import { api } from '../../http';
@@ -25,15 +28,15 @@ export default {
     name: 'feedIndex',
     components: {
         HeadTop,
+        FeedItem,
         FootGuide,
-        ...components
     },
     data() {
         return {
             feed_type: this.$route.params.type,
             feeds: [],
             busy: false,
-            bottomAllLoaded: false
+            bottomAllLoaded: false,
         }
     },
     watch: {
@@ -49,7 +52,7 @@ export default {
             this.$http.get('/feeds', {
                 params: {
                     type: this.feed_type,
-                    limit: 30
+                    limit: 10
                 }
             }).then((res) => {
                 const { data: { feeds = [], pinned = [], ad = [] } } = res;
@@ -57,7 +60,7 @@ export default {
                 if(feeds.lenght < 12) {
                     this.bottomAllLoaded = true;
                 }
-            }).catch(({ response: { data = { message: '获取动态列表失败' }} })=>{
+            }).catch(({ response: { data = { message: '获取动态列表失败' } } }) => {
                 this.$Message.error(data)
             })
         },
@@ -81,7 +84,7 @@ export default {
     created() {
         this.updateList();
     },
-    beforeDestroy(){
+    beforeDestroy() {
         this.$store.commit('SAVE_FEED_TYPE', '');
     }
 }
