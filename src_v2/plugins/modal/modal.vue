@@ -1,36 +1,49 @@
 <template>
     <div>
-        <div :class='maskClasses' v-show='visible' @click='mask'></div>
+        <transition :name="transitionNames[1]">
+            <div :class="maskClasses" v-show="visible" @click="mask"></div>
+        </transition>
         <div :class="wrapClasses" @click="handleWrapClick">
-            <div :class="classes" v-show="visible">
-                <div :class="[prefixCls + '-content']">
-                    <a :class="[prefixCls + '-close']" v-if="closable" @click="close">
-                        <slot name="close">
-                            <v-icon type="base-clean"></v-icon>
-                        </slot>
-                    </a>
-                    <div :class="[prefixCls + '-header']" v-if="showHead">
-                        <slot name="header">
-                            <div :class="[prefixCls + '-header-inner']">{{ title }}</div>
-                        </slot>
-                    </div>
-                    <div :class="[prefixCls + '-body']">
-                        <slot></slot>
-                    </div>
-                    <div :class="[prefixCls + '-footer']" v-if="!footerHide">
-                        <slot name="footer"></slot>
+            <transition :name="transitionNames[0]" @after-leave="animationFinish">
+                <div :class="classes" :style="mainStyles" v-show="visible">
+                    <div :class="[prefixCls + '-content']">
+                        <a :class="[prefixCls + '-close']" v-if="closable" @click="close">
+                            <slot name="close">
+                                <Icon type="base-clean"></Icon>
+                            </slot>
+                        </a>
+                        <div :class="[prefixCls + '-header']" v-if="showHead">
+                            <slot name="header">
+                                <div :class="[prefixCls + '-header-inner']">{{ title }}</div>
+                            </slot>
+                        </div>
+                        <div :class="[prefixCls + '-body']">
+                            <slot></slot>
+                        </div>
+                        <div :class="[prefixCls + '-footer']" v-if="!footerHide">
+                            <slot name="footer">
+                                <button @click.native="ok">{{ localeOkText }}</button>
+                                <button @click.native="cancel">{{ localeCancelText }}</button>
+                            </slot>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </transition>
         </div>
     </div>
 </template>
 <script>
-const prefixCls = 'v-modal'
+import Icon from '../../components/common/vIcons';
+const prefixCls = 'v-modal';
+const FUNC = (e) => { e.preventDefault() };
 export default {
-    name: 'postMenu',
+    name: 'Modal',
+    components: { Icon },
     props: {
-        className: String,
+        value: {
+            type: Boolean,
+            default: false
+        },
         closable: {
             type: Boolean,
             default: true
@@ -42,27 +55,52 @@ export default {
         title: {
             type: String
         },
+        width: {
+            type: [Number, String],
+            default: 520
+        },
+        okText: {
+            type: String
+        },
+        cancelText: {
+            type: String
+        },
+        loading: {
+            type: Boolean,
+            default: false
+        },
+        styles: {
+            type: Object
+        },
+        className: {
+            type: String
+        },
+        // for instance
         footerHide: {
             type: Boolean,
             default: false
         },
-        showHead: {
+        scrollable: {
             type: Boolean,
-            default: true
+            default: false
+        },
+        transitionNames: {
+            type: Array,
+            default() {
+                return ['ease', 'fade'];
+            }
         },
     },
     data() {
         return {
-            prefixCls,
-            timer: null,
+            prefixCls: prefixCls,
             wrapShow: false,
-            visible: this.value,
-        }
+            showHead: true,
+            buttonLoading: false,
+            visible: this.value
+        };
     },
     computed: {
-        maskClasses() {
-            return `${prefixCls}-mask`
-        },
         wrapClasses() {
             return [
                 `${prefixCls}-wrap`,
@@ -70,27 +108,38 @@ export default {
                     [`${prefixCls}-hidden`]: !this.wrapShow,
                     [`${this.className}`]: !!this.className
                 }
-            ]
+            ];
+        },
+        maskClasses() {
+            return `${prefixCls}-mask`;
         },
         classes() {
             return `${prefixCls}`;
         },
-    },
-    watch: {
-        value(val) {
-            this.visible = val;
+        mainStyles() {
+            let style = {};
+            const width = parseInt(this.width);
+            const styleWidth = {
+                width: width <= 100 ? `${width}%` : `${width}px`
+            };
+            const customStyle = this.styles ? this.styles : {};
+            Object.assign(style, styleWidth, customStyle);
+            return style;
         },
-        visible(val) {
-            if(val === false) {
-                this.timer = setTimeout(() => {
-                    this.wrapShow = false;
-                }, 300);
+        localeOkText() {
+            if(this.okText === undefined) {
+                return this.t('i.modal.okText');
             } else {
-                if(this.timer) clearTimeout(this.timer);
-                this.wrapShow = true;
+                return this.okText;
             }
-            this.$emit('on-visible-change', val);
         },
+        localeCancelText() {
+            if(this.cancelText === undefined) {
+                return this.t('i.modal.cancelText');
+            } else {
+                return this.cancelText;
+            }
+        }
     },
     methods: {
         close() {
@@ -107,21 +156,83 @@ export default {
             const className = event.target.getAttribute('class');
             if(className && className.indexOf(`${prefixCls}-wrap`) > -1) this.mask();
         },
-        EscClose(e) {
-            if(this.visible && this.closable) {
-                if(e.keyCode === 27) {
-                    this.close();
-                }
-            }
+        cancel() {
+            this.close();
         },
+        ok() {
+            if(this.loading) {
+                this.buttonLoading = true;
+            } else {
+                this.visible = false;
+                this.$emit('input', false);
+            }
+            this.$emit('on-ok');
+        },
+        animationFinish() {
+            this.$emit('on-hidden');
+        },
+
+        addScrollEffect() {
+            document.body.style.overflow = 'hidden';
+            /* 兼容移动端 */
+            document.body.addEventListener('touchmove', FUNC, false);
+        },
+        removeScrollEffect() {
+            document.body.style.overflow = '';
+            document.body.removeEventListener('touchmove', FUNC, false);
+        }
     },
     mounted() {
         if(this.visible) {
             this.wrapShow = true;
         }
-        // ESC close
-        document.addEventListener('keydown', this.EscClose);
+        let showHead = true;
+        if(this.$slots.header === undefined && !this.title) {
+            showHead = false;
+        }
+        this.showHead = showHead;
     },
-}
+    beforeDestroy() {
+        this.removeScrollEffect();
+    },
+    watch: {
+        value(val) {
+            this.visible = val;
+        },
+        visible(val) {
+            if(val === false) {
+                this.buttonLoading = false;
+                this.timer = setTimeout(() => {
+                    this.wrapShow = false;
+                    this.removeScrollEffect();
+                }, 300);
+            } else {
+                if(this.timer) clearTimeout(this.timer);
+                this.wrapShow = true;
+                if(!this.scrollable) {
+                    this.addScrollEffect();
+                }
+            }
+            this.$emit('on-visible-change', val);
+        },
+        loading(val) {
+            if(!val) {
+                this.buttonLoading = false;
+            }
+        },
+        scrollable(val) {
+            if(!val) {
+                this.addScrollEffect();
+            } else {
+                this.removeScrollEffect();
+            }
+        },
+        title(val) {
+            if(this.$slots.header === undefined) {
+                this.showHead = !!val;
+            }
+        }
+    }
+};
 </script>
 <style lang="less" src='./modal.less'></style>

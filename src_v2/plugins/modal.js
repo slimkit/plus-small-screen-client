@@ -1,4 +1,4 @@
-import Modal from './modal/';
+import Modal from './modal/ModalInstance';
 
 let modalInstance;
 
@@ -6,6 +6,7 @@ function getModalInstance(render = undefined) {
     modalInstance = modalInstance || Modal.newInstance({
         closable: false,
         maskClosable: false,
+        footerHide: true,
         render: render
     });
 
@@ -23,11 +24,13 @@ function confirm(options) {
     instance.show(options);
 }
 
-Modal.confirm = function(props = {}) {
+Modal.info = function(props = {}) {
+    props.title = '提示';
+    props.showCancel = true;
     return confirm(props);
 };
 
-Modal.postMenu = function(props = {}) {
+Modal.confirm = function(props = {}) {
     return confirm(props);
 };
 

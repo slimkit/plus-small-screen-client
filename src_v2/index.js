@@ -31,10 +31,10 @@ components.forEach(component => {
 
 Vue.config.productionTip = false;
 
-Vue.use(Ajax);
-Vue.use(modal);
-Vue.use(imgLazy);
-Vue.use(messageToast);
+Vue.use(Ajax); /* Ajax */
+Vue.use(modal); /* 弹层 */
+Vue.use(imgLazy); /* 图片懒加载 */
+Vue.use(messageToast); /* 消息提示 */
 
 for (const k in filters) {
   Vue.filter(k, filters[k]);
@@ -62,9 +62,4 @@ new Vue({
         show_modal: false
     },
     directives: {},
-    methods: {
-        showModal() {
-            this.show_modal = !this.show_modal;
-        }
-    }
 }).$mount('#app');

@@ -36,7 +36,6 @@
                 <feed-comment-item v-for='comment in comments' v-if='comment.id' :comment='comment' :key='`feed-${feed.id}-comment-${comment.id}`' @action='commentAction' />
             </div>
         </template>
-        <div ref='input'></div>
     </div>
 </template>
 <script>
@@ -95,6 +94,9 @@ export default {
         },
         comment_count() {
             return formatNum(this.feed.feed_comment_count) || 0
+        },
+        has_collect() {
+            return this.feed.has_collect || false;
         }
     },
     methods: {
@@ -137,13 +139,31 @@ export default {
          */
         moreAction() {
             console.log('显示更多操作');
+            this.$Modal.confirm({
+                render(h) {
+                    return [h('button', {
+                            on: {
+                                click: (e) => {
+                                    console.log(e.target.innerHTML);
+                                }
+                            }
+                        }, '分享'),
+                        h('button', {
+                            on: {
+                                click: (e) => {
+                                    console.log(e.target.innerHTML);
+                                }
+                            }
+                        }, `${this.has_collect ? '取消收藏' : '收藏'}`)
+                    ]
+                }
+            })
         },
         /**
          * 评论操作
          *     @author jsonleex <jsonlseex@163.com>
          */
         commentAction(id, name) {
-
             // todo 判断是否位当前用户
             const placeholder = name && id ? `回复${name}` : '随便说说';
             this.showCommentInput({
