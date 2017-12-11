@@ -6,9 +6,12 @@ import TimeAgo from 'vue-timeago';
 
 import modal from './plugins/modal';
 import imgLazy from './plugins/imgLazy';
+import imgCropper from './plugins/imgCropper';
 import messageToast from './plugins/messageToast';
 
 import './util/rem';
+/* h5 调试 */
+// import './util/console';
 import './style/index.less';
 
 // Filters
@@ -34,7 +37,11 @@ Vue.config.productionTip = false;
 Vue.use(Ajax); /* Ajax */
 Vue.use(modal); /* 弹层 */
 Vue.use(imgLazy); /* 图片懒加载 */
+Vue.use(imgCropper); /* 图片裁剪 */
 Vue.use(messageToast); /* 消息提示 */
+
+Vue.prototype.$MessageBundle = filters.plusMessageFirst;
+
 
 for (const k in filters) {
   Vue.filter(k, filters[k]);
