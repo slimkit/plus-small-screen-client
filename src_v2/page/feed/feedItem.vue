@@ -9,7 +9,11 @@
                 <div>
                     <i class="feed_item_content_info_pinned_icon" v-if='is_pinned'>置顶</i>
                     <template>
-                        <timeago class="feed_item_content_info_time" :since="time" :auto-update="60" />
+                        <!-- <timeago class="feed_item_content_info_time" :since="time" :auto-update="60" /> -->
+                        <!-- # todo -->
+                        <span class="feed_item_content_info_time">
+                            {{ time | time2tips }}
+                        </span>
                     </template>
                 </div>
             </div>
