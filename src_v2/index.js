@@ -34,7 +34,7 @@ components.forEach(component => {
 
 Vue.config.productionTip = false;
 
-Vue.use(Ajax); /* Ajax */
+Vue.prototype.$http = Ajax; /* Ajax */
 Vue.use(modal); /* 弹层 */
 Vue.use(imgLazy); /* 图片懒加载 */
 Vue.use(imgCropper); /* 图片裁剪 */

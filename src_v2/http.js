@@ -5,7 +5,10 @@ import router from './routers/';
  * 添加请求拦截器
  *     @author jsonleex <jsonlseex@163.com>
  */
+let TOKEN;
 axios.interceptors.request.use(config => {
+
+    TOKEN = (localEvent.get('CURRENTUSER') || {}).token;
 
     // if(config.method === 'post') {
     //     // JSON 转换为 FormData
@@ -14,8 +17,8 @@ axios.interceptors.request.use(config => {
     //     config.data = formData
     // }
 
-    if((localEvent.get('CURRENTUSER') || {}).token) {
-        config.headers.Authorization = `Bearer ${localStorage.token}`
+    if(TOKEN) {
+        config.headers.Authorization = `Bearer ${TOKEN}`
     }
     return config
 }, error => {
@@ -35,9 +38,12 @@ axios.interceptors.response.use(res => {
         if(error.response) {
             const { status } = error.response;
             if(status === 401) {
-                router.push({ path: '/signin', query: { redirect: router.currentRoute.fullPath } });
+                setTimeout(() => {
+                    router.push({ path: '/signin', query: { redirect: router.currentRoute.fullPath } })
+                }, 500);
+                const message = TOKEN ? "登录失效, 请重新登录" : "您还没有登录";
                 return Promise.reject({
-                    response: { data: { message: "登录失效, 请重新登录" } }
+                    response: { data: { message } }
                 });
             }
         } else if(error.request) {
@@ -59,8 +65,4 @@ if(!basename) {
 // 默认 v2 接口
 axios.defaults.baseURL = basename.content || '/api/v2';
 
-export default {
-    install(vue, opt = {}) {
-        Object.defineProperty(vue.prototype, '$http', { value: axios });
-    }
-};
+export default axios;
