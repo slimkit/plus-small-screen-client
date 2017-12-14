@@ -15,31 +15,43 @@ body, div, span, header, footer, nav, section, aside, article, ul, dl, dt, dd, l
         outline: none;
     }
 }
-div#app{
+
+div#app {
     display: initial;
     height: 100%;
-    > div{
+    >div {
         display: inherit;
     }
 }
+
+
 /*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
+
 ::-webkit-scrollbar {
     width: 0px;
     height: 0px;
     background-color: #F5F5F5;
 }
+
+
 /*定义滚动条轨道 内阴影+圆角*/
+
 ::-webkit-scrollbar-track {
-    -webkit-box-shadow: inset 0 0 1px rgba(0, 0, 0, 0); /*no*/
+    -webkit-box-shadow: inset 0 0 1px rgba(0, 0, 0, 0);
+    /*no*/
     border-radius: 10px;
     background-color: #F5F5F5;
 }
+
+
 /*定义滑块 内阴影+圆角*/
+
 ::-webkit-scrollbar-thumb {
     border-radius: 10px;
     -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
     background-color: #555;
 }
+
 input[type="button"], input[type="submit"], input[type="search"], input[type="reset"] {
     -webkit-appearance: none;
 }
@@ -52,6 +64,7 @@ input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill {
 
 input[type=text]:focus, input[type=password]:focus, textarea:focus {
     -webkit-box-shadow: 0 0 0 1000px transparent inset;
+    outline: none;
 }
 
 textarea {
@@ -87,7 +100,6 @@ li {
 //     }
 // }
 
-
 /* 文本超出显示... */
 
 .ellipsis {
@@ -95,6 +107,7 @@ li {
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+
 
 
 /* 统一入口样式 */
@@ -111,7 +124,8 @@ li {
         display: flex;
         align-items: center;
         +.entry_item {
-            border-top: 1px solid #ededed;/*no*/
+            border-top: 1px solid #ededed;
+            /*no*/
         }
         .entry_title {
             flex: 1 1 auto;
@@ -123,7 +137,7 @@ li {
             font-size: 28px;
             color: #999;
             text-align: right;
-            .v-badge-dot{
+            .v-badge-dot {
                 transform: scale(.7);
             }
         }
@@ -139,4 +153,22 @@ li {
             height: 36px;
         }
     }
+}
+
+.btn-loading {
+    animation: rotate360 2s infinite linear;
+}
+
+@keyframes rotate360 {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
+.full-page{
+    background: #fff;
 }

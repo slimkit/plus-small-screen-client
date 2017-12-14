@@ -3,14 +3,14 @@
         <head-top title='发现' />
         <transition-group tag="ul" class='entry_group' v-for='(group, index) in entrys' :key='`${prefix}-entry-group-${index}`' name="slide">
             <li v-for='({icon,title, path, tips, new_tips}, index) in group' :key='`${prefix}-entry-${icon}`' class="entry_item" @click='to(path)'>
-                <v-icon :type='`${prefix}-${icon}`' class='entry_prepend' />
+                <v-icon :type='`${prefix}-${icon}`' width='.4rem' height='.4rem' class='entry_prepend' />
                 <div class="entry_title">{{ title }}</div>
                 <div class="entry_tips">
                     <v-badge :dot='new_tips'>
                         {{ tips }}
                     </v-badge>
                 </div>
-                <v-icon type='base-arrow-r' class='entry_append' />
+                <v-icon type='base-arrow-r' class='entry_append' color='#bfbfbf' />
             </li>
         </transition-group>
         <foot-guide></foot-guide>

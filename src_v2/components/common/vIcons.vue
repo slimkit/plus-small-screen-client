@@ -1,7 +1,9 @@
 <template>
-    <svg :width='width' :height='height' :fill='color'>
-        <use xmlns:xlink="http://www.w3.org/1999/xlink" :xlink:href="`#${type}`"></use>
-    </svg>
+    <i class="v-icon" :style='wrapStyles'>
+        <svg width='100%' height='100%' :color='color'>
+            <use xmlns:xlink="http://www.w3.org/1999/xlink" :xlink:href="`#${type}`"></use>
+        </svg>
+    </i>
 </template>
 <script>
 export default {
@@ -12,17 +14,37 @@ export default {
             required: true
         },
         height: {
-            type: [String, Number],
-            default: 24
+            type: [String, Number]
         },
         width: {
-            type: [String, Number],
-            default: 24
+            type: [String, Number]
         },
         color: {
-            type: String,
-            default: 'currentColor'
+            type: String
+        }
+    },
+    computed: {
+        wrapStyles() {
+            return {
+                width: `${this.width}rem`,
+                height: `${this.height}rem`,
+            }
         }
     }
 }
 </script>
+<style lang='less'>
+.v-icon {
+    display: inline-flex;
+    width: 48px;
+    height: 48px;
+    justify-content: center;
+    align-items: center;
+    vertical-align: middle;
+    svg {
+        width: 100%;
+        height: 100%;
+        fill: currentColor;
+    }
+}
+</style>
