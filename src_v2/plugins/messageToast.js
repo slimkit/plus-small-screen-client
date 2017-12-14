@@ -55,7 +55,7 @@ function notice(
     })();
 };
 
-const Msg = {
+export const Msg = {
     name: 'Message',
 
     info(options) {
@@ -94,6 +94,7 @@ const Msg = {
 };
 
 export default {
+    _message: Msg,
     install(vue) {
         if(this.installed) return;
         vue.prototype.$Message = Msg;

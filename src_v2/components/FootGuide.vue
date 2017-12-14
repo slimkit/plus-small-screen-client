@@ -1,31 +1,32 @@
 <template>
     <footer id="foot_guide">
         <section @click="to('/feed/new')" class="guide_item" :class="{active: isCurPath('/feed')}">
-            <v-icon type='foot-home' class='foot_guide_icon' />
+            <v-icon type='foot-home' width='.45' height='.45' class='foot_guide_icon' />
             <span>首页</span>
         </section>
         <section @click="to('/discover')" class="guide_item" :class="{active: isCurPath('/discover')}">
-            <v-icon type='foot-discover' class='foot_guide_icon' />
+            <v-icon type='foot-discover' width='.45' height='.45' class='foot_guide_icon' />
             <span>发现</span>
         </section>
-        <section @click="showPostOption" class="guide_item plus">
-            <v-icon type='foot-plus' class='foot_guide_icon' />
+        <section @click="showPostMenu" class="guide_item plus">
+            <v-icon type='foot-plus' height='.6' width='.6' color='#fff' class='foot_guide_icon plus' />
         </section>
         <section @click="to('/message/msg')" class="guide_item" :class="{active: isCurPath('/message')}">
             <v-badge :dot='has_msg'>
-                <v-icon type='foot-message' class='foot_guide_icon' />
+                <v-icon type='foot-message' width='.45' height='.45' class='foot_guide_icon' />
             </v-badge>
             <span>消息</span>
         </section>
         <section @click="to('/profile')" class="guide_item" :class="{active: isCurPath('profile')}">
             <v-badge :dot='has_fans'>
-                <v-icon type='foot-profile' class='foot_guide_icon' />
+                <v-icon type='foot-profile' width='.45' height='.45' class='foot_guide_icon' />
             </v-badge>
             <span>我</span>
         </section>
     </footer>
 </template>
 <script>
+import showPostMenu from './postMenu/showPostMenu';
 export default {
     name: 'FootGuide',
     data() {
@@ -41,8 +42,8 @@ export default {
         isCurPath(path) {
             return this.$route.fullPath.indexOf(path) > -1;
         },
-        showPostOption() {
-            this.$root.showModal();
+        showPostMenu() {
+            showPostMenu.show({})
         }
     },
     mounted() {
@@ -81,21 +82,12 @@ export default {
     align-items: center;
     justify-content: center;
     color: #ccc;
-    .foot_guide_icon {
-        width: 45px;
-        height: 45px;
-        +.v-badge-dot {
-            top: 0;
-        }
+    .v-badge-dot {
+        top: 0;
     }
     &.plus {
         background-color: #59b6d7;
         margin: 0 15px;
-        svg {
-            color: #fff;
-            width: 60px;
-            height: 60px;
-        }
     }
     &.active {
         color: #59b6d7;

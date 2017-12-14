@@ -144,6 +144,7 @@ export default {
         moreAction() {
             console.log('显示更多操作');
             this.$Modal.confirm({
+                showCancel: true,
                 render(h) {
                     return [h('button', {
                             on: {

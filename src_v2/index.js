@@ -22,11 +22,13 @@ import Ajax from './http';
 
 /** common components */
 import vIcon from './components/common/vIcons'; /* Icons */
+import btnSwitch from './components/common/btnSwitch'; /* btnSwitch 按钮 */
 import badge from './components/common/badge'; /* Badge 徽标 */
+import fullSpin from './components/FullSpin';  /* 全屏加载动画 */
 import userAvatar from './components/common/userAvatar'; /* Avatar 用户头像组件 */
 import loadMore from './components/loadMore/loadMore';
 
-const components = [vIcon, badge, userAvatar, loadMore];
+const components = [vIcon, btnSwitch, badge, userAvatar, loadMore, fullSpin];
 
 components.forEach(component => {
     Vue.component(component.name, component);
@@ -43,8 +45,8 @@ Vue.use(messageToast); /* 消息提示 */
 Vue.prototype.$MessageBundle = filters.plusMessageFirst;
 
 
-for (const k in filters) {
-  Vue.filter(k, filters[k]);
+for(const k in filters) {
+    Vue.filter(k, filters[k]);
 }
 
 Vue.use(TimeAgo, {

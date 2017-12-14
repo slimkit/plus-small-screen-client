@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import localEvent from 'store';
 import VueRouter from 'vue-router';
+import * as Message from '../plugins/messageToast';
 
 import routes from './routes';
 
@@ -29,18 +30,24 @@ const router = new VueRouter({
  * meta.requiresAuth = true
  *
  * 登录后不可访问的路由需要添加
- * meta.canEnterOrNot = true
+ * meta.forGuest = true
  * 
  */
 router.beforeEach((to, from, next) => {
     const isLogin = !!((localEvent.get('CURRENTUSER') || {}).token),
-        meta = to.matched.some(record => record.meta) || {};
-    if(meta.requiresAuth) {
-        isLogin ? next() : next({ path: '/signin', query: { redirect: to.fullPath } });
-    } else if(meta.canEnterOrNot) {
-        isLogin ? next({ path: '/feed/new' }) : next();
+        requiresAuth = to.matched.some(record => record.meta.requiresAuth),
+        forGuest = to.matched.some(record => record.meta.forGuest),
+        redirect = from.query.redirect;
+    if(isLogin) {
+        forGuest ?
+            next({ path: `${ redirect ? redirect : '/feed/new' }` }) : next();
     } else {
-        next();
+        requiresAuth ? (() => {
+            Message.Msg.error('您还没有登录, 请先登录或注册');
+            setTimeout(function() {
+                next({ path: '/signin', query: { redirect: to.fullPath } })
+            }, 1500);
+        })() : next();
     }
 });
 

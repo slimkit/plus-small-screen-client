@@ -1,21 +1,32 @@
 <template>
     <div class="header">
-        <div class="head_goback">
-            <slot name='prepend'>
-                <section v-if="goBack" @click="goBackFn">
-                    <v-icon type='base-back' />
-                </section>
-            </slot>
-        </div>
-        <slot name='title'>
-            <div class="header_title ellipsis" v-if='title'>{{ title || $route.meta.title }}</div>
+        <slot>
+            <div class="head_goback">
+                <slot name='prepend'>
+                    <section v-if="goBack" @click="goBackFn">
+                        <template v-if='typeof goBack === "string"'>
+                            {{ goBack }}
+                        </template>
+                        <template v-else>
+                            <v-icon type='base-back' />
+                        </template>
+                    </section>
+                </slot>
+            </div>
+            <div class="header_title" v-if='title'>
+                <slot name='title'>
+                    <span class="ellipsis">
+                        {{ title || $route.meta.title }}
+                    </span>
+                </slot>
+            </div>
+            <slot name='nav'></slot>
+            <div class="head_append" v-if="append">
+                <slot name='append'>
+                    <section @click="to('/signup')">注册</section>
+                </slot>
+            </div>
         </slot>
-        <slot name='nav'></slot>
-        <div class="head_append" v-if="append">
-            <slot name='append'>
-                <section @click="to('/signup')">注册</section>
-            </slot>
-        </div>
     </div>
 </template>
 <script>
@@ -23,14 +34,14 @@ export default {
     name: 'HeaderTop',
     props: {
         title: String,
-        goBack: [Boolean, Function],
+        goBack: [Boolean, Function, String],
         append: [Boolean, String]
     },
     computed: {},
     methods: {
         goBackFn() {
             return typeof this.goBack === 'function' ?
-                this.goBack :
+                this.goBack() :
                 this.$router.go(-1);
         },
         to(path) {
@@ -56,13 +67,14 @@ export default {
     width: 100%;
     line-height: 90px;
     background: #fff;
-    border-bottom: 1px solid #ededed; /* no */
+    border-bottom: 1px solid #ededed;
+    /* no */
     .header_title {
         position: absolute;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        width: 50%;
+        width: 60%;
         text-align: center;
         font-size: 36px;
         color: #333;
@@ -84,7 +96,8 @@ export default {
             text-align: center;
             font-size: 32px;
             width: 90px;
-            border-bottom: 2px solid transparent; /* no */
+            border-bottom: 2px solid transparent;
+            /* no */
             +.head_nav_item {
                 margin-left: 50px;
             }
@@ -95,13 +108,18 @@ export default {
         }
     }
     .head_goback {
-        left: 0.4rem;
-        width: 0.6rem;
+        left: 30px;
+        width: 100px;
         height: 100%;
-        margin-left: .4rem;
-        svg {
+        margin-left:30px;
+        font-size: 32px;
+        color: #59b6d7;
+        .v-icon {
+            width: 40px;
+            height: 40px;
             position: absolute;
             top: 50%;
+            color: #333;
             transform: translateY(-50%);
         }
     }
@@ -112,6 +130,14 @@ export default {
         position: absolute;
         top: 50%;
         transform: translateY(-50%);
+        .v-icon {
+            width: 40px;
+            height: 40px;
+            color: #333;
+            +.v-icon {
+                margin-left: 10px;
+            }
+        }
     }
 }
 </style>

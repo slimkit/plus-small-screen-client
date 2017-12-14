@@ -174,8 +174,12 @@ export default {
 
         addScrollEffect() {
             document.body.style.overflow = 'hidden';
-            /* 兼容移动端 */
+
+            /* 兼容移动端 全屏时禁止 body 的滑动 允许 modal 滑动 */
             document.body.addEventListener('touchmove', FUNC, false);
+            // this.$el.addEventListener('touchmove', (e) => {
+            //     e.stopPropagation();
+            // }, false);
         },
         removeScrollEffect() {
             document.body.style.overflow = '';
