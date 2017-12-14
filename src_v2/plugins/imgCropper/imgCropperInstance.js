@@ -3,6 +3,10 @@ import ImgCropper from './imgCropper';
 
 const prefixCls = 'v-img-cropper';
 
+/**
+ * 圆形裁剪
+ *     @author jsonleex <jsonlseex@163.com>
+ */
 function getRoundedCanvas(sourceCanvas) {
     var canvas = document.createElement('canvas');
     var context = canvas.getContext('2d');
@@ -67,7 +71,8 @@ ImgCropper.newInstance = properties => {
                 }
             }, [h(ImgCropper, {
                 props: {
-                    url: this.url
+                    url: this.url,
+                    round: this.round
                 }
             })]))
 
@@ -127,7 +132,6 @@ ImgCropper.newInstance = properties => {
     const cropper = Instance.$children[0];
     return {
         show(option) {
-            console.log(option);
             if('url' in option) {
                 cropper.$parent.url = option.url
             }

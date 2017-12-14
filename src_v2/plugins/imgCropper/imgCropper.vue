@@ -1,5 +1,5 @@
 <template>
-    <div id="cropperImg">
+    <div id="cropperImg" :class='{ round }'>
         <img ref='cropperImg' :src="url">
     </div>
 </template>
@@ -12,6 +12,10 @@ export default {
         aspectRatio: {
             type: [Number, String],
             default: 1 / 1
+        },
+        round: {
+            type: Boolean,
+            default: true
         }
     },
     data() {
@@ -48,14 +52,12 @@ export default {
     },
 }
 </script>
-<style scoped>
-.container {
-    max-width: 640px;
-    margin: 20px auto;
-}
-
-img {
-    max-width: 100%;
+<style lang='less'>
+.round {
+    .cropper-view-box,
+    .cropper-face {
+        border-radius: 50%;
+    }
 }
 </style>
 <style lang="less" src='./imgCropper.less'></style>

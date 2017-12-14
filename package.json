@@ -39,6 +39,7 @@
     "babel-preset-env": "^1.6.1",
     "babel-preset-es2016": "^6.24.1",
     "babel-preset-es2017": "^6.24.1",
+    "cropperjs": "^1.1.3",
     "dexie": "^2.0.0-beta",
     "exif-js": "^2.2.1",
     "exif-orient": "^0.0.5",
