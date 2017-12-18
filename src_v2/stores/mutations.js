@@ -27,6 +27,12 @@ export default {
         localEvent.set('CUR_LOCATION', state.CUR_LOCATION);
     },
 
+    // 保存热门城市
+    SAVE_HOT_CITYS(state, list){
+        state.HOTCTIYS = list;
+        localEvent.set('HOTCTIYS', state.HOTCTIYS);
+    },
+
     // 注销登录
     LOGOUT(state) {
         state.CURRENTUSER = null;

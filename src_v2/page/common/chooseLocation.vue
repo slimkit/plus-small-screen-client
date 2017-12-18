@@ -1,16 +1,275 @@
 <template>
-    <div class="full-page">
-        <head-top :go-back='true' :title='$route.meta.title'>选择地理位置</head-top>
+    <div class="page-location">
+        <head-top :append='true' title='1'>
+            <div slot='append' class="location-top-cancel" @click='$router.go(-1)'>取消</div>
+            <div slot='title' class="location-search">
+                <v-icon type='base-search' class='location-search-icon'></v-icon>
+                <input class="location-search-input" type="text" v-model='keyword' placeholder="搜索" @input="search">
+            </div>
+        </head-top>
+        <!-- 保留此空 div -->
+        <div></div>
+        <template v-if='isShowHot'>
+            <div class="location-current">
+                <span>当前定位</span>
+                <span class="location-current-txt" :class='{c999: !cur_txt }'>{{cur_txt || "未定位"}}</span>
+                <v-icon :type='cur_icon' :class='{"btn-loading": cur_icon === "base-loading"}' class="location-current-append" @click.native.stop='updateLocation'></v-icon>
+            </div>
+            <div class="location-hot">
+                <label>热门城市</label>
+                <div class="location-hot-list">
+                    <div class="location-hot-item" v-for='hotCity in hot_citys' v-if='hotCity.length > 0' @click='chooseHotCity(hotCity)'>
+                        {{ hotCity.slice(hotCity.lastIndexOf(' ')) }}
+                    </div>
+                </div>
+            </div>
+        </template>
+        <template v-if='dataList.length > 0'>
+            <ul class="location-search-list">
+                <li class="location-search-list-item" v-for='item in dataList' v-if='item' @click='chooseHotCity(item)'>
+                    {{ item }}
+                </li>
+            </ul>
+        </template>
     </div>
 </template>
 <script>
-import HeadTop from '@/components/HeadTop'
+import _ from 'lodash';
+import HeadTop from '@/components/HeadTop';
+
+let sources = [];
 
 export default {
     name: 'chooseLocation',
     components: {
         HeadTop
+    },
+    data() {
+        return {
+            keyword: '',
+            showHot: true,
+            loading: false,
+
+            dataList: []
+        }
+    },
+    computed: {
+        location() {
+            const location = this.$store.state.CUR_LOCATION || {};
+            if(JSON.stringify(location) === "{}") {
+                this.$store.dispatch('GET_LOCATION');
+            } else {
+                this.loading = false;
+            }
+            return location;
+        },
+        cur_icon() {
+            return this.is_loading ? 'base-loading' : 'location-arrow'
+        },
+        cur_txt() {
+            return this.location.label || '';
+        },
+        hot_citys() {
+            return this.$store.state.HOTCTIYS;
+        },
+
+        is_loading() {
+            return this.loading || !(this.cur_txt.length > 0);
+        },
+
+        isShowHot() {
+            return !(this.keyword.length > 0) && !(this.dataList.length > 0);
+        }
+    },
+    methods: {
+        updateLocation() {
+            this.loading = true;
+            this.$store.dispatch('UPDATE_LOCATION');
+        },
+        chooseHotCity(city) {
+            this.$http.get(`around-amap/geo?address=${city.replace(/[\s\uFEFF\xA0]+/g, '')}`).then(res => {
+                const {
+                    data: {
+                        geocodes: [{
+                            city,
+                            district,
+                            location,
+                        }]
+                    } = {}
+                } = res;
+                const [lng, lat] = location.split(',');
+                this.$store.commit('SAVE_LOCATION', {
+                    label: city,
+                    lng,
+                    lat
+                });
+
+                this.$router.push(`/find/nearby?lng=${lng}&lat=${lat}`);
+            }).catch(err => {
+                console.log(err);
+            });
+        },
+
+        //使用_.debounce控制搜索的触发频率
+        //准备搜索
+        search: _.debounce(function() {
+                let that = this;
+                //删除已经结束的请求
+                _.remove(sources, (n) => n.source === null);
+
+                //取消还未结束的请求
+                sources.forEach(function(item) {
+                    if(item !== null && item.source !== null && item.status === 1) {
+                        item.status = 0;
+                        item.source.cancel('取消上一个')
+                    }
+                });
+
+                //创建新的请求cancelToken,并设置状态请求中
+                let sc = {
+                    source: that.$http.CancelToken.source(),
+                    status: 1 //状态1：请求中，0:取消中
+                };
+                sources.push(sc);
+
+                //开始搜索数据
+                if(that.keyword) {
+                    that.$http.get(`/locations/search?name=${that.keyword}`, {
+                        cancelToken: sc.source.token
+                    }).then(({ data = [] }) => {
+                        //置空请求canceltoken
+                        sc.source = null;
+                        that.dataList = data.map((item, index) => {
+                            let name = '';
+                            item = item.tree;
+                            while(item) {
+                                name = item.name + "," + name;
+                                item = item.parent;
+                            }
+                            return name.substr(0, (name.length - 1));
+                        })
+
+                    }).catch(({ response: { data = { message: '搜索失败' } } = {} } = {}) => {
+                        //置空请求canceltoken
+                        sc.source = null;
+                        that.$Message.error(data);
+                    });
+                }
+            },
+            500 //空闲时间间隔设置500ms
+        )
+    },
+    created() {
+        this.$store.dispatch('GET_HOT_CITYS');
     }
 }
 </script>
-<style lang='less'></style>
+<style lang='less'>
+@location-prefix: location;
+.page-location {
+    .head-top-title {
+        padding: 0 120px 0 30px;
+        width: 100%;
+    }
+}
+
+.@{location-prefix} {
+    &-top-cancel {
+        color: #59b6d7;
+    }
+
+    &-search {
+        display: flex;
+        padding: 0 10px;
+        align-items: center;
+        justify-content: flex-start;
+        width: 600px;
+        height: 55px;
+        background-color: #f4f5f5;
+        border-radius: 10px;
+        &-icon {
+            color: #999;
+            width: 25px;
+            height: 25px;
+        }
+
+        &-input {
+            margin-left: 15px;
+            flex: 1 1 auto;
+            height: 100%;
+            background: none;
+        }
+
+        &-list{
+            background-color: #fff;
+            padding: 0 30px;
+            &-item{
+                border-bottom: 1px solid #ededed; /*no*/
+                width: 100%;
+                height: 100px;
+                line-height: 98px;
+                font-size: 30px;
+                color: #333;
+            }
+        }
+    }
+
+    &-current {
+        display: flex;
+        margin-top: 20px;
+        padding: 0 20px;
+        height: 90px;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 28px;
+        color: #333;
+        background-color: #fff;
+        &-txt {
+            font-size: 28px;
+            margin: -2px 35px;
+            flex: 1 1 auto;
+            cursor: default;
+            &.c999 {
+                color: #999;
+            }
+        }
+        &-append {
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+        }
+    }
+
+    &-hot {
+        label {
+            display: block;
+            padding: 0 20px;
+            height: 60px;
+            line-height: 60px;
+            font-size: 26px;
+            color: #999;
+        }
+
+        &-list {
+            display: flex;
+            flex-wrap: wrap;
+            width: 100%;
+            padding: 40px 20px 10px;
+            background-color: #fff;
+        }
+        &-item {
+            padding: 0 20px;
+            width: 150px;
+            height: 60px;
+            line-height: 58px;
+            font-size: 28px;
+            color: #333;
+            margin-right: 30px;
+            margin-bottom: 30px;
+            background-color: #f4f5f5;
+            border-radius: 8px;
+            text-align: center;
+        }
+    }
+}
+</style>

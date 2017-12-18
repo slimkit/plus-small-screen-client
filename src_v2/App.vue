@@ -8,11 +8,11 @@
     </div>
 </template>
 <script>
-import svgIcon from 'components/common/svgIcon';
 export default {
     name: 'app',
     components: {
-        svgIcon
+        svgIcon: () =>
+            import( /* webpackChunkName: 'svgIcon'*/ '@/components/common/svgIcon')
     }
 }
 </script>

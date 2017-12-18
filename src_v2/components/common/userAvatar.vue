@@ -5,7 +5,8 @@
         <span ref="children" :class="[prefixCls + '-string']" :style="childrenStyle" v-else>
             <slot></slot>
         </span>
-        <v-icon :type="badeg" v-if="badeg" class='avatar_badeg'></v-icon>
+        <!-- <v-icon :type="badeg" v-if="badeg" class='avatar_badeg'></v-icon> -->
+        <img :src="badeg" v-if="badeg" class='avatar_badeg'></img>
     </span>
 </template>
 <script>

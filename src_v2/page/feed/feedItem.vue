@@ -1,24 +1,25 @@
 <template>
-    <div class="feed_item" @click='viewFeed'>
-        <v-avatar sex='user.sex' :src='user.avatar' class='feed_item_avatar'>
+    <div class="feed-item" @click='viewFeed'>
+        <v-avatar sex='user.sex' :src='user.avatar' class='feed-item-avatar' v-if='!no_user' @click.native.stop='to(`/user/${user.id}`)'>
             {{ user.name.slice(0, 1) }}
         </v-avatar>
-        <div class="feed_item_content">
-            <div class="feed_item_content_info">
+        <div v-else class="feed-item-time">{{ time | time2txt }}</div>
+        <div class="feed-item-content">
+            <div class="feed-item-content-info" v-if='!no_user' @click.stop='to(`/user/${user.id}`)'>
                 <span>{{ user.name }}</span>
                 <div>
-                    <i class="feed_item_content_info_pinned_icon" v-if='is_pinned'>置顶</i>
+                    <i class="feed-item-content-info-pinned-icon" v-if='is_pinned'>置顶</i>
                     <template>
-                        <!-- <timeago class="feed_item_content_info_time" :since="time" :auto-update="60" /> -->
+                        <!-- <timeago class="feed-item-content-info-time" :since="time" :auto-update="60" /> -->
                         <!-- # todo -->
-                        <span class="feed_item_content_info_time">
+                        <span class="feed-item-content-info-time">
                             {{ time | time2tips }}
                         </span>
                     </template>
                 </div>
             </div>
             <template v-if='text.length > 0 '>
-                <div class="feed_item_content_text">
+                <div class="feed-item-content-text">
                     <template v-if='is_pay && text.length > 50'>
                         <span>{{ text.slice(0, 50) }}</span>
                         <span class="blur">{{ '魑魅魍魉魑魅魍魉魑魅' }}</span>
@@ -29,14 +30,14 @@
                 </div>
             </template>
             <template v-if='images.length > 0'>
-                <feed-images :imgs='images' @viewPic='viewPic' class='feed_item_content_imgs'></feed-images>
+                <feed-images :imgs='images' @viewPic='viewPic' class='feed-item-content-imgs'></feed-images>
             </template>
         </div>
-        <div class="feed_item_foot">
+        <div class="feed-item-foot">
             <feedTool :has_like='has_like' :like_count='like_count' :comment_count='comment_count' @likeFeed='likeFeed' @moreAction='moreAction' @commentFeed='commentFeed'></feedTool>
         </div>
         <template v-if='comment_count > 0'>
-            <div class="feed_item_comments">
+            <div class="feed-item-comments">
                 <feed-comment-item v-for='comment in comments' v-if='comment.id' :comment='comment' :key='`feed-${feed.id}-comment-${comment.id}`' @action='commentAction' />
             </div>
         </template>
@@ -61,6 +62,7 @@ export default {
             type: Object,
             required: true
         },
+        no_user: Boolean,
         is_pinned: {
             type: Boolean,
             default: true
@@ -189,32 +191,31 @@ export default {
 }
 </script>
 <style lang='less' socped>
-.feed_item {
-    /*display: flex;*/
+@feed-item-prefix: feed-item;
+
+.@{feed-item-prefix} {
     background: #fff;
     padding: 30px 20px;
     font-size: 30px;
-    +.feed_item {
+    +.feed-item {
         margin-top: 10px;
     }
-    &_avatar {
-        /*flex: 0 0 auto;*/
+    &-avatar {
         float: left;
     }
-    &_content {
-        /*flex: 1 1 auto;*/
+    &-content {
         margin-left: 20+38*2px;
-        &_info {
+        &-info {
             display: flex;
             justify-content: space-between;
             font-size: 26px;
             color: #333;
-            &_time {
+            &-time {
                 margin-left: 10px;
                 font-size: 24px;
                 color: #ccc
             }
-            &_pinned_icon {
+            &-pinned-icon {
                 display: inline-table;
                 font-size: 22px;
                 color: #4bb893;
@@ -225,8 +226,10 @@ export default {
                 /*no*/
             }
         }
-        &_text {
+        &-info+&-text {
             margin-top: 25px;
+        }
+        &-text {
             width: 100%;
             font-size: 30px;
             line-height: 1.4;
@@ -236,11 +239,11 @@ export default {
                 text-shadow: 0 0 10px #999;
             }
         }
-        &_imgs {
+        &-text+&-imgs {
             margin-top: 25px;
         }
     }
-    &_foot {
+    &-foot {
         margin: 20px -20px 0;
         padding: 0 20px 0 116px;
         height: 90px;
@@ -250,8 +253,12 @@ export default {
             margin-bottom: -30px;
         }
     }
-    &_comments {
+    &-comments {
         padding: 0 0 0 96px;
+    }
+    &-time {
+        max-width: 96px;
+        float: left;
     }
 }
 </style>

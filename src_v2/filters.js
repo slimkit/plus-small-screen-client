@@ -13,6 +13,31 @@ export function plusMessageFirst(message, defaultMessage) {
 }
 
 /**
+ * 格式化 时间
+ * @author Jsonleex <jsonlseex@163.com>
+ * @param  {String}
+ * @return {String}
+ */
+
+export const time2txt = (str) => {
+    if(!str) return '';
+
+    // 兼容 IOS 保证传入数据格式 YYYY/MM/dd HH:mm:ss 
+    let date = new Date(str.replace(/\-/g, '/'));
+
+    // 现在的时间-传入的时间 = 相差的时间（单位 = 毫秒）
+    let time = new Date().getTime() - date.getTime()
+
+    if(time < 0) {
+        return ''
+    } else if((time / 3600000) < 24) {
+        return '今天';
+    } else {
+        return date.getMonth() + 1 + '月' + date.getDate();
+    }
+}
+
+/**
  * 格式化 时间提示
  * @author Jsonleex <jsonlseex@163.com>
  * @param  {String}

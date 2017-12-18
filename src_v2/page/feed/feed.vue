@@ -1,10 +1,10 @@
 <template>
     <div>
         <head-top>
-            <div slot='nav' class="head_nav">
-                <router-link class='head_nav_item' to="/feed/new">最新</router-link>
-                <router-link class='head_nav_item' to="/feed/hot">热门</router-link>
-                <router-link class='head_nav_item' to="/feed/follow">关注</router-link>
+            <div slot='nav' class="head-top-nav">
+                <router-link class='head-top-nav-item' to="/feed/new">最新</router-link>
+                <router-link class='head-top-nav-item' to="/feed/hot">热门</router-link>
+                <router-link class='head-top-nav-item' to="/feed/follow">关注</router-link>
             </div>
         </head-top>
         <div>

@@ -1,11 +1,11 @@
 <template>
     <div>
         <head-top>
-            <div slot='nav' class="head_nav">
-                <router-link class='head_nav_item' to="/message/msg">
+            <div slot='nav' class="head-top-nav">
+                <router-link class='head-top-nav-item' to="/message/msg">
                     <v-badge dot>消息</v-badge>
                 </router-link>
-                <router-link class='head_nav_item' to="/message/info">
+                <router-link class='head-top-nav-item' to="/message/info">
                     <v-badge :dot='has_info'>通知</v-badge>
                 </router-link>
             </div>

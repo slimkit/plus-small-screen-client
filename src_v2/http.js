@@ -7,7 +7,6 @@ import router from './routers/';
  */
 let TOKEN;
 axios.interceptors.request.use(config => {
-
     TOKEN = (localEvent.get('CURRENTUSER') || {}).token;
 
     // if(config.method === 'post') {

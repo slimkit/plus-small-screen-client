@@ -19,9 +19,33 @@ export default {
 
     async GET_LOCATION({ commit }) {
         let location = await getLocation();
-        const { addressComponent: { city, district, street = '' } = {} } = location;
-        location.label = street.length > 5 ? `${street.slice(0, 2)}…${street.slice(-2)}` : street;
+        const {
+            addressComponent: {
+                city = '',
+                district = '',
+                street = ''
+            } = {},
+            position: {
+                lng = 0,
+                lat = 0
+            }
+        } = location;
 
-        commit("SAVE_LOCATION", location);
+        commit("SAVE_LOCATION", {
+            label: street || district || city,
+            lng,
+            lat
+        });
+    },
+
+    UPDATE_LOCATION({ commit, dispatch }) {
+        commit('SAVE_LOCATION', {});
+        dispatch('GET_LOCATION');
+    },
+
+    GET_HOT_CITYS({ commit }) {
+        http.get('/locations/hots').then(({ data = [] }) => {
+            commit('SAVE_HOT_CITYS', data);
+        });
     }
 }

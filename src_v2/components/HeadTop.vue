@@ -1,7 +1,7 @@
 <template>
-    <div class="header">
+    <div :class="['head-top', { transparent }]">
         <slot>
-            <div class="head_goback">
+            <div class="head-top-goback">
                 <slot name='prepend'>
                     <section v-if="goBack" @click="goBackFn">
                         <template v-if='typeof goBack === "string"'>
@@ -13,7 +13,7 @@
                     </section>
                 </slot>
             </div>
-            <div class="header_title" v-if='title'>
+            <div class="head-top-title" v-if='title'>
                 <slot name='title'>
                     <span class="ellipsis">
                         {{ title || $route.meta.title }}
@@ -21,7 +21,7 @@
                 </slot>
             </div>
             <slot name='nav'></slot>
-            <div class="head_append" v-if="append">
+            <div class="head-top-append" v-if="append">
                 <slot name='append'>
                     <section @click="to('/signup')">注册</section>
                 </slot>
@@ -35,7 +35,8 @@ export default {
     props: {
         title: String,
         goBack: [Boolean, Function, String],
-        append: [Boolean, String]
+        append: [Boolean, String],
+        transparent: Boolean
     },
     computed: {},
     methods: {
@@ -52,13 +53,9 @@ export default {
     }
 }
 </script>
-<style>
-.header+* {
-    padding-top: 90px;
-}
-</style>
-<style lang='less' scoped>
-.header {
+<style lang='less'>
+@head-top-prefix: head-top;
+.@{head-top-prefix} {
     position: fixed;
     z-index: 100;
     left: 0;
@@ -66,10 +63,20 @@ export default {
     height: 90px;
     width: 100%;
     line-height: 90px;
+    color: #333;
     background: #fff;
     border-bottom: 1px solid #ededed;
     /* no */
-    .header_title {
+    transition: all .3s;
+    &.transparent {
+        background-color: transparent;
+        border-bottom-color: transparent;
+        color: #fff;
+    }
+    &+* {
+        padding-top: 90px;
+    }
+    &-title {
         position: absolute;
         top: 50%;
         left: 50%;
@@ -77,9 +84,8 @@ export default {
         width: 60%;
         text-align: center;
         font-size: 36px;
-        color: #333;
     }
-    .head_nav {
+    &-nav {
         display: flex;
         -ms-align-items: center;
         align-items: center;
@@ -90,7 +96,7 @@ export default {
         transform: translate(-50%, -50%);
         max-width: 80%;
         height: 100%;
-        .head_nav_item {
+        &-item {
             box-sizing: border-box;
             color: #999;
             text-align: center;
@@ -98,7 +104,7 @@ export default {
             width: 90px;
             border-bottom: 2px solid transparent;
             /* no */
-            +.head_nav_item {
+            &+& {
                 margin-left: 50px;
             }
         }
@@ -107,33 +113,31 @@ export default {
             border-bottom-color: #59b6d7;
         }
     }
-    .head_goback {
+    &-goback {
         left: 30px;
         width: 100px;
         height: 100%;
-        margin-left:30px;
+        margin-left: 30px;
         font-size: 32px;
-        color: #59b6d7;
         .v-icon {
             width: 40px;
             height: 40px;
             position: absolute;
             top: 50%;
-            color: #333;
             transform: translateY(-50%);
         }
     }
-    .head_append {
-        font-size: 32px;
-        right: 30px;
-        color: #59b6d7;
+    &-append {
         position: absolute;
+        right: 30px;
         top: 50%;
         transform: translateY(-50%);
+        font-size: 32px;
         .v-icon {
             width: 40px;
             height: 40px;
-            color: #333;
+            margin-right: 4px;
+            margin-left: -4px;
             +.v-icon {
                 margin-left: 10px;
             }
