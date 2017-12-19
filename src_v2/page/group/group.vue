@@ -7,14 +7,36 @@
             </div>
         </head-top>
         <div>
+            <!-- 等待加入 -->
+            <div class="entry_group group-count">
+                <div class="entry_item">
+                    <div class="entry_title">
+                        <span class="num">{{ count }}</span>个兴趣小组, 等待你的加入</div>
+                    <v-icon type='base-arrow-r' class='entry_append' />
+                </div>
+            </div>
             <!-- 我加入的 -->
-            <div class="group-list-group joined" v-if='showJoined'>
-                <group-list-item v-for='item in joined' v-if='item.id' :key='`group-${item.id}`'></group-list-item>
+            <div class="group-list-group joined">
+                <div class="group-list-label" @click='to(`/groups/joined`)'>
+                    <span>我加入的</span>
+                    <div class="group-list-more">
+                        查看更多
+                        <v-icon type='base-arrow-r'></v-icon>
+                    </div>
+                </div>
+                <group-list-item v-for='item in joined' v-if='item.id' :key='`group-${item.id}`' :group='item'></group-list-item>
             </div>
             <!-- 我加入的 END -->
             <!-- 推荐 -->
             <div class="group-list-group recommend" v-if='showRecommend'>
-                <group-list-item v-for='item in recommend' v-if='item.id' :key='`group-${item.id}`'></group-list-item>
+                <div class="group-list-label">
+                    <span>热门推荐</span>
+                    <div class="group-list-more">
+                        <v-icon type='base-arrow-r'></v-icon>
+                        换一批
+                    </div>
+                </div>
+                <group-list-item v-for='item in recommend' v-if='item.id' :key='`group-${item.id}`' :group='item'></group-list-item>
             </div>
             <!-- 推荐 END -->
         </div>
@@ -32,18 +54,21 @@ export default {
     data() {
         return {
             joined: [],
-            recommend: []
+            recommend: [],
+            count: 0, // 圈子总数
         }
     },
     computed: {
-        showJoined() {
-            return this.joined.length > 0;
-        },
         showRecommend() {
             return this.recommend.length > 0;
         },
     },
     methods: {
+        to(path) {
+            if(path) {
+                this.$router.push({ path });
+            }
+        },
         createdGroup() {
             this.$router.push('/add_group')
             // this.$Modal.info({
@@ -62,12 +87,20 @@ export default {
                 if(data) {
                     this.joined = [...data];
                 }
+
             });
 
             this.$http.get('/plus-group/recommend/groups').then(({ data = [] }) => {
                 if(data) {
                     this.recommend = [...data];
                 }
+            });
+
+            this.$http.get(`/plus-group/groups/count`).then(({ data: { count = 0 } }) => {
+                this.count = count;
+            }).catch(err => {
+                console.log(err);
+                console.log('获取圈子动态总数失败!');
             })
         },
     },
@@ -77,3 +110,55 @@ export default {
     }
 }
 </script>
+<style lang="less">
+@group-list-prefixCls: group-list;
+
+.entry_group.group-count {
+    margin: 10px 0;
+    font-size: 24px;
+    .num {
+        font-size: 40px;
+        color: #f4504d;
+    }
+
+    .entry_title {
+        color: #999;
+    }
+
+    .entry_append.v-icon {
+        color: #999;
+        margin-right: 0;
+        width: 24px;
+        height: 24px;
+    }
+}
+
+.@{group-list-prefixCls} {
+    &-group {
+        background-color: #fff;
+        font-size: 26px;
+        color: #999;
+        &+& {
+            margin-top: 10px;
+        }
+    }
+    &-label {
+        padding: 0 20px;
+        border-bottom: 1px solid #ededed;
+        /*no*/
+        height: 70px;
+        line-height: 68px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    &-more {
+        .v-icon {
+            width: 24px;
+            height: 24px;
+            vertical-align: baseline;
+        }
+    }
+}
+</style>

@@ -16,6 +16,7 @@ import './style/index.less';
 
 // Filters
 import * as filters from './filters';
+import { formatNum } from './util/';
 
 /** Ajax */
 import Ajax from './http';
@@ -24,7 +25,7 @@ import Ajax from './http';
 import vIcon from './components/common/vIcons'; /* Icons */
 import btnSwitch from './components/common/btnSwitch'; /* btnSwitch 按钮 */
 import badge from './components/common/badge'; /* Badge 徽标 */
-import fullSpin from './components/FullSpin';  /* 全屏加载动画 */
+import fullSpin from './components/FullSpin'; /* 全屏加载动画 */
 import userAvatar from './components/common/userAvatar'; /* Avatar 用户头像组件 */
 import loadMore from './components/loadMore/loadMore';
 
@@ -44,6 +45,7 @@ Vue.use(messageToast); /* 消息提示 */
 
 Vue.prototype.$MessageBundle = filters.plusMessageFirst;
 
+filters.formatNum = formatNum;
 
 for(const k in filters) {
     Vue.filter(k, filters[k]);
