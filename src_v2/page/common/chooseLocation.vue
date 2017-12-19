@@ -50,12 +50,13 @@ export default {
             showHot: true,
             loading: false,
 
-            dataList: []
+            dataList: [],
+            redirect: '', // 选择地址后 跳转的路径
         }
     },
     computed: {
         location() {
-            const location = this.$store.state.CUR_LOCATION || {};
+            const location = this.$store.state.LOCATION || {};
             if(JSON.stringify(location) === "{}") {
                 this.$store.dispatch('GET_LOCATION');
             } else {
@@ -86,25 +87,42 @@ export default {
             this.loading = true;
             this.$store.dispatch('UPDATE_LOCATION');
         },
-        chooseHotCity(city) {
-            this.$http.get(`around-amap/geo?address=${city.replace(/[\s\uFEFF\xA0]+/g, '')}`).then(res => {
+        chooseHotCity(city_txt) {
+            console.log(city_txt);
+            this.$http.get(`around-amap/geo?address=${city_txt.replace(/[\s\uFEFF\xA0]+/g, '')}`).then(res => {
                 const {
                     data: {
                         geocodes: [{
                             city,
                             district,
+                            province,
                             location,
                         }]
                     } = {}
                 } = res;
-                const [lng, lat] = location.split(',');
-                this.$store.commit('SAVE_LOCATION', {
-                    label: city,
-                    lng,
-                    lat
-                });
 
-                this.$router.push(`/find/nearby?lng=${lng}&lat=${lat}`);
+                const [lng, lat] = location.split(',');
+                const label = district.length > 0 ? district : (city.length > 0 ? city : province);
+
+                if(this.redirect) {
+                    if(this.redirect.indexOf('/find/') > -1) {
+                        this.$store.commit('SAVE_LOCATION', {
+                            label,
+                            lng,
+                            lat
+                        });
+                        this.$router.push(`/find/nearby?lng=${lng}&lat=${lat}`)
+                    } else if(this.redirect.indexOf('/add_group') > -1) {
+                        this.$store.commit('SAVE_GROUP_LOCATION', {
+                            label,
+                            lng,
+                            lat
+                        });
+                        this.$router.go(-1);
+                    }
+                } else {
+                    this.$router.go(-1);
+                }
             }).catch(err => {
                 console.log(err);
             });
@@ -159,6 +177,11 @@ export default {
             500 //空闲时间间隔设置500ms
         )
     },
+    beforeRouteEnter(to, from, next) {
+        next(vm => {
+            vm.redirect = from.fullPath;
+        })
+    },
     created() {
         this.$store.dispatch('GET_HOT_CITYS');
     }
@@ -200,11 +223,12 @@ export default {
             background: none;
         }
 
-        &-list{
+        &-list {
             background-color: #fff;
             padding: 0 30px;
-            &-item{
-                border-bottom: 1px solid #ededed; /*no*/
+            &-item {
+                border-bottom: 1px solid #ededed;
+                /*no*/
                 width: 100%;
                 height: 100px;
                 line-height: 98px;

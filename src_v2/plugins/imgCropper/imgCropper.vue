@@ -38,6 +38,7 @@ export default {
     mounted() {
         this.imgVNode = this.$refs.cropperImg;
         this.cropper = new Cropper(this.imgVNode, {
+            viewMode: 1,
             dragMode: 'move',
             aspectRatio: this.aspectRatio,
             autoCropArea: 0.65,

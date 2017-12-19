@@ -107,7 +107,7 @@ ImgCropper.newInstance = properties => {
                 if(this.round) {
                     data = getRoundedCanvas(data);
                 }
-                this.onOk(data.toDataURL());
+                this.onOk(data);
                 this.remove();
             },
             remove() {

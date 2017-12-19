@@ -3,6 +3,9 @@
         <span :class='[`${prefixCls}-text`]' @click='onClick'>
             <slot></slot>
         </span>
+        <div :class="[`${prefixCls}-append`]">
+            <slot name='append'></slot>
+        </div>
         <div :class='[`${prefixCls}`]'>
             <label :for="id" ref='label' :class='[`${prefixCls}-label`]'>
                 <input v-if='type==="radio"' :id="id" v-model='cur_value' :value='dataValue' :class="[`${prefixCls}-input`]" type="radio" @change='setValue'>
@@ -61,6 +64,16 @@ export default {
 
 .@{switch-prefix-radio},
 .@{switch-prefix-checkbox} {
+    &-append {
+        order: 2;
+        font-size: 30px;
+        text-align: right;
+        input {
+            font-size: 30px;
+            text-align: right;
+            padding: 0 20px;
+        }
+    }
     &-wrap {
         display: flex;
         background: #fff;

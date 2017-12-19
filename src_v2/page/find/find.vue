@@ -34,7 +34,7 @@ export default {
     },
     computed: {
         location() {
-            const location = this.$store.state.CUR_LOCATION || {};
+            const location = this.$store.state.LOCATION || {};
             if(JSON.stringify(location) === "{}") {
                 this.$store.dispatch('GET_LOCATION');
             }

@@ -19,7 +19,7 @@ export default {
     },
     computed: {
         location() {
-            return this.$store.state.CUR_LOCATION;
+            return this.$store.state.LOCATION;
         },
         latitude() {
             return this.$route.query.lat || this.location.lat || 0;
