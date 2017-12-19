@@ -23,12 +23,17 @@ export default {
 
     // 保存定位信息
     SAVE_LOCATION(state, location) {
-        state.CUR_LOCATION = location;
-        localEvent.set('CUR_LOCATION', state.CUR_LOCATION);
+        state.LOCATION = location;
+        localEvent.set('LOCATION', state.LOCATION);
+    },
+
+    // 保存创建圈子时选择的位置 临时数据
+    SAVE_GROUP_LOCATION(state, location) {
+        state.CUR_GROUP_LOCATION = location;
     },
 
     // 保存热门城市
-    SAVE_HOT_CITYS(state, list){
+    SAVE_HOT_CITYS(state, list) {
         state.HOTCTIYS = list;
         localEvent.set('HOTCTIYS', state.HOTCTIYS);
     },

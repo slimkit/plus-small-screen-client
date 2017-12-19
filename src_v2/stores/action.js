@@ -3,7 +3,8 @@ import getLocation from '../util/location';
 import { _message } from '../plugins/messageToast';
 export default {
 
-    GET_FEED_TYPES({ commit }) {
+    // 获取圈子分类数据
+    GET_GROUP_TYPES({ commit }) {
         http.get('/plus-group/categories').then(({ data = [] }) => {
             commit('SAVE_GROUP_TYPES', data);
         })
