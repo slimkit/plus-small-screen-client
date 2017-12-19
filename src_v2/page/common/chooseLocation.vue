@@ -1,10 +1,10 @@
 <template>
     <div class="page-location">
-        <head-top :append='true' title='1'>
-            <div slot='append' class="location-top-cancel" @click='$router.go(-1)'>取消</div>
-            <div slot='title' class="location-search">
-                <v-icon type='base-search' class='location-search-icon'></v-icon>
-                <input class="location-search-input" type="text" v-model='keyword' placeholder="搜索" @input="search">
+        <head-top :append='true' title='选择定位'>
+            <div slot='append' class="head-top-cancel" @click='$router.go(-1)'>取消</div>
+            <div slot='title' class="head-top-search">
+                <v-icon type='base-search' class='head-top-search-icon'></v-icon>
+                <input class="head-top-search-input" type="text" v-model='keyword' placeholder="搜索" @input="search">
             </div>
         </head-top>
         <!-- 保留此空 div -->
@@ -197,44 +197,17 @@ export default {
 }
 
 .@{location-prefix} {
-    &-top-cancel {
-        color: #59b6d7;
-    }
-
-    &-search {
-        display: flex;
-        padding: 0 10px;
-        align-items: center;
-        justify-content: flex-start;
-        width: 600px;
-        height: 55px;
-        background-color: #f4f5f5;
-        border-radius: 10px;
-        &-icon {
-            color: #999;
-            width: 25px;
-            height: 25px;
-        }
-
-        &-input {
-            margin-left: 15px;
-            flex: 1 1 auto;
-            height: 100%;
-            background: none;
-        }
-
-        &-list {
-            background-color: #fff;
-            padding: 0 30px;
-            &-item {
-                border-bottom: 1px solid #ededed;
-                /*no*/
-                width: 100%;
-                height: 100px;
-                line-height: 98px;
-                font-size: 30px;
-                color: #333;
-            }
+    &-search-list {
+        background-color: #fff;
+        padding: 0 30px;
+        &-item {
+            border-bottom: 1px solid #ededed;
+            /*no*/
+            width: 100%;
+            height: 100px;
+            line-height: 98px;
+            font-size: 30px;
+            color: #333;
         }
     }
 

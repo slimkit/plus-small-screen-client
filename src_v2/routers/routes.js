@@ -25,8 +25,10 @@ const
     import( /* webpackChunkName: 'group' */ '../page/group/children/addGroup'),
     chooseCategory = () =>
     import( /* webpackChunkName: 'group' */ '../page/group/children/chooseCategory'),
-    joinedGroup = () =>
-    import( /* webpackChunkName: 'group' */ '../page/group/children/joinedGroup'),
+    groupJoined = () =>
+    import( /* webpackChunkName: 'group' */ '../page/group/children/groupJoined'),
+    groupSearch = () =>
+    import( /* webpackChunkName: 'group' */ '../page/group/children/groupSearch'),
 
     question = () =>
     import( /* webpackChunkName: 'question' */ '../page/question/question'),
@@ -123,13 +125,8 @@ const router = [{
         },
 
         /* 我加入的圈子 */
-        {
-            path: '/groups/joined',
-            component: joinedGroup,
-            meta: { title: '我的圈子', keepAlive: true, requiresAuth: true }
-        },
-
-        /* 创建圈子 */
+        { path: '/groups/joined', component: groupJoined, meta: { title: '我的圈子', keepAlive: true, requiresAuth: true } }, /* 创建圈子 */
+        { name: 'groupSearch', path: '/groups/search', component: groupSearch, meta: { title: '我的圈子', keepAlive: true, requiresAuth: true } }, /* 搜索圈子 */
         {
             path: '/add_group',
             component: addGroup,

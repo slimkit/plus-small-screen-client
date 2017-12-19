@@ -38,6 +38,19 @@ export default {
         localEvent.set('HOTCTIYS', state.HOTCTIYS);
     },
 
+    // 保存用户搜索历史
+    ADD_SEARCH_HISTORY(state, list) {
+        const old = state.SEARCHHISTORY;
+        state.SEARCHHISTORY = Array.from(new Set([list, ...old]));
+        localEvent.set('SEARCHHISTORY', state.SEARCHHISTORY);
+    },
+
+    // 清空搜索历史
+    CLEAN_SEARCH_HISTORY(state) {
+        state.SEARCHHISTORY = [];
+        localEvent.remove('SEARCHHISTORY');
+    },
+
     // 注销登录
     LOGOUT(state) {
         state.CURRENTUSER = null;

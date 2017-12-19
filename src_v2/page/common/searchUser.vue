@@ -1,10 +1,10 @@
 <template>
     <div class="page-search_usr">
         <head-top :append='true' title='1'>
-            <div slot='append' class="search_usr-top-cancel" @click='cancel'>取消</div>
-            <div slot='title' class="search_usr-search">
-                <v-icon type='base-search' class='search_usr-search-icon'></v-icon>
-                <input class="search_usr-search-input" type="text" v-model='keyword' placeholder="搜索" @input="search">
+            <div slot='append' class="head-top-cancel" @click='cancel'>取消</div>
+            <div slot='title' class="head-top-search">
+                <v-icon type='base-search' class='head-top-search-icon'></v-icon>
+                <input class="head-top-search-input" type="text" v-model='keyword' placeholder="搜索" @input="search">
             </div>
         </head-top>
         <!-- 保留此空 div -->
@@ -106,46 +106,18 @@ export default {
         width: 100%;
     }
 }
-
 .@{search_usr-prefixCls} {
-    &-top-cancel {
-        color: #59b6d7;
-    }
-
-    &-search {
-        display: flex;
-        padding: 0 10px;
-        align-items: center;
-        justify-content: flex-start;
-        width: 600px;
-        height: 55px;
-        background-color: #f4f5f5;
-        border-radius: 10px;
-        &-icon {
-            color: #999;
-            width: 25px;
-            height: 25px;
-        }
-
-        &-input {
-            margin-left: 15px;
-            flex: 1 1 auto;
-            height: 100%;
-            background: none;
-        }
-
-        &-list {
-            background-color: #fff;
-            padding: 0 30px;
-            &-item {
-                border-bottom: 1px solid #ededed;
-                /*no*/
-                width: 100%;
-                height: 100px;
-                line-height: 98px;
-                font-size: 30px;
-                color: #333;
-            }
+    &-search-list {
+        background-color: #fff;
+        padding: 0 30px;
+        &-item {
+            border-bottom: 1px solid #ededed;
+            /*no*/
+            width: 100%;
+            height: 100px;
+            line-height: 98px;
+            font-size: 30px;
+            color: #333;
         }
     }
 }

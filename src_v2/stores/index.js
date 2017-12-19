@@ -22,15 +22,18 @@ const state = {
     /* 当前登录用户信息 */
     CURRENTUSER: LocalEvent.get('CURRENTUSER') || {},
 
+    /* 搜索历史 */
+    SEARCHHISTORY: LocalEvent.get('SEARCHHISTORY') || [],
+
     /* 当前定位 */
     LOCATION: LocalEvent.get('LOCATION') || {},
     /* 热门城市 */
     HOTCTIYS: LocalEvent.get('HOTCTIYS') || [],
-
     /* 当前选择的标签 临时数据 */
     CUR_SELECTED_TAGS: [],
     /* 当前圈子的位置信息 临时数据 */
     CUR_GROUP_LOCATION: {},
+
 }
 
 export default new Vuex.Store({

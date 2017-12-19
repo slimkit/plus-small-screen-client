@@ -73,6 +73,7 @@ export default {
         border-bottom-color: transparent;
         color: #fff;
     }
+
     &+* {
         padding-top: 90px;
     }
@@ -141,6 +142,32 @@ export default {
             +.v-icon {
                 margin-left: 10px;
             }
+        }
+    }
+    &-cancel {
+        color: #59b6d7;
+    }
+
+    &-search {
+        display: flex;
+        padding: 0 10px;
+        align-items: center;
+        justify-content: flex-start;
+        width: 600px;
+        height: 55px;
+        background-color: #f4f5f5;
+        border-radius: 10px;
+        &-icon.v-icon {
+            color: #999;
+            width: 28px;
+            height: 28px;
+        }
+
+        &-input {
+            margin-left: 15px;
+            flex: 1 1 auto;
+            height: 100%;
+            background: none;
         }
     }
 }

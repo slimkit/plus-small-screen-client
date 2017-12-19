@@ -2,7 +2,7 @@
     <div>
         <head-top :go-back='()=>{$router.push("/discover")}' append='true' title='圈子'>
             <div slot='append'>
-                <v-icon type='base-search'></v-icon>
+                <v-icon type='base-search' @click.native='to(`/groups/search`)'></v-icon>
                 <v-icon type='group-add' @click.native='createdGroup'></v-icon>
             </div>
         </head-top>
@@ -20,7 +20,7 @@
                 <div class="group-list-label" @click='to(`/groups/joined`)'>
                     <span>我加入的</span>
                     <div class="group-list-more">
-                        查看更多
+                        <span>查看更多</span>
                         <v-icon type='base-arrow-r'></v-icon>
                     </div>
                 </div>
@@ -31,9 +31,9 @@
             <div class="group-list-group recommend" v-if='showRecommend'>
                 <div class="group-list-label">
                     <span>热门推荐</span>
-                    <div class="group-list-more">
-                        <v-icon type='base-arrow-r'></v-icon>
-                        换一批
+                    <div class="group-list-more" @click='getRec'>
+                        <v-icon :class='{"btn-loading": loading}' type='base-refresh'></v-icon>
+                        <span>换一批</span>
                     </div>
                 </div>
                 <group-list-item v-for='item in recommend' v-if='item.id' :key='`group-${item.id}`' :group='item'></group-list-item>
@@ -56,6 +56,7 @@ export default {
             joined: [],
             recommend: [],
             count: 0, // 圈子总数
+            loading: false
         }
     },
     computed: {
@@ -65,8 +66,9 @@ export default {
     },
     methods: {
         to(path) {
+            path = typeof path === 'string' ? { path } : path;
             if(path) {
-                this.$router.push({ path });
+                this.$router.push(path);
             }
         },
         createdGroup() {
@@ -90,11 +92,7 @@ export default {
 
             });
 
-            this.$http.get('/plus-group/recommend/groups').then(({ data = [] }) => {
-                if(data) {
-                    this.recommend = [...data];
-                }
-            });
+            this.getRec();
 
             this.$http.get(`/plus-group/groups/count`).then(({ data: { count = 0 } }) => {
                 this.count = count;
@@ -103,6 +101,16 @@ export default {
                 console.log('获取圈子动态总数失败!');
             })
         },
+        // 获取推荐圈子
+        getRec() {
+            this.loading = true;
+            this.$http.get('/plus-group/recommend/groups?type=random').then(({ data = [] }) => {
+                if(data) {
+                    this.recommend = [...data];
+                    this.loading = false;
+                }
+            });
+        }
     },
     created() {
         this.getGroup();
@@ -154,6 +162,11 @@ export default {
     }
 
     &-more {
+        display: flex;
+        align-items: center;
+        span {
+            margin: 0 5px;
+        }
         .v-icon {
             width: 24px;
             height: 24px;
