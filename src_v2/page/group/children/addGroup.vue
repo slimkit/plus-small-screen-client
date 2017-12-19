@@ -21,7 +21,7 @@
             </div>
             <div class="form-row">
                 <label>分类</label>
-                <div :class="['input', 'ccc', { c333: category}]" @click='toChoose("add_group/category")'>
+                <div :class="['input', 'ccc', { c333: category.id}]" @click='toChoose("add_group/category")'>
                     {{ (category || {}).name || '选择圈子类别' }}
                     <v-icon type='base-arrow-r'></v-icon>
                 </div>
@@ -43,8 +43,8 @@
             <!-- # todo -->
             <div class="form-row">
                 <label>位置</label>
-                <div :class="['input', 'ccc', { c333: location}]" @click='toChoose("location")'>
-                    {{ location || '设置圈子地理位置' }}
+                <div :class="['input', 'ccc', { c333: location_txt}]" @click='toChoose("location")'>
+                    {{ location_txt || '设置圈子地理位置' }}
                     <v-icon type='base-arrow-r'></v-icon>
                 </div>
             </div>
@@ -58,10 +58,19 @@
         <!-- switch -->
         <div class="switch-group">
             <v-switch v-model='allow_feed' type='checkbox'>帖子同步至动态</v-switch>
-            <v-switch v-model='mode.private' type='checkbox'>设置为封闭圈子</v-switch>
-            <template v-if='mode.private'>
-                <v-switch v-model='mode.paid' :data-value='true' type='radio'>收费入圈</v-switch>
-                <v-switch v-model='mode.paid' :data-value='false' type='radio'>免费入圈</v-switch>
+            <v-switch v-model='private' type='checkbox'>设置为封闭圈子</v-switch>
+            <template v-if='private'>
+                <v-switch v-model='paid' :data-value='true' type='radio'>
+                    收费入圈
+                    <template v-if='paid'>
+                        <div slot='append'>
+                            <!-- 移动端 数字键盘 -->
+                            <!-- pattern="[0-9]*" -->
+                            <input type="number" placeholder="设置入圈收费金额" v-model='money' pattern="[0-9]*">金币
+                        </div>
+                    </template>
+                </v-switch>
+                <v-switch v-model='paid' :data-value='false' type='radio'>免费入圈</v-switch>
             </template>
             <p class="tips">注: 用户需经圈管理员同意方可加入封闭圈子</p>
         </div>
@@ -69,9 +78,9 @@
         <!-- notice -->
         <div class="form-group notice">
             <div class="form-row">
-                <label for="summary">公告</label>
+                <label for="notice">公告</label>
                 <div class="input auto">
-                    <textarea :style='textareaStyles' ref='summary' v-model='summary' placeholder="选填" maxlength="50" id="summary"></textarea>
+                    <textarea :style='textareaStyles' ref='notice' v-model='notice' placeholder="选填" maxlength="50" id="notice"></textarea>
                 </div>
             </div>
         </div>
@@ -83,9 +92,10 @@
     </div>
 </template>
 <script>
-import { getFileUrl } from '../../../util/';
-import HeadTop from '../../../components/HeadTop';
-import calcTextareaHeight from '../../../util/calcTextareaHeight';
+import { getFileUrl } from '@/util/';
+import HeadTop from '@/components/HeadTop';
+import calcTextareaHeight from '@/util/calcTextareaHeight';
+import { encodeGeoHash } from '@/util/geohash';
 export default {
     name: 'addGroup',
     components: {
@@ -96,53 +106,72 @@ export default {
             name: '', // 圈名
             // tags: [], //  标签
             header: '', // 头像 
-            category: '', // 分类ID 
-            location: '', // 地区
-            latitude: '', // 纬度
-            longitude: '', // 经度
-            geo_hash: '', // geo_hash
+            avatar: null,
+            category: {}, // 当前 
             summary: '', //圈子简介
+            notice: '', // 公告
+            money: null,
             textareaStyles: {},
             allow_feed: false,
             // 圈子类别 public: 公开，private：私有，paid：付费的
-            mode: {
-                private: true,
-                public: false,
-                paid: false,
-            },
+            private: true,
+            paid: false,
         }
     },
     computed: {
         disabled() {
-            return true;
+            return [this.name, this.header, this.tags].map(v => v.length > 0).includes(false);
         },
         tagsLen() {
             return this.tags.length;
         },
         tags() {
-            return this.$store.state.CUR_SELECTED_TAGS || [];
+            return this.$store.state.CUR_SELECTED_TAGS;
+        },
+        cur_location() {
+            return this.$store.state.CUR_GROUP_LOCATION;
+        },
+        location_txt() {
+            return this.cur_location.label || '';
+        },
+        mode() {
+            return this.paid ? 'paid' : (this.private ? 'private' : 'public');
         }
-
     },
     watch: {
+        money(val) {
+            if(val < 0) {
+                this.money = 0;
+            }
+        },
+        private(val) {
+            if(!val) {
+                this.paid = val;
+            }
+        },
         summary(val) {
             this.$nextTick(() => {
-                this.resizeTextarea();
+                this.resizeTextarea(this.$refs.summary);
             });
+        },
+        notice(val) {
+            this.$nextTick(() => {
+                this.resizeTextarea(this.$refs.notice);
+            })
         }
     },
     methods: {
         init() {
             this.name = '';
             this.header = '';
+            this.avatar = {};
             this.category = '';
-            this.location = '';
-            this.latitude = '';
-            this.longitude = '';
-            this.geo_hash = '';
             this.summary = '';
+            this.notice = '';
+            this.money = '';
             this.textareaStyles = {};
             this.$store.state.CUR_SELECTED_TAGS = [];
+            this.$store.state.CUR_GROUP_LOCATION = {};
         },
         /**
          * 取消 并 返回上一页
@@ -159,7 +188,55 @@ export default {
          */
         addGroup() {
             // POST /categories/:category/groups
-            this.$http.post(`/plus-group/categories/${this.category}/groups`)
+            const category = this.category.id;
+            if(!category) {
+                return this.$Message.error('请选择圈子分类');
+            }
+
+
+            let params = {
+                name: this.name,
+                summary: this.summary,
+                notice: this.notice,
+                mode: this.mode,
+                allow_feed: this.allow_feed,
+            }
+
+            if(this.location) {
+                const { lat, lng } = this.cur_location;
+                params = Object.assign({}, params, {
+                    location: this.location_txt,
+                    latitude: lat,
+                    longitude: lng,
+                    geo_hash: encodeGeoHash(lat, lng)
+                });
+            }
+
+            this.avatar.toBlob((blob) => {
+                let formData = new FormData();
+                formData.append('avatar', blob);
+
+                Object.keys(params).forEach(key => formData.append(key, params[key]));
+
+                if(params.mode = 'paid') {
+                    if(this.money > 0) {
+                        formData.append('money', this.money);
+                    }
+                }
+                // tags
+                this.tags.forEach((t, index) => {
+                    formData.append(`tags[][id]`, t.id);
+                });
+
+                this.$http.post(`/plus-group/categories/${category}/groups`, formData, {
+                    validateStatus: s => s === 200
+                }).then(data => {
+                    this.$Message.success('创建圈子成功');
+                }).catch(err => {
+                    const { response: { data = { message: '创建圈子失败' } } = {} } = err;
+                    this.$Message.error(data);
+                })
+            });
         },
 
         /**
@@ -184,8 +261,9 @@ export default {
                 onCancel() {
                     vm.$refs.uploadFile.value = null;
                 },
-                onOk(data) {
-                    vm.header = data;
+                onOk(canvas) {
+                    vm.avatar = canvas;
+                    vm.header = canvas.toDataURL();
                     vm.$refs.uploadFile.value = null;
                 },
             });
@@ -195,8 +273,9 @@ export default {
          * 更新 文本域 的样式
          *     @author jsonleex <jsonlseex@163.com>
          */
-        resizeTextarea() {
-            this.textareaStyles = { ...calcTextareaHeight(this.$refs.summary), paddingBottom: '.3rem' };
+        resizeTextarea(el) {
+            el.style.height = calcTextareaHeight(el).height;
+            el.style.paddingBottom = '.3rem';
         },
         /**
          * 进入选择页面
@@ -227,6 +306,7 @@ export default {
     height: 100%;
     font-size: 32px;
     background: none;
+    color: #59b6d7;
     &[disabled] {
         color: #ccc;
     }

@@ -70,13 +70,10 @@ export default {
                 }
             })
         },
-
-        // 获取圈子分类
-        getGroupCategories() {
-        }
     },
     created() {
-        this.$store.dispatch('GET_FEED_TYPES');
+        this.getGroup();
+        this.$store.dispatch('GET_GROUP_TYPES');
     }
 }
 </script>
