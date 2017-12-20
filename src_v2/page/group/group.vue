@@ -2,7 +2,7 @@
     <div>
         <head-top :go-back='()=>{$router.push("/discover")}' append='true' title='圈子'>
             <div slot='append'>
-                <v-icon type='base-search' @click.native='to(`/groups/search`)'></v-icon>
+                <v-icon type='base-search' @click.native='to(`/group/search`)'></v-icon>
                 <v-icon type='group-add' @click.native='createdGroup'></v-icon>
             </div>
         </head-top>
@@ -17,7 +17,7 @@
             </div>
             <!-- 我加入的 -->
             <div class="group-list-group joined">
-                <div class="group-list-label" @click='to(`/groups/joined`)'>
+                <div class="group-list-label" @click='to(`/group/joined`)'>
                     <span>我加入的</span>
                     <div class="group-list-more">
                         <span>查看更多</span>
@@ -72,7 +72,7 @@ export default {
             }
         },
         createdGroup() {
-            this.$router.push('/add_group')
+            this.$router.push('/group/add')
             // this.$Modal.info({
             //     content: '只有认证通过的用户才可以创建圈子, 是否去认证?',
             //     okText: '去认证',

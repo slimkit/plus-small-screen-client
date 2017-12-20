@@ -29,6 +29,8 @@ const
     import( /* webpackChunkName: 'group' */ '../page/group/children/groupJoined'),
     groupSearch = () =>
     import( /* webpackChunkName: 'group' */ '../page/group/children/groupSearch'),
+    groupDetail = () =>
+    import( /* webpackChunkName: 'group' */ '../page/group/children/groupDetail'),
 
     question = () =>
     import( /* webpackChunkName: 'question' */ '../page/question/question'),
@@ -121,14 +123,17 @@ const router = [{
             path: '/group',
             component: group,
             meta: { title: '圈子', keepAlive: true, requiresAuth: true },
-            children: []
+        }, {
+            path: '/group/detail/:groupID',
+            component: groupDetail,
+            meta: { title: '圈子', keepAlive: true, requiresAuth: true },
         },
 
         /* 我加入的圈子 */
-        { path: '/groups/joined', component: groupJoined, meta: { title: '我的圈子', keepAlive: true, requiresAuth: true } }, /* 创建圈子 */
-        { name: 'groupSearch', path: '/groups/search', component: groupSearch, meta: { title: '我的圈子', keepAlive: true, requiresAuth: true } }, /* 搜索圈子 */
+        { path: '/group/joined', component: groupJoined, meta: { title: '我的圈子', keepAlive: true, requiresAuth: true } }, /* 创建圈子 */
+        { name: 'groupSearch', path: '/group/search', component: groupSearch, meta: { title: '我的圈子', keepAlive: true, requiresAuth: true } }, /* 搜索圈子 */
         {
-            path: '/add_group',
+            path: '/group/add',
             component: addGroup,
             meta: { title: '创建圈子', keepAlive: true, requiresAuth: true },
             children: [{

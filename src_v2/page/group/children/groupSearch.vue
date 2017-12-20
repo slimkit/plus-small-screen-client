@@ -19,7 +19,7 @@
                 <div class="group-search-history-item" v-for='(history,index) in historys' :key='`history-${index}`' v-if='history' @click='historyClick(history)'>
                     <v-icon type='base-circle-time'></v-icon>
                     <div class="group-search-history-item-label">{{ history }}</div>
-                    <v-icon type='base-clean'></v-icon>
+                    <v-icon type='base-clean' @click.native.stop='cleanSearchHistorys(history)'></v-icon>
                 </div>
                 <div class="group-search-history-item cancel" @click='cleanSearchHistorys' ref='test'>清空搜索历史</div>
             </div>
@@ -77,8 +77,8 @@ export default {
             this.$router.go(-1);
             this.$destroy();
         },
-        cleanSearchHistorys() {
-            this.$store.commit('CLEAN_SEARCH_HISTORY');
+        cleanSearchHistorys(history) {
+            this.$store.commit('CLEAN_SEARCH_HISTORY', history);
         },
         historyClick(history) {
             this.keyword = history;

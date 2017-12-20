@@ -46,9 +46,14 @@ export default {
     },
 
     // 清空搜索历史
-    CLEAN_SEARCH_HISTORY(state) {
-        state.SEARCHHISTORY = [];
-        localEvent.remove('SEARCHHISTORY');
+    CLEAN_SEARCH_HISTORY(state, data) {
+        const index = state.SEARCHHISTORY.indexOf(data);
+        if(data && index >= 0) {
+            state.SEARCHHISTORY.splice(index, 1);
+        } else {
+            state.SEARCHHISTORY = [];
+            localEvent.remove('SEARCHHISTORY');
+        }
     },
 
     // 注销登录

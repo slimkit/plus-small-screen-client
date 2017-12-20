@@ -1,5 +1,5 @@
 <template>
-    <div :class="prefixCls" :id='`group-${group.id}`'>
+    <div :class="prefixCls" :id='`group-${group.id}`' @click='to(`/group/detail/${group.id}`)'>
         <div :class="`${prefixCls}-header`">
             <img :src="header">
         </div>
@@ -18,7 +18,7 @@
             </p>
         </div>
         <div :class="`${prefixCls}-action`">
-            <a v-if='!group.joined' @click='joinGroup' :class="[`${prefixCls}-action-btn`, 'join']">
+            <a v-if='!group.joined' @click.stop='joinGroup(group.id)' :class="[`${prefixCls}-action-btn`, 'join']">
                 <v-icon type='foot-plus'></v-icon>加入
             </a>
             <div v-if='role' :class="[`${prefixCls}-role`, roles.cls]">{{ roles.label }}</div>
@@ -74,7 +74,21 @@ export default {
     },
 
     methods: {
-        joinGroup() {}
+        to(path) {
+            if(path) {
+                this.$router.push({ path });
+            }
+        },
+        joinGroup(id) {
+            // PUT /groups/:group
+            // # todo
+            this.$http.put(`/plus-group/groups/${id}`).then(({ data }) => {
+                this.$Message.success(data);
+            }).catch(err => {
+                const { response: { data = { message: '申请失败 可能是已经申请过了' } } = {} } = err;
+                this.$Message.error(data);
+            })
+        },
     }
 }
 </script>
