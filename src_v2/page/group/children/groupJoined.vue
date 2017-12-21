@@ -1,6 +1,6 @@
 <template>
     <div>
-        <head-top :go-back='true' :title='`我加入的`'></head-top>
+        <head-top :go-back='cancel' :title='`我加入的`'></head-top>
         <div>
             <group-item v-for='group in myGroups' :key='`group-${group.id}`' :group='group' :role='true'></group-item>
         </div>
@@ -21,6 +21,9 @@ export default {
         }
     },
     methods: {
+        cancel() {
+            this.$router.go(-1);
+        },
         getMyGroups() {
             this.$http.get('/plus-group/user-groups').then(({ data = [] }) => {
                 if(data) {

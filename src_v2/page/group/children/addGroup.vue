@@ -21,7 +21,7 @@
             </div>
             <div class="form-row">
                 <label>分类</label>
-                <div :class="['input', 'ccc', { c333: category.id}]" @click='toChoose("add_group/category")'>
+                <div :class="['input', 'ccc', { c333: category.id}]" @click='toChoose("group/add/category")'>
                     {{ (category || {}).name || '选择圈子类别' }}
                     <v-icon type='base-arrow-r'></v-icon>
                 </div>
@@ -180,7 +180,6 @@ export default {
         cancel() {
             this.init();
             this.$router.go(-1);
-            this.$destroy();
         },
         /**
          * 创建圈子

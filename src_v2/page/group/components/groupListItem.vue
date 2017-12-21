@@ -1,5 +1,5 @@
 <template>
-    <div :class="prefixCls" :id='`group-${group.id}`' @click='to(`/group/detail/${group.id}`)'>
+    <div :class="prefixCls" :id='`group-${group.id}`' @click='beforeToDetail'>
         <div :class="`${prefixCls}-header`">
             <img :src="header">
         </div>
@@ -89,6 +89,14 @@ export default {
                 this.$Message.error(data);
             })
         },
+
+        beforeToDetail() {
+            if(this.group.mode === 'public' || this.group.joined) {
+                this.to(`/group/detail/${this.group.id}`)
+            } else {
+                this.$Message.error('需要先加入圈子, 才能查看圈子信息哦~');
+            }
+        }
     }
 }
 </script>

@@ -75,7 +75,6 @@ export default {
     methods: {
         cancel() {
             this.$router.go(-1);
-            this.$destroy();
         },
         cleanSearchHistorys(history) {
             this.$store.commit('CLEAN_SEARCH_HISTORY', history);

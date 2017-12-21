@@ -15,8 +15,17 @@ const
     profile = () =>
     import( /* webpackChunkName: 'profile' */ '../page/profile/profile'),
 
+    // 我的圈子
+    profileGroup = () =>
+    import( /* webpackChunkName: 'profile' */ '../page/profile/children/profileGroup'),
+    profileGroup_group = () =>
+    import( /* webpackChunkName: 'profile' */ '../page/profile/children/profileGroup.group'),
+    profileGroup_posts = () =>
+    import( /* webpackChunkName: 'profile' */ '../page/profile/children/profileGroup.posts'),
+
     news = () =>
     import( /* webpackChunkName: 'news' */ '../page/news/news'),
+
     group = () =>
     import( /* webpackChunkName: 'group' */ '../page/group/group'),
 
@@ -29,8 +38,12 @@ const
     import( /* webpackChunkName: 'group' */ '../page/group/children/groupJoined'),
     groupSearch = () =>
     import( /* webpackChunkName: 'group' */ '../page/group/children/groupSearch'),
+    groupAll = () =>
+    import( /* webpackChunkName: 'group' */ '../page/group/children/groupAll'),
     groupDetail = () =>
     import( /* webpackChunkName: 'group' */ '../page/group/children/groupDetail'),
+    groupPostFeed = () =>
+    import( /* webpackChunkName: 'group' */ '../page/group/children/groupPostFeed'),
 
     question = () =>
     import( /* webpackChunkName: 'question' */ '../page/question/question'),
@@ -71,6 +84,7 @@ const router = [{
         { path: '/signin', component: signin, meta: { title: '登录', forGuest: true } }, /* 登录 */
         { path: '/signup', component: signup, meta: { title: '注册', forGuest: true } }, /* 注册 */
         { path: '/profile', component: profile, meta: { title: '我', requiresAuth: true } }, /* 个人中心 */
+
         { path: '/discover', component: discover, meta: { title: '发现' } }, /* 发现 */
 
         /* 功能页面 */
@@ -126,7 +140,31 @@ const router = [{
         }, {
             path: '/group/detail/:groupID',
             component: groupDetail,
-            meta: { title: '圈子', keepAlive: true, requiresAuth: true },
+            meta: { title: '圈子详情', keepAlive: true, requiresAuth: true },
+        }, {
+            path: '/group/all',
+            component: groupAll,
+            meta: { title: '全部圈子', keepAlive: true, requiresAuth: true },
+        }, {
+            path: '/group/post',
+            component: groupPostFeed,
+            meta: { title: '发布帖子', keepAlive: true, requiresAuth: true },
+        }, {
+            path: 'profile/group',
+            component: profileGroup,
+            meta: { title: '我的圈子', requiresAuth: true },
+            redirect: 'profile/group/groups',
+            children: [{
+                path: 'groups',
+                name: 'profileGroup_groups',
+                component: profileGroup_group,
+                meta: { keepAlive: true },
+            }, {
+                path: 'posts',
+                name: 'profileGroup_posts',
+                component: profileGroup_posts,
+                meta: { keepAlive: true },
+            }]
         },
 
         /* 我加入的圈子 */

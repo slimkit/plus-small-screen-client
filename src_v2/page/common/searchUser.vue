@@ -40,7 +40,6 @@ export default {
     methods: {
         cancel() {
             this.$router.go(-1);
-            this.$destroy();
         },
         //使用_.debounce控制搜索的触发频率
         //准备搜索
