@@ -34,7 +34,13 @@ export default {
                 [{
                     title: '清除缓存',
                     icon: 'news',
-                    path: '/news',
+                    path: 'clean',
+                    new_tips: false,
+                    tips: ''
+                }, {
+                    title: '我的圈子',
+                    icon: 'news',
+                    path: '/profile/group',
                     new_tips: false,
                     tips: ''
                 }]
@@ -43,8 +49,10 @@ export default {
     },
     methods: {
         to(path) {
-            this.$store.commit("LOGOUT");
-            // this.$router.push({ path });
+            if(path === 'clean') {
+                this.$store.commit("LOGOUT");
+            }
+            this.$router.push({ path });
         }
     }
 }

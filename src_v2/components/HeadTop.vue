@@ -114,6 +114,52 @@ export default {
             border-bottom-color: #59b6d7;
         }
     }
+
+    &-tabs-nav {
+        display: flex;
+        -ms-align-items: center;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        max-width: 80%;
+        height: 100%;
+        &-item {
+            padding: 0 30px;
+            font-size: 32px;
+            color: #59b6d7;
+            height: 60px;
+            line-height: 60px;
+            border-width: 1px 0;
+            /*no*/
+            border-style: solid;
+            border-color: #59b6d7;
+
+            &:first-child {
+                border-left-width: 1px;
+                /*no*/
+                border-top-left-radius: 4px;
+                /*no*/
+                border-bottom-left-radius: 4px;
+                /*no*/
+            }
+            &:last-child {
+                border-right-width: 1px;
+                /*no*/
+                border-top-right-radius: 4px;
+                /*no*/
+                border-bottom-right-radius: 4px;
+                /*no*/
+            }
+
+            &.router-link-active{
+                background-color: #59b6d7;
+                color: #fff;
+            }
+        }
+    }
     &-goback {
         left: 30px;
         width: 100px;

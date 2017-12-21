@@ -1,6 +1,6 @@
 <template>
     <div>
-        <head-top :go-back='()=>{$router.push("/discover")}' append='true' title='圈子'>
+        <head-top :go-back='cancel' append='true' title='圈子'>
             <div slot='append'>
                 <v-icon type='base-search' @click.native='to(`/group/search`)'></v-icon>
                 <v-icon type='group-add' @click.native='createdGroup'></v-icon>
@@ -9,7 +9,7 @@
         <div>
             <!-- 等待加入 -->
             <div class="entry_group group-count">
-                <div class="entry_item">
+                <div class="entry_item" @click='to(`/group/all`)'>
                     <div class="entry_title">
                         <span class="num">{{ count }}</span>个兴趣小组, 等待你的加入</div>
                     <v-icon type='base-arrow-r' class='entry_append' />
@@ -65,6 +65,9 @@ export default {
         },
     },
     methods: {
+        cancel() {
+            this.to('/discover');
+        },
         to(path) {
             path = typeof path === 'string' ? { path } : path;
             if(path) {
