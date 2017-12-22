@@ -4,7 +4,7 @@
             <div class='profile-group-nav-item' :class='{active: curType === type}' v-for='({ label, type },index) in navs' :key='`profile-group-nav-${index}`' @click='curType = type'>{{ label }}</div>
         </div>
         <div>
-            <groupItem role='true' v-for='group in dataList' v-if='group.id' :key='`profile-group-${group.id}`' :group='group'></groupItem>
+            <groupItem :role='true' v-for='group in dataList' v-if='group.id' :key='`profile-group-${group.id}`' :group='group'></groupItem>
         </div>
     </div>
 </template>
