@@ -1,6 +1,6 @@
 <template>
     <div @click.stop='' class="comment-input">
-        <textarea :style='textareaStyles' :maxlength="maxlength" :placeholder="placeholder" ref='input' autofocus="true" :value="currentValue" @keyup.enter="handleEnter" @input="handleInput" />
+        <textarea :style='textareaStyles' :maxlength="maxlength" :placeholder="placeholder" ref='input' autofocus="true" :value="currentValue" @keyup.ctrl.enter="handleEnter" @input="handleInput" />
         <div class="comment-input-append">
             <template v-if='len > 200'>
                 <p>{{ len }}/{{maxlength}}</p>
@@ -50,6 +50,11 @@ export default {
             this.$emit('input', value);
             this.setCurrentValue(value);
             this.$emit('on-change', event);
+        },
+        handleEnter() {
+            if(this.currentValue) {
+                this.$emit('on-ok', this.currentValue);
+            }
         },
         handleChange(event) {
             this.$emit('on-input-change', event);

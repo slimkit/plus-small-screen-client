@@ -121,11 +121,14 @@ export default {
             content: '长图';
             display: block;
             position: absolute;
-            bottom: 1px;/*no*/
-            right: 1px;/*no*/
+            bottom: 1px;
+            /*no*/
+            right: 1px;
+            /*no*/
             padding: 0 5px;
             height: 30px;
-            border-radius: 1px; /*no*/
+            border-radius: 1px;
+            /*no*/
             line-height: 30px;
             font-size: 20px;
             z-index: 1;
@@ -202,79 +205,4 @@ export default {
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*.puzzle {
-        width: 100%;
-        height: 100%;
-        div {
-            float: left;
-            overflow: hidden;
-            position: relative;
-        }
-        .vertical {
-            background-repeat: no-repeat;
-            background-size: 100% auto;
-            background-position: center center;
-        }
-        .horizontal {
-            background-repeat: no-repeat;
-            background-size: auto 100%;
-            background-position: center center;
-        }
-    }
-    .puzzle-size (@height, @width) {
-        height: @height;
-        width: @width;
-    }
-    .puzzle-5 {
-        .puzzle();
-        .box:nth-child(1) {
-            .puzzle-size(66.5%, 66.7%);
-        }
-        .box:nth-child(2), .box:nth-child(3) {
-            .puzzle-size(50%, 33.3%);
-        }
-        .box:nth-child(3) {
-            float: right;
-        }
-        .box:nth-child(4), .box:nth-child(5) {
-            .puzzle-size(33.3%, 33.3%);
-        }
-    }*/
 </style>

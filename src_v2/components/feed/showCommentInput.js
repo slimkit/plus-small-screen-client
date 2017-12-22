@@ -62,8 +62,8 @@ CommentInput.newInstance = properties => {
                 this.onCancel();
                 this.remove();
             },
-            ok() {
-                this.onOk();
+            ok(txt) {
+                this.onOk(txt);
             },
             remove() {
                 setTimeout(() => {

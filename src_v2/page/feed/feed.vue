@@ -7,14 +7,19 @@
                 <router-link class='head-top-nav-item' to="/feed/follow">关注</router-link>
             </div>
         </head-top>
+        <div></div>
+        <!--         <feed-item v-for='feed in feeds' channel='feed' :feed='feed' :key='`feed-${feed_type}-${feed.id}`'></feed-item>
+        <group-feed-item :title='feed.title' channel='group' v-for='feed in groupFeeds' :feed='feed' :key='`group-feed-${feed_type}-${feed.id}`'></group-feed-item>
+ -->
         <div>
-            <feed-item v-for='feed in feeds' :feed='feed' :key='`feed-${feed_type}-${feed.id}`'></feed-item>
+            <feed-item v-for='feed in feeds' channel='feed' :feed='feed' :key='`feed-${feed_type}-${feed.id}`'></feed-item>
         </div>
         <foot-guide></foot-guide>
     </div>
 </template>
 <script>
-import FeedItem from './feedItem';
+// import FeedItem from './feedItem';
+import { FeedItem, GroupFeedItem } from '@/components/feed/feedItem';
 import { oneOf } from '../../util/';
 import modal from '../../plugins/modal/modal'
 import HeadTop from '../../components/HeadTop';
@@ -30,6 +35,7 @@ export default {
         HeadTop,
         FeedItem,
         FootGuide,
+        GroupFeedItem,
     },
     data() {
         return {
@@ -43,7 +49,7 @@ export default {
         $route({ params: { type } }) {
             /* 判断路由是否变化 */
             if(oneOf(type, types) && type != this.feed_type) {
-                this.updateList();
+                // this.updateList();
             }
         }
     },

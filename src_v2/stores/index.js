@@ -33,7 +33,6 @@ const state = {
     CUR_SELECTED_TAGS: [],
     /* 当前圈子的位置信息 临时数据 */
     CUR_GROUP_LOCATION: {},
-
 }
 
 export default new Vuex.Store({

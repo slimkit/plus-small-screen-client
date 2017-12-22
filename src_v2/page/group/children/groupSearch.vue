@@ -35,7 +35,7 @@
 import _ from 'lodash';
 import HeadTop from '@/components/HeadTop';
 import groupItem from '../components/groupListItem';
-import feedItem from '@/page/feed/feedItem';
+import { GroupFeedItem } from '@/components/feed/feedItem';
 
 const sources = [];
 export default {
@@ -63,7 +63,7 @@ export default {
             return this.$store.state.SEARCHHISTORY;
         },
         cur_component() {
-            return this.searchType === 'groups' ? groupItem : feedItem
+            return this.searchType === 'groups' ? groupItem : GroupFeedItem
         },
     },
     watch: {

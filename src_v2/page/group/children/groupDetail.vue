@@ -68,7 +68,7 @@
                             </div>
                         </div>
                     </div>
-                    <feed-item v-for='feed in feeds' v-if='feed.id' :key='`group-feed-${groupID}-${feed.id}`' :feed='feed'></feed-item>
+                    <group-feed-item v-for='feed in feeds' v-if='feed.id' :key='`group-feed-${groupID}-${feed.id}`' :feed='feed' />
                 </div>
             </div>
             <!-- base info END -->
@@ -117,7 +117,7 @@
 </template>
 <script>
 import HeadTop from '@/components/HeadTop';
-import feedItem from '@/page/feed/feedItem';
+import { GroupFeedItem } from '@/components/feed/feedItem';
 const filterTypes = [{
     type: 'latest_post',
     label: '最新帖子'
@@ -129,7 +129,7 @@ export default {
     name: 'groupDetail',
     components: {
         HeadTop,
-        feedItem
+        GroupFeedItem
     },
     data() {
         return {

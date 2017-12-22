@@ -56,14 +56,12 @@
 <script>
 import { formatNum } from '@/util/';
 import HeadTop from '@/components/HeadTop';
-import FeedItem from '@/page/feed/feedItem';
-import async from 'async-es';
+import { FeedItem } from '@/components/feed/feedItem';
 export default {
     name: 'userHome',
     components: {
         HeadTop,
         FeedItem
-
     },
     data() {
         return {

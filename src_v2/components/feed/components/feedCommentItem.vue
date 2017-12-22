@@ -1,9 +1,9 @@
 <template>
-    <div class="feed_comment_item" @click.stop='commentAction'>
-        <a @click.stop="to(`/user/${user.id}`)" class="user_name">{{ user.name }}</a>
-        <template v-if='reply_user'>
+    <div class="feed-comment-item" v-if='user.id' @click.stop='commentAction'>
+        <a @click.stop="to(`/user/${user.id}`)" class="user-name">{{ user.name }}</a>
+        <template v-if='replyUser'>
             回复
-            <a @click.stop='to(`/user/${reply_user.id}`)' class="user_name">{{ reply_user }}</a>
+            <a @click.stop='to(`/user/${replyUser.id}`)' class="user-name">{{ replyUser.name }}</a>
         </template>
         <span class="content">{{ body }}</span>
     </div>
@@ -18,14 +18,19 @@ export default {
     },
     computed: {
         user() {
-            return this.comment.user || {};
+            const { user, user_id } = this.comment;
+            const usr = user ? user : this.$store.getter.getUserById(usr);
+            if(usr.id === user_id) {
+                return user;
+            }
+            return {};
         },
-        reply_user() {
-            return this.comment.reply_user || 0
+        replyUser() {
+            return this.comment.reply;
         },
         body() {
             let r = this.comment.body;
-            return r.length > 60 ? r.slice(0, 57) + '...' : r;
+            return r.length > 60 ? r.slice(0, 57) + '…' : r;
         }
     },
     methods: {
@@ -33,19 +38,19 @@ export default {
             this.$router.push({ path });
         },
         commentAction() {
-            this.$emit('action', this.user.id, this.user.name);
+            this.$emit('action', this.user.id, this.user.name, this.comment.id);
         }
     }
 }
 </script>
 <style lang='less'>
-.feed_comment_item {
+.feed-comment-item {
     color: #999;
     font-size: 26px;
     line-height: 1.4;
     max-height: 26*1.4*3px;
     overflow-y: hidden;
-    .user_name {
+    .user-name {
         padding: 0 5px;
         color: #333;
         &:last-of-type:after {

@@ -1,19 +1,19 @@
 <template>
-    <div class="feed_tool">
-        <div class="feed_tool_item" :class='{has_like}' @click.stop='likeFeed'>
-            <v-icon :type='`${ has_like ? "feed-like":"feed-unlike"}`' class='feed_tool_icon'></v-icon>
-            <span>{{ like_count }}</span>
+    <div class="feed-tool">
+        <div class="feed-tool-item" :class='{hasLike}' @click.stop='likeFeed'>
+            <v-icon :type='`${ hasLike ? "feed-like":"feed-unlike"}`' class='feed-tool-icon'></v-icon>
+            <span>{{ likeCount }}</span>
         </div>
-        <div class="feed_tool_item" @click.stop='commentFeed'>
-            <v-icon type='feed-comment' class='feed_tool_icon'></v-icon>
-            <span>{{ comment_count }}</span>
+        <div class="feed-tool-item" @click.stop='commentFeed'>
+            <v-icon type='feed-comment' class='feed-tool-icon'></v-icon>
+            <span>{{ commentCount }}</span>
         </div>
-        <div class="feed_tool_item">
-            <v-icon type='feed-eye' class='feed_tool_icon'></v-icon>
-            <span>{{ like_count }}</span>
+        <div class="feed-tool-item">
+            <v-icon type='feed-eye' class='feed-tool-icon'></v-icon>
+            <span>{{ viewCount }}</span>
         </div>
-        <div class="feed_tool_item" @click.stop='moreAction'>
-            <v-icon type='feed-more' class='feed_tool_icon'></v-icon>
+        <div class="feed-tool-item" @click.stop='moreAction'>
+            <v-icon type='feed-more' class='feed-tool-icon'></v-icon>
         </div>
     </div>
 </template>
@@ -26,17 +26,22 @@ const isNum = {
 export default {
     name: 'feedTool',
     props: {
-        has_like: {
+        hasLike: {
             type: Boolean,
-            default: false,
             required: true
         },
-        like_count: {
+        likeCount: {
             type: [Number, String],
             required: true,
             ...isNum
         },
-        comment_count: {
+        viewCount: {
+            type: [Number, String],
+            required: true,
+            ...isNum
+        },
+
+        commentCount: {
             type: [Number, String],
             required: true,
             ...isNum
@@ -47,7 +52,7 @@ export default {
             this.$emit('likeFeed');
         },
         commentFeed() {
-            this.$emit('commentFeed');
+            this.$emit('commentFeed', this.com);
         },
         moreAction() {
             this.$emit('moreAction');
@@ -56,14 +61,14 @@ export default {
 }
 </script>
 <style lang='less' scoped>
-@prefix: feed_tool;
+@prefix: feed-tool;
 .@{prefix} {
     width: 100%;
     height: 90px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    &_item {
+    &-item {
         display: flex;
         color: #b3b3b3;
         font-size: 24px;
@@ -71,11 +76,11 @@ export default {
         span {
             margin-left: 10px;
         }
-        &.has_like{
+        &.hasLike {
             color: #f4504d
         }
     }
-    &_icon {
+    &-icon {
         width: 40px;
         height: 40px;
     }
