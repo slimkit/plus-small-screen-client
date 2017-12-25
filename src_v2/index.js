@@ -2,7 +2,7 @@ import Vue from 'vue';
 import store from './stores/';
 import router from './routers/';
 // import FastClick from 'fastclick'
-import TimeAgo from 'vue-timeago';
+// import TimeAgo from 'vue-timeago';
 
 import modal from './plugins/modal';
 import imgLazy from './plugins/imgLazy';
@@ -32,7 +32,7 @@ import loadMore from './components/loadMore/loadMore';
 const components = [vIcon, btnSwitch, badge, userAvatar, loadMore, fullSpin];
 
 components.forEach(component => {
-    Vue.component(component.name, component);
+  Vue.component(component.name, component);
 });
 
 Vue.config.productionTip = false;
@@ -47,17 +47,17 @@ Vue.prototype.$MessageBundle = filters.plusMessageFirst;
 
 filters.formatNum = formatNum;
 
-for(const k in filters) {
-    Vue.filter(k, filters[k]);
+for (const k in filters) {
+  Vue.filter(k, filters[k]);
 }
 
-Vue.use(TimeAgo, {
-    name: 'timeago',
-    locale: 'zh-CN',
-    locales: {
-        'zh-CN': require('vue-timeago/locales/zh-CN.json')
-    }
-});
+// Vue.use(TimeAgo, {
+//   name: 'timeago',
+//   locale: 'zh-CN',
+//   locales: {
+//     'zh-CN': require('vue-timeago/locales/zh-CN.json')
+//   }
+// });
 
 /* 此处留一坑 */
 // if('addEventListener' in document) {
@@ -67,10 +67,7 @@ Vue.use(TimeAgo, {
 // }
 
 new Vue({
-    store,
-    router,
-    data: {
-        show_modal: false
-    },
-    directives: {},
+  store,
+  router,
+  directives: {}
 }).$mount('#app');
