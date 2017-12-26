@@ -8,22 +8,22 @@
 </template>
 <script>
 export default {
-    name: 'message',
-    props: ['type'],
-    computed: {
-        alertClasses() {
-            return {
-                'Alert--Success': this.type === 'success',
-                'Alert--Warning': this.type === 'warning',
-                'Alert--Error': this.type === 'error'
-            }
-        }
-    },
-    data() {
-        return {
-            show: true
-        };
+  name: 'message',
+  props: ['type'],
+  computed: {
+    alertClasses () {
+      return {
+        'Alert--Success': this.type === 'success',
+        'Alert--Warning': this.type === 'warning',
+        'Alert--Error': this.type === 'error'
+      }
     }
+  },
+  data () {
+    return {
+      show: true
+    }
+  }
 }
 </script>
 <style>

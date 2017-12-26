@@ -31,26 +31,26 @@
 </template>
 <script>
 export default {
-    name: 'HeaderTop',
-    props: {
-        title: String,
-        goBack: [Boolean, Function, String],
-        append: [Boolean, String],
-        transparent: Boolean
+  name: 'HeaderTop',
+  props: {
+    title: String,
+    goBack: [Boolean, Function, String],
+    append: [Boolean, String],
+    transparent: Boolean
+  },
+  computed: {},
+  methods: {
+    goBackFn () {
+      return typeof this.goBack === 'function'
+        ? this.goBack()
+        : this.$router.go(-1)
     },
-    computed: {},
-    methods: {
-        goBackFn() {
-            return typeof this.goBack === 'function' ?
-                this.goBack() :
-                this.$router.go(-1);
-        },
-        to(path) {
-            if(path) {
-                this.$router.push({ path });
-            }
-        }
+    to (path) {
+      if (path) {
+        this.$router.push({ path })
+      }
     }
+  }
 }
 </script>
 <style lang='less'>

@@ -355,9 +355,5 @@ export default { name: 'svgIcon' }
         fill: #C7C7C7;
     }
 }
-
-
-
-
 /*#group-add {.st0 {fill: #4A4D5E; } .st1 {fill: #FFFFFF; } .st2 {fill: #333333; } .st3 {fill: #999999; } }*/
 </style>

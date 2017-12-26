@@ -26,29 +26,29 @@
     </footer>
 </template>
 <script>
-import showPostMenu from './postMenu/showPostMenu';
+import showPostMenu from './postMenu/showPostMenu'
 export default {
-    name: 'FootGuide',
-    data() {
-        return {
-            has_msg: true,
-            has_fans: true
-        }
-    },
-    methods: {
-        to(path) {
-            this.$router.push({ path });
-        },
-        isCurPath(path) {
-            return this.$route.fullPath.indexOf(path) > -1;
-        },
-        showPostMenu() {
-            showPostMenu.show({})
-        }
-    },
-    mounted() {
-        this.$el.parentNode.style.paddingBottom = '1rem';
+  name: 'FootGuide',
+  data () {
+    return {
+      has_msg: true,
+      has_fans: true
     }
+  },
+  methods: {
+    to (path) {
+      this.$router.push({ path })
+    },
+    isCurPath (path) {
+      return this.$route.fullPath.indexOf(path) > -1
+    },
+    showPostMenu () {
+      showPostMenu.show({})
+    }
+  },
+  mounted () {
+    this.$el.parentNode.style.paddingBottom = '1rem'
+  }
 }
 </script>
 <style lang="less">
@@ -59,7 +59,7 @@ export default {
     }
 }
 </style>
-<style lang="scss" scoped>
+<style lang="less" scoped>
 #foot_guide {
     background-color: #363844;
     position: fixed;

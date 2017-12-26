@@ -1,30 +1,32 @@
-import Vue from 'vue';
-import PostMenu from './postMenu';
+import Vue from 'vue'
+import PostMenu from './postMenu'
 
-const defaultMenuList = {
+// const defaultMenuList = {
 
-}, prefixCls = 'v-post-menu';
+// }
+
+const prefixCls = 'v-post-menu'
 
 PostMenu.newInstance = properties => {
-  const _props = properties || {};
-
+  const _props = properties || {}
+  /* eslint-disable no-new */
   const Instance = new Vue({
     data: Object.assign({}, {
       mask: true,
       visible: false
     }, _props),
 
-    render(h) {
-      const maskVNodes = [];
+    render (h) {
+      const maskVNodes = []
       if (this.mask) {
         maskVNodes.push(h('div', {
           attrs: {
             class: `${prefixCls}-mask`
           }
-        }));
+        }))
       }
 
-      const bodyVNodes = [];
+      const bodyVNodes = []
 
       bodyVNodes.push(h('div', {
         attrs: {
@@ -34,7 +36,7 @@ PostMenu.newInstance = properties => {
         on: {
           'on-close': this.close
         }
-      })]));
+      })]))
 
       return h('div', {
         directives: [{
@@ -48,20 +50,20 @@ PostMenu.newInstance = properties => {
     },
     computed: {},
     methods: {
-      close() {
-        this.visible = false;
-        this.onClose();
+      close () {
+        this.visible = false
+        this.onClose()
       }
     }
-  });
+  })
 
-  const component = Instance.$mount();
-  document.body.appendChild(component.$el);
-  const Menu = Instance.$children[0];
+  const component = Instance.$mount()
+  document.body.appendChild(component.$el)
+  const Menu = Instance.$children[0]
 
   return {
-    show() {
-      Menu.$parent.visible = true;
+    show () {
+      Menu.$parent.visible = true
     },
     comment: Menu
   }
@@ -69,26 +71,26 @@ PostMenu.newInstance = properties => {
 
 let inputInstance
 
-function getInputInstance() {
-  inputInstance = inputInstance || PostMenu.newInstance({});
-  return inputInstance;
+function getInputInstance () {
+  inputInstance = inputInstance || PostMenu.newInstance({})
+  return inputInstance
 }
 
-function showInput(option) {
-  const instance = getInputInstance();
-  instance.show(option);
+function showInput (option) {
+  const instance = getInputInstance()
+  instance.show(option)
 }
 
 export default {
   name: 'PostMenu',
-  show(option = {}) {
-    return showInput(option);
+  show (option = {}) {
+    return showInput(option)
   },
-  remove() {
+  remove () {
     if (!inputInstance) {
-      return false;
+      return false
     }
-    const instance = getInputInstance();
-    instance.remove();
+    const instance = getInputInstance()
+    instance.remove()
   }
-};
+}

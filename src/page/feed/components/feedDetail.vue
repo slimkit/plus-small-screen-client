@@ -4,12 +4,12 @@
 </template>
 <script>
 export default {
-    name: 'feedDetail',
-    methods: {
-        to(path) {
-            this.$route.push(path);
-        }
+  name: 'feedDetail',
+  methods: {
+    to (path) {
+      this.$route.push(path)
     }
+  }
 }
 </script>
 <style lang='less'>

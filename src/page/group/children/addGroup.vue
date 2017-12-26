@@ -92,211 +92,210 @@
     </div>
 </template>
 <script>
-import { getFileUrl } from '@/util/';
-import HeadTop from '@/components/HeadTop';
-import calcTextareaHeight from '@/util/calcTextareaHeight';
-import { encodeGeoHash } from '@/util/geohash';
+import { getFileUrl } from '@/util/'
+import HeadTop from '@/components/HeadTop'
+import calcTextareaHeight from '@/util/calcTextareaHeight'
+import { encodeGeoHash } from '@/util/geohash'
 export default {
-    name: 'addGroup',
-    components: {
-        HeadTop,
+  name: 'addGroup',
+  components: {
+    HeadTop
+  },
+  data () {
+    return {
+      name: '', // 圈名
+      // tags: [], //  标签
+      header: '', // 头像
+      avatar: null,
+      category: {}, // 当前
+      summary: '', // 圈子简介
+      notice: '', // 公告
+      money: null,
+      textareaStyles: {},
+      allow_feed: false,
+      // 圈子类别 public: 公开，private：私有，paid：付费的
+      private: true,
+      paid: false
+    }
+  },
+  computed: {
+    disabled () {
+      return [this.name, this.header, this.tags].map(v => v.length > 0).includes(false)
     },
-    data() {
-        return {
-            name: '', // 圈名
-            // tags: [], //  标签
-            header: '', // 头像 
-            avatar: null,
-            category: {}, // 当前 
-            summary: '', //圈子简介
-            notice: '', // 公告
-            money: null,
-            textareaStyles: {},
-            allow_feed: false,
-            // 圈子类别 public: 公开，private：私有，paid：付费的
-            private: true,
-            paid: false,
-        }
+    tagsLen () {
+      return this.tags.length
     },
-    computed: {
-        disabled() {
-            return [this.name, this.header, this.tags].map(v => v.length > 0).includes(false);
-        },
-        tagsLen() {
-            return this.tags.length;
-        },
-        tags() {
-            return this.$store.state.CUR_SELECTED_TAGS;
-        },
-        cur_location() {
-            return this.$store.state.CUR_GROUP_LOCATION;
-        },
-        location_txt() {
-            return this.cur_location.label || '';
-        },
-        mode() {
-            return this.paid ? 'paid' : (this.private ? 'private' : 'public');
-        }
+    tags () {
+      return this.$store.state.CUR_SELECTED_TAGS
     },
-    watch: {
-        money(val) {
-            if(val < 0) {
-                this.money = 0;
-            }
-        },
-        private(val) {
-            if(!val) {
-                this.paid = val;
-            }
-        },
-        summary(val) {
-            this.$nextTick(() => {
-                this.resizeTextarea(this.$refs.summary);
-            });
-        },
-        notice(val) {
-            this.$nextTick(() => {
-                this.resizeTextarea(this.$refs.notice);
-            })
-        }
+    cur_location () {
+      return this.$store.state.CUR_GROUP_LOCATION
     },
-    methods: {
-        init() {
-            this.name = '';
-            this.header = '';
-            this.avatar = {};
-            this.category = '';
-            this.summary = '';
-            this.notice = '';
-            this.money = '';
-            this.textareaStyles = {};
-            this.$store.state.CUR_SELECTED_TAGS = [];
-            this.$store.state.CUR_GROUP_LOCATION = {};
-        },
-        /**
+    location_txt () {
+      return this.cur_location.label || ''
+    },
+    mode () {
+      return this.paid ? 'paid' : (this.private ? 'private' : 'public')
+    }
+  },
+  watch: {
+    money (val) {
+      if (val < 0) {
+        this.money = 0
+      }
+    },
+    private (val) {
+      if (!val) {
+        this.paid = val
+      }
+    },
+    summary (val) {
+      this.$nextTick(() => {
+        this.resizeTextarea(this.$refs.summary)
+      })
+    },
+    notice (val) {
+      this.$nextTick(() => {
+        this.resizeTextarea(this.$refs.notice)
+      })
+    }
+  },
+  methods: {
+    init () {
+      this.name = ''
+      this.header = ''
+      this.avatar = {}
+      this.category = ''
+      this.summary = ''
+      this.notice = ''
+      this.money = ''
+      this.textareaStyles = {}
+      this.$store.state.CUR_SELECTED_TAGS = []
+      this.$store.state.CUR_GROUP_LOCATION = {}
+    },
+    /**
          * 取消 并 返回上一页
          *     @author jsonleex <jsonlseex@163.com>
          */
-        cancel() {
-            this.init();
-            this.$router.go(-1);
-        },
-        /**
+    cancel () {
+      this.init()
+      this.$router.go(-1)
+    },
+    /**
          * 创建圈子
          *     @author jsonleex <jsonlseex@163.com>
          */
-        addGroup() {
-            // POST /categories/:category/groups
-            const category = this.category.id;
-            if(!category) {
-                return this.$Message.error('请选择圈子分类');
-            }
+    addGroup () {
+      // POST /categories/:category/groups
+      const category = this.category.id
+      if (!category) {
+        return this.$Message.error('请选择圈子分类')
+      }
 
+      let params = {
+        name: this.name,
+        summary: this.summary,
+        notice: this.notice,
+        mode: this.mode,
+        allow_feed: this.allow_feed
+      }
 
-            let params = {
-                name: this.name,
-                summary: this.summary,
-                notice: this.notice,
-                mode: this.mode,
-                allow_feed: this.allow_feed,
-            }
+      if (this.location) {
+        const { lat, lng } = this.cur_location
+        params = Object.assign({}, params, {
+          location: this.location_txt,
+          latitude: lat,
+          longitude: lng,
+          geo_hash: encodeGeoHash(lat, lng)
+        })
+      }
 
-            if(this.location) {
-                const { lat, lng } = this.cur_location;
-                params = Object.assign({}, params, {
-                    location: this.location_txt,
-                    latitude: lat,
-                    longitude: lng,
-                    geo_hash: encodeGeoHash(lat, lng)
-                });
-            }
+      this.avatar.toBlob((blob) => {
+        let formData = new FormData()
+        formData.append('avatar', blob)
 
-            this.avatar.toBlob((blob) => {
-                let formData = new FormData();
-                formData.append('avatar', blob);
+        Object.keys(params).forEach(key => formData.append(key, params[key]))
 
-                Object.keys(params).forEach(key => formData.append(key, params[key]));
+        if (params.mode === 'paid') {
+          if (this.money > 0) {
+            formData.append('money', this.money)
+          }
+        }
+        // tags
+        this.tags.forEach((t, index) => {
+          formData.append(`tags[][id]`, t.id)
+        })
 
-                if(params.mode = 'paid') {
-                    if(this.money > 0) {
-                        formData.append('money', this.money);
-                    }
-                }
-                // tags
-                this.tags.forEach((t, index) => {
-                    formData.append(`tags[][id]`, t.id);
-                });
+        this.$http.post(`/plus-group/categories/${category}/groups`, formData, {
+          validateStatus: s => s === 200
+        }).then(data => {
+          this.$Message.success('创建圈子成功')
+        }).catch(err => {
+          const { response: { data = { message: '创建圈子失败' } } = {} } = err
+          this.$Message.error(data)
+        })
+      })
+    },
 
-                this.$http.post(`/plus-group/categories/${category}/groups`, formData, {
-                    validateStatus: s => s === 200
-                }).then(data => {
-                    this.$Message.success('创建圈子成功');
-                }).catch(err => {
-                    const { response: { data = { message: '创建圈子失败' } } = {} } = err;
-                    this.$Message.error(data);
-                })
-            });
-        },
-
-        /**
+    /**
          * 选择图片
          *     @author jsonleex <jsonlseex@163.com>
          */
-        chooseImg() {
-            this.$refs.uploadFile.click();
-        },
+    chooseImg () {
+      this.$refs.uploadFile.click()
+    },
 
-        /**
+    /**
          * 裁剪图片
          *     @author jsonleex <jsonlseex@163.com>
          */
-        getImg(e) {
-            const vm = this;
-            let files = e.target.files || e.dataTransfer.files;
-            if(!files.length) return;
-            this.$ImgCropper.show({
-                url: getFileUrl(files[0]),
-                round: false,
-                onCancel() {
-                    vm.$refs.uploadFile.value = null;
-                },
-                onOk(canvas) {
-                    vm.avatar = canvas;
-                    vm.header = canvas.toDataURL();
-                    vm.$refs.uploadFile.value = null;
-                },
-            });
+    getImg (e) {
+      const vm = this
+      let files = e.target.files || e.dataTransfer.files
+      if (!files.length) return
+      this.$ImgCropper.show({
+        url: getFileUrl(files[0]),
+        round: false,
+        onCancel () {
+          vm.$refs.uploadFile.value = null
         },
+        onOk (canvas) {
+          vm.avatar = canvas
+          vm.header = canvas.toDataURL()
+          vm.$refs.uploadFile.value = null
+        }
+      })
+    },
 
-        /**
+    /**
          * 更新 文本域 的样式
          *     @author jsonleex <jsonlseex@163.com>
          */
-        resizeTextarea(el) {
-            el.style.height = calcTextareaHeight(el).height;
-            el.style.paddingBottom = '.3rem';
-        },
-        /**
+    resizeTextarea (el) {
+      el.style.height = calcTextareaHeight(el).height
+      el.style.paddingBottom = '.3rem'
+    },
+    /**
          * 进入选择页面
          *     @author jsonleex <jsonlseex@163.com>
          */
-        toChoose(type) {
-            if(!type) {
-                return
-            }
-            this.$router.push(`/${type.toLocaleLowerCase()}`);
-        },
-    },
-    beforeRouteEnter(to, from, next) {
-        // todo
-        const { category } = from.params;
-        next(vm => {
-            if(category) {
-                vm.init();
-                // vm.category = category;
-            }
-        });
+    toChoose (type) {
+      if (!type) {
+        return
+      }
+      this.$router.push(`/${type.toLocaleLowerCase()}`)
     }
+  },
+  beforeRouteEnter (to, from, next) {
+    // todo
+    const { category } = from.params
+    next(vm => {
+      if (category) {
+        vm.init()
+        // vm.category = category;
+      }
+    })
+  }
 }
 </script>
 <style lang='less'>

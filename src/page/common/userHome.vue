@@ -54,124 +54,124 @@
     </div>
 </template>
 <script>
-import { formatNum } from '@/util/';
-import HeadTop from '@/components/HeadTop';
-import { FeedItem } from '@/components/feed/feedItem';
+import { formatNum } from '@/util/'
+import HeadTop from '@/components/HeadTop'
+import { FeedItem } from '@/components/feed/feedItem'
 export default {
-    name: 'userHome',
-    components: {
-        HeadTop,
-        FeedItem
+  name: 'userHome',
+  components: {
+    HeadTop,
+    FeedItem
+  },
+  data () {
+    return {
+      user: {
+        ...this.$store.getters.getUserById(this.$route.params.Uid),
+        tags: [],
+        feeds: []
+      },
+      scrollTop: 0
+    }
+  },
+  computed: {
+    Uid () {
+      return this.$route.params.Uid
     },
-    data() {
-        return {
-            user: {
-                ...this.$store.getters.getUserById(this.$route.params.Uid),
-                tags: [],
-                feeds: [],
-            },
-            scrollTop: 0
-        }
+    followers_count () {
+      return formatNum((this.user.extra || {}).followers_count || 0)
     },
-    computed: {
-        Uid() {
-            return this.$route.params.Uid;
-        },
-        followers_count() {
-            return formatNum((this.user.extra || {}).followers_count || 0);
-        },
-        followings_count() {
-            return formatNum((this.user.extra || {}).followings_count || 0)
-        },
-        bg_cover() {
-            const bg = this.user.bg;
-            return bg ? {
-                'background-image': `url(${bg})`
-            } : {};
-        },
-        verified() {
-            const verified = this.user.verified;
-            const { description, icon } = verified || {};
-            return verified ? {
-                description,
-                icon
-            } : false;
-        },
-        location() {
-            return this.user.location || false;
-        },
-        bio() {
-            return this.user.bio || '这家伙很懒. 什么也没留下';
-        },
-        feeds_length() {
-            return(this.user.extra || {}).feeds_count || 0
-        },
-        tags() {
-            return this.user.tags;
-        },
-        feeds() {
-            return this.user.feeds;
-        },
+    followings_count () {
+      return formatNum((this.user.extra || {}).followings_count || 0)
+    },
+    bg_cover () {
+      const bg = this.user.bg
+      return bg ? {
+        'background-image': `url(${bg})`
+      } : {}
+    },
+    verified () {
+      const verified = this.user.verified
+      const { description, icon } = verified || {}
+      return verified ? {
+        description,
+        icon
+      } : false
+    },
+    location () {
+      return this.user.location || false
+    },
+    bio () {
+      return this.user.bio || '这家伙很懒. 什么也没留下'
+    },
+    feeds_length () {
+      return (this.user.extra || {}).feeds_count || 0
+    },
+    tags () {
+      return this.user.tags
+    },
+    feeds () {
+      return this.user.feeds
+    },
 
-        top_tranparent() {
-            return !(this.scrollTop > 110);
-        }
-    },
-    methods: {
-        /**
+    top_tranparent () {
+      return !(this.scrollTop > 110)
+    }
+  },
+  methods: {
+    /**
          * 触发一个刷新 同步用户数据
          *     同时更新 vuex 中的数据
          * @author jsonleex <jsonlseex@163.com>
          */
-        updateUserData(cb) {
-            this.$http.get(`/users/${this.Uid}`).then(({ data = {} }) => {
-                this.user = Object.assign({}, this.user, data);
-                cb && cb();
-            }).catch(err => {
-                const { response: { data = { message: '获取用户数据失败' } } = {} } = err;
-                this.$Message.error(data);
-            });
-        },
-
-        getUserTags(cb) {
-            this.$http.get(`/users/${this.Uid}/tags`).then(({ data = [] }) => {
-                this.user.tags = [...data];
-                cb && cb();
-            });
-        },
-
-        getUserFeeds(cb) {
-            this.$http.get('/feeds', {
-                params: { type: 'users', user: this.Uid }
-            }).then(({ data = [] } = {}) => {
-                this.user = Object.assign({}, this.user, { feeds: data['feeds'] });
-                cb && cb();
-            });
-        },
-
-        init() {
-            this.updateUserData(this.getUserFeeds(this.getUserTags(() => {
-                this.$store.commit('SAVE_USER', this.user);
-            })));
-        },
-
-        goBack() {
-            this.$router.go(-1);
-        }
+    updateUserData (cb) {
+      this.$http.get(`/users/${this.Uid}`).then(({ data = {} }) => {
+        this.user = Object.assign({}, this.user, data)
+        cb && cb()
+      }).catch(err => {
+        const { response: { data = { message: '获取用户数据失败' } } = {} } = err
+        this.$Message.error(data)
+      })
     },
 
-    activated() {
-        if(this.user.id !== this.Uid) {
-            this.init();
-        }
+    getUserTags (cb) {
+      this.$http.get(`/users/${this.Uid}/tags`).then(({ data = [] }) => {
+        this.user.tags = [...data]
+        cb && cb()
+      })
     },
 
-    mounted() {
-        this.init();
-        this.$el.addEventListener('scroll', (e) => {
-            this.scrollTop = this.$el.scrollTop;
-        });
+    getUserFeeds (cb) {
+      this.$http.get('/feeds', {
+        params: { type: 'users', user: this.Uid }
+      }).then(({ data = [] } = {}) => {
+        this.user = Object.assign({}, this.user, { feeds: data['feeds'] })
+        cb && cb()
+      })
+    },
+
+    init () {
+      this.updateUserData(this.getUserFeeds(this.getUserTags(() => {
+        this.$store.commit('SAVE_USER', this.user)
+      })))
+    },
+
+    goBack () {
+      this.$router.go(-1)
     }
+  },
+
+  activated () {
+    if (this.user.id !== this.Uid) {
+      this.init()
+    }
+  },
+
+  mounted () {
+    this.init()
+    this.$el.addEventListener('scroll', (e) => {
+      this.scrollTop = this.$el.scrollTop
+    })
+  }
 }
 </script>
 <style lang='less'>

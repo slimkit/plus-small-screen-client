@@ -1,4 +1,4 @@
-import PostMenu from './postMenu';
+import PostMenu from './postMenu'
 
 const
   menus = [{
@@ -32,10 +32,10 @@ const
     cls: 'check-in',
     path: '/post/checkin'
   }],
-  prefixCls = 'v-post-menu';
+  prefixCls = 'v-post-menu'
 
 PostMenu.newInstance = properties => {
-  const _props = properties || {};
+  const _props = properties || {}
 
   const Instance = new Vue({
     data: Object.assign({}, {
@@ -43,24 +43,24 @@ PostMenu.newInstance = properties => {
       visible: false
     }, { menus }, _props),
 
-    render(h) {
-      const menusVNodes = [];
+    render (h) {
+      const menusVNodes = []
       menus.forEach(menu => {
         menusVNodes.push(h('div', {
           class: `${prefixCls}-item _${menu.cls}`
-        }, [h('div', )]))
-      });
+        }, [h('div')]))
+      })
 
-      const maskVNodes = [];
+      const maskVNodes = []
       if (this.mask) {
         maskVNodes.push(h('div', {
           attrs: {
             class: `${prefixCls}-mask`
           }
-        }));
+        }))
       }
 
-      const bodyVNodes = [];
+      const bodyVNodes = []
 
       bodyVNodes.push(h('div', {
         attrs: {
@@ -70,7 +70,7 @@ PostMenu.newInstance = properties => {
         on: {
           'on-close': this.close
         }
-      })]));
+      })]))
 
       return h('div', {
         directives: [{
@@ -84,24 +84,24 @@ PostMenu.newInstance = properties => {
     },
     computed: {},
     methods: {
-      close() {
-        this.visible = false;
-        this.onClose();
+      close () {
+        this.visible = false
+        this.onClose()
       }
     },
-    onClose() {}
-  });
+    onClose () {}
+  })
 
-  const component = Instance.$mount();
-  document.body.appendChild(component.$el);
-  const Menu = Instance.$children[0];
+  const component = Instance.$mount()
+  document.body.appendChild(component.$el)
+  const Menu = Instance.$children[0]
 
   return {
-    show() {
-      Menu.$parent.visible = true;
+    show () {
+      Menu.$parent.visible = true
     },
     comment: Menu
   }
 }
 
-export default PostMenu;
+export default PostMenu

@@ -24,6 +24,7 @@
   <div id="app">
     <router-view></router-view>
   </div>
+  <script src="{{ mix('/js/manifest.js', 'assets/h5') }}?v=20171120"></script>
   <script src="{{ mix('/js/vendor.js', 'assets/h5') }}?v=20171120"></script>
   <script src="{{ mix('js/app.js', 'assets/h5') }}?v=20171120"></script>
 </body>

@@ -9,33 +9,33 @@
     </div>
 </template>
 <script>
-import { mapState } from 'vuex';
-import HeadTop from '@/components/HeadTop';
+import { mapState } from 'vuex'
+import HeadTop from '@/components/HeadTop'
 export default {
-    name: 'chooseCategory',
-    components: {
-        HeadTop
-    },
-    computed: {
-        ...mapState({
-            types: s => s.GROUPTYPES
-        }),
+  name: 'chooseCategory',
+  components: {
+    HeadTop
+  },
+  computed: {
+    ...mapState({
+      types: s => s.GROUPTYPES
+    }),
 
-        choosed() {
-            return this.$parent.category;
-        }
-    },
-    methods: {
-        ok(type) {
-            this.$parent.category = type;
-
-            this.$Message.success({
-                Message: `已选择 ${ type.name } 分类 `,
-            });
-
-            this.$router.go(-1);
-        },
+    choosed () {
+      return this.$parent.category
     }
+  },
+  methods: {
+    ok (type) {
+      this.$parent.category = type
+
+      this.$Message.success({
+        Message: `已选择 ${type.name} 分类 `
+      })
+
+      this.$router.go(-1)
+    }
+  }
 }
 </script>
 <style lang='less'>

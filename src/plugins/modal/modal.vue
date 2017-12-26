@@ -33,210 +33,210 @@
     </div>
 </template>
 <script>
-import Icon from '../../components/common/vIcons';
-const prefixCls = 'v-modal';
-const FUNC = (e) => { e.preventDefault() };
+import Icon from '../../components/common/vIcons'
+const prefixCls = 'v-modal'
+const FUNC = (e) => { e.preventDefault() }
 export default {
-    name: 'Modal',
-    components: { Icon },
-    props: {
-        value: {
-            type: Boolean,
-            default: false
-        },
-        closable: {
-            type: Boolean,
-            default: true
-        },
-        maskClosable: {
-            type: Boolean,
-            default: true
-        },
-        title: {
-            type: String
-        },
-        width: {
-            type: [Number, String],
-            default: 520
-        },
-        okText: {
-            type: String
-        },
-        cancelText: {
-            type: String
-        },
-        loading: {
-            type: Boolean,
-            default: false
-        },
-        styles: {
-            type: Object
-        },
-        className: {
-            type: String
-        },
-        // for instance
-        footerHide: {
-            type: Boolean,
-            default: false
-        },
-        scrollable: {
-            type: Boolean,
-            default: false
-        },
-        transitionNames: {
-            type: Array,
-            default() {
-                return ['ease', 'fade'];
-            }
-        },
+  name: 'Modal',
+  components: { Icon },
+  props: {
+    value: {
+      type: Boolean,
+      default: false
     },
-    data() {
-        return {
-            prefixCls: prefixCls,
-            wrapShow: false,
-            showHead: true,
-            buttonLoading: false,
-            visible: this.value
-        };
+    closable: {
+      type: Boolean,
+      default: true
     },
-    computed: {
-        wrapClasses() {
-            return [
-                `${prefixCls}-wrap`,
-                {
-                    [`${prefixCls}-hidden`]: !this.wrapShow,
-                    [`${this.className}`]: !!this.className
-                }
-            ];
-        },
-        maskClasses() {
-            return `${prefixCls}-mask`;
-        },
-        classes() {
-            return `${prefixCls}`;
-        },
-        mainStyles() {
-            let style = {};
-            const width = parseInt(this.width);
-            const styleWidth = {
-                width: width <= 100 ? `${width}%` : `${width}px`
-            };
-            const customStyle = this.styles ? this.styles : {};
-            Object.assign(style, styleWidth, customStyle);
-            return style;
-        },
-        localeOkText() {
-            if(this.okText === undefined) {
-                return this.t('i.modal.okText');
-            } else {
-                return this.okText;
-            }
-        },
-        localeCancelText() {
-            if(this.cancelText === undefined) {
-                return this.t('i.modal.cancelText');
-            } else {
-                return this.cancelText;
-            }
-        }
+    maskClosable: {
+      type: Boolean,
+      default: true
     },
-    methods: {
-        close() {
-            this.visible = false;
-            this.$emit('input', false);
-            this.$emit('on-cancel');
-        },
-        mask() {
-            if(this.maskClosable) {
-                this.close();
-            }
-        },
-        handleWrapClick(event) {
-            const className = event.target.getAttribute('class');
-            if(className && className.indexOf(`${prefixCls}-wrap`) > -1) this.mask();
-        },
-        cancel() {
-            this.close();
-        },
-        ok() {
-            if(this.loading) {
-                this.buttonLoading = true;
-            } else {
-                this.visible = false;
-                this.$emit('input', false);
-            }
-            this.$emit('on-ok');
-        },
-        animationFinish() {
-            this.$emit('on-hidden');
-        },
-
-        addScrollEffect() {
-            document.body.style.overflow = 'hidden';
-
-            /* 兼容移动端 全屏时禁止 body 的滑动 允许 modal 滑动 */
-            document.body.addEventListener('touchmove', FUNC, false);
-            // this.$el.addEventListener('touchmove', (e) => {
-            //     e.stopPropagation();
-            // }, false);
-        },
-        removeScrollEffect() {
-            document.body.style.overflow = '';
-            document.body.removeEventListener('touchmove', FUNC, false);
-        }
+    title: {
+      type: String
     },
-    mounted() {
-        if(this.visible) {
-            this.wrapShow = true;
-        }
-        let showHead = true;
-        if(this.$slots.header === undefined && !this.title) {
-            showHead = false;
-        }
-        this.showHead = showHead;
+    width: {
+      type: [Number, String],
+      default: 520
     },
-    beforeDestroy() {
-        this.removeScrollEffect();
+    okText: {
+      type: String
     },
-    watch: {
-        value(val) {
-            this.visible = val;
-        },
-        visible(val) {
-            if(val === false) {
-                this.buttonLoading = false;
-                this.timer = setTimeout(() => {
-                    this.wrapShow = false;
-                    this.removeScrollEffect();
-                }, 300);
-            } else {
-                if(this.timer) clearTimeout(this.timer);
-                this.wrapShow = true;
-                if(!this.scrollable) {
-                    this.addScrollEffect();
-                }
-            }
-            this.$emit('on-visible-change', val);
-        },
-        loading(val) {
-            if(!val) {
-                this.buttonLoading = false;
-            }
-        },
-        scrollable(val) {
-            if(!val) {
-                this.addScrollEffect();
-            } else {
-                this.removeScrollEffect();
-            }
-        },
-        title(val) {
-            if(this.$slots.header === undefined) {
-                this.showHead = !!val;
-            }
-        }
+    cancelText: {
+      type: String
+    },
+    loading: {
+      type: Boolean,
+      default: false
+    },
+    styles: {
+      type: Object
+    },
+    className: {
+      type: String
+    },
+    // for instance
+    footerHide: {
+      type: Boolean,
+      default: false
+    },
+    scrollable: {
+      type: Boolean,
+      default: false
+    },
+    transitionNames: {
+      type: Array,
+      default () {
+        return ['ease', 'fade']
+      }
     }
-};
+  },
+  data () {
+    return {
+      prefixCls: prefixCls,
+      wrapShow: false,
+      showHead: true,
+      buttonLoading: false,
+      visible: this.value
+    }
+  },
+  computed: {
+    wrapClasses () {
+      return [
+        `${prefixCls}-wrap`,
+        {
+          [`${prefixCls}-hidden`]: !this.wrapShow,
+          [`${this.className}`]: !!this.className
+        }
+      ]
+    },
+    maskClasses () {
+      return `${prefixCls}-mask`
+    },
+    classes () {
+      return `${prefixCls}`
+    },
+    mainStyles () {
+      let style = {}
+      const width = parseInt(this.width)
+      const styleWidth = {
+        width: width <= 100 ? `${width}%` : `${width}px`
+      }
+      const customStyle = this.styles ? this.styles : {}
+      Object.assign(style, styleWidth, customStyle)
+      return style
+    },
+    localeOkText () {
+      if (this.okText === undefined) {
+        return this.t('i.modal.okText')
+      } else {
+        return this.okText
+      }
+    },
+    localeCancelText () {
+      if (this.cancelText === undefined) {
+        return this.t('i.modal.cancelText')
+      } else {
+        return this.cancelText
+      }
+    }
+  },
+  methods: {
+    close () {
+      this.visible = false
+      this.$emit('input', false)
+      this.$emit('on-cancel')
+    },
+    mask () {
+      if (this.maskClosable) {
+        this.close()
+      }
+    },
+    handleWrapClick (event) {
+      const className = event.target.getAttribute('class')
+      if (className && className.indexOf(`${prefixCls}-wrap`) > -1) this.mask()
+    },
+    cancel () {
+      this.close()
+    },
+    ok () {
+      if (this.loading) {
+        this.buttonLoading = true
+      } else {
+        this.visible = false
+        this.$emit('input', false)
+      }
+      this.$emit('on-ok')
+    },
+    animationFinish () {
+      this.$emit('on-hidden')
+    },
+
+    addScrollEffect () {
+      document.body.style.overflow = 'hidden'
+
+      /* 兼容移动端 全屏时禁止 body 的滑动 允许 modal 滑动 */
+      document.body.addEventListener('touchmove', FUNC, false)
+      // this.$el.addEventListener('touchmove', (e) => {
+      //     e.stopPropagation();
+      // }, false);
+    },
+    removeScrollEffect () {
+      document.body.style.overflow = ''
+      document.body.removeEventListener('touchmove', FUNC, false)
+    }
+  },
+  mounted () {
+    if (this.visible) {
+      this.wrapShow = true
+    }
+    let showHead = true
+    if (this.$slots.header === undefined && !this.title) {
+      showHead = false
+    }
+    this.showHead = showHead
+  },
+  beforeDestroy () {
+    this.removeScrollEffect()
+  },
+  watch: {
+    value (val) {
+      this.visible = val
+    },
+    visible (val) {
+      if (val === false) {
+        this.buttonLoading = false
+        this.timer = setTimeout(() => {
+          this.wrapShow = false
+          this.removeScrollEffect()
+        }, 300)
+      } else {
+        if (this.timer) clearTimeout(this.timer)
+        this.wrapShow = true
+        if (!this.scrollable) {
+          this.addScrollEffect()
+        }
+      }
+      this.$emit('on-visible-change', val)
+    },
+    loading (val) {
+      if (!val) {
+        this.buttonLoading = false
+      }
+    },
+    scrollable (val) {
+      if (!val) {
+        this.addScrollEffect()
+      } else {
+        this.removeScrollEffect()
+      }
+    },
+    title (val) {
+      if (this.$slots.header === undefined) {
+        this.showHead = !!val
+      }
+    }
+  }
+}
 </script>
 <style lang="less" src='./modal.less'></style>

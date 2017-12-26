@@ -1,14 +1,14 @@
-import path from 'path';
-import webpack from 'webpack';
-import config from './config/';
-import merge from 'webpack-merge';
-import { styleLoaders } from './utils';
-import baseWebpackConfig from './base.conf';
-import ExtractTextPlugin from 'extract-text-webpack-plugin';
-import OptimizeCSSPlugin from 'optimize-css-assets-webpack-plugin';
-import WebpackLaravelMixManifest from 'webpack-laravel-mix-manifest';
+import path from 'path'
+import webpack from 'webpack'
+import config from './config/'
+import merge from 'webpack-merge'
+import { styleLoaders } from './utils'
+import baseWebpackConfig from './base.conf'
+import ExtractTextPlugin from 'extract-text-webpack-plugin'
+import OptimizeCSSPlugin from 'optimize-css-assets-webpack-plugin'
+import WebpackLaravelMixManifest from 'webpack-laravel-mix-manifest'
 
-const env = process.env.NODE_ENV;
+const env = config.build.env
 
 const webpackConfig = merge(baseWebpackConfig, {
   module: {
@@ -21,7 +21,8 @@ const webpackConfig = merge(baseWebpackConfig, {
   output: {
     path: config.build.assetsRoot,
     filename: 'js/[name].[chunkhash].js',
-    chunkFilename: 'js/[name].[chunkhash].js'
+    chunkFilename: 'js/[name].[chunkhash].js',
+    publicPath: config.build.assetsPublicPath
   },
   plugins: [
     // http://vuejs.github.io/vue-loader/en/workflow/production.html
@@ -52,13 +53,13 @@ const webpackConfig = merge(baseWebpackConfig, {
       name: 'vendor',
       minChunks: function(module) {
         // any required modules inside node_modules are extracted to vendor
-        return(
+        return (
           module.resource &&
           /\.js$/.test(module.resource) &&
           module.resource.indexOf(
             path.join(__dirname, '../node_modules')
           ) === 0
-        );
+        )
       }
     }),
     // extract webpack runtime and module manifest to its own file in order to
@@ -69,6 +70,6 @@ const webpackConfig = merge(baseWebpackConfig, {
     }),
     new WebpackLaravelMixManifest()
   ]
-});
+})
 
-export default webpackConfig;
+export default webpackConfig

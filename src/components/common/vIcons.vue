@@ -7,30 +7,30 @@
 </template>
 <script>
 export default {
-    name: 'vIcon',
-    props: {
-        type: {
-            type: [String],
-            required: true
-        },
-        height: {
-            type: [String, Number]
-        },
-        width: {
-            type: [String, Number]
-        },
-        color: {
-            type: String
-        }
+  name: 'vIcon',
+  props: {
+    type: {
+      type: [String],
+      required: true
     },
-    computed: {
-        wrapStyles() {
-            return {
-                width: `${this.width}rem`,
-                height: `${this.height}rem`,
-            }
-        }
+    height: {
+      type: [String, Number]
+    },
+    width: {
+      type: [String, Number]
+    },
+    color: {
+      type: String
     }
+  },
+  computed: {
+    wrapStyles () {
+      return {
+        width: `${this.width}rem`,
+        height: `${this.height}rem`
+      }
+    }
+  }
 }
 </script>
 <style lang='less'>

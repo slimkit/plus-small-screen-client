@@ -17,7 +17,7 @@ const prefixCls = 'v-post-menu'
 export default {
   name: 'postMenu',
   props: {},
-  data() {
+  data () {
     return {
       prefixCls
     }
@@ -25,7 +25,7 @@ export default {
   computed: {},
   watch: {},
   methods: {
-    close() {
+    close () {
       this.$emit('on-close')
     }
   }

@@ -1,12 +1,12 @@
-import config from './config/';
-import utils, { cssLoaders } from './utils';
+import config from './config/'
+import { cssLoaders } from './utils'
 
-const isProduction = process.env.NODE_ENV === 'production';
+const isProduction = process.env.NODE_ENV === 'production'
 
 export default {
   loaders: cssLoaders({
-    sourceMap: isProduction 
-      ? config.build.productionSourceMap 
+    sourceMap: isProduction
+      ? config.build.productionSourceMap
       : config.dev.cssSourceMap,
     extract: isProduction
   }),

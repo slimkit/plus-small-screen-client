@@ -1,12 +1,11 @@
-import path from 'path';
-import config from './config/';
-import eslintFormatter from 'eslint-friendly-formatter';
-// import WebpackLaravelMixManifest from 'webpack-laravel-mix-manifest';
+import path from 'path'
+import config from './config/'
+import eslintFormatter from 'eslint-friendly-formatter'
 
-import vueLoaderConfig from './vue-loader.conf';
+import vueLoaderConfig from './vue-loader.conf'
 
 function resolve(dir) {
-  return path.join(__dirname, '..', dir);
+  return path.join(__dirname, '..', dir)
 }
 
 export default {
@@ -16,8 +15,7 @@ export default {
   output: {
     path: config.build.assetsRoot,
     filename: 'js/[name].js',
-    publicPath: process.env.NODE_ENV === 'production' ?
-      config.build.assetsPublicPath : config.dev.assetsPublicPath,
+    publicPath: '/'
   },
   resolve: {
     extensions: ['.js', '.vue', '.json'],
@@ -65,6 +63,6 @@ export default {
         name: 'fonts/[name].[hash:7].[ext]'
       }
     }]
-  },
+  }
   // plugins: []
-};
+}

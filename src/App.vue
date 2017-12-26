@@ -9,11 +9,11 @@
 </template>
 <script>
 export default {
-    name: 'app',
-    components: {
-        svgIcon: () =>
-            import( /* webpackChunkName: 'svgIcon'*/ '@/components/common/svgIcon')
-    }
+  name: 'app',
+  components: {
+    svgIcon: () =>
+            import(/* webpackChunkName: 'svgIcon' */ '@/components/common/svgIcon')
+  }
 }
 </script>
 <style lang="less">

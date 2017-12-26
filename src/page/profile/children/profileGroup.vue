@@ -13,28 +13,28 @@
     </div>
 </template>
 <script>
-import HeadTop from '@/components/HeadTop';
+import HeadTop from '@/components/HeadTop'
 export default {
-    name: 'profileGroup',
-    components: {
-        HeadTop,
-    },
-    data() {
-        return {
-            types: [{
-                label: '圈子',
-                path: '/profile/group/groups'
-            }, {
-                label: '帖子',
-                path: '/profile/group/posts'
-            }],
-        }
-    },
-    methods: {
-        cancel() {
-            this.$router.push('/profile');
-        }
+  name: 'profileGroup',
+  components: {
+    HeadTop
+  },
+  data () {
+    return {
+      types: [{
+        label: '圈子',
+        path: '/profile/group/groups'
+      }, {
+        label: '帖子',
+        path: '/profile/group/posts'
+      }]
     }
+  },
+  methods: {
+    cancel () {
+      this.$router.push('/profile')
+    }
+  }
 }
 </script>
 <style lang='less'>

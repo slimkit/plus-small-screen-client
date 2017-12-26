@@ -6,6 +6,6 @@
 
 <script>
     export default {
-        name: "newsIndex"
+      name: 'newsIndex'
     }
 </script>

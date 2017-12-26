@@ -19,45 +19,45 @@
 </template>
 <script>
 const isNum = {
-    validator(val) {
-        return typeof(+val) === 'number';
-    }
-};
+  validator (val) {
+    return typeof (+val) === 'number'
+  }
+}
 export default {
-    name: 'feedTool',
-    props: {
-        hasLike: {
-            type: Boolean,
-            required: true
-        },
-        likeCount: {
-            type: [Number, String],
-            required: true,
-            ...isNum
-        },
-        viewCount: {
-            type: [Number, String],
-            required: true,
-            ...isNum
-        },
-
-        commentCount: {
-            type: [Number, String],
-            required: true,
-            ...isNum
-        }
+  name: 'feedTool',
+  props: {
+    hasLike: {
+      type: Boolean,
+      required: true
     },
-    methods: {
-        likeFeed() {
-            this.$emit('likeFeed');
-        },
-        commentFeed() {
-            this.$emit('commentFeed', this.com);
-        },
-        moreAction() {
-            this.$emit('moreAction');
-        }
+    likeCount: {
+      type: [Number, String],
+      required: true,
+      ...isNum
+    },
+    viewCount: {
+      type: [Number, String],
+      required: true,
+      ...isNum
+    },
+
+    commentCount: {
+      type: [Number, String],
+      required: true,
+      ...isNum
     }
+  },
+  methods: {
+    likeFeed () {
+      this.$emit('likeFeed')
+    },
+    commentFeed () {
+      this.$emit('commentFeed', this.com)
+    },
+    moreAction () {
+      this.$emit('moreAction')
+    }
+  }
 }
 </script>
 <style lang='less' scoped>

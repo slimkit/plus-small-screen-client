@@ -60,30 +60,30 @@
     </div>
 </template>
 <script>
-const prefixCls = 'feed_img';
+const prefixCls = 'feed_img'
 export default {
-    name: 'feedImages',
-    props: {
-        imgs: Array
-    },
-    data() {
-        return {
-            prefixCls
-        }
-    },
-    computed: {
-        classes() {
-            return [
-                `${prefixCls}`,
-                `${prefixCls}-i${this.imgs.length}`,
-            ]
-        }
-    },
-    methods: {
-        viewPic(id) {
-            this.$emit('viewPic', id);
-        }
+  name: 'feedImages',
+  props: {
+    imgs: Array
+  },
+  data () {
+    return {
+      prefixCls
     }
+  },
+  computed: {
+    classes () {
+      return [
+        `${prefixCls}`,
+        `${prefixCls}-i${this.imgs.length}`
+      ]
+    }
+  },
+  methods: {
+    viewPic (id) {
+      this.$emit('viewPic', id)
+    }
+  }
 }
 </script>
 <style lang='less'>

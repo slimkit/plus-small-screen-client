@@ -6,7 +6,7 @@
     </div>
 </template>
 <script>
-import HeadTop from '../components/HeadTop';
+import HeadTop from '../components/HeadTop'
 export default {
   name: 'signup',
   components: {

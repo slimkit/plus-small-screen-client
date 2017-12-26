@@ -1,12 +1,11 @@
-const
-  REG_PSW = /^[0-9]{4,6}$/,
-  REG_EMAIL = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/,
-  REG_PHONE = /^(((13[0-9]{1})|14[0-9]{1}|(15[0-9]{1})|17[0-9]{1}|(18[0-9]{1}))+\d{8})$/,
-  REG_USER = /^[a-zA-Z_\u4E00-\u9FA5\uF900-\uFA2D][a-zA-Z0-9_\u4E00-\u9FA5\uF900-\uFA2D]*$/
+// const REG_PSW = /^[0-9]{4,6}$/
+// const REG_EMAIL = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/
+// const REG_PHONE = /^(((13[0-9]{1})|14[0-9]{1}|(15[0-9]{1})|17[0-9]{1}|(18[0-9]{1}))+\d{8})$/
+// const REG_USER = /^[a-zA-Z_\u4E00-\u9FA5\uF900-\uFA2D][a-zA-Z0-9_\u4E00-\u9FA5\uF900-\uFA2D]*$/
 
 const types = ['password', 'account']
 const TEST = {
-  password(psw) {
+  password (psw) {
     const res = {}
     if (psw) {
       if (psw.length < 5) {
@@ -27,7 +26,7 @@ const TEST = {
     return res
   },
   // todo 用户账号 判断
-  account(val) {
+  account (val) {
     const res = {}
     if (val) {
       res.r = true
@@ -37,7 +36,7 @@ const TEST = {
   }
 }
 
-export function addValidate({ type, rule }) {
+export function addValidate ({ type, rule }) {
   if (type && typeof type === 'string') {
     if (rule) {
       types.push(type)

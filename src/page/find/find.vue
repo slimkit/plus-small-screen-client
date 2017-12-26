@@ -23,39 +23,39 @@
     </div>
 </template>
 <script>
-import HeadTop from '@/components/HeadTop';
+import HeadTop from '@/components/HeadTop'
 export default {
-    name: 'findIndex',
-    components: {
-        HeadTop
+  name: 'findIndex',
+  components: {
+    HeadTop
+  },
+  data () {
+    return {}
+  },
+  computed: {
+    location () {
+      const location = this.$store.state.LOCATION || {}
+      if (JSON.stringify(location) === '{}') {
+        this.$store.dispatch('GET_LOCATION')
+      }
+      return location
     },
-    data() {
-        return {}
-    },
-    computed: {
-        location() {
-            const location = this.$store.state.LOCATION || {};
-            if(JSON.stringify(location) === "{}") {
-                this.$store.dispatch('GET_LOCATION');
-            }
-            return location;
-        },
 
-        cur_txt() {
-            const { label = '' } = this.location;
-            return(label.length > 5 ? `${label.slice(0, 2)}…${label.slice(-2)}` : label) || '选择城市';
-        }
-    },
-    methods: {
-        goBack() {
-            this.to('/discover');
-        },
-        to(patch) {
-            if(patch) {
-                this.$router.push(patch);
-            }
-        }
+    cur_txt () {
+      const { label = '' } = this.location
+      return (label.length > 5 ? `${label.slice(0, 2)}…${label.slice(-2)}` : label) || '选择城市'
     }
+  },
+  methods: {
+    goBack () {
+      this.to('/discover')
+    },
+    to (patch) {
+      if (patch) {
+        this.$router.push(patch)
+      }
+    }
+  }
 }
 </script>
 <style lang='less'>

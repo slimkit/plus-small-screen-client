@@ -14,41 +14,41 @@
 </template>
 <script>
 export default {
-    name: 'findItem',
-    props: ['user'],
-    data() {
-        return {
-            loading: false
-        }
-    },
-    computed: {
-        isFollow() {
-            const { follower = false, following = false } = this.user;
-            return follower && following ?
-                'eachFollow' : (follower ? 'follow' : 'unFollow');
-        }
-    },
-    methods: {
-        toUserHome() {
-            this.$router.push(`/user/${this.user.id}`);
-        },
-        followUser(e) {
-            if(this.loading) return false;
-            this.loading = true;
-            this.$store.dispatch('FOLLOW_USER', {
-                id: this.user.id,
-                status: this.isFollow
-            }).then(({ status, follower }) => {
-                this.loading = false;
-                this.user.follower = follower;
-            }).catch((err) => {
-                const { response: { data = { message: '操作失败' } } = {} } = err;
-
-                this.loading = false;
-                this.$Message.error(data);
-            });
-        }
+  name: 'findItem',
+  props: ['user'],
+  data () {
+    return {
+      loading: false
     }
+  },
+  computed: {
+    isFollow () {
+      const { follower = false, following = false } = this.user
+      return follower && following
+        ? 'eachFollow' : (follower ? 'follow' : 'unFollow')
+    }
+  },
+  methods: {
+    toUserHome () {
+      this.$router.push(`/user/${this.user.id}`)
+    },
+    followUser (e) {
+      if (this.loading) return false
+      this.loading = true
+      this.$store.dispatch('FOLLOW_USER', {
+        id: this.user.id,
+        status: this.isFollow
+      }).then(({ status, follower }) => {
+        this.loading = false
+        this.user.follower = follower
+      }).catch((err) => {
+        const { response: { data = { message: '操作失败' } } = {} } = err
+
+        this.loading = false
+        this.$Message.error(data)
+      })
+    }
+  }
 }
 </script>
 <style lang='less'>

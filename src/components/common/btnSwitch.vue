@@ -16,45 +16,45 @@
     </div>
 </template>
 <script>
-import { oneOf } from '../../util/';
-const prefixCls = 'v-switch';
+import { oneOf } from '../../util/'
+const prefixCls = 'v-switch'
 export default {
-    name: 'vSwitch',
-    props: {
-        type: {
-            requried: true,
-            validator(val) {
-                return oneOf(val, ['checkbox', 'radio']);
-            }
-        },
-        value: Boolean,
-        dataValue: {},
-        id: {
-            type: String,
-            default: function() {
-                return 'v-switch-' + this._uid;
-            },
-        },
+  name: 'vSwitch',
+  props: {
+    type: {
+      requried: true,
+      validator (val) {
+        return oneOf(val, ['checkbox', 'radio'])
+      }
     },
-    data() {
-        return {
-            prefixCls: `${prefixCls}-${this.type}`,
-            cur_value: this.value,
-        }
-    },
-    watch: {
-        value(val) {
-            this.cur_value = val;
-        }
-    },
-    methods: {
-        setValue() {
-            this.$emit('input', this.cur_value)
-        },
-        onClick() {
-            this.$refs.label.click();
-        }
+    value: Boolean,
+    dataValue: {},
+    id: {
+      type: String,
+      default: function () {
+        return 'v-switch-' + this._uid
+      }
     }
+  },
+  data () {
+    return {
+      prefixCls: `${prefixCls}-${this.type}`,
+      cur_value: this.value
+    }
+  },
+  watch: {
+    value (val) {
+      this.cur_value = val
+    }
+  },
+  methods: {
+    setValue () {
+      this.$emit('input', this.cur_value)
+    },
+    onClick () {
+      this.$refs.label.click()
+    }
+  }
 }
 </script>
 <style lang='less'>

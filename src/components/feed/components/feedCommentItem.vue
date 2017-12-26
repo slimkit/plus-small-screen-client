@@ -10,37 +10,38 @@
 </template>
 <script>
 export default {
-    name: 'feedCommentItem',
-    props: {
-        comment: {
-            required: true
-        }
-    },
-    computed: {
-        user() {
-            const { user, user_id } = this.comment;
-            const usr = user ? user : this.$store.getter.getUserById(usr);
-            if(usr.id === user_id) {
-                return user;
-            }
-            return {};
-        },
-        replyUser() {
-            return this.comment.reply;
-        },
-        body() {
-            let r = this.comment.body;
-            return r.length > 60 ? r.slice(0, 57) + '…' : r;
-        }
-    },
-    methods: {
-        to(path) {
-            this.$router.push({ path });
-        },
-        commentAction() {
-            this.$emit('action', this.user.id, this.user.name, this.comment.id);
-        }
+  name: 'feedCommentItem',
+  props: {
+    comment: {
+      required: true
     }
+  },
+  computed: {
+    user () {
+      const { user, user_id: userID } = this.comment
+      const usr = user || this.$store.getter.getUserById(userID)
+      /* eslint-diable camelcase */
+      if (usr.id === userID) {
+        return user
+      }
+      return {}
+    },
+    replyUser () {
+      return this.comment.reply
+    },
+    body () {
+      let r = this.comment.body
+      return r.length > 60 ? r.slice(0, 57) + '…' : r
+    }
+  },
+  methods: {
+    to (path) {
+      this.$router.push({ path })
+    },
+    commentAction () {
+      this.$emit('action', this.user.id, this.user.name, this.comment.id)
+    }
+  }
 }
 </script>
 <style lang='less'>

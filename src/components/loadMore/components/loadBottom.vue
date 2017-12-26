@@ -5,7 +5,7 @@
 </template>
 <script>
 export default {
-    name: 'loadMoreBottom'
+  name: 'loadMoreBottom'
 }
 </script>
 <style lang='less'></style>

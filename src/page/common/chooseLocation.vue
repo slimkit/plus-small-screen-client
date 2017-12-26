@@ -34,157 +34,155 @@
     </div>
 </template>
 <script>
-import _ from 'lodash';
-import HeadTop from '@/components/HeadTop';
+import _ from 'lodash'
+import HeadTop from '@/components/HeadTop'
 
-let sources = [];
+let sources = []
 
 export default {
-    name: 'chooseLocation',
-    components: {
-        HeadTop
-    },
-    data() {
-        return {
-            keyword: '',
-            showHot: true,
-            loading: false,
+  name: 'chooseLocation',
+  components: {
+    HeadTop
+  },
+  data () {
+    return {
+      keyword: '',
+      showHot: true,
+      loading: false,
 
-            dataList: [],
-            redirect: '', // 选择地址后 跳转的路径
-        }
-    },
-    computed: {
-        location() {
-            const location = this.$store.state.LOCATION || {};
-            if(JSON.stringify(location) === "{}") {
-                this.$store.dispatch('GET_LOCATION');
-            } else {
-                this.loading = false;
-            }
-            return location;
-        },
-        cur_icon() {
-            return this.is_loading ? 'base-loading' : 'location-arrow'
-        },
-        cur_txt() {
-            return this.location.label || '';
-        },
-        hot_citys() {
-            return this.$store.state.HOTCTIYS;
-        },
-
-        is_loading() {
-            return this.loading || !(this.cur_txt.length > 0);
-        },
-
-        isShowHot() {
-            return !(this.keyword.length > 0) && !(this.dataList.length > 0);
-        }
-    },
-    methods: {
-        updateLocation() {
-            this.loading = true;
-            this.$store.dispatch('UPDATE_LOCATION');
-        },
-        chooseHotCity(city_txt) {
-            console.log(city_txt);
-            this.$http.get(`around-amap/geo?address=${city_txt.replace(/[\s\uFEFF\xA0]+/g, '')}`).then(res => {
-                const {
-                    data: {
-                        geocodes: [{
-                            city,
-                            district,
-                            province,
-                            location,
-                        }]
-                    } = {}
-                } = res;
-
-                const [lng, lat] = location.split(',');
-                const label = district.length > 0 ? district : (city.length > 0 ? city : province);
-
-                if(this.redirect) {
-                    if(this.redirect.indexOf('/find/') > -1) {
-                        this.$store.commit('SAVE_LOCATION', {
-                            label,
-                            lng,
-                            lat
-                        });
-                        this.$router.push(`/find/nearby?lng=${lng}&lat=${lat}`)
-                    } else if(this.redirect.indexOf('/add_group') > -1) {
-                        this.$store.commit('SAVE_GROUP_LOCATION', {
-                            label,
-                            lng,
-                            lat
-                        });
-                        this.$router.go(-1);
-                    }
-                } else {
-                    this.$router.go(-1);
-                }
-            }).catch(err => {
-                console.log(err);
-            });
-        },
-
-        //使用_.debounce控制搜索的触发频率
-        //准备搜索
-        search: _.debounce(function() {
-                let that = this;
-                //删除已经结束的请求
-                _.remove(sources, (n) => n.source === null);
-
-                //取消还未结束的请求
-                sources.forEach(function(item) {
-                    if(item !== null && item.source !== null && item.status === 1) {
-                        item.status = 0;
-                        item.source.cancel('取消上一个')
-                    }
-                });
-
-                //创建新的请求cancelToken,并设置状态请求中
-                let sc = {
-                    source: that.$http.CancelToken.source(),
-                    status: 1 //状态1：请求中，0:取消中
-                };
-                sources.push(sc);
-
-                //开始搜索数据
-                if(that.keyword) {
-                    that.$http.get(`/locations/search?name=${that.keyword}`, {
-                        cancelToken: sc.source.token
-                    }).then(({ data = [] }) => {
-                        //置空请求canceltoken
-                        sc.source = null;
-                        that.dataList = data.map((item, index) => {
-                            let name = '';
-                            item = item.tree;
-                            while(item) {
-                                name = item.name + "," + name;
-                                item = item.parent;
-                            }
-                            return name.substr(0, (name.length - 1));
-                        })
-
-                    }).catch(({ response: { data = { message: '搜索失败' } } = {} } = {}) => {
-                        //置空请求canceltoken
-                        sc.source = null;
-                        that.$Message.error(data);
-                    });
-                }
-            },
-            500 //空闲时间间隔设置500ms
-        )
-    },
-    beforeRouteEnter(to, from, next) {
-        next(vm => {
-            vm.redirect = from.fullPath;
-        })
-    },
-    created() {
-        this.$store.dispatch('GET_HOT_CITYS');
+      dataList: [],
+      redirect: '' // 选择地址后 跳转的路径
     }
+  },
+  computed: {
+    location () {
+      const location = this.$store.state.LOCATION || {}
+      if (JSON.stringify(location) === '{}') {
+        this.$store.dispatch('GET_LOCATION')
+      } else {
+        this.loading = false
+      }
+      return location
+    },
+    cur_icon () {
+      return this.is_loading ? 'base-loading' : 'location-arrow'
+    },
+    cur_txt () {
+      return this.location.label || ''
+    },
+    hot_citys () {
+      return this.$store.state.HOTCTIYS
+    },
+
+    is_loading () {
+      return this.loading || !(this.cur_txt.length > 0)
+    },
+
+    isShowHot () {
+      return !(this.keyword.length > 0) && !(this.dataList.length > 0)
+    }
+  },
+  methods: {
+    updateLocation () {
+      this.loading = true
+      this.$store.dispatch('UPDATE_LOCATION')
+    },
+    chooseHotCity (cityTxt) {
+      this.$http.get(`around-amap/geo?address=${cityTxt.replace(/[\s\uFEFF\xA0]+/g, '')}`).then(res => {
+        const {
+          data: {
+            geocodes: [{
+              city,
+              district,
+              province,
+              location
+            }]
+          } = {}
+        } = res
+
+        const [lng, lat] = location.split(',')
+        const label = district.length > 0 ? district : (city.length > 0 ? city : province)
+
+        if (this.redirect) {
+          if (this.redirect.indexOf('/find/') > -1) {
+            this.$store.commit('SAVE_LOCATION', {
+              label,
+              lng,
+              lat
+            })
+            this.$router.push(`/find/nearby?lng=${lng}&lat=${lat}`)
+          } else if (this.redirect.indexOf('/add_group') > -1) {
+            this.$store.commit('SAVE_GROUP_LOCATION', {
+              label,
+              lng,
+              lat
+            })
+            this.$router.go(-1)
+          }
+        } else {
+          this.$router.go(-1)
+        }
+      }).catch(err => {
+        console.log(err)
+      })
+    },
+
+    // 使用_.debounce控制搜索的触发频率
+    // 准备搜索
+    search: _.debounce(function () {
+      let that = this
+      // 删除已经结束的请求
+      _.remove(sources, (n) => n.source === null)
+
+      // 取消还未结束的请求
+      sources.forEach(function (item) {
+        if (item !== null && item.source !== null && item.status === 1) {
+          item.status = 0
+          item.source.cancel('取消上一个')
+        }
+      })
+
+      // 创建新的请求cancelToken,并设置状态请求中
+      let sc = {
+        source: that.$http.CancelToken.source(),
+        status: 1 // 状态1：请求中，0:取消中
+      }
+      sources.push(sc)
+
+      // 开始搜索数据
+      if (that.keyword) {
+        that.$http.get(`/locations/search?name=${that.keyword}`, {
+          cancelToken: sc.source.token
+        }).then(({ data = [] }) => {
+          // 置空请求canceltoken
+          sc.source = null
+          that.dataList = data.map((item, index) => {
+            let name = ''
+            item = item.tree
+            while (item) {
+              name = item.name + ',' + name
+              item = item.parent
+            }
+            return name.substr(0, (name.length - 1))
+          })
+        }).catch(({ response: { data = { message: '搜索失败' } } = {} } = {}) => {
+          // 置空请求canceltoken
+          sc.source = null
+          that.$Message.error(data)
+        })
+      }
+    },
+    500 // 空闲时间间隔设置500ms
+    )
+  },
+  beforeRouteEnter (to, from, next) {
+    next(vm => {
+      vm.redirect = from.fullPath
+    })
+  },
+  created () {
+    this.$store.dispatch('GET_HOT_CITYS')
+  }
 }
 </script>
 <style lang='less'>

@@ -6,7 +6,7 @@
 </template>
 <script>
 export default {
-    name: 'FullSpin'
+  name: 'FullSpin'
 }
 </script>
 <style lang='less'>

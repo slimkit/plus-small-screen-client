@@ -17,58 +17,58 @@
     </div>
 </template>
 <script>
-import HeadTop from '../../components/HeadTop';
-import FootGuide from '../../components/FootGuide';
+import HeadTop from '../../components/HeadTop'
+import FootGuide from '../../components/FootGuide'
 export default {
-    name: 'discoverIndex',
-    components: {
-        HeadTop,
-        FootGuide
-    },
-    data() {
-        return {
-            prefix: 'discover',
-            entrys: [
-                [{
-                    title: '资讯',
-                    icon: 'news',
-                    path: '/news',
-                    new_tips: false,
-                    tips: ''
-                }, {
-                    title: '圈子',
-                    icon: 'group',
-                    path: '/group',
-                    new_tips: false,
-                    tips: ''
-                }, {
-                    title: '问答',
-                    icon: 'question',
-                    path: '/question',
-                    new_tips: false,
-                    tips: ''
-                }],
-                [{
-                    title: '排行',
-                    icon: 'rank',
-                    path: '/rank',
-                    new_tips: false,
-                    tips: ''
-                }],
-                [{
-                    title: '找人',
-                    icon: 'find',
-                    path: '/find',
-                    new_tips: true,
-                    tips: '500米内有一大波玩家赶来'
-                }]
-            ]
-        }
-    },
-    methods: {
-        to(path) {
-            this.$router.push({ path });
-        },
+  name: 'discoverIndex',
+  components: {
+    HeadTop,
+    FootGuide
+  },
+  data () {
+    return {
+      prefix: 'discover',
+      entrys: [
+        [{
+          title: '资讯',
+          icon: 'news',
+          path: '/news',
+          new_tips: false,
+          tips: ''
+        }, {
+          title: '圈子',
+          icon: 'group',
+          path: '/group',
+          new_tips: false,
+          tips: ''
+        }, {
+          title: '问答',
+          icon: 'question',
+          path: '/question',
+          new_tips: false,
+          tips: ''
+        }],
+        [{
+          title: '排行',
+          icon: 'rank',
+          path: '/rank',
+          new_tips: false,
+          tips: ''
+        }],
+        [{
+          title: '找人',
+          icon: 'find',
+          path: '/find',
+          new_tips: true,
+          tips: '500米内有一大波玩家赶来'
+        }]
+      ]
     }
+  },
+  methods: {
+    to (path) {
+      this.$router.push({ path })
+    }
+  }
 }
 </script>

@@ -9,60 +9,60 @@
     </span>
 </template>
 <script>
-const prefixCls = 'v-badge';
+const prefixCls = 'v-badge'
 export default {
-    name: 'vBadge',
-    props: {
-        count: [Number, String],
-        dot: {
-            type: Boolean,
-            default: false
-        },
-        overflowCount: {
-            type: [Number, String],
-            default: 99
-        },
-        className: String
+  name: 'vBadge',
+  props: {
+    count: [Number, String],
+    dot: {
+      type: Boolean,
+      default: false
     },
-    computed: {
-        classes() {
-            return `${prefixCls}`;
-        },
-        dotClasses() {
-            return `${prefixCls}-dot`;
-        },
-        countClasses() {
-            return [
-                `${prefixCls}-count`,
-                {
-                    [`${this.className}`]: !!this.className,
-                    [`${prefixCls}-count-alone`]: this.alone
-                }
-            ];
-        },
-        finalCount() {
-            return parseInt(this.count) >= parseInt(this.overflowCount) ? `${this.overflowCount}+` : this.count;
-        },
-        badge() {
-            let status = false;
-            if(this.count) {
-                status = !(parseInt(this.count) === 0);
-            }
-            if(this.dot) {
-                status = true;
-                if(this.count !== null) {
-                    if(parseInt(this.count) === 0) {
-                        status = false;
-                    }
-                }
-            }
-            return status;
-        },
-        alone() {
-            return this.$slots.default === undefined;
+    overflowCount: {
+      type: [Number, String],
+      default: 99
+    },
+    className: String
+  },
+  computed: {
+    classes () {
+      return `${prefixCls}`
+    },
+    dotClasses () {
+      return `${prefixCls}-dot`
+    },
+    countClasses () {
+      return [
+        `${prefixCls}-count`,
+        {
+          [`${this.className}`]: !!this.className,
+          [`${prefixCls}-count-alone`]: this.alone
         }
+      ]
+    },
+    finalCount () {
+      return parseInt(this.count) >= parseInt(this.overflowCount) ? `${this.overflowCount}+` : this.count
+    },
+    badge () {
+      let status = false
+      if (this.count) {
+        status = !(parseInt(this.count) === 0)
+      }
+      if (this.dot) {
+        status = true
+        if (this.count !== null) {
+          if (parseInt(this.count) === 0) {
+            status = false
+          }
+        }
+      }
+      return status
+    },
+    alone () {
+      return this.$slots.default === undefined
     }
-};
+  }
+}
 </script>
 <style lang='less'>
 .v-badge {

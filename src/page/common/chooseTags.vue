@@ -25,49 +25,49 @@
     </transition>
 </template>
 <script>
-import { mapState } from 'vuex';
+import { mapState } from 'vuex'
 import HeadTop from '@/components/HeadTop'
 
 export default {
-    name: 'chooseTags',
-    components: {
-        HeadTop
-    },
-    data() {
-        return {
-            selected: []
-        }
-    },
-    computed: {
-        ...mapState({
-            tags: s => s.USERTAGS,
-            cur_selected: s => s.CUR_SELECTED_TAGS
-        }),
-    },
-    methods: {
-        ok() {
-            this.$store.state.CUR_SELECTED_TAGS = this.selected;
-            this.$router.go(this.$route.query.redirect);
-        },
-        selectTag(tag) {
-            const index = this.selected.indexOf(tag);
-            if(index > -1) {
-                let old = this.selected;
-                old.splice(index, 1);
-                this.selected = old;
-            } else {
-                if(this.selected.length < 5) {
-                    this.selected = Array.from(new Set([...this.selected, tag]))
-                } else {
-                    this.$Message.error('标签最多选择5个');
-                }
-            }
-        }
-    },
-    created() {
-        this.$store.dispatch('GET_USER_TAGS');
-        this.selected = this.cur_selected;
+  name: 'chooseTags',
+  components: {
+    HeadTop
+  },
+  data () {
+    return {
+      selected: []
     }
+  },
+  computed: {
+    ...mapState({
+      tags: s => s.USERTAGS,
+      cur_selected: s => s.CUR_SELECTED_TAGS
+    })
+  },
+  methods: {
+    ok () {
+      this.$store.state.CUR_SELECTED_TAGS = this.selected
+      this.$router.go(this.$route.query.redirect)
+    },
+    selectTag (tag) {
+      const index = this.selected.indexOf(tag)
+      if (index > -1) {
+        let old = this.selected
+        old.splice(index, 1)
+        this.selected = old
+      } else {
+        if (this.selected.length < 5) {
+          this.selected = Array.from(new Set([...this.selected, tag]))
+        } else {
+          this.$Message.error('标签最多选择5个')
+        }
+      }
+    }
+  },
+  created () {
+    this.$store.dispatch('GET_USER_TAGS')
+    this.selected = this.cur_selected
+  }
 }
 </script>
 <style lang='less'>

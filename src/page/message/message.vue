@@ -14,20 +14,20 @@
     </div>
 </template>
 <script>
-import HeadTop from '../../components/HeadTop';
-import FootGuide from '../../components/FootGuide';
+import HeadTop from '../../components/HeadTop'
+import FootGuide from '../../components/FootGuide'
 export default {
-    name: 'messageIndex',
-    data() {
-        return {
-            has_info: false,
-            has_msg: true
-        }
-    },
-    components: {
-        HeadTop,
-        FootGuide
+  name: 'messageIndex',
+  data () {
+    return {
+      has_info: false,
+      has_msg: true
     }
+  },
+  components: {
+    HeadTop,
+    FootGuide
+  }
 }
 </script>
 <style lang="less"></style>

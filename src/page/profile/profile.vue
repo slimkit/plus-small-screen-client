@@ -17,44 +17,44 @@
     </div>
 </template>
 <script>
-import HeadTop from '../../components/HeadTop';
-import FootGuide from '../../components/FootGuide';
+import HeadTop from '../../components/HeadTop'
+import FootGuide from '../../components/FootGuide'
 
-const prefix = 'mine';
+const prefix = 'mine'
 export default {
-    name: 'profileIndex',
-    components: {
-        HeadTop,
-        FootGuide
-    },
-    data() {
-        return {
-            prefix,
-            entrys: [
-                [{
-                    title: '清除缓存',
-                    icon: 'news',
-                    path: 'clean',
-                    new_tips: false,
-                    tips: ''
-                }, {
-                    title: '我的圈子',
-                    icon: 'news',
-                    path: '/profile/group',
-                    new_tips: false,
-                    tips: ''
-                }]
-            ]
-        }
-    },
-    methods: {
-        to(path) {
-            if(path === 'clean') {
-                this.$store.commit("LOGOUT");
-            }
-            this.$router.push({ path });
-        }
+  name: 'profileIndex',
+  components: {
+    HeadTop,
+    FootGuide
+  },
+  data () {
+    return {
+      prefix,
+      entrys: [
+        [{
+          title: '清除缓存',
+          icon: 'news',
+          path: 'clean',
+          new_tips: false,
+          tips: ''
+        }, {
+          title: '我的圈子',
+          icon: 'news',
+          path: '/profile/group',
+          new_tips: false,
+          tips: ''
+        }]
+      ]
     }
+  },
+  methods: {
+    to (path) {
+      if (path === 'clean') {
+        this.$store.commit('LOGOUT')
+      }
+      this.$router.push({ path })
+    }
+  }
 }
 </script>
 <style lang="less">

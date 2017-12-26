@@ -10,76 +10,76 @@
     </div>
 </template>
 <script>
-import calcTextareaHeight from '../../../util/calcTextareaHeight';
+import calcTextareaHeight from '../../../util/calcTextareaHeight'
 export default {
-    name: 'commentInput',
-    props: {
-        focus: Boolean,
-        placeholder: {
-            type: String,
-            default: "随便说说~",
-            requried: true
-        },
-        maxlength: {
-            type: [Number, String],
-            default: 255,
-            validator(val) {
-                return typeof(+val) === 'number';
-            }
-        }
+  name: 'commentInput',
+  props: {
+    focus: Boolean,
+    placeholder: {
+      type: String,
+      default: '随便说说~',
+      requried: true
     },
-    data() {
-        return {
-            textareaStyles: {},
-            currentValue: ''
-        }
-    },
-    computed: {
-        len() {
-            return this.currentValue.length;
-        }
-    },
-    methods: {
-        handleDone() {
-            if(this.currentValue) {
-                this.$emit('on-ok', this.currentValue);
-            }
-        },
-        handleInput(event) {
-            let value = event.target.value;
-            this.$emit('input', value);
-            this.setCurrentValue(value);
-            this.$emit('on-change', event);
-        },
-        handleEnter() {
-            if(this.currentValue) {
-                this.$emit('on-ok', this.currentValue);
-            }
-        },
-        handleChange(event) {
-            this.$emit('on-input-change', event);
-        },
-        setCurrentValue(value) {
-            if(value === this.currentValue) return;
-            this.$nextTick(() => {
-                this.resizeTextarea();
-            });
-            this.currentValue = value;
-        },
-        resizeTextarea() {
-            this.textareaStyles = calcTextareaHeight(this.$refs.input);
-        }
-    },
-    watch: {
-        focus(val) {
-            if(val) {
-                this.$refs.input.focus();
-            }
-        }
-    },
-    mounted() {
-        this.$refs.input.focus();
+    maxlength: {
+      type: [Number, String],
+      default: 255,
+      validator (val) {
+        return typeof (+val) === 'number'
+      }
     }
+  },
+  data () {
+    return {
+      textareaStyles: {},
+      currentValue: ''
+    }
+  },
+  computed: {
+    len () {
+      return this.currentValue.length
+    }
+  },
+  methods: {
+    handleDone () {
+      if (this.currentValue) {
+        this.$emit('on-ok', this.currentValue)
+      }
+    },
+    handleInput (event) {
+      let value = event.target.value
+      this.$emit('input', value)
+      this.setCurrentValue(value)
+      this.$emit('on-change', event)
+    },
+    handleEnter () {
+      if (this.currentValue) {
+        this.$emit('on-ok', this.currentValue)
+      }
+    },
+    handleChange (event) {
+      this.$emit('on-input-change', event)
+    },
+    setCurrentValue (value) {
+      if (value === this.currentValue) return
+      this.$nextTick(() => {
+        this.resizeTextarea()
+      })
+      this.currentValue = value
+    },
+    resizeTextarea () {
+      this.textareaStyles = calcTextareaHeight(this.$refs.input)
+    }
+  },
+  watch: {
+    focus (val) {
+      if (val) {
+        this.$refs.input.focus()
+      }
+    }
+  },
+  mounted () {
+    this.$refs.input.focus()
+  }
 }
 </script>
 <style lang='less'>

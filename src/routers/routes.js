@@ -1,77 +1,78 @@
-import App from '../App';
-import signin from '../page/signin';
-import signup from '../page/signup';
-import NotFound from '../page/notFound';
+import App from '../App'
+import signin from '../page/signin'
+import signup from '../page/signup'
+import NotFound from '../page/notFound'
 
+/* eslint-disable one-var */
 const
   feed = () =>
-    import(/* webpackChunkName: 'feed' */ '../page/feed/feed'),
+  import(/* webpackChunkName: 'feed' */ '../page/feed/feed'),
   feedDetail = () =>
-    import(/* webpackChunkName: 'feed' */ '../page/feed/components/feedDetail'),
+  import(/* webpackChunkName: 'feed' */ '../page/feed/components/feedDetail'),
   discover = () =>
-    import(/* webpackChunkName: 'common' */ '../page/discover/discover'),
+  import(/* webpackChunkName: 'common' */ '../page/discover/discover'),
   message = () =>
-    import(/* webpackChunkName: 'message' */ '../page/message/message'),
+  import(/* webpackChunkName: 'message' */ '../page/message/message'),
   profile = () =>
-    import(/* webpackChunkName: 'profile' */ '../page/profile/profile'),
+  import(/* webpackChunkName: 'profile' */ '../page/profile/profile'),
 
   // 我的圈子
   profileGroup = () =>
-    import(/* webpackChunkName: 'profile' */ '../page/profile/children/profileGroup'),
-  profileGroup_group = () =>
-    import(/* webpackChunkName: 'profile' */ '../page/profile/children/profileGroup.group'),
-  profileGroup_posts = () =>
-    import(/* webpackChunkName: 'profile' */ '../page/profile/children/profileGroup.posts'),
+  import(/* webpackChunkName: 'profile' */ '../page/profile/children/profileGroup'),
+  profileGroupGroup = () =>
+  import(/* webpackChunkName: 'profile' */ '../page/profile/children/profileGroup.group'),
+  profileGroupPosts = () =>
+  import(/* webpackChunkName: 'profile' */ '../page/profile/children/profileGroup.posts'),
 
   news = () =>
-    import(/* webpackChunkName: 'news' */ '../page/news/news'),
+  import(/* webpackChunkName: 'news' */ '../page/news/news'),
 
   group = () =>
-    import(/* webpackChunkName: 'group' */ '../page/group/group'),
+  import(/* webpackChunkName: 'group' */ '../page/group/group'),
 
   // 添加圈子
   addGroup = () =>
-    import(/* webpackChunkName: 'group' */ '../page/group/children/addGroup'),
+  import(/* webpackChunkName: 'group' */ '../page/group/children/addGroup'),
   chooseCategory = () =>
-    import(/* webpackChunkName: 'group' */ '../page/group/children/chooseCategory'),
+  import(/* webpackChunkName: 'group' */ '../page/group/children/chooseCategory'),
   groupJoined = () =>
-    import(/* webpackChunkName: 'group' */ '../page/group/children/groupJoined'),
+  import(/* webpackChunkName: 'group' */ '../page/group/children/groupJoined'),
   groupSearch = () =>
-    import(/* webpackChunkName: 'group' */ '../page/group/children/groupSearch'),
+  import(/* webpackChunkName: 'group' */ '../page/group/children/groupSearch'),
   groupAll = () =>
-    import(/* webpackChunkName: 'group' */ '../page/group/children/groupAll'),
+  import(/* webpackChunkName: 'group' */ '../page/group/children/groupAll'),
   groupDetail = () =>
-    import(/* webpackChunkName: 'group' */ '../page/group/children/groupDetail'),
+  import(/* webpackChunkName: 'group' */ '../page/group/children/groupDetail'),
   groupPostFeed = () =>
-    import(/* webpackChunkName: 'group' */ '../page/group/children/groupPostFeed'),
+  import(/* webpackChunkName: 'group' */ '../page/group/children/groupPostFeed'),
 
   question = () =>
-    import(/* webpackChunkName: 'question' */ '../page/question/question'),
+  import(/* webpackChunkName: 'question' */ '../page/question/question'),
   rank = () =>
-    import(/* webpackChunkName: 'rank' */ '../page/rank/rank'),
+  import(/* webpackChunkName: 'rank' */ '../page/rank/rank'),
 
   // 找人
   find = () =>
-    import(/* webpackChunkName: 'find' */ '../page/find/find'),
+  import(/* webpackChunkName: 'find' */ '../page/find/find'),
   findContent = () =>
-    import(/* webpackChunkName: 'find' */ '../page/find/children/findContent'),
+  import(/* webpackChunkName: 'find' */ '../page/find/children/findContent'),
   findNearby = () =>
-    import(/* webpackChunkName: 'find' */ '../page/find/children/findNearby'),
+  import(/* webpackChunkName: 'find' */ '../page/find/children/findNearby'),
 
   /* 公共页面 */
 
   // 个人主页
   userHome = () =>
-    import(/* webpackChunkName: 'common' */ '../page/common/userHome'),
+  import(/* webpackChunkName: 'common' */ '../page/common/userHome'),
   // 用户标签选择
   chooseTags = () =>
-    import(/* webpackChunkName: 'common' */ '../page/common/chooseTags'),
+  import(/* webpackChunkName: 'common' */ '../page/common/chooseTags'),
   // 定位选择
   chooseLocation = () =>
-    import(/* webpackChunkName: 'common' */ '../page/common/chooseLocation'),
+  import(/* webpackChunkName: 'common' */ '../page/common/chooseLocation'),
   // 搜索用户
   searchUser = () =>
-    import(/* webpackChunkName: 'common' */ '../page/common/searchUser')
+  import(/* webpackChunkName: 'common' */ '../page/common/searchUser')
 
 const router = [{
   path: '/',
@@ -156,13 +157,13 @@ const router = [{
       redirect: 'profile/group/groups',
       children: [{
         path: 'groups',
-        name: 'profileGroup_groups',
-        component: profileGroup_group,
+        name: 'profileGroupGroups',
+        component: profileGroupGroup,
         meta: { keepAlive: true }
       }, {
         path: 'posts',
-        name: 'profileGroup_posts',
-        component: profileGroup_posts,
+        name: 'profileGroupPosts',
+        component: profileGroupPosts,
         meta: { keepAlive: true }
       }]
     },
@@ -198,6 +199,6 @@ const router = [{
 
     { path: '*', component: NotFound } /* 404 页面 */
   ]
-}];
+}]
 
-export default router;
+export default router

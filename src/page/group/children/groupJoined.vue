@@ -7,34 +7,34 @@
     </div>
 </template>
 <script>
-import HeadTop from '@/components/HeadTop';
-import groupItem from '../components/groupListItem';
+import HeadTop from '@/components/HeadTop'
+import groupItem from '../components/groupListItem'
 export default {
-    name: 'joinedGroup',
-    components: {
-        HeadTop,
-        groupItem
-    },
-    data() {
-        return {
-            myGroups: []
-        }
-    },
-    methods: {
-        cancel() {
-            this.$router.go(-1);
-        },
-        getMyGroups() {
-            this.$http.get('/plus-group/user-groups').then(({ data = [] }) => {
-                if(data) {
-                    this.myGroups = [...data];
-                }
-            });
-        }
-    },
-    created() {
-        this.getMyGroups();
+  name: 'joinedGroup',
+  components: {
+    HeadTop,
+    groupItem
+  },
+  data () {
+    return {
+      myGroups: []
     }
+  },
+  methods: {
+    cancel () {
+      this.$router.go(-1)
+    },
+    getMyGroups () {
+      this.$http.get('/plus-group/user-groups').then(({ data = [] }) => {
+        if (data) {
+          this.myGroups = [...data]
+        }
+      })
+    }
+  },
+  created () {
+    this.getMyGroups()
+  }
 }
 </script>
 <style lang='less'>

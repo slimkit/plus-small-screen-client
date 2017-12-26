@@ -1,52 +1,52 @@
-import Modal from './modal/ModalInstance';
+import Modal from './modal/ModalInstance'
 
-let modalInstance;
+let modalInstance
 
-function getModalInstance(render = undefined) {
-    modalInstance = modalInstance || Modal.newInstance({
-        closable: false,
-        maskClosable: false,
-        footerHide: true,
-        render: render
-    });
+function getModalInstance (render = undefined) {
+  modalInstance = modalInstance || Modal.newInstance({
+    closable: false,
+    maskClosable: false,
+    footerHide: true,
+    render: render
+  })
 
-    return modalInstance;
+  return modalInstance
 }
 
-function confirm(options) {
-    const render = ('render' in options) ? options.render : undefined;
-    let instance = getModalInstance(render);
+function confirm (options) {
+  const render = ('render' in options) ? options.render : undefined
+  let instance = getModalInstance(render)
 
-    options.onRemove = function() {
-        modalInstance = null;
-    };
+  options.onRemove = function () {
+    modalInstance = null
+  }
 
-    instance.show(options);
+  instance.show(options)
 }
 
-Modal.info = function(props = {}) {
-    props.title = '提示';
-    props.showCancel = true;
-    return confirm(props);
-};
+Modal.info = function (props = {}) {
+  props.title = '提示'
+  props.showCancel = true
+  return confirm(props)
+}
 
-Modal.confirm = function(props = {}) {
-    return confirm(props);
-};
+Modal.confirm = function (props = {}) {
+  return confirm(props)
+}
 
-Modal.remove = function() {
-    if(!modalInstance) { // at loading status, remove after Cancel
-        return false;
-    }
+Modal.remove = function () {
+  if (!modalInstance) { // at loading status, remove after Cancel
+    return false
+  }
 
-    const instance = getModalInstance();
+  const instance = getModalInstance()
 
-    instance.remove();
-};
+  instance.remove()
+}
 
 export default {
-    install(vue) {
-        if(this.installed) return;
-        vue.prototype.$Modal = Modal;
-    }
+  install (vue) {
+    if (this.installed) return
+    vue.prototype.$Modal = Modal
+  }
 }
