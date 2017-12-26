@@ -1,4 +1,4 @@
-import path from 'path';
+import path from 'path'
 export default {
   build: {
     env: {
@@ -16,7 +16,16 @@ export default {
     autoOpenBrowser: true,
     port: process.env.PORT || 8080,
     assetsPublicPath: '/',
-    proxyTable: {},
+    proxyTable: {
+      // proxy all requests starting with /api to jsonplaceholder
+      '/api': {
+        target: 'http://test-plus.zhibocloud.cn',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/api': '/api'
+        }
+      }
+    },
     cssSourceMap: false
   }
-};
+}
