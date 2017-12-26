@@ -1,30 +1,26 @@
 import Vue from 'vue';
 import localEvent from 'store';
 import VueRouter from 'vue-router';
+import * as Message from '../plugins/messageToast';
 
 import routes from './routes';
 
 Vue.use(VueRouter);
-const scrollBehavior = (to, from, savedPosition) => {
-    if(savedPosition) {
-        return savedPosition;
-    } else {
-        const position = {};
-        if(to.hash) {
-            position.selector = to.hash;
-        }
-        if(to.matched.some(m => m.meta.scrollToTop)) {
-            position.x = 0;
-            position.y = 0;
-        }
-        return position;
-    }
-};
 const router = new VueRouter({
+    routes,
     mode: 'history',
     base: '/h5',
-    scrollBehavior,
-    routes
+    strict: process.env.NODE_ENV !== 'production',
+    scrollBehavior(to, from, savedPosition) {
+        if(savedPosition) {
+            return savedPosition
+        } else {
+            if(from.meta.keepAlive) {
+                from.meta.savedPosition = document.body.scrollTop || document.documentElement.scrollTop;
+            }
+            return { x: 0, y: to.meta.savedPosition || 0 }
+        }
+    },
 });
 
 /**
@@ -34,18 +30,24 @@ const router = new VueRouter({
  * meta.requiresAuth = true
  *
  * 登录后不可访问的路由需要添加
- * meta.canEnterOrNot = true
+ * meta.forGuest = true
  * 
  */
 router.beforeEach((to, from, next) => {
-    const isLogin = !!((localEvent.get('mine') || {}).token),
-        meta = to.matched.some(record => record.meta) || {};
-    if(meta.requiresAuth) {
-        isLogin ? next() : next({ path: '/login', query: { redirect: to.fullPath } });
-    } else if(meta.canEnterOrNot) {
-        isLogin ? next({ path: '/feed' }) : next();
+    const isLogin = !!((localEvent.get('CURRENTUSER') || {}).token),
+        requiresAuth = to.matched.some(record => record.meta.requiresAuth),
+        forGuest = to.matched.some(record => record.meta.forGuest),
+        redirect = from.query.redirect;
+    if(isLogin) {
+        forGuest ?
+            next({ path: `${ redirect ? redirect : '/feed/new' }` }) : next();
     } else {
-        next();
+        requiresAuth ? (() => {
+            Message.Msg.error('您还没有登录, 请先登录或注册');
+            setTimeout(function() {
+                next({ path: '/signin', query: { redirect: to.fullPath } })
+            }, 1500);
+        })() : next();
     }
 });
 

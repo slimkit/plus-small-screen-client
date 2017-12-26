@@ -1,115 +1,73 @@
 import Vue from 'vue';
-import store from './stores/store';
-import router from './routers/index';
-import VueLazyload from 'vue-lazyload';
-import loading_img from './statics/images/image-loading.png';
-import 'swiper/dist/css/swiper.css';
-import VueAwesomeSwiper from 'vue-awesome-swiper';
-import UserAvatar from './components/user/UserAvatar';
-// 统一message处理
-import plusMessageBundle from 'plus-message-bundle';
+import store from './stores/';
+import router from './routers/';
+// import FastClick from 'fastclick'
+// import TimeAgo from 'vue-timeago';
 
-Vue.use(VueAwesomeSwiper);
+import modal from './plugins/modal';
+import imgLazy from './plugins/imgLazy';
+import imgCropper from './plugins/imgCropper';
+import messageToast from './plugins/messageToast';
 
-// 时区
-import TimeAgo from 'vue-timeago';
+import './util/rem';
+/* h5 调试 */
+// import './util/console';
+import './style/index.less';
 
-// html title
-import VueWechatTitle from 'vue-wechat-title';
+// Filters
+import * as filters from './filters';
+import { formatNum } from './util/';
 
-// UI库
-import 'mint-ui/lib/style.css';
-import iView from 'iview';
-import './styles/common.less';
-import { TabContainer, TabContainerItem, Loadmore, Popup, Picker } from 'mint-ui';
+/** Ajax */
+import Ajax from './http';
 
-// 本地存储插件
-import storeLocal from 'store';
+/** common components */
+import vIcon from './components/common/vIcons'; /* Icons */
+import btnSwitch from './components/common/btnSwitch'; /* btnSwitch 按钮 */
+import badge from './components/common/badge'; /* Badge 徽标 */
+import fullSpin from './components/FullSpin'; /* 全屏加载动画 */
+import userAvatar from './components/common/userAvatar'; /* Avatar 用户头像组件 */
+import loadMore from './components/loadMore/loadMore';
 
-// bus
-import bus from './utils/bus';
+const components = [vIcon, btnSwitch, badge, userAvatar, loadMore, fullSpin];
 
-import App from './App';
-
-// bus
-Vue.use(bus);
-
-// iview ui
-Vue.use(iView);
-
-// html title
-Vue.use(VueWechatTitle);
-
-// lazyload for images
-Vue.use(VueLazyload, {
-  loading: loading_img,
-  try: 3
-});
-
-// timeago component
-Vue.use(TimeAgo, {
-  name: 'timeago',
-  locale: 'zh-CN',
-  locales: {
-    'zh-CN': require('vue-timeago/locales/zh-CN.json')
-  }
-});
-
-const components = [
-  Popup,
-  Picker,
-  Loadmore,
-  UserAvatar,
-  TabContainer,
-  TabContainerItem
-];
-
-components.map(component =>{
+components.forEach(component => {
   Vue.component(component.name, component);
 });
 
-// 注册一个全局自定义指令 v-focus
-Vue.directive('focus', {
-  // 当绑定元素插入到 DOM 中。
-  inserted: function (el) {
-    // 聚焦元素
-    el.focus();
-  }
-});
+Vue.config.productionTip = false;
 
-// 注册一个全局自定义指令 v-focus
-Vue.directive('childfocus', {
-  // 当绑定元素插入到 DOM 中。
-  inserted: function (el) {
-    // 聚焦元素
-    el.firstChild.focus();
-  }
-});
+Vue.prototype.$http = Ajax; /* Ajax */
+Vue.use(modal); /* 弹层 */
+Vue.use(imgLazy); /* 图片懒加载 */
+Vue.use(imgCropper); /* 图片裁剪 */
+Vue.use(messageToast); /* 消息提示 */
 
-Vue.directive('fixed', {
-  bind: (el, binding, vnode) => {
-    const ot = el.offsetTop;
-    document.onscroll = () => {
-      const st = document.body.scrollTop || document.documentElement.scrollTop;
-      el.setAttribute('data-fixed', st > ot ? 'fixed': '');
-    };
-  }
-});
+Vue.prototype.$MessageBundle = filters.plusMessageFirst;
 
+filters.formatNum = formatNum;
 
-// 定义 localStorage 组件
-Vue.prototype.$storeLocal = storeLocal;
-// 定义 plusMessageBundle组件
-Vue.prototype.$MessageBundle = plusMessageBundle;
+for (const k in filters) {
+  Vue.filter(k, filters[k]);
+}
 
-const app = new Vue({
-  router,
+// Vue.use(TimeAgo, {
+//   name: 'timeago',
+//   locale: 'zh-CN',
+//   locales: {
+//     'zh-CN': require('vue-timeago/locales/zh-CN.json')
+//   }
+// });
+
+/* 此处留一坑 */
+// if('addEventListener' in document) {
+//     document.addEventListener('DOMContentLoaded', function() {
+//         FastClick.attach(document.body);
+//     }, false);
+// }
+
+new Vue({
   store,
-  el: '#app',
-  render: h => h(App)
-});
-
-// iview 全局消息提示默认配置
-app.$Message.config({top: 8, duration: 3});
-
-export { app, router };
+  router,
+  directives: {}
+}).$mount('#app');

@@ -1,8 +1,14 @@
+/**
+ * User mutations
+ * @author leex <JsonLeex@163.com>
+ */
+
 import _ from 'lodash';
 import localEvent from 'store';
+
 export default {
-    SAVE_USER(state, user) {
-        const oldUsers = state.users;
+    ADD_USER_TO_VUEX(state, user) {
+        const old = state.users;
         try {
             if(!_.isEmpty(user)) {
                 let _new = {};
@@ -11,11 +17,11 @@ export default {
                 } else if(_.isPlainObject(user)) {
                     _new[`user_${user.id}`] = user;
                 }
-                state.users = Object.assign({}, oldUsers, _new);
-                localEvent.set('USERS', state.users);
+                state.users = Object.assign({}, old, _new);
+                localEvent.set('users', state.users);
             }
         } catch(e) {
-            state.users = oldUsers;
+            state.users = old;
         }
-    }
-}
+    },
+};
