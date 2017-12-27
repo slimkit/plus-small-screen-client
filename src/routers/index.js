@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import { oneOf } from '@/util'
 import localEvent from 'store'
 import VueRouter from 'vue-router'
 import * as Message from '../plugins/messageToast'
@@ -38,6 +39,10 @@ router.beforeEach((to, from, next) => {
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
   const forGuest = to.matched.some(record => record.meta.forGuest)
   const redirect = from.query.redirect
+  const upgrade = ['/question', '/news', '/rank']
+  if (oneOf(to.path, upgrade)) {
+    next({ path: '/upgrade' })
+  }
   if (isLogin) {
     forGuest
       ? next({ path: `${redirect || '/feed/new'}` }) : next()

@@ -2,6 +2,7 @@ import App from '../App'
 import signin from '../page/signin'
 import signup from '../page/signup'
 import NotFound from '../page/notFound'
+import upgrade from '../page/upgrade'
 
 /* eslint-disable one-var */
 const
@@ -197,7 +198,10 @@ const router = [{
     { path: '/tags', component: chooseTags, meta: { title: '选择标签' } }, /* 选择标签 */
     { path: '/location', component: chooseLocation, meta: { title: '选择位置' } }, /* 定位 */
 
+    { path: '/upgrade', component: upgrade }, /* 网站升级中 */
+
     { path: '*', component: NotFound } /* 404 页面 */
+
   ]
 }]
 
