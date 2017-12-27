@@ -20,7 +20,7 @@
 import HeadTop from '../../components/HeadTop'
 import FootGuide from '../../components/FootGuide'
 
-const prefix = 'mine'
+const prefix = 'profile'
 export default {
   name: 'profileIndex',
   components: {
@@ -39,7 +39,7 @@ export default {
           tips: ''
         }, {
           title: '我的圈子',
-          icon: 'news',
+          icon: 'group',
           path: '/profile/group',
           new_tips: false,
           tips: ''

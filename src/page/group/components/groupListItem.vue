@@ -5,7 +5,7 @@
     </div>
     <div :class="`${prefixCls}-info`">
       <div :class="`${prefixCls}-name`">
-        <h3>{{ group.name }}</h3>
+        <h3 class="ellipsis">{{ group.name }}</h3>
         <i v-if='group.mode ==="paid"' :class="`${prefixCls}-paid-icon`">付费</i>
       </div>
       <p>
@@ -136,12 +136,14 @@ export default {
 
   &-name {
     width: 100%;
+    max-width: 420px;
     display: flex;
     align-items: center;
     margin-bottom: 20px;
     font-size: 32px;
     color: #333;
     h3 {
+      max-width: calc(~'100% - ' 100px);
       margin: 0;
       padding: 0;
     }
@@ -197,6 +199,7 @@ export default {
     flex: none;
     width: 120px;
     height: 120px;
+    overflow: hidden;
     img {
       width: 100%;
       object-fit: cover;

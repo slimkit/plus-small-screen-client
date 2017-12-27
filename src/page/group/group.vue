@@ -32,7 +32,7 @@
         <div class="group-list-label">
           <span>热门推荐</span>
           <div class="group-list-more" @click='getRec'>
-            <v-icon :class='{"btn-loading": loading}' type='base-refresh'></v-icon>
+            <v-icon type='base-refresh' :style='{ transform: `rotate(${clickCount}turn)` }'></v-icon>
             <span>换一批</span>
           </div>
         </div>
@@ -42,7 +42,6 @@
     </div>
   </div>
 </template>
-
 <script>
 import HeadTop from '../../components/HeadTop'
 import groupListItem from './components/groupListItem'
@@ -52,30 +51,30 @@ export default {
     HeadTop,
     groupListItem
   },
-  data () {
+  data() {
     return {
       joined: [],
       recommend: [],
       count: 0, // 圈子总数
-      loading: false
+      clickCount: 0
     }
   },
   computed: {
-    showRecommend () {
+    showRecommend() {
       return this.recommend.length > 0
     }
   },
   methods: {
-    cancel () {
+    cancel() {
       this.to('/discover')
     },
-    to (path) {
+    to(path) {
       path = typeof path === 'string' ? { path } : path
       if (path) {
         this.$router.push(path)
       }
     },
-    createdGroup () {
+    createdGroup() {
       this.$router.push('/group/add')
       // this.$Modal.info({
       //     content: '只有认证通过的用户才可以创建圈子, 是否去认证?',
@@ -88,7 +87,7 @@ export default {
     },
 
     // 获取首页圈子
-    getGroup () {
+    getGroup() {
       this.$http.get('/plus-group/user-groups').then(({ data = [] }) => {
         if (data) {
           this.joined = [...data]
@@ -108,17 +107,16 @@ export default {
       })
     },
     // 获取推荐圈子
-    getRec () {
-      this.loading = true
+    getRec() {
       this.$http.get('/plus-group/recommend/groups?type=random').then(({ data = [] }) => {
         if (data) {
           this.recommend = [...data]
-          this.loading = false
+          this.clickCount += 1
         }
       })
     }
   },
-  created () {
+  created() {
     this.getGroup()
     this.$store.dispatch('GET_GROUP_TYPES')
   }
@@ -128,56 +126,56 @@ export default {
 @group-list-prefixCls: group-list;
 
 .entry_group.group-count {
-    margin: 10px 0;
-    font-size: 24px;
-    .num {
-        font-size: 40px;
-        color: #f4504d;
-    }
+  margin: 10px 0;
+  font-size: 24px;
+  .num {
+    font-size: 40px;
+    color: #f4504d;
+  }
 
-    .entry_title {
-        color: #999;
-    }
+  .entry_title {
+    color: #999;
+  }
 
-    .entry_append.v-icon {
-        color: #999;
-        margin-right: 0;
-        width: 24px;
-        height: 24px;
-    }
+  .entry_append.v-icon {
+    color: #999;
+    margin-right: 0;
+    width: 24px;
+    height: 24px;
+  }
 }
 
 .@{group-list-prefixCls} {
-    &-group {
-        background-color: #fff;
-        font-size: 26px;
-        color: #999;
-        &+& {
-            margin-top: 10px;
-        }
+  &-group {
+    background-color: #fff;
+    font-size: 26px;
+    color: #999;
+    &+& {
+      margin-top: 10px;
     }
-    &-label {
-        padding: 0 20px;
-        border-bottom: 1px solid #ededed;
-        /*no*/
-        height: 70px;
-        line-height: 68px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
+  }
+  &-label {
+    padding: 0 20px;
+    border-bottom: 1px solid #ededed;
+    /*no*/
+    height: 70px;
+    line-height: 68px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
 
-    &-more {
-        display: flex;
-        align-items: center;
-        span {
-            margin: 0 5px;
-        }
-        .v-icon {
-            width: 24px;
-            height: 24px;
-            vertical-align: baseline;
-        }
+  &-more {
+    display: flex;
+    align-items: center;
+    span {
+      margin: 0 5px;
     }
+    .v-icon {
+      width: 24px;
+      height: 24px;
+      transition: .5s ease;
+    }
+  }
 }
 </style>
