@@ -1,4 +1,3 @@
-import path from 'path'
 import webpack from 'webpack'
 import config from './config/'
 import merge from 'webpack-merge'
@@ -21,11 +20,6 @@ const webpackConfig = merge(baseWebpackConfig, {
   plugins: [
     new webpack.DefinePlugin({
       'process.env': config.dev.env
-    }),
-    new webpack.optimize.UglifyJsPlugin({
-      compress: {
-        warnings: false
-      }
     }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin(),

@@ -9,6 +9,7 @@ import portfinder from 'portfinder'
 import hotMiddleware from 'webpack-hot-middleware'
 import devMiddleware from 'webpack-dev-middleware'
 import proxyMiddleware from 'http-proxy-middleware'
+import history from 'connect-history-api-fallback'
 
 if (!process.env.NODE_ENV) {
   process.env.NODE_ENV = JSON.parse(config.dev.env.NODE_ENV)
@@ -43,6 +44,8 @@ const DMEInstance = devMiddleware(compiler, {
   publicPath: webpackConfig.output.publicPath,
   logLevel: 'silent'
 })
+
+app.use(history())
 
 app.use(DMEInstance)
 
