@@ -143,14 +143,6 @@ const props = {
   isPay: {
     type: Boolean,
     default: false
-  },
-  /**
-   * 动态标题
-   * @type {String}
-   */
-  title: {
-    type: String,
-    default: ''
   }
 }
 
@@ -238,11 +230,10 @@ const methods = {
    */
   showCommentInput (options = {}) {
     const that = this
-    const fId = this.feed.id
     const { reply_user } = options
     options = Object.assign({}, {
-      onOk (txt) {
-        that.commentFeed(txt, { fId, reply_user }, showCommentInput.remove)
+      onOk (txt, cb) {
+        that.commentFeed(txt, reply_user, cb)
       }
     }, options)
     showCommentInput.show(options)

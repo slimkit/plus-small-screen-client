@@ -1,96 +1,72 @@
-import Vue from 'vue'
-import PostMenu from './postMenu'
+import PostMenu from './postMenuInstance'
+import WENZI from '@/images/ico_word@3x.png'
+import PIC from '@/images/ico_potoablum@3x.png'
+import TOUGAO from '@/images/ico_contribute@3x.png'
+import CHECKIN from '@/images/ico_attendance@3x.png'
+import QUESTION from '@/images/ico_question@3x.png'
+import FATIE from '@/images/ico_fatie@3x.png'
+let menuInstance
+const
+  menus = [{
+    label: '文字',
+    src: WENZI,
+    cls: 'wenzi',
+    path: '/post/wenzi'
+  }, {
+    label: '图片',
+    src: PIC,
+    cls: 'pic',
+    path: '/post/pic'
+  }, {
+    label: '投稿',
+    src: TOUGAO,
+    cls: 'tougao',
+    path: '/post/release'
+  }, {
+    label: '签到',
+    src: CHECKIN,
+    cls: 'check-in',
+    path: '/post/checkin'
+  }, {
+    label: '提问',
+    src: QUESTION,
+    cls: 'check-in',
+    path: '/post/question'
+  }, {
+    label: '发帖',
+    src: FATIE,
+    cls: 'check-in',
+    path: '/post/fatie'
+  }]
 
-// const defaultMenuList = {
-
-// }
-
-const prefixCls = 'v-post-menu'
-
-PostMenu.newInstance = properties => {
-  const _props = properties || {}
-  /* eslint-disable no-new */
-  const Instance = new Vue({
-    data: Object.assign({}, {
-      mask: true,
-      visible: false
-    }, _props),
-
-    render (h) {
-      const maskVNodes = []
-      if (this.mask) {
-        maskVNodes.push(h('div', {
-          attrs: {
-            class: `${prefixCls}-mask`
-          }
-        }))
-      }
-
-      const bodyVNodes = []
-
-      bodyVNodes.push(h('div', {
-        attrs: {
-          class: `${prefixCls}-wrap`
-        }
-      }, [h(PostMenu, {
-        on: {
-          'on-close': this.close
-        }
-      })]))
-
-      return h('div', {
-        directives: [{
-          name: 'show',
-          value: this.visible
-        }],
-        attrs: {
-          class: `${prefixCls}-modal`
-        }
-      }, [maskVNodes, bodyVNodes])
-    },
-    computed: {},
-    methods: {
-      close () {
-        this.visible = false
-        this.onClose()
-      }
-    }
+function getInputInstance() {
+  menuInstance = menuInstance || PostMenu.newInstance({
+    menus
   })
-
-  const component = Instance.$mount()
-  document.body.appendChild(component.$el)
-  const Menu = Instance.$children[0]
-
-  return {
-    show () {
-      Menu.$parent.visible = true
-    },
-    comment: Menu
-  }
+  return menuInstance
 }
 
-let inputInstance
-
-function getInputInstance () {
-  inputInstance = inputInstance || PostMenu.newInstance({})
-  return inputInstance
-}
-
-function showInput (option) {
+function showInput(options) {
   const instance = getInputInstance()
-  instance.show(option)
+  options.onRemove = () => {
+    menuInstance = null
+  }
+  instance.show(options)
 }
 
 export default {
   name: 'PostMenu',
-  show (option = {}) {
-    return showInput(option)
+  show(options = {}) {
+    return showInput(options)
   },
-  remove () {
-    if (!inputInstance) {
+  remove() {
+    if (!menuInstance) {
       return false
     }
     const instance = getInputInstance()
     instance.remove()
+  },
+  config({ menus = [] }) {
+
   }
 }

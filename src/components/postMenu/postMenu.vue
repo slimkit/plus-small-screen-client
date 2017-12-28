@@ -1,23 +1,30 @@
 <template>
-<div :class="`${prefixCls}`">
-  <div :class="`${prefixCls}-ad`"></div>
-  <div :class="`${prefixCls}-menu-list`">
-    <slot></slot>
-  </div>
-  <div :class="`${prefixCls}-foot`">
-    <div :class="`${prefixCls}-close`" @click='close'>
-      <span></span>
-      <span></span>
+  <transition name='router-fadeInTop' mode="out-in">
+    <div :class="`${prefixCls}`">
+      <div :class="`${prefixCls}-ad`"></div>
+      <div :class="`${prefixCls}-list`">
+        <slot></slot>
+      </div>
+      <div :class="`${prefixCls}-foot`">
+        <div :class="[`${prefixCls}-close`, { open }]" @click='close'>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
+  </transition>
 </template>
 <script>
 const prefixCls = 'v-post-menu'
 export default {
   name: 'postMenu',
-  props: {},
-  data () {
+  props: {
+    open: {
+      type: Boolean,
+      default: false
+    }
+  },
+  data() {
     return {
       prefixCls
     }
@@ -25,10 +32,11 @@ export default {
   computed: {},
   watch: {},
   methods: {
-    close () {
+    close() {
       this.$emit('on-close')
     }
   }
 }
+
 </script>
 <style lang="less" src='./postMenu.less'></style>

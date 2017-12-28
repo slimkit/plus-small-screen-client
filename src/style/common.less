@@ -156,7 +156,7 @@ li {
 }
 
 .btn-loading {
-    animation: rotate360 2s infinite linear;
+    animation: rotate360 2s infinite ease;
 }
 
 @keyframes rotate360 {
@@ -164,7 +164,7 @@ li {
         transform: rotate(0deg);
     }
     to {
-        transform: rotate(360deg);
+        transform: rotate(-360deg);
     }
 }
 

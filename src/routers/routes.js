@@ -44,8 +44,7 @@ const
   import(/* webpackChunkName: 'group' */ '../page/group/children/groupAll'),
   groupDetail = () =>
   import(/* webpackChunkName: 'group' */ '../page/group/children/groupDetail'),
-  groupPostFeed = () =>
-  import(/* webpackChunkName: 'group' */ '../page/group/children/groupPostFeed'),
+
 
   question = () =>
   import(/* webpackChunkName: 'question' */ '../page/question/question'),
@@ -73,7 +72,11 @@ const
   import(/* webpackChunkName: 'common' */ '../page/common/chooseLocation'),
   // 搜索用户
   searchUser = () =>
-  import(/* webpackChunkName: 'common' */ '../page/common/searchUser')
+  import(/* webpackChunkName: 'common' */ '../page/common/searchUser'),
+  postGroupFeed = () =>
+  import(/* webpackChunkName: 'common' */ '../page/common/postGroupFeed/'),
+  postWenzi = () =>
+  import(/* webpackChunkName: 'common' */ '../page/common/postWenzi')
 
 const router = [{
   path: '/',
@@ -148,10 +151,6 @@ const router = [{
       component: groupAll,
       meta: { title: '全部圈子', keepAlive: true, requiresAuth: true }
     }, {
-      path: '/group/post',
-      component: groupPostFeed,
-      meta: { title: '发布帖子', keepAlive: true, requiresAuth: true }
-    }, {
       path: 'profile/group',
       component: profileGroup,
       meta: { title: '我的圈子', requiresAuth: true },
@@ -197,6 +196,25 @@ const router = [{
     { path: '/search_user/', component: searchUser, meta: { title: '搜索用户', keepAlive: true } }, /* 搜索用户 */
     { path: '/tags', component: chooseTags, meta: { title: '选择标签' } }, /* 选择标签 */
     { path: '/location', component: chooseLocation, meta: { title: '选择位置' } }, /* 定位 */
+
+    {
+      path: '/post/wenzi',
+      component: postWenzi,
+      meta: {
+        keepAlive: true,
+        title: '发布文字',
+        requiresAuth: true
+      }
+    }, {
+      path: '/post/fatie',
+      name: 'postGroupFeed',
+      component: postGroupFeed,
+      meta: {
+        keepAlive: true,
+        title: '发布帖子',
+        requiresAuth: true
+      }
+    },
 
     { path: '/upgrade', component: upgrade }, /* 网站升级中 */
 

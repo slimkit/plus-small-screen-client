@@ -6,6 +6,7 @@
                 <v-icon type='group-add' @click.native='createdGroup'></v-icon>
             </div>
         </head-top>
+        <div></div>
         <div class="group-all-category" :class='{"open": switchStatus}'>
             <div class="group-all-category-list">
                 <div :class="['group-all-category-list-item', { active: cur_cate === 0}]" id='group-categorys-0' @click='setlectCurCate(0)'>全部</div>

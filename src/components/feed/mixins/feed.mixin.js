@@ -4,7 +4,7 @@ export default {
     text () {
       let r = this.feed.feed_content
       r = r
-        ? (r.length < 50
+        ? (r.length < 49
           ? r
           : (this.isPay
             ? `${r.slice(0, 40)}`
@@ -12,6 +12,7 @@ export default {
         : false
       return r
     },
+    title() { return '' },
     hasLike () {
       return this.feed.has_like
     },
@@ -42,7 +43,6 @@ export default {
         url,
         method
       }).then(({ data }) => {
-        console.log(data)
         this.feed.has_like = !this.feed.has_like
         this.feed.like_count = num
       }).catch(err => {
@@ -58,13 +58,14 @@ export default {
      * @param  {String} txt
      * @param  {[type]} option
      */
-    commentFeed (body, { fId, reply_user }, cb) {
+    commentFeed (body, replyUser, cb) {
       // POST /feeds/:feed/comments
-      this.$http.post(`/feeds/${fId}/comments`, {
+      this.$http.post(`/feeds/${this.feed.id}/comments`, {
         body,
-        reply_user
+        reply_user: replyUser
       }).then(({ data: { message, comment } = {} }) => {
         this.feed.comments.unshift(comment)
+        this.feed.feed_comment_count += 1
         cb && cb()
       }).catch(err => {
         const { response: { data = { message: '评论失败' } } = {} } = err

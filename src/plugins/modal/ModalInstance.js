@@ -201,7 +201,6 @@ Modal.newInstance = properties => {
     },
     remove () {
       modal.visible = false
-      modal.$parent.buttonLoading = false
       modal.$parent.remove()
     },
     component: modal

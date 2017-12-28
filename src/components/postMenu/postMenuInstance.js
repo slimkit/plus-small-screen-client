@@ -1,82 +1,61 @@
+import Vue from 'vue'
+import router from '@/routers'
 import PostMenu from './postMenu'
-
-const
-  menus = [{
-    label: '文字',
-    icon: 'wenzi',
-    cls: 'wenzi',
-    path: '/post/wenzi'
-  }, {
-    label: '图片',
-    icon: 'pic',
-    cls: 'pic',
-    path: '/post/pic'
-  }, {
-    label: '投稿',
-    icon: 'tougao',
-    cls: 'tougao',
-    path: '/post/release'
-  }, {
-    label: '签到',
-    icon: 'check-in',
-    cls: 'check-in',
-    path: '/post/checkin'
-  }, {
-    label: '提问',
-    icon: 'check-in',
-    cls: 'check-in',
-    path: '/post/checkin'
-  }, {
-    label: '发帖',
-    icon: 'check-in',
-    cls: 'check-in',
-    path: '/post/checkin'
-  }],
-  prefixCls = 'v-post-menu'
+const prefixCls = 'v-post-menu'
 
 PostMenu.newInstance = properties => {
   const _props = properties || {}
 
   const Instance = new Vue({
     data: Object.assign({}, {
-      mask: true,
       visible: false
-    }, { menus }, _props),
+    }, _props),
 
-    render (h) {
+    render(h) {
       const menusVNodes = []
-      menus.forEach(menu => {
+      this.menus.forEach(menu => {
         menusVNodes.push(h('div', {
           class: `${prefixCls}-item _${menu.cls}`
-        }, [h('div')]))
+        }, [h('img', {
+          class: `${prefixCls}-item-icon`,
+          attrs: {
+            src: `${menu.src}`
+          },
+          on: {
+            click: () => {
+              router.push(`${menu.path}`)
+              this.$nextTick(() => {
+                this.close()
+              })
+            }
+          }
+        }), h('div', {
+          class: `${prefixCls}-item-label`
+        }, menu.label)]))
       })
 
       const maskVNodes = []
-      if (this.mask) {
-        maskVNodes.push(h('div', {
-          attrs: {
-            class: `${prefixCls}-mask`
-          }
-        }))
-      }
+      maskVNodes.push(h('div', {
+        attrs: {
+          class: `${prefixCls}-mask`
+        }
+      }))
 
       const bodyVNodes = []
-
       bodyVNodes.push(h('div', {
         attrs: {
           class: `${prefixCls}-wrap`
         }
       }, [h(PostMenu, {
+        props: {
+          open: this.visible
+        },
         on: {
           'on-close': this.close
         }
-      })]))
+      }, [menusVNodes])]))
 
       return h('div', {
-        directives: [{
-          name: 'show',
-          value: this.visible
-        }],
         attrs: {
           class: `${prefixCls}-modal`
         }
@@ -84,23 +63,33 @@ PostMenu.newInstance = properties => {
     },
     computed: {},
     methods: {
-      close () {
+      close() {
         this.visible = false
         this.onClose()
-      }
-    },
-    onClose () {}
+      },
+      onClose() {
+        this.$destroy()
+        document.body.removeChild(this.$el)
+        this.onRemove()
+      },
+      onRemove() {}
+    }
   })
 
-  const component = Instance.$mount()
-  document.body.appendChild(component.$el)
+  const Parent = Instance.$mount()
+  document.body.appendChild(Parent.$el)
   const Menu = Instance.$children[0]
 
   return {
-    show () {
-      Menu.$parent.visible = true
+    show(props) {
+      Parent.onRemove = props.onRemove
+      Parent.visible = true
     },
-    comment: Menu
+    remove() {
+      Parent.visible = false
+      Parent.remove()
+    },
+    component: Menu
   }
 }
 

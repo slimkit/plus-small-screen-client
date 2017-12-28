@@ -1,8 +1,9 @@
 export default {
   computed: {
     text() {
-      return '12345678gggg'
+      return this.feed.summary
     },
+    title() { return this.feed.title },
     hasLike() {
       return this.feed.liked
     },
@@ -28,15 +29,14 @@ export default {
       // DELETE /group-posts/:post/likes
       const method = this.hasLike ? 'delete' : 'post'
       const num = this.hasLike
-        ? this.feed.comments_count - 1
-        : this.feed.comments_count + 1
+        ? this.feed.likes_count - 1
+        : this.feed.likes_count + 1
       this.$http({
         method,
         url: `/plus-group/group-posts/${this.feed.id}/likes`
       }).then(({ data }) => {
-        console.log(data)
         this.feed.liked = !this.feed.liked
-        this.feed.comments_count = num
+        this.feed.likes_count = num
       }).catch(err => {
         console.log(err)
       })
@@ -50,13 +50,14 @@ export default {
      * @param  {String} txt
      * @param  {[type]} option
      */
-    commentFeed(body, { fId, reply_user }, cb) {
+    commentFeed(body, replyUser, cb) {
       // /group-posts/:post/comments
-      this.$http.post(`/plus-group/group-posts//${fId}/comments`, {
+      this.$http.post(`/plus-group/group-posts/${this.feed.id}/comments`, {
         body,
-        reply_user
-      }).then(({ data = {} }) => {
-        console.log(data)
+        reply_user: replyUser
+      }).then(({ data: { message, comment } = {} }) => {
+        this.feed.comments.unshift(comment)
+        this.feed.comments_count += 1
         cb && cb()
       }).catch(err => {
         const { response: { data = { message: '评论失败' } } = {} } = err

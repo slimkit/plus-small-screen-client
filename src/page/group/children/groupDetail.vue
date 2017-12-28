@@ -1,7 +1,7 @@
 <template>
   <div class="group-detail">
     <div class="main" :style="translate3d">
-      <head-top :go-back='goBack' :append='true' :transparent='top_tranparent'>
+      <head-top :go-back='goBack' :append='true' :transparent='topTranparent'>
         <div slot='append'>
           <v-icon type='base-search' @click.native='to(`/group/search`)'></v-icon>
           <v-icon type='base-share'></v-icon>
@@ -137,7 +137,7 @@ export default {
       group: {},
       feeds: [],
       filterTypes,
-      redirect: '',
+      scrollTop: 0,
       menuOpen: false,
       filterShow: false,
       showAllSummary: false,
@@ -159,8 +159,8 @@ export default {
     groupID() {
       return this.$route.params.groupID
     },
-    top_tranparent() {
-      return true
+    topTranparent() {
+      return !(this.scrollTop > 110)
     },
     translate3d() {
       return this.menuOpen ? {
@@ -187,7 +187,7 @@ export default {
       }
     },
     goBack() {
-      this.to(this.redirect)
+      this.$router.go(-1)
     },
     openMenu() {
       this.menuOpen = true
@@ -214,8 +214,8 @@ export default {
         params: {
           type: this.filterType.type
         }
-      }).then(({ data = [] }) => {
-        this.feeds = data
+      }).then(({ data: { posts = [], pinneds = [] } = {} }) => {
+        this.feeds = posts
       })
     },
     joinGroup() {
@@ -259,9 +259,18 @@ export default {
           cancelText: `知道了`
         })
       }
-      // if (true) {
-      //   this.to(`/group/post`)
-      // }
+
+      this.$router.push({
+        name: 'postGroupFeed',
+        params: {
+          groupID: this.group.id
+        }
+      })
+    },
+
+    init() {
+      this.getGroupDetail()
+      this.getGroupFeeds()
     }
   },
   /**
@@ -272,19 +281,21 @@ export default {
     if (this.groupID === this.oldID) {
 
     } else {
-      this.getGroupDetail()
+      this.init()
     }
   },
   beforeRouteEnter(to, from, next) {
     next(vm => {
-      const path = from.fullPath
       vm.oldID = to.params.groupID
-      vm.redirect = path && path !== '/' ? path : '/group'
     })
   },
-  created() {
-    this.getGroupDetail()
+  mounted() {
+    this.init()
+    this.$el.addEventListener('scroll', (e) => {
+      this.scrollTop = this.$el.scrollTop
+    })
   }
 }
+
 </script>
 <style lang='less' src='./groupDetail.less'></style>

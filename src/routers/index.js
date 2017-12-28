@@ -12,11 +12,12 @@ const router = new VueRouter({
   mode: 'history',
   base: '/h5',
   // strict: process.env.NODE_ENV !== 'production',
-  scrollBehavior (to, from, savedPosition) {
+  scrollBehavior(to, from, savedPosition) {
     if (savedPosition) {
       return savedPosition
     } else {
-      if (from.meta.keepAlive) {
+      const { meta: { keepAlive = false, toTop = false } } = from
+      if (keepAlive && !toTop) {
         from.meta.savedPosition = document.body.scrollTop || document.documentElement.scrollTop
       }
       return { x: 0, y: to.meta.savedPosition || 0 }
@@ -39,7 +40,16 @@ router.beforeEach((to, from, next) => {
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
   const forGuest = to.matched.some(record => record.meta.forGuest)
   const redirect = from.query.redirect
-  const upgrade = ['/question', '/news', '/rank']
+  const upgrade = [
+    '/question',
+    '/news',
+    '/rank',
+    '/post/wenzi',
+    '/post/pic',
+    '/post/release',
+    '/post/checkin',
+    '/post/question'
+  ]
   if (oneOf(to.path, upgrade)) {
     next({ path: '/upgrade' })
   }
