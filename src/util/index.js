@@ -23,15 +23,47 @@ export const oneOf = (value, validList) => {
 export const getStyle = (element, attr, NumberMode = 'int') => {
   let target
   if (attr === 'scrollTop') {
-    target = element.scrollTop
+    target = getScrollTop(element)
   } else if (element.currentStyle) {
     target = element.currentStyle[attr]
   } else {
     target = document.defaultView.getComputedStyle(element, null)[attr]
   }
   // 在获取 opactiy 时需要获取小数 parseFloat
-  // return NumberMode == 'float' ? parseFloat(target) : parseInt(target);
-  return target
+  return NumberMode === 'float' ? parseFloat(target) : parseInt(target)
+}
+
+/**
+ * 获取 ScrollTop
+ *   @author jsonleex <jsonlseex@163.com>
+ */
+export const getScrollTop = (element) => {
+  if (element === window) {
+    return Math.max(window.pageYOffset || 0, document.documentElement.scrollTop)
+  }
+
+  return element.scrollTop
+}
+
+/**
+ * 获取 当前滚动节点
+ *   @author jsonleex <jsonlseex@163.com>
+ */
+export const getScrollEventTarget = (element) => {
+  let currentNode = element
+  while (
+    currentNode &&
+    currentNode.tagName !== 'HTML' &&
+    currentNode.tagName !== 'BODY' &&
+    currentNode.nodeType === 1
+  ) {
+    let overflowY = document.defaultView.getComputedStyle(currentNode).overflowY
+    if (overflowY === 'scroll' || overflowY === 'auto') {
+      return currentNode
+    }
+    currentNode = currentNode.parentNode
+  }
+  return window
 }
 
 /**
