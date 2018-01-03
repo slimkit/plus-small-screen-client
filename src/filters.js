@@ -8,7 +8,7 @@ import plueMessageBundle from 'plus-message-bundle'
  * @return {String}
  * @author Seven Du <shiweidu@outlook.com>
  */
-export function plusMessageFirst (message, defaultMessage) {
+export function plusMessageFirst(message, defaultMessage) {
   return plueMessageBundle(message, defaultMessage).getMessage()
 }
 
@@ -35,6 +35,30 @@ export const time2txt = (str) => {
   } else {
     return date.getMonth() + 1 + '月' + date.getDate()
   }
+}
+
+/**
+ * 时区转换
+ */
+export const UTC2localTime = (UTCDateString) => {
+  if (!UTCDateString) {
+    return '-'
+  }
+
+  function formatFunc(str) { // 格式化显示
+    return str > 9 ? str : '0' + str
+  }
+  var date2 = new Date(UTCDateString) // 这步是关键
+  var year = date2.getFullYear()
+  var mon = formatFunc(date2.getMonth() + 1)
+  var day = formatFunc(date2.getDate())
+  var hour = date2.getHours()
+  var noon = hour >= 12 ? 'PM' : 'AM'
+  hour = hour >= 12 ? hour - 12 : hour
+  hour = formatFunc(hour)
+  var min = formatFunc(date2.getMinutes())
+  var dateStr = year + '-' + mon + '-' + day + ' ' + noon + ' ' + hour + ':' + min
+  return dateStr
 }
 
 /**

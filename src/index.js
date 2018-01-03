@@ -1,17 +1,19 @@
 import Vue from 'vue'
 import store from './stores/'
 import router from './routers/'
+import directives from './directives/'
 // import FastClick from 'fastclick'
 // import TimeAgo from 'vue-timeago';
 
-import modal from './plugins/modal'
+import modal from './plugins/modal/'
 import imgLazy from './plugins/imgLazy'
 import imgCropper from './plugins/imgCropper'
 import messageToast from './plugins/messageToast'
 
 import './util/rem'
+
 /* h5 调试 */
-// import './util/console';
+// import './util/console'
 import './style/index.less'
 
 // Filters
@@ -35,7 +37,7 @@ components.forEach(component => {
   Vue.component(component.name, component)
 })
 
-// Vue.config.productionTip = false
+Vue.config.productionTip = false
 
 Vue.prototype.$http = Ajax /* Ajax */
 Vue.use(modal) /* 弹层 */
@@ -66,9 +68,13 @@ for (const k in filters) {
 //     }, false);
 // }
 
+// 自定义指令
+for (const k in directives) {
+  Vue.directive(k, directives[k])
+}
+
 /* eslint-disable no-new */
 new Vue({
   store,
-  router,
-  directives: {}
+  router
 }).$mount('#app')
