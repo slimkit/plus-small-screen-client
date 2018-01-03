@@ -6,23 +6,26 @@
     </head-top>
     <div></div>
     <div :class="`${prefixCls}-content`">
-      <template v-if='!!groupID'>
-        <div :class="`${prefixCls}-group`">
-
+      <template v-if='!groupID'>
+        <div :class="`${prefixCls}-select`">
+          <div :class="`${prefixCls}-select-label`">选择圈子</div>
+          <v-icon type='base-arrow-r' />
         </div>
       </template>
       <div :class="`${prefixCls}-title`">
         <input type="text" v-model='title' placeholder='输入标题, 20字以内' maxlength="20">
       </div>
       <div :class="`${prefixCls}-body`">
-        <textarea placeholder="输入要说的话, 图文结合更精彩哦" v-model='body' ref='body'></textarea>
+        <textarea 
+        v-txtautosize
+        v-model='body'
+        placeholder="输入要说的话, 图文结合更精彩哦" />
       </div>
     </div>
     <router-view></router-view>
   </div>
 </template>
 <script>
-import calcTextareaHeight from '@/util/calcTextareaHeight'
 import HeadTop from '@/components/HeadTop'
 const prefixCls = 'post--group-feed'
 export default {
@@ -32,20 +35,18 @@ export default {
   },
   data() {
     return {
-      groupID: this.$route.params.groupID,
       prefixCls,
       title: '',
       body: ''
     }
   },
   watch: {
-    body(val) {
-      this.$nextTick(() => {
-        this.resizeTextarea(this.$refs.body)
-      })
-    }
+    body(val) {}
   },
   computed: {
+    groupID() {
+      return this.$route.params.groupID
+    },
     disabled() {
       return !(this.title.length > 0 && this.body.length > 0)
     }
@@ -54,20 +55,21 @@ export default {
     goBack() {
       this.$router.go(-1)
     },
-    resizeTextarea(el) {
-      el.style.height = calcTextareaHeight(el).height
-    },
     postFeed() {
-      const params = {
-        title: this.title,
-        body: this.body
+      if (this.groupID) {
+        const params = {
+          title: this.title,
+          body: this.body
+        }
+        // /groups/:group/posts
+        this.$http.post(`/plus-group/groups/${this.groupID}`, {
+          params
+        }).then(({ data = [] }) => {
+          console.log(data)
+        })
+      } else {
+
       }
-      // /groups/:group/posts
-      this.$http.post(`/plus-group/groups/${this.$router}`, {
-        params
-      }).then(({ data = [] }) => {
-        console.log(data)
-      })
     }
   }
 }
@@ -84,6 +86,19 @@ export default {
     background-color: #fff;
     color: #59b6d7;
     &[disabled] {
+      color: #ccc
+    }
+  }
+  &-select{
+    display: flex;
+    height: 100px;
+    padding: 0 20px;
+    font-size: 30px;
+    align-items: center;
+    justify-content: space-between;
+    .v-icon{
+      width: 24px;
+      height: 24px;
       color: #ccc
     }
   }

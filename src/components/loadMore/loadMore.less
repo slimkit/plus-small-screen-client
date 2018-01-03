@@ -1,14 +1,16 @@
 @v-loadmore-prefix: v-loadmore;
 .@{v-loadmore-prefix} {
-  height: 100%;
-  overflow: scroll;
+  overflow: hidden;
   -webkit-overflow-scrolling: touch;
   background-color: inherit;
   font-size: 0.32rem;
   &-wrap {
     margin-top: -90px;
+    margin-bottom: -90px;
     width: 100%;
-    transition-duration: 300ms;
+    transition: .5s;
+    &.dropped {
+    }
   }
   &-head,
   &-foot {

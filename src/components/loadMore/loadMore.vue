@@ -1,6 +1,6 @@
 <template>
   <div :class='`${prefixCls}`'>
-    <section :class='`${prefixCls}-wrap`' :style="{ 'transform': transform }">
+    <section :class='[`${prefixCls}-wrap`, { "dropped": topDropped || bottomDropped}]' :style="{ 'transform': transform }">
       <div :class='`${prefixCls}-head`' ref='head'>
         <slot name='head'>
           <span>{{ topText }}</span>
@@ -9,7 +9,7 @@
       <slot></slot>
       <div :class='`${prefixCls}-foot`'>
         <slot name='foot'>
-          <span>加载中...</span>
+          <span>{{ bottomText }}</span>
         </slot>
       </div>
     </section>
@@ -24,7 +24,7 @@ export default {
       type: Function,
       default: undefined
     },
-    onInfinite: {
+    bottomMethod: {
       type: Function
     },
     topPullText: {
@@ -38,6 +38,23 @@ export default {
     topLoadingText: {
       type: String,
       default: '加载中...'
+    },
+
+    bottomPullText: {
+      type: String,
+      default: '上拉加载更多'
+    },
+    bottomDropText: {
+      type: String,
+      default: '释放加载'
+    },
+    bottomLoadingText: {
+      type: String,
+      default: '加载中...'
+    },
+    noMore: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -46,6 +63,9 @@ export default {
 
       topText: '',
       topStatus: '',
+      bottomText: '',
+      bottomStatus: '',
+
       startY: 0,
       currentY: 0,
 
@@ -55,7 +75,9 @@ export default {
       startScrollTop: 0,
       scrollEventTarget: null,
 
-      topDropped: false
+      topDropped: false,
+      bottomDropped: false,
+      bottomReached: false
     }
   },
   computed: {
@@ -80,6 +102,21 @@ export default {
           this.topText = this.topLoadingText
           break
       }
+    },
+
+    bottomStatus(val) {
+      switch (val) {
+        case 'pull':
+          this.bottomText = this.bottomPullText
+          break
+        case 'drop':
+          this.bottomText = this.bottomDropText
+          break
+        case 'loading':
+          this.bottomText = this.bottomLoadingText
+          break
+      }
+      this.bottomText = this.noMore ? '没有更多' : this.bottomText
     }
   },
 
@@ -111,16 +148,16 @@ export default {
 
     checkBottomReached() {
       if (this.scrollEventTarget === window) {
-        console.log(1)
-        return document.documentElement.scrollTop || document.body.scrollTop + document.documentElement.clientHeight >= document.body.scrollHeight
+        return ((document.documentElement.scrollTop || document.body.scrollTop) + document.documentElement.clientHeight >= document.body.scrollHeight)
       } else {
         return this.$el.getBoundingClientRect().bottom <= this.scrollEventTarget.getBoundingClientRect().bottom + 1
       }
     },
 
     handleTouchStart(e) {
-      this.startY = e.targetTouches[0].pageY
+      this.startY = event.touches[0].clientY
       this.startScrollTop = this.getScrollTop(this.scrollEventTarget)
+      this.bottomReached = false
       if (this.topStatus !== 'loading') {
         this.topStatus = 'pull'
         this.topDropped = false
@@ -135,10 +172,12 @@ export default {
         return
       }
       this.currentY = event.touches[0].clientY
-      // let distance = (this.currentY - this.startY) / this.distanceIndex
       let distance = (this.currentY - this.startY)
-      this.direction = distance > 0 ? 'down' : 'up'
-
+      if (distance > this.maxDistance / 2) {
+        this.direction = 'down'
+      } else if (distance < -this.maxDistance / 2) {
+        this.direction = 'up'
+      }
       if (
         this.direction === 'down' &&
         typeof this.onRefresh === 'function' &&
@@ -158,13 +197,34 @@ export default {
           this.translate = 0
         }
 
-        this.topStatus = this.translate >= this.maxDistance / 2 ? 'drop' : 'pull'
+        this.topStatus = this.translate >= this.maxDistance * 2 / 3 ? 'drop' : 'pull'
       }
-      if (
-        this.direction === 'up'
-      ) {
-        console.log(this.checkBottomReached())
-      }
+
+      // if (this.direction === 'up') {
+      //   this.bottomReached = this.bottomReached || this.checkBottomReached()
+      // }
+
+      // if (
+      //   typeof this.bottomMethod === 'function' &&
+      //   this.direction === 'up' &&
+      //   this.bottomReached &&
+      //   this.bottomStatus !== 'loading' &&
+      //   !this.noMore
+      // ) {
+      //   event.preventDefault()
+      //   event.stopPropagation()
+      //   if (this.maxDistance > 0) {
+      //     this.translate = Math.abs(distance) <= this.maxDistance ? this.getScrollTop(this.scrollEventTarget) - this.startScrollTop + distance : this.translate
+      //   } else {
+      //     this.translate = this.getScrollTop(this.scrollEventTarget) - this.startScrollTop + distance
+      //   }
+      //   if (this.translate > 0) {
+      //     this.translate = 0
+      //   }
+      //   this.bottomStatus = -this.translate >= this.maxDistance / 2 ? 'drop' : 'pull'
+      // }
+
+      this.$emit('translate-change', this.translate)
     },
 
     handleTouchEnd(e) {
@@ -181,6 +241,22 @@ export default {
         } else {
           this.translate = 0
           this.topStatus = 'pull'
+        }
+      }
+      if (
+        this.direction === 'up' &&
+        this.bottomReached &&
+        this.translate < 0
+      ) {
+        this.bottomDropped = true
+        this.bottomReached = false
+        if (this.bottomStatus === 'drop') {
+          this.translate = -this.maxDistance / 2
+          this.bottomStatus = 'loading'
+          this.bottomMethod(this.onRefreshed)
+        } else {
+          this.translate = '0'
+          this.bottomStatus = 'pull'
         }
       }
       this.direction = ''
@@ -207,8 +283,20 @@ export default {
       this.$nextTick(() => {
         this.topStatus = 'pull'
       })
-    }
+    },
 
+    onBottomLoaded() {
+      this.bottomStatus = 'pull'
+      this.bottomDropped = false
+      this.$nextTick(() => {
+        if (this.scrollEventTarget === window) {
+          document.body.scrollTop += this.maxDistance / 2
+        } else {
+          this.scrollEventTarget.scrollTop += this.maxDistance / 2
+        }
+        this.translate = 0
+      })
+    }
   },
   mounted() {
     this.init()

@@ -1,209 +1,64 @@
 import Vue from 'vue'
 import Modal from './modal.vue'
 
-const prefixCls = 'v-modal-confirm'
+// const prefixCls = 'v-modal-body'
 
 Modal.newInstance = properties => {
   const _props = properties || {}
-
   const Instance = new Vue({
-    data: Object.assign({}, _props, {
+    data: Object.assign({}, {
+      styles: {},
+      render: null,
       visible: false,
-      width: 100,
-      title: '',
-      body: '',
-      okText: undefined,
-      cancelText: undefined,
-      showOk: false,
-      showCancel: false,
-      loading: false,
-      buttonLoading: false,
-      scrollable: false
-    }),
-    render (h) {
-      let footerVNodes = []
-      if (this.showCancel || this.showOk) {
-        if (this.showOk) {
-          footerVNodes.push(h('button', {
-            on: {
-              click: this.ok
-            }
-          }, this.localeOkText))
-        }
-        if (this.showCancel) {
-          footerVNodes.push(h('button', {
-            on: {
-              click: this.cancel
-            }
-          }, this.localeCancelText))
-        }
-      }
-
-      // render content
-      let bodyRender
+      maskClosable: false
+    }, _props),
+    render(h) {
+      const bodyVNodes = []
       if (this.render) {
-        bodyRender = h('div', {
-          attrs: {
-            class: `${prefixCls}-body ${prefixCls}-body-render`
-          }
-        }, [this.render(h)])
-      } else {
-        bodyRender = h('div', {
-          attrs: {
-            class: `${prefixCls}-body`
-          }
-        }, [h('div', {
-          attrs: {
-            class: `${prefixCls}-head`
-          }
-        }, [
-          h('div', {
-            attrs: {
-              class: `${prefixCls}-head-title`
-            },
-            domProps: {
-              innerHTML: this.title
-            }
-          })
-        ]), h('div', {
-          domProps: {
-            innerHTML: this.body
-          }
-        })])
+        bodyVNodes.push(this.render(h))
       }
-
       return h(Modal, {
-        props: Object.assign({}, _props, {
-          width: this.width,
-          scrollable: this.scrollable
-        }),
-        domProps: {
-          value: this.visible
-        },
         on: {
+          'on-cancel': this.remove,
           input: (status) => {
             this.visible = status
           }
+        },
+        props: {
+          styles: this.styles,
+          maskClosable: this.maskClosable
         }
-      }, [
-        h('div', {
-          attrs: {
-            class: prefixCls
-          }
-        }, [
-          bodyRender,
-          h('div', {
-            attrs: {
-              class: `${prefixCls}-footer`
-            }
-          }, footerVNodes)
-        ])
-      ])
-    },
-    computed: {
-      localeOkText () {
-        if (this.okText) {
-          return this.okText
-        } else {
-          return '确定'
-        }
-      },
-      localeCancelText () {
-        if (this.cancelText) {
-          return this.cancelText
-        } else {
-          return '取消'
-        }
-      }
+      }, [bodyVNodes])
     },
     methods: {
-      cancel () {
-        this.$children[0].visible = false
-        this.buttonLoading = false
-        this.onCancel()
-        this.remove()
+      remove() {
+        this.$nextTick(this.destroy)
       },
-      ok () {
-        if (this.loading) {
-          this.buttonLoading = true
-        } else {
-          this.$children[0].visible = false
-          this.remove()
-        }
-        this.onOk()
-      },
-      remove () {
-        setTimeout(() => {
-          this.destroy()
-        }, 300)
-      },
-      destroy () {
+      destroy() {
         this.$destroy()
         document.body.removeChild(this.$el)
         this.onRemove()
       },
-      onOk () {},
-      onCancel () {},
-      onRemove () {}
+      onRemove() {}
     }
   })
 
-  const component = Instance.$mount()
-  document.body.appendChild(component.$el)
+  const Parent = Instance.$mount()
+  document.body.appendChild(Parent.$el)
   const modal = Instance.$children[0]
 
   return {
-    show (props) {
-      modal.$parent.showOk = props.showOk
-      modal.$parent.showCancel = props.showCancel
-
-      if ('width' in props) {
-        modal.$parent.width = props.width
+    show(props) {
+      if ('maskClosable' in props) {
+        Parent.maskClosable = props.maskClosable
       }
-
-      if ('title' in props) {
-        modal.$parent.title = props.title
-      }
-
-      if ('content' in props) {
-        modal.$parent.body = props.content
-      }
-
-      if ('okText' in props) {
-        modal.$parent.okText = props.okText
-      }
-
-      if ('cancelText' in props) {
-        modal.$parent.cancelText = props.cancelText
-      }
-
-      if ('onCancel' in props) {
-        modal.$parent.onCancel = props.onCancel
-      }
-
-      if ('onOk' in props) {
-        modal.$parent.onOk = props.onOk
-      }
-
-      // async for ok
-      if ('loading' in props) {
-        modal.$parent.loading = props.loading
-      }
-
-      if ('scrollable' in props) {
-        modal.$parent.scrollable = props.scrollable
-      }
-
-      // notice when component destroy
-      modal.$parent.onRemove = props.onRemove
-
       modal.visible = true
+      Parent.onRemove = props.onRemove
     },
-    remove () {
+    remove() {
       modal.visible = false
-      modal.$parent.remove()
-    },
-    component: modal
+      Parent.remove()
+    }
   }
 }
 

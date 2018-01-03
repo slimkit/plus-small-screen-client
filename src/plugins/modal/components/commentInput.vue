@@ -1,6 +1,7 @@
 <template>
-  <div @click.stop='' class="comment-input">
-    <textarea :style='textareaStyles' :maxlength="maxlength" :placeholder="placeholder" ref='input' autofocus="true" :value="currentValue" @keyup.ctrl.enter="handleEnter" @input="handleInput" />
+  <div class="comment-input">
+    <!-- v-txtautosize  -->
+    <textarea :maxlength="maxlength" autofocus="true" :placeholder="placeholder" ref='input' :value="currentValue" @keyup.ctrl.enter="handleEnter" @input="handleInput" />
     <div class="comment-input-append">
       <template v-if='len > 200'>
         <p>{{ len }}/{{maxlength}}</p>
@@ -15,9 +16,10 @@
   </div>
 </template>
 <script>
-import calcTextareaHeight from '../../../util/calcTextareaHeight'
+import directives from '@/directives/'
 export default {
   name: 'commentInput',
+  directives,
   props: {
     focus: Boolean,
     loading: Boolean,
@@ -36,7 +38,6 @@ export default {
   },
   data() {
     return {
-      textareaStyles: {},
       currentValue: ''
     }
   },
@@ -58,32 +59,26 @@ export default {
       let value = event.target.value
       this.$emit('input', value)
       this.setCurrentValue(value)
-      this.$emit('on-change', event)
     },
     handleEnter() {
       if (this.currentValue) {
         this.$emit('on-ok', this.currentValue)
       }
     },
-    handleChange(event) {
-      this.$emit('on-input-change', event)
-    },
     setCurrentValue(value) {
       if (value === this.currentValue) return
-      this.$nextTick(() => {
-        this.resizeTextarea()
-      })
       this.currentValue = value
+      this.resizeTextarea(this.$refs.input)
     },
-    resizeTextarea() {
-      this.textareaStyles = calcTextareaHeight(this.$refs.input)
-    }
-  },
-  watch: {
-    focus(val) {
-      if (val) {
-        this.$refs.input.focus()
+    resizeTextarea(el) {
+      const originalHeight = el.style.height
+      el.style.height = ''
+      let endHeight = el.scrollHeight
+      if (el.scrollHeight === 0) {
+        el.style.height = originalHeight
+        return
       }
+      el.style.height = endHeight + 'px'
     }
   },
   mounted() {
@@ -93,34 +88,10 @@ export default {
 
 </script>
 <style lang='less'>
-.v-comment-input {
-  position: fixed;
-  overflow: hidden;
-  right: 0;
+.comment-input {
+  position: absolute;
   bottom: 0;
   left: 0;
-  z-index: 1000;
-  -webkit-overflow-scrolling: touch;
-  outline: 0;
-  &-mask {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background-color: rgba(55, 55, 55, 0.3);
-    height: 100%;
-    z-index: 1000;
-  }
-  &-body {
-    position: relative;
-    background-color: #fff;
-    border: 0;
-    background-clip: padding-box;
-  }
-}
-
-.comment-input {
   width: 100%;
   padding: 15px 20px;
   min-height: 100px;
@@ -131,11 +102,11 @@ export default {
     flex: 0 0 auto
   }
   textarea {
+    overflow-y: scroll;
     flex: 1 1 auto;
-    height: 26*1.5+10px;
-    padding: 5px 0;
-    min-height: 26*1.5+10px;
-    max-height: 175px;
+    padding: 0;
+    height: 26*1.5px;
+    min-height: 26*1.5px;
     line-height: 1.5;
     color: #000;
     font-size: 26px;
@@ -144,11 +115,6 @@ export default {
     border-radius: 0;
     border-bottom: 1px solid #59b6d7;
     /*no*/
-    &:focus,
-    &:active,
-    &:hover {
-      outline: none !important;
-    }
   }
   p {
     text-align: center;
@@ -169,7 +135,7 @@ export default {
     &[disabled] {
       background-color: #ccc;
     }
-    .v-icon{
+    .v-icon {
       width: 28px;
       height: 28px;
       animation: rotate360 2s infinite linear;

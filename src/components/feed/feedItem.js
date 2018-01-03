@@ -5,7 +5,7 @@ import feedTools from './components/feedTools'
 import feedImages from './components/feedImages'
 import feedCommentItem from './components/feedCommentItem'
 import { oneOf } from '../../util/'
-import showCommentInput from './showCommentInput'
+// import showCommentInput from './showCommentInput'
 import './feedItem.less'
 
 const
@@ -236,7 +236,7 @@ const methods = {
         that.commentFeed(txt, reply_user, cb)
       }
     }, options)
-    showCommentInput.show(options)
+    this.$ShowCommentInput(options)
   }
 }
 
