@@ -51,7 +51,11 @@
       <div class="form-row">
         <label for="summary">简介</label>
         <div class="input auto">
-          <textarea :style='textareaStyles' ref='summary' v-model='summary' placeholder="编辑简介" maxlength="50" id="summary"></textarea>
+          <textarea 
+          v-txtautosize 
+          v-model='summary' 
+          placeholder="编辑简介" 
+          maxlength="50" />
         </div>
       </div>
     </div>
@@ -80,7 +84,10 @@
       <div class="form-row">
         <label for="notice">公告</label>
         <div class="input auto">
-          <textarea :style='textareaStyles' ref='notice' v-model='notice' placeholder="选填" maxlength="50" id="notice"></textarea>
+          <textarea 
+          v-txtautosize 
+          v-model='notice' 
+          placeholder="选填" />
         </div>
       </div>
     </div>
@@ -94,7 +101,6 @@
 <script>
 import { getFileUrl } from '@/util/'
 import HeadTop from '@/components/HeadTop'
-import calcTextareaHeight from '@/util/calcTextareaHeight'
 import { encodeGeoHash } from '@/util/geohash'
 export default {
   name: 'addGroup',
@@ -111,7 +117,6 @@ export default {
       summary: '', // 圈子简介
       notice: '', // 公告
       money: null,
-      textareaStyles: {},
       allow_feed: false,
       // 圈子类别 public: 公开，private：私有，paid：付费的
       private: true,
@@ -148,16 +153,6 @@ export default {
       if (!val) {
         this.paid = val
       }
-    },
-    summary(val) {
-      this.$nextTick(() => {
-        this.resizeTextarea(this.$refs.summary)
-      })
-    },
-    notice(val) {
-      this.$nextTick(() => {
-        this.resizeTextarea(this.$refs.notice)
-      })
     }
   },
   methods: {
@@ -169,7 +164,6 @@ export default {
       this.summary = ''
       this.notice = ''
       this.money = ''
-      this.textareaStyles = {}
       this.$store.state.CUR_SELECTED_TAGS = []
       this.$store.state.CUR_GROUP_LOCATION = {}
     },
@@ -265,15 +259,6 @@ export default {
           vm.$refs.uploadFile.value = null
         }
       })
-    },
-
-    /**
-     * 更新 文本域 的样式
-     *     @author jsonleex <jsonlseex@163.com>
-     */
-    resizeTextarea(el) {
-      el.style.height = calcTextareaHeight(el).height
-      el.style.paddingBottom = '.3rem'
     },
     /**
      * 进入选择页面
@@ -379,15 +364,15 @@ export default {
   }
 
   textarea {
+    padding: 15px 0;
     outline: 0;
     border: 0;
     width: 100%;
-    height: auto;
-    min-height: 100px;
+    height: 30px;
+    line-height: 1;
     resize: none;
     font-size: 30px;
     vertical-align: middle;
-    padding-top: 30px;
     color: #333;
   }
 
