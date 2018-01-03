@@ -1,5 +1,5 @@
-import test from './test'
 import Modal from './modalInstance'
+import pay from './components/pay'
 import commentInpt from './components/commentInput'
 
 let modalInstance
@@ -55,7 +55,7 @@ Modal.info = () => {
 Modal.pay = (options = {}) => {
   return showModal({
     render(h) {
-      return h(test, {
+      return h(pay, {
         on: {
           'on-close': Modal.remove
         }
