@@ -1,6 +1,10 @@
 import http from '@/http'
 export default {
-  GET_USER_DATA({ commit }, type, params = { limit: 15 }) {
+  GET_USER_DATA({ commit }, {
+    type,
+    limit = 15,
+    offset = 0
+  }) {
     let uri
 
     switch (type) {
@@ -19,10 +23,10 @@ export default {
         noMore: false,
         data: []
       }
-      http.get(uri, params).then(({ data = [] }) => {
+      http.get(`${uri}?limit=${limit}&offset=${offset}`).then(({ data = [] }) => {
         if (data.length > 0) {
           res.data = data
-          res.noMore = data.length < params.limit
+          res.noMore = data.length < limit
           commit('SAVE_USER', data)
         }
         resolve(res)
