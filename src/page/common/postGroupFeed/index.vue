@@ -6,9 +6,9 @@
     </head-top>
     <div></div>
     <div :class="`${prefixCls}-content`">
-      <template v-if='!groupID'>
-        <div :class="`${prefixCls}-select`">
-          <div :class="`${prefixCls}-select-label`">选择圈子</div>
+      <template v-if='!groupID || selectGroup.id'>
+        <div :class="`${prefixCls}-select`" @click.stop='showChoosePage'>
+          <div :class="`${prefixCls}-select-label`">{{ chooseTips }}</div>
           <v-icon type='base-arrow-r' />
         </div>
       </template>
@@ -16,42 +16,52 @@
         <input type="text" v-model='title' placeholder='输入标题, 20字以内' maxlength="20">
       </div>
       <div :class="`${prefixCls}-body`">
-        <textarea 
-        v-txtautosize
-        v-model='body'
-        placeholder="输入要说的话, 图文结合更精彩哦" />
+        <textarea v-txtautosize v-model='body' placeholder="输入要说的话, 图文结合更精彩哦" />
       </div>
     </div>
-    <router-view></router-view>
+    <ChooseGroup @on-close='closeChoosePage' v-model='selectGroup' v-show='showChoose' />
   </div>
 </template>
 <script>
 import HeadTop from '@/components/HeadTop'
+import ChooseGroup from './children/chooseGroup'
 const prefixCls = 'post--group-feed'
 export default {
   name: 'postGroupFeed',
   components: {
-    HeadTop
+    HeadTop,
+    ChooseGroup
   },
   data() {
     return {
       prefixCls,
       title: '',
-      body: ''
+      body: '',
+      showChoose: false,
+      selectGroup: {}
     }
   },
   watch: {
     body(val) {}
   },
   computed: {
+    chooseTips() {
+      return this.selectGroup.name || '选择圈子'
+    },
     groupID() {
-      return this.$route.params.groupID
+      return this.selectGroup.id || this.$route.params.groupID
     },
     disabled() {
       return !(this.title.length > 0 && this.body.length > 0)
     }
   },
   methods: {
+    showChoosePage() {
+      this.showChoose = true
+    },
+    closeChoosePage() {
+      this.showChoose = false
+    },
     goBack() {
       this.$router.go(-1)
     },
@@ -59,13 +69,18 @@ export default {
       if (this.groupID) {
         const params = {
           title: this.title,
-          body: this.body
+          body: this.body,
+          summary: this.body,
+          feed_from: 2
         }
         // /groups/:group/posts
-        this.$http.post(`/plus-group/groups/${this.groupID}`, {
-          params
-        }).then(({ data = [] }) => {
-          console.log(data)
+        this.$http.post(`/plus-group/groups/${this.groupID}/posts`, {
+          ...params
+        }).then(({ data: { post } }) => {
+          if (post.id) {
+            console.log('发布成功')
+            this.$router.push(`/group-feed-detail/${post.id}`)
+          }
         })
       } else {
 
@@ -89,14 +104,14 @@ export default {
       color: #ccc
     }
   }
-  &-select{
+  &-select {
     display: flex;
     height: 100px;
     padding: 0 20px;
     font-size: 30px;
     align-items: center;
     justify-content: space-between;
-    .v-icon{
+    .v-icon {
       width: 24px;
       height: 24px;
       color: #ccc

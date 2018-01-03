@@ -29,9 +29,6 @@ export default {
         scrollEl = getScrollEventTarget(el)
         heightEl = el
       }
-
-      console.log(scrollEl)
-
       el.addEventListener('touchstart', () => {
         height = heightEl.clientHeight
         if (scrollType === 2) {
@@ -65,17 +62,7 @@ export default {
       }
 
       const loadMore = () => {
-        console.log('-------------')
-        console.log('sTop:', getScrollTop(scrollEl))
-        console.log('Wh', windowHeight)
-        console.log('-------------')
-        console.log('h', height)
-        console.log('setT', setTop)
-        console.log('pB:', paddingBottom)
-        console.log('mB:', marginBottom)
-        console.log('sr:', scrollReduce)
         if (getScrollTop(scrollEl) + windowHeight >= height + setTop + paddingBottom + marginBottom - scrollReduce) {
-          console.log('done')
           binding.value()
         }
       }
