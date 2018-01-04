@@ -11,34 +11,16 @@
       <div class="group-member-search" v-if='(keyword.length+searchList.length) > 0'></div>
       <div class="group-member-lists" v-else>
         <div class="group-member-list  admin">
-          <p class="group-member-label">圈管理{{ manager.length }}</p>
-          <div class="group-member-item" v-for='({ user }) in manager' v-if='user.id'>
-            <div class="group-member-item-info">
-              <v-avatar :src='user.avatar' :sex='user.sex'></v-avatar>
-              <span class="group-member-name">{{user.name}}</span>
-            </div>
-            <v-icon type='feed-more' color='#b3b3b3'></v-icon>
-          </div>
+          <p class="group-member-label">圈管理({{ manager.length }})</p>
+          <groupMemberItem :user='user' @update='getMember' @on-delete='getMember' :rule='rule' v-for='(user) in manager' :key='user.id' />
         </div>
         <div class="group-member-list member">
-          <p class="group-member-label">成员{{ members.length }}</p>
-          <div class="group-member-item" v-for='({ user }) in members' v-if='user.id'>
-            <div class="group-member-item-info">
-              <v-avatar :src='user.avatar' :sex='user.sex'></v-avatar>
-              <span class="group-member-name">{{user.name}}</span>
-            </div>
-            <v-icon type='feed-more' color='#b3b3b3'></v-icon>
-          </div>
+          <p class="group-member-label">成员({{ members.length }})</p>
+          <groupMemberItem :user='user' @update='getMember' @on-delete='getMember' :rule='rule' v-for='(user) in members' :key='user.id' />
         </div>
         <div class="group-member-list blacklist">
-          <p class="group-member-label">黑名单{{ blacklist.length }}</p>
-          <div class="group-member-item" v-for='({ user }) in blacklist' v-if='user.id'>
-            <div class="group-member-item-info">
-              <v-avatar :src='user.avatar' :sex='user.sex'></v-avatar>
-              <span class="group-member-name">{{user.name}}</span>
-            </div>
-            <v-icon type='feed-more' color='#b3b3b3'></v-icon>
-          </div>
+          <p class="group-member-label">黑名单({{ blacklist.length }})</p>
+          <groupMemberItem :user='user' @update='getMember' @on-delete='getMember' :rule='rule' v-for='(user) in blacklist' :key='user.id' />
         </div>
       </div>
     </div>
@@ -47,15 +29,18 @@
 <script>
 import _ from 'lodash'
 import HeadTop from '@/components/HeadTop'
+import groupMemberItem from '../components/groupMemberItem'
 const sources = []
 export default {
   name: 'groupMember',
   components: {
-    HeadTop
+    HeadTop,
+    groupMemberItem
   },
   data() {
     return {
       groupID: this.$route.params.groupID,
+      rule: this.$route.params.rule,
       members: [],
       manager: [],
       blacklist: [],
@@ -147,30 +132,6 @@ export default {
     background-color: #f4f5f5;
     font-size: 26px;
     color: #999;
-  }
-  &-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 20px;
-    height: 135px;
-    background-color: #fff;
-    &-info {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    &+& {
-      border-top: 1px solid #ededed;
-      /*no*/
-    }
-  }
-
-  &-name {
-    flex: 1 1 auto;
-    margin: 0 30px;
-    font-size: 34px;
-    color: #333;
   }
 }
 

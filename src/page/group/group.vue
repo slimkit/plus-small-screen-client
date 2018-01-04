@@ -24,7 +24,7 @@
             <v-icon type='base-arrow-r'></v-icon>
           </div>
         </div>
-        <group-list-item v-for='item in joined' v-if='item.id' :key='`group-${item.id}`' :group='item'></group-list-item>
+        <group-list-item :role='true' v-for='item in joined' v-if='item.id' :key='`group-${item.id}`' :group='item'></group-list-item>
       </div>
       <!-- 我加入的 END -->
       <!-- 推荐 -->
