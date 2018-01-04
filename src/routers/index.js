@@ -43,7 +43,7 @@ router.beforeEach((to, from, next) => {
   const upgrade = [
     '/question',
     '/news',
-    '/rank',
+    // '/rank',
     '/post/wenzi',
     '/post/pic',
     '/post/release',
