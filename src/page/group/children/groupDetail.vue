@@ -68,7 +68,10 @@
               </div>
             </div>
           </div>
-          <group-feed-item v-for='feed in feeds' v-if='feed.id' :key='`group-feed-${groupID}-${feed.id}`' :feed='feed' />
+          <div v-load-more="loaderMore" type='2'>
+            <group-feed-item v-for='feed in feeds' v-if='feed.id' :key='`group-feed-${groupID}-${feed.id}`' :feed='feed' />
+            <div class="load-more--bottom" v-if='showLoading || touchend'>{{ loadTips }}</div>
+          </div>
         </div>
       </div>
       <!-- base info END -->
@@ -83,7 +86,7 @@
           <div class="menu-item">
             更多操作
           </div>
-          <div class="menu-item" @click='to({ name: "groupMember", params: { groupID: group.id, rule: group.joined.role} })'>
+          <div class="menu-item" @click='to({ name: "groupMember", params: { groupID: group.id, rule: role} })'>
             <v-icon class='menu-item-prepend' type='group-member'></v-icon>
             <div class="menu-item-title">成员</div>
             <div class="menu-item-tips">{{ group.users_count }}</div>
@@ -94,22 +97,22 @@
             <div class="menu-item-title">详细信息</div>
             <v-icon class='menu-item-append' type='base-arrow-r'></v-icon>
           </div>
-          <div class="menu-item">
+          <div class="menu-item" v-if='role === "founder"'>
             <v-icon class='menu-item-prepend' type='group-income'></v-icon>
             <div class="menu-item-title">圈子收益</div>
             <v-icon class='menu-item-append' type='base-arrow-r'></v-icon>
           </div>
-          <div class="menu-item" @click='to(`/group/${groupID}/permissions`)'>
+          <div class="menu-item" v-if='role === "founder"' @click='to(`/group/${groupID}/permissions`)'>
             <v-icon class='menu-item-prepend' type='group-permissions'></v-icon>
             <div class="menu-item-title">发帖权限</div>
             <v-icon class='menu-item-append' type='base-arrow-r'></v-icon>
           </div>
-          <div class="menu-item">
+          <div class="menu-item" v-if='role !== "member"'>
             <v-icon class='menu-item-prepend' type='group-report'></v-icon>
             <div class="menu-item-title">举报管理</div>
             <v-icon class='menu-item-append' type='base-arrow-r'></v-icon>
           </div>
-          <a class="menu-exit-group" @click='exitGroup'>退出圈子</a>
+          <a class="menu-exit-group" @click='exitGroup'>{{ role === 'founder' ? '转让圈子' : '退出圈子'}}</a>
         </div>
       </div>
     </div>
@@ -141,7 +144,13 @@ export default {
       menuOpen: false,
       filterShow: false,
       showAllSummary: false,
-      filterType: filterTypes[0]
+      filterType: filterTypes[0],
+
+      preventRepeatReuqest: false, // 到达底部加载数据，防止重复加载
+      showBackStatus: false, // 显示返回顶部按钮
+      showLoading: true, // 显示加载动画
+      touchend: false, // 没有更多数据
+      loadTips: '下拉加载更多'
     }
   },
   computed: {
@@ -155,6 +164,9 @@ export default {
     },
     isMember() {
       return !!(this.group.joined)
+    },
+    role() {
+      return (this.group.joined || {}).role || 'member'
     },
     groupID() {
       return this.$route.params.groupID
@@ -209,15 +221,60 @@ export default {
       }
     },
 
-    getGroupFeeds() {
-      // GET /groups/:group/posts
-      this.$http.get(`/plus-group/groups/${this.groupID}/posts`, {
+    async getGroupFeeds() {
+      this.loadTips = '加载中...'
+      const {
+        data: {
+          posts,
+          pinned
+        } = {}
+      } = await this.$http.get(`/plus-group/groups/${this.groupID}/posts`, {
         params: {
           type: this.filterType.type
         }
-      }).then(({ data: { posts = [], pinneds = [] } = {} }) => {
-        this.feeds = posts
       })
+
+      this.feeds = posts ? [...posts] : []
+      this.pinned = pinned ? [...pinned] : []
+
+      this.showLoading = false
+      if (this.feeds.length === this.group.posts_count) {
+        this.loadTips = '没有更多'
+        this.touchend = true
+      }
+    },
+    async loaderMore() {
+      if (this.touchend) {
+        return
+      }
+      // 防止重复请求
+      if (this.preventRepeatReuqest) {
+        return
+      }
+      this.showLoading = true
+      this.preventRepeatReuqest = true
+      this.loadTips = '加载中...'
+      // GET /groups/:group/posts
+      const {
+        data: {
+          posts,
+          pinneds
+        }
+      } = this.$http.get(`/plus-group/groups/${this.groupID}/posts`, {
+        params: {
+          type: this.filterType.type,
+          offset: this.feeds.length
+        }
+      })
+      this.feeds = [...this.feeds, ...posts]
+      this.pinneds = [...this.pinneds, ...pinneds]
+      this.showLoading = false
+      if (this.feeds.length === this.group.posts_count) {
+        this.touchend = true
+        this.loadTips = '没有更多'
+        return false
+      }
+      this.preventRepeatReuqest = false
     },
     joinGroup() {
       this.$http.put(`/plus-group/groups/${this.groupID}`).then(({ data }) => {

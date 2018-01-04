@@ -22,7 +22,6 @@ export default {
   directives,
   props: {
     focus: Boolean,
-    loading: Boolean,
     placeholder: {
       type: String,
       default: '随便说说~',
@@ -38,6 +37,7 @@ export default {
   },
   data() {
     return {
+      loading: false,
       currentValue: ''
     }
   },
@@ -51,6 +51,7 @@ export default {
   },
   methods: {
     handleDone() {
+      this.loading = true
       if (this.currentValue) {
         this.$emit('on-ok', this.currentValue)
       }
@@ -61,9 +62,7 @@ export default {
       this.setCurrentValue(value)
     },
     handleEnter() {
-      if (this.currentValue) {
-        this.$emit('on-ok', this.currentValue)
-      }
+      this.handleDone()
     },
     setCurrentValue(value) {
       if (value === this.currentValue) return

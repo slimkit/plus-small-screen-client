@@ -232,8 +232,10 @@ const methods = {
     const that = this
     const { reply_user } = options
     options = Object.assign({}, {
-      onOk (txt, cb) {
-        that.commentFeed(txt, reply_user, cb)
+      onOk (txt) {
+        that.commentFeed(txt, reply_user, () => {
+          that.$Modal.remove()
+        })
       }
     }, options)
     this.$ShowCommentInput(options)
