@@ -44,6 +44,8 @@ const
   import(/* webpackChunkName: 'group' */ '../page/group/children/groupAll'),
   groupDetail = () =>
   import(/* webpackChunkName: 'group' */ '../page/group/children/groupDetail'),
+  groupMember = () =>
+  import(/* webpackChunkName: 'group' */ '../page/group/children/groupMember'),
 
 
   question = () =>
@@ -146,6 +148,13 @@ const router = [{
       path: '/group/detail/:groupID',
       component: groupDetail,
       meta: { title: '圈子详情', keepAlive: true, requiresAuth: true }
+    }, {
+      name: 'groupMember',
+      path: '/group/member',
+      component: groupMember,
+      meta: {
+        title: '成员管理'
+      }
     }, {
       path: '/group/all',
       component: groupAll,

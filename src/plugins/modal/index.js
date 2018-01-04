@@ -87,6 +87,7 @@ export default {
   install(vue) {
     if (this.installed) return
     vue.prototype.$Modal = Modal
+    vue.prototype.$pay = Modal.pay
     vue.prototype.$ShowCommentInput = Modal.commentInpt
   }
 }

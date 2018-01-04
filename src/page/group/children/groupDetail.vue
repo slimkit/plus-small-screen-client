@@ -83,7 +83,7 @@
           <div class="menu-item">
             更多操作
           </div>
-          <div class="menu-item">
+          <div class="menu-item" @click='to({ name: "groupMember", params: { groupID: group.id } })'>
             <v-icon class='menu-item-prepend' type='group-member'></v-icon>
             <div class="menu-item-title">成员</div>
             <div class="menu-item-tips">{{ group.users_count }}</div>
@@ -183,7 +183,8 @@ export default {
   methods: {
     to(path) {
       if (path) {
-        this.$router.push({ path })
+        path = typeof path === 'string' ? { path } : path
+        this.$router.push(path)
       }
     },
     goBack() {
