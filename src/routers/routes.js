@@ -48,8 +48,18 @@ const
 
   question = () =>
   import(/* webpackChunkName: 'question' */ '../page/question/question'),
+
+  // 排行榜
   rank = () =>
   import(/* webpackChunkName: 'rank' */ '../page/rank/rank'),
+  rankUsers = () =>
+  import(/* webpackChunkName: 'rank' */ '../page/rank/children/users'),
+  rankQuestions = () =>
+  import(/* webpackChunkName: 'rank' */ '../page/rank/children/questions'),
+  rankFeeds = () =>
+  import(/* webpackChunkName: 'rank' */ '../page/rank/children/feeds'),
+  rankNews = () =>
+  import(/* webpackChunkName: 'rank' */ '../page/rank/children/news'),
 
   // 找人
   find = () =>
@@ -135,7 +145,37 @@ const router = [{
         }
       }]
     }, /* 找人 */
-    { path: '/rank', component: rank, meta: { title: '排行' } }, /* 排行 */
+    {
+      path: '/rank',
+      component: rank,
+      meta: { title: '排行' },
+      redirect: '/rank/users',
+      children: [{
+        path: 'users',
+        component: rankUsers,
+        meta: {
+          keepAlive: true
+        }
+      }, {
+        path: 'questions',
+        component: rankQuestions,
+        meta: {
+          keepAlive: true
+        }
+      }, {
+        path: 'feeds',
+        component: rankFeeds,
+        meta: {
+          keepAlive: true
+        }
+      }, {
+        path: 'news',
+        component: rankNews,
+        meta: {
+          keepAlive: true
+        }
+      }]
+    }, /* 排行 */
 
     /* 圈子 */
     {
