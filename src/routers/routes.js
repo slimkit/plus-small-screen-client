@@ -48,6 +48,8 @@ const
   import(/* webpackChunkName: 'group' */ '../page/group/children/groupMember'),
   groupPermissions = () =>
   import(/* webpackChunkName: 'group' */ '../page/group/children/groupPermissions'),
+  groupEdit = () =>
+  import(/* webpackChunkName: 'group' */ '../page/group/children/groupEdit'),
 
 
   question = () =>
@@ -163,6 +165,13 @@ const router = [{
       component: groupPermissions,
       meta: {
         title: '发帖权限'
+      }
+    }, {
+      name: 'groupEdit',
+      path: '/group/:groupID/edit',
+      component: groupEdit,
+      meta: {
+        title: '修改资料'
       }
     }, {
       path: '/group/all',

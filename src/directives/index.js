@@ -1,13 +1,24 @@
-import autosize from 'autosize'
+// import autosize from 'autosize'
 import { getStyle, getScrollTop, getScrollEventTarget } from '@/util/'
+const autosize = (el) => {
+  const originalHeight = el.style.height
+  el.style.height = ''
+  let endHeight = el.scrollHeight
+  if (el.scrollHeight === 0) {
+    el.style.height = originalHeight
+    return
+  }
+  el.style.height = endHeight + 'px'
+}
 export default {
   txtautosize: {
     inserted(el) {
       autosize(el)
     },
-    unbind(el) {
-      autosize.destroy(el)
-    }
+    update(el) {
+      autosize(el)
+    },
+    unbind(el) {}
   },
   'load-more': {
     bind: (el, binding) => {

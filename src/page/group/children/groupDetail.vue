@@ -89,7 +89,7 @@
             <div class="menu-item-tips">{{ group.users_count }}</div>
             <v-icon class='menu-item-append' type='base-arrow-r'></v-icon>
           </div>
-          <div class="menu-item">
+          <div class="menu-item" @click='to(`/group/${groupID}/edit`)'>
             <v-icon class='menu-item-prepend' type='group-info'></v-icon>
             <div class="menu-item-title">详细信息</div>
             <v-icon class='menu-item-append' type='base-arrow-r'></v-icon>
