@@ -9,7 +9,7 @@
     </head-top>
     <div v-load-more="loaderMore" type="2">
       <feed-item v-for='feed in feeds' channel='feed' :feed='feed' :key='`feed-${feed_type}-${feed.id}`'></feed-item>
-      <div class="load-more--bottom" v-if='showLoading'>加载中...</div>
+      <div class="load-more--bottom" v-if='showLoading || touchend'>{{ loadTips }}</div>
     </div>
     <foot-guide></foot-guide>
   </div>
@@ -43,7 +43,8 @@ export default {
       preventRepeatReuqest: false, // 到达底部加载数据，防止重复加载
       showBackStatus: false, // 显示返回顶部按钮
       showLoading: true, // 显示加载动画
-      touchend: false // 没有更多数据
+      touchend: false, // 没有更多数据
+      loadTips: '下拉加载更多'
     }
   },
   watch: {
@@ -65,7 +66,7 @@ export default {
       }
       this.showLoading = true
       this.preventRepeatReuqest = true
-
+      this.loadTips = '加载中...'
       const params = {
         type: this.feed_type,
         limit: 15,
@@ -84,15 +85,16 @@ export default {
       this.pinned = pinned ? [...this.pinned, ...pinned] : this.pinned
       this.maxId = feeds.length ? feeds[feeds.length - 1].id : this.maxId
       this.showLoading = false
-      // 当获取数据小于20，说明没有更多数据，不需要再次请求数据
       if (feeds.length < 15) {
         this.touchend = true
+        this.loadTips = '没有更多'
         return false
       }
       this.preventRepeatReuqest = false
     },
 
     async initData() {
+      this.loadTips = '加载中...'
       const {
         data: {
           ad,
@@ -113,6 +115,7 @@ export default {
 
       this.showLoading = false
       if (feeds.length < 15) {
+        this.loadTips = '没有更多'
         this.touchend = true
       }
     }
