@@ -99,7 +99,7 @@
             <div class="menu-item-title">圈子收益</div>
             <v-icon class='menu-item-append' type='base-arrow-r'></v-icon>
           </div>
-          <div class="menu-item">
+          <div class="menu-item" @click='to(`/group/${groupID}/permissions`)'>
             <v-icon class='menu-item-prepend' type='group-permissions'></v-icon>
             <div class="menu-item-title">发帖权限</div>
             <v-icon class='menu-item-append' type='base-arrow-r'></v-icon>

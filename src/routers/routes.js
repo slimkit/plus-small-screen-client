@@ -46,6 +46,8 @@ const
   import(/* webpackChunkName: 'group' */ '../page/group/children/groupDetail'),
   groupMember = () =>
   import(/* webpackChunkName: 'group' */ '../page/group/children/groupMember'),
+  groupPermissions = () =>
+  import(/* webpackChunkName: 'group' */ '../page/group/children/groupPermissions'),
 
 
   question = () =>
@@ -150,10 +152,17 @@ const router = [{
       meta: { title: '圈子详情', keepAlive: true, requiresAuth: true }
     }, {
       name: 'groupMember',
-      path: '/group/member',
+      path: '/group/:groupID/member',
       component: groupMember,
       meta: {
         title: '成员管理'
+      }
+    }, {
+      name: 'groupPermissions',
+      path: '/group/:groupID/permissions',
+      component: groupPermissions,
+      meta: {
+        title: '发帖权限'
       }
     }, {
       path: '/group/all',

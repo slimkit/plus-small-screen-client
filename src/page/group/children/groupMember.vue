@@ -40,7 +40,7 @@ export default {
   data() {
     return {
       groupID: this.$route.params.groupID,
-      rule: this.$route.params.rule,
+      rule: this.$route.params.rule || 'member',
       members: [],
       manager: [],
       blacklist: [],

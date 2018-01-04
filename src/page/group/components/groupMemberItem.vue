@@ -21,7 +21,7 @@ export default {
   props: {
     user: Object,
     groupID: {
-      type: Number,
+      type: [Number, String],
       default () {
         return this.$route.params.groupID
       }
