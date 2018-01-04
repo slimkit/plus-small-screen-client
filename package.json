@@ -3,13 +3,16 @@
   "version": "1.0.0",
   "description": "🌝The SPA of ThinkSNS+",
   "main": "index.js",
-  "repository": "https://github.com/boxshadow/plus-component-web",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zhiyicx/plus-component-web.git"
+  },
   "author": "Seven <shiweidu@outlook.com>",
   "license": "Apache-2.0",
   "scripts": {
     "dev": "node dev.js",
     "build": "node pro.js",
-    "eslint": "./node_modules/.bin/eslint --fix src --ext .vue .js"
+    "eslint": "eslint --fix src --ext .vue .js"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
@@ -54,11 +57,16 @@
     "autosize": "^4.0.0",
     "axios": "^0.17.1",
     "cropperjs": "^1.2.1",
+    "css-loader": "^0.28.7",
+    "file-loader": "^1.1.6",
     "lodash": "^4.17.4",
     "plus-message-bundle": "0.0.5",
     "store": "^2.0.12",
     "vue": "^2.5.13",
+    "vue-loader": "^13.6.2",
     "vue-router": "^3.0.1",
+    "vue-style-loader": "^3.0.3",
+    "vue-template-compiler": "^2.5.13",
     "vuex": "^3.0.1"
   },
   "browserslist": [
@@ -71,5 +79,9 @@
     "Opera >= 12",
     "Safari >= 6",
     "not ie <= 8"
-  ]
+  ],
+  "bugs": {
+    "url": "https://github.com/zhiyicx/plus-component-web/issues"
+  },
+  "homepage": "https://github.com/zhiyicx/plus-component-web#readme"
 }
