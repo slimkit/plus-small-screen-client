@@ -138,11 +138,4 @@ export default {
 }
 
 </script>
-<style lang="less">
-  .load-more--bottom{
-    height: 90px;
-    line-height: 90px;
-    text-align: center;
-    font-size: 32px;
-  }
-</style>
+<style lang="less"></style>

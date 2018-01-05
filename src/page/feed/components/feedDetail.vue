@@ -1,10 +1,16 @@
 <template>
-    <div class="feed_detail" @click='$router.go(-1)'>
+    <div class="feed-detail">
+      <head-top :go-back='true'></head-top>
+
     </div>
 </template>
 <script>
+import HeadTop from '@/components/HeadTop'
 export default {
   name: 'feedDetail',
+  components: {
+    HeadTop
+  },
   methods: {
     to (path) {
       this.$route.push(path)
@@ -13,8 +19,5 @@ export default {
 }
 </script>
 <style lang='less'>
-.feed_detail {
-    height: 3000px;
-    background: #ccc;
-}
+.feed-detail {}
 </style>

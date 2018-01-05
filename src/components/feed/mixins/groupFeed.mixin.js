@@ -21,6 +21,13 @@ export default {
     }
   },
   methods: {
+    /**
+     * 查看动态详情
+     * @author jsonleex <jsonlseex@163.com>
+     */
+    viewFeed() {
+      this.$router.push(`/group/${this.feed.group_id}/feed/${this.feed.id}`)
+    },
     formatData() {
       console.log('format data')
     },

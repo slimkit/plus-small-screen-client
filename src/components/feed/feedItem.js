@@ -162,13 +162,6 @@ const components = {
  */
 const methods = {
   /**
-   * 查看动态详情
-   * @author jsonleex <jsonlseex@163.com>
-   */
-  viewFeed () {
-    this.$router.push(`/feed-detail/${this.feed.id}`)
-  },
-  /**
    * 前往动态作者主页
    * @author jsonleex <jsonlseex@163.com>
    */

@@ -50,6 +50,8 @@ const
   import(/* webpackChunkName: 'group' */ '../page/group/children/groupPermissions'),
   groupEdit = () =>
   import(/* webpackChunkName: 'group' */ '../page/group/children/groupEdit'),
+  groupFeedDetail = () =>
+  import(/* webpackChunkName: 'group' */ '../page/group/children/groupFeedDetail'),
 
 
   question = () =>
@@ -212,6 +214,13 @@ const router = [{
       component: groupEdit,
       meta: {
         title: '修改资料'
+      }
+    }, {
+      name: 'groupFeedDetail',
+      path: '/group/:groupID/feed/:feedID',
+      component: groupFeedDetail,
+      meta: {
+        title: '帖子详情'
       }
     }, {
       path: '/group/all',

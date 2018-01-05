@@ -1,7 +1,7 @@
 export default {
   computed: {
     // 文本内容
-    text () {
+    text() {
       let r = this.feed.feed_content
       r = r
         ? (r.length < 49
@@ -13,27 +13,34 @@ export default {
       return r
     },
     title() { return '' },
-    hasLike () {
+    hasLike() {
       return this.feed.has_like
     },
     // 点赞数
-    likeCount () {
+    likeCount() {
       return this.feed.like_count
     },
     // 浏览数
-    viewCount () {
+    viewCount() {
       return this.feed.feed_view_count
     },
     // 评论数
-    commentCount () {
+    commentCount() {
       return this.feed.feed_comment_count
     }
   },
   methods: {
-    formatData () {
+    /**
+     * 查看动态详情
+     * @author jsonleex <jsonlseex@163.com>
+     */
+    viewFeed() {
+      this.$router.push(`/feed-detail/${this.feed.id}`)
+    },
+    formatData() {
       console.log('format data')
     },
-    likeFeed () {
+    likeFeed() {
       // POST /feeds/:feed/like
       // DELETE /feeds/:feed/unlike
       const method = this.hasLike ? 'delete' : 'post'
@@ -49,7 +56,7 @@ export default {
         console.log(err)
       })
     },
-    moreAction () {
+    moreAction() {
       console.log('更多操作')
     },
     /**
@@ -58,7 +65,7 @@ export default {
      * @param  {String} txt
      * @param  {[type]} option
      */
-    commentFeed (body, replyUser, cb) {
+    commentFeed(body, replyUser, cb) {
       // POST /feeds/:feed/comments
       this.$http.post(`/feeds/${this.feed.id}/comments`, {
         body,
@@ -79,7 +86,7 @@ export default {
      * @param  {Number}   id cId
      * @param  {Function} cb 关闭 modal
      */
-    deleteComment (id, cb) {
+    deleteComment(id, cb) {
       console.log('删除评论:', id)
     },
     /**
@@ -88,7 +95,7 @@ export default {
      * @param  {Number}   id cId
      * @param  {Function} cb 关闭 modal
      */
-    pinnedComment (id, cb) {
+    pinnedComment(id, cb) {
       console.log('申请评论置顶:', id)
     }
   }
