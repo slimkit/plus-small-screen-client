@@ -1,14 +1,11 @@
 import Vue from 'vue'
 import Modal from './modal.vue'
 
-// const prefixCls = 'v-modal-body'
-
 Modal.newInstance = properties => {
   const _props = properties || {}
   const Instance = new Vue({
     data: Object.assign({}, {
       styles: {},
-      render: null,
       visible: false,
       maskClosable: false
     }, _props),
@@ -28,7 +25,7 @@ Modal.newInstance = properties => {
           styles: this.styles,
           maskClosable: this.maskClosable
         }
-      }, [bodyVNodes])
+      }, bodyVNodes)
     },
     methods: {
       remove() {

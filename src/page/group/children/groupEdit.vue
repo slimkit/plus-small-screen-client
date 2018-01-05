@@ -176,7 +176,7 @@ export default {
       this.notice = notice
       this.money = money
       this.role = role
-      this.allow_feed = allowFeed
+      this.allow_feed = !!(allowFeed)
 
       switch (mode) {
         case 'paid':

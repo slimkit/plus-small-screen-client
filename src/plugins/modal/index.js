@@ -1,8 +1,10 @@
 import Modal from './modalInstance'
 import pay from './components/pay'
 import commentInpt from './components/commentInput'
+import './modal.less'
 
 let modalInstance
+const prefixCls = 'v-modal'
 
 function getModalInstance(render = undefined) {
   modalInstance = modalInstance || Modal.newInstance({ render })
@@ -42,10 +44,32 @@ Modal.remove = () => {
 /**
  * 提示弹窗
  */
-Modal.info = () => {
-  return showModal({
-    maskClosable: true
+Modal.info = (options = {}) => {
+  options = Object.assign({}, options, {
+    maskClosable: false
   })
+  const render = (h) => {
+    return h('div', {
+      class: `${prefixCls}-info`,
+      on: {
+        // click: (e) => {
+        //   e.
+        // }
+      }
+    }, [h('div', {
+      class: `${prefixCls}-info-body`
+    }, [options.render(h)]), h('div', {
+      class: `${prefixCls}-info-foot`
+    }, [h('button', {
+      on: {
+        'click': () => {
+          modalInstance.remove()
+        }
+      }
+    }, '取消')])])
+  }
+
+  return showModal({ ...options, render })
 }
 
 /**
