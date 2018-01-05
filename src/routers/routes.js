@@ -61,16 +61,12 @@ const
   rank = () =>
   import(/* webpackChunkName: 'rank' */ '../page/rank/rank'),
   rankUsers = () =>
-  import(/* webpackChunkName: 'rank' */ '../page/rank/children/users'),
   import(/* webpackChunkName: 'rank' */ '../page/rank/children/rankUsers'),
   rankQuestions = () =>
-  import(/* webpackChunkName: 'rank' */ '../page/rank/children/questions'),
   import(/* webpackChunkName: 'rank' */ '../page/rank/children/rankQuestions'),
   rankFeeds = () =>
-  import(/* webpackChunkName: 'rank' */ '../page/rank/children/feeds'),
   import(/* webpackChunkName: 'rank' */ '../page/rank/children/rankFeeds'),
   rankNews = () =>
-  import(/* webpackChunkName: 'rank' */ '../page/rank/children/news'),
   import(/* webpackChunkName: 'rank' */ '../page/rank/children/rankNews'),
 
   // 找人
