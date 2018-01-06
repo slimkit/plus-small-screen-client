@@ -2,7 +2,7 @@ import Vue from 'vue'
 import { oneOf } from '@/util'
 import localEvent from 'store'
 import VueRouter from 'vue-router'
-import * as Message from '../plugins/messageToast'
+import { MessageToast } from '../plugins/messageToast'
 
 import routes from './routes'
 
@@ -58,7 +58,7 @@ router.beforeEach((to, from, next) => {
       ? next({ path: `${redirect || '/feed/new'}` }) : next()
   } else {
     requiresAuth ? (() => {
-      Message.Msg.error('您还没有登录, 请先登录或注册')
+      MessageToast.error('您还没有登录, 请先登录或注册')
       setTimeout(function () {
         next({ path: '/signin', query: { redirect: to.fullPath } })
       }, 1500)
