@@ -38,6 +38,24 @@
         </div>
       </div>
     </div>
+    <div class="gfd-action">
+      <div class="gfd-action-item" @click='likeFeed'>
+        <v-icon :type='`${ liked ? "feed-like":"feed-unlike"}`'></v-icon>
+        <p>喜欢</p>
+      </div>
+      <div class="gfd-action-item" @click='showCommentInput'>
+        <v-icon type='feed-comment'></v-icon>
+        <p>评论</p>
+      </div>
+      <div class="gfd-action-item">
+        <v-icon type='base-share'></v-icon>
+        <p>分享</p>
+      </div>
+      <div class="gfd-action-item">
+        <v-icon type='feed-more'></v-icon>
+        <p>更多</p>
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -108,9 +126,105 @@ export default {
         limit: 5
       })
       this.likesList = data
+    },
+
+    likeFeed() {
+      // POST /group-posts/:post/likes
+      // DELETE /group-posts/:post/likes
+      const method = this.liked ? 'delete' : 'post'
+      const num = this.liked
+        ? this.likes_count - 1
+        : this.likes_count + 1
+      this.$http({
+        method,
+        url: `/plus-group/group-posts/${this.feedID}/likes`
+      }).then(({ data }) => {
+        this.liked = !this.liked
+        this.likes_count = num
+      }).catch(err => {
+        console.log(err)
+      })
+    },
+    /**
+     * 评论帖子
+     * @author jsonleex <jsonlseex@163.com>
+     * @param  {String} txt
+     * @param  {[type]} option
+     */
+    commentFeed(body, replyUser, cb) {
+      // /group-posts/:post/comments
+      this.$http.post(`/plus-group/group-posts/${this.feedID}/comments`, {
+        body,
+        reply_user: replyUser
+      }).then(({ data: { message, comment } = {} }) => {
+        this.comments.unshift(comment)
+        this.comments_count += 1
+        cb && cb()
+      }).catch(err => {
+        const { response: { data = { message: '评论失败' } } = {} } = err
+        this.$Message.error(data)
+        cb && cb()
+      })
+    },
+    /**
+     * 弹出评论操作框
+     * @author jsonleex <jsonlseex@163.com>
+     */
+    commentAction(uId, uName, cId) {
+      if (uId === this.$store.state.CURRENTUSER.id) {
+        this.showCommentAction(cId)
+      } else {
+        const placeholder = uName && uId ? `回复${uName}` : '随便说说'
+        this.showCommentInput({ placeholder, reply_user: uId })
+      }
+    },
+    /**
+     * 显示评论操作弹层
+     * @author jsonleex <jsonlseex@163.com>
+     */
+    showCommentAction(id) {
+      const that = this
+      this.$Modal.info({
+        render(h) {
+          return h('div', {}, [
+            h('button', {
+              on: {
+                click: () => {
+                  that.deleteComment(id, this.onOk)
+                }
+              }
+            }, '删除'),
+            h('button', {
+              on: {
+                click: () => {
+                  that.pinnedComment(id, this.onOk)
+                }
+              }
+            }, '申请评论置顶')
+          ])
+        },
+        onOk() {
+          this.$Modal.remove()
+        }
+      })
+    },
+    /**
+     * 显示评论输入框
+     * @author jsonleex <jsonlseex@163.com>
+     */
+    showCommentInput(options = {}) {
+      const that = this
+      const { reply_user } = options
+      options = Object.assign({}, {
+        onOk(txt) {
+          that.commentFeed(txt, reply_user, () => {
+            that.$Modal.remove()
+          })
+        }
+      }, options)
+      this.$ShowCommentInput(options)
     }
   },
-
   created() {
     this.initData()
     this.getFeedLikes()
@@ -122,14 +236,16 @@ export default {
 .group-feed-detail {
   font-size: 30px;
   &-content {
-    padding: 0 20px;
+    padding-left: 20px;
+    padding-right: 20px;
     background-color: #fff
   }
 }
 
 .gfd {
   &-head {
-    padding: 0 20px;
+    padding-left: 20px;
+    padding-right: 20px;
     background-color: #fff;
     h1 {
       font-size: 50px;
@@ -148,7 +264,7 @@ export default {
   &-like-list {
     display: flex;
     margin-right: 25px;
-    &-item{
+    &-item {
       width: 24px;
     }
   }
@@ -156,7 +272,11 @@ export default {
   &-body {
     padding: 50px 20px;
     background-color: #fff;
-    &-content {}
+    &-content {
+      width: 100%;
+      overflow-x: auto;
+      word-break: break-all;
+    }
     &-l {
       color: #59b6d7;
       display: flex;
@@ -167,7 +287,8 @@ export default {
       color: #999
     }
     p {
-      padding: 0 20px;
+      padding-left: 20px;
+      padding-right: 20px;
     }
     &-foot {
       margin-top: 50px;
@@ -181,7 +302,8 @@ export default {
     background-color: #fff;
     margin-top: 10px;
     &-head {
-      padding: 0 20px;
+      padding-left: 20px;
+      padding-right: 20px;
       border-bottom: 1px solid #ededed;
       /*no*/
       height: 80px;
@@ -209,6 +331,30 @@ export default {
       color: #999;
       p:first-child {
         color: #333;
+      }
+    }
+  }
+
+  &-action {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 95px;
+    line-height: 95px;
+    text-align: center;
+    background-color: #fff;
+    border-top: 1px solid #ededed;
+    &-item {
+      line-height: 1.4;
+      font-size: 24px;
+      color: #b3b3b3;
+      .v-icon {
+        width: 38px;
+        height: 38px;
       }
     }
   }
