@@ -1,6 +1,8 @@
 import axios from 'axios'
 import localEvent from 'store'
 import router from './routers/'
+import { MessageToast } from '@/plugins/messageToast'
+import { plusMessageFirst } from './filters'
 /**
  * 添加请求拦截器
  *     @author jsonleex <jsonlseex@163.com>
@@ -33,24 +35,31 @@ axios.interceptors.response.use(res => res,
   /* 错误处理 */
   error => {
     if (error.response) {
-      const { status } = error.response
-      if (status === 401) {
-        localEvent.remove('CURRENTUSER')
-        setTimeout(() => {
-          router.push({ path: '/signin', query: { redirect: router.currentRoute.fullPath } })
-        }, 500)
-        const message = TOKEN ? '登录失效, 请重新登录' : '您还没有登录'
-        return Promise.reject(new Error({
-          response: { data: { message } }
-        }))
+      const { status, data } = error.response
+      switch (status) {
+        case 401:
+          localEvent.remove('CURRENTUSER')
+          setTimeout(() => {
+            router.push({ path: '/signin', query: { redirect: router.currentRoute.fullPath } })
+          }, 500)
+          const message401 = TOKEN
+          ? '登录失效, 请重新登录'
+          : '您还没有登录'
+          MessageToast.error(message401)
+          break
+        default:
+          const message = plusMessageFirst(data)
+          if (message) {
+            MessageToast.error(message)
+          }
+          break
       }
     } else if (error.request) {
       console.log(error.request)
     } else {
       console.log('Error', error.message)
     }
-
-    return Promise.reject(error)
+    return false
   }
 )
 

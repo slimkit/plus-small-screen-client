@@ -38,7 +38,8 @@ export default {
   },
   data() {
     return {
-      prefixCls
+      prefixCls,
+      requesting: false
     }
   },
 
@@ -94,15 +95,16 @@ export default {
       }
     },
 
-    joinGroup(cb) {
-      this.$http.put(`/plus-group/groups/${this.group.id}`).then(({ data }) => {
+    async joinGroup(cb) {
+      if (this.requesting) return
+      this.requesting = true
+      const { status, data } = await this.$http.put(`/plus-group/groups/${this.group.id}`)
+      if (status === 201) {
+        this.group.joined = true
         this.$Message.success(data)
+        this.requesting = false
         cb && cb()
-      }).catch(err => {
-        const { response: { data = { message: '申请失败 可能是已经申请过了' } } = {} } = err
-        this.$Message.error(data)
-        cb && cb()
-      })
+      }
     },
 
     beforeToDetail() {
