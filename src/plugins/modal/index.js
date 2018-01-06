@@ -77,11 +77,21 @@ Modal.info = (options = {}) => {
  * @author jsonleex <jsonlseex@163.com>
  */
 Modal.pay = (options = {}) => {
+  const { content, price, onOk } = options
   return showModal({
     render(h) {
       return h(pay, {
         on: {
-          'on-close': Modal.remove
+          'on-close': Modal.remove,
+          'on-ok': (cb) => {
+            if (typeof onOk === 'function') {
+              onOk(cb)
+            }
+          }
+        },
+        props: {
+          content,
+          price
         }
       })
     }

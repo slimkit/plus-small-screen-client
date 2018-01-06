@@ -4,13 +4,13 @@
       <span></span>
       <span></span>
     </div>
-    <slot>
-      <div :class="`${prefixCls}-body`" @click.stop='handleBodyClick'>
+    <div :class="`${prefixCls}-body`" @click.stop='handleBodyClick'>
+      <slot>
         <div :class="`${prefixCls}-wrap`">
           <div :class="`${prefixCls}-content`">这是一个弹层</div>
         </div>
-      </div>
-    </slot>
+      </slot>
+    </div>
   </div>
 </template>
 <script>

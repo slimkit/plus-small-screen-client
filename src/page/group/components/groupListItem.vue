@@ -18,7 +18,7 @@
       </p>
     </div>
     <div :class="`${prefixCls}-action`">
-      <a v-if='!group.joined' @click.stop='joinGroup(group.id)' :class="[`${prefixCls}-action-btn`, 'join']">
+      <a v-if='!group.joined' @click.stop='beforeJoin' :class="[`${prefixCls}-action-btn`, 'join']">
         <v-icon type='foot-plus'></v-icon>加入
       </a>
       <div v-if='role' :class="[`${prefixCls}-role`, roles.cls]">{{ roles.label }}</div>
@@ -78,14 +78,30 @@ export default {
         this.$router.push({ path })
       }
     },
-    joinGroup(id) {
+    beforeJoin(group) {
       // PUT /groups/:group
       // # todo
-      this.$http.put(`/plus-group/groups/${id}`).then(({ data }) => {
+      const { mode, money } = this.group
+      if (mode === 'paid') {
+        const price = (~~money).toFixed(2)
+        this.$pay({
+          price,
+          content: `您只需支付${price}来加入圈子`,
+          onOk: this.joinGroup
+        })
+      } else {
+        this.joinGroup()
+      }
+    },
+
+    joinGroup(cb) {
+      this.$http.put(`/plus-group/groups/${this.group.id}`).then(({ data }) => {
         this.$Message.success(data)
+        cb && cb()
       }).catch(err => {
         const { response: { data = { message: '申请失败 可能是已经申请过了' } } = {} } = err
         this.$Message.error(data)
+        cb && cb()
       })
     },
 
@@ -98,6 +114,7 @@ export default {
     }
   }
 }
+
 </script>
 <style lang='less'>
 @group-list-item-prefix: group-list-item;
@@ -207,4 +224,5 @@ export default {
     }
   }
 }
+
 </style>
