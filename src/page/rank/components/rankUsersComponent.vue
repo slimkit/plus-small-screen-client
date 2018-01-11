@@ -8,7 +8,7 @@
       </div>
     </div>
     <div :class="`${prefixCls}-label`">
-      <div :class="`${prefixCls}-user`" v-for="user in getShow" :key="user.id">
+      <div @click="to(`/user/${user.id}`)" :class="`${prefixCls}-user`" v-for="user in getShow" :key="user.id">
         <v-avatar :class="`${prefixCls}-user-avatar`" :src='user.avatar' :sex='user.sex'></v-avatar>
         <p class="ellipsis">{{ user.name }}</p>
       </div>
@@ -28,6 +28,9 @@
         required: true
       },
       title: {
+        required: true
+      },
+      name: {
         required: true
       }
     },
@@ -78,6 +81,8 @@
         )
         .then(({ data = [] }) => {
           this.users = [ ...data ]
+          this.$store.commit('SAVE_RANK_DATA', { name: this.name, data })
+          this.$store.commit('SAVE_USER', data)
         })
         .catch(({ response: { data } }) => {
           console.log(data)
@@ -85,7 +90,7 @@
       }
     },
 
-    beforeMount() {
+    created() {
       this.getUsers()
     }
   }
@@ -95,10 +100,13 @@
   @rank-list-prefixCls: rank-list-item;
 
   .@{rank-list-prefixCls} {
+    background-color: #fff;
+    &+&{
+      margin-top: 8px;
+    }
     &-label {
       &:nth-child(2) {
         height: 194px;
-        border-bottom: 8px solid #f4f5f5;
         margin-left: -30px;
         justify-content: flex-start;
       }
@@ -111,10 +119,11 @@
       justify-content: space-between;
       h6 {
         font-size: 30px;
+        color: #333;
       }
     }
     &-user {
-      font-size: 26px;
+      font-size: 24px;
       width: calc(~'20% - ' 30px);
       margin-left: 30px;
       display: flex;
@@ -127,6 +136,7 @@
         span {
           color: #666;
           width: 100%;
+          font-size: 24px
         }
         img {
           width: 100px;

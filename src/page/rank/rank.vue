@@ -58,7 +58,7 @@
     justify-content: center;
     &-item {
       padding: 0 10px;
-      font-size: 28px;
+      font-size: 32px;
       color: #999;
       border-bottom: 3px solid transparent;
       &+& {
@@ -75,6 +75,6 @@
     padding-top: 180px;
     min-height: 100vh;
     position: relative;
-    background-color: #fff;
+    background-color: #f4f5f5;
 }
 </style>

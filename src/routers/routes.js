@@ -53,7 +53,6 @@ const
   groupFeedDetail = () =>
   import(/* webpackChunkName: 'group' */ '../page/group/children/groupFeedDetail'),
 
-
   question = () =>
   import(/* webpackChunkName: 'question' */ '../page/question/question'),
 
@@ -68,6 +67,25 @@ const
   import(/* webpackChunkName: 'rank' */ '../page/rank/children/rankFeeds'),
   rankNews = () =>
   import(/* webpackChunkName: 'rank' */ '../page/rank/children/rankNews'),
+  rankFollowers = () =>
+  import(/* webpackChunkName: 'rank' */ '../page/rank/lists/fansList'),
+  rankBalances = () =>
+  import(/* webpackChunkName: 'rank' */ '../page/rank/lists/balanceList'),
+  rankIncome = () =>
+  import(/* webpackChunkName: 'rank' */ '../page/rank/lists/incomeList'),
+  rankQuestionExports = () =>
+  import(/* webpackChunkName: 'rank' */ '../page/rank/lists/exportList'),
+  rankQuestionLikes = () =>
+  import(/* webpackChunkName: 'rank' */ '../page/rank/lists/questionLikesList'),
+  rankCheckinLikes = () =>
+  import(/* webpackChunkName: 'rank' */ '../page/rank/lists/checkinList'),
+
+  rankQuestionList = () =>
+  import(/* webpackChunkName: 'rank' */ '../page/rank/lists/rankQuestionList'),
+  rankFeedList = () =>
+  import(/* webpackChunkName: 'rank' */ '../page/rank/lists/rankFeedList'),
+  rankNewsList = () =>
+  import(/* webpackChunkName: 'rank' */ '../page/rank/lists/rankNewsList'),
 
   // 找人
   find = () =>
@@ -184,7 +202,78 @@ const router = [{
         }
       }]
     }, /* 排行 */
-
+    {
+      path: '/rank/users/followers',
+      component: rankFollowers,
+      meta: {
+        title: '全站粉丝排行榜',
+        keepAlive: true
+      }
+    },
+    {
+      path: '/rank/users/balance',
+      component: rankBalances,
+      meta: {
+        title: '财富达人排行榜',
+        keepAlive: true
+      }
+    },
+    {
+      path: '/rank/users/income',
+      component: rankIncome,
+      meta: {
+        title: '收入达人排行榜',
+        keepAlive: true
+      }
+    },
+    {
+      path: '/rank/users/question-experts',
+      component: rankQuestionExports,
+      meta: {
+        title: '社区专家排行榜',
+        keepAlive: true
+      }
+    },
+    {
+      path: '/rank/users/question-likes',
+      component: rankQuestionLikes,
+      meta: {
+        title: '问答达人排行榜',
+        keepAlive: true
+      }
+    },
+    {
+      path: '/rank/users/checkin',
+      component: rankCheckinLikes,
+      meta: {
+        title: '社区签到排行榜',
+        keepAlive: true
+      }
+    },
+    {
+      path: '/rank/q/:time',
+      component: rankQuestionList,
+      meta: {
+        // keepAlive: true,
+        title: '问答排行榜'
+      }
+    },
+    {
+      path: '/rank/f/:time',
+      component: rankFeedList,
+      meta: {
+        // keepAlive: true,
+        title: '动态排行榜'
+      }
+    },
+    {
+      path: '/rank/n/:time',
+      component: rankNewsList,
+      meta: {
+        // keepAlive: true,
+        title: '资讯排行榜'
+      }
+    },
     /* 圈子 */
     {
       path: '/group',

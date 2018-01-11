@@ -5,8 +5,8 @@ export default {
     let user = users[`user_${id}`] || {}
     // 将关注状态重置
     // 避免多个账号之间数据交叉
-    user.follower = false
-    user.following = false
+    // user.follower = false
+    // user.following = false
 
     return user
   }
