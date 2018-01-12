@@ -1,11 +1,11 @@
 const {
 	url
 } = window.TS_WEB;
-const baseUrl = url + '/assets/h5/';
+const baseUrl = url
 
 export function resolveImage(image) {
-	if (image.slice(0, 5).toLowerCase() == 'data:') {
+	if (image.slice(0, 5).toLowerCase() === 'data:') {
 		return image;
 	}
-	return baseUrl + 'images/' + image;
+	return baseUrl + image;
 }
