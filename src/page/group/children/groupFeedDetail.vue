@@ -1,10 +1,10 @@
 <template>
   <div class="group-feed-detail">
-    <head-top :go-back='true' title='帖子详情'></head-top>
+    <head-top :go-back='goBack' title='帖子详情'></head-top>
     <div class="gfd-head">
       <h1>{{ title }}</h1>
       <p>来自
-        <a>{{ user.name }}</a>
+        <a>{{ group.name }}</a>
       </p>
     </div>
     <div class="gfd-body">
@@ -77,7 +77,8 @@ export default {
       likes_count: 0,
       views_count: 0,
       user: {},
-      likesList: []
+      likesList: [],
+      group: {}
     }
   },
   computed: {
@@ -101,7 +102,8 @@ export default {
           liked,
           likes_count: likesCount,
           views_count: viewsCount,
-          user
+          user,
+          group
         }
       } = await this.$http.get(`/plus-group/groups/${this.groupID}/posts/${this.feedID}`)
 
@@ -115,6 +117,7 @@ export default {
       this.likes_count = likesCount
       this.views_count = viewsCount
       this.user = user
+      this.group = group
     },
 
     // 获取点赞列表
@@ -126,6 +129,16 @@ export default {
         limit: 5
       })
       this.likesList = data
+    },
+
+    goBack () {
+      this.to(`/group/detail/${this.groupID}`)
+    },
+    to(path) {
+      path = typeof path === 'string' ? { path } : path
+      if (path) {
+        this.$router.push(path)
+      }
     },
 
     likeFeed() {

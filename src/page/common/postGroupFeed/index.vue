@@ -79,7 +79,7 @@ export default {
         }).then(({ data: { post } }) => {
           if (post.id) {
             console.log('发布成功')
-            this.$router.push(`/group-feed-detail/${post.id}`)
+            this.$router.push(`/group/${this.groupID}/feed/${post.id}`)
           }
         })
       } else {
