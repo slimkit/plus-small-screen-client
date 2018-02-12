@@ -11,11 +11,80 @@
   }
 }
 
+body,
+div,
+span,
+header,
+footer,
+nav,
+section,
+aside,
+article,
+ul,
+dl,
+dt,
+dd,
+li,
+a,
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+i,
+b,
+textarea,
+button,
+input,
+select,
+figure,
+figcaption {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  font-style: normal;
+  text-decoration: none;
+  border: none;
+  color: inherit;
+  font-weight: normal;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-font-smoothing: antialiased;
+  &:hover {
+    outline: none;
+  }
+}
+
+input[type='button'],
+input[type='submit'],
+input[type='search'],
+input[type='reset'] {
+  -webkit-appearance: none;
+}
+
+input:-webkit-autofill,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px #fff inset !important;
+  background: none !important;
+  color: inherit !important;
+}
+
+input[type='text']:focus,
+input[type='password']:focus,
+textarea:focus {
+  -webkit-box-shadow: 0 0 0 1000px transparent inset;
+  outline: none;
+}
+
 body {
   font-size: 16px;
   color: #333;
   background-color: #f4f5f5;
-  font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑";
+  font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB',
+    'Microsoft YaHei', '微软雅黑';
 }
 
 a {
