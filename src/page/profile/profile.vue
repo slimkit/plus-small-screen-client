@@ -42,21 +42,6 @@
           </v-badge>
           <p>关注</p>
         </router-link>
-        <router-link
-        v-if='verified'
-        :to="{
-          path: `user/${this.user.id}/fans`,
-          query: {
-            type: 'students'
-          }
-        }"
-        :class="`${prefixCls}--count`"
-        >
-          <v-badge count='0'>
-            <div class="num">{{ extra.students_count || 0 | formatNum }}</div>
-          </v-badge>
-          <p>学员</p>
-        </router-link>
       </div>
     </div>
     <!-- 入口配置 -->
@@ -66,60 +51,6 @@
           <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#profile-home"></use>
         </svg>
         <span>个人主页</span>
-        <svg class='entry__item--append'>
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-arrow-r"></use>
-        </svg>
-      </router-link>
-      <router-link tag='li' class="entry__item" :to='`/user/${user.id}/news?type=0`'>
-        <svg class='entry__item--prepend'>
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#profile-plane"></use>
-        </svg>
-        <span>{{ verified ? '我' : '看过' }}的头条</span>
-        <svg class='entry__item--append'>
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-arrow-r"></use>
-        </svg>
-      </router-link>
-      <router-link tag='li' class="entry__item" :to='`/user/${user.id}/product?type=0`'>
-        <svg class='entry__item--prepend'>
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#profile-product"></use>
-        </svg>
-        <span>{{ verified ? '我' : '看过' }}的产品</span>
-        <svg class='entry__item--append'>
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-arrow-r"></use>
-        </svg>
-      </router-link>
-      <router-link
-      tag='li'
-      class="entry__item"
-      :to='`/user/${user.id}/course`'>
-        <svg class='entry__item--prepend'>
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#profile-course"></use>
-        </svg>
-        <span>{{ verified ? '我' : '看过' }}的课程</span>
-        <svg class='entry__item--append'>
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-arrow-r"></use>
-        </svg>
-      </router-link>
-    </ul>
-    <ul class="entry__group padding">
-      <router-link tag='li' class="entry__item" :to='`/user/${user.id}/questions`'>
-        <svg class='entry__item--prepend'>
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#profile-question"></use>
-        </svg>
-        <span>我的问答</span>
-        <svg class='entry__item--append'>
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-arrow-r"></use>
-        </svg>
-      </router-link>
-      <router-link
-      tag='li'
-      class="entry__item"
-      to='/wallet'>
-        <svg class='entry__item--prepend'>
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#profile-wallet"></use>
-        </svg>
-        <span>钱包</span>
-        <span>{{ balance }}</span>
         <svg class='entry__item--append'>
           <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-arrow-r"></use>
         </svg>
@@ -136,8 +67,31 @@
           <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-arrow-r"></use>
         </svg>
       </router-link>
+      <router-link tag='li' class="entry__item" :to='`/user/${user.id}/questions`'>
+        <svg class='entry__item--prepend'>
+          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#profile-question"></use>
+        </svg>
+        <span>我的问答</span>
+        <svg class='entry__item--append'>
+          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-arrow-r"></use>
+        </svg>
+      </router-link>
     </ul>
+    <!-- <ul class="entry__group padding"></ul> -->
     <ul class="entry__group padding">
+      <router-link
+      tag='li'
+      class="entry__item"
+      to='/wallet'>
+        <svg class='entry__item--prepend'>
+          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#profile-wallet"></use>
+        </svg>
+        <span>钱包</span>
+        <span>{{ balance }}</span>
+        <svg class='entry__item--append'>
+          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-arrow-r"></use>
+        </svg>
+      </router-link>
       <li
       class="entry__item"
       >
