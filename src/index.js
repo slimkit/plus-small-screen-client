@@ -24,6 +24,7 @@ import userAvatar from './components/VAvatar'; /* Avatar 用户头像组件 */
 import loadMore from './components/loadMore';
 import HeadTop from './components/HeadTop';
 import FootGuide from './components/FootGuide';
+import DiySelect from './components/DiySelect';
 
 const components = [
   vIcon,
@@ -33,7 +34,8 @@ const components = [
   loadMore,
   fullSpin,
   HeadTop,
-  FootGuide
+  FootGuide,
+  DiySelect
 ];
 
 components.forEach(component => {

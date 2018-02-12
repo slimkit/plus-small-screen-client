@@ -77,6 +77,36 @@ export default {
   & + * {
     padding-top: 90px;
   }
+
+  .diy-select {
+    font-size: 36px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    text-align: center;
+    &--label {
+      display: inline-block;
+      &:after {
+        font-size: 16px;
+        right: 0;
+        color: #ccc;
+      }
+    }
+    &--option {
+      background-color: #fff;
+    }
+    &--options {
+      position: fixed;
+      top: 90px;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background-color: rgba(0, 0, 0, 0.2);
+    }
+  }
+
   &-title {
     position: absolute;
     top: 50%;
