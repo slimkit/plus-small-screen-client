@@ -241,7 +241,7 @@ const methods = {
       },
       options
     );
-    this.$ShowCommentInput(options);
+    this.$Modal.commentInpt(options);
   }
 };
 
