@@ -42,9 +42,7 @@ router.beforeEach((to, from, next) => {
   const forGuest = to.matched.some(record => record.meta.forGuest);
   const redirect = from.query.redirect;
   const upgrade = [
-    // '/question',
     '/news',
-    // '/rank',
     '/post/wenzi',
     '/post/pic',
     '/post/release',

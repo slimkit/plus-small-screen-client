@@ -6,6 +6,7 @@ import Modal from './plugins/modal/';
 import imgLazy from './plugins/imgLazy';
 import Message from './plugins/message/';
 import imgCropper from './plugins/imgCropper';
+import _ from 'lodash';
 import './util/rem';
 
 /* h5 调试 */
@@ -60,6 +61,14 @@ for (const k in filters) {
 for (const k in directives) {
   Vue.directive(k, directives[k]);
 }
+
+Vue.mixin({
+  methods: {
+    uniqById(target = [], source = []) {
+      return _.unionBy([...target, ...source], 'id');
+    }
+  }
+});
 
 /* eslint-disable no-new */
 new Vue({
