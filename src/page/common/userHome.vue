@@ -66,19 +66,23 @@
   </div>
 </template>
 <script>
-import { formatNum } from '@/util/'
-import HeadTop from '@/components/HeadTop'
-import { FeedItem } from '@/components/feed/feedItem'
-const filterTypes = [{
-  type: '',
-  label: '全部动态'
-}, {
-  type: 'paid',
-  label: '付费动态'
-}, {
-  type: 'pinned',
-  label: '置顶动态'
-}]
+import { formatNum } from '@/filters';
+import HeadTop from '@/components/HeadTop';
+import { FeedItem } from '@/components/feed/feedItem';
+const filterTypes = [
+  {
+    type: '',
+    label: '全部动态'
+  },
+  {
+    type: 'paid',
+    label: '付费动态'
+  },
+  {
+    type: 'pinned',
+    label: '置顶动态'
+  }
+];
 export default {
   name: 'userHome',
   components: {
@@ -96,55 +100,52 @@ export default {
       scrollTop: 0,
       filterShow: false,
       filterType: filterTypes[0]
-    }
+    };
   },
   computed: {
     Uid() {
-      return this.$route.params.Uid
+      return this.$route.params.Uid;
     },
     followers_count() {
-      return formatNum((this.user.extra || {}).followers_count || 0)
+      return formatNum((this.user.extra || {}).followers_count || 0);
     },
     followings_count() {
-      return formatNum((this.user.extra || {}).followings_count || 0)
+      return formatNum((this.user.extra || {}).followings_count || 0);
     },
     bg_cover() {
-      const bg = this.user.bg
-      return bg ? {
-        'background-image': `url(${bg})`
-      } : {}
+      const bg = this.user.bg;
+      return {
+        backgroundImage: bg ? `url(${bg})` : ''
+      };
     },
     verified() {
-      const verified = this.user.verified
-      const { description, icon } = verified || {}
-      return verified ? {
-        description,
-        icon
-      } : false
+      const verified = this.user.verified;
+      const { description, icon } = verified || {};
+      return verified ? { description, icon } : false;
     },
     location() {
-      return this.user.location || false
+      return this.user.location || false;
     },
     bio() {
-      return this.user.bio || '这家伙很懒. 什么也没留下'
+      return this.user.bio || '这家伙很懒. 什么也没留下';
     },
     feeds_length() {
-      return (this.user.extra || {}).feeds_count || 0
+      return (this.user.extra || {}).feeds_count || 0;
     },
     tags() {
-      return this.user.tags
+      return this.user.tags;
     },
     feeds() {
-      return this.user.feeds
+      return this.user.feeds;
     },
 
     topTranparent() {
-      return !(this.scrollTop > 110)
+      return !(this.scrollTop > 110);
     }
   },
   watch: {
     filterType() {
-      this.getUserFeeds()
+      this.getUserFeeds();
     }
   },
   methods: {
@@ -154,67 +155,77 @@ export default {
      * @author jsonleex <jsonlseex@163.com>
      */
     updateUserData(cb) {
-      this.$http.get(`/users/${this.Uid}`).then(({ data = {} }) => {
-        this.user = Object.assign({}, this.user, data)
-        cb && cb()
-      }).catch(err => {
-        const { response: { data = { message: '获取用户数据失败' } } = {} } = err
-        this.$Message.error(data)
-      })
+      this.$http
+        .get(`/users/${this.Uid}`)
+        .then(({ data = {} }) => {
+          this.user = Object.assign({}, this.user, data);
+          cb && cb();
+        })
+        .catch(err => {
+          const {
+            response: { data = { message: '获取用户数据失败' } } = {}
+          } = err;
+          this.$Message.error(data);
+        });
     },
 
     getUserTags(cb) {
       this.$http.get(`/users/${this.Uid}/tags`).then(({ data = [] }) => {
-        this.user.tags = [...data]
-        cb && cb()
-      })
+        this.user.tags = [...data];
+        cb && cb();
+      });
     },
 
     getUserFeeds(cb) {
-      const params = { type: 'users', user: this.Uid }
+      const params = { type: 'users', user: this.Uid };
       if (this.filterType.type) {
-        params.screen = this.filterType.type
+        params.screen = this.filterType.type;
       }
-      this.$http.get('/feeds', {
-        params
-      }).then(({ data = [] } = {}) => {
-        this.user = Object.assign({}, this.user, { feeds: data['feeds'] })
-        cb && cb()
-      })
+      this.$http
+        .get('/feeds', {
+          params
+        })
+        .then(({ data = [] } = {}) => {
+          this.user = Object.assign({}, this.user, { feeds: data['feeds'] });
+          cb && cb();
+        });
     },
 
     init() {
-      this.updateUserData(this.getUserFeeds(this.getUserTags(() => {
-        this.$store.commit('SAVE_USER', this.user)
-      })))
+      this.updateUserData(
+        this.getUserFeeds(
+          this.getUserTags(() => {
+            this.$store.commit('SAVE_USER', this.user);
+          })
+        )
+      );
     },
 
     goBack() {
-      this.$router.go(-1)
+      this.$router.go(-1);
     },
 
     selectFilterType(type) {
-      this.filterType = type
+      this.filterType = type;
     },
 
     showFilter() {
-      this.filterShow = !this.filterShow
+      this.filterShow = !this.filterShow;
     }
   },
   activated() {
     if (this.user.id !== this.Uid) {
-      this.init()
+      this.init();
       // this.$route.meta.toTop = true
     }
   },
   mounted() {
-    this.init()
-    this.$el.addEventListener('scroll', (e) => {
-      this.scrollTop = this.$el.scrollTop
-    })
+    this.init();
+    this.$el.addEventListener('scroll', e => {
+      this.scrollTop = this.$el.scrollTop;
+    });
   }
-}
-
+};
 </script>
 <style lang='less'>
 @user-home-prefix: user-home;
@@ -258,6 +269,7 @@ export default {
   }
 
   &-name {
+    margin: 0;
     font-size: 32px;
     color: #fff;
     margin-bottom: 20px;
@@ -267,10 +279,13 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 30px;
+    margin-bottom: 15px;
     font-size: 20px;
     color: #fff;
-    p+p {
+    p {
+      margin: 0;
+    }
+    p + p {
       margin-left: 50px;
     }
     span {
@@ -291,7 +306,7 @@ export default {
       color: #666;
       text-align: center;
       border-radius: 18px;
-      background-color: rgba(102, 102, 102, .1);
+      background-color: rgba(102, 102, 102, 0.1);
       margin-bottom: 10px;
       margin-left: 10px;
     }
@@ -322,7 +337,7 @@ export default {
         background-color: #fff;
         transform: translateY(100%);
         border-radius: 8px;
-        box-shadow: 0 0 10px 0 rgba(0, 0, 0, .1);
+        box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
       }
       &-option {
         display: flex;
@@ -331,7 +346,7 @@ export default {
         padding: 0 20px;
         width: 200px;
         height: 150/2px;
-        &+& {
+        & + & {
           border-top: 1px solid #ededed;
         }
         .v-icon {
@@ -356,5 +371,4 @@ export default {
     }
   }
 }
-
 </style>

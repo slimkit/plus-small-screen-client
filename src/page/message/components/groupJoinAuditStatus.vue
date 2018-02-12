@@ -95,7 +95,7 @@
         this.currentItem = audit;
         const vm = this;
         this.$Modal.info({
-          title: '请选择',
+          title: false,
           render(h) {
             return h('div', {}, [
               h(
