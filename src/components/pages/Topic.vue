@@ -47,12 +47,13 @@
       <span>{{ topic.experts_count }}位相关专家</span>
       <div>
         <user-avatar
-          v-for="user in topic.experts"
+          v-for="user, index in topic.experts"
           :key="user.id"
           :class="classNameBuilder('experts-user')"
           :size="0.5"
           :src="user.avatar"
           :sex="user.sex"
+          :style="[{ zIndex: topic.experts.length - index }]"
         />
       </div>
     </div>
@@ -317,25 +318,9 @@ export default {
     &-user {
       position: relative;
       border: solid 1px #fff;
-      &:last-child {
-        right: 0;
-        z-index: 1;
-      }
-      &:nth-child(1) {
-        z-index: 5;
-        right: -80px;
-      }
-      &:nth-child(2) {
-        z-index: 4;
-        right: -60px;
-      }
-      &:nth-child(3) {
-        z-index: 3;
-        right: -40px;
-      }
-      &:nth-child(4) {
-        z-index: 2;
-        right: -20px;
+      margin-left: -20px;
+      &:first-child {
+        margin-left: 0;
       }
     }
   }
