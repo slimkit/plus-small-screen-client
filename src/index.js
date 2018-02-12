@@ -29,9 +29,20 @@ import btnSwitch from './components/common/btnSwitch'; /* btnSwitch 按钮 */
 import badge from './components/common/badge'; /* Badge 徽标 */
 import fullSpin from './components/FullSpin'; /* 全屏加载动画 */
 import userAvatar from './components/VAvatar'; /* Avatar 用户头像组件 */
-import loadMore from './components/loadMore/loadMore';
+import loadMore from './components/loadMore';
+import HeadTop from './components/HeadTop';
+import FootGuide from './components/FootGuide';
 
-const components = [vIcon, btnSwitch, badge, userAvatar, loadMore, fullSpin];
+const components = [
+  vIcon,
+  btnSwitch,
+  badge,
+  userAvatar,
+  loadMore,
+  fullSpin,
+  HeadTop,
+  FootGuide
+];
 
 components.forEach(component => {
   Vue.component(component.name, component);
