@@ -26,7 +26,7 @@
   </div>
 </template>
 <script>
-const prefixCls = 'group-list-item'
+const prefixCls = 'group-list-item';
 export default {
   name: 'groupListItem',
   props: {
@@ -40,83 +40,84 @@ export default {
     return {
       prefixCls,
       requesting: false
-    }
+    };
   },
 
   computed: {
     header() {
-      return this.group.avatar
+      return this.group.avatar;
     },
 
     roles() {
-      if (!this.role) return
+      if (!this.role) return;
       const roles = {
         label: '',
         cls: ''
-      }
-      const { joined: { role = '普通成员' } = {} } = this.group
+      };
+      const { joined: { role = '普通成员' } = {} } = this.group;
 
       switch (role) {
         case 'member':
-          roles.label = '普通成员'
-          break
+          roles.label = '普通成员';
+          break;
         case 'administrator':
-          roles.label = '管理员'
-          break
+          roles.label = '管理员';
+          break;
         case 'founder':
-          roles.label = '圈主'
-          break
+          roles.label = '圈主';
+          break;
       }
-      roles.cls = role
+      roles.cls = role;
 
-      return roles
+      return roles;
     }
   },
 
   methods: {
     to(path) {
       if (path) {
-        this.$router.push({ path })
+        this.$router.push({ path });
       }
     },
     beforeJoin(group) {
       // PUT /groups/:group
       // # todo
-      const { mode, money } = this.group
+      const { mode, money } = this.group;
       if (mode === 'paid') {
-        const price = (~~money).toFixed(2)
+        const price = (~~money).toFixed(2);
         this.$pay({
           price,
           content: `您只需支付${price}来加入圈子`,
           onOk: this.joinGroup
-        })
+        });
       } else {
-        this.joinGroup()
+        this.joinGroup();
       }
     },
 
     async joinGroup(cb) {
-      if (this.requesting) return
-      this.requesting = true
-      const { status, data } = await this.$http.put(`/plus-group/groups/${this.group.id}`)
+      if (this.requesting) return;
+      this.requesting = true;
+      const { status, data } = await this.$http.put(
+        `/plus-group/groups/${this.group.id}`
+      );
       if (status === 201) {
-        this.group.joined = true
-        this.$Message.success(data)
-        this.requesting = false
-        cb && cb()
+        this.group.joined = true;
+        this.$Message.success(data);
+        this.requesting = false;
+        cb && cb();
       }
     },
 
     beforeToDetail() {
       if (this.group.mode === 'public' || this.group.joined) {
-        this.to(`/group/detail/${this.group.id}`)
+        this.to(`/group/detail/${this.group.id}`);
       } else {
-        this.$Message.error('需要先加入圈子, 才能查看圈子信息哦~')
+        this.$Message.error('需要先加入圈子, 才能查看圈子信息哦~');
       }
     }
   }
-}
-
+};
 </script>
 <style lang='less'>
 @group-list-item-prefix: group-list-item;
@@ -141,6 +142,7 @@ export default {
     }
   }
   &-paid-icon {
+    font-style: normal;
     margin-left: 15px;
     border-radius: 3px;
     /*no*/
@@ -150,7 +152,13 @@ export default {
     line-height: 30px;
     font-size: 20px;
     color: #fff;
-    background: linear-gradient(135deg, #E8D1B3 0%, #E8D1B3 38%, #C8A06C 42%, #C8A06C 100%);
+    background: linear-gradient(
+      135deg,
+      #e8d1b3 0%,
+      #e8d1b3 38%,
+      #c8a06c 42%,
+      #c8a06c 100%
+    );
   }
 
   &-name {
@@ -165,6 +173,7 @@ export default {
       max-width: calc(~'100% - ' 100px);
       margin: 0;
       padding: 0;
+      font-weight: 400;
     }
   }
   &-info {
@@ -187,6 +196,7 @@ export default {
     }
 
     .num {
+      font-style: normal;
       color: #59b6d7;
       margin-left: 10px;
     }
@@ -226,5 +236,4 @@ export default {
     }
   }
 }
-
 </style>
