@@ -8,6 +8,7 @@ import Message from './plugins/message/';
 import imgCropper from './plugins/imgCropper';
 import _ from 'lodash';
 import './util/rem';
+import 'github-markdown-css';
 
 /* h5 调试 */
 import './style/index.less';
