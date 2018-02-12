@@ -19,7 +19,9 @@ const markdown = markdownIt({
  * @author Seven Du <shiweidu@outlook.com>
  */
 export function render(markdownText) {
-  return markdown.render(markdownText);
+  return markdown.render(
+    String(markdownText)
+  );
 }
 
 /**
