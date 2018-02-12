@@ -157,6 +157,9 @@ const WalletWithdraw = () =>
 const WalletDetail = () =>
   import(/* webpackChunkName: 'wallet' */ '@/page/wallet/WalletDetail');
 
+const UserFans = () =>
+  import(/* webpackChunkName: 'user' */ '@/page/user/UserFans');
+
 const router = [
   {
     path: '/',
@@ -585,10 +588,22 @@ const router = [
       /* 公共页面 */
 
       {
-        path: '/user/:Uid',
+        path: '/user/:Uid(\\d+)',
         component: userHome,
-        meta: { title: '个人主页', keepAlive: true }
+        meta: {
+          title: '个人主页',
+          keepAlive: true
+        }
       } /* 个人主页 */,
+      {
+        path: '/user/:userID(\\d+)/fans',
+        component: UserFans,
+        meta: {
+          title: '粉丝',
+          keepAlive: true,
+          requiresAuth: true
+        }
+      },
       {
         path: '/search_user/',
         component: searchUser,
