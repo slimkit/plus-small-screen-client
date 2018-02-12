@@ -1,10 +1,12 @@
 <template>
-    <transition :name="transitionName" @enter="handleEnter" @leave="handleLeave">
-        <div :class="classes">
-            <v-icon :type='icon' width='0.32rem' height='0.32rem' :class='[`${prefixCls}-icon`]'></v-icon>
-            <span>{{ content | plusMessageFirst('这是一条提示') }}</span>
-        </div>
-    </transition>
+  <transition :name="transitionName" @enter="handleEnter" @leave="handleLeave">
+    <div :class="classes">
+      <svg :class='[`${prefixCls}-icon`]'>
+        <use xmlns:xlink="http://www.w3.org/1999/xlink" :xlink:href="`#${icon}`"></use>
+      </svg>
+      <span class="ellipsis">{{ content | plusMessageAnalyze(defaultMessage) }}</span>
+    </div>
+  </transition>
 </template>
 <script>
 const prefixCls = 'v-msg'
@@ -39,47 +41,48 @@ export default {
       required: true
     }
   },
-  data () {
+  data() {
     return {
       prefixCls
     }
   },
   computed: {
-    classes () {
+    classes() {
       return [
         prefixCls,
         `${prefixCls}__${this.type}`
       ]
+    },
+    /**
+     *  Default message.
+     *
+     * @return {string}
+     * @author Seven Du <shiweidu@outlook.com>
+     */
+    defaultMessage() {
+      if (this.type === 'success') {
+        return '成功！';
+      }
+
+      return '发生错误了，请刷新重试！';
     }
   },
   methods: {
-    clearCloseTimer () {
+    clearCloseTimer() {
       if (this.closeTimer) {
         clearTimeout(this.closeTimer)
         this.closeTimer = null
       }
     },
-    close () {
+    close() {
       this.clearCloseTimer()
       this.onClose()
       this.$parent.close(this.name)
     },
-    handleEnter (el) {
-      // if(this.type === 'message') {
-      //     el.style.height = el.scrollHeight + 'px';
-      // }
-    },
-    handleLeave (el) {
-      // if(this.type === 'message') {
-      //     if(document.getElementsByClassName('v-msg__message').length !== 1) {
-      //         el.style.height = 0;
-      //         el.style.paddingTop = 0;
-      //         el.style.paddingBottom = 0;
-      //     }
-      // }
-    }
+    handleEnter(el) {},
+    handleLeave(el) {}
   },
-  mounted () {
+  mounted() {
     this.clearCloseTimer()
     if (this.duration !== 0) {
       this.closeTimer = setTimeout(() => {
@@ -87,9 +90,10 @@ export default {
       }, this.duration * 1000)
     }
   },
-  beforeDestroy () {
+  beforeDestroy() {
     this.clearCloseTimer()
   }
 }
+
 </script>
-<style lang='less' src='./message.less'></style>
+<style lang='less' src='./style/message.less'></style>

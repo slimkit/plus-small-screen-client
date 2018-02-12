@@ -2,24 +2,16 @@ import Vue from 'vue';
 import store from './stores/';
 import router from './routers/';
 import directives from './directives/';
-// import FastClick from 'fastclick'
-// import TimeAgo from 'vue-timeago';
-
-import modal from './plugins/modal/';
+import Modal from './plugins/modal/';
 import imgLazy from './plugins/imgLazy';
+import Message from './plugins/message/';
 import imgCropper from './plugins/imgCropper';
-import messageToast from './plugins/messageToast';
-
 import './util/rem';
 
 /* h5 调试 */
-// import './util/console'
 import './style/index.less';
-
 // Filters
 import * as filters from './filters';
-import { formatNum } from './util/';
-
 /** Ajax */
 import Ajax from './http';
 
@@ -51,34 +43,17 @@ components.forEach(component => {
 Vue.config.productionTip = false;
 
 Vue.prototype.$http = Ajax; /* Ajax */
-Vue.use(modal); /* 弹层 */
-Vue.use(imgLazy); /* 图片懒加载 */
-Vue.use(imgCropper); /* 图片裁剪 */
-Vue.use(messageToast); /* 消息提示 */
-
+Vue.prototype.$Modal = Modal;
+Vue.prototype.$Message = Message;
 Vue.prototype.$MessageBundle = filters.plusMessageFirst;
 
-filters.formatNum = formatNum;
+Vue.use(imgLazy); /* 图片懒加载 */
+Vue.use(imgCropper); /* 图片裁剪 */
+Vue.config.productionTip = false;
 
 for (const k in filters) {
   Vue.filter(k, filters[k]);
 }
-
-// Vue.use(TimeAgo, {
-//   name: 'timeago',
-//   locale: 'zh-CN',
-//   locales: {
-//     'zh-CN': require('vue-timeago/locales/zh-CN.json')
-//   }
-// });
-
-/* 此处留一坑 */
-// if('addEventListener' in document) {
-//     document.addEventListener('DOMContentLoaded', function() {
-//         FastClick.attach(document.body);
-//     }, false);
-// }
-
 // 自定义指令
 for (const k in directives) {
   Vue.directive(k, directives[k]);

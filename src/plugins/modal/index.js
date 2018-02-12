@@ -12,9 +12,9 @@ function getModalInstance(render = undefined) {
 }
 
 function showModal(options = {}) {
-  const render = ('render' in options) ? options.render : undefined
+  const render = 'render' in options ? options.render : undefined
   let instance = getModalInstance(render)
-  options.onRemove = function () {
+  options.onRemove = function() {
     modalInstance = null
   }
 
@@ -25,7 +25,7 @@ function showModal(options = {}) {
  * 显示默认弹窗
  * @author jsonleex <jsonlseex@163.com>
  */
-Modal.show = (options) => {
+Modal.show = options => {
   return showModal(options)
 }
 
@@ -45,28 +45,57 @@ Modal.remove = () => {
  * 提示弹窗
  */
 Modal.info = (options = {}) => {
-  options = Object.assign({}, options, {
-    maskClosable: false
-  })
-  const render = (h) => {
-    return h('div', {
-      class: `${prefixCls}-info`,
-      on: {
-        // click: (e) => {
-        //   e.
-        // }
-      }
-    }, [h('div', {
-      class: `${prefixCls}-info-body`
-    }, [options.render(h)]), h('div', {
-      class: `${prefixCls}-info-foot`
-    }, [h('button', {
-      on: {
-        'click': () => {
-          modalInstance.remove()
-        }
-      }
-    }, '取消')])])
+  options = Object.assign(
+    {
+      title: '提示'
+    },
+    options,
+    {
+      maskClosable: false
+    }
+  )
+  const render = h => {
+    return h(
+      'div',
+      {
+        class: `${prefixCls}-info`
+      },
+      [
+        h(
+          'div',
+          {
+            class: `${prefixCls}-info-head`
+          },
+          options.title
+        ),
+        h(
+          'div',
+          {
+            class: `${prefixCls}-info-body`
+          },
+          [options.render(h)]
+        ),
+        h(
+          'div',
+          {
+            class: `${prefixCls}-info-foot`
+          },
+          [
+            h(
+              'button',
+              {
+                on: {
+                  click: () => {
+                    modalInstance.remove()
+                  }
+                }
+              },
+              '取消'
+            )
+          ]
+        )
+      ]
+    )
   }
 
   return showModal({ ...options, render })
@@ -83,7 +112,7 @@ Modal.pay = (options = {}) => {
       return h(pay, {
         on: {
           'on-close': Modal.remove,
-          'on-ok': (cb) => {
+          'on-ok': cb => {
             if (typeof onOk === 'function') {
               onOk(cb)
             }
@@ -116,12 +145,12 @@ Modal.commentInpt = (options = {}) => {
   }
   return showModal(_props)
 }
-
-export default {
-  install(vue) {
-    if (this.installed) return
-    vue.prototype.$Modal = Modal
-    vue.prototype.$pay = Modal.pay
-    vue.prototype.$ShowCommentInput = Modal.commentInpt
-  }
-}
+export default Modal
+// export default {
+//   install(vue) {
+//     if (this.installed) return
+//     vue.prototype.$Modal = Modal
+//     vue.prototype.$pay = Modal.pay
+//     vue.prototype.$ShowCommentInput = Modal.commentInpt
+//   }
+// }

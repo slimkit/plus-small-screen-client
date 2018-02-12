@@ -1,14 +1,23 @@
 <template>
   <div class="comment-input">
     <!-- v-txtautosize  -->
-    <textarea :maxlength="maxlength" autofocus="true" :placeholder="placeholder" ref='input' :value="currentValue" @keyup.ctrl.enter="handleEnter" @input="handleInput" />
+    <textarea
+    :maxlength="maxlength"
+    autofocus="true"
+    :placeholder="placeholder"
+    ref='input'
+    :value="currentValue"
+    @keyup.ctrl.enter="handleEnter"
+    @input="handleInput" />
     <div class="comment-input-append">
       <template v-if='len > 200'>
         <p>{{ len }}/{{maxlength}}</p>
       </template>
       <button :disabled="disabled" @click='handleDone'>
         <template v-if='loading'>
-          <v-icon type='base-loading'></v-icon>
+          <svg>
+            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="base-loading"></use>
+          </svg>
         </template>
         <template v-else>发送</template>
       </button>
@@ -16,10 +25,8 @@
   </div>
 </template>
 <script>
-import directives from '@/directives/'
 export default {
   name: 'commentInput',
-  directives,
   props: {
     focus: Boolean,
     placeholder: {
@@ -31,7 +38,7 @@ export default {
       type: [Number, String],
       default: 255,
       validator(val) {
-        return typeof (+val) === 'number'
+        return typeof +val === 'number'
       }
     }
   },
@@ -84,7 +91,6 @@ export default {
     this.$refs.input.focus()
   }
 }
-
 </script>
 <style lang='less'>
 .comment-input {
@@ -97,8 +103,8 @@ export default {
   background-color: #fafafa;
   display: flex;
   align-items: flex-end;
-  >* {
-    flex: 0 0 auto
+  > * {
+    flex: 0 0 auto;
   }
   textarea {
     overflow-y: scroll;
@@ -147,5 +153,4 @@ export default {
     justify-content: flex-end;
   }
 }
-
 </style>

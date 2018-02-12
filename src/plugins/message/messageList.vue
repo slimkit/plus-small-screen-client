@@ -1,16 +1,7 @@
 <template>
-    <div class="v-msg-list">
-        <message v-for="msg in msgs" 
-        :key="msg.name" 
-        :type="msg.type" 
-        :icon="msg.icon"
-        :content="msg.content" 
-        :duration="msg.duration" 
-        :closable="msg.closable" 
-        :name="msg.name" 
-        :transition-name="msg.transitionName" 
-        :on-close="msg.onClose"></message>
-    </div>
+  <div class="v-msg-list">
+    <message v-for="msg in msgs" :key="msg.name" :type="msg.type" :icon="msg.icon" :content="msg.content" :duration="msg.duration" :closable="msg.closable" :name="msg.name" :transition-name="msg.transitionName" :on-close="msg.onClose"></message>
+  </div>
 </template>
 <script>
 import message from './message'
@@ -24,13 +15,13 @@ export default {
   components: {
     message
   },
-  data () {
+  data() {
     return {
       msgs: []
     }
   },
   methods: {
-    add (msg) {
+    add(msg) {
       const name = msg.name || getUuid()
       let newMsg = Object.assign({
         content: {},
@@ -40,7 +31,7 @@ export default {
       }, msg)
       this.msgs.push(newMsg)
     },
-    close (name) {
+    close(name) {
       const oldMsgs = this.msgs
       for (let i = 0; i < oldMsgs.length; i++) {
         if (oldMsgs[i].name === name) {
@@ -49,10 +40,10 @@ export default {
         }
       }
     },
-    closeAll () {
+    closeAll() {
       this.msgs = []
     }
   }
 }
+
 </script>
-<style lang='less'></style>

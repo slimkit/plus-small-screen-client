@@ -1,12 +1,12 @@
-import Vue from 'vue'
-import { oneOf } from '@/util'
-import localEvent from 'store'
-import VueRouter from 'vue-router'
-import { MessageToast } from '../plugins/messageToast'
+import Vue from 'vue';
+import { oneOf } from '@/util';
+import localEvent from 'store';
+import VueRouter from 'vue-router';
+import Message from '@/plugins/message';
 
-import routes from './routes'
+import routes from './routes';
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 const router = new VueRouter({
   routes,
   mode: 'history',
@@ -14,16 +14,17 @@ const router = new VueRouter({
   // strict: process.env.NODE_ENV !== 'production',
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) {
-      return savedPosition
+      return savedPosition;
     } else {
-      const { meta: { keepAlive = false, toTop = false } } = from
+      const { meta: { keepAlive = false, toTop = false } } = from;
       if (keepAlive && !toTop) {
-        from.meta.savedPosition = document.body.scrollTop || document.documentElement.scrollTop
+        from.meta.savedPosition =
+          document.body.scrollTop || document.documentElement.scrollTop;
       }
-      return { x: 0, y: to.meta.savedPosition || 0 }
+      return { x: 0, y: to.meta.savedPosition || 0 };
     }
   }
-})
+});
 
 /**
  * 路由守卫 登录检测 islogin
@@ -36,10 +37,10 @@ const router = new VueRouter({
  *
  */
 router.beforeEach((to, from, next) => {
-  const isLogin = !!((localEvent.get('CURRENTUSER') || {}).token)
-  const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
-  const forGuest = to.matched.some(record => record.meta.forGuest)
-  const redirect = from.query.redirect
+  const isLogin = !!(localEvent.get('CURRENTUSER') || {}).token;
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+  const forGuest = to.matched.some(record => record.meta.forGuest);
+  const redirect = from.query.redirect;
   const upgrade = [
     '/question',
     '/news',
@@ -49,21 +50,20 @@ router.beforeEach((to, from, next) => {
     '/post/release',
     '/post/checkin',
     '/post/question'
-  ]
+  ];
   if (oneOf(to.path, upgrade)) {
-    next({ path: '/upgrade' })
+    next({ path: '/upgrade' });
   }
   if (isLogin) {
-    forGuest
-      ? next({ path: `${redirect || '/feed/new'}` }) : next()
+    forGuest ? next({ path: `${redirect || '/feed/new'}` }) : next();
   } else {
-    requiresAuth ? (() => {
-      MessageToast.error('您还没有登录, 请先登录或注册')
-      setTimeout(function () {
-        next({ path: '/signin', query: { redirect: to.fullPath } })
-      }, 1500)
-    })() : next()
+    if (requiresAuth) {
+      Message.error('您还没有登录, 请先登录或注册');
+      next({ path: '/signin', query: { redirect: to.fullPath } });
+    } else {
+      next();
+    }
   }
-})
+});
 
-export default router
+export default router;
