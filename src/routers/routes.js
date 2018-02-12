@@ -13,8 +13,6 @@ const
   import(/* webpackChunkName: 'feed' */ '../page/feed/components/feedDetail'),
   discover = () =>
   import(/* webpackChunkName: 'common' */ '../page/discover/discover'),
-  message = () =>
-  import(/* webpackChunkName: 'message' */ '../page/message/message'),
   profile = () =>
   import(/* webpackChunkName: 'profile' */ '../page/profile/profile'),
 
@@ -113,7 +111,36 @@ const
   postGroupFeed = () =>
   import(/* webpackChunkName: 'common' */ '../page/common/postGroupFeed/'),
   postWenzi = () =>
-  import(/* webpackChunkName: 'common' */ '../page/common/postWenzi')
+  import(/* webpackChunkName: 'common' */ '../page/common/postWenzi'),
+  /**
+   * 消息页面组件
+   * @Author   Wayne
+   * @DateTime 2018-01-29
+   * @Email    qiaobin@zhiyicx.com
+   * @return   {[type]}            [description]
+   */
+  MessageMain = () =>
+    import(/* webpackChunkName: 'message' */ '@/page/message/message'),
+  msg = () =>
+    import(/* webpackChunkName: 'message' */ '@/page/message/children/msg'),
+  notification = () =>
+    import(/* webpackChunkName: 'message' */ '@/page/message/children/notification'),
+  msgComments = () =>
+    import(/* webpackChunkName: 'message' */ '@/page/message/list/comments'),
+  msgLikes = () =>
+    import(/* webpackChunkName: 'message' */ '@/page/message/list/likes'),
+  msgAudits = () =>
+    import(/* webpackChunkName: 'message' */ '@/page/message/list/audits'),
+  feedCommentAudit = () =>
+    import(/* webpackChunkName: 'message' */ '@/page/message/children/audits/feedCommentAudit'),
+  newsCommentAudit = () =>
+    import(/* webpackChunkName: 'message' */ '@/page/message/children/audits/newsCommentAudit'),
+  groupPostAudit = () =>
+    import(/* webpackChunkName: 'message' */ '@/page/message/children/audits/groupPostAudit'),
+  groupCommentAudit = () =>
+    import(/* webpackChunkName: 'message' */ '@/page/message/children/audits/groupCommentAudit'),
+  groupJoinAudit = () =>
+    import(/* webpackChunkName: 'message' */ '@/page/message/children/audits/groupJoinAudit');
 
 const router = [{
   path: '/',
@@ -355,7 +382,109 @@ const router = [{
 
     { path: '/feed-detail/:feedID', component: feedDetail }, /* 动态详情 */
 
-    { path: '/message/:type', component: message, meta: { title: '消息', keepAlive: true, requiresAuth: true } }, /* 消息 */
+    /**
+     * 消息页面路由
+     */
+    {
+      path: '/message',
+      component: MessageMain,
+      redirect: '/message/msg',
+      meta: {
+        title: '消息',
+        requiresAuth: true
+      },
+      children: [
+        {
+          path: 'msg',
+          component: msg,
+          meta: {
+            title: '消息',
+            requiresAuth: true
+          }
+        },
+        {
+          path: 'notification',
+          component: notification,
+          meta: {
+            title: '通知',
+            requiresAuth: true
+          }
+        }
+      ]
+    },
+    {
+      path: '/message/comments',
+      component: msgComments,
+      meta: {
+        title: '评论我的',
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/message/likes',
+      component: msgLikes,
+      meta: {
+        title: '赞过我的',
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/message/audits',
+      component: msgAudits,
+      meta: {
+        title: '审核列表',
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/message/audits',
+      component: msgAudits,
+      redirect: '/message/audits/feedcomments',
+      meta: {
+        title: '审核列表',
+        requiresAuth: true
+      },
+      children: [
+        {
+          path: 'feedcomments',
+          component: feedCommentAudit,
+          meta: {
+            title: '动态评论置顶'
+          }
+        },
+        {
+          path: 'newscomments',
+          component: newsCommentAudit,
+          meta: {
+            title: '文章评论置顶'
+          }
+        },
+        {
+          path: 'groupposts',
+          component: groupPostAudit,
+          meta: {
+            title: '帖子评论置顶'
+          }
+        },
+        {
+          path: 'groupcomments',
+          component: groupCommentAudit,
+          meta: {
+            title: '帖子置顶'
+          }
+        },
+        {
+          path: 'groupjoins',
+          component: groupJoinAudit,
+          meta: {
+            title: '圈子加入申请'
+          }
+        }
+      ]
+    },
+    /**
+     * 消息页面路由结束
+     */
 
     /* 公共页面 */
 
