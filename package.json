@@ -66,6 +66,7 @@
     "plus-message-bundle": "^1.0.0",
     "store": "^2.0.12",
     "swiper": "^4.1.6",
+    "timeago.js": "^3.0.2",
     "vue": "^2.5.13",
     "vue-loader": "^13.6.2",
     "vue-router": "^3.0.1",

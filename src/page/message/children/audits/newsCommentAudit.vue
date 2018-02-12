@@ -86,13 +86,13 @@ export default {
         }
       )
       .then(({ data }) => {
+        this.$refs.loadmore.bottomEnd(data.length < 15);
         if (data.length > 0) {
           this.$store.commit('SAVE_NEWS_COMMENT_AUDITS', {
             type: 'more',
             data
           });
         }
-        this.$refs.loadmore.bottomEnd(!(data.length < 1));
       });
     }
   },

@@ -28,7 +28,7 @@
       </section>
       <section v-if="comment.commentable === null">
         <div :class="`${prefixCls}-item-bottom-noImg`" class="content">
-          头条已被删除
+          文章已被删除
         </div>
       </section>
     </div>

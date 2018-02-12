@@ -74,6 +74,7 @@ export default {
           validateStatus: s => s === 200
         })
         .then(({ data }) => {
+          this.$refs.loadmore.bottomEnd(data.length < 15);
           if (data.length > 0) {
             this.$store.commit('SAVE_JOIN_GROUP_AUDITS', {
               type: 'more',
