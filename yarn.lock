@@ -56,7 +56,7 @@
 
 "@types/jquery@^2.0.40":
   version "2.0.48"
-  resolved "http://registry.npm.taobao.org/@types/jquery/download/@types/jquery-2.0.48.tgz#3e90d8cde2d29015e5583017f7830cb3975b2eef"
+  resolved "https://registry.yarnpkg.com/@types/jquery/-/jquery-2.0.48.tgz#3e90d8cde2d29015e5583017f7830cb3975b2eef"
 
 abbrev@1:
   version "1.1.1"
@@ -4763,7 +4763,7 @@ through@^2.3.6:
 
 timeago.js@^3.0.2:
   version "3.0.2"
-  resolved "http://registry.npm.taobao.org/timeago.js/download/timeago.js-3.0.2.tgz#32a67e7c0d887ea42ca588d3aae26f77de5e76cc"
+  resolved "https://registry.yarnpkg.com/timeago.js/-/timeago.js-3.0.2.tgz#32a67e7c0d887ea42ca588d3aae26f77de5e76cc"
   dependencies:
     "@types/jquery" "^2.0.40"
 
