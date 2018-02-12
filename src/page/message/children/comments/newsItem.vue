@@ -4,7 +4,7 @@
       <v-avatar :sex="comment.user.sex" :src="comment.user.avatar" />
       <section class="userInfo">
         <router-link :class="`${prefixCls}-item-top-link`" :to="`/user/${comment.user_id}`">{{ comment.user.name }}</router-link>
-        <span v-if="comment.reply_user">回复</span><span v-else>评论了你的头条</span>
+        <span v-if="comment.reply_user">回复</span><span v-else>评论了你的文章</span>
         <router-link :class="`${prefixCls}-item-top-link`" v-if="comment.reply_user" :to="`/user/${comment.reply_user}`">{{ comment.reply.name }} </router-link>:
         <p>{{ comment.created_at | time2tips }}</p>
       </section>
@@ -13,7 +13,8 @@
       <span class="content" @click.stop="showCommentInput">
         {{ comment.body }}
       </span>
-      <section v-if="comment.commentable !== null" @click="goToFeedDetail()">
+      <!-- <section v-if="comment.commentable !== null" @click="goToFeedDetail()"> -->
+        <section v-if="comment.commentable !== null">
         <div :class="`${prefixCls}-item-bottom-noImg`" class="content" v-if="!getImage">
           {{ comment.commentable.title }}
         </div>

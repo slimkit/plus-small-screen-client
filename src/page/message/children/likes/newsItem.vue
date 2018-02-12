@@ -4,12 +4,13 @@
       <v-avatar :sex="like.user.sex" :src="like.user.avatar" />
       <section class="userInfo">
         <router-link :class="`${prefixCls}-item-top-link`" :to="`/user/${like.user_id}`">{{ like.user.name }}</router-link>
-        <span>赞了你的头条</span>
+        <span>赞了你的文章</span>
         <p>{{ like.created_at | time2tips }}</p>
       </section>
     </div>
     <div :class="`${prefixCls}-item-bottom`">
-      <section v-if="like.likeable !== null" @click="goToFeedDetail()">
+      <!-- <section v-if="like.likeable !== null" @click="goToFeedDetail()"> -->
+      <section v-if="like.likeable !== null">
         <div :class="`${prefixCls}-item-bottom-noImg`" class="content" v-if="!getImage">
           {{ like.likeable.title }}
         </div>

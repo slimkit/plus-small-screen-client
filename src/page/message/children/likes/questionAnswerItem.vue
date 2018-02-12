@@ -51,7 +51,7 @@
        */
       goToFeedDetail () {
         const { likeable: { id = 0 } } = this.like;
-        this.$router.push(`/feeds/${id}`)
+        this.$router.push(`/questions/${id}`)
       }
     },
     computed: {

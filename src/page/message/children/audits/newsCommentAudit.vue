@@ -17,10 +17,12 @@
               <news-comment-audit-status :audit="audit" />
             </div>
             <div :class="`${prefixCls}-item-bottom`" v-if="audit.news">
-              <div class="content" @click="goToDetail(audit.news.id)" v-if="audit.comment">
+              <!-- <div class="content" @click="goToDetail(audit.news.id)" v-if="audit.comment"> -->
+              <div class="content" v-if="audit.comment">
                 对你的文章进行了“<span>{{ audit.comment.body }}</span>”评论并申请置顶,请及时审核
               </div>
-              <div class="content" @click="goToDetail(audit.news.id)" v-else>
+              <!-- <div class="content" @click="goToDetail(audit.news.id)" v-else> -->
+              <div class="content" v-else>
                 对你的文章进行了评论并申请置顶,请及时审核
               </div>
             </div>

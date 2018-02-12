@@ -57,7 +57,7 @@
        */
       goToFeedDetail () {
         const { commentable: { id = 0 } } = this.comment;
-        this.$router.push(`/feeds/${id}`)
+        this.$router.push(`/feed-detail/${id}`)
       },
 
       sendComment(comment) {

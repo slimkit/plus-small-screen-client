@@ -50,7 +50,7 @@
        */
       goToFeedDetail () {
         const { likeable: { id = 0 } } = this.like;
-        this.$router.push(`/feeds/${id}`)
+        this.$router.push(`/feed-detail/${id}`)
       }
     },
     computed: {

@@ -51,8 +51,8 @@
        * @return   {[type]}            [description]
        */
       goToFeedDetail () {
-        const { commentable: { id = 0 } } = this.comment;
-        this.$router.push(`/questions/${id}`)
+        const { commentable: { id = 0, group_id: groupId = 0 } } = this.comment;
+        this.$router.push(`/group/${groupId}/feed/${id}`)
       },
 
       sendComment(comment) {
