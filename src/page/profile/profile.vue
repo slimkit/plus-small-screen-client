@@ -55,7 +55,7 @@
           <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-arrow-r"></use>
         </svg>
       </router-link>
-      <router-link
+      <!-- <router-link
       tag='li'
       class="entry__item"
       to='/collect'>
@@ -66,8 +66,8 @@
         <svg class='entry__item--append'>
           <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-arrow-r"></use>
         </svg>
-      </router-link>
-      <router-link tag='li' class="entry__item" :to='`/user/${user.id}/questions`'>
+      </router-link> -->
+      <!-- <router-link tag='li' class="entry__item" :to='`/user/${user.id}/questions`'>
         <svg class='entry__item--prepend'>
           <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#profile-question"></use>
         </svg>
@@ -75,7 +75,7 @@
         <svg class='entry__item--append'>
           <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-arrow-r"></use>
         </svg>
-      </router-link>
+      </router-link> -->
     </ul>
     <!-- <ul class="entry__group padding"></ul> -->
     <ul class="entry__group padding">
