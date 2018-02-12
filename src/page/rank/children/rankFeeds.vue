@@ -1,11 +1,10 @@
 <template>
   <div>
-    <rank-users-component v-for="rank in ranks" :title="rank.title" :api="rank.api" :name="rank.name" :key="rank.name" :listUrl="rank.listUrl" />
+    <rank-users-component v-for="rank in ranks" v-bind="rank" :key="rank.api" />
   </div>
 </template>
-
 <script>
-  import RankUsersComponent from '../components/rankUsersComponent'
+  import RankUsersComponent from '../components/rankUsersComponent';
   const ranks = [
     {
       title: '今日动态排行榜',
@@ -23,7 +22,8 @@
       api: '/feeds/ranks?type=month&limit=15',
       name: 'rankFeedsMonth'
     }
-  ]
+  ];
+
   export default {
     name: 'rankFeeds',
     components: {

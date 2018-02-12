@@ -35,14 +35,15 @@
     },
     data() {
       return {
-        users: [],
         prefixCls,
         loading: false
       }
     },
 
     computed: {
-  
+      users () {
+        return this.$store.getters.getUsersByType('rankIncome');
+      }
     },
 
     methods: {
@@ -82,9 +83,7 @@
       }
     },
 
-    created () {
-      this.users = this.$store.getters.getUsersByType('rankIncome')
-    }
+    created () {}
   }
 </script>
 

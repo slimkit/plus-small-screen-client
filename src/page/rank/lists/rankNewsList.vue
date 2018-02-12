@@ -55,7 +55,6 @@
     },
     data() {
       return {
-        users: [],
         prefixCls,
         loading: false,
         title: '', // 标题
@@ -65,7 +64,9 @@
     },
 
     computed: {
-  
+      users () {
+        return this.$store.getters.getUsersByType(this.vuex);
+      }
     },
 
     methods: {
@@ -117,7 +118,7 @@
           }
         )
         .then(({ data }) => {
-          console.log(data)
+          this.$store.commit('SAVE_RANK_DATA', { name: this.vuex, data })
         })
       }
     },
@@ -126,9 +127,10 @@
       let time = this.$route.params.time || 'today'
       this.title = config[time].title
       this.vuex = config[time].vuex
-      this.query = config[time].query
-      this.users = this.$store.getters.getUsersByType(this.vuex)
-      this.getUsers()
+      this.query = config[time].query;
+      if (this.users.length === 0) {
+        this.getUsers();
+      }
     }
   }
 </script>

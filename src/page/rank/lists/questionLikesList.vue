@@ -36,14 +36,15 @@
     },
     data() {
       return {
-        users: [],
         prefixCls,
         loading: false
       }
     },
 
     computed: {
-  
+      users () {
+        return this.$store.getters.getUsersByType('rankQuestionLikes');
+      }
     },
 
     methods: {
@@ -83,9 +84,7 @@
       }
     },
 
-    created () {
-      this.users = this.$store.getters.getUsersByType('rankQuestionLikes')
-    }
+    created () {}
   }
 </script>
 

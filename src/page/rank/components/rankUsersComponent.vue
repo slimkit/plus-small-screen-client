@@ -84,13 +84,9 @@
           this.$store.commit('SAVE_RANK_DATA', { name: this.name, data })
           this.$store.commit('SAVE_USER', data)
         })
-        .catch(({ response: { data } }) => {
-          console.log(data)
-        })
       }
     },
-
-    created() {
+    activated() {
       this.getUsers()
     }
   }
