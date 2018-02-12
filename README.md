@@ -19,13 +19,8 @@ The package is a SPA for ThinkSNS+
 ## Install
 
 ```shell
-composer require zhiyicx/plus-component-web
+composer require zhiyicx/plus-component-h5
 ```
-
-##### Dependencies ThinkSNS+ library:
-
-- zhiyicx/plus-component-im
-- zhiyicx/plus-component-feed
 
 #### Publish font-end application （SPA）
 
@@ -36,7 +31,7 @@ php artisan package:handle h5 publish
 ## Remove
 
 ```shell
-composer remove zhiyicx/plus-component-web
+composer remove zhiyicx/plus-component-h5
 ```
 
 > Because h5 rely on the ThinkSNS+ other packages, so when the installation of h5 these packages will be installed together, you have not installed these packages alone, then remove the h5 when these dependent packages will be removed together.
