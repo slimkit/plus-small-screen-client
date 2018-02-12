@@ -9,7 +9,7 @@
   const ranks = [
     {
       title: '今日资讯排行榜',
-      listUrl: '/news/n/today',
+      listUrl: '/rank/n/today',
       api: '/news/ranks?type=day&limit=15',
       name: 'rankNewsToday'
     }, {

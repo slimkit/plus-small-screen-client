@@ -25,7 +25,7 @@
 
 <script>
   import HeadTop from '../../../components/HeadTop'
-  const prefixCls = 'rankQuestionLikes'
+  const prefixCls = 'rankItem'
   export default {
     components: {
       HeadTop
@@ -89,49 +89,6 @@
   }
 </script>
 
-<style lang="less">
-  @prefixCls: rankQuestionLikes;
-
-  .@{prefixCls} {
-    &-info {
-      width: 90%;
-      display: inline-flex;
-    }
-    &-user-avatar {
-      width: 76px;
-      height: 76px;
-    }
-    &-title {
-      margin-left: 30px;
-      h6 {
-        font-size: 30px;
-        color: #333;
-      }
-      p {
-        color: #999;
-        font-size: 28px;
-      }
-    }
-    &-list {
-      padding: 90px 0 0;
-      &-item {
-        display: flex;
-        align-items: center;
-        height: 135px;
-        padding: 0 29px;
-        background: #fff;
-        border-bottom: 1px solid #ededed;
-        justify-content: space-between;
-        .rank {
-          &.top {
-            color: #59b6d7;
-          }
-          width: 15%;
-          display: inline-flex;
-          font-size: 34px;
-          color: #999;
-        }
-      }
-    }
-  }
+<style lang="less" src="../style.less">
+  
 </style>
