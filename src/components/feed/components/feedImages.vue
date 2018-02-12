@@ -199,8 +199,8 @@ export default {
         }
     }
     &-i8 {
-        .feed_img-img-w:nth-child(3),
-        .feed_img-img-w:nth-child(4) {
+        .feed_img-img-w:nth-child(4),
+        .feed_img-img-w:nth-child(5) {
             width: calc(~'50% - 4px');
         }
     }
