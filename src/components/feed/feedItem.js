@@ -1,22 +1,20 @@
-import feedMixin from './mixins/feed.mixin'
-import groupFeedMixin from './mixins/groupFeed.mixin'
+import feedMixin from './mixins/feed.mixin';
+import groupFeedMixin from './mixins/groupFeed.mixin';
 // components
-import feedTools from './components/feedTools'
-import feedImages from './components/feedImages'
-import feedCommentItem from './components/feedCommentItem'
-import { oneOf } from '../../util/'
+import feedTools from './components/feedTools';
+import feedImages from './components/feedImages';
+import feedCommentItem from './components/feedCommentItem';
+import { oneOf } from '../../util/';
 // import showCommentInput from './showCommentInput'
-import './feedItem.less'
+import './feedItem.less';
 
-const
-  // Feed type `feed | group |`
-  FEED_TYPES = ['feed', 'group']
-const
-  // Node template
-  template = `
+const // Feed type `feed | group |`
+FEED_TYPES = ['feed', 'group'];
+const // Node template
+template = `
     <div class='feed-item' @click='viewFeed'>
         <span v-if='showFeedTime'>{{ time | time2txt }}</span>
-        <v-avatar v-else sex='user.sex' 
+        <v-avatar v-else :sex='user.sex' 
             :src='user.avatar' 
             class='feed-item-avatar' 
             @click.native.stop='viewUser'>
@@ -92,7 +90,7 @@ const
         <!-- 评论 END -->
 
     </div>
-`
+`;
 
 /**
  * Feed component common props
@@ -113,8 +111,8 @@ const props = {
    * @type {String}
    */
   channel: {
-    validator (val) {
-      return oneOf(val, FEED_TYPES)
+    validator(val) {
+      return oneOf(val, FEED_TYPES);
     }
   },
   /**
@@ -144,7 +142,7 @@ const props = {
     type: Boolean,
     default: false
   }
-}
+};
 
 /**
  * Feed component common components
@@ -154,7 +152,7 @@ const components = {
   feedTools,
   feedImages,
   feedCommentItem
-}
+};
 
 /**
  * Feed component common methods
@@ -165,75 +163,87 @@ const methods = {
    * 前往动态作者主页
    * @author jsonleex <jsonlseex@163.com>
    */
-  viewUser () {
-    this.$router.push(`/user/${this.feed.user_id}`)
+  viewUser() {
+    this.$router.push(`/user/${this.feed.user_id}`);
   },
   /**
    * 查看图片
    * @author jsonleex <jsonlseex@163.com>
    */
-  viewPic () {
-    console.log('查看图片')
+  viewPic() {
+    console.log('查看图片');
   },
   /**
    * 弹出评论操作框
    * @author jsonleex <jsonlseex@163.com>
    */
-  commentAction (uId, uName, cId) {
+  commentAction(uId, uName, cId) {
     if (uId === this.$store.state.CURRENTUSER.id) {
-      this.showCommentAction(cId)
+      this.showCommentAction(cId);
     } else {
-      const placeholder = uName && uId ? `回复${uName}` : '随便说说'
-      this.showCommentInput({ placeholder, reply_user: uId })
+      const placeholder = uName && uId ? `回复${uName}` : '随便说说';
+      this.showCommentInput({ placeholder, reply_user: uId });
     }
   },
   /**
    * 显示评论操作弹层
    * @author jsonleex <jsonlseex@163.com>
    */
-  showCommentAction (id) {
-    const that = this
+  showCommentAction(id) {
+    const that = this;
     this.$Modal.info({
-      render (h) {
+      render(h) {
         return h('div', {}, [
-          h('button', {
-            on: {
-              click: () => {
-                that.deleteComment(id, this.onOk)
+          h(
+            'button',
+            {
+              on: {
+                click: () => {
+                  that.deleteComment(id, this.onOk);
+                }
               }
-            }
-          }, '删除'),
-          h('button', {
-            on: {
-              click: () => {
-                that.pinnedComment(id, this.onOk)
+            },
+            '删除'
+          ),
+          h(
+            'button',
+            {
+              on: {
+                click: () => {
+                  that.pinnedComment(id, this.onOk);
+                }
               }
-            }
-          }, '申请评论置顶')
-        ])
+            },
+            '申请评论置顶'
+          )
+        ]);
       },
-      onOk () {
-        this.$Modal.remove()
+      onOk() {
+        this.$Modal.remove();
       }
-    })
+    });
   },
   /**
    * 显示评论输入框
    * @author jsonleex <jsonlseex@163.com>
    */
-  showCommentInput (options = {}) {
-    const that = this
-    const { reply_user } = options
-    options = Object.assign({}, {
-      onOk (txt) {
-        that.commentFeed(txt, reply_user, () => {
-          that.$Modal.remove()
-        })
-      }
-    }, options)
-    this.$ShowCommentInput(options)
+  showCommentInput(options = {}) {
+    const that = this;
+    const { reply_user } = options;
+    options = Object.assign(
+      {},
+      {
+        onOk(txt) {
+          that.commentFeed(txt, reply_user, () => {
+            that.$Modal.remove();
+          });
+        }
+      },
+      options
+    );
+    this.$ShowCommentInput(options);
   }
-}
+};
 
 /**
  * Feed component common computed
@@ -241,27 +251,27 @@ const methods = {
  */
 const computed = {
   // 动态作者
-  user () {
-    return this.feed.user
+  user() {
+    return this.feed.user;
   },
   // 发布时间
-  time () {
+  time() {
     // replace(/-/g, '/') 兼容 IOS
-    return this.feed.created_at.replace(/-/g, '/')
+    return this.feed.created_at.replace(/-/g, '/');
   },
   // 图片
-  images () {
-    return this.feed.images || []
+  images() {
+    return this.feed.images || [];
   },
   // 评论
-  comments () {
-    return this.feed.comments || []
+  comments() {
+    return this.feed.comments || [];
   },
   // 是否为自己的动态
-  isOwner () {
-    return this.user.id === this.$store.state.CURRENTUSER.id
+  isOwner() {
+    return this.user.id === this.$store.state.CURRENTUSER.id;
   }
-}
+};
 
 /**
  * FeedItem
@@ -275,7 +285,7 @@ export const FeedItem = {
   components,
   name: 'FeedItem',
   mixins: [feedMixin]
-}
+};
 
 /**
  * GroupFeedItem component
@@ -289,4 +299,4 @@ export const GroupFeedItem = {
   components,
   name: 'GroupFeedItem',
   mixins: [groupFeedMixin]
-}
+};
