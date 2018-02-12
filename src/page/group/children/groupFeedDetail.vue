@@ -235,7 +235,7 @@ export default {
           })
         }
       }, options)
-      this.$ShowCommentInput(options)
+      this.$Modal.commentInpt(options)
     }
   },
   created() {
@@ -308,6 +308,9 @@ export default {
       display: flex;
       align-items: center;
       justify-content: space-between;
+      p {
+        margin: 0;
+      }
     }
   }
 
@@ -333,6 +336,9 @@ export default {
       &+& {
         border-top: 1px solid #ededed;
         /*no*/
+      }
+      p {
+        margin: 0;
       }
     }
 
@@ -368,6 +374,9 @@ export default {
       .v-icon {
         width: 38px;
         height: 38px;
+      }
+      p {
+        margin: 0;
       }
     }
   }
