@@ -26,14 +26,25 @@
     </footer>
 </template>
 <script>
+import { mapState } from 'vuex';
 import showPostMenu from './postMenu/showPostMenu'
 export default {
   name: 'FootGuide',
   data () {
     return {
-      has_msg: true,
-      has_fans: true
+      has_fans: false
     }
+  },
+  computed: {
+    ...mapState({
+      has_msg: state => (state.MESSAGE.UNREAD_COUNT.msg.diggs.count +
+            state.MESSAGE.UNREAD_COUNT.msg.comments.count +
+            state.MESSAGE.UNREAD_COUNT.msg.audits.feedCommentCount +
+            state.MESSAGE.UNREAD_COUNT.msg.audits.groupJoinCount +
+            state.MESSAGE.UNREAD_COUNT.msg.audits.groupPostCommentCount +
+            state.MESSAGE.UNREAD_COUNT.msg.audits.groupPostCount +
+            state.MESSAGE.UNREAD_COUNT.msg.audits.newsCommentCount) > 0
+    })
   },
   methods: {
     to (path) {
