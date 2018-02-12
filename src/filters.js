@@ -111,3 +111,14 @@ export const formatNum = num => {
   }
   return '0';
 };
+
+/**
+ * Markdown to text fiter.
+ *
+ * @param {string} markdown
+ * @return {string}
+ * @author Seven Du <shiweidu@outlook.com>
+ */
+export function markdownText(markdown) {
+  return require('./util/markdown').syntaxTextAndImage(markdown).text;
+}

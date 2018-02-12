@@ -3,6 +3,7 @@ import signin from '../page/signin'
 import signup from '../page/signup'
 import NotFound from '../page/notFound'
 import upgrade from '../page/upgrade'
+import questionRoutes from './question';
 
 /* eslint-disable one-var */
 const
@@ -53,8 +54,8 @@ const
   groupFeedDetail = () =>
   import(/* webpackChunkName: 'group' */ '../page/group/children/groupFeedDetail'),
 
-  question = () =>
-  import(/* webpackChunkName: 'question' */ '../page/question/question'),
+  // question = () =>
+  // import(/* webpackChunkName: 'question' */ '../page/question/question'),
 
   // 排行榜
   rank = () =>
@@ -122,6 +123,7 @@ const router = [{
 
     /* 基础入口 */
     { path: '', redirect: '/signin' },
+    ...questionRoutes,
     { path: '/signin', component: signin, meta: { title: '登录', forGuest: true } }, /* 登录 */
     { path: '/signup', component: signup, meta: { title: '注册', forGuest: true } }, /* 注册 */
     { path: '/profile', component: profile, meta: { title: '我', requiresAuth: true } }, /* 个人中心 */
@@ -347,7 +349,7 @@ const router = [{
       }]
     },
 
-    { path: '/question', component: question, meta: { title: '问答' } }, /* 问答 */
+    // { path: '/question', component: question, meta: { title: '问答' } }, /* 问答 */
 
     { path: '/feed/:type', component: feed, meta: { title: '动态', keepAlive: true } }, /* 动态 */
 
