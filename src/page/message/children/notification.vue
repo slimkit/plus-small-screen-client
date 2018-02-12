@@ -41,7 +41,6 @@
           }
         )
         .then(({ data }) => {
-          console.log(data);
           this.$refs.loadmore.topEnd(!(data.length < 15));
           this.notifications = _.unionBy([ ...data, ...this.notifications ]);
         })
