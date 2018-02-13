@@ -134,7 +134,8 @@ export default {
             z-index: 1;
             color: #fff;
             opacity: .9;
-            background: linear-gradient(135deg, #E8D1B3 0%, #E8D1B3 38%, #C8A06C 42%, #C8A06C 100%)
+            background: linear-gradient(135deg, #E8D1B3 0%, #E8D1B3 38%, #C8A06C 42%, #C8A06C 100%);
+            max-height: 6.2rem !important;
         }
     }
     &-i1 {
