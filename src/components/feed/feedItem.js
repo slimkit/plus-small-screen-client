@@ -18,7 +18,6 @@ template = `
             :src='user.avatar' 
             class='feed-item-avatar' 
             @click.native.stop='viewUser'>
-            {{ user.name.slice(0, 1) }}
         </v-avatar>
 
         <div class="feed-item-content">
