@@ -192,18 +192,14 @@ export default {
      * @return {void}
      * @author Seven Du <shiweidu@outlook.com>
      */
-    '$route'() {
-      this.fetchQuestions();
+    '$route'(newRoute, oldRoute) {
+      if (newRoute.path === oldRoute.path && newRoute.query.type !== oldRoute.query.type) {
+        this.fetchQuestions();
+      }
     }
   },
 
-  /**
-   * The module created hook.
-   *
-   * @return {void}
-   * @author Seven Du <shiweidu@outlook.com>
-   */
-  created() {
+  mounted() {
     this.fetchQuestions();
   }
 }

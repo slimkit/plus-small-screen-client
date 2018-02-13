@@ -216,9 +216,12 @@ export default {
     }
   },
   watch: {
-    answersTimeOrder() {
-      this.answers = [];
-      this.loadContainer.beforeRefresh();
+    answersTimeOrder(newRoute, oldRoute) {
+      console.log(newRoute, oldRoute);
+      if (newRoute.path === oldRoute.path) {
+        this.answers = [];
+        this.loadContainer.beforeRefresh();
+      }
     }
   },
   /**
@@ -283,6 +286,9 @@ export default {
       });
     },
     handleLoadMoreAnswers() {
+      if (!this.answers.length) {
+        return;
+      }
       this.answerRequestMethod(
         this.$route.params.id,
         this.answers.length

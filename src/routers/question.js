@@ -47,12 +47,16 @@ export default [
   {
     path: '/question',
     component: Questions,
-    meta: { requiresAuth: true },
+    meta: {
+      requiresAuth: true,
+      keepAlive: true
+    },
     children: [
       {
         name: 'question',
         path: '',
-        component: QuestionsModule
+        component: QuestionsModule,
+        meta: { keepAlive: true }
       },
       {
         path: 'topics',

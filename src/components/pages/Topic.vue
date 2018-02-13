@@ -116,9 +116,12 @@ export default {
     }
   },
   watch: {
-    '$route'() {
-      this.questions = [];
-      this.loadContainer.beforeRefresh();
+    '$route'(newRoute, oldRoute) {
+      console.log(newRoute.path === oldRoute.path && newRoute.query.type !== oldRoute.query.type);
+      if (newRoute.path === oldRoute.path && newRoute.query.type !== oldRoute.query.type) {
+        this.questions = [];
+        this.loadContainer.beforeRefresh();
+      }
     }
   },
   methods: {
