@@ -150,9 +150,10 @@ export default {
                 display: block;
                 width: initial;
                 height: initial;
-                max-width: 100%;
+                width: 100%;
                 position: initial;
                 background-color: rgba(135, 135, 135, .4);
+                max-height: 688px;
             }
         }
     }
