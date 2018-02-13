@@ -66,7 +66,6 @@ export default {
    * @author Seven Du <shiweidu@outlook.com>
    */
   data: () => ({
-    user: {},
     topics: []
   }),
 
@@ -90,6 +89,11 @@ export default {
 
     loadContainer() {
       return this.$refs.LoadQuestionTopicsContainer;
+    },
+    user() {
+      const { CURRENTUSER: user } = this.$store.state;
+
+      return user;
     }
   },
 
@@ -117,16 +121,6 @@ export default {
    * @type {Object}
    */
   methods: {
-    /**
-     * Sync the loged user.
-     *
-     * @return {void}
-     * @author Seven Du <shiweidu@outlook.com>
-     */
-    syncLogedUser() {
-      const { CURRENTUSER: user } = this.$store.state;
-      this.user = user;
-    },
     /**
      * The module refresh handle.
      *
@@ -238,15 +232,6 @@ export default {
         this.$Message.error(data);
       });
     }
-  },
-  /**
-   * The module created hook.
-   *
-   * @return {void}
-   * @author Seven Du <shiweidu@outlook.com>
-   */
-  created() {
-    this.syncLogedUser();
   }
 }
 </script>
