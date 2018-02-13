@@ -44,8 +44,8 @@
   </transition>
 </template>
 <script>
-import HeadTop from '../components/HeadTop'
-import validate from '../util/validate'
+import HeadTop from '../components/HeadTop';
+import validate from '../util/validate';
 export default {
   name: 'signin',
   components: {
@@ -60,68 +60,84 @@ export default {
       btnLoading: false,
 
       /* 后台获取三方登录数据 */
-      tr_signin: [{
-        icon: 'tr-QQ',
-        title: 'QQ'
-      }, {
-        icon: 'tr-weibo',
-        title: '微博'
-      }, {
-        icon: 'tr-wechat',
-        title: '微信'
-      }]
-    }
+      tr_signin: [
+        {
+          icon: 'tr-QQ',
+          title: 'QQ'
+        },
+        {
+          icon: 'tr-weibo',
+          title: '微博'
+        },
+        {
+          icon: 'tr-wechat',
+          title: '微信'
+        }
+      ]
+    };
   },
   computed: {
     disabled() {
-      return this.account.length < 2 || this.password.length < 6 || this.btnLoading
+      return (
+        this.account.length < 2 || this.password.length < 6 || this.btnLoading
+      );
     }
   },
   methods: {
     signIn() {
-      this.error = ''
-      this.btnLoading = true
+      this.error = '';
+      this.btnLoading = true;
       // 需要验证的 数据
-      const vals = [{
-        val: this.account,
-        type: 'account'
-      }, {
-        val: this.password,
-        type: 'password'
-      }]
+      const vals = [
+        {
+          val: this.account,
+          type: 'account'
+        },
+        {
+          val: this.password,
+          type: 'password'
+        }
+      ];
 
-      const r = vals.map(v => validate(v)).every(o => o.r)
+      const r = vals.map(v => validate(v)).every(o => o.r);
 
       if (r) {
-        const deviceCode = this.$store.state.BROWSER.OS
+        const deviceCode = this.$store.state.BROWSER.OS;
         const param = {
           login: this.account,
           password: this.password,
           device_code: deviceCode
-        }
+        };
 
         /* 用户登录 */
-        this.$http.post('tokens', param, {
-          validateStatus: s => s === 201
-        }).then(({ data }) => {
-          this.btnLoading = false
-          const { token, user } = data
-          if (token) {
-            this.$store.commit('SAVE_CURRENTUSER', { ...user, token })
-            this.$router.push(this.$route.query.redirect || '/feed/new')
-          }
-        }).catch(err => {
-          console.log(err)
-          this.btnLoading = false
-          const { response: { data = { message: '登录失败' } } = {} } = err
-          this.error = this.$MessageBundle(data)
-        })
+        this.$http
+          .post('tokens', param, {
+            validateStatus: s => s === 201
+          })
+          .then(({ data }) => {
+            this.btnLoading = false;
+            const { token, user } = data;
+            if (token) {
+              this.$store.commit('SAVE_CURRENTUSER', { ...user, token });
+              this.$nextTick(() => {
+                this.$router.push(this.$route.query.redirect || '/feed/new');
+                this.$store.dispatch('GET_UNREAD_COUNT');
+                this.$store.commit('SAVE_USER', user);
+              });
+            }
+          })
+          .catch(err => {
+            console.log(err);
+            this.btnLoading = false;
+            const { response: { data = { message: '登录失败' } } = {} } = err;
+            this.error = this.$MessageBundle(data);
+          });
       } else {
-        return (this.btnLoading = false)
+        return (this.btnLoading = false);
       }
     }
   }
-}
+};
 </script>
 <style lang='less'>
 .signin_page {
@@ -130,7 +146,7 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  >* {
+  > * {
     flex: 0 0 auto;
   }
   .normal_signin {
@@ -152,7 +168,8 @@ export default {
     padding: 0;
     text-align: center;
     font-size: 24px;
-    &:before, &:after {
+    &:before,
+    &:after {
       content: '';
       display: inline-block;
       vertical-align: middle;
@@ -161,7 +178,6 @@ export default {
       border-bottom: 1px solid currentColor;
       /*no*/
     }
-    ;
     &:before {
       margin-right: 20px;
     }
@@ -229,10 +245,10 @@ export default {
     display: flex;
     align-items: center;
     font-size: 30px;
-    >* {
+    > * {
       flex: 0 0 auto;
     }
-    &+& {
+    & + & {
       border-top: 1px solid #ededed;
       /*no*/
     }
@@ -243,7 +259,7 @@ export default {
   padding: 30px;
   color: #f4504d;
   font-size: 24px;
-  height: 24*1.5+60px
+  height: 24*1.5+60px;
 }
 
 .long_btn {
@@ -259,7 +275,7 @@ export default {
   color: #fff;
   border-radius: 12px;
   background: #59b6d7;
-  >div {
+  > div {
     width: 100%;
     height: 100%;
     display: flex;

@@ -38,9 +38,8 @@ const router = new VueRouter({
  */
 router.beforeEach((to, from, next) => {
   const isLogin = !!(localEvent.get('CURRENTUSER') || {}).token;
-  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
   const forGuest = to.matched.some(record => record.meta.forGuest);
-  const redirect = from.query.redirect;
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
   const upgrade = [
     '/news',
     '/post/wenzi',
@@ -52,16 +51,22 @@ router.beforeEach((to, from, next) => {
   if (oneOf(to.path, upgrade)) {
     next({ path: '/upgrade' });
   }
-  if (isLogin) {
-    forGuest ? next({ path: `${redirect || '/feed/new'}` }) : next();
-  } else {
-    if (requiresAuth) {
+  if (requiresAuth) {
+    if (isLogin) {
+      next();
+    } else {
       Message.error('您还没有登录, 请先登录或注册');
       next({ path: '/signin', query: { redirect: to.fullPath } });
+    }
+  } else if (forGuest) {
+    if (isLogin) {
+      const redirect = from.query.redirect;
+      next({ path: `${redirect || '/feed/new'}` });
     } else {
       next();
     }
   }
+  next();
 });
 
 export default router;
