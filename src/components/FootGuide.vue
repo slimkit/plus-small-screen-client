@@ -9,7 +9,7 @@
             <span>发现</span>
         </section>
         <section @click="showPostMenu" class="guide_item plus">
-            <v-icon type='foot-plus' height='.6' width='.6' color='#fff' class='foot_guide_icon plus' />
+            <v-icon type='foot-plus' height='.6' width='.6' style="fill: #fff" class='foot_guide_icon plus' />
         </section>
         <section @click="to('/message/msg')" class="guide_item" :class="{active: isCurPath('/message')}">
             <v-badge :dot='has_msg'>
@@ -37,13 +37,15 @@ export default {
   },
   computed: {
     ...mapState({
-      has_msg: state => (state.MESSAGE.UNREAD_COUNT.msg.diggs.count +
+      has_msg: state => (
+            state.MESSAGE.UNREAD_COUNT.msg.diggs.count +
             state.MESSAGE.UNREAD_COUNT.msg.comments.count +
             state.MESSAGE.UNREAD_COUNT.msg.audits.feedCommentCount +
             state.MESSAGE.UNREAD_COUNT.msg.audits.groupJoinCount +
             state.MESSAGE.UNREAD_COUNT.msg.audits.groupPostCommentCount +
             state.MESSAGE.UNREAD_COUNT.msg.audits.groupPostCount +
-            state.MESSAGE.UNREAD_COUNT.msg.audits.newsCommentCount) > 0
+            state.MESSAGE.UNREAD_COUNT.msg.audits.newsCommentCount
+        ) > 0
     })
   },
   methods: {
