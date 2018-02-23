@@ -9,7 +9,7 @@
           <h2 :class="`${prefixCls}--name`">{{ user.name }}</h2>
           <p :class="`${prefixCls}--bio`">{{ user.bio|| '这家伙很懒, 什么也没留下'}}</p>
           <svg>
-            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-arrow-r"></use>
+            <use xlink:href="#base-arrow-r"></use>
           </svg>
         </div>
       </div>
@@ -48,11 +48,20 @@
     <ul class="entry__group padding">
       <router-link tag='li' class="entry__item" :to='`/user/${user.id}`'>
         <svg class='entry__item--prepend'>
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#profile-home"></use>
+          <use xlink:href="#profile-home"></use>
         </svg>
         <span>个人主页</span>
         <svg class='entry__item--append'>
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-arrow-r"></use>
+          <use xlink:href="#base-arrow-r"></use>
+        </svg>
+      </router-link>
+      <router-link tag='li' class="entry__item" to='/profile/group'>
+        <svg class='entry__item--prepend'>
+          <use xlink:href="#profile-group"></use>
+        </svg>
+        <span>我的圈子</span>
+        <svg class='entry__item--append'>
+          <use xlink:href="#base-arrow-r"></use>
         </svg>
       </router-link>
       <!-- <router-link
@@ -60,20 +69,20 @@
       class="entry__item"
       to='/collect'>
         <svg class='entry__item--prepend'>
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#profile-collect"></use>
+          <use xlink:href="#profile-collect"></use>
         </svg>
         <span>收藏</span>
         <svg class='entry__item--append'>
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-arrow-r"></use>
+          <use xlink:href="#base-arrow-r"></use>
         </svg>
       </router-link> -->
       <!-- <router-link tag='li' class="entry__item" :to='`/user/${user.id}/questions`'>
         <svg class='entry__item--prepend'>
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#profile-question"></use>
+          <use xlink:href="#profile-question"></use>
         </svg>
         <span>我的问答</span>
         <svg class='entry__item--append'>
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-arrow-r"></use>
+          <use xlink:href="#base-arrow-r"></use>
         </svg>
       </router-link> -->
     </ul>
@@ -84,12 +93,12 @@
       class="entry__item"
       to='/wallet'>
         <svg class='entry__item--prepend'>
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#profile-wallet"></use>
+          <use xlink:href="#profile-wallet"></use>
         </svg>
         <span>钱包</span>
         <span>{{ balance }}</span>
         <svg class='entry__item--append'>
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-arrow-r"></use>
+          <use xlink:href="#base-arrow-r"></use>
         </svg>
       </router-link>
       <li
@@ -98,12 +107,12 @@
       <!-- tag='li' -->
       <!-- to='/verification' -->
         <svg class='entry__item--prepend'>
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#profile-approve"></use>
+          <use xlink:href="#profile-approve"></use>
         </svg>
         <span>认证</span>
         <span>{{ verified ? '已认证' : '未认证' }}</span>
         <svg class='entry__item--append'>
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-arrow-r"></use>
+          <use xlink:href="#base-arrow-r"></use>
         </svg>
       </li>
       <router-link
@@ -111,11 +120,11 @@
       class="entry__item"
       to='/setting'>
         <svg class='entry__item--prepend'>
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#profile-setting"></use>
+          <use xlink:href="#profile-setting"></use>
         </svg>
         <span>设置</span>
         <svg class='entry__item--append'>
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-arrow-r"></use>
+          <use xlink:href="#base-arrow-r"></use>
         </svg>
       </router-link>
     </ul>
