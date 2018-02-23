@@ -22,7 +22,7 @@
 .router-fadeInRight-leave-active,
 .router-fadeInBottom-enter-active,
 .router-fadeInBottom-leave-active {
-  transition: transform .3s;
+  transition: transform 0.3s;
 }
 
 .router-fadeInRight-enter,
@@ -63,4 +63,19 @@
 
 .fadeInUp {
   animation-name: fadeInUp;
+}
+
+.router-fade-in-left-enter-active,
+.router-fade-in-right-enter-active {
+  transition: transform 0.3s cubic-bezier(0.55, 0, 0.1, 1);
+}
+
+.router-fade-in-right-enter,
+.router-fade-in-right-leave-active {
+  transform: translate(100%, 0);
+}
+
+.router-fade-in-left-enter,
+.router-fade-in-left-leave-active {
+  transform: translate(-100%, 0);
 }
