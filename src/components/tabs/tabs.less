@@ -1,0 +1,34 @@
+@tabs-prefix: v-tab;
+.@{tabs-prefix} {
+  &s {
+    height: 0.9rem;
+    display: flex;
+    position: relative;
+    align-items: center;
+    background-color: #fff;
+    justify-content: space-around;
+    box-shadow: 0 0px 5px 0px rgba(0, 0, 0, 0.34);
+  }
+  & {
+    flex: 0 0 auto;
+    height: 100%;
+    color: #999;
+    line-height: 0.88rem;
+    font-size: 0.3rem;
+  }
+  &.active {
+    color: #333;
+  }
+  &-link-highlight {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 2px;
+    background-color: #59b6d7;
+    transition: transform 0.3s, width 0.3s;
+    backface-visibility: hidden;
+    &.init {
+      transition: none !important;
+    }
+  }
+}
