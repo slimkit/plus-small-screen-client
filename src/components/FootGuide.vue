@@ -9,7 +9,7 @@
             <span>发现</span>
         </section>
         <section @click="showPostMenu" class="guide_item plus">
-            <v-icon type='foot-plus' height='.6' width='.6' style="fill: #fff" class='foot_guide_icon plus' />
+            <v-icon type='foot-plus' height='.6' width='.6' class='foot_guide_icon plus' />
         </section>
         <section @click="to('/message/msg')" class="guide_item" :class="{active: isCurPath('/message')}">
             <v-badge :dot='has_msg'>
@@ -99,6 +99,7 @@ export default {
         top: 0;
     }
     &.plus {
+        color: #fff !important;
         background-color: #59b6d7;
         margin: 0 15px;
     }
