@@ -6,7 +6,7 @@ use Zhiyi\Plus\Models\GoldType;
 use Zhiyi\Plus\Models\CommonConfig;
 use Zhiyi\Plus\Http\Controllers\Controller;
 use Illuminate\Contracts\Config\Repository;
-use Zhiyi\Component\ZhiyiPlus\PlusComponentIm\Repository\ImServe as ImServeRepsitory;
+// use Zhiyi\Component\ZhiyiPlus\PlusComponentIm\Repository\ImServe as ImServeRepsitory;
 
 class HomeController extends Controller
 {
@@ -17,7 +17,7 @@ class HomeController extends Controller
      * @return mixed
      * @author Seven Du <shiweidu@outlook.com>
      */
-    public function index(ImServeRepsitory $repository, GoldType $goldType, Repository $config, CommonConfig $common)
+    public function index(GoldType $goldType, Repository $config)
     {
         // 金币设置
         $gold = $goldType->where('status', 1)->select('name', 'unit')->first();
@@ -34,7 +34,7 @@ class HomeController extends Controller
             'api' => url('api/v2'),
             'apiv1' => url('api/v1'),
             'goldName' => $gold ? $gold->name : '金币',
-            'webSocktUrl' => config('im.open') === true ? $repository->get()['serve'] : '', // 如果 im 开启，则返回地址，否则返回空。
+            // 'webSocktUrl' => config('im.open') === true ? $repository->get()['serve'] : '', // 如果 im 开启，则返回地址，否则返回空。
         ]);
     }
 }
