@@ -28,14 +28,17 @@ export default {
   },
   computed: {
     ...mapState({
-      msg: state => state.MESSAGE.UNREAD_COUNT.msg,
+      // 新消息提示
+      has_msg: state => ((state.MESSAGE.UNREAD_COUNT.msg.diggs.count +
+        state.MESSAGE.UNREAD_COUNT.msg.comments.count +
+        state.MESSAGE.UNREAD_COUNT.msg.audits.feedCommentCount +
+        state.MESSAGE.UNREAD_COUNT.msg.audits.groupJoinCount +
+        state.MESSAGE.UNREAD_COUNT.msg.audits.groupPostCommentCount +
+        state.MESSAGE.UNREAD_COUNT.msg.audits.groupPostCount +
+        state.MESSAGE.UNREAD_COUNT.msg.audits.newsCommentCount
+      ) > 0),
       notification: state => state.MESSAGE.UNREAD_COUNT.notification
-    }),
-
-    // 新消息提示
-    has_msg () {
-      return (this.msg.audits.count + this.msg.comments.count + this.msg.diggs.count) > 0
-    }
+    })
   },
   methods: {
   },
