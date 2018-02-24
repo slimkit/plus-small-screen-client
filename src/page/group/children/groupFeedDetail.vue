@@ -1,6 +1,6 @@
 <template>
   <div class="group-feed-detail">
-    <head-top :go-back='goBack' title='帖子详情'></head-top>
+    <head-top :go-back='true' title='帖子详情'></head-top>
     <div class="gfd-head">
       <h1>{{ title }}</h1>
       <p>来自
@@ -59,7 +59,7 @@
   </div>
 </template>
 <script>
-import HeadTop from '@/components/HeadTop'
+import HeadTop from '@/components/HeadTop';
 export default {
   name: 'groupFeedDetail',
   components: {
@@ -79,14 +79,14 @@ export default {
       user: {},
       likesList: [],
       group: {}
-    }
+    };
   },
   computed: {
     groupID() {
-      return this.$route.params.groupID
+      return this.$route.params.groupID;
     },
     feedID() {
-      return this.$route.params.feedID
+      return this.$route.params.feedID;
     }
   },
   methods: {
@@ -105,58 +105,57 @@ export default {
           user,
           group
         }
-      } = await this.$http.get(`/plus-group/groups/${this.groupID}/posts/${this.feedID}`)
+      } = await this.$http.get(
+        `/plus-group/groups/${this.groupID}/posts/${this.feedID}`
+      );
 
-      this.title = title
-      this.body = body
-      this.created_at = createdAt
-      this.images = images
-      this.comments = comments
-      this.comments_count = commentsCount
-      this.liked = liked
-      this.likes_count = likesCount
-      this.views_count = viewsCount
-      this.user = user
-      this.group = group
+      this.title = title;
+      this.body = body;
+      this.created_at = createdAt;
+      this.images = images;
+      this.comments = comments;
+      this.comments_count = commentsCount;
+      this.liked = liked;
+      this.likes_count = likesCount;
+      this.views_count = viewsCount;
+      this.user = user;
+      this.group = group;
     },
 
     // 获取点赞列表
     async getFeedLikes() {
       // GET /group-posts/:post/likes
-      const {
-        data
-      } = await this.$http.get(`/plus-group/group-posts/${this.feedID}/likes`, {
-        limit: 5
-      })
-      this.likesList = data
-    },
-
-    goBack () {
-      this.to(`/group/detail/${this.groupID}`)
+      const { data } = await this.$http.get(
+        `/plus-group/group-posts/${this.feedID}/likes`,
+        {
+          limit: 5
+        }
+      );
+      this.likesList = data;
     },
     to(path) {
-      path = typeof path === 'string' ? { path } : path
+      path = typeof path === 'string' ? { path } : path;
       if (path) {
-        this.$router.push(path)
+        this.$router.push(path);
       }
     },
 
     likeFeed() {
       // POST /group-posts/:post/likes
       // DELETE /group-posts/:post/likes
-      const method = this.liked ? 'delete' : 'post'
-      const num = this.liked
-        ? this.likes_count - 1
-        : this.likes_count + 1
+      const method = this.liked ? 'delete' : 'post';
+      const num = this.liked ? this.likes_count - 1 : this.likes_count + 1;
       this.$http({
         method,
         url: `/plus-group/group-posts/${this.feedID}/likes`
-      }).then(({ data }) => {
-        this.liked = !this.liked
-        this.likes_count = num
-      }).catch(err => {
-        console.log(err)
       })
+        .then(({ data }) => {
+          this.liked = !this.liked;
+          this.likes_count = num;
+        })
+        .catch(err => {
+          console.log(err);
+        });
     },
     /**
      * 评论帖子
@@ -166,18 +165,21 @@ export default {
      */
     commentFeed(body, replyUser, cb) {
       // /group-posts/:post/comments
-      this.$http.post(`/plus-group/group-posts/${this.feedID}/comments`, {
-        body,
-        reply_user: replyUser
-      }).then(({ data: { message, comment } = {} }) => {
-        this.comments.unshift(comment)
-        this.comments_count += 1
-        cb && cb()
-      }).catch(err => {
-        const { response: { data = { message: '评论失败' } } = {} } = err
-        this.$Message.error(data)
-        cb && cb()
-      })
+      this.$http
+        .post(`/plus-group/group-posts/${this.feedID}/comments`, {
+          body,
+          reply_user: replyUser
+        })
+        .then(({ data: { message, comment } = {} }) => {
+          this.comments.unshift(comment);
+          this.comments_count += 1;
+          cb && cb();
+        })
+        .catch(err => {
+          const { response: { data = { message: '评论失败' } } = {} } = err;
+          this.$Message.error(data);
+          cb && cb();
+        });
     },
     /**
      * 弹出评论操作框
@@ -185,10 +187,10 @@ export default {
      */
     commentAction(uId, uName, cId) {
       if (uId === this.$store.state.CURRENTUSER.id) {
-        this.showCommentAction(cId)
+        this.showCommentAction(cId);
       } else {
-        const placeholder = uName && uId ? `回复${uName}` : '随便说说'
-        this.showCommentInput({ placeholder, reply_user: uId })
+        const placeholder = uName && uId ? `回复${uName}` : '随便说说';
+        this.showCommentInput({ placeholder, reply_user: uId });
       }
     },
     /**
@@ -196,54 +198,65 @@ export default {
      * @author jsonleex <jsonlseex@163.com>
      */
     showCommentAction(id) {
-      const that = this
+      const that = this;
       this.$Modal.info({
         render(h) {
           return h('div', {}, [
-            h('button', {
-              on: {
-                click: () => {
-                  that.deleteComment(id, this.onOk)
+            h(
+              'button',
+              {
+                on: {
+                  click: () => {
+                    that.deleteComment(id, this.onOk);
+                  }
                 }
-              }
-            }, '删除'),
-            h('button', {
-              on: {
-                click: () => {
-                  that.pinnedComment(id, this.onOk)
+              },
+              '删除'
+            ),
+            h(
+              'button',
+              {
+                on: {
+                  click: () => {
+                    that.pinnedComment(id, this.onOk);
+                  }
                 }
-              }
-            }, '申请评论置顶')
-          ])
+              },
+              '申请评论置顶'
+            )
+          ]);
         },
         onOk() {
-          this.$Modal.remove()
+          this.$Modal.remove();
         }
-      })
+      });
     },
     /**
      * 显示评论输入框
      * @author jsonleex <jsonlseex@163.com>
      */
     showCommentInput(options = {}) {
-      const that = this
-      const { reply_user } = options
-      options = Object.assign({}, {
-        onOk(txt) {
-          that.commentFeed(txt, reply_user, () => {
-            that.$Modal.remove()
-          })
-        }
-      }, options)
-      this.$Modal.commentInpt(options)
+      const that = this;
+      const { reply_user } = options;
+      options = Object.assign(
+        {},
+        {
+          onOk(txt) {
+            that.commentFeed(txt, reply_user, () => {
+              that.$Modal.remove();
+            });
+          }
+        },
+        options
+      );
+      this.$Modal.commentInpt(options);
     }
   },
   created() {
-    this.initData()
-    this.getFeedLikes()
+    this.initData();
+    this.getFeedLikes();
   }
-}
-
+};
 </script>
 <style lang='less'>
 .group-feed-detail {
@@ -251,7 +264,7 @@ export default {
   &-content {
     padding-left: 20px;
     padding-right: 20px;
-    background-color: #fff
+    background-color: #fff;
   }
 }
 
@@ -269,7 +282,7 @@ export default {
       color: #ccc;
       font-size: 24px;
       a {
-        color: #59b6d7
+        color: #59b6d7;
       }
     }
   }
@@ -297,7 +310,7 @@ export default {
     }
     &-r {
       text-align: right;
-      color: #999
+      color: #999;
     }
     p {
       padding-left: 20px;
@@ -333,7 +346,7 @@ export default {
       min-height: 125px;
       align-items: flex-start;
       justify-content: flex-start;
-      &+& {
+      & + & {
         border-top: 1px solid #ededed;
         /*no*/
       }
@@ -381,5 +394,4 @@ export default {
     }
   }
 }
-
 </style>

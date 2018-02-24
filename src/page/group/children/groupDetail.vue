@@ -86,17 +86,17 @@
           <div class="menu-item">
             更多操作
           </div>
-          <div class="menu-item" @click='to({ name: "groupMember", params: { groupID: group.id, rule: role} })'>
+          <router-link to='member' append class="menu-item">
             <v-icon class='menu-item-prepend' type='group-member'></v-icon>
             <div class="menu-item-title">成员</div>
             <div class="menu-item-tips">{{ group.users_count }}</div>
             <v-icon class='menu-item-append' type='base-arrow-r'></v-icon>
-          </div>
-          <div class="menu-item" @click='to(`/group/${groupID}/edit`)'>
+          </router-link>
+          <router-link class="menu-item" to='info' append>
             <v-icon class='menu-item-prepend' type='group-info'></v-icon>
             <div class="menu-item-title">详细信息</div>
             <v-icon class='menu-item-append' type='base-arrow-r'></v-icon>
-          </div>
+          </router-link>
 <!--           <div class="menu-item" v-if='role === "founder"'>
             <v-icon class='menu-item-prepend' type='group-income'></v-icon>
             <div class="menu-item-title">圈子收益</div>
@@ -119,15 +119,18 @@
   </div>
 </template>
 <script>
-import HeadTop from '@/components/HeadTop'
-import { GroupFeedItem } from '@/components/feed/feedItem'
-const filterTypes = [{
-  type: 'latest_post',
-  label: '最新帖子'
-}, {
-  type: 'latest_reply',
-  label: '最新回复'
-}]
+import HeadTop from '@/components/HeadTop';
+import { GroupFeedItem } from '@/components/feed/feedItem';
+const filterTypes = [
+  {
+    type: 'latest_post',
+    label: '最新帖子'
+  },
+  {
+    type: 'latest_reply',
+    label: '最新回复'
+  }
+];
 export default {
   name: 'groupDetail',
   components: {
@@ -151,163 +154,173 @@ export default {
       showLoading: true, // 显示加载动画
       touchend: false, // 没有更多数据
       loadTips: '下拉加载更多'
-    }
+    };
   },
   computed: {
     founder() {
-      return (this.group.founder || {}).user || {}
+      return (this.group.founder || {}).user || {};
     },
     bg_cover() {
       return {
         backgroundImage: `url(${this.avatar})`
-      }
+      };
     },
     isMember() {
-      return !!(this.group.joined)
+      return !!this.group.joined;
     },
     role() {
-      return (this.group.joined || {}).role || 'member'
+      return (this.group.joined || {}).role || 'member';
     },
     groupID() {
-      return this.$route.params.groupID
+      return this.$route.params.groupID;
     },
     topTranparent() {
-      return !(this.scrollTop > 110)
+      return !(this.scrollTop > 110);
     },
     translate3d() {
-      return this.menuOpen ? {
-        transform: `translate3d(-4.5rem, 0, 0)`
-      } : {}
+      return {
+        transform: this.menuOpen ? `translate(-4.5rem, 0)` : 'none'
+      };
     },
     avatar() {
-      return this.group.avatar
+      return this.group.avatar;
     },
     summary() {
-      const summary = this.group.summary || ''
-      return summary.length > 40 && !(this.showAllSummary) ? summary.slice(0, 38) + '...' : summary
+      const summary = this.group.summary || '';
+      return summary.length > 40 && !this.showAllSummary
+        ? summary.slice(0, 38) + '...'
+        : summary;
     }
   },
   watch: {
     filterType() {
-      this.getGroupFeeds()
+      this.getGroupFeeds();
     }
   },
   methods: {
     to(path) {
       if (path) {
-        path = typeof path === 'string' ? { path } : path
-        this.$router.push(path)
+        path = typeof path === 'string' ? { path } : path;
+        this.$router.push(path);
       }
     },
     goBack() {
-      this.$router.go(-1)
+      this.$router.go(-1);
     },
     openMenu() {
-      this.menuOpen = true
+      this.menuOpen = true;
     },
     closeMenu() {
-      this.menuOpen = false
+      this.menuOpen = false;
     },
     menuMainClick(e) {},
 
     getGroupDetail() {
       if (this.groupID) {
-        this.$http.get(`/plus-group/groups/${this.groupID}`).then(({ data = {} }) => {
-          this.group = data
-        })
+        this.$http
+          .get(`/plus-group/groups/${this.groupID}`)
+          .then(({ data = {} }) => {
+            this.group = data;
+          });
       } else {
-        this.$Message.error('发生了一些错误')
-        this.goBack()
+        this.$Message.error('发生了一些错误');
+        this.goBack();
       }
     },
 
     async getGroupFeeds() {
-      this.loadTips = '加载中...'
-      const {
-        data: {
-          posts,
-          pinned
-        } = {}
-      } = await this.$http.get(`/plus-group/groups/${this.groupID}/posts`, {
-        params: {
-          type: this.filterType.type
+      this.loadTips = '加载中...';
+      const { data: { posts, pinned } = {} } = await this.$http.get(
+        `/plus-group/groups/${this.groupID}/posts`,
+        {
+          params: {
+            type: this.filterType.type
+          }
         }
-      })
+      );
 
-      this.feeds = posts ? [...posts] : []
-      this.pinned = pinned ? [...pinned] : []
+      this.feeds = posts ? [...posts] : [];
+      this.pinned = pinned ? [...pinned] : [];
 
-      this.showLoading = false
+      this.showLoading = false;
       if (this.feeds.length === this.group.posts_count) {
-        this.loadTips = '没有更多'
-        this.touchend = true
+        this.loadTips = '没有更多';
+        this.touchend = true;
       }
     },
     async loaderMore() {
       if (this.touchend) {
-        return
+        return;
       }
       // 防止重复请求
       if (this.preventRepeatReuqest) {
-        return
+        return;
       }
-      this.showLoading = true
-      this.preventRepeatReuqest = true
-      this.loadTips = '加载中...'
+      this.showLoading = true;
+      this.preventRepeatReuqest = true;
+      this.loadTips = '加载中...';
       // GET /groups/:group/posts
-      const {
-        data: {
-          posts,
-          pinneds
+      const { data: { posts, pinneds } } = this.$http.get(
+        `/plus-group/groups/${this.groupID}/posts`,
+        {
+          params: {
+            type: this.filterType.type,
+            offset: this.feeds.length
+          }
         }
-      } = this.$http.get(`/plus-group/groups/${this.groupID}/posts`, {
-        params: {
-          type: this.filterType.type,
-          offset: this.feeds.length
-        }
-      })
-      this.feeds = [...this.feeds, ...posts]
-      this.pinneds = [...this.pinneds, ...pinneds]
-      this.showLoading = false
+      );
+      this.feeds = [...this.feeds, ...posts];
+      this.pinneds = [...this.pinneds, ...pinneds];
+      this.showLoading = false;
       if (this.feeds.length === this.group.posts_count) {
-        this.touchend = true
-        this.loadTips = '没有更多'
-        return false
+        this.touchend = true;
+        this.loadTips = '没有更多';
+        return false;
       }
-      this.preventRepeatReuqest = false
+      this.preventRepeatReuqest = false;
     },
     joinGroup() {
-      this.$http.put(`/plus-group/groups/${this.groupID}`).then(({ data }) => {
-        this.$Message.success(data)
-        this.getGroupDetail()
-      }).catch(err => {
-        const { response: { data = { message: '申请失败 可能是已经申请过了' } } = {} } = err
-        this.$Message.error(data)
-      })
+      this.$http
+        .put(`/plus-group/groups/${this.groupID}`)
+        .then(({ data }) => {
+          this.$Message.success(data);
+          this.getGroupDetail();
+        })
+        .catch(err => {
+          const {
+            response: { data = { message: '申请失败 可能是已经申请过了' } } = {}
+          } = err;
+          this.$Message.error(data);
+        });
     },
 
     exitGroup() {
       // DELETE /groups/:group/exit
-      this.$http.delete(`/plus-group/groups/${this.groupID}/exit`).then(({ data }) => {
-        this.$Message.success('退出成功')
-        this.goBack()
-      }).catch(err => {
-        const { response: { data = { message: '申请失败 可能是已经申请过了' } } = {} } = err
-        this.$Message.error(data)
-      })
+      this.$http
+        .delete(`/plus-group/groups/${this.groupID}/exit`)
+        .then(({ data }) => {
+          this.$Message.success('退出成功');
+          this.goBack();
+        })
+        .catch(err => {
+          const {
+            response: { data = { message: '申请失败 可能是已经申请过了' } } = {}
+          } = err;
+          this.$Message.error(data);
+        });
     },
 
     // 私聊圈主
     contactFounder() {
-      console.log('私聊')
+      console.log('私聊');
     },
 
     selectFilterType(type) {
-      this.filterType = type
+      this.filterType = type;
     },
 
     showFilter() {
-      this.filterShow = !this.filterShow
+      this.filterShow = !this.filterShow;
     },
 
     beforeToPost() {
@@ -315,7 +328,7 @@ export default {
         return this.$Modal.info({
           content: `你需要先加入"${this.group.name}"才能发布圈内帖子`,
           cancelText: `知道了`
-        })
+        });
       }
 
       this.$router.push({
@@ -323,12 +336,12 @@ export default {
         params: {
           groupID: this.group.id
         }
-      })
+      });
     },
 
     init() {
-      this.getGroupDetail()
-      this.getGroupFeeds()
+      this.getGroupDetail();
+      this.getGroupFeeds();
     }
   },
   /**
@@ -337,23 +350,23 @@ export default {
    */
   activated() {
     if (this.groupID === this.oldID) {
-
     } else {
-      this.init()
+      this.init();
     }
   },
   beforeRouteEnter(to, from, next) {
     next(vm => {
-      vm.oldID = to.params.groupID
-    })
+      vm.oldID = to.params.groupID;
+    });
   },
   mounted() {
-    this.init()
-    this.$el.addEventListener('scroll', (e) => {
-      this.scrollTop = this.$el.scrollTop
-    })
+    this.init();
+    this.$el.addEventListener('scroll', e => {
+      this.scrollTop = this.$el.scrollTop;
+    });
   }
-}
-
+};
 </script>
-<style lang='less' src='./groupDetail.less'></style>
+<style lang='less' src='./groupDetail.less'>
+
+</style>

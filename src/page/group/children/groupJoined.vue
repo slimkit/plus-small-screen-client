@@ -1,41 +1,42 @@
 <template>
+  <div>
+    <head-top :go-back='cancel' :title='`我加入的`'></head-top>
     <div>
-        <head-top :go-back='cancel' :title='`我加入的`'></head-top>
-        <div>
-            <group-item v-for='group in myGroups' :key='`group-${group.id}`' :group='group' :role='true'></group-item>
-        </div>
+        <group-item v-for='group in myGroups' :key='`group-${group.id}`' :group='group' :role='true'></group-item>
     </div>
+  </div>
 </template>
 <script>
-import HeadTop from '@/components/HeadTop'
-import groupItem from '../components/groupListItem'
+import HeadTop from '@/components/HeadTop';
+import groupItem from '../components/groupListItem';
 export default {
   name: 'joinedGroup',
   components: {
     HeadTop,
     groupItem
   },
-  data () {
+  data() {
     return {
       myGroups: []
-    }
+    };
   },
   methods: {
-    cancel () {
-      this.$router.go(-1)
+    cancel() {
+      this.$router.go(-1);
     },
-    getMyGroups () {
+    getMyGroups() {
       this.$http.get('/plus-group/user-groups').then(({ data = [] }) => {
         if (data) {
-          this.myGroups = [...data]
+          this.myGroups = [...data];
         }
-      })
+      });
     }
   },
-  created () {
-    this.getMyGroups()
+  created() {
+    this.getMyGroups();
   }
-}
+};
 </script>
 <style lang='less'>
+
 </style>

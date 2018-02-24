@@ -55,7 +55,7 @@
           <use xlink:href="#base-arrow-r"></use>
         </svg>
       </router-link>
-      <router-link tag='li' class="entry__item" to='/profile/group'>
+      <router-link tag='li' class="entry__item" to='/own/groups'>
         <svg class='entry__item--prepend'>
           <use xlink:href="#profile-group"></use>
         </svg>
