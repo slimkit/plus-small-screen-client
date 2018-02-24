@@ -5,8 +5,8 @@
         <router-link class='head-top-tabs-nav-item' to="/message/msg">
           <v-badge :dot="has_msg">消息</v-badge>
         </router-link>
-        <router-link class='head-top-tabs-nav-item' to="/message/notification">
-          <v-badge :dot='notification'>通知</v-badge>
+        <router-link class='head-top-tabs-nav-item' to="/message/charts">
+          <v-badge :dot='notification'>聊天</v-badge>
         </router-link>
       </div>
     </head-top>

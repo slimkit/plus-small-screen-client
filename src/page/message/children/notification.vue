@@ -1,5 +1,7 @@
 <template>
   <div :class="`${prefixCls}`">
+    <head-top :go-back='true' title='系统消息'></head-top>
+    <div></div>
     <load-more
       :onRefresh='onRefresh'
       :onLoadMore='onLoadMore'

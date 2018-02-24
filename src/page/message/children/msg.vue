@@ -30,6 +30,16 @@ export default {
     return {
       prefixCls,
       system: {
+        system: {
+          title: '系统消息',
+          placeholder: 'sPlaceholder',
+          icon: 'message-likes',
+          hanBadge: 0,
+          url: '/message/notification',
+          bgColor: '#59b6d7',
+          count: 'sCount',
+          time: 'sTime'
+        },
         comments: {
           title: '评论的',
           placeholder: 'cPlaceholder',
@@ -90,11 +100,17 @@ export default {
     aPlaceholder() {
       return this.msg.audits.placeholder;
     },
+    sPlaceholder () {
+      return '系统通知';
+    },
     cTime() {
       return this.msg.comments.time;
     },
     dTime() {
       return this.msg.diggs.time;
+    },
+    sTime () {
+      return '';
     },
     cCount() {
       return this.msg.comments.count;
@@ -104,6 +120,9 @@ export default {
     },
     aCount() {
       return this.msg.audits.feedCommentCount + this.msg.audits.groupJoinCount + this.msg.audits.groupPostCommentCount + this.msg.audits.groupPostCount + this.msg.audits.newsCommentCount;
+    },
+    sCount () {
+      return 0;
     }
   },
 

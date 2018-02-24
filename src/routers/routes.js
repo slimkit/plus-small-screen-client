@@ -348,16 +348,16 @@ const router = [
               title: '消息',
               requiresAuth: true
             }
-          },
-          {
-            path: 'notification',
-            component: notification,
-            meta: {
-              title: '通知',
-              requiresAuth: true
-            }
           }
         ]
+      },
+      {
+        path: '/message/notification',
+        component: notification,
+        meta: {
+          title: '通知',
+          requiresAuth: true
+        }
       },
       {
         path: '/message/comments',
