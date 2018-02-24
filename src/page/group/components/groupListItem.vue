@@ -1,7 +1,7 @@
 <template>
   <div :class="prefixCls" :id='`group-${group.id}`' @click='beforeToDetail'>
     <div :class="`${prefixCls}-header`">
-      <img :src="header">
+      <img v-lazyload="header">
     </div>
     <div :class="`${prefixCls}-info`">
       <div :class="`${prefixCls}-name`">
@@ -9,17 +9,15 @@
         <i v-if='group.mode ==="paid"' :class="`${prefixCls}-paid-icon`">付费</i>
       </div>
       <p>
-        <span>帖子
-          <i class="num">{{ group.posts_count || 0 | formatNum }}</i>
-        </span>
-        <span>成员
-          <i class="num">{{ group.users_count || 0 | formatNum }}</i>
-        </span>
+        <span>帖子<i class="num">{{ group.posts_count || 0 | formatNum }}</i></span>
+        <span>成员<i class="num">{{ group.users_count || 0 | formatNum }}</i></span>
       </p>
     </div>
-    <div :class="`${prefixCls}-action`">
+    <div :class="`${prefixCls}-action`" v-if='append'>
       <a v-if='!group.joined' @click.stop='beforeJoin' :class="[`${prefixCls}-action-btn`, 'join']">
-        <v-icon type='foot-plus'></v-icon>加入
+        <svg>
+          <use xlink:href="#foot-plus"></use>
+        </svg>加入
       </a>
       <div v-if='role' :class="[`${prefixCls}-role`, roles.cls]">{{ roles.label }}</div>
     </div>
@@ -34,7 +32,11 @@ export default {
       required: true
     },
 
-    role: Boolean
+    role: Boolean,
+    append: {
+      type: Boolean,
+      default: true
+    }
   },
   data() {
     return {
@@ -54,7 +56,8 @@ export default {
         label: '',
         cls: ''
       };
-      const { joined: { role = '普通成员' } = {} } = this.group;
+      const { joined } = this.group;
+      const { role = '普通成员' } = joined || {};
 
       switch (role) {
         case 'member':
@@ -85,7 +88,7 @@ export default {
       const { mode, money } = this.group;
       if (mode === 'paid') {
         const price = (~~money).toFixed(2);
-        this.$pay({
+        this.$Modal.pay({
           price,
           content: `您只需支付${price}来加入圈子`,
           onOk: this.joinGroup
@@ -111,7 +114,7 @@ export default {
 
     beforeToDetail() {
       if (this.group.mode === 'public' || this.group.joined) {
-        this.to(`/group/detail/${this.group.id}`);
+        this.to(`/group/${this.group.id}`);
       } else {
         this.$Message.error('需要先加入圈子, 才能查看圈子信息哦~');
       }
@@ -217,9 +220,9 @@ export default {
       border-radius: 8px;
       color: #59b6d7;
       background-color: #fff;
-      .v-icon {
-        width: 20px;
-        height: 20px;
+      svg {
+        width: 28px;
+        height: 28px;
         margin-right: 5px;
       }
     }
