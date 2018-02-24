@@ -1,40 +1,44 @@
 <template>
-  <div class="group-feed-detail">
+  <div class="feed-detail">
     <head-top :go-back='goBack' title='动态详情'></head-top>
-    <div class="gfd-body">
-      <div class="gfd-body-content" v-html='body'></div>
-      <div class="gfd-body-foot">
-        <div class="gfd-body-l">
-          <div class="gfd-like-list">
-            <div class="gfd-like-list-item" v-for='({user}) in likesList'>
+    <div class="ffd-body">
+      <div ref="images" class="ffd-body-images">
+        <img v-for="image in imagesFormat" :key="image.url" :src="image.url" :width="image.width" :height="image.height" />
+      </div>
+      <div ref="content" class="ffd-body-content" v-html='body'>
+      </div>
+      <div class="ffd-body-foot">
+        <div class="ffd-body-l">
+          <div :class="{'ffd-like-list-none': likes_count === 0}" class="ffd-like-list">
+            <div class="ffd-like-list-item" v-for='({user}) in likesList'>
               <v-avatar :src='user.avatar' size='small' :sex='user.sex' :key='user.id'></v-avatar>
             </div>
           </div>
           <span>{{ likes_count }}人点赞</span>
         </div>
-        <div class="gfd-body-r">
+        <div class="ffd-body-r">
           <p>发布于{{ created_at | time2tips }}</p>
           <p>{{ views_count }}人预览</p>
         </div>
       </div>
     </div>
-    <div class="gfd-foot">
-      <div class="gfd-foot-head">
+    <div class="ffd-foot">
+      <div class="ffd-foot-head">
         {{ comments_count }}条评论
       </div>
       <div class="gdf-comment-list">
-        <div class="gfd-comment-item" v-for='comment in pinneds'>
+        <div class="ffd-comment-item" v-for='comment in pinneds'>
           <router-link :to="`/user/${comment.user.id}`">
             <v-avatar :src='comment.user.avatar' :sex='comment.user.sex'></v-avatar>
           </router-link>
-          <div class="gfd-comment-body">
-            <section class="gfd-comment-body-top">
+          <div class="ffd-comment-body">
+            <section class="ffd-comment-body-top">
               <router-link :to="`/user/${comment.user.id}`" tag="span">{{ comment.user.name }}</router-link>
               <span>置顶</span>
               <span>{{ comment.created_at | time2tips }}</span>
             </section>
             <p v-if="!comment.reply_user" @click="commentAction(comment.user_id, comment.user.name, comment.id)">{{ comment.body }}</p>
-            <section v-else class="gfd-comment-body-reply" @click.stop="commentAction(comment.user_id, comment.user.name, comment.id)">
+            <section v-else class="ffd-comment-body-reply" @click.stop="commentAction(comment.user_id, comment.user.name, comment.id)">
               回复
               <span @click.prevent="goToUserHome(comment.reply.id)">{{ comment.reply.name }}</span>>: 
               <i @click.stop="commentAction(comment.user_id, comment.user.name, comment.id)">{{comment.body}}</i>
@@ -43,17 +47,17 @@
         </div>
       </div>
       <div class="gdf-comment-list">
-        <div class="gfd-comment-item" v-for='comment in comments'>
+        <div class="ffd-comment-item" v-for='comment in comments'>
           <router-link :to="`/user/${comment.user.id}`">
             <v-avatar :src='comment.user.avatar' :sex='comment.user.sex'></v-avatar>
           </router-link>
-          <div class="gfd-comment-body">
-            <section class="gfd-comment-body-usually">
+          <div class="ffd-comment-body">
+            <section class="ffd-comment-body-usually">
               <router-link :to="`/user/${comment.user.id}`" tag="span">{{ comment.user.name }}</router-link>
               <span>{{ comment.created_at | time2tips }}</span>
             </section>
             <p v-if="!comment.reply_user" @click="commentAction(comment.user_id, comment.user.name, comment.id)">{{ comment.body }}</p>
-            <section v-else class="gfd-comment-body-reply">
+            <section v-else class="ffd-comment-body-reply">
               回复
               <span @click.prevent="goToUserHome(comment.reply.id)">{{ comment.reply.name }}</span>: 
               <i @click.stop="commentAction(comment.user_id, comment.user.name, comment.id)">{{comment.body}}</i>
@@ -62,20 +66,20 @@
         </div>
       </div>
     </div>
-    <div class="gfd-action">
-      <div class="gfd-action-item" @click='likeFeed'>
+    <div class="ffd-action">
+      <div class="ffd-action-item" @click='likeFeed'>
         <v-icon :type='`${ liked ? "feed-like":"feed-unlike"}`'></v-icon>
         <p>喜欢</p>
       </div>
-      <div class="gfd-action-item" @click='showCommentInput'>
+      <div class="ffd-action-item" @click='showCommentInput'>
         <v-icon type='feed-comment'></v-icon>
         <p>评论</p>
       </div>
-      <div class="gfd-action-item">
+      <div class="ffd-action-item">
         <v-icon type='base-share'></v-icon>
         <p>分享</p>
       </div>
-      <div class="gfd-action-item">
+      <div class="ffd-action-item">
         <v-icon type='feed-more'></v-icon>
         <p>更多</p>
       </div>
@@ -106,14 +110,40 @@ export default {
     }
   },
   computed: {
+    bodyWith () {
+      return this.$refs.body;
+    },
     feedID() {
       return this.$route.params.feedID
     },
     currentUserId () {
-      return this.$store.state.CURRENTUSER.id;
+      return this.$store.state.CURRENTUSER.id || 0;
     },
-    currentUser () {
-      // return this.$store.getters.getUserById(this.currentUserId);
+    currentUserToken () {
+      return this.$store.state.CURRENTUSER.token || '';
+    },
+    clientWidth () {
+      return this.$refs.content.clientWidth || 0;
+    },
+    baseUrl () {
+      return document.head.querySelector('meta[name="api-basename"]').content;
+    },
+    // 图片展示
+    imagesFormat () {
+      if (this.images.length === 0) {
+        return [];
+      }
+      let formatImages = [];
+      this.images.map(item => {
+        let newItem = {};
+        let size = _.split(item.size, 'x');
+        let rato = parseInt(size[0]) / this.clientWidth;
+        newItem.width = this.clientWidth;
+        newItem.height = parseInt(parseInt(size[1]) / rato);
+        newItem.url = `${this.baseUrl}/files/${item.file}?token=${this.currentUserToken}`;
+        formatImages.push(newItem);
+      });
+      return formatImages;
     }
   },
   methods: {
@@ -299,7 +329,7 @@ export default {
 
 </script>
 <style lang='less'>
-.group-feed-detail {
+.feed-detail {
   font-size: 30px;
   &-content {
     padding-left: 20px;
@@ -307,11 +337,11 @@ export default {
     background-color: #fff
   }
   .head-top + * {
-    padding-top: 110px;
+    padding-top: 90px;
   }
 }
 
-.gfd {
+.ffd {
   &-head {
     padding-left: 20px;
     padding-right: 20px;
@@ -337,14 +367,26 @@ export default {
       width: 24px;
     }
   }
+  &-like-list-none {
+    margin-right: 0;
+  }
 
   &-body {
-    padding: 50px 20px;
+    padding-top: 90px;
+    padding: 50px 0;
     background-color: #fff;
+    &-images {
+      width: 100%;
+      img {
+        background-color: #f4f5f5;
+      }
+    }
+
     &-content {
       width: 100%;
       overflow-x: auto;
       word-break: break-all;
+      padding: 10px 20px;
     }
     &-l {
       color: #59b6d7;
@@ -361,11 +403,13 @@ export default {
     }
     &-foot {
       margin-top: 50px;
+      padding: 0 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       p {
         margin: 0;
+        padding: 0;
       }
     }
   }
@@ -373,6 +417,7 @@ export default {
   &-foot {
     background-color: #fff;
     margin-top: 10px;
+    padding-bottom: 95px;
     &-head {
       padding-left: 20px;
       padding-right: 20px;
