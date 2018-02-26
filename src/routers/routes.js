@@ -7,6 +7,7 @@ import forgot from '../page/forgot';
 import about from '../page/about';
 import setting from '../page/setting/setting';
 
+import newsRoutes from './news';
 import groupRoutes from './group';
 import questionRoutes from './question';
 
@@ -138,6 +139,7 @@ const router = [
     children: [
       /* 基础入口 */
       { path: '', redirect: '/signin' },
+      ...newsRoutes,
       ...groupRoutes,
       ...questionRoutes,
       {
