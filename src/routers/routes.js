@@ -19,7 +19,6 @@ const feed = () => import(/* webpackChunkName: 'feed' */ '../page/feed/feed'),
     import(/* webpackChunkName: 'common' */ '../page/discover/discover'),
   profile = () =>
     import(/* webpackChunkName: 'profile' */ '../page/profile/profile'),
-  news = () => import(/* webpackChunkName: 'news' */ '../page/news/news'),
   // 排行榜
   rank = () => import(/* webpackChunkName: 'rank' */ '../page/rank/rank'),
   rankUsers = () =>
@@ -165,7 +164,6 @@ const router = [
       } /* 发现 */,
 
       /* 功能页面 */
-      { path: '/news', component: news, meta: { title: '资讯' } } /* 资讯 */,
       {
         path: '/find',
         component: find,

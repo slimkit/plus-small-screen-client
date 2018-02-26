@@ -210,12 +210,13 @@ export default {
     top: 50%;
     transform: translateY(-50%);
     font-size: 32px;
-    .v-icon {
+    .v-icon,
+    svg {
       width: 40px;
       height: 40px;
       margin-right: 4px;
       margin-left: -4px;
-      + .v-icon {
+      + & {
         margin-left: 10px;
       }
     }
