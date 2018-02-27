@@ -79,3 +79,83 @@
 .router-fade-in-left-leave-active {
   transform: translate(-100%, 0);
 }
+
+// 上滑显示下滑隐藏
+.headroom {
+  &-head,
+  &-foot {
+    position: fixed;
+    left: 0;
+    right: 0;
+    animation-duration: 0.5s;
+    animation-fill-mode: both;
+  }
+  &-head {
+    top: 0;
+  }
+  &-foot {
+    bottom: 0;
+  }
+  &--headShow {
+    animation-name: headroom--headShow;
+  }
+  &--headHide {
+    animation-name: headroom--headHide;
+  }
+  &--footShow {
+    animation-name: headroom--footShow;
+  }
+  &--footHide {
+    animation-name: headroom--footHide;
+  }
+}
+
+// head显示
+@keyframes headroom--headShow {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -100%, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+// head隐藏
+@keyframes headroom--headHide {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+    transform: translate3d(0, -100%, 0);
+  }
+}
+
+// foot显示
+@keyframes headroom--footShow {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 100%, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+// foot隐藏
+@keyframes headroom--footHide {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+    transform: translate3d(0, 100%, 0);
+  }
+}
