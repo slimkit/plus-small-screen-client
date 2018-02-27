@@ -140,7 +140,6 @@ export default {
 
 .searchPop {
     overflow: hidden;
-    position: relative;
     padding: 46px 0 0;
     width: 100%;
     height: 100%;
