@@ -302,7 +302,7 @@ export default {
         if (typeof this.onLoadMore === 'function') {
           this.scEl.onscroll = this.handleScrolling();
         }
-        if (!this.fulled()) {
+        if (typeof this.onRefresh === 'function' && !this.fulled()) {
           this.beforeRefresh();
         }
       });

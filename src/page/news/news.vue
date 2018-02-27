@@ -1,7 +1,7 @@
 <template>
   <div class="p-news">
     <head-top :go-back='true' title='资讯' :append='true'>
-      <router-link to='serach' append tag='svg' slot='append'>
+      <router-link to='search' append tag='svg' slot='append'>
         <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-search"></use>
       </router-link>
     </head-top>
