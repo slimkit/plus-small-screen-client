@@ -51,7 +51,7 @@
           </i>
         </li>
       </ul>
-      <ul class="component-lists">
+      <!-- <ul class="component-lists">
         <li class="component-list" @click="changeUrl(`/rank`)">
           <i class="component-icon">
             <RankingIcon height="21" width="21" />
@@ -63,7 +63,7 @@
             <RightArrowIcon height="18" width="18" color="#999" />
           </i>
         </li>
-      </ul>
+      </ul> -->
       <ul class="component-lists">
         <li class="component-list" @click="changeUrl(`/findsomeone`)">
           <i class="component-icon">
