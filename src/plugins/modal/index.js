@@ -1,24 +1,24 @@
-import Modal from './modalInstance'
-import pay from './components/pay'
-import commentInpt from './components/commentInput'
-import './modal.less'
+import Modal from './modalInstance';
+import pay from './components/pay';
+import commentInpt from './components/commentInput';
+import './modal.less';
 
-let modalInstance
-const prefixCls = 'v-modal'
+let modalInstance;
+const prefixCls = 'v-modal';
 
 function getModalInstance(render = undefined) {
-  modalInstance = modalInstance || Modal.newInstance({ render })
-  return modalInstance
+  modalInstance = modalInstance || Modal.newInstance({ render });
+  return modalInstance;
 }
 
 function showModal(options = {}) {
-  const render = 'render' in options ? options.render : undefined
-  let instance = getModalInstance(render)
+  const render = 'render' in options ? options.render : undefined;
+  let instance = getModalInstance(render);
   options.onRemove = function() {
-    modalInstance = null
-  }
+    modalInstance = null;
+  };
 
-  instance.show(options)
+  instance.show(options);
 }
 
 /**
@@ -26,8 +26,8 @@ function showModal(options = {}) {
  * @author jsonleex <jsonlseex@163.com>
  */
 Modal.show = options => {
-  return showModal(options)
-}
+  return showModal(options);
+};
 
 /**
  * 移除当前弹窗
@@ -35,11 +35,11 @@ Modal.show = options => {
  */
 Modal.remove = () => {
   if (!modalInstance) {
-    return false
+    return false;
   }
-  const instance = getModalInstance()
-  instance.remove()
-}
+  const instance = getModalInstance();
+  instance.remove();
+};
 
 /**
  * 提示弹窗
@@ -53,7 +53,7 @@ Modal.info = (options = {}) => {
     {
       maskClosable: false
     }
-  )
+  );
   const render = h => {
     return h(
       'div',
@@ -64,10 +64,12 @@ Modal.info = (options = {}) => {
         h(
           'div',
           {
-            directives: [{
-              name: 'show',
-              value: typeof options.title === 'boolean' && !!options.title
-            }],
+            directives: [
+              {
+                name: 'show',
+                value: typeof options.title === 'boolean' && !!options.title
+              }
+            ],
             class: `${prefixCls}-info-head`
           },
           options.title
@@ -90,7 +92,7 @@ Modal.info = (options = {}) => {
               {
                 on: {
                   click: () => {
-                    modalInstance.remove()
+                    modalInstance.remove();
                   }
                 }
               },
@@ -99,18 +101,18 @@ Modal.info = (options = {}) => {
           ]
         )
       ]
-    )
-  }
+    );
+  };
 
-  return showModal({ ...options, render })
-}
+  return showModal({ ...options, render });
+};
 
 /**
  * 支付弹窗
  * @author jsonleex <jsonlseex@163.com>
  */
 Modal.pay = (options = {}) => {
-  const { content, price, onOk } = options
+  const { content, price, onOk } = options;
   return showModal({
     render(h) {
       return h(pay, {
@@ -118,7 +120,7 @@ Modal.pay = (options = {}) => {
           'on-close': Modal.remove,
           'on-ok': cb => {
             if (typeof onOk === 'function') {
-              onOk(cb)
+              onOk(cb);
             }
           }
         },
@@ -126,15 +128,28 @@ Modal.pay = (options = {}) => {
           content,
           price
         }
-      })
+      });
     }
-  })
-}
+  });
+};
 
+/**
+ * 公共评论输入框
+ *
+ * options: {
+ *  placeholder: {
+ *    type: String,
+ *    default: '随便说说~',
+ *    requried: true
+ *  },
+ *  maxlength: Number,
+ *  onOk: Function
+ * }
+ */
 Modal.commentInpt = (options = {}) => {
-  let onOk = () => {}
+  let onOk = () => {};
   if ('onOk' in options) {
-    onOk = options.onOk
+    onOk = options.onOk;
   }
   const _props = {
     maskClosable: true,
@@ -144,12 +159,12 @@ Modal.commentInpt = (options = {}) => {
           'on-ok': onOk
         },
         props: options
-      })
+      });
     }
-  }
-  return showModal(_props)
-}
-export default Modal
+  };
+  return showModal(_props);
+};
+export default Modal;
 // export default {
 //   install(vue) {
 //     if (this.installed) return

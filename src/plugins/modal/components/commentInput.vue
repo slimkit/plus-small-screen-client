@@ -1,6 +1,5 @@
 <template>
   <div class="comment-input">
-    <!-- v-txtautosize  -->
     <textarea
     :maxlength="maxlength"
     autofocus="true"
@@ -14,11 +13,9 @@
         <p>{{ len }}/{{maxlength}}</p>
       </template>
       <button :disabled="disabled" @click='handleDone'>
-        <template v-if='loading'>
-          <svg>
-            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="base-loading"></use>
-          </svg>
-        </template>
+        <svg v-if='loading'>
+          <use xlink:href="#base-loading"></use>
+        </svg>
         <template v-else>发送</template>
       </button>
     </div>
@@ -38,7 +35,7 @@ export default {
       type: [Number, String],
       default: 255,
       validator(val) {
-        return typeof +val === 'number'
+        return typeof +val === 'number';
       }
     }
   },
@@ -46,51 +43,52 @@ export default {
     return {
       loading: false,
       currentValue: ''
-    }
+    };
   },
   computed: {
     disabled() {
-      return !(this.len > 0 && !this.loading)
+      return !(this.len > 0 && !this.loading);
     },
     len() {
-      return this.currentValue.length
+      return this.currentValue.length;
     }
   },
   methods: {
     handleDone() {
-      this.loading = true
+      this.loading = true;
       if (this.currentValue) {
-        this.$emit('on-ok', this.currentValue)
+        this.$emit('on-ok', this.currentValue);
       }
     },
     handleInput(event) {
-      let value = event.target.value
-      this.$emit('input', value)
-      this.setCurrentValue(value)
+      this.loading = false;
+      let value = event.target.value;
+      this.$emit('input', value);
+      this.setCurrentValue(value);
     },
     handleEnter() {
-      this.handleDone()
+      this.handleDone();
     },
     setCurrentValue(value) {
-      if (value === this.currentValue) return
-      this.currentValue = value
-      this.resizeTextarea(this.$refs.input)
+      if (value === this.currentValue) return;
+      this.currentValue = value;
+      this.resizeTextarea(this.$refs.input);
     },
     resizeTextarea(el) {
-      const originalHeight = el.style.height
-      el.style.height = ''
-      let endHeight = el.scrollHeight
+      const originalHeight = el.style.height;
+      el.style.height = '';
+      let endHeight = el.scrollHeight;
       if (el.scrollHeight === 0) {
-        el.style.height = originalHeight
-        return
+        el.style.height = originalHeight;
+        return;
       }
-      el.style.height = endHeight + 'px'
+      el.style.height = endHeight + 'px';
     }
   },
   mounted() {
-    this.$refs.input.focus()
+    this.$refs.input.focus();
   }
-}
+};
 </script>
 <style lang='less'>
 .comment-input {
@@ -129,9 +127,12 @@ export default {
     margin-left: 15px;
   }
   button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-size: 24px;
     margin-left: 15px;
-    width: 89px;
+    width: 100px;
     height: 50px;
     color: #fff;
     background-color: #59b6d7;
@@ -140,7 +141,7 @@ export default {
     &[disabled] {
       background-color: #ccc;
     }
-    .v-icon {
+    svg {
       width: 28px;
       height: 28px;
       animation: rotate360 2s infinite linear;
