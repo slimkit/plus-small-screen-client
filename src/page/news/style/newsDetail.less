@@ -1,0 +1,115 @@
+.news-detail {
+  &--body {
+    // min-height: 100vh;
+    background-color: #fff;
+    p {
+      margin: 9px 0;
+    }
+    .head {
+      padding: 0 20px;
+      .title {
+        color: #59b6d7;
+        font-size: 50px;
+        font-weight: normal;
+        letter-spacing: 1px; /*no*/
+      }
+      p {
+        color: #ccc;
+        font-size: 24px;
+      }
+      i.news-cate {
+        padding: 4px;
+        font-style: normal;
+        display: inline-block;
+        font-size: 20px;
+        height: 30/0.95px;
+        color: #59b6d7;
+        line-height: 30/0.95-10px;
+        border: 1px solid currentColor; /*no*/
+        -webkit-transform-origin-x: 0;
+        -webkit-transform: scale(0.95);
+        transform: scale(0.95);
+      }
+    }
+    .subject {
+      margin: 50px 20px 20px;
+      padding: 30px;
+      font-size: 26px;
+      line-height: 36px;
+      background-color: #f4f5f6;
+      color: #999;
+      border-left: 5px solid #e3e3e3;
+      &:before {
+        content: '[摘要]';
+        color: #666;
+      }
+    }
+    .content {
+      margin: 50px 0 0;
+      padding: 0 20px;
+      font-size: 30px;
+      line-height: 48px;
+      p {
+        margin-top: 50px;
+      }
+      img {
+        max-width: 100%;
+      }
+    }
+    .foot {
+      padding: 50px 20px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      &-left {
+        span {
+          color: #59b6d7;
+          font-size: 28px;
+          vertical-align: middle;
+        }
+      }
+      &-right {
+        font-size: 28px;
+        text-align: right;
+        color: #ccc;
+      }
+      .likes-list {
+        display: inline;
+        list-style: none;
+        vertical-align: middle;
+        li {
+          display: inline-block;
+          &:not(:first-child) {
+            margin-left: -15px;
+          }
+        }
+      }
+    }
+  }
+}
+
+.bt10 {
+  border-top-style: solid;
+  border-top-width: 10px;
+}
+.bdcf4f5f6 {
+  border-color: #f4f5f6;
+}
+.m-panel {
+  background-color: #fff;
+  h3 {
+    span {
+      display: inline-block;
+      height: 100%;
+      border-bottom: 2px solid #59b6d7; /*no*/
+    }
+    margin: 0;
+    padding: 0 20px;
+    height: 80px;
+    line-height: 78px;
+    font-size: 35px;
+    font-weight: normal;
+    border-bottom: 1px solid #dedede; /*no*/
+  }
+}

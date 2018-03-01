@@ -1,16 +1,16 @@
 <template>
-  <section class="news-detail">
-    <div class="news-detail--body">
+  <router-link tag='div' :to='`/news/${news.id}`' replace class="news-item">
+    <section class="news-item--body">
       <h2>{{ title }}</h2>
       <p>
         <i class="news-cate">{{ cate }}</i>
         <span>作者 {{ author }}</span><span>・{{ hits }}浏览</span><span>・{{ time | time2tips }}</span>
       </p>
+    </section>
+    <div class="news-item--poster" v-if='image'>
+      <img v-lazyload="image">
     </div>
-    <div class="news-detail--poster" v-if='image'>
-      <img v-lazyload="image" alt="">
-    </div>
-  </section>
+  </router-link>
 </template>
 <script>
 export default {
