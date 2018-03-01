@@ -87,7 +87,9 @@
     position: fixed;
     left: 0;
     right: 0;
+    -webkit-animation-duration: 0.5s;
     animation-duration: 0.5s;
+    -webkit-animation-fill-mode: both;
     animation-fill-mode: both;
   }
   &-head {
@@ -97,15 +99,19 @@
     bottom: 0;
   }
   &--headShow {
+    -webkit-animation-name: headroom--headShow;
     animation-name: headroom--headShow;
   }
   &--headHide {
+    -webkit-animation-name: headroom--headHide;
     animation-name: headroom--headHide;
   }
   &--footShow {
+    -webkit-animation-name: headroom--footShow;
     animation-name: headroom--footShow;
   }
   &--footHide {
+    -webkit-animation-name: headroom--footHide;
     animation-name: headroom--footHide;
   }
 }
@@ -114,11 +120,26 @@
 @keyframes headroom--headShow {
   from {
     opacity: 0;
+    -webkit-transform: translate3d(0, -100%, 0);
     transform: translate3d(0, -100%, 0);
   }
 
   to {
     opacity: 1;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+  }
+}
+@-webkit-keyframes headroom--headShow {
+  from {
+    opacity: 0;
+    -webkit-transform: translate3d(0, -100%, 0);
+    transform: translate3d(0, -100%, 0);
+  }
+
+  to {
+    opacity: 1;
+    -webkit-transform: translate3d(0, 0, 0);
     transform: translate3d(0, 0, 0);
   }
 }
@@ -131,6 +152,18 @@
 
   to {
     opacity: 0;
+    -webkit-transform: translate3d(0, -100%, 0);
+    transform: translate3d(0, -100%, 0);
+  }
+}
+@-webkit-keyframes headroom--headHide {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+    -webkit-transform: translate3d(0, -100%, 0);
     transform: translate3d(0, -100%, 0);
   }
 }
@@ -139,11 +172,27 @@
 @keyframes headroom--footShow {
   from {
     opacity: 0;
+    -webkit-transform: translate3d(0, 100%, 0);
     transform: translate3d(0, 100%, 0);
   }
 
   to {
     opacity: 1;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@-webkit-keyframes headroom--footShow {
+  from {
+    opacity: 0;
+    -webkit-transform: translate3d(0, 100%, 0);
+    transform: translate3d(0, 100%, 0);
+  }
+
+  to {
+    opacity: 1;
+    -webkit-transform: translate3d(0, 0, 0);
     transform: translate3d(0, 0, 0);
   }
 }
@@ -156,6 +205,19 @@
 
   to {
     opacity: 0;
+    -webkit-transform: translate3d(0, 100%, 0);
+    transform: translate3d(0, 100%, 0);
+  }
+}
+
+@-webkit-keyframes headroom--footHide {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+    -webkit-transform: translate3d(0, 100%, 0);
     transform: translate3d(0, 100%, 0);
   }
 }
