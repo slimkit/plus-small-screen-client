@@ -6,7 +6,6 @@
         <input type="text" v-model='keyword' @keypress='beforeSearch($event)'>
       </div>
     </head-top>
-    <div></div>
     <load-more
     ref='loadmore'
     :onRefresh='topEvent'
