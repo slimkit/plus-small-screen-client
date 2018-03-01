@@ -158,6 +158,9 @@ export default {
     };
   },
   computed: {
+    canPulldown() {
+      return typeof this.onRefresh === 'function';
+    },
     scEl() {
       return this.scrollTarget === document.documentElement
         ? window
@@ -252,6 +255,7 @@ export default {
     startDrag(e) {
       e = e.changedTouches ? e.changedTouches[0] : e;
       if (
+        this.canPulldown &&
         this.scrollTarget.scrollTop <= 0 &&
         !this.loading &&
         !this.requesting
@@ -288,9 +292,13 @@ export default {
      */
     beforeRefresh() {
       if (this.requesting) return;
-      this.requesting = true;
-      this.dY = this.topDistance;
-      this.onRefresh();
+      if (typeof this.onRefresh === 'function') {
+        this.requesting = true;
+        this.dY = this.topDistance;
+        this.onRefresh();
+      } else {
+        this.dY = 0;
+      }
     },
     // 过渡
     transitionEnd() {},
@@ -302,7 +310,7 @@ export default {
         if (typeof this.onLoadMore === 'function') {
           this.scEl.onscroll = this.handleScrolling();
         }
-        if (typeof this.onRefresh === 'function' && !this.fulled()) {
+        if (this.canPulldown && !this.fulled()) {
           this.beforeRefresh();
         }
       });
