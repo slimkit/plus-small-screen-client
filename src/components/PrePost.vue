@@ -104,6 +104,16 @@
     }),
     props: ['config'],
     methods: {
+      beforeEnter(){
+        if(this.mine && this.mine.token){
+          return true
+        }else {
+          this.$nextTick(this.close)
+          this.$Message.error('请登录');
+          this.$router.push('/login');
+          return false;
+        }
+      },
       /**
        * 关闭prepost
        * @return {[type]} [description]
@@ -118,6 +128,7 @@
        * @return {[type]} [description]
        */
       postTextFeed () {
+        if(!this.beforeEnter()) return;
         this.$store.dispatch(SHOWPOST, cb => {
           cb ({
             show: true,
@@ -133,6 +144,7 @@
        * @return {[type]} [description]
        */
       postImageFeed () {
+        if(!this.beforeEnter()) return;
         this.$store.dispatch(SHOWPOST, cb => {
           cb ({
             show: true
@@ -149,6 +161,7 @@
        * @return {[type]} [description]
        */
       postQuestion () {
+        if(!this.beforeEnter()) return;
         this.$store.dispatch(SHOWQUESTIONPOST, cb => {
           cb({
             show: true,
@@ -164,6 +177,7 @@
        * @return {[type]} [description]
        */
       checkin () {
+        if(!this.beforeEnter()) return;
         this.$store.dispatch(SHOWCHECKIN, cb => {
           cb(true);
         });
@@ -171,10 +185,12 @@
           this.close();
         }, 300)
       },
+      addNews(){console.log('投稿开发中...')}
     },
     computed: {
       ...mapState({
-        show: state => state.prePost.prePost.show
+        show: state => state.prePost.prePost.show,
+        mine: state => state.users.mine
       }),
     },
   };
