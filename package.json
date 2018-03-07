@@ -65,6 +65,7 @@
     "markdown-it": "^8.4.0",
     "markdown-it-plus-image": "^1.0.1",
     "normalize.css": "^8.0.0",
+    "photoswipe": "^4.1.2",
     "plus-message-bundle": "^1.0.0",
     "store": "^2.0.12",
     "swiper": "^4.1.6",
