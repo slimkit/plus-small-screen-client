@@ -16,7 +16,7 @@
   <meta name="x5-fullscreen" content="true">
   <meta name="full-screen" content="yes">
   <title>{{ $siteName }}</title>
-  <script src="https://webapi.amap.com/maps?v=1.3&key=abb777bcccf278aa589076944112267e"></script>
+  <script src="{{ $jssdkAmap }}"></script>
 <!--   <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.css?v=20171120" rel="stylesheet"> -->
   <link rel="stylesheet" href="{{ mix('css/app.css', 'assets/h5') }}?v=20171120" />
 </head>
