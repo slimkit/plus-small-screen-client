@@ -7,8 +7,12 @@
   <meta name="keywords" content="{{ $siteKeywords }}">
   <meta name="description" content="{{ $siteDescription }}">
   <title>{{ $siteName }}</title>
-  <script src="https://webapi.amap.com/maps?v=1.3&key=abb777bcccf278aa589076944112267e"></script>
-  <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.css?v=20171120" rel="stylesheet">
+  <script src="{{ $jssdkAmap }}"></script>
+  @if($ssl) 
+    <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.css?v=20171120" rel="stylesheet">
+  @else
+    <link href="http://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.css?v=20171120" rel="stylesheet">
+  @endif
   <link rel="stylesheet" href="{{ mix('css/app.css', 'assets/h5') }}?v=20171120" />
   <style>
     /*********************** markdown 样式重构 *******************/
