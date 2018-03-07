@@ -1,210 +1,179 @@
 <template>
-    <div :class='classes'>
-        <template v-if='(imgs.length != 5 && imgs.length != 7)'>
-            <div :class="[`${prefixCls}-img-w`, `img-${index + 1}`]" v-for='(img, index) in imgs' v-if='img.file' @click.stop='viewPic(img.file)'>
-                <img v-lazyload="`/api/v2/files/${img.file}`">
-            </div>
-        </template>
-        <!-- 五张图 -->
-        <template v-if='imgs.length === 5'>
-            <div :class="[`${prefixCls}-img-w`, `img-1`]" @click.stop='viewPic(imgs[0].file)'>
-                <img v-lazyload="`/api/v2/files/${imgs[0].file}`">
-            </div>
-            <div :class="[`img-2_3`]">
-                <div :class="[`${prefixCls}-img-w`, `img-2`]" @click.stop='viewPic(imgs[1].file)'>
-                    <img v-lazyload="`/api/v2/files/${imgs[1].file}`">
-                </div>
-                <div :class="[`${prefixCls}-img-w`, `img-3`]" @click.stop='viewPic(imgs[2].file)'>
-                    <img v-lazyload="`/api/v2/files/${imgs[2].file}`">
-                </div>
-            </div>
-            <div :class="[`${prefixCls}-img-w`, `img-4`]" @click.stop='viewPic(imgs[3].file)'>
-                <img v-lazyload="`/api/v2/files/${imgs[3].file}`">
-            </div>
-            <div :class="[`${prefixCls}-img-w`, `img-5`]" @click.stop='viewPic(imgs[4].file)'>
-                <img v-lazyload="`/api/v2/files/${imgs[4].file}`">
-            </div>
-        </template>
-        <!-- 七张图 -->
-        <template v-if='imgs.length === 7'>
-            <div class="img-1_4">
-                <div :class="[`${prefixCls}-img-w`, `img-1`]" @click.stop='viewPic(imgs[0].file)'>
-                    <img v-lazyload="`/api/v2/files/${imgs[0].file}`">
-                </div>
-                <div :class="[`${prefixCls}-img-w`, `img-4`]" @click.stop='viewPic(imgs[3].file)'>
-                    <img v-lazyload="`/api/v2/files/${imgs[3].file}`">
-                </div>
-            </div>
-            <div class="img-2__7">
-                <div class="img-2_3">
-                    <div :class="[`${prefixCls}-img-w`, `img-2`]" @click.stop='viewPic(imgs[1].file)'>
-                        <img v-lazyload="`/api/v2/files/${imgs[1].file}`">
-                    </div>
-                    <div :class="[`${prefixCls}-img-w`, `img-3`]" @click.stop='viewPic(imgs[2].file)'>
-                        <img v-lazyload="`/api/v2/files/${imgs[2].file}`">
-                    </div>
-                </div>
-                <div :class="[`${prefixCls}-img-w`, `img-5`]" @click.stop='viewPic(imgs[4].file)'>
-                    <img v-lazyload="`/api/v2/files/${imgs[4].file}`">
-                </div>
-                <div class="img-6_7">
-                    <div :class="[`${prefixCls}-img-w`, `img-6`]" @click.stop='viewPic(imgs[5].file)'>
-                        <img v-lazyload="`/api/v2/files/${imgs[5].file}`">
-                    </div>
-                    <div :class="[`${prefixCls}-img-w`, `img-7`]" @click.stop='viewPic(imgs[6].file)'>
-                        <img v-lazyload="`/api/v2/files/${imgs[6].file}`">
-                    </div>
-                </div>
-            </div>
-        </template>
-    </div>
+  <div
+  :id='`m-pics${id}`'
+  :class="['m-pics',`m-pics-${pics.length}`]">
+    <ul class="m-pics-list">
+      <li :key='`pics-${id}-${index}` 'v-for='(img, index) in pics'>
+        <!-- :style='{"--w": img.w, "--h": img.h}' -->
+        <div
+        :class="['m-pics-box',{ 'long': isLongImg(img) }]"
+        :style='pics.length === 1 ? longStyle(img.w, img.h) : ""'>
+          <div
+          class="m-pic" 
+          @click.stop='handleClick($event, index)'
+          :style="{ backgroundImage: `url(${img.src})` }" />
+        </div>
+      </li>
+    </ul>
+  </div>
 </template>
 <script>
-const prefixCls = 'feed_img'
+import bus from '@/bus.js';
 export default {
-  name: 'feedImages',
+  name: 'm-pics',
   props: {
-    imgs: Array
-  },
-  data () {
-    return {
-      prefixCls
-    }
-  },
-  computed: {
-    classes () {
-      return [
-        `${prefixCls}`,
-        `${prefixCls}-i${this.imgs.length}`
-      ]
+    id: {
+      type: Number,
+      required: true
+    },
+    pics: {
+      type: Array
     }
   },
   methods: {
-    viewPic (id) {
-      this.$emit('viewPic', id)
+    handleClick($event, index) {
+      // const clickEl = $event.target;
+      const els = this.$el.querySelectorAll('.m-pic');
+      const images = this.pics.map((img, index) => {
+        return {
+          ...img,
+          el: els[index]
+        };
+      });
+      bus.$emit('mvGallery', index, images);
+    },
+    isLongImg(img) {
+      const [w, h] = img.size.split('x');
+      img.title = '查看原图';
+      img.src = `/api/v2/files/${img.file}`;
+      img.w = w;
+      img.h = h;
+      return w > 3 * h || h > 3 * w;
+    },
+
+    longStyle(w, h) {
+      w = w > 518 ? 518 : w;
+      h = h > 960 ? 960 : h;
+      return {
+        width: w + 'px',
+        paddingBottom: h / w * 100 + '%'
+      };
     }
   }
-}
+};
 </script>
 <style lang='less'>
-@feed_img-prefix: feed_img;
-.@{feed_img-prefix} {
-    width: 520px;
-    overflow-x: hidden;
-    display: flex;
-    flex-wrap: wrap;
-    img {
-        overflow: hidden;
-        height: 100%;
-        width: 100%;
-        object-fit: cover;
+.m-pic {
+  cursor: pointer;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: 50%;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+.m-pics {
+  width: 100%;
+  overflow-y: hidden;
+  &-list {
+    text-align: left;
+    margin-bottom: -4px;
+    font-size: 0;
+    max-width: 518px;
+    max-height: 692px;
+    li {
+      width: 1/3 * 100%;
+      display: inline-block;
+      vertical-align: top;
+      padding: 0 4px 4px 0;
+    }
+  }
+  &-box {
+    display: inline-block;
+    position: relative;
+    padding-bottom: 100%;
+    width: 100%;
+    height: 0;
+    background-color: #f4f5f6;
+    &.long {
+      .m-pic:after {
+        display: block;
         position: absolute;
-        left: 0;
-        right: 0;
-        top: 0;
-        bottom: 0;
-        margin: auto;
-        /*background-color: rgba(135, 135, 135, .4);*/
+        bottom: 10px;
+        right: 5px;
+        content: '长图';
+        background-color: #c8a06c;
+        text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
+        background-image: -webkit-linear-gradient(
+          25deg,
+          #e8d1b3 0%,
+          rgba(232, 209, 179, 0.6) 100%
+        );
+        background-image: -o-linear-gradient(
+          25deg,
+          #e8d1b3 0%,
+          rgba(232, 209, 179, 0.6) 100%
+        );
+        background-image: linear-gradient(
+          115deg,
+          #e8d1b3 40%,
+          rgba(232, 209, 179, 0.6) 50%
+        );
+        text-align: center;
+        width: 60px;
+        padding: 5px;
+        height: 30px;
+        line-height: 20px;
+        font-size: 20px;
+        color: #fff;
+      }
+      .m-pic {
+        background-position: top center;
+        max-height: 690px;
+      }
     }
-    .feed_img-img-w {
-        height: auto;
-        flex: 0 0 auto;
-        overflow: hidden;
-        margin: 0 4px 4px 0;
-        position: relative;
-        &:after {
-            content: '';
-            display: block;
-            padding-top: 100%;
-        }
-        &.long:before {
-            content: '长图';
-            display: block;
-            position: absolute;
-            bottom: 1px;
-            /*no*/
-            right: 1px;
-            /*no*/
-            padding: 0 5px;
-            height: 30px;
-            border-radius: 1px;
-            /*no*/
-            line-height: 30px;
-            font-size: 20px;
-            z-index: 1;
-            color: #fff;
-            opacity: .9;
-            background: linear-gradient(135deg, #E8D1B3 0%, #E8D1B3 38%, #C8A06C 42%, #C8A06C 100%);
-            max-height: 6.2rem !important;
-        }
+  }
+  &-1 {
+    text-align: left;
+    .m-pics-list {
+      display: inline-block;
+      overflow-y: hidden;
     }
-    &-i1 {
-        .feed_img-img-w {
-            width: 100%;
-            background: none;
-            &:after {
-                display: none;
-            }
-            img {
-                margin: initial;
-                display: block;
-                width: initial;
-                height: initial;
-                width: 100%;
-                position: initial;
-                background-color: rgba(135, 135, 135, .4);
-                max-height: 688px;
-            }
-        }
+    li {
+      width: 100%;
     }
-    &-i2,
-    &-i4 {
-        .feed_img-img-w {
-            width: calc(~'50% - 4px');
-        }
+    .long {
+      width: calc(~'var(--w) * 1px');
+      padding-bottom: calc(~'var(--h) / var(--w) * 100%');
+      max-width: 100%;
     }
-    &-i5 {
-        .feed_img-img-w {
-            &:first-child {
-                width: calc(~'(2/3)*100% - 4px');
-            }
-            &:nth-child(3),
-            &:nth-child(4) {
-                width: calc(~'(1/2)*100% - 4px');
-            }
-        }
-        .img-2_3 {
-            width: calc(~'(1/3)*100% - 4px');
-            background-color: initial;
-            .feed_img-img-w {
-                width: 100% !important;
-            }
-        }
+  }
+  &-2,
+  &-4 {
+    li {
+      width: 50%;
     }
-    &-i7 {
-        .img-1_4, .img-2__7 {
-            width: calc(~'50% - 4px');
-        }
-        .img-2_3, .img-6_7 {
-            display: flex;
-            .feed_img-img-w {
-                width: calc(~'50% - 4px');
-            }
-        }
+  }
+  &-5 {
+    position: relative;
+    li:nth-child(1),
+    li:nth-child(2) {
+      width: 50%;
     }
-    &-i3,
-    &-i6,
-    &-i8,
-    &-i9 {
-        .feed_img-img-w {
-            width: calc(~'33.333% - 4px');
-        }
+  }
+  &-8 {
+    li:nth-child(4),
+    li:nth-child(5) {
+      width: 50%;
     }
-    &-i8 {
-        .feed_img-img-w:nth-child(4),
-        .feed_img-img-w:nth-child(5) {
-            width: calc(~'50% - 4px');
-        }
+  }
+  &-7 {
+    li:nth-child(1),
+    li:nth-child(2),
+    li:nth-child(6),
+    li:nth-child(7) {
+      width: 50%;
     }
+  }
 }
 </style>

@@ -90,15 +90,25 @@ export const time2tips = date => {
  * 格式化数字
  *     @author jsonleex <jsonlseex@163.com>
  */
-export const formatNum = num => {
-  if (typeof ~~num === 'number') {
-    if (num === 0) return '0';
-    const k = 1000;
-    const sizes = ['', 'K', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y'];
-    const i = Math.floor(Math.log(num) / Math.log(k));
-    return num / Math.pow(k, i) + ' ' + sizes[i];
-  }
-  return '0';
+export const formatNum = (a = 0) => {
+  return (
+    a > 0 &&
+      (a > 99999999 && (a = Math.floor(a / 1e8) + '亿'),
+      a > 9999 &&
+        (a =
+          a > 99999999
+            ? Math.floor(a / 1e8) + '亿'
+            : Math.floor(a / 1e4) + '万')),
+    a
+  );
+  // if (typeof ~~num === 'number') {
+  //   if (num === 0) return '0';
+  //   const k = 1000;
+  //   const sizes = ['', 'K', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y'];
+  //   const i = Math.floor(Math.log(num) / Math.log(k));
+  //   return num / Math.pow(k, i) + ' ' + sizes[i];
+  // }
+  // return '0';
 };
 
 /**
