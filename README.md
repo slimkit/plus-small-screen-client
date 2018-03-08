@@ -2,12 +2,14 @@
 
 这是 ThinkSNS Plus 的一个 SPA 前端应用！
 
+> 当前分支为 `4.0.0-rc.*` 版本开发分支，安装**稳定版本**请前往👉[3.x Branch](https://github.com/zhiyicx/plus-component-h5/tree/3.x)
+
 ## 安装
 
 在 Plus 程序下执行
 
 ```shell
-composer require zhiyicx/plus-component-h5
+composer require zhiyicx/plus-component-h5:4.0.0-rc.*
 ```
 
 然后执行 `php artisan vendor:publish --force` 然后页面就会出现一个列表，你找到 `\Zhiyi\Component\ZhiyiPlus\PlusComponentH5\ServiceProvider` 这一条，输入对应编号后按「enter」按键，像现在 你已经安装完成了！！
