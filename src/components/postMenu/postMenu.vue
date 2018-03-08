@@ -15,9 +15,9 @@
   </transition>
 </template>
 <script>
-const prefixCls = 'v-post-menu'
+const prefixCls = "v-post-menu";
 export default {
-  name: 'postMenu',
+  name: "postMenu",
   props: {
     open: {
       type: Boolean,
@@ -27,16 +27,16 @@ export default {
   data() {
     return {
       prefixCls
-    }
+    };
   },
   computed: {},
   watch: {},
   methods: {
     close() {
-      this.$emit('on-close')
+      this.$emit("on-close");
     }
   }
-}
-
+};
 </script>
-<style lang="less" src='./postMenu.less'></style>
+<style lang="less" src='./postMenu.less'>
+</style>

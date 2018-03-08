@@ -6,8 +6,8 @@
 </template>
 <script>
 export default {
-  name: 'v-tabs',
-  props: ['value'],
+  name: "v-tabs",
+  props: ["value"],
   data() {
     return {};
   },
@@ -17,7 +17,7 @@ export default {
   methods: {
     handleTabClick(value) {
       if (this.value !== value) {
-        this.$emit('change', value);
+        this.$emit("change", value);
       }
     },
     getActiveIndex() {
@@ -38,14 +38,14 @@ export default {
       const $el = index >= 0 ? cl[index].$el : {};
       const x = $el.offsetLeft;
       const w = $el.clientWidth;
-      el.style.width = w > 0 ? w + 10 + 'px' : '100%';
+      el.style.width = w > 0 ? w + 10 + "px" : "100%";
       el.style.transform = `translate3d(${x - 5}px, 0, 0)`;
     }
   },
   mounted() {
     this.setTabLightStyle();
     setTimeout(() => {
-      this.$refs.highlight.classList.remove('init');
+      this.$refs.highlight.classList.remove("init");
     }, 300);
   }
 };

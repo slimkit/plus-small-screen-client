@@ -4,7 +4,7 @@
       <head-top :go-back='close' :title='`选择圈子`'></head-top>
       <div></div>
       <div class="choose-group-list">
-        <div class="choose-group-item ellipsis" v-for='group in groups'
+        <div class="choose-group-item ellipsis" v-for='group in groups' :key="group.id"
         :class='{active: selected.id === group.id}'
         @click='selectGroup(group)'
         v-if='group.id'>{{ group.name }}</div>
@@ -13,9 +13,9 @@
   </transition>
 </template>
 <script>
-import HeadTop from '@/components/HeadTop'
+import HeadTop from "@/components/HeadTop";
 export default {
-  name: 'chooseGroup',
+  name: "chooseGroup",
   props: {
     value: {}
   },
@@ -26,30 +26,29 @@ export default {
     return {
       groups: [],
       selected: 0
-    }
+    };
   },
   methods: {
     close() {
-      this.$emit('on-close')
-      this.selected && this.$emit('input', this.selected)
+      this.$emit("on-close");
+      this.selected && this.$emit("input", this.selected);
     },
     selectGroup(group) {
-      this.selected = group
-      this.close()
+      this.selected = group;
+      this.close();
     },
     async getAllGroups() {
-      const {
-        data
-      } = await this.$http.get(`/plus-group/user-groups?type=allow_post`)
-      this.groups = data ? [...data] : []
+      const { data } = await this.$http.get(
+        `/plus-group/user-groups?type=allow_post`
+      );
+      this.groups = data ? [...data] : [];
     }
   },
   mounted() {
-    this.selected = this.value
-    this.getAllGroups()
+    this.selected = this.value;
+    this.getAllGroups();
   }
-}
-
+};
 </script>
 <style lang='less' scoped>
 .choose-group {
@@ -71,7 +70,7 @@ export default {
 
   &-item {
     height: 60px;
-    width: calc(~'25% - 10px');
+    width: calc(~"25% - 10px");
     margin: 0 10px 10px 0;
     padding: 0 20px;
     line-height: 60px;
@@ -85,5 +84,4 @@ export default {
     }
   }
 }
-
 </style>

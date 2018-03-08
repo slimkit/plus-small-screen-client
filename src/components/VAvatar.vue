@@ -8,18 +8,18 @@
   </div>
 </template>
 <script>
-const prefixCls = 'v-avatar';
+const prefixCls = "v-avatar";
 export default {
-  name: 'VAvatar',
+  name: "VAvatar",
   props: {
     shape: {
-      default: 'circle'
+      default: "circle"
     },
     uid: {
       type: [Number, String]
     },
     size: {
-      default: 'default'
+      default: "default"
     },
     src: {
       type: String
@@ -41,11 +41,11 @@ export default {
     icon() {
       switch (+this.sex) {
         case 0:
-          return 'secret';
+          return "secret";
         case 1:
-          return 'man';
+          return "man";
         case 2:
-          return 'woman';
+          return "woman";
       }
     },
     classes() {
@@ -54,7 +54,7 @@ export default {
         `${prefixCls}-${this.shape}`,
         `${prefixCls}-${this.size}`,
         {
-          [`${prefixCls}-${this.icon}`]: typeof this.sex !== 'undefined'
+          [`${prefixCls}-${this.icon}`]: typeof this.sex !== "undefined"
         }
       ];
     }
@@ -70,5 +70,4 @@ export default {
 };
 </script>
 <style lang="less" src='./style/UserAvatar.less'>
-
 </style>

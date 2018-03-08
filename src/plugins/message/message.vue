@@ -9,12 +9,12 @@
   </transition>
 </template>
 <script>
-const prefixCls = 'v-msg'
+const prefixCls = "v-msg";
 export default {
   props: {
     type: {
       type: String,
-      default: 'message'
+      default: "message"
     },
     duration: {
       type: Number,
@@ -27,7 +27,7 @@ export default {
     transitionName: String,
     icon: {
       type: String,
-      default: 'msg-info'
+      default: "msg-info"
     },
     content: {
       required: true
@@ -44,14 +44,11 @@ export default {
   data() {
     return {
       prefixCls
-    }
+    };
   },
   computed: {
     classes() {
-      return [
-        prefixCls,
-        `${prefixCls}__${this.type}`
-      ]
+      return [prefixCls, `${prefixCls}__${this.type}`];
     },
     /**
      *  Default message.
@@ -60,40 +57,40 @@ export default {
      * @author Seven Du <shiweidu@outlook.com>
      */
     defaultMessage() {
-      if (this.type === 'success') {
-        return '成功！';
+      if (this.type === "success") {
+        return "成功！";
       }
 
-      return '发生错误了，请刷新重试！';
+      return "发生错误了，请刷新重试！";
     }
   },
   methods: {
     clearCloseTimer() {
       if (this.closeTimer) {
-        clearTimeout(this.closeTimer)
-        this.closeTimer = null
+        clearTimeout(this.closeTimer);
+        this.closeTimer = null;
       }
     },
     close() {
-      this.clearCloseTimer()
-      this.onClose()
-      this.$parent.close(this.name)
+      this.clearCloseTimer();
+      this.onClose();
+      this.$parent.close(this.name);
     },
-    handleEnter(el) {},
-    handleLeave(el) {}
+    handleEnter() {},
+    handleLeave() {}
   },
   mounted() {
-    this.clearCloseTimer()
+    this.clearCloseTimer();
     if (this.duration !== 0) {
       this.closeTimer = setTimeout(() => {
-        this.close()
-      }, this.duration * 1000)
+        this.close();
+      }, this.duration * 1000);
     }
   },
   beforeDestroy() {
-    this.clearCloseTimer()
+    this.clearCloseTimer();
   }
-}
-
+};
 </script>
-<style lang='less' src='./style/message.less'></style>
+<style lang='less' src='./style/message.less'>
+</style>

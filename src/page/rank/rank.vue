@@ -21,60 +21,60 @@
 </template>
 
 <script>
-  import HeadTop from '../../components/HeadTop'
-  export default {
-    name: 'rankIndex',
-    components: {
-      HeadTop
+import HeadTop from "../../components/HeadTop";
+export default {
+  name: "rankIndex",
+  components: {
+    HeadTop
+  },
+  methods: {
+    cancel() {
+      this.to("/discover");
     },
-    methods: {
-      cancel () {
-        this.to('/discover')
-      },
-      to(path) {
-        path = typeof path === 'string' ? { path } : path
-        if (path) {
-          this.$router.push(path)
-        }
+    to(path) {
+      path = typeof path === "string" ? { path } : path;
+      if (path) {
+        this.$router.push(path);
       }
     }
   }
+};
 </script>
 
 <style lang='less'>
-  .rank-nav {
-    position: fixed;
-    z-index: 100;
-    top: 90px;
-    padding-top: 0 !important;
-    display: flex;
-    align-items: center;
-    height: 90px;
-    width: 100%;
-    line-height: 89px;
-    border-bottom: 1px solid #ededed;
-    /*no*/
-    background-color: #fff;
-    justify-content: center;
-    &-item {
-      padding: 0 10px;
-      font-size: 32px;
-      color: #999;
-      border-bottom: 3px solid transparent;
-      &+& {
-        margin-left: 90px;
-      }
+.rank-nav {
+  position: fixed;
+  z-index: 100;
+  top: 90px;
+  padding-top: 0 !important;
+  display: flex;
+  align-items: center;
+  height: 90px;
+  width: 100%;
+  line-height: 89px;
+  border-bottom: 1px solid #ededed;
+  /*no*/
+  background-color: #fff;
+  justify-content: center;
+  &-item {
+    padding: 0 10px;
+    font-size: 32px;
+    color: #999;
+    border-bottom: 3px solid transparent;
+    & + & {
+      margin-left: 90px;
+    }
 
-      &.router-link-active {
-        border-color: #59b6d7;
-        color: #333;
-      }
+    &.router-link-active {
+      border-color: #59b6d7;
+      color: #333;
     }
   }
-  .rank-content {
-    padding-top: 180px;
-    min-height: 100vh;
-    position: relative;
-    background-color: #f4f5f5;
+}
+.rank-content {
+  padding-top: 180px;
+  min-height: 100vh;
+  position: relative;
+  background-color: #f4f5f5;
 }
 </style>

@@ -44,34 +44,34 @@
   </transition>
 </template>
 <script>
-import HeadTop from '../components/HeadTop';
-import validate from '../util/validate';
+import HeadTop from "../components/HeadTop";
+import validate from "../util/validate";
 export default {
-  name: 'signin',
+  name: "signin",
   components: {
     HeadTop
   },
   data() {
     return {
-      account: '',
-      password: '',
+      account: "",
+      password: "",
       eye: false,
-      error: '',
+      error: "",
       btnLoading: false,
 
       /* 后台获取三方登录数据 */
       tr_signin: [
         {
-          icon: 'tr-QQ',
-          title: 'QQ'
+          icon: "tr-QQ",
+          title: "QQ"
         },
         {
-          icon: 'tr-weibo',
-          title: '微博'
+          icon: "tr-weibo",
+          title: "微博"
         },
         {
-          icon: 'tr-wechat',
-          title: '微信'
+          icon: "tr-wechat",
+          title: "微信"
         }
       ]
     };
@@ -85,17 +85,17 @@ export default {
   },
   methods: {
     signIn() {
-      this.error = '';
+      this.error = "";
       this.btnLoading = true;
       // 需要验证的 数据
       const vals = [
         {
           val: this.account,
-          type: 'account'
+          type: "account"
         },
         {
           val: this.password,
-          type: 'password'
+          type: "password"
         }
       ];
 
@@ -111,25 +111,25 @@ export default {
 
         /* 用户登录 */
         this.$http
-          .post('tokens', param, {
+          .post("tokens", param, {
             validateStatus: s => s === 201
           })
           .then(({ data }) => {
             this.btnLoading = false;
             const { token, user } = data;
             if (token) {
-              this.$store.commit('SAVE_CURRENTUSER', { ...user, token });
+              this.$store.commit("SAVE_CURRENTUSER", { ...user, token });
               this.$nextTick(() => {
-                this.$router.push(this.$route.query.redirect || '/feed/new');
-                this.$store.dispatch('GET_UNREAD_COUNT');
-                this.$store.commit('SAVE_USER', user);
+                this.$router.push(this.$route.query.redirect || "/feed/new");
+                this.$store.dispatch("GET_UNREAD_COUNT");
+                this.$store.commit("SAVE_USER", user);
               });
             }
           })
           .catch(err => {
             console.log(err);
             this.btnLoading = false;
-            const { response: { data = { message: '登录失败' } } = {} } = err;
+            const { response: { data = { message: "登录失败" } } = {} } = err;
             this.error = this.$MessageBundle(data);
           });
       } else {
@@ -170,7 +170,7 @@ export default {
     font-size: 24px;
     &:before,
     &:after {
-      content: '';
+      content: "";
       display: inline-block;
       vertical-align: middle;
       height: 0;
@@ -259,14 +259,14 @@ export default {
   padding: 30px;
   color: #f4504d;
   font-size: 24px;
-  height: 24*1.5+60px;
+  height: 24 * 1.5+60px;
 }
 
 .long_btn {
   display: block;
   box-sizing: border-box;
   text-align: center;
-  width: calc(~'100% - 60px');
+  width: calc(~"100% - 60px");
   margin: 0 30px;
   height: 90px;
   line-height: 90px;

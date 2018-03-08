@@ -1,10 +1,10 @@
-import Modal from './modalInstance';
-import pay from './components/pay';
-import commentInpt from './components/commentInput';
-import './modal.less';
+import Modal from "./modalInstance";
+import pay from "./components/pay";
+import commentInpt from "./components/commentInput";
+import "./modal.less";
 
 let modalInstance;
-const prefixCls = 'v-modal';
+const prefixCls = "v-modal";
 
 function getModalInstance(render = undefined) {
   modalInstance = modalInstance || Modal.newInstance({ render });
@@ -12,7 +12,7 @@ function getModalInstance(render = undefined) {
 }
 
 function showModal(options = {}) {
-  const render = 'render' in options ? options.render : undefined;
+  const render = "render" in options ? options.render : undefined;
   let instance = getModalInstance(render);
   options.onRemove = function() {
     modalInstance = null;
@@ -47,7 +47,7 @@ Modal.remove = () => {
 Modal.info = (options = {}) => {
   options = Object.assign(
     {
-      title: '提示'
+      title: "提示"
     },
     options,
     {
@@ -56,18 +56,18 @@ Modal.info = (options = {}) => {
   );
   const render = h => {
     return h(
-      'div',
+      "div",
       {
         class: `${prefixCls}-info`
       },
       [
         h(
-          'div',
+          "div",
           {
             directives: [
               {
-                name: 'show',
-                value: typeof options.title === 'boolean' && !!options.title
+                name: "show",
+                value: typeof options.title === "boolean" && !!options.title
               }
             ],
             class: `${prefixCls}-info-head`
@@ -75,20 +75,20 @@ Modal.info = (options = {}) => {
           options.title
         ),
         h(
-          'div',
+          "div",
           {
             class: `${prefixCls}-info-body`
           },
           [options.render(h)]
         ),
         h(
-          'div',
+          "div",
           {
             class: `${prefixCls}-info-foot`
           },
           [
             h(
-              'button',
+              "button",
               {
                 on: {
                   click: () => {
@@ -96,7 +96,7 @@ Modal.info = (options = {}) => {
                   }
                 }
               },
-              '取消'
+              "取消"
             )
           ]
         )
@@ -117,9 +117,9 @@ Modal.pay = (options = {}) => {
     render(h) {
       return h(pay, {
         on: {
-          'on-close': Modal.remove,
-          'on-ok': cb => {
-            if (typeof onOk === 'function') {
+          "on-close": Modal.remove,
+          "on-ok": cb => {
+            if (typeof onOk === "function") {
               onOk(cb);
             }
           }
@@ -148,7 +148,7 @@ Modal.pay = (options = {}) => {
  */
 Modal.commentInpt = (options = {}) => {
   let onOk = () => {};
-  if ('onOk' in options) {
+  if ("onOk" in options) {
     onOk = options.onOk;
   }
   const _props = {
@@ -156,7 +156,7 @@ Modal.commentInpt = (options = {}) => {
     render(h) {
       return h(commentInpt, {
         on: {
-          'on-ok': onOk
+          "on-ok": onOk
         },
         props: options
       });

@@ -1,6 +1,6 @@
-import getters from './getters'
-import actions from './actions'
-import mutations from './mutations'
+import getters from "./getters";
+import actions from "./actions";
+import mutations from "./mutations";
 const state = {
   rankQuestionExperts: [],
   rankIncome: [],
@@ -17,11 +17,11 @@ const state = {
   rankNewsToday: [],
   rankBalance: [],
   rankCheckin: []
-}
+};
 
 export default {
   state,
   getters,
   actions,
   mutations
-}
+};

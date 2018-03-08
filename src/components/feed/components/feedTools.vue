@@ -19,12 +19,12 @@
 </template>
 <script>
 const isNum = {
-  validator (val) {
-    return typeof (+val) === 'number'
+  validator(val) {
+    return typeof +val === "number";
   }
-}
+};
 export default {
-  name: 'feedTool',
+  name: "feedTool",
   props: {
     hasLike: {
       type: Boolean,
@@ -48,41 +48,41 @@ export default {
     }
   },
   methods: {
-    likeFeed () {
-      this.$emit('likeFeed')
+    likeFeed() {
+      this.$emit("likeFeed");
     },
-    commentFeed () {
-      this.$emit('commentFeed', this.com)
+    commentFeed() {
+      this.$emit("commentFeed", this.com);
     },
-    moreAction () {
-      this.$emit('moreAction')
+    moreAction() {
+      this.$emit("moreAction");
     }
   }
-}
+};
 </script>
 <style lang='less' scoped>
 @prefix: feed-tool;
 .@{prefix} {
-    width: 100%;
-    height: 90px;
+  width: 100%;
+  height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  &-item {
     display: flex;
+    color: #b3b3b3;
+    font-size: 24px;
     align-items: center;
-    justify-content: space-between;
-    &-item {
-        display: flex;
-        color: #b3b3b3;
-        font-size: 24px;
-        align-items: center;
-        span {
-            margin-left: 10px;
-        }
-        &.hasLike {
-            color: #f4504d
-        }
+    span {
+      margin-left: 10px;
     }
-    &-icon {
-        width: 40px;
-        height: 40px;
+    &.hasLike {
+      color: #f4504d;
     }
+  }
+  &-icon {
+    width: 40px;
+    height: 40px;
+  }
 }
 </style>

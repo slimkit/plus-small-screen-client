@@ -13,7 +13,7 @@
 
 <script>
 export default {
-  name: 'UserItem',
+  name: "UserItem",
   props: {
     user: {
       type: Object,
@@ -27,8 +27,8 @@ export default {
     isFollow() {
       const { follower = false, following = false } = this.user;
       return follower && following
-        ? 'eachFollow'
-        : follower ? 'follow' : 'unFollow';
+        ? "eachFollow"
+        : follower ? "follow" : "unFollow";
     }
   },
   methods: {
@@ -36,16 +36,16 @@ export default {
       if (this.loading) return false;
       this.loading = true;
       this.$store
-        .dispatch('FOLLOW_USER', {
+        .dispatch("FOLLOW_USER", {
           id: this.user.id,
           status: this.isFollow
         })
-        .then(({ status, follower }) => {
+        .then(({ follower }) => {
           this.loading = false;
           this.user.follower = follower;
         })
         .catch(err => {
-          const { response: { data = { message: '操作失败' } } = {} } = err;
+          const { response: { data = { message: "操作失败" } } = {} } = err;
 
           this.loading = false;
           this.$Message.error(data);
@@ -56,5 +56,4 @@ export default {
 </script>
 
 <style lang="less" src='./style/UserItem.less'>
-
 </style>

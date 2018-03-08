@@ -212,8 +212,8 @@
                   </g>
             </symbol>
             <symbol viewBox='0 0 24 24' id='location-arrow'>
-                <path fill='#999999' d="M13.6,23L23,1L1,10.4l10.7,1.9L13.6,23z M13.6,23" /> </g>
-                <path fill='#b2b2b2' d="M12,12L23,1L1,10.4l10.7,1.9L12,12z" /> </g>
+                <path fill='#999999' d="M13.6,23L23,1L1,10.4l10.7,1.9L13.6,23z M13.6,23" />
+                <path fill='#b2b2b2' d="M12,12L23,1L1,10.4l10.7,1.9L12,12z" />
             </symbol>
             <symbol viewBox='0 0 24 24' id='base-back'>
                 <g>
@@ -380,7 +380,7 @@
     </svg>
 </template>
 <script>
-export default { name: 'svgIcon' };
+export default { name: "svgIcon" };
 </script>
 <style lang='less'>
 #discover-news,

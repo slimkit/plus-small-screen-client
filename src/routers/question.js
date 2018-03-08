@@ -4,7 +4,7 @@
  * @return {Promise}
  * @author Seven Du <shiweidu@outlook.com>
  */
-const Questions = () => import('../components/pages/Questions');
+const Questions = () => import("../components/pages/Questions");
 
 /**
  * Questions page module.
@@ -13,7 +13,7 @@ const Questions = () => import('../components/pages/Questions');
  * @author Seven Du <shiweidu@outlook.com>
  */
 const QuestionsModule = () =>
-  import('../components/modules/question/Questions');
+  import("../components/modules/question/Questions");
 
 /**
  * Quesrion Tags module.
@@ -22,7 +22,7 @@ const QuestionsModule = () =>
  * @author Seven Du <shiweidu@outlook.com>
  */
 const QuestionTopicsModule = () =>
-  import('../components/modules/question/Topics');
+  import("../components/modules/question/Topics");
 
 /**
  * The a question page.
@@ -30,7 +30,7 @@ const QuestionTopicsModule = () =>
  * @return {Promise} [description]
  * @author Seven Du <shiweidu@outlook.com>
  */
-const Question = () => import('../components/pages/Question');
+const Question = () => import("../components/pages/Question");
 
 /**
  * The a topic page.
@@ -38,14 +38,14 @@ const Question = () => import('../components/pages/Question');
  * @return {Promise}
  * @author Seven Du <shiweidu@outlook.com>
  */
-const Topic = () => import('../components/pages/Topic');
+const Topic = () => import("../components/pages/Topic");
 
 export default [
   /**
    * Questions page entry.
    */
   {
-    path: '/question',
+    path: "/question",
     component: Questions,
     meta: {
       requiresAuth: true,
@@ -53,13 +53,13 @@ export default [
     },
     children: [
       {
-        name: 'question',
-        path: '',
+        name: "question",
+        path: "",
         component: QuestionsModule,
         meta: { keepAlive: true }
       },
       {
-        path: 'topics',
+        path: "topics",
         component: QuestionTopicsModule
       }
     ]
@@ -68,12 +68,12 @@ export default [
    * Question page.
    */
   {
-    path: '/questions/:id',
+    path: "/questions/:id",
     component: Question,
     meta: { requiresAuth: true }
   },
   {
-    path: '/question-topics/:id',
+    path: "/question-topics/:id",
     component: Topic,
     meta: { requiresAuth: true }
   }

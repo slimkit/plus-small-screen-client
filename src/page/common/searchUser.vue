@@ -21,103 +21,112 @@
     </div>
 </template>
 <script>
-import _ from 'lodash'
-import HeadTop from '@/components/HeadTop'
-import findItem from '@/page/find/components/findItem'
-let sources = []
+import _ from "lodash";
+import HeadTop from "@/components/HeadTop";
+import findItem from "@/page/find/components/findItem";
+let sources = [];
 export default {
-  name: 'searchUser',
+  name: "searchUser",
   components: {
     HeadTop,
     findItem
   },
-  data () {
+  data() {
     return {
       rec: [],
-      keyword: '',
+      keyword: "",
       dataList: []
-    }
+    };
   },
   methods: {
-    cancel () {
-      this.$router.go(-1)
+    cancel() {
+      this.$router.go(-1);
     },
     // 使用_.debounce控制搜索的触发频率
     // 准备搜索
-    search: _.debounce(function () {
-      let that = this
-      // 删除已经结束的请求
-      _.remove(sources, (n) => n.source === null)
+    search: _.debounce(
+      function() {
+        let that = this;
+        // 删除已经结束的请求
+        _.remove(sources, n => n.source === null);
 
-      // 取消还未结束的请求
-      sources.forEach(function (item) {
-        if (item !== null && item.source !== null && item.status === 1) {
-          item.status = 0
-          item.source.cancel('取消上一个')
+        // 取消还未结束的请求
+        sources.forEach(function(item) {
+          if (item !== null && item.source !== null && item.status === 1) {
+            item.status = 0;
+            item.source.cancel("取消上一个");
+          }
+        });
+
+        // 创建新的请求cancelToken,并设置状态请求中
+        let sc = {
+          source: that.$http.CancelToken.source(),
+          status: 1 // 状态1：请求中，0:取消中
+        };
+        sources.push(sc);
+
+        // 开始搜索数据
+        if (that.keyword) {
+          that.$http
+            .get(`/user/search?keyword=${that.keyword}`, {
+              cancelToken: sc.source.token
+            })
+            .then(({ data = [] }) => {
+              // 置空请求canceltoken
+              sc.source = null;
+              this.dataList = data;
+            })
+            .catch(
+              ({ response: { data = { message: "搜索失败" } } = {} } = {}) => {
+                // 置空请求canceltoken
+                sc.source = null;
+                that.$Message.error(data);
+              }
+            );
         }
-      })
-
-      // 创建新的请求cancelToken,并设置状态请求中
-      let sc = {
-        source: that.$http.CancelToken.source(),
-        status: 1 // 状态1：请求中，0:取消中
-      }
-      sources.push(sc)
-
-      // 开始搜索数据
-      if (that.keyword) {
-        that.$http.get(`/user/search?keyword=${that.keyword}`, {
-          cancelToken: sc.source.token
-        }).then(({ data = [] }) => {
-          // 置空请求canceltoken
-          sc.source = null
-          this.dataList = data
-        }).catch(({ response: { data = { message: '搜索失败' } } = {} } = {}) => {
-          // 置空请求canceltoken
-          sc.source = null
-          that.$Message.error(data)
-        })
-      }
-    },
-    500 // 空闲时间间隔设置500ms
+      },
+      500 // 空闲时间间隔设置500ms
     ),
 
-    getRecUser () {
-      this.$http.get('/user/find-by-tags').then(({ data = [] }) => {
-        console.log(data)
-        this.rec = [...data]
-      }).catch(err => {
-        console.log(err)
-      })
+    getRecUser() {
+      this.$http
+        .get("/user/find-by-tags")
+        .then(({ data = [] }) => {
+          console.log(data);
+          this.rec = [...data];
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   },
-  created () {
-    this.getRecUser()
+  created() {
+    this.getRecUser();
   }
-}
+};
 </script>
 <style lang='less'>
 @search_usr-prefixCls: search_usr;
 
 .page-search_usr {
-    .head-top-title {
-        padding: 0 120px 0 30px;
-        width: 100%;
-    }
+  .head-top-title {
+    padding: 0 120px 0 30px;
+    width: 100%;
+  }
 }
 .@{search_usr-prefixCls} {
-    &-search-list {
-        background-color: #fff;
-        padding: 0 30px;
-        &-item {
-            border-bottom: 1px solid #ededed;
-            /*no*/
-            width: 100%;
-            height: 100px;
-            line-height: 98px;
-            font-size: 30px;
-            color: #333;
-        }
+  &-search-list {
+    background-color: #fff;
+    padding: 0 30px;
+    &-item {
+      border-bottom: 1px solid #ededed;
+      /*no*/
+      width: 100%;
+      height: 100px;
+      line-height: 98px;
+      font-size: 30px;
+      color: #333;
     }
+  }
 }
 </style>

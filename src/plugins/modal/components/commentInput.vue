@@ -23,26 +23,26 @@
 </template>
 <script>
 export default {
-  name: 'commentInput',
+  name: "commentInput",
   props: {
     focus: Boolean,
     placeholder: {
       type: String,
-      default: '随便说说~',
+      default: "随便说说~",
       requried: true
     },
     maxlength: {
       type: [Number, String],
       default: 255,
       validator(val) {
-        return typeof +val === 'number';
+        return typeof +val === "number";
       }
     }
   },
   data() {
     return {
       loading: false,
-      currentValue: ''
+      currentValue: ""
     };
   },
   computed: {
@@ -57,13 +57,13 @@ export default {
     handleDone() {
       this.loading = true;
       if (this.currentValue) {
-        this.$emit('on-ok', this.currentValue);
+        this.$emit("on-ok", this.currentValue);
       }
     },
     handleInput(event) {
       this.loading = false;
       let value = event.target.value;
-      this.$emit('input', value);
+      this.$emit("input", value);
       this.setCurrentValue(value);
     },
     handleEnter() {
@@ -76,13 +76,13 @@ export default {
     },
     resizeTextarea(el) {
       const originalHeight = el.style.height;
-      el.style.height = '';
+      el.style.height = "";
       let endHeight = el.scrollHeight;
       if (el.scrollHeight === 0) {
         el.style.height = originalHeight;
         return;
       }
-      el.style.height = endHeight + 'px';
+      el.style.height = endHeight + "px";
     }
   },
   mounted() {
@@ -108,8 +108,8 @@ export default {
     overflow-y: scroll;
     flex: 1 1 auto;
     padding: 0;
-    height: 26*1.5px;
-    min-height: 26*1.5px;
+    height: 26 * 1.5px;
+    min-height: 26 * 1.5px;
     line-height: 1.5;
     color: #000;
     font-size: 26px;

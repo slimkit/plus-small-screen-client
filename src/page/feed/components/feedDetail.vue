@@ -10,7 +10,7 @@
       <div class="ffd-body-foot">
         <div class="ffd-body-l">
           <div :class="{'ffd-like-list-none': likes_count === 0}" class="ffd-like-list">
-            <div class="ffd-like-list-item" v-for='({user}) in likesList'>
+            <div class="ffd-like-list-item" v-for='({user}) in likesList' :key="user.id">
               <v-avatar :src='user.avatar' size='small' :sex='user.sex' :key='user.id'></v-avatar>
             </div>
           </div>
@@ -27,7 +27,7 @@
         {{ comments_count }}条评论
       </div>
       <div class="gdf-comment-list">
-        <div class="ffd-comment-item" v-for='comment in pinneds'>
+        <div class="ffd-comment-item" v-for='comment in pinneds' :key="comment.id">
           <router-link :to="`/user/${comment.user.id}`">
             <v-avatar :src='comment.user.avatar' :sex='comment.user.sex'></v-avatar>
           </router-link>
@@ -47,7 +47,7 @@
         </div>
       </div>
       <div class="gdf-comment-list">
-        <div class="ffd-comment-item" v-for='comment in comments'>
+        <div class="ffd-comment-item" v-for='comment in comments' :key="comment.id">
           <router-link :to="`/user/${comment.user.id}`">
             <v-avatar :src='comment.user.avatar' :sex='comment.user.sex'></v-avatar>
           </router-link>
@@ -87,17 +87,17 @@
   </div>
 </template>
 <script>
-import _ from 'lodash';
-import HeadTop from '@/components/HeadTop'
+import _ from "lodash";
+import HeadTop from "@/components/HeadTop";
 export default {
-  name: 'feedDetail',
+  name: "feedDetail",
   components: {
     HeadTop
   },
   data() {
     return {
-      body: '',
-      created_at: '',
+      body: "",
+      created_at: "",
       images: [],
       comments: [],
       comments_count: 0,
@@ -107,47 +107,49 @@ export default {
       user: {},
       likesList: [],
       pinneds: []
-    }
+    };
   },
   computed: {
-    bodyWith () {
+    bodyWith() {
       return this.$refs.body;
     },
     feedID() {
-      return this.$route.params.feedID
+      return this.$route.params.feedID;
     },
-    currentUserId () {
+    currentUserId() {
       return this.$store.state.CURRENTUSER.id || 0;
     },
-    currentUserToken () {
-      return this.$store.state.CURRENTUSER.token || '';
+    currentUserToken() {
+      return this.$store.state.CURRENTUSER.token || "";
     },
-    clientWidth () {
+    clientWidth() {
       return this.$refs.content.clientWidth || 0;
     },
-    baseUrl () {
+    baseUrl() {
       return document.head.querySelector('meta[name="api-basename"]').content;
     },
     // 图片展示
-    imagesFormat () {
+    imagesFormat() {
       if (this.images.length === 0) {
         return [];
       }
-      let formatImages = [];
-      this.images.map(item => {
+
+      return this.images.map(item => {
         let newItem = {};
-        let size = _.split(item.size, 'x');
+        let size = _.split(item.size, "x");
         let rato = parseInt(size[0]) / this.clientWidth;
         newItem.width = this.clientWidth;
         newItem.height = parseInt(parseInt(size[1]) / rato);
-        newItem.url = `${this.baseUrl}/files/${item.file}?token=${this.currentUserToken}`;
-        formatImages.push(newItem);
+        newItem.url = `${this.baseUrl}/files/${item.file}?token=${
+          this.currentUserToken
+        }`;
+
+        return newItem;
       });
-      return formatImages;
     }
   },
   methods: {
-    goToUserHome (id) {
+    goToUserHome(id) {
       this.$router.push(`/user/${id}`);
     },
     async initData() {
@@ -162,23 +164,21 @@ export default {
           feed_view_count: viewsCount,
           user
         }
-      } = await this.$http.get(`/feeds/${this.feedID}`)
+      } = await this.$http.get(`/feeds/${this.feedID}`);
 
-      this.body = body
-      this.created_at = createdAt
-      this.images = images
-      this.comments_count = commentsCount
-      this.liked = liked
-      this.likes_count = likesCount
-      this.views_count = viewsCount
-      this.user = user
+      this.body = body;
+      this.created_at = createdAt;
+      this.images = images;
+      this.comments_count = commentsCount;
+      this.liked = liked;
+      this.likes_count = likesCount;
+      this.views_count = viewsCount;
+      this.user = user;
     },
 
     // 获取评论列表
-    async getComments () {
-      const {
-        data
-      } = await this.$http.get(`/feeds/${this.feedID}/comments`, {
+    async getComments() {
+      const { data } = await this.$http.get(`/feeds/${this.feedID}/comments`, {
         limit: 15
       });
       this.comments = data.comments;
@@ -187,37 +187,33 @@ export default {
 
     // 获取点赞列表
     async getFeedLikes() {
-      const {
-        data
-      } = await this.$http.get(`/feeds/${this.feedID}/likes`, {
+      const { data } = await this.$http.get(`/feeds/${this.feedID}/likes`, {
         limit: 5
-      })
-      this.likesList = data
+      });
+      this.likesList = data;
     },
 
-    goBack () {
+    goBack() {
       this.$router.go(-1);
     },
     to(path) {
-      path = typeof path === 'string' ? { path } : path
+      path = typeof path === "string" ? { path } : path;
       if (path) {
-        this.$router.push(path)
+        this.$router.push(path);
       }
     },
 
     likeFeed() {
-      const method = this.liked ? 'delete' : 'post'
+      const method = this.liked ? "delete" : "post";
       const url = this.liked
         ? `/feeds/${this.feedID}/unlike`
         : `/feeds/${this.feedID}/like`;
-      const num = this.liked
-        ? this.likes_count - 1
-        : this.likes_count + 1;
+      const num = this.liked ? this.likes_count - 1 : this.likes_count + 1;
       this.$http({
         method,
         url
-      }).then(({ data }) => {
-        this.liked = !this.liked
+      }).then(() => {
+        this.liked = !this.liked;
         this.likes_count = num;
         let user = this.$store.getters.getUserById(this.currentUserId);
         if (!this.liked) {
@@ -228,7 +224,7 @@ export default {
             user_id: this.currentUserId
           });
         }
-      })
+      });
     },
     /**
      * 评论帖子
@@ -236,16 +232,18 @@ export default {
      * @param  {String} txt
      * @param  {[type]} option
      */
-    commentFeed(body, replyUser, cb) {
-      this.$http.post(`/feeds/${this.feedID}/comments`, {
-        body,
-        reply_user: replyUser
-      }).then(({ data: { message, comment } = {} }) => {
-        this.comments.unshift(comment)
-        this.comments_count += 1
-        this.$Modal.remove();
-        this.$Message.success(message);
-      })
+    commentFeed(body, replyUser) {
+      this.$http
+        .post(`/feeds/${this.feedID}/comments`, {
+          body,
+          reply_user: replyUser
+        })
+        .then(({ data: { message, comment } = {} }) => {
+          this.comments.unshift(comment);
+          this.comments_count += 1;
+          this.$Modal.remove();
+          this.$Message.success(message);
+        });
     },
     /**
      * 弹出评论操作框
@@ -253,71 +251,81 @@ export default {
      */
     commentAction(uId, uName, cId) {
       if (uId === this.$store.state.CURRENTUSER.id) {
-        this.showCommentAction(cId)
+        this.showCommentAction(cId);
       } else {
-        const placeholder = uName && uId ? `回复: ${uName}` : '随便说说'
-        this.showCommentInput({ placeholder, reply_user: uId })
+        const placeholder = uName && uId ? `回复: ${uName}` : "随便说说";
+        this.showCommentInput({ placeholder, reply_user: uId });
       }
     },
-    deleteComment (id, callback) {
-      this.$http.delete(
-        `/feeds/${this.feedID}/comments/${id}`,
-        {
+    deleteComment(id) {
+      this.$http
+        .delete(`/feeds/${this.feedID}/comments/${id}`, {
           validateStatus: s => s === 204
-        }
-      )
-      .then(() => {
-        this.$Message.success('删除成功');
-        this.comments_count -= 1;
-        _.remove(this.comments, n => n.id === id);
-      })
+        })
+        .then(() => {
+          this.$Message.success("删除成功");
+          this.comments_count -= 1;
+          _.remove(this.comments, n => n.id === id);
+        });
     },
     /**
      * 显示评论操作弹层
      * @author jsonleex <jsonlseex@163.com>
      */
     showCommentAction(id) {
-      const that = this
+      const that = this;
       that.$Modal.info({
         render(h) {
-          return h('div', {}, [
-            h('button', {
-              on: {
-                click: () => {
-                  that.$Modal.remove();
-                  that.deleteComment(id)
+          return h("div", {}, [
+            h(
+              "button",
+              {
+                on: {
+                  click: () => {
+                    that.$Modal.remove();
+                    that.deleteComment(id);
+                  }
                 }
-              }
-            }, '删除'),
-            h('button', {
-              on: {
-                click: () => {
-                  that.$Modal.remove();
-                  // that.pinnedComment(id)
-                  that.$Message.error('还得再等等...');
+              },
+              "删除"
+            ),
+            h(
+              "button",
+              {
+                on: {
+                  click: () => {
+                    that.$Modal.remove();
+                    // that.pinnedComment(id)
+                    that.$Message.error("还得再等等...");
+                  }
                 }
-              }
-            }, '申请评论置顶')
-          ])
+              },
+              "申请评论置顶"
+            )
+          ]);
         },
         onOk() {
-          this.$Modal.remove()
+          this.$Modal.remove();
         }
-      })
+      });
     },
     /**
      * 显示评论输入框
      * @author jsonleex <jsonlseex@163.com>
      */
     showCommentInput(options = {}) {
-      const that = this
-      const { reply_user } = options
-      options = Object.assign({}, {
-        onOk(txt) {
-          that.commentFeed(txt, reply_user);
-        }
-      }, options)
-      this.$Modal.commentInpt(options)
+      const that = this;
+      const { reply_user } = options;
+      options = Object.assign(
+        {},
+        {
+          onOk(txt) {
+            that.commentFeed(txt, reply_user);
+          }
+        },
+        options
+      );
+      this.$Modal.commentInpt(options);
     }
   },
   created() {
@@ -325,8 +333,7 @@ export default {
     this.getFeedLikes();
     this.getComments();
   }
-}
-
+};
 </script>
 <style lang='less'>
 .feed-detail {
@@ -334,7 +341,7 @@ export default {
   &-content {
     padding-left: 20px;
     padding-right: 20px;
-    background-color: #fff
+    background-color: #fff;
   }
   .head-top + * {
     padding-top: 90px;
@@ -355,7 +362,7 @@ export default {
       color: #ccc;
       font-size: 24px;
       a {
-        color: #59b6d7
+        color: #59b6d7;
       }
     }
   }
@@ -395,7 +402,7 @@ export default {
     }
     &-r {
       text-align: right;
-      color: #999
+      color: #999;
     }
     p {
       padding-left: 20px;
@@ -437,7 +444,7 @@ export default {
       .v-avatar {
         flex: 0 0 auto;
       }
-      &+& {
+      & + & {
         border-top: 1px solid #ededed;
         /*no*/
       }
@@ -448,10 +455,10 @@ export default {
     }
 
     &-body {
-      max-width: calc(~'100% - ' 76px);
+      max-width: calc(~"100% - " 76px);
       overflow-x: hidden;
       flex: 1 1 auto;
-      margin: 0  0 0 30px;
+      margin: 0 0 0 30px;
       color: #999;
       p {
         margin-top: 10px;
@@ -479,7 +486,7 @@ export default {
               margin-right: 0;
             }
           }
-        } 
+        }
       }
       &-usually {
         display: flex;
@@ -488,9 +495,10 @@ export default {
           color: #333;
           + span {
             color: #999;
-            font-size: 22px;          }
+            font-size: 22px;
+          }
         }
-      }   
+      }
     }
   }
 
@@ -521,5 +529,4 @@ export default {
     }
   }
 }
-
 </style>

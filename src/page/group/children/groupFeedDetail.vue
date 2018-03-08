@@ -12,8 +12,8 @@
       <div class="gfd-body-foot">
         <div class="gfd-body-l">
           <div class="gfd-like-list">
-            <div class="gfd-like-list-item" v-for='({user}) in likesList'>
-              <v-avatar :src='user.avatar' size='small' :sex='user.sex' :key='user.id'></v-avatar>
+            <div class="gfd-like-list-item" v-for='({user}) in likesList' :key="user.id">
+              <v-avatar :src='user.avatar' size='small' :sex='user.sex'></v-avatar>
             </div>
           </div>
           <span>{{ likes_count }}人点赞</span>
@@ -29,7 +29,7 @@
         {{ comments_count }}条评论
       </div>
       <div class="gdf-comment-list">
-        <div class="gfd-comment-item" v-for='comment in comments'>
+        <div class="gfd-comment-item" v-for='comment in comments' :key="comment.id">
           <v-avatar :src='comment.user.avatar' :sex='comment.user.sex'></v-avatar>
           <div class="gfd-comment-body">
             <p>{{ comment.user.name }}</p>
@@ -59,17 +59,17 @@
   </div>
 </template>
 <script>
-import HeadTop from '@/components/HeadTop';
+import HeadTop from "@/components/HeadTop";
 export default {
-  name: 'groupFeedDetail',
+  name: "groupFeedDetail",
   components: {
     HeadTop
   },
   data() {
     return {
-      title: '',
-      body: '',
-      created_at: '',
+      title: "",
+      body: "",
+      created_at: "",
       images: [],
       comments: [],
       comments_count: 0,
@@ -134,7 +134,7 @@ export default {
       this.likesList = data;
     },
     to(path) {
-      path = typeof path === 'string' ? { path } : path;
+      path = typeof path === "string" ? { path } : path;
       if (path) {
         this.$router.push(path);
       }
@@ -143,13 +143,13 @@ export default {
     likeFeed() {
       // POST /group-posts/:post/likes
       // DELETE /group-posts/:post/likes
-      const method = this.liked ? 'delete' : 'post';
+      const method = this.liked ? "delete" : "post";
       const num = this.liked ? this.likes_count - 1 : this.likes_count + 1;
       this.$http({
         method,
         url: `/plus-group/group-posts/${this.feedID}/likes`
       })
-        .then(({ data }) => {
+        .then(() => {
           this.liked = !this.liked;
           this.likes_count = num;
         })
@@ -170,13 +170,13 @@ export default {
           body,
           reply_user: replyUser
         })
-        .then(({ data: { message, comment } = {} }) => {
+        .then(({ data: { comment } = {} }) => {
           this.comments.unshift(comment);
           this.comments_count += 1;
           cb && cb();
         })
         .catch(err => {
-          const { response: { data = { message: '评论失败' } } = {} } = err;
+          const { response: { data = { message: "评论失败" } } = {} } = err;
           this.$Message.error(data);
           cb && cb();
         });
@@ -189,7 +189,7 @@ export default {
       if (uId === this.$store.state.CURRENTUSER.id) {
         this.showCommentAction(cId);
       } else {
-        const placeholder = uName && uId ? `回复${uName}` : '随便说说';
+        const placeholder = uName && uId ? `回复${uName}` : "随便说说";
         this.showCommentInput({ placeholder, reply_user: uId });
       }
     },
@@ -201,9 +201,9 @@ export default {
       const that = this;
       this.$Modal.info({
         render(h) {
-          return h('div', {}, [
+          return h("div", {}, [
             h(
-              'button',
+              "button",
               {
                 on: {
                   click: () => {
@@ -211,10 +211,10 @@ export default {
                   }
                 }
               },
-              '删除'
+              "删除"
             ),
             h(
-              'button',
+              "button",
               {
                 on: {
                   click: () => {
@@ -222,7 +222,7 @@ export default {
                   }
                 }
               },
-              '申请评论置顶'
+              "申请评论置顶"
             )
           ]);
         },
@@ -356,7 +356,7 @@ export default {
     }
 
     &-body {
-      max-width: calc(~'100% - ' 76+120px);
+      max-width: calc(~"100% - " 76+120px);
       overflow-x: hidden;
       flex: 1 1 auto;
       margin: 0 30px;

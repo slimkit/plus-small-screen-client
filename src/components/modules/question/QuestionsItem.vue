@@ -40,9 +40,9 @@
 </template>
 
 <script>
-import UserAvatar from '../UserAvatar';
-import QuestionListAnswerCard from './QuestionListAnswerCard';
-import { syntaxTextAndImage } from '../../../util/markdown';
+import UserAvatar from "../UserAvatar";
+import QuestionListAnswerCard from "./QuestionListAnswerCard";
+import { syntaxTextAndImage } from "../../../util/markdown";
 
 /**
  * Question list item.
@@ -53,7 +53,7 @@ export default {
    *
    * @type {String}
    */
-  name: 'module-question-list-item',
+  name: "module-question-list-item",
 
   /**
    * The component using components.
@@ -80,7 +80,6 @@ export default {
    * @type {Object}
    */
   computed: {
-
     /**
      * Answer data.
      *
@@ -161,20 +160,20 @@ export default {
     }
   }
   &-shang {
+    color: #fca308;
+    &-i,
+    span {
       color: #fca308;
-      &-i,
-      span {
-        color: #fca308;
-        width: 20px;
-        height: 21px;
-        font-size: 22px;
-        font-weight: normal;
-        font-stretch: normal;
-        line-height: 0px;
-        letter-spacing: 0px;
-        border: solid 1px #fca308;
-        padding: 4px;
-      }
+      width: 20px;
+      height: 21px;
+      font-size: 22px;
+      font-weight: normal;
+      font-stretch: normal;
+      line-height: 0px;
+      letter-spacing: 0px;
+      border: solid 1px #fca308;
+      padding: 4px;
     }
+  }
 }
 </style>

@@ -9,10 +9,10 @@
     </div>
 </template>
 <script>
-import { mapState } from 'vuex'
-import HeadTop from '@/components/HeadTop'
+import { mapState } from "vuex";
+import HeadTop from "@/components/HeadTop";
 export default {
-  name: 'chooseCategory',
+  name: "chooseCategory",
   components: {
     HeadTop
   },
@@ -21,45 +21,45 @@ export default {
       types: s => s.GROUPTYPES
     }),
 
-    choosed () {
-      return this.$parent.category
+    choosed() {
+      return this.$parent.category;
     }
   },
   methods: {
-    ok (type) {
-      this.$parent.category = type
+    ok(type) {
+      this.$parent.category = type;
 
       this.$Message.success({
         Message: `已选择 ${type.name} 分类 `
-      })
+      });
 
-      this.$router.go(-1)
+      this.$router.go(-1);
     }
   }
-}
+};
 </script>
 <style lang='less'>
 .group--types-list {
-    margin-top: 40px;
-    padding-left: 20px;
-    padding-right: 20px;
-    width: 100%;
-    display: flex;
-    flex-wrap: wrap;
-    &-item {
-        height: 60px;
-        width: calc(~'25% - 10px');
-        margin: 0 10px 10px 0;
-        padding: 0 20px;
-        line-height: 60px;
-        border-radius: 4px;
-        /*no*/
-        background: #f4f5f5;
-        font-size: 28px;
-        text-align: center;
-        &.active {
-            background-color: #d9eef6;
-        }
+  margin-top: 40px;
+  padding-left: 20px;
+  padding-right: 20px;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  &-item {
+    height: 60px;
+    width: calc(~"25% - 10px");
+    margin: 0 10px 10px 0;
+    padding: 0 20px;
+    line-height: 60px;
+    border-radius: 4px;
+    /*no*/
+    background: #f4f5f5;
+    font-size: 28px;
+    text-align: center;
+    &.active {
+      background-color: #d9eef6;
     }
+  }
 }
 </style>

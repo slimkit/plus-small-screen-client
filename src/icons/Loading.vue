@@ -36,6 +36,6 @@
 
 <script>
 export default {
-  name: 'icon-loading'
-}
+  name: "icon-loading"
+};
 </script>

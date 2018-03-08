@@ -17,82 +17,82 @@
 </template>
 <script>
 export default {
-  name: 'notFound'
-}
+  name: "notFound"
+};
 </script>
 <style lang='less' scode>
 .not_found {
-    background: #eee;
-    margin: 0;
-    height: 100vh;
-    width: 100%;
-    font: 5rem/1 Open Sans, Impact;
-    .tips_text {
-        fill: #111;
-        text-anchor: middle;
-        text-align: center;
-        font-size: .5rem;
-        margin: auto;
-    }
-    svg {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        margin: auto;
-    }
+  background: #eee;
+  margin: 0;
+  height: 100vh;
+  width: 100%;
+  font: 5rem/1 Open Sans, Impact;
+  .tips_text {
+    fill: #111;
+    text-anchor: middle;
+    text-align: center;
+    font-size: 0.5rem;
+    margin: auto;
+  }
+  svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+  }
 }
 
 .text {
-    fill: none;
-    stroke-width: 4;
-    stroke-linejoin: round;
-    stroke-dasharray: 70 330;
-    stroke-dashoffset: 0;
-    -webkit-animation: stroke 6s infinite linear;
-    animation: stroke 6s infinite linear;
+  fill: none;
+  stroke-width: 4;
+  stroke-linejoin: round;
+  stroke-dasharray: 70 330;
+  stroke-dashoffset: 0;
+  -webkit-animation: stroke 6s infinite linear;
+  animation: stroke 6s infinite linear;
 }
 
 .text:nth-child(5n + 1) {
-    stroke: #F2385A;
-    -webkit-animation-delay: -1.2s;
-    animation-delay: -1.2s;
+  stroke: #f2385a;
+  -webkit-animation-delay: -1.2s;
+  animation-delay: -1.2s;
 }
 
 .text:nth-child(5n + 2) {
-    stroke: #F5A503;
-    -webkit-animation-delay: -2.4s;
-    animation-delay: -2.4s;
+  stroke: #f5a503;
+  -webkit-animation-delay: -2.4s;
+  animation-delay: -2.4s;
 }
 
 .text:nth-child(5n + 3) {
-    stroke: #E9F1DF;
-    -webkit-animation-delay: -3.6s;
-    animation-delay: -3.6s;
+  stroke: #e9f1df;
+  -webkit-animation-delay: -3.6s;
+  animation-delay: -3.6s;
 }
 
 .text:nth-child(5n + 4) {
-    stroke: #56D9CD;
-    -webkit-animation-delay: -4.8s;
-    animation-delay: -4.8s;
+  stroke: #56d9cd;
+  -webkit-animation-delay: -4.8s;
+  animation-delay: -4.8s;
 }
 
 .text:nth-child(5n + 5) {
-    stroke: #3AA1BF;
-    -webkit-animation-delay: -6s;
-    animation-delay: -6s;
+  stroke: #3aa1bf;
+  -webkit-animation-delay: -6s;
+  animation-delay: -6s;
 }
 
 @-webkit-keyframes stroke {
-    100% {
-        stroke-dashoffset: -400;
-    }
+  100% {
+    stroke-dashoffset: -400;
+  }
 }
 
 @keyframes stroke {
-    100% {
-        stroke-dashoffset: -400;
-    }
+  100% {
+    stroke-dashoffset: -400;
+  }
 }
 </style>

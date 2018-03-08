@@ -49,7 +49,7 @@
             <v-icon type='base-filter-list'></v-icon>
           </div>
           <div class="user-home-feeds-filter-select" v-show='filterShow' @click='showFilter'>
-            <div class="user-home-feeds-filter-option" :class='{active: option.type === filterType.type}' v-for='option in filterTypes' @click='selectFilterType(option)'>
+            <div class="user-home-feeds-filter-option" :class='{active: option.type === filterType.type}' v-for='option in filterTypes' @click='selectFilterType(option)' :key="option.label">
               <span>{{ option.label }}</span>
               <v-icon type='base-checked'></v-icon>
             </div>
@@ -66,25 +66,25 @@
   </div>
 </template>
 <script>
-import { formatNum } from '@/filters';
-import HeadTop from '@/components/HeadTop';
-import { FeedItem } from '@/components/feed/feedItem';
+import { formatNum } from "@/filters";
+import HeadTop from "@/components/HeadTop";
+import { FeedItem } from "@/components/feed/feedItem";
 const filterTypes = [
   {
-    type: '',
-    label: '全部动态'
+    type: "",
+    label: "全部动态"
   },
   {
-    type: 'paid',
-    label: '付费动态'
+    type: "paid",
+    label: "付费动态"
   },
   {
-    type: 'pinned',
-    label: '置顶动态'
+    type: "pinned",
+    label: "置顶动态"
   }
 ];
 export default {
-  name: 'userHome',
+  name: "userHome",
   components: {
     HeadTop,
     FeedItem
@@ -115,7 +115,7 @@ export default {
     bg_cover() {
       const bg = this.user.bg;
       return {
-        backgroundImage: bg ? `url(${bg})` : ''
+        backgroundImage: bg ? `url(${bg})` : ""
       };
     },
     verified() {
@@ -127,7 +127,7 @@ export default {
       return this.user.location || false;
     },
     bio() {
-      return this.user.bio || '这家伙很懒. 什么也没留下';
+      return this.user.bio || "这家伙很懒. 什么也没留下";
     },
     feeds_length() {
       return (this.user.extra || {}).feeds_count || 0;
@@ -163,7 +163,7 @@ export default {
         })
         .catch(err => {
           const {
-            response: { data = { message: '获取用户数据失败' } } = {}
+            response: { data = { message: "获取用户数据失败" } } = {}
           } = err;
           this.$Message.error(data);
         });
@@ -177,16 +177,16 @@ export default {
     },
 
     getUserFeeds(cb) {
-      const params = { type: 'users', user: this.Uid };
+      const params = { type: "users", user: this.Uid };
       if (this.filterType.type) {
         params.screen = this.filterType.type;
       }
       this.$http
-        .get('/feeds', {
+        .get("/feeds", {
           params
         })
         .then(({ data = [] } = {}) => {
-          this.user = Object.assign({}, this.user, { feeds: data['feeds'] });
+          this.user = Object.assign({}, this.user, { feeds: data["feeds"] });
           cb && cb();
         });
     },
@@ -195,7 +195,7 @@ export default {
       this.updateUserData(
         this.getUserFeeds(
           this.getUserTags(() => {
-            this.$store.commit('SAVE_USER', this.user);
+            this.$store.commit("SAVE_USER", this.user);
           })
         )
       );
@@ -221,7 +221,7 @@ export default {
   },
   mounted() {
     this.init();
-    this.$el.addEventListener('scroll', e => {
+    this.$el.addEventListener("scroll", () => {
       this.scrollTop = this.$el.scrollTop;
     });
   }
@@ -261,7 +261,7 @@ export default {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    background-image: url('../../images/user_home_default_cover.png');
+    background-image: url("../../images/user_home_default_cover.png");
   }
 
   &-avatar {

@@ -14,9 +14,9 @@
   </div>
 </template>
 <script>
-import HeadTop from '@/components/HeadTop'
+import HeadTop from "@/components/HeadTop";
 export default {
-  name: 'groupReport',
+  name: "groupReport",
   components: {
     HeadTop
   },
@@ -27,16 +27,15 @@ export default {
   },
   data() {
     return {
-      content: ''
-    }
+      content: ""
+    };
   }
-}
-
+};
 </script>
 <style lang='less'>
 @group-report-prefix: group-report;
 .@{group-report-prefix} {
-  &-item{
+  &-item {
     height: 100px;
     padding: 10px;
     background-color: #f4f5f5;
@@ -57,9 +56,8 @@ export default {
       bottom: 0;
       right: 0;
       font-size: 20px;
-      color: #999
+      color: #999;
     }
   }
 }
-
 </style>

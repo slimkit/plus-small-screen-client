@@ -14,8 +14,8 @@
 </template>
 <script>
 export default {
-  name: 'news-item',
-  props: ['news'],
+  name: "news-item",
+  props: ["news"],
   data() {
     return {
       hits: 0,
@@ -23,16 +23,16 @@ export default {
       image: null,
       title: null,
       author: null,
-      time: ''
+      time: ""
     };
   },
   methods: {
     formatData() {
       const {
         hits = 0,
-        author = '',
+        author = "",
         image = {},
-        title = '',
+        title = "",
         created_at: createdAt,
         category = {}
       } = this.news;
@@ -50,5 +50,4 @@ export default {
 };
 </script>
 <style lang='less' src='../style/newsItem.less'>
-
 </style>

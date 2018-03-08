@@ -3,7 +3,7 @@
         <head-top title='发现' />
         <div></div>
         <transition-group tag="ul" class='entry__group padding' v-for='(group, index) in entrys' :key='`${prefix}-entry-group-${index}`' name="slide">
-            <li v-for='({icon,title, path, tips, new_tips}, index) in group' :key='`${prefix}-entry-${icon}`' class="entry__item" @click='to(path)'>
+            <li v-for='{icon,title, path, tips, new_tips} in group' :key='`${prefix}-entry-${icon}`' class="entry__item" @click='to(path)'>
                 <v-icon :type='`${prefix}-${icon}`' class='entry__item--prepend' />
                 <span>{{ title }}</span>
                 <v-badge :dot='new_tips'>{{ tips }}</v-badge>
@@ -16,57 +16,57 @@
     </div>
 </template>
 <script>
-import HeadTop from '../../components/HeadTop';
-import FootGuide from '../../components/FootGuide';
+import HeadTop from "../../components/HeadTop";
+import FootGuide from "../../components/FootGuide";
 export default {
-  name: 'discoverIndex',
+  name: "discoverIndex",
   components: {
     HeadTop,
     FootGuide
   },
   data() {
     return {
-      prefix: 'discover',
+      prefix: "discover",
       entrys: [
         [
           {
-            title: '资讯',
-            icon: 'news',
-            path: '/news',
+            title: "资讯",
+            icon: "news",
+            path: "/news",
             new_tips: false,
-            tips: ''
+            tips: ""
           },
           {
-            title: '圈子',
-            icon: 'group',
-            path: '/group',
+            title: "圈子",
+            icon: "group",
+            path: "/group",
             new_tips: false,
-            tips: ''
+            tips: ""
           },
           {
-            title: '问答',
-            icon: 'question',
-            path: '/question',
+            title: "问答",
+            icon: "question",
+            path: "/question",
             new_tips: false,
-            tips: ''
+            tips: ""
           }
         ],
         [
           {
-            title: '排行',
-            icon: 'rank',
-            path: '/rank',
+            title: "排行",
+            icon: "rank",
+            path: "/rank",
             new_tips: false,
-            tips: ''
+            tips: ""
           }
         ],
         [
           {
-            title: '找人',
-            icon: 'find',
-            path: '/find',
+            title: "找人",
+            icon: "find",
+            path: "/find",
             new_tips: true,
-            tips: '500米内有一大波玩家赶来'
+            tips: "500米内有一大波玩家赶来"
           }
         ]
       ]

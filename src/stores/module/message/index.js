@@ -1,24 +1,24 @@
-import getters from './getters';
-import actions from './actions';
-import mutations from './mutations';
+import getters from "./getters";
+import actions from "./actions";
+import mutations from "./mutations";
 
 const state = {
   UNREAD_COUNT: {
     msg: {
       comments: {
         count: 0,
-        placeholder: '',
+        placeholder: "",
         lastUsers: [],
-        time: ''
+        time: ""
       },
       diggs: {
         count: 0,
-        placeholder: '',
+        placeholder: "",
         lastUsers: [],
-        time: ''
+        time: ""
       },
       audits: {
-        placeholder: '暂无未审核的申请',
+        placeholder: "暂无未审核的申请",
         newsCommentCount: 0,
         feedCommentCount: 0,
         groupPostCommentCount: 0,

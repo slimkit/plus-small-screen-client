@@ -28,7 +28,7 @@
 </template>
 <script>
 export default {
-  name: 'news-tool-bar',
+  name: "news-tool-bar",
   props: {
     liked: {
       type: Boolean,
@@ -37,20 +37,19 @@ export default {
   },
   methods: {
     handleLike() {
-      this.$emit('handleLike');
+      this.$emit("handleLike");
     },
     handleComment() {
-      this.$emit('handleComment');
+      this.$emit("handleComment");
     },
     handleShare() {
-      this.$emit('handleShare');
+      this.$emit("handleShare");
     },
     handleMore() {
-      this.$emit('handleMore');
+      this.$emit("handleMore");
     }
   }
 };
 </script>
 <style lang='less' src='../style/newsToolBar.less'>
-
 </style>

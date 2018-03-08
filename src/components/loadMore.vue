@@ -65,11 +65,11 @@ const getScrollTarget = el => {
   while (
     el &&
     el.nodeType === 1 &&
-    el.tagName !== 'HTML' &&
-    el.tagName !== 'BODY'
+    el.tagName !== "HTML" &&
+    el.tagName !== "BODY"
   ) {
     const overflowY = document.defaultView.getComputedStyle(el).overflowY;
-    if (overflowY === 'scroll' || overflowY === 'auto') {
+    if (overflowY === "scroll" || overflowY === "auto") {
       return el;
     }
     el = el.parentNode;
@@ -98,7 +98,7 @@ function throttle(fn, delay, scrolling = () => {}) {
   };
 }
 export default {
-  name: 'loadMore',
+  name: "loadMore",
   props: {
     noTranslateAnimation: {
       type: Boolean,
@@ -110,15 +110,15 @@ export default {
     },
     topPullText: {
       type: String,
-      default: '下拉刷新'
+      default: "下拉刷新"
     },
     topDropText: {
       type: String,
-      default: '刷新中...'
+      default: "刷新中..."
     },
     topLoadingText: {
       type: String,
-      default: '释放更新'
+      default: "释放更新"
     },
     showText: {
       type: Boolean,
@@ -159,7 +159,7 @@ export default {
   },
   computed: {
     canPulldown() {
-      return typeof this.onRefresh === 'function';
+      return typeof this.onRefresh === "function";
     },
     scEl() {
       return this.scrollTarget === document.documentElement
@@ -173,14 +173,14 @@ export default {
       return 0.05 * this.visibleHeight;
     },
     transition() {
-      return this.dragging || (this.dY === 0 && this.reset) ? '0s' : '200ms';
+      return this.dragging || (this.dY === 0 && this.reset) ? "0s" : "200ms";
     },
     translate() {
       return !this.noTranslateAnimation
-        ? 'translateY(' +
+        ? "translateY(" +
             (80 * Math.atan(this.dY / 200) - this.topBarHeight) +
-            'px)'
-        : '';
+            "px)"
+        : "";
     },
     status() {
       return this.dragging && this.dY > this.topDistance
@@ -227,7 +227,7 @@ export default {
      * @auth:  jsonleex <jsonleex@163.com>
      */
     fillContainer() {
-      if (typeof this.onLoadMore === 'function') {
+      if (typeof this.onLoadMore === "function") {
         this.loading = true;
         this.onLoadMore();
       }
@@ -260,7 +260,7 @@ export default {
         !this.loading &&
         !this.requesting
       ) {
-        this.$emit('onStart');
+        this.$emit("onStart");
         this.startY = e.pageY;
         this.dragging = true;
         this.reset = false;
@@ -274,13 +274,13 @@ export default {
         e.preventDefault();
         this.dY = $e.pageY - this.startY;
         this.requesting && (this.dY += this.topDistance);
-        this.$emit('onPull', this.dY);
+        this.$emit("onPull", this.dY);
       }
     },
     // Touch end
     stopDrag() {
       this.dragging = false;
-      this.$emit('onEnd');
+      this.$emit("onEnd");
       this.dY > this.topDistance && window.scrollY <= 0
         ? this.beforeRefresh()
         : (this.dY = 0);
@@ -292,7 +292,7 @@ export default {
      */
     beforeRefresh() {
       if (this.requesting) return;
-      if (typeof this.onRefresh === 'function') {
+      if (typeof this.onRefresh === "function") {
         this.requesting = true;
         this.dY = this.topDistance;
         this.onRefresh();
@@ -307,7 +307,7 @@ export default {
       this.$nextTick(() => {
         this.topBarHeight = this.$el.children[0].clientHeight;
         this.scrollTarget = getScrollTarget(this.$el);
-        if (typeof this.onLoadMore === 'function') {
+        if (typeof this.onLoadMore === "function") {
           this.scEl.onscroll = this.handleScrolling();
         }
         if (this.canPulldown && !this.fulled()) {
@@ -334,5 +334,4 @@ export default {
 </script>
 
 <style lang="less" src='./style/loadmore.less'>
-
 </style>

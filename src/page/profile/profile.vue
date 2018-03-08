@@ -132,9 +132,9 @@
   </div>
 </template>
 <script>
-const prefixCls = 'profile';
+const prefixCls = "profile";
 export default {
-  name: 'profile',
+  name: "profile",
   data() {
     return {
       prefixCls,
@@ -147,7 +147,7 @@ export default {
     },
     balance() {
       const {
-        site: { gold_name: { name = '金币' } = {} } = {}
+        site: { gold_name: { name = "金币" } = {} } = {}
       } = this.$store.state.CONFIG;
       return (+this.wallet.balance || 0).toFixed(2) + name;
     },
@@ -166,7 +166,7 @@ export default {
   },
   methods: {
     initData() {
-      console.log('refreshUser');
+      console.log("refreshUser");
     }
   },
   mounted() {
@@ -175,5 +175,4 @@ export default {
 };
 </script>
 <style lang='less' src='./style/profile.less'>
-
 </style>

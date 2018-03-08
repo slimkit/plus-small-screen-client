@@ -4,23 +4,27 @@ export default {
   watch: {
     scrollable(val) {
       if (!val) {
-        this.addScrollEffect()
+        this.addScrollEffect();
       } else {
-        this.removeScrollEffect()
+        this.removeScrollEffect();
       }
     }
   },
   methods: {
     addScrollEffect() {
-      document.documentElement.style.overflow = 'hidden'
+      document.documentElement.style.overflow = "hidden";
       // document.body.style.height = '100vh'
       // console.log(document.body.offsetHeight)
       // app.style.overflow = 'hidden'
       // app.style.height = '100vh'
       /* 兼容移动端 全屏时禁止 body 的滑动 允许 modal 滑动 */
-      this.$el.addEventListener('touchmove', (e) => {
-        e.preventDefault()
-      }, false)
+      this.$el.addEventListener(
+        "touchmove",
+        e => {
+          e.preventDefault();
+        },
+        false
+      );
     },
     removeScrollEffect() {
       // document.body.style.overflow = ''
@@ -29,4 +33,4 @@ export default {
       // app.style.height = ''
     }
   }
-}
+};

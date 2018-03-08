@@ -47,13 +47,13 @@
       <span>{{ topic.experts_count }}位相关专家</span>
       <div>
         <user-avatar
-          v-for="user, index in topic.experts"
-          :key="user.id"
+          v-for="(user, index) in topic.experts"
           :class="classNameBuilder('experts-user')"
           :size="0.5"
           :src="user.avatar"
           :sex="user.sex"
           :style="[{ zIndex: topic.experts.length - index }]"
+          :key="user.id"
         />
       </div>
     </div>
@@ -86,15 +86,15 @@
 </template>
 
 <script>
-import UserAvatar from '../modules/UserAvatar';
-import QuestionsItem from '../modules/question/QuestionsItem';
-import { show, questions, follow, unfollow } from '../../api/question/topics';
-const name = 'page-question-topic';
+import UserAvatar from "../modules/UserAvatar";
+import QuestionsItem from "../modules/question/QuestionsItem";
+import { show, questions, follow, unfollow } from "../../api/question/topics";
+const name = "page-question-topic";
 export default {
   name,
   components: {
-    'user-avatar': UserAvatar,
-    'question-item': QuestionsItem
+    "user-avatar": UserAvatar,
+    "question-item": QuestionsItem
   },
   data: () => ({
     topic: {},
@@ -107,7 +107,7 @@ export default {
       return this.$route.params.id;
     },
     type() {
-      const { type = 'hot' } = this.$route.query;
+      const { type = "hot" } = this.$route.query;
 
       return type;
     },
@@ -116,9 +116,15 @@ export default {
     }
   },
   watch: {
-    '$route'(newRoute, oldRoute) {
-      console.log(newRoute.path === oldRoute.path && newRoute.query.type !== oldRoute.query.type);
-      if (newRoute.path === oldRoute.path && newRoute.query.type !== oldRoute.query.type) {
+    $route(newRoute, oldRoute) {
+      console.log(
+        newRoute.path === oldRoute.path &&
+          newRoute.query.type !== oldRoute.query.type
+      );
+      if (
+        newRoute.path === oldRoute.path &&
+        newRoute.query.type !== oldRoute.query.type
+      ) {
         this.questions = [];
         this.loadContainer.beforeRefresh();
       }
@@ -129,79 +135,89 @@ export default {
       return `${name}-${className}`;
     },
     handleRefresh() {
-      show(this.id).then(({ data }) => {
-        this.loading = false;
-        this.topic = data;
-        this.handleRefreshQuestions();
-      }).catch(({ response: { data } = {} }) => {
-        this.loading = true;
-        this.loadContainer.topEnd(false);
-        this.loadContainer.bottomEnd(true);
-        this.$Message.error(data);
-      });
+      show(this.id)
+        .then(({ data }) => {
+          this.loading = false;
+          this.topic = data;
+          this.handleRefreshQuestions();
+        })
+        .catch(({ response: { data } = {} }) => {
+          this.loading = true;
+          this.loadContainer.topEnd(false);
+          this.loadContainer.bottomEnd(true);
+          this.$Message.error(data);
+        });
     },
     handleRefreshQuestions() {
       const offset = 0;
       const limit = 15;
-      questions(this.id, this.type, offset, limit).then(({ data }) => {
-        this.questions = data;
-        this.loadContainer.topEnd(false);
-        this.loadContainer.bottomEnd(data.length < limit);
-      }).catch(({ response: { data } = {} }) => {
-        this.loadContainer.topEnd(false);
-        this.loadContainer.bottomEnd(true);
-        this.$Message.error(data);
-      });
+      questions(this.id, this.type, offset, limit)
+        .then(({ data }) => {
+          this.questions = data;
+          this.loadContainer.topEnd(false);
+          this.loadContainer.bottomEnd(data.length < limit);
+        })
+        .catch(({ response: { data } = {} }) => {
+          this.loadContainer.topEnd(false);
+          this.loadContainer.bottomEnd(true);
+          this.$Message.error(data);
+        });
     },
     handleLoadQuestions() {
       const offset = this.questions.length;
       const limit = 15;
-      questions(this.id, this.type, offset, limit).then(({ data }) => {
-        this.questions = [ ...this.questions, ...data ];
-        this.loadContainer.bottomEnd(data.length < limit);
-      }).catch(({ response: { data } = {} }) => {
-        this.loadContainer.bottomEnd(true);
-        this.$Message.error(data);
-      });
+      questions(this.id, this.type, offset, limit)
+        .then(({ data }) => {
+          this.questions = [...this.questions, ...data];
+          this.loadContainer.bottomEnd(data.length < limit);
+        })
+        .catch(({ response: { data } = {} }) => {
+          this.loadContainer.bottomEnd(true);
+          this.$Message.error(data);
+        });
     },
     handleScrolling() {
       const nav = this.$refs.types;
       const offsetTop = this.typeNavOffsetTop;
       const y = document.documentElement.scrollTop + 48;
       if (y >= offsetTop) {
-        nav.style.position = 'fixed';
+        nav.style.position = "fixed";
         nav.style.marginTop = 0;
-        nav.style.top = '0.9rem';
+        nav.style.top = "0.9rem";
         return;
       }
-      nav.style.position = 'relative';
-      nav.style.marginTop = '-1rem';
-      nav.style.top = '1.16rem';
+      nav.style.position = "relative";
+      nav.style.marginTop = "-1rem";
+      nav.style.top = "1.16rem";
     },
     handleFollow(topic) {
-      follow(topic.id).then(() => {
-        topic.has_follow = true;
-        this.follows_count += 1;
-      }).catch(({ response: { data } = {} }) => {
-        this.$Message.error(data);
-      });
+      follow(topic.id)
+        .then(() => {
+          topic.has_follow = true;
+          this.follows_count += 1;
+        })
+        .catch(({ response: { data } = {} }) => {
+          this.$Message.error(data);
+        });
     },
     handleUnfollow(topic) {
-      unfollow(topic.id).then(() => {
-        topic.has_follow = false;
-        topic.follows_count -= 1;
-        if (this.type === 'follow') {
-          let newTopics = [];
-          this.topics.forEach((_topic) => {
-            if (_topic.id !== topic.id) {
-              newTopics.push(_topic);
-            }
-          });
-          this.topics = newTopics;
-        }
-      }).catch(({ response: { data } = {} }) => {
-        this.$Message.error(data);
-      });
+      unfollow(topic.id)
+        .then(() => {
+          topic.has_follow = false;
+          topic.follows_count -= 1;
+          if (this.type === "follow") {
+            let newTopics = [];
+            this.topics.forEach(_topic => {
+              if (_topic.id !== topic.id) {
+                newTopics.push(_topic);
+              }
+            });
+            this.topics = newTopics;
+          }
+        })
+        .catch(({ response: { data } = {} }) => {
+          this.$Message.error(data);
+        });
     }
   },
   mounted() {
@@ -212,7 +228,7 @@ export default {
       };
     }
   }
-}
+};
 </script>
 
 <style lang="less">

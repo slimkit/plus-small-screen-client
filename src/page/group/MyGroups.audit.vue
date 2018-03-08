@@ -17,9 +17,9 @@
   </div>
 </template>
 <script>
-import groupItem from './components/groupListItem';
+import groupItem from "./components/groupListItem";
 export default {
-  name: 'my-groups-audit-list',
+  name: "my-groups-audit-list",
   components: {
     groupItem
   },
@@ -36,7 +36,7 @@ export default {
   methods: {
     onRefresh() {
       this.$http
-        .get('/plus-group/user-groups?limit=15&type=audit')
+        .get("/plus-group/user-groups?limit=15&type=audit")
         .then(({ data }) => {
           this.list = [...data];
           this.$refs.loadmore.topEnd(!(data.length < 15));
@@ -44,10 +44,10 @@ export default {
     },
     onLoadMore() {
       this.$http
-        .get('/plus-group/user-groups', {
+        .get("/plus-group/user-groups", {
           params: {
             limit: 15,
-            type: 'audit',
+            type: "audit",
             offset: this.list.length
           }
         })

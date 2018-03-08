@@ -22,10 +22,10 @@
   </div>
 </template>
 <script>
-import newsItem from './components/newsItem.vue';
-import newsFilter from './components/newsFilter';
+import newsItem from "./components/newsItem.vue";
+import newsFilter from "./components/newsFilter";
 export default {
-  name: 'news-index',
+  name: "news-index",
   components: {
     newsItem,
     newsFilter
@@ -56,7 +56,7 @@ export default {
           : { limit: 10, cate_id: this.currentCate };
 
       this.$http
-        .get('/news', {
+        .get("/news", {
           params
         })
         .then(({ data = [] } = {}) => {
@@ -70,7 +70,7 @@ export default {
           ? { limit: 10, recommend: 1, after: this.after }
           : { limit: 10, cate_id: this.currentCate, after: this.after };
       this.$http
-        .get('/news', {
+        .get("/news", {
           params
         })
         .then(({ data = [] } = {}) => {
@@ -82,5 +82,4 @@ export default {
 };
 </script>
 <style lang="less" src='./style/news.less'>
-
 </style>

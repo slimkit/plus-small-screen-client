@@ -5,11 +5,10 @@
 </template>
 
 <script>
-    export default {
-      name: 'questionIndex'
-    }
+export default {
+  name: "questionIndex"
+};
 </script>
 
 <style lang='less'>
-
 </style>

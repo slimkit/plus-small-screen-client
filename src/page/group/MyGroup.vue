@@ -15,10 +15,10 @@
 </template>
 <script>
 export default {
-  name: 'my-group',
+  name: "my-group",
   methods: {
     cancel() {
-      this.$router.push('/profile');
+      this.$router.push("/profile");
     }
   }
 };

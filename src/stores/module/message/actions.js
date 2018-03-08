@@ -1,5 +1,5 @@
-import http from '@/http';
-import getMessageUnameTxt from '@/util/getMessageUnameTxt';
+import http from "@/http";
+import getMessageUnameTxt from "@/util/getMessageUnameTxt";
 export default {
   /**
    * 获取未读信息数量
@@ -12,13 +12,13 @@ export default {
     // console.log(rootState);
     if (!rootState.CURRENTUSER || !rootState.CURRENTUSER.token) return;
     let options = {};
-    let cPlaceholder = '还没有人评论过你';
-    let dPlaceholder = '还没有人赞过你';
-    let aPlaceholder = '暂无未审核的申请';
-    let cTime = '';
-    let dTime = '';
+    let cPlaceholder = "还没有人评论过你";
+    let dPlaceholder = "还没有人赞过你";
+    let aPlaceholder = "暂无未审核的申请";
+    let cTime = "";
+    let dTime = "";
     http
-      .get('/user/unread-count', {
+      .get("/user/unread-count", {
         validataStatus: status => status === 200
       })
       .then(({ data }) => {
@@ -34,20 +34,20 @@ export default {
         let {
           news: { count: newsCount = 0 } = {},
           feeds: { count: feedsCount = 0 } = {},
-          'group-comments': { count: groupComments = 0 } = {},
-          'group-posts': { count: groupPosts = 0 } = {}
+          "group-comments": { count: groupComments = 0 } = {},
+          "group-posts": { count: groupPosts = 0 } = {}
         } =
           data.pinneds || {};
 
         if (data.comments.length > 0) {
           let plsh = getMessageUnameTxt(data.comments);
-          cPlaceholder = plsh.placeholder + '评论了我';
+          cPlaceholder = plsh.placeholder + "评论了我";
           cTime = plsh.time;
         }
 
         if (data.likes.length > 0) {
           let plsh = getMessageUnameTxt(data.likes);
-          dPlaceholder = plsh.placeholder + '赞了我';
+          dPlaceholder = plsh.placeholder + "赞了我";
           dTime = plsh.time;
         }
 
@@ -59,7 +59,7 @@ export default {
             groupPosts >
           0
         ) {
-          aPlaceholder = '你有未处理的审核申请';
+          aPlaceholder = "你有未处理的审核申请";
         }
 
         options = {
@@ -89,7 +89,7 @@ export default {
             }
           }
         };
-        commit('SAVE_MESSAGE_UNREAD_COUNT', options);
+        commit("SAVE_MESSAGE_UNREAD_COUNT", options);
       });
   },
 
@@ -101,11 +101,11 @@ export default {
    * @param    {[type]}            options.commit [description]
    */
   GET_MY_COMMENTED_ALL({ commit }) {
-    http('/user/comments', {
+    http("/user/comments", {
       validateStatus: s => s === 200
     }).then(({ data }) => {
-      commit('SAVE_MY_COMMENTED', {
-        type: 'all',
+      commit("SAVE_MY_COMMENTED", {
+        type: "all",
         data
       });
     });
@@ -119,12 +119,12 @@ export default {
    * @param    {[type]}            options.state  [description]
    * @param    {[type]}            options.commit [description]
    */
-  GET_MY_LIKED_ALL({ state, commit }) {
-    http('/user/likes', {
+  GET_MY_LIKED_ALL({ commit }) {
+    http("/user/likes", {
       validateStatus: s => s === 200
     }).then(({ data }) => {
-      commit('SAVE_MY_LIKED', {
-        type: 'new',
+      commit("SAVE_MY_LIKED", {
+        type: "new",
         data
       });
     });

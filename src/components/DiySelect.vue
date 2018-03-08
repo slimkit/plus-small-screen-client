@@ -2,7 +2,7 @@
   <div class="diy-select" :class="{open}" @click='open = !open'>
     <div class="diy-select--label">{{ curSelectValue }}</div>
     <div class="diy-select--options" v-show='open'>
-      <div class="diy-select--option" v-for='(option, index) in options' @click='setCurVal(option)'>
+      <div class="diy-select--option" v-for='option in options' @click='setCurVal(option)' :key="option.label">
         <template v-if='option.hasMsg'>
           <v-badge :dot='option.hasMsg'>{{ option.label }}</v-badge>
         </template>
@@ -14,7 +14,7 @@
 
 <script>
 export default {
-  name: 'DiySelect',
+  name: "DiySelect",
   props: {
     value: null,
     options: {
@@ -22,12 +22,12 @@ export default {
     },
     placeholder: {
       type: String,
-      default: '请选择'
+      default: "请选择"
     }
   },
   data() {
     return {
-      curVal: '',
+      curVal: "",
       open: false
     };
   },
@@ -49,8 +49,8 @@ export default {
       },
       get() {
         if (
-          typeof this.curVal !== 'undefined' &&
-          typeof this.curVal.label !== 'undefined'
+          typeof this.curVal !== "undefined" &&
+          typeof this.curVal.label !== "undefined"
         ) {
           return this.curVal.label;
         } else {
@@ -62,15 +62,14 @@ export default {
   methods: {
     setCurVal(val) {
       this.curVal = val;
-      this.$emit('input', val.value);
+      this.$emit("input", val.value);
     }
   },
   mounted() {
-    this.curSelectValue = '0';
+    this.curSelectValue = "0";
   }
 };
 </script>
 
 <style lang="less" src='./style/diySelect.less'>
-
 </style>

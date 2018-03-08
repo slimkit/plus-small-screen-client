@@ -3,7 +3,7 @@
 </template>
 
 <script>
-const name = 'page-answer';
+const name = "page-answer";
 export default {
   name
 };

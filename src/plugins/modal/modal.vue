@@ -14,10 +14,10 @@
   </div>
 </template>
 <script>
-const prefixCls = 'v-modal';
+const prefixCls = "v-modal";
 let scrollTop;
 export default {
-  name: 'v-modal',
+  name: "v-modal",
   props: {
     value: {
       type: Boolean,
@@ -27,7 +27,7 @@ export default {
       type: Object,
       default: () => {
         return {
-          backgroundColor: 'rgba(0, 0, 0, .2)'
+          backgroundColor: "rgba(0, 0, 0, .2)"
         };
       }
     },
@@ -55,7 +55,7 @@ export default {
       if (val) {
         scrollTop = document.scrollingElement.scrollTop;
         document.body.classList.add(`${this.prefixCls}-open`);
-        document.body.style.top = -scrollTop + 'px';
+        document.body.style.top = -scrollTop + "px";
       } else {
         document.body.classList.remove(`${this.prefixCls}-open`);
         document.scrollingElement.scrollTop = scrollTop;
@@ -65,8 +65,8 @@ export default {
   methods: {
     close() {
       this.visible = false;
-      this.$emit('input', false);
-      this.$emit('on-cancel');
+      this.$emit("input", false);
+      this.$emit("on-cancel");
     },
     handleWrapClick() {
       if (this.maskClosable) {

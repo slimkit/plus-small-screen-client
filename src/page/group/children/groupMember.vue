@@ -27,12 +27,12 @@
   </transition>
 </template>
 <script>
-import _ from 'lodash'
-import HeadTop from '@/components/HeadTop'
-import groupMemberItem from '../components/groupMemberItem'
-const sources = []
+import _ from "lodash";
+import HeadTop from "@/components/HeadTop";
+import groupMemberItem from "../components/groupMemberItem";
+const sources = [];
 export default {
-  name: 'groupMember',
+  name: "groupMember",
   components: {
     HeadTop,
     groupMemberItem
@@ -40,84 +40,94 @@ export default {
   data() {
     return {
       groupID: this.$route.params.groupID,
-      rule: this.$route.params.rule || 'member',
+      rule: this.$route.params.rule || "member",
       members: [],
       manager: [],
       blacklist: [],
-      keyword: '',
+      keyword: "",
       searchList: []
-    }
+    };
   },
   methods: {
     cancel() {
-      this.$router.go(-1)
+      this.$router.go(-1);
     },
     // 使用_.debounce控制搜索的触发频率
     // 准备搜索
-    search: _.debounce(function () {
-      let that = this
+    search: _.debounce(
+      function() {
+        let that = this;
         // 删除已经结束的请求
-      _.remove(sources, (n) => n.source === null)
+        _.remove(sources, n => n.source === null);
 
         // 取消还未结束的请求
-      sources.forEach(function (item) {
-        if (item !== null && item.source !== null && item.status === 1) {
-          item.status = 0
-          item.source.cancel('取消上一个')
-        }
-      })
+        sources.forEach(function(item) {
+          if (item !== null && item.source !== null && item.status === 1) {
+            item.status = 0;
+            item.source.cancel("取消上一个");
+          }
+        });
 
         // 创建新的请求cancelToken,并设置状态请求中
-      let sc = {
-        source: that.$http.CancelToken.source(),
-        status: 1 // 状态1：请求中，0:取消中
-      }
-      sources.push(sc)
+        let sc = {
+          source: that.$http.CancelToken.source(),
+          status: 1 // 状态1：请求中，0:取消中
+        };
+        sources.push(sc);
 
         // 开始搜索数据
-      if (that.keyword) {
-        that.$http.get(`/plus-group/groups/${that.groupID}/members?keyword=${that.keyword}`, {
-          cancelToken: sc.source.token
-        }).then(({ data = [] }) => {
-            // 置空请求canceltoken
-          sc.source = null
-        }).catch(({ response: { data = { message: '搜索失败' } } = {} } = {}) => {
-            // 置空请求canceltoken
-          sc.source = null
-          that.$Message.error(data)
-        })
-      }
-    },
+        if (that.keyword) {
+          that.$http
+            .get(
+              `/plus-group/groups/${that.groupID}/members?keyword=${
+                that.keyword
+              }`,
+              {
+                cancelToken: sc.source.token
+              }
+            )
+            .then(() => {
+              // 置空请求canceltoken
+              sc.source = null;
+            })
+            .catch(
+              ({ response: { data = { message: "搜索失败" } } = {} } = {}) => {
+                // 置空请求canceltoken
+                sc.source = null;
+                that.$Message.error(data);
+              }
+            );
+        }
+      },
       500 // 空闲时间间隔设置500ms
     ),
     async getMember() {
       // GET /groups/:group/members
       if (!this.groupID) {
-        return false
+        return false;
       }
-      const {
-        data: members
-      } = await this.$http.get(`/plus-group/groups/${this.groupID}/members?type=member`)
-      this.members = members ? [...members] : []
-      const {
-        data: manager
-      } = await this.$http.get(`/plus-group/groups/${this.groupID}/members?type=manager`)
-      this.manager = manager ? [...manager] : []
-      const {
-        data: blacklist
-      } = await this.$http.get(`/plus-group/groups/${this.groupID}/members?type=blacklist`)
-      this.blacklist = blacklist ? [...blacklist] : []
+      const { data: members } = await this.$http.get(
+        `/plus-group/groups/${this.groupID}/members?type=member`
+      );
+      this.members = members ? [...members] : [];
+      const { data: manager } = await this.$http.get(
+        `/plus-group/groups/${this.groupID}/members?type=manager`
+      );
+      this.manager = manager ? [...manager] : [];
+      const { data: blacklist } = await this.$http.get(
+        `/plus-group/groups/${this.groupID}/members?type=blacklist`
+      );
+      this.blacklist = blacklist ? [...blacklist] : [];
     }
   },
   mounted() {
     if (!this.groupID) {
-      this.$router.go(-1)
-      this.$Message.error('发生了一些错误')
+      this.$router.go(-1);
+      this.$Message.error("发生了一些错误");
     }
-    this.getMember()
+    this.getMember();
   }
-}
-
+};
 </script>
 <style lang='less'>
 .group-member {
@@ -134,5 +144,4 @@ export default {
     color: #999;
   }
 }
-
 </style>

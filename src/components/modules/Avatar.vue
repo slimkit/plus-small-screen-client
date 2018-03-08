@@ -11,7 +11,7 @@ export default {
    *
    * @type {String}
    */
-  name: 'module-avatar',
+  name: "module-avatar",
 
   /**
    * The component props.
@@ -21,7 +21,7 @@ export default {
   props: {
     classes: { type: [Array, String] },
     size: { type: [String, Number], default: 0.4 },
-    sizeUnit: { type: String, default: 'rem' }
+    sizeUnit: { type: String, default: "rem" }
   },
 
   /**
@@ -30,7 +30,6 @@ export default {
    * @type {Object}
    */
   methods: {
-
     /**
      * Class name builder.
      *
@@ -50,7 +49,7 @@ export default {
      * @author Seven Du <shiweidu@outlook.com>
      */
     handleClick(event) {
-      this.$emit('click', event);
+      this.$emit("click", event);
     }
   },
 
@@ -60,7 +59,6 @@ export default {
    * @type {Object}
    */
   computed: {
-
     /**
      * Root element class name.
      *
@@ -69,11 +67,11 @@ export default {
      */
     rootClassName() {
       let classes = this.classes || [];
-      if (typeof classes === 'string' || classes instanceof String) {
+      if (typeof classes === "string" || classes instanceof String) {
         classes = [classes];
       }
 
-      return ['module-avatar', ...classes];
+      return ["module-avatar", ...classes];
     },
 
     /**
@@ -84,7 +82,7 @@ export default {
      */
     rootStyles() {
       let size = this.size;
-      if (typeof size === 'number' || size instanceof Number) {
+      if (typeof size === "number" || size instanceof Number) {
         size = size + this.sizeUnit;
       }
 

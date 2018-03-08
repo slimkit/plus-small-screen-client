@@ -6,17 +6,17 @@
 </template>
 <script>
 export default {
-  name: 'my-group-groups',
+  name: "my-group-groups",
   data() {
     return {
       navs: [
         {
-          path: '/own/groups/joined',
-          title: '我加入的'
+          path: "/own/groups/joined",
+          title: "我加入的"
         },
         {
-          path: '/own/groups/audit',
-          title: '待审核的'
+          path: "/own/groups/audit",
+          title: "待审核的"
         }
       ]
     };

@@ -32,101 +32,106 @@
   </div>
 </template>
 <script>
-import _ from 'lodash'
-import HeadTop from '@/components/HeadTop'
-import groupItem from '../components/groupListItem'
-import { GroupFeedItem } from '@/components/feed/feedItem'
+import _ from "lodash";
+import HeadTop from "@/components/HeadTop";
+import groupItem from "../components/groupListItem";
+import { GroupFeedItem } from "@/components/feed/feedItem";
 
-const sources = []
+const sources = [];
 export default {
-  name: 'groupSearch',
+  name: "groupSearch",
   components: {
     HeadTop
   },
 
   data() {
     return {
-      keyword: '',
-      searchType: 'groups',
+      keyword: "",
+      searchType: "groups",
       dataList: []
-    }
+    };
   },
 
   computed: {
     showType() {
-      return this.dataList.length > 0 || !(this.showHistory)
+      return this.dataList.length > 0 || !this.showHistory;
     },
     showHistory() {
-      return this.historys.length > 0 && !(this.keyword.length > 0)
+      return this.historys.length > 0 && !(this.keyword.length > 0);
     },
     historys() {
-      return this.$store.state.SEARCHHISTORY
+      return this.$store.state.SEARCHHISTORY;
     },
     cur_component() {
-      return this.searchType === 'groups' ? groupItem : GroupFeedItem
+      return this.searchType === "groups" ? groupItem : GroupFeedItem;
     }
   },
   watch: {
-    searchType(val) {
-      this.dataList = []
-      this.search()
+    searchType() {
+      this.dataList = [];
+      this.search();
     }
   },
   methods: {
     cancel() {
-      this.$router.go(-1)
+      this.$router.go(-1);
     },
     cleanSearchHistorys(history) {
-      this.$store.commit('CLEAN_SEARCH_HISTORY', history)
+      this.$store.commit("CLEAN_SEARCH_HISTORY", history);
     },
     historyClick(history) {
-      this.keyword = history
-      this.search()
+      this.keyword = history;
+      this.search();
     },
     // 使用_.debounce控制搜索的触发频率
     // 准备搜索
-    search: _.debounce(function () {
-      let that = this
+    search: _.debounce(
+      function() {
+        let that = this;
         // 删除已经结束的请求
-      _.remove(sources, (n) => n.source === null)
+        _.remove(sources, n => n.source === null);
 
         // 取消还未结束的请求
-      sources.forEach(function (item) {
-        if (item !== null && item.source !== null && item.status === 1) {
-          item.status = 0
-          item.source.cancel('取消上一个')
-        }
-      })
+        sources.forEach(function(item) {
+          if (item !== null && item.source !== null && item.status === 1) {
+            item.status = 0;
+            item.source.cancel("取消上一个");
+          }
+        });
 
         // 创建新的请求cancelToken,并设置状态请求中
-      let sc = {
-        source: that.$http.CancelToken.source(),
-        status: 1 // 状态1：请求中，0:取消中
-      }
-      sources.push(sc)
+        let sc = {
+          source: that.$http.CancelToken.source(),
+          status: 1 // 状态1：请求中，0:取消中
+        };
+        sources.push(sc);
 
         // 开始搜索数据
-      if (that.keyword) {
-        const uri = `/plus-group/${that.searchType}?keyword=${that.keyword}`
-        that.$store.commit('ADD_SEARCH_HISTORY', that.keyword)
-        that.$http.get(uri, {
-          cancelToken: sc.source.token
-        }).then(({ data = [] }) => {
-            // 置空请求canceltoken
-          sc.source = null
-          that.dataList = [...data]
-        }).catch(({ response: { data = { message: '搜索失败' } } = {} } = {}) => {
-            // 置空请求canceltoken
-          sc.source = null
-          that.$Message.error(data)
-        })
-      }
-    },
+        if (that.keyword) {
+          const uri = `/plus-group/${that.searchType}?keyword=${that.keyword}`;
+          that.$store.commit("ADD_SEARCH_HISTORY", that.keyword);
+          that.$http
+            .get(uri, {
+              cancelToken: sc.source.token
+            })
+            .then(({ data = [] }) => {
+              // 置空请求canceltoken
+              sc.source = null;
+              that.dataList = [...data];
+            })
+            .catch(
+              ({ response: { data = { message: "搜索失败" } } = {} } = {}) => {
+                // 置空请求canceltoken
+                sc.source = null;
+                that.$Message.error(data);
+              }
+            );
+        }
+      },
       500 // 空闲时间间隔设置500ms
     )
   }
-}
-
+};
 </script>
 <style lang='less'>
 @group-search-prefixCls: group-search;
@@ -135,9 +140,11 @@ export default {
     padding: 0 1.2rem 0 0.3rem;
     width: 100%;
   }
-  &-content {}
+  &-content {
+  }
   &-history {
-    &-list {}
+    &-list {
+    }
     &-item {
       padding: 0 30px;
       display: flex;
@@ -166,7 +173,7 @@ export default {
     }
   }
   &-item {
-    &+& {
+    & + & {
       margin-top: 10px;
     }
   }
@@ -197,5 +204,4 @@ export default {
     }
   }
 }
-
 </style>

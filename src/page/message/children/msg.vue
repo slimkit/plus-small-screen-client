@@ -21,53 +21,53 @@
   </div>
 </template>
 <script>
-import { mapState } from 'vuex';
-const prefixCls = 'msg';
+import { mapState } from "vuex";
+const prefixCls = "msg";
 
 export default {
-  name: 'msg',
+  name: "msg",
   data() {
     return {
       prefixCls,
       system: {
         system: {
-          title: '系统消息',
-          placeholder: 'sPlaceholder',
-          icon: 'message-likes',
+          title: "系统消息",
+          placeholder: "sPlaceholder",
+          icon: "message-likes",
           hanBadge: 0,
-          url: '/message/notification',
-          bgColor: '#59b6d7',
-          count: 'sCount',
-          time: 'sTime'
+          url: "/message/notification",
+          bgColor: "#59b6d7",
+          count: "sCount",
+          time: "sTime"
         },
         comments: {
-          title: '评论的',
-          placeholder: 'cPlaceholder',
-          icon: 'message-comments',
+          title: "评论的",
+          placeholder: "cPlaceholder",
+          icon: "message-comments",
           hanBadge: 0,
-          url: '/message/comments',
-          bgColor: '#59b6d7',
-          count: 'cCount',
-          time: 'cTime'
+          url: "/message/comments",
+          bgColor: "#59b6d7",
+          count: "cCount",
+          time: "cTime"
         },
         diggs: {
-          title: '赞过的',
-          placeholder: 'dPlaceholder',
-          icon: 'message-likes',
+          title: "赞过的",
+          placeholder: "dPlaceholder",
+          icon: "message-likes",
           hanBadge: 0,
-          url: '/message/likes',
-          bgColor: '#fe8f90',
-          count: 'dCount',
-          time: 'dTime'
+          url: "/message/likes",
+          bgColor: "#fe8f90",
+          count: "dCount",
+          time: "dTime"
         },
         audits: {
-          title: '审核',
-          placeholder: 'aPlaceholder',
-          icon: 'msg-error',
+          title: "审核",
+          placeholder: "aPlaceholder",
+          icon: "msg-error",
           hanBadge: 0,
-          url: '/message/audits/feedcomments',
-          bgColor: '#fbb12a',
-          count: 'aCount'
+          url: "/message/audits/feedcomments",
+          bgColor: "#fbb12a",
+          count: "aCount"
         }
       }
     };
@@ -100,8 +100,8 @@ export default {
     aPlaceholder() {
       return this.msg.audits.placeholder;
     },
-    sPlaceholder () {
-      return '系统通知';
+    sPlaceholder() {
+      return "系统通知";
     },
     cTime() {
       return this.msg.comments.time;
@@ -109,8 +109,8 @@ export default {
     dTime() {
       return this.msg.diggs.time;
     },
-    sTime () {
-      return '';
+    sTime() {
+      return "";
     },
     cCount() {
       return this.msg.comments.count;
@@ -119,9 +119,15 @@ export default {
       return this.msg.diggs.count;
     },
     aCount() {
-      return this.msg.audits.feedCommentCount + this.msg.audits.groupJoinCount + this.msg.audits.groupPostCommentCount + this.msg.audits.groupPostCount + this.msg.audits.newsCommentCount;
+      return (
+        this.msg.audits.feedCommentCount +
+        this.msg.audits.groupJoinCount +
+        this.msg.audits.groupPostCommentCount +
+        this.msg.audits.groupPostCount +
+        this.msg.audits.newsCommentCount
+      );
     },
-    sCount () {
+    sCount() {
       return 0;
     }
   },

@@ -1,85 +1,90 @@
-const basename = document.head.querySelector('meta[name="api-basename"]')
+const basename = document.head.querySelector('meta[name="api-basename"]');
 if (!basename) {
-  console.error('后台根地址没有设置，请设置 "<meta name="api-basename" content="url">"')
+  console.error(
+    '后台根地址没有设置，请设置 "<meta name="api-basename" content="url">"'
+  );
 }
-const baseUrl = basename.content
+const baseUrl = basename.content;
 
-const onError = (err) => {
-  console.log(err)
-}
+const onError = err => {
+  console.log(err);
+};
 
-export default async (url = '', data = {}, type = 'GET', method = 'fetch') => {
-  type = type.toUpperCase()
-  url = baseUrl + url
-  if (type === 'GET') {
-    let dataStr = '' // 数据拼接字符串
+export default async (url = "", data = {}, type = "GET", method = "fetch") => {
+  type = type.toUpperCase();
+  url = baseUrl + url;
+  if (type === "GET") {
+    let dataStr = ""; // 数据拼接字符串
     Object.keys(data).forEach(key => {
-      dataStr += key + '=' + data[key] + '&'
-    })
+      dataStr += key + "=" + data[key] + "&";
+    });
 
-    if (dataStr !== '') {
-      dataStr = dataStr.substr(0, dataStr.lastIndexOf('&'))
-      url = url + '?' + dataStr
+    if (dataStr !== "") {
+      dataStr = dataStr.substr(0, dataStr.lastIndexOf("&"));
+      url = url + "?" + dataStr;
     }
   }
-  if (window.fetch && method === 'fetch') {
+  if (window.fetch && method === "fetch") {
     let requestConfig = {
-      credentials: 'include',
+      credentials: "include",
       method: type,
       headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
+        Accept: "application/json",
+        "Content-Type": "application/json"
       },
-      mode: 'cors',
-      cache: 'force-cache'
-    }
+      mode: "cors",
+      cache: "force-cache"
+    };
 
-    if (type === 'POST') {
-      Object.defineProperty(requestConfig, 'body', {
+    if (type === "POST") {
+      Object.defineProperty(requestConfig, "body", {
         value: JSON.stringify(data)
-      })
+      });
     }
 
     try {
-      const response = await fetch(url, requestConfig)
-      const responseJson = await response.json()
-      return responseJson
+      const response = await fetch(url, requestConfig);
+      const responseJson = await response.json();
+      return responseJson;
     } catch (error) {
-      onError(error)
-      throw new Error(error)
+      onError(error);
+      throw new Error(error);
     }
   } else {
     return new Promise((resolve, reject) => {
-      let requestObj
+      let requestObj;
       if (window.XMLHttpRequest) {
-        requestObj = new XMLHttpRequest()
+        requestObj = new XMLHttpRequest();
       } else {
         /* eslint-disable no-undef */
-        requestObj = new ActiveXObject()
+        requestObj = new ActiveXObject();
       }
 
-      let sendData = ''
-      if (type === 'POST') {
-        sendData = JSON.stringify(data)
+      let sendData = "";
+      if (type === "POST") {
+        sendData = JSON.stringify(data);
       }
 
-      requestObj.open(type, url, true)
-      requestObj.setRequestHeader('Content-type', 'application/x-www-form-urlencoded')
-      requestObj.send(sendData)
+      requestObj.open(type, url, true);
+      requestObj.setRequestHeader(
+        "Content-type",
+        "application/x-www-form-urlencoded"
+      );
+      requestObj.send(sendData);
 
       requestObj.onreadystatechange = () => {
         if (requestObj.readyState === 4) {
           if (requestObj.status === 200) {
-            let obj = requestObj.response
-            if (typeof obj !== 'object') {
-              obj = JSON.parse(obj)
+            let obj = requestObj.response;
+            if (typeof obj !== "object") {
+              obj = JSON.parse(obj);
             }
-            resolve(obj)
+            resolve(obj);
           } else {
-            reject(requestObj)
+            reject(requestObj);
           }
         }
-      }
-    })
+      };
+    });
   }
-}
+};

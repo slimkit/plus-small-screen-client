@@ -22,7 +22,7 @@
 </template>
 <script>
 export default {
-  name: 'payModal',
+  name: "payModal",
   props: {
     content: {
       required: true
@@ -35,19 +35,18 @@ export default {
   data() {
     return {
       loading: false
-    }
+    };
   },
   methods: {
     cancel() {
-      this.$emit('on-close')
+      this.$emit("on-close");
     },
     ok() {
-      this.loading = true
-      this.$emit('on-ok', this.cancel)
+      this.loading = true;
+      this.$emit("on-ok", this.cancel);
     }
   }
-}
-
+};
 </script>
 <style lang='less'>
 @pay-prefix: pay;
@@ -91,7 +90,7 @@ export default {
         background-color: #fff;
         border: 1px solid #59b6d7;
         border-radius: 6px;
-        &+button {
+        & + button {
           margin-top: 20px;
         }
         &.primary {
@@ -99,7 +98,7 @@ export default {
           background-color: #59b6d7;
           &[disabled] {
             background-color: #ccc;
-            border-color: #ccc
+            border-color: #ccc;
           }
         }
       }
@@ -109,5 +108,4 @@ export default {
     }
   }
 }
-
 </style>

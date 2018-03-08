@@ -1,17 +1,17 @@
-import http from '@/http';
+import http from "@/http";
 export default {
   GET_USER_DATA({ commit }, { type, limit = 15, offset = 0 }) {
     let uri;
     console.log(type);
     switch (type) {
-      case 'pop':
-        uri = '/user/populars';
+      case "pop":
+        uri = "/user/populars";
         break;
-      case 'new':
-        uri = '/user/latests';
+      case "new":
+        uri = "/user/latests";
         break;
-      case 'rec':
-        uri = '/user/find-by-tags';
+      case "rec":
+        uri = "/user/find-by-tags";
         break;
     }
     return new Promise((resolve, reject) => {
@@ -25,7 +25,7 @@ export default {
           if (data.length > 0) {
             res.data = data;
             res.noMore = data.length < limit;
-            commit('SAVE_USER', data);
+            commit("SAVE_USER", data);
           }
           resolve(res);
         })
@@ -35,20 +35,21 @@ export default {
     });
   },
 
+  /* eslint-disable */
   FOLLOW_USER({ commit }, { id, status }) {
     // PUT /user/followings/:user
     // DELETE /user/followings/:user
     let method;
 
     switch (status) {
-      case 'unFollow':
-        method = 'PUT';
+      case "unFollow":
+        method = "PUT";
         break;
-      case 'eachFollow':
-        method = 'DELETE';
+      case "eachFollow":
+        method = "DELETE";
         break;
-      case 'follow':
-        method = 'DELETE';
+      case "follow":
+        method = "DELETE";
         break;
     }
 
@@ -58,7 +59,7 @@ export default {
 
     const res = {
       status: true,
-      follower: method === 'PUT'
+      follower: method === "PUT"
     };
 
     return new Promise((resolve, reject) => {

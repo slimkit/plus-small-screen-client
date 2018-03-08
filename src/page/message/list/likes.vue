@@ -17,24 +17,24 @@
   </div>
 </template>
 <script>
-import _ from 'lodash';
-import { mapState } from 'vuex';
-import feedItem from '../children/likes/feedItem';
-import newsItem from '../children/likes/newsItem';
-import productItem from '../children/likes/productItem';
-import groupPostItem from '../children/likes/groupPostItem';
-import questionAnswerItem from '../children/likes/questionAnswerItem';
+import _ from "lodash";
+import { mapState } from "vuex";
+import feedItem from "../children/likes/feedItem";
+import newsItem from "../children/likes/newsItem";
+import productItem from "../children/likes/productItem";
+import groupPostItem from "../children/likes/groupPostItem";
+import questionAnswerItem from "../children/likes/questionAnswerItem";
 
-const prefixCls = 'msgList';
+const prefixCls = "msgList";
 const items = {
   news: newsItem,
   feeds: feedItem,
   product: productItem,
-  'group-posts': groupPostItem,
-  'question-answers': questionAnswerItem
+  "group-posts": groupPostItem,
+  "question-answers": questionAnswerItem
 };
 export default {
-  name: 'myLikes',
+  name: "myLikes",
   data: () => ({
     prefixCls,
     refreshData: [],
@@ -43,8 +43,8 @@ export default {
   watch: {
     refreshData(val) {
       if (val.length > 0) {
-        this.$store.commit('SAVE_MY_LIKED', {
-          type: 'new',
+        this.$store.commit("SAVE_MY_LIKED", {
+          type: "new",
           data: val
         });
       }
@@ -55,7 +55,7 @@ export default {
     onRefresh() {
       this.refreshData = [];
       this.$http
-        .get('/user/likes', {
+        .get("/user/likes", {
           validateStatus: s => s === 200
         })
         .then(({ data }) => {
@@ -72,7 +72,7 @@ export default {
       const { id = 0 } = _.last(this.likes) || {};
       this.$http
         .get(
-          '/user/likes',
+          "/user/likes",
           { params: { after: id } },
           { validateStatus: s => s === 200 }
         )
@@ -81,7 +81,7 @@ export default {
             this.$refs.loadmore.bottomEnd(true);
             return false;
           }
-          this.$store.commit('SAVE_MY_LIKED', { type: 'more', data });
+          this.$store.commit("SAVE_MY_LIKED", { type: "more", data });
           this.$refs.loadmore.bottomEnd(data.length < 15);
         });
     }
@@ -100,5 +100,4 @@ export default {
 };
 </script>
 <style lang="less" src="../style.less">
-
 </style>

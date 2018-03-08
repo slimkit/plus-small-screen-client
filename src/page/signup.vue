@@ -20,7 +20,7 @@
 
       <div class="signup-form--row" v-if='verifiable_type === "sms"'>
         <label class="signup-form--row-prepend" for="phone">手机号</label>
-        <input id="phone" v-model.trim.num='phone' type="number" maxlength="11" placeholder="输入11位手机号" oninput="if(value.length>11)value=value.slice(0,11)">
+        <input id="phone" v-model.trim.number='phone' type="number" maxlength="11" placeholder="输入11位手机号" oninput="if(value.length>11)value=value.slice(0,11)">
         <span 
         class="signup-form--row-append c_59b6d7" 
         :class='{ disabled: phone.length < 11 }'
@@ -86,9 +86,9 @@ function strLength(str) {
   }
   return totalLength;
 }
-const prefixCls = 'signup';
-const SMS = 'sms'; // 手机
-const EMAIL = 'mail'; // 邮箱
+const prefixCls = "signup";
+const SMS = "sms"; // 手机
+const EMAIL = "mail"; // 邮箱
 
 // 手机号码规则
 const phoneReg = /^(((13[0-9]{1})|14[0-9]{1}|(15[0-9]{1})|17[0-9]{1}|(18[0-9]{1}))+\d{8})$/;
@@ -100,26 +100,26 @@ const usernameReg = /^[a-zA-Z_\u4E00-\u9FA5\uF900-\uFA2D][a-zA-Z0-9_\u4E00-\u9FA
 // const codeReg = /^[0-9]{4,6}$/;
 
 export default {
-  name: 'signup',
+  name: "signup",
   data() {
     return {
       prefixCls,
       eye: false,
-      error: '',
+      error: "",
       loading: false,
 
-      name: '',
-      email: '',
-      phone: '',
+      name: "",
+      email: "",
+      phone: "",
       countdown: 0,
-      password: '',
+      password: "",
       verifiable_type: SMS,
-      verifiable_code: ''
+      verifiable_code: ""
     };
   },
   computed: {
     codeText() {
-      return this.countdown > 0 ? `${this.countdown}后重发` : '获取验证码';
+      return this.countdown > 0 ? `${this.countdown}后重发` : "获取验证码";
     },
     canGetCode() {
       return (
@@ -138,23 +138,23 @@ export default {
       } = this.$data;
 
       const res = [name, password, verifiableCode, verifiableType].every(
-        i => i !== ''
+        i => i !== ""
       );
 
       return !(res && (phone.length === 11 || email.length > 4));
     },
     _$type: {
       get() {
-        let label = '';
-        let label2 = '';
+        let label = "";
+        let label2 = "";
         switch (this.verifiable_type) {
           case SMS:
-            label = '手机';
-            label2 = '邮箱';
+            label = "手机";
+            label2 = "邮箱";
             break;
           case EMAIL:
-            label = '邮箱';
-            label2 = '手机';
+            label = "邮箱";
+            label2 = "手机";
             break;
         }
         return {
@@ -187,27 +187,31 @@ export default {
       };
       this.verifiable_type === SMS ? delete param.email : delete param.phone;
       this.$http
-        .post('verifycodes/register', param, {
+        .post("verifycodes/register", param, {
           validateStatus: status => status === 202
         })
         .then(() => {
           this.countdown = 60;
           this.countDown();
-          this.$Message.success('发送验证码成功');
-          this.error = '';
+          this.$Message.success("发送验证码成功");
+          this.error = "";
         })
-        .catch(({response: {status = null, data: {errors = {}} = {}} = {}}) => {
-          if (status === 500) {
-            this.error = {message: '网络错误,请联系管理员'};
-            return;
+        .catch(
+          ({
+            response: { status = null, data: { errors = {} } = {} } = {}
+          }) => {
+            if (status === 500) {
+              this.error = { message: "网络错误,请联系管理员" };
+              return;
+            }
+            if (status === 422) {
+              this.error = errors;
+            }
+            setTimeout(() => {
+              this.error = "";
+            }, 3000);
           }
-          if (status === 422) {
-            this.error = errors;
-          }
-          setTimeout(() => {
-            this.error = '';
-          }, 3000);
-        });
+        );
     },
     signIn() {
       const {
@@ -221,37 +225,37 @@ export default {
 
       // 判断特殊字符及空格
       if (!usernameReg.test(name)) {
-        this.$Message.error({name: '用户名不能包含特殊符号以及空格'});
+        this.$Message.error({ name: "用户名不能包含特殊符号以及空格" });
         return;
       }
 
       // 判断首字符是否为数字
       if (!isNaN(name[0])) {
-        this.$Message.error({name: '用户名不能以数字开头'});
+        this.$Message.error({ name: "用户名不能以数字开头" });
         return;
       }
 
       // 判断字节数
       if (strLength(name) > 48 || strLength(name) < 4) {
-        this.$Message.error({name: '用户名不能少于2个中文或4个英文'});
+        this.$Message.error({ name: "用户名不能少于2个中文或4个英文" });
         return;
       }
 
       // 手机号
       if (verifiableType === SMS && !phoneReg.test(phone)) {
-        this.$Message.error({phone: '请输入正确的手机号码'});
+        this.$Message.error({ phone: "请输入正确的手机号码" });
         return;
       }
 
       // 邮箱
       if (verifiableType !== SMS && !emailReg.test(email)) {
-        this.$Message.error({email: '请输入正确的邮箱号码'});
+        this.$Message.error({ email: "请输入正确的邮箱号码" });
         return;
       }
 
       // 密码长度
       if (password.length < 6) {
-        this.$Message.error({password: '密码长度必须大于6位'});
+        this.$Message.error({ password: "密码长度必须大于6位" });
         return;
       }
 
@@ -267,15 +271,15 @@ export default {
       this.loading = true;
       verifiableType === SMS ? delete param.email : delete param.phone;
       this.$http
-        .post('users', param)
-        .then(({data: {token} = {}}) => {
+        .post("users", param)
+        .then(({ data: { token } = {} }) => {
           if (token) {
             this.loading = false;
-            this.$Message.success('注册成功, 请登陆');
-            this.$router.push('/signin');
+            this.$Message.success("注册成功, 请登陆");
+            this.$router.push("/signin");
           }
         })
-        .catch(({response: {status = null, data: {errors = {}} = {}} = {}}) => {
+        .catch(({ response: { data: { errors = {} } = {} } = {} }) => {
           this.$Message.error(errors);
         });
     },
@@ -293,5 +297,4 @@ export default {
 };
 </script>
 <style lang='less' src='./style/signup.less'>
-
 </style>

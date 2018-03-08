@@ -23,8 +23,8 @@
 </template>
 <script>
 export default {
-  name: 'WalletInfoDetail',
-  props: ['detail'],
+  name: "WalletInfoDetail",
+  props: ["detail"],
   computed: {
     user() {
       return this.$store.state.CURRENTUSER;
@@ -58,7 +58,7 @@ export default {
       border-bottom: 1px solid #ededed; /*no*/
       &--label {
         color: #ccc;
-        width: 25*4px;
+        width: 25 * 4px;
       }
       > div {
         margin-left: 15px;

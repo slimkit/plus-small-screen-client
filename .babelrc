@@ -1,12 +1,5 @@
-{ 
-    "presets": ["env", "stage-2"],
-    "plugins": [[
-        "transform-runtime",
-        {
-          "helpers": false,
-          "polyfill": true,
-          "regenerator": true,
-          "moduleName": "babel-runtime"
-        }
-    ]]
+{
+  "presets": [
+    "@vue/app"
+  ]
 }

@@ -6,14 +6,14 @@
 </template>
 <script>
 export default {
-  name: 'AboutUs',
+  name: "AboutUs",
   data() {
     return {
-      body: ''
+      body: ""
     };
   },
   mounted() {
-    this.$http.get('/aboutus').then(({ data }) => {
+    this.$http.get("/aboutus").then(({ data }) => {
       this.body = data;
     });
   }

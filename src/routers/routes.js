@@ -1,76 +1,75 @@
-import App from '../App';
-import signin from '../page/signin';
-import signup from '../page/signup';
-import NotFound from '../page/notFound';
-import upgrade from '../page/upgrade';
-import forgot from '../page/forgot';
-import about from '../page/about';
-import setting from '../page/setting/setting';
+import signin from "../page/signin";
+import signup from "../page/signup";
+import NotFound from "../page/notFound";
+import upgrade from "../page/upgrade";
+import forgot from "../page/forgot";
+import about from "../page/about";
+import setting from "../page/setting/setting";
 
-import newsRoutes from './news';
-import groupRoutes from './group';
-import questionRoutes from './question';
+import newsRoutes from "./news";
+import groupRoutes from "./group";
+import questionRoutes from "./question";
 
 /* eslint-disable one-var */
-const feed = () => import(/* webpackChunkName: 'feed' */ '../page/feed/feed'),
+const feed = () => import(/* webpackChunkName: 'feed' */ "../page/feed/feed"),
   feedDetail = () =>
-    import(/* webpackChunkName: 'feed' */ '../page/feed/components/feedDetail'),
+    import(/* webpackChunkName: 'feed' */ "../page/feed/components/feedDetail"),
   discover = () =>
-    import(/* webpackChunkName: 'common' */ '../page/discover/discover'),
+    import(/* webpackChunkName: 'common' */ "../page/discover/discover"),
   profile = () =>
-    import(/* webpackChunkName: 'profile' */ '../page/profile/profile'),
+    import(/* webpackChunkName: 'profile' */ "../page/profile/profile"),
   // 排行榜
-  rank = () => import(/* webpackChunkName: 'rank' */ '../page/rank/rank'),
+  rank = () => import(/* webpackChunkName: 'rank' */ "../page/rank/rank"),
   rankUsers = () =>
-    import(/* webpackChunkName: 'rank' */ '../page/rank/children/rankUsers'),
+    import(/* webpackChunkName: 'rank' */ "../page/rank/children/rankUsers"),
   rankQuestions = () =>
-    import(/* webpackChunkName: 'rank' */ '../page/rank/children/rankQuestions'),
+    import(/* webpackChunkName: 'rank' */ "../page/rank/children/rankQuestions"),
   rankFeeds = () =>
-    import(/* webpackChunkName: 'rank' */ '../page/rank/children/rankFeeds'),
+    import(/* webpackChunkName: 'rank' */ "../page/rank/children/rankFeeds"),
   rankNews = () =>
-    import(/* webpackChunkName: 'rank' */ '../page/rank/children/rankNews'),
+    import(/* webpackChunkName: 'rank' */ "../page/rank/children/rankNews"),
   rankFollowers = () =>
-    import(/* webpackChunkName: 'rank' */ '../page/rank/lists/fansList'),
+    import(/* webpackChunkName: 'rank' */ "../page/rank/lists/fansList"),
   rankBalances = () =>
-    import(/* webpackChunkName: 'rank' */ '../page/rank/lists/balanceList'),
+    import(/* webpackChunkName: 'rank' */ "../page/rank/lists/balanceList"),
   rankIncome = () =>
-    import(/* webpackChunkName: 'rank' */ '../page/rank/lists/incomeList'),
+    import(/* webpackChunkName: 'rank' */ "../page/rank/lists/incomeList"),
   rankQuestionExports = () =>
-    import(/* webpackChunkName: 'rank' */ '../page/rank/lists/exportList'),
+    import(/* webpackChunkName: 'rank' */ "../page/rank/lists/exportList"),
   rankQuestionLikes = () =>
-    import(/* webpackChunkName: 'rank' */ '../page/rank/lists/questionLikesList'),
+    import(/* webpackChunkName: 'rank' */ "../page/rank/lists/questionLikesList"),
   rankCheckinLikes = () =>
-    import(/* webpackChunkName: 'rank' */ '../page/rank/lists/checkinList'),
+    import(/* webpackChunkName: 'rank' */ "../page/rank/lists/checkinList"),
   rankQuestionList = () =>
-    import(/* webpackChunkName: 'rank' */ '../page/rank/lists/rankQuestionList'),
+    import(/* webpackChunkName: 'rank' */ "../page/rank/lists/rankQuestionList"),
   rankFeedList = () =>
-    import(/* webpackChunkName: 'rank' */ '../page/rank/lists/rankFeedList'),
+    import(/* webpackChunkName: 'rank' */ "../page/rank/lists/rankFeedList"),
   rankNewsList = () =>
-    import(/* webpackChunkName: 'rank' */ '../page/rank/lists/rankNewsList'),
+    import(/* webpackChunkName: 'rank' */ "../page/rank/lists/rankNewsList"),
   // 找人
-  find = () => import(/* webpackChunkName: 'find' */ '../page/find/find'),
+  find = () => import(/* webpackChunkName: 'find' */ "../page/find/find"),
   findContent = () =>
-    import(/* webpackChunkName: 'find' */ '../page/find/children/findContent'),
+    import(/* webpackChunkName: 'find' */ "../page/find/children/findContent"),
   findNearby = () =>
-    import(/* webpackChunkName: 'find' */ '../page/find/children/findNearby'),
+    import(/* webpackChunkName: 'find' */ "../page/find/children/findNearby"),
   /* 公共页面 */
 
   // 个人主页
   userHome = () =>
-    import(/* webpackChunkName: 'common' */ '../page/common/userHome'),
+    import(/* webpackChunkName: 'common' */ "../page/common/userHome"),
   // 用户标签选择
   chooseTags = () =>
-    import(/* webpackChunkName: 'common' */ '../page/common/chooseTags'),
+    import(/* webpackChunkName: 'common' */ "../page/common/chooseTags"),
   // 定位选择
   chooseLocation = () =>
-    import(/* webpackChunkName: 'common' */ '../page/common/chooseLocation'),
+    import(/* webpackChunkName: 'common' */ "../page/common/chooseLocation"),
   // 搜索用户
   searchUser = () =>
-    import(/* webpackChunkName: 'common' */ '../page/common/searchUser'),
+    import(/* webpackChunkName: 'common' */ "../page/common/searchUser"),
   postGroupFeed = () =>
-    import(/* webpackChunkName: 'common' */ '../page/common/postGroupFeed/'),
+    import(/* webpackChunkName: 'common' */ "../page/common/postGroupFeed/"),
   postWenzi = () =>
-    import(/* webpackChunkName: 'common' */ '../page/common/postWenzi'),
+    import(/* webpackChunkName: 'common' */ "../page/common/postWenzi"),
   /**
    * 消息页面组件
    * @Author   Wayne
@@ -79,27 +78,27 @@ const feed = () => import(/* webpackChunkName: 'feed' */ '../page/feed/feed'),
    * @return   {[type]}            [description]
    */
   MessageMain = () =>
-    import(/* webpackChunkName: 'message' */ '@/page/message/message'),
+    import(/* webpackChunkName: 'message' */ "@/page/message/message"),
   msg = () =>
-    import(/* webpackChunkName: 'message' */ '@/page/message/children/msg'),
+    import(/* webpackChunkName: 'message' */ "@/page/message/children/msg"),
   notification = () =>
-    import(/* webpackChunkName: 'message' */ '@/page/message/children/notification'),
+    import(/* webpackChunkName: 'message' */ "@/page/message/children/notification"),
   msgComments = () =>
-    import(/* webpackChunkName: 'message' */ '@/page/message/list/comments'),
+    import(/* webpackChunkName: 'message' */ "@/page/message/list/comments"),
   msgLikes = () =>
-    import(/* webpackChunkName: 'message' */ '@/page/message/list/likes'),
+    import(/* webpackChunkName: 'message' */ "@/page/message/list/likes"),
   msgAudits = () =>
-    import(/* webpackChunkName: 'message' */ '@/page/message/list/audits'),
+    import(/* webpackChunkName: 'message' */ "@/page/message/list/audits"),
   feedCommentAudit = () =>
-    import(/* webpackChunkName: 'message' */ '@/page/message/children/audits/feedCommentAudit'),
+    import(/* webpackChunkName: 'message' */ "@/page/message/children/audits/feedCommentAudit"),
   newsCommentAudit = () =>
-    import(/* webpackChunkName: 'message' */ '@/page/message/children/audits/newsCommentAudit'),
+    import(/* webpackChunkName: 'message' */ "@/page/message/children/audits/newsCommentAudit"),
   groupPostAudit = () =>
-    import(/* webpackChunkName: 'message' */ '@/page/message/children/audits/groupPostAudit'),
+    import(/* webpackChunkName: 'message' */ "@/page/message/children/audits/groupPostAudit"),
   groupCommentAudit = () =>
-    import(/* webpackChunkName: 'message' */ '@/page/message/children/audits/groupCommentAudit'),
+    import(/* webpackChunkName: 'message' */ "@/page/message/children/audits/groupCommentAudit"),
   groupJoinAudit = () =>
-    import(/* webpackChunkName: 'message' */ '@/page/message/children/audits/groupJoinAudit');
+    import(/* webpackChunkName: 'message' */ "@/page/message/children/audits/groupJoinAudit");
 
 /**
  * 钱包页面
@@ -107,442 +106,435 @@ const feed = () => import(/* webpackChunkName: 'feed' */ '../page/feed/feed'),
  * @return {[type]}
  */
 const wallet = () =>
-  import(/* webpackChunkName: 'wallet' */ '@/page/wallet/wallet');
+  import(/* webpackChunkName: 'wallet' */ "@/page/wallet/wallet");
 /**
  * 充值
  * @auth: jsonleex <jsonleex@163.com>
  */
 const WalletRecharge = () =>
-  import(/* webpackChunkName: 'wallet' */ '@/page/wallet/WalletRecharge');
+  import(/* webpackChunkName: 'wallet' */ "@/page/wallet/WalletRecharge");
 /**
  * 提现
  * @auth: jsonleex <jsonleex@163.com>
  */
 const WalletWithdraw = () =>
-  import(/* webpackChunkName: 'wallet' */ '@/page/wallet/WalletWithdraw');
+  import(/* webpackChunkName: 'wallet' */ "@/page/wallet/WalletWithdraw");
 /**
  * 明细
  * @auth: jsonleex <jsonleex@163.com>
  */
 const WalletDetail = () =>
-  import(/* webpackChunkName: 'wallet' */ '@/page/wallet/WalletDetail');
+  import(/* webpackChunkName: 'wallet' */ "@/page/wallet/WalletDetail");
 
 const UserFans = () =>
-  import(/* webpackChunkName: 'user' */ '@/page/user/UserFans');
+  import(/* webpackChunkName: 'user' */ "@/page/user/UserFans");
 
 const router = [
+  /* 基础入口 */
+  { path: "/", redirect: "/signin" },
+  ...newsRoutes,
+  ...groupRoutes,
+  ...questionRoutes,
   {
-    path: '/',
-    component: App,
-    /* 顶层路由 */
+    path: "/signin",
+    component: signin,
+    meta: { title: "登录", forGuest: true }
+  } /* 登录 */,
+  {
+    path: "/signup",
+    component: signup,
+    meta: { title: "注册", forGuest: true }
+  } /* 注册 */,
+  {
+    path: "/profile",
+    component: profile,
+    meta: { title: "我", requiresAuth: true }
+  } /* 个人中心 */,
+
+  {
+    path: "/discover",
+    component: discover,
+    meta: { title: "发现" }
+  } /* 发现 */,
+
+  /* 功能页面 */
+  {
+    path: "/find",
+    component: find,
+    meta: {
+      title: "找人",
+      requiresAuth: true
+    },
+    redirect: "/find/pop",
     children: [
-      /* 基础入口 */
-      { path: '', redirect: '/signin' },
-      ...newsRoutes,
-      ...groupRoutes,
-      ...questionRoutes,
       {
-        path: '/signin',
-        component: signin,
-        meta: { title: '登录', forGuest: true }
-      } /* 登录 */,
-      {
-        path: '/signup',
-        component: signup,
-        meta: { title: '注册', forGuest: true }
-      } /* 注册 */,
-      {
-        path: '/profile',
-        component: profile,
-        meta: { title: '我', requiresAuth: true }
-      } /* 个人中心 */,
-
-      {
-        path: '/discover',
-        component: discover,
-        meta: { title: '发现' }
-      } /* 发现 */,
-
-      /* 功能页面 */
-      {
-        path: '/find',
-        component: find,
+        path: "new",
+        component: findContent,
         meta: {
-          title: '找人',
-          requiresAuth: true
-        },
-        redirect: '/find/pop',
-        children: [
-          {
-            path: 'new',
-            component: findContent,
-            meta: {
-              type: 'new',
-              title: '最新',
-              keepAlive: true
-            }
-          },
-          {
-            path: 'pop',
-            component: findContent,
-            meta: {
-              type: 'pop',
-              title: '热门',
-              keepAlive: true
-            }
-          },
-          {
-            path: 'rec',
-            component: findContent,
-            meta: {
-              type: 'rec',
-              title: '推荐',
-              keepAlive: true
-            }
-          },
-          {
-            path: 'nearby',
-            component: findNearby,
-            meta: {
-              title: '附近',
-              keepAlive: true
-            }
-          }
-        ]
-      } /* 找人 */,
-      {
-        path: '/rank',
-        component: rank,
-        meta: { title: '排行' },
-        redirect: '/rank/users',
-        children: [
-          {
-            path: 'users',
-            component: rankUsers,
-            meta: {
-              keepAlive: true
-            }
-          },
-          {
-            path: 'questions',
-            component: rankQuestions,
-            meta: {
-              keepAlive: true
-            }
-          },
-          {
-            path: 'feeds',
-            component: rankFeeds,
-            meta: {
-              keepAlive: true
-            }
-          },
-          {
-            path: 'news',
-            component: rankNews,
-            meta: {
-              keepAlive: true
-            }
-          }
-        ]
-      } /* 排行 */,
-      {
-        path: '/rank/users/followers',
-        component: rankFollowers,
-        meta: {
-          title: '全站粉丝排行榜',
+          type: "new",
+          title: "最新",
           keepAlive: true
         }
       },
       {
-        path: '/rank/users/balance',
-        component: rankBalances,
+        path: "pop",
+        component: findContent,
         meta: {
-          title: '财富达人排行榜',
+          type: "pop",
+          title: "热门",
           keepAlive: true
         }
       },
       {
-        path: '/rank/users/income',
-        component: rankIncome,
+        path: "rec",
+        component: findContent,
         meta: {
-          title: '收入达人排行榜',
+          type: "rec",
+          title: "推荐",
           keepAlive: true
         }
       },
       {
-        path: '/rank/users/question-experts',
-        component: rankQuestionExports,
+        path: "nearby",
+        component: findNearby,
         meta: {
-          title: '社区专家排行榜',
+          title: "附近",
           keepAlive: true
         }
-      },
-      {
-        path: '/rank/users/question-likes',
-        component: rankQuestionLikes,
-        meta: {
-          title: '问答达人排行榜',
-          keepAlive: true
-        }
-      },
-      {
-        path: '/rank/users/checkin',
-        component: rankCheckinLikes,
-        meta: {
-          title: '社区签到排行榜',
-          keepAlive: true
-        }
-      },
-      {
-        path: '/rank/q/:time',
-        component: rankQuestionList,
-        meta: {
-          // keepAlive: true,
-          title: '问答排行榜'
-        }
-      },
-      {
-        path: '/rank/f/:time',
-        component: rankFeedList,
-        meta: {
-          // keepAlive: true,
-          title: '动态排行榜'
-        }
-      },
-      {
-        path: '/rank/n/:time',
-        component: rankNewsList,
-        meta: {
-          // keepAlive: true,
-          title: '资讯排行榜'
-        }
-      },
-
-      // { path: '/question', component: question, meta: { title: '问答' } }, /* 问答 */
-
-      {
-        path: '/feed/:type',
-        component: feed,
-        meta: { title: '动态', keepAlive: true }
-      } /* 动态 */,
-
-      { path: '/feed-detail/:feedID', component: feedDetail } /* 动态详情 */,
-
-      /**
-       * 消息页面路由
-       */
-      {
-        path: '/message',
-        component: MessageMain,
-        redirect: '/message/msg',
-        meta: {
-          title: '消息',
-          requiresAuth: true
-        },
-        children: [
-          {
-            path: 'msg',
-            component: msg,
-            meta: {
-              title: '消息',
-              requiresAuth: true
-            }
-          }
-        ]
-      },
-      {
-        path: '/message/notification',
-        component: notification,
-        meta: {
-          title: '通知',
-          requiresAuth: true
-        }
-      },
-      {
-        path: '/message/comments',
-        component: msgComments,
-        meta: {
-          title: '评论我的',
-          requiresAuth: true
-        }
-      },
-      {
-        path: '/message/likes',
-        component: msgLikes,
-        meta: {
-          title: '赞过我的',
-          requiresAuth: true
-        }
-      },
-      {
-        path: '/message/audits',
-        component: msgAudits,
-        meta: {
-          title: '审核列表',
-          requiresAuth: true
-        }
-      },
-      {
-        path: '/message/audits',
-        component: msgAudits,
-        redirect: '/message/audits/feedcomments',
-        meta: {
-          title: '审核列表',
-          requiresAuth: true
-        },
-        children: [
-          {
-            path: 'feedcomments',
-            component: feedCommentAudit,
-            meta: {
-              title: '动态评论置顶'
-            }
-          },
-          {
-            path: 'newscomments',
-            component: newsCommentAudit,
-            meta: {
-              title: '文章评论置顶'
-            }
-          },
-          {
-            path: 'groupposts',
-            component: groupPostAudit,
-            meta: {
-              title: '帖子评论置顶'
-            }
-          },
-          {
-            path: 'groupcomments',
-            component: groupCommentAudit,
-            meta: {
-              title: '帖子置顶'
-            }
-          },
-          {
-            path: 'groupjoins',
-            component: groupJoinAudit,
-            meta: {
-              title: '圈子加入申请'
-            }
-          }
-        ]
-      },
-      /**
-       * 消息页面路由结束
-       */
-
-      {
-        path: '/wallet',
-        component: wallet,
-        meta: {
-          title: '钱包',
-          requiresAuth: true
-        }
-      },
-      {
-        path: '/wallet/recharge',
-        component: WalletRecharge,
-        meta: {
-          title: '充值'
-        }
-      },
-      {
-        path: '/wallet/withdraw',
-        component: WalletWithdraw,
-        meta: {
-          title: '提现'
-        }
-      },
-      {
-        path: '/wallet/detail',
-        component: WalletDetail,
-        meta: {
-          title: '明细'
-        }
-      },
-
-      /* 公共页面 */
-
-      {
-        path: '/user/:Uid(\\d+)',
-        component: userHome,
-        meta: {
-          title: '个人主页',
-          keepAlive: true
-        }
-      } /* 个人主页 */,
-      {
-        path: '/user/:userID(\\d+)/fans',
-        component: UserFans,
-        meta: {
-          title: '粉丝',
-          keepAlive: true,
-          requiresAuth: true
-        }
-      },
-      {
-        path: '/search_user/',
-        component: searchUser,
-        meta: { title: '搜索用户', keepAlive: true }
-      } /* 搜索用户 */,
-      {
-        path: '/tags',
-        component: chooseTags,
-        meta: { title: '选择标签' }
-      } /* 选择标签 */,
-      {
-        path: '/location',
-        component: chooseLocation,
-        meta: { title: '选择位置' }
-      } /* 定位 */,
-
-      {
-        path: '/post/wenzi',
-        component: postWenzi,
-        meta: {
-          keepAlive: true,
-          title: '发布文字',
-          requiresAuth: true
-        }
-      },
-      {
-        path: '/post/fatie',
-        name: 'postGroupFeed',
-        component: postGroupFeed,
-        meta: {
-          keepAlive: true,
-          title: '发布帖子',
-          requiresAuth: true
-        }
-      },
-      {
-        path: '/setting',
-        component: setting,
-        meta: {
-          title: '设置',
-          requiresAuth: true
-        }
-      },
-      {
-        path: '/forgot',
-        component: forgot,
-        meta: {
-          title: '忘记密码'
-        }
-      },
-      { path: '/upgrade', component: upgrade } /* 网站升级中 */,
-      {
-        path: '/about',
-        component: about,
-        meta: {
-          title: '关于我们'
-        }
-      },
-      { path: '*', component: NotFound } /* 404 页面 */
+      }
     ]
-  }
+  } /* 找人 */,
+  {
+    path: "/rank",
+    component: rank,
+    meta: { title: "排行" },
+    redirect: "/rank/users",
+    children: [
+      {
+        path: "users",
+        component: rankUsers,
+        meta: {
+          keepAlive: true
+        }
+      },
+      {
+        path: "questions",
+        component: rankQuestions,
+        meta: {
+          keepAlive: true
+        }
+      },
+      {
+        path: "feeds",
+        component: rankFeeds,
+        meta: {
+          keepAlive: true
+        }
+      },
+      {
+        path: "news",
+        component: rankNews,
+        meta: {
+          keepAlive: true
+        }
+      }
+    ]
+  } /* 排行 */,
+  {
+    path: "/rank/users/followers",
+    component: rankFollowers,
+    meta: {
+      title: "全站粉丝排行榜",
+      keepAlive: true
+    }
+  },
+  {
+    path: "/rank/users/balance",
+    component: rankBalances,
+    meta: {
+      title: "财富达人排行榜",
+      keepAlive: true
+    }
+  },
+  {
+    path: "/rank/users/income",
+    component: rankIncome,
+    meta: {
+      title: "收入达人排行榜",
+      keepAlive: true
+    }
+  },
+  {
+    path: "/rank/users/question-experts",
+    component: rankQuestionExports,
+    meta: {
+      title: "社区专家排行榜",
+      keepAlive: true
+    }
+  },
+  {
+    path: "/rank/users/question-likes",
+    component: rankQuestionLikes,
+    meta: {
+      title: "问答达人排行榜",
+      keepAlive: true
+    }
+  },
+  {
+    path: "/rank/users/checkin",
+    component: rankCheckinLikes,
+    meta: {
+      title: "社区签到排行榜",
+      keepAlive: true
+    }
+  },
+  {
+    path: "/rank/q/:time",
+    component: rankQuestionList,
+    meta: {
+      // keepAlive: true,
+      title: "问答排行榜"
+    }
+  },
+  {
+    path: "/rank/f/:time",
+    component: rankFeedList,
+    meta: {
+      // keepAlive: true,
+      title: "动态排行榜"
+    }
+  },
+  {
+    path: "/rank/n/:time",
+    component: rankNewsList,
+    meta: {
+      // keepAlive: true,
+      title: "资讯排行榜"
+    }
+  },
+
+  // { path: '/question', component: question, meta: { title: '问答' } }, /* 问答 */
+
+  {
+    path: "/feed/:type",
+    component: feed,
+    meta: { title: "动态", keepAlive: true }
+  } /* 动态 */,
+
+  { path: "/feed-detail/:feedID", component: feedDetail } /* 动态详情 */,
+
+  /**
+   * 消息页面路由
+   */
+  {
+    path: "/message",
+    component: MessageMain,
+    redirect: "/message/msg",
+    meta: {
+      title: "消息",
+      requiresAuth: true
+    },
+    children: [
+      {
+        path: "msg",
+        component: msg,
+        meta: {
+          title: "消息",
+          requiresAuth: true
+        }
+      }
+    ]
+  },
+  {
+    path: "/message/notification",
+    component: notification,
+    meta: {
+      title: "通知",
+      requiresAuth: true
+    }
+  },
+  {
+    path: "/message/comments",
+    component: msgComments,
+    meta: {
+      title: "评论我的",
+      requiresAuth: true
+    }
+  },
+  {
+    path: "/message/likes",
+    component: msgLikes,
+    meta: {
+      title: "赞过我的",
+      requiresAuth: true
+    }
+  },
+  {
+    path: "/message/audits",
+    component: msgAudits,
+    meta: {
+      title: "审核列表",
+      requiresAuth: true
+    }
+  },
+  {
+    path: "/message/audits",
+    component: msgAudits,
+    redirect: "/message/audits/feedcomments",
+    meta: {
+      title: "审核列表",
+      requiresAuth: true
+    },
+    children: [
+      {
+        path: "feedcomments",
+        component: feedCommentAudit,
+        meta: {
+          title: "动态评论置顶"
+        }
+      },
+      {
+        path: "newscomments",
+        component: newsCommentAudit,
+        meta: {
+          title: "文章评论置顶"
+        }
+      },
+      {
+        path: "groupposts",
+        component: groupPostAudit,
+        meta: {
+          title: "帖子评论置顶"
+        }
+      },
+      {
+        path: "groupcomments",
+        component: groupCommentAudit,
+        meta: {
+          title: "帖子置顶"
+        }
+      },
+      {
+        path: "groupjoins",
+        component: groupJoinAudit,
+        meta: {
+          title: "圈子加入申请"
+        }
+      }
+    ]
+  },
+  /**
+   * 消息页面路由结束
+   */
+
+  {
+    path: "/wallet",
+    component: wallet,
+    meta: {
+      title: "钱包",
+      requiresAuth: true
+    }
+  },
+  {
+    path: "/wallet/recharge",
+    component: WalletRecharge,
+    meta: {
+      title: "充值"
+    }
+  },
+  {
+    path: "/wallet/withdraw",
+    component: WalletWithdraw,
+    meta: {
+      title: "提现"
+    }
+  },
+  {
+    path: "/wallet/detail",
+    component: WalletDetail,
+    meta: {
+      title: "明细"
+    }
+  },
+
+  /* 公共页面 */
+
+  {
+    path: "/user/:Uid(\\d+)",
+    component: userHome,
+    meta: {
+      title: "个人主页",
+      keepAlive: true
+    }
+  } /* 个人主页 */,
+  {
+    path: "/user/:userID(\\d+)/fans",
+    component: UserFans,
+    meta: {
+      title: "粉丝",
+      keepAlive: true,
+      requiresAuth: true
+    }
+  },
+  {
+    path: "/search_user/",
+    component: searchUser,
+    meta: { title: "搜索用户", keepAlive: true }
+  } /* 搜索用户 */,
+  {
+    path: "/tags",
+    component: chooseTags,
+    meta: { title: "选择标签" }
+  } /* 选择标签 */,
+  {
+    path: "/location",
+    component: chooseLocation,
+    meta: { title: "选择位置" }
+  } /* 定位 */,
+
+  {
+    path: "/post/wenzi",
+    component: postWenzi,
+    meta: {
+      keepAlive: true,
+      title: "发布文字",
+      requiresAuth: true
+    }
+  },
+  {
+    path: "/post/fatie",
+    name: "postGroupFeed",
+    component: postGroupFeed,
+    meta: {
+      keepAlive: true,
+      title: "发布帖子",
+      requiresAuth: true
+    }
+  },
+  {
+    path: "/setting",
+    component: setting,
+    meta: {
+      title: "设置",
+      requiresAuth: true
+    }
+  },
+  {
+    path: "/forgot",
+    component: forgot,
+    meta: {
+      title: "忘记密码"
+    }
+  },
+  { path: "/upgrade", component: upgrade } /* 网站升级中 */,
+  {
+    path: "/about",
+    component: about,
+    meta: {
+      title: "关于我们"
+    }
+  },
+  { path: "*", component: NotFound } /* 404 页面 */
 ];
 
 export default router;

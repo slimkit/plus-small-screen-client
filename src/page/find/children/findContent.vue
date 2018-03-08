@@ -12,9 +12,9 @@
     </div>
 </template>
 <script>
-import findItem from '../components/findItem';
+import findItem from "../components/findItem";
 export default {
-  name: 'findContent',
+  name: "findContent",
   components: {
     findItem
   },
@@ -52,7 +52,7 @@ export default {
     getUsers() {
       this.loading = true;
       this.$store
-        .dispatch('GET_USER_DATA', {
+        .dispatch("GET_USER_DATA", {
           type: this.type,
           limt: 15
         })

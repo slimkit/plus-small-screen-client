@@ -7,7 +7,7 @@
           ref='loadmore'
           :class="`${prefixCls}-loadmore`"
         >
-          <div v-if="audit.comment !== null" v-for="audit in audits" :class="`${prefixCls}-item`">
+          <div v-if="audit.comment !== null" v-for="audit in audits" :class="`${prefixCls}-item`" :key="audit.id">
             <div :class="`${prefixCls}-item-top`">
               <v-avatar :sex="audit.user.sex" :src="audit.user.avatar" />
               <section class="userInfo">
@@ -31,15 +31,15 @@
 </template>
 
 <script>
-import _ from 'lodash';
-import { mapState } from 'vuex';
-import groupJoinAuditStatus from '../../components/groupJoinAuditStatus'
-const prefixCls = 'msgList';
+import _ from "lodash";
+import { mapState } from "vuex";
+import groupJoinAuditStatus from "../../components/groupJoinAuditStatus";
+const prefixCls = "msgList";
 export default {
   components: {
     groupJoinAuditStatus
   },
-  name: 'groupJoinAudit',
+  name: "groupJoinAudit",
   data: () => ({
     prefixCls
   }),
@@ -49,13 +49,13 @@ export default {
     },
     onRefresh() {
       this.$http
-        .get('/plus-group/user-group-audit-members', {
+        .get("/plus-group/user-group-audit-members", {
           validateStatus: s => s === 200
         })
         .then(({ data }) => {
           if (data.length > 0) {
-            this.$store.commit('SAVE_JOIN_GROUP_AUDITS', {
-              type: 'new',
+            this.$store.commit("SAVE_JOIN_GROUP_AUDITS", {
+              type: "new",
               data
             });
           }
@@ -70,14 +70,14 @@ export default {
       }
 
       this.$http
-        .get('/plus-group/user-group-audit-members', {
+        .get("/plus-group/user-group-audit-members", {
           validateStatus: s => s === 200
         })
         .then(({ data }) => {
           this.$refs.loadmore.bottomEnd(data.length < 15);
           if (data.length > 0) {
-            this.$store.commit('SAVE_JOIN_GROUP_AUDITS', {
-              type: 'more',
+            this.$store.commit("SAVE_JOIN_GROUP_AUDITS", {
+              type: "more",
               data
             });
           }
@@ -93,5 +93,4 @@ export default {
 };
 </script>
 <style lang="less" src="../../style.less">
-
 </style>

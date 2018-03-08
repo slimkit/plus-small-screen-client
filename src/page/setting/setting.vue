@@ -26,28 +26,28 @@
 </template>
 <script>
 export default {
-  name: 'setting',
+  name: "setting",
   methods: {
     async signOut() {
-      const res = await this.$store.dispatch('SIGN_OUT');
+      const res = await this.$store.dispatch("SIGN_OUT");
       if (res) {
         this.$Modal.remove();
-        this.$router.push('/signin');
+        this.$router.push("/signin");
       }
     },
     beforeSignOut() {
       const vm = this;
       this.$Modal.info({
-        title: '确认退出登录?',
+        title: "确认退出登录?",
         render(h) {
           return h(
-            'button',
+            "button",
             {
               on: {
                 click: vm.signOut
               }
             },
-            '退出'
+            "退出"
           );
         }
       });
@@ -56,5 +56,4 @@ export default {
 };
 </script>
 <style lang="less" src='./style/setting.less'>
-
 </style>

@@ -1,4 +1,4 @@
-import request from '../../http';
+import request from "../../http";
 
 /**
  * Query questions list.
@@ -8,7 +8,7 @@ import request from '../../http';
  * @author Seven Du <shiweidu@outlook.com>
  */
 function queryList(query = {}) {
-  return request.get('/questions', {
+  return request.get("/questions", {
     params: query,
     validateStatus: status => status === 200
   });
@@ -48,9 +48,13 @@ export function show(id) {
  * @author Seven Du <shiweidu@outlook.com>
  */
 export function watch(id) {
-  return request.put(`/user/question-watches/${id}`, {}, {
-    validateStatus: status => status === 204
-  });
+  return request.put(
+    `/user/question-watches/${id}`,
+    {},
+    {
+      validateStatus: status => status === 204
+    }
+  );
 }
 
 /**

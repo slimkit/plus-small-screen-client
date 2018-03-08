@@ -58,8 +58,8 @@
     <!-- switch -->
     <div class="switch-group" v-if='role === "founder"'>
       <v-switch v-model='allow_feed' type='checkbox'>帖子同步至动态</v-switch>
-      <v-switch v-model='private' type='checkbox'>设置为封闭圈子</v-switch>
-      <template v-if='private'>
+      <v-switch v-model='privately' type='checkbox'>设置为封闭圈子</v-switch>
+      <template v-if='privately'>
         <v-switch v-model='paid' :data-value='true' type='radio'>
           收费入圈
           <template v-if='paid'>
@@ -90,62 +90,64 @@
   </div>
 </template>
 <script>
-import { getFileUrl } from '@/util/'
-import HeadTop from '@/components/HeadTop'
-import { encodeGeoHash } from '@/util/geohash'
+import { getFileUrl } from "@/util/";
+import HeadTop from "@/components/HeadTop";
+import { encodeGeoHash } from "@/util/geohash";
 export default {
-  name: 'addGroup',
+  name: "addGroup",
   components: {
     HeadTop
   },
   data() {
     return {
-      name: '', // 圈名
+      name: "", // 圈名
       // tags: [], //  标签
-      header: '', // 头像
+      header: "", // 头像
       avatar: null,
       category: {}, // 当前
-      summary: '', // 圈子简介
-      notice: '', // 公告
+      summary: "", // 圈子简介
+      notice: "", // 公告
       money: null,
       allow_feed: false,
       // 圈子类别 public: 公开，private：私有，paid：付费的
-      private: true,
+      privately: true,
       paid: false,
 
-      role: 'member',
+      role: "member",
       groupID: this.$route.params.groupID
-    }
+    };
   },
   computed: {
     disabled() {
-      return [this.name, this.header, this.tags].map(v => v.length > 0).includes(false)
+      return [this.name, this.header, this.tags]
+        .map(v => v.length > 0)
+        .includes(false);
     },
     tagsLen() {
-      return this.tags.length
+      return this.tags.length;
     },
     tags() {
-      return this.$store.state.CUR_SELECTED_TAGS
+      return this.$store.state.CUR_SELECTED_TAGS;
     },
     cur_location() {
-      return this.$store.state.CUR_GROUP_LOCATION
+      return this.$store.state.CUR_GROUP_LOCATION;
     },
     location_txt() {
-      return this.cur_location.label || ''
+      return this.cur_location.label || "";
     },
     mode() {
-      return this.paid ? 'paid' : (this.private ? 'private' : 'public')
+      return this.paid ? "paid" : this.privately ? "private" : "public";
     }
   },
   watch: {
     money(val) {
       if (val < 0) {
-        this.money = 0
+        this.money = 0;
       }
     },
-    private(val) {
+    privately(val) {
       if (!val) {
-        this.paid = val
+        this.paid = val;
       }
     }
   },
@@ -162,41 +164,38 @@ export default {
           summary,
           category,
           allow_feed: allowFeed,
-          joined: {
-            role
-          }
+          joined: { role }
         }
-      } = await this.$http.get(`/plus-group/groups/${this.groupID}`)
+      } = await this.$http.get(`/plus-group/groups/${this.groupID}`);
 
-      this.name = name
-      this.header = avatar
-      this.avatar = {}
-      this.category = category
-      this.summary = summary
-      this.notice = notice
-      this.money = money
-      this.role = role
-      this.allow_feed = !!(allowFeed)
+      this.name = name;
+      this.header = avatar;
+      this.avatar = {};
+      this.category = category;
+      this.summary = summary;
+      this.notice = notice;
+      this.money = money;
+      this.role = role;
+      this.allow_feed = !!allowFeed;
 
       switch (mode) {
-        case 'paid':
-          this.paid = true
-          break
-        case '1':
-          this.private = true
-          break
+        case "paid":
+          this.paid = true;
+          break;
+        case "1":
+          this.privately = true;
+          break;
       }
 
-
-      this.$store.state.CUR_SELECTED_TAGS = [...tags]
-      this.$store.state.CUR_GROUP_LOCATION = {}
+      this.$store.state.CUR_SELECTED_TAGS = [...tags];
+      this.$store.state.CUR_GROUP_LOCATION = {};
     },
     /**
      * 取消 并 返回上一页
      *     @author jsonleex <jsonlseex@163.com>
      */
     cancel() {
-      this.$router.go(-1)
+      this.$router.go(-1);
     },
     /**
      * 创建圈子
@@ -204,9 +203,9 @@ export default {
      */
     addGroup() {
       // POST /categories/:category/groups
-      const category = this.category.id
+      const category = this.category.id;
       if (!category) {
-        return this.$Message.error('请选择圈子分类')
+        return this.$Message.error("请选择圈子分类");
       }
 
       let params = {
@@ -215,43 +214,48 @@ export default {
         notice: this.notice,
         mode: this.mode,
         allow_feed: this.allow_feed
-      }
+      };
 
       if (this.location) {
-        const { lat, lng } = this.cur_location
+        const { lat, lng } = this.cur_location;
         params = Object.assign({}, params, {
           location: this.location_txt,
           latitude: lat,
           longitude: lng,
           geo_hash: encodeGeoHash(lat, lng)
-        })
+        });
       }
 
-      this.avatar.toBlob((blob) => {
-        let formData = new FormData()
-        formData.append('avatar', blob)
+      this.avatar.toBlob(blob => {
+        let formData = new FormData();
+        formData.append("avatar", blob);
 
-        Object.keys(params).forEach(key => formData.append(key, params[key]))
+        Object.keys(params).forEach(key => formData.append(key, params[key]));
 
-        if (params.mode === 'paid') {
+        if (params.mode === "paid") {
           if (this.money > 0) {
-            formData.append('money', this.money)
+            formData.append("money", this.money);
           }
         }
         // tags
-        this.tags.forEach((t, index) => {
-          formData.append(`tags[][id]`, t.id)
-        })
+        this.tags.forEach(t => {
+          formData.append(`tags[][id]`, t.id);
+        });
 
-        this.$http.post(`/plus-group/groups/${this.groupID}`, formData, {
-          validateStatus: s => s === 200
-        }).then(data => {
-          this.$Message.success('创建圈子成功')
-        }).catch(err => {
-          const { response: { data = { message: '创建圈子失败' } } = {} } = err
-          this.$Message.error(data)
-        })
-      })
+        this.$http
+          .post(`/plus-group/groups/${this.groupID}`, formData, {
+            validateStatus: s => s === 200
+          })
+          .then(() => {
+            this.$Message.success("创建圈子成功");
+          })
+          .catch(err => {
+            const {
+              response: { data = { message: "创建圈子失败" } } = {}
+            } = err;
+            this.$Message.error(data);
+          });
+      });
     },
 
     /**
@@ -259,10 +263,10 @@ export default {
      *     @author jsonleex <jsonlseex@163.com>
      */
     chooseImg() {
-      if (this.role === 'member') {
-        return
+      if (this.role === "member") {
+        return;
       }
-      this.$refs.uploadFile.click()
+      this.$refs.uploadFile.click();
     },
 
     /**
@@ -270,41 +274,40 @@ export default {
      *     @author jsonleex <jsonlseex@163.com>
      */
     getImg(e) {
-      const vm = this
-      let files = e.target.files || e.dataTransfer.files
-      if (!files.length) return
+      const vm = this;
+      let files = e.target.files || e.dataTransfer.files;
+      if (!files.length) return;
       this.$ImgCropper.show({
         url: getFileUrl(files[0]),
         round: false,
         onCancel() {
-          vm.$refs.uploadFile.value = null
+          vm.$refs.uploadFile.value = null;
         },
         onOk(canvas) {
-          vm.avatar = canvas
-          vm.header = canvas.toDataURL()
-          vm.$refs.uploadFile.value = null
+          vm.avatar = canvas;
+          vm.header = canvas.toDataURL();
+          vm.$refs.uploadFile.value = null;
         }
-      })
+      });
     },
     /**
      * 进入选择页面
      *     @author jsonleex <jsonlseex@163.com>
      */
     toChoose(type) {
-      if (this.role === 'member') {
-        return
+      if (this.role === "member") {
+        return;
       }
       if (!type) {
-        return
+        return;
       }
-      this.$router.push(`/${type.toLocaleLowerCase()}`)
+      this.$router.push(`/${type.toLocaleLowerCase()}`);
     }
   },
   created() {
-    this.init()
+    this.init();
   }
-}
-
+};
 </script>
 <style lang='less'>
 .add_group_btn {
@@ -341,8 +344,8 @@ export default {
   justify-content: space-between;
   align-items: center;
   &.header-upload {
-    input[type='file'] {
-      display: none!important;
+    input[type="file"] {
+      display: none !important;
     }
     span {
       flex: 1 1 auto;
@@ -362,7 +365,7 @@ export default {
     font-size: 30px;
     border-bottom: 1px solid #ededed;
     /*no*/
-    &[type='text'] {
+    &[type="text"] {
       line-height: normal;
     }
     &.ccc {
@@ -397,7 +400,7 @@ export default {
     color: #333;
   }
 
-   ::placeholder {
+  ::placeholder {
     color: #ccc;
   }
 
@@ -424,7 +427,7 @@ export default {
 
 .router-slid-enter-active,
 .router-slid-leave-active {
-  transition: all .4s;
+  transition: all 0.4s;
 }
 
 .router-slid-enter,
@@ -471,5 +474,4 @@ export default {
   font-size: 20px;
   color: #b3b3b3;
 }
-
 </style>

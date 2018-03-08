@@ -49,7 +49,7 @@ export default {
    *
    * @type {string}
    */
-  name: 'module-question-app-bar',
+  name: "module-question-app-bar",
 
   /**
    * The component computed data.
@@ -64,9 +64,9 @@ export default {
      * @author Seven Du <shiweidu@outlook.com>
      */
     routePath() {
-      const { path } = this.$route
+      const { path } = this.$route;
 
-      return path
+      return path;
     },
 
     /**
@@ -77,8 +77,8 @@ export default {
      */
     questionRouteClassName() {
       return [
-        'module-question-app-bar_tab-item',
-        {active: this.hasQuestionRouteActive}
+        "module-question-app-bar_tab-item",
+        { active: this.hasQuestionRouteActive }
       ];
     },
 
@@ -90,8 +90,8 @@ export default {
      */
     topicsRouteClassName() {
       return [
-        'module-question-app-bar_tab-item',
-        {active: this.hasTopicRouteActive}
+        "module-question-app-bar_tab-item",
+        { active: this.hasTopicRouteActive }
       ];
     },
 
@@ -102,7 +102,7 @@ export default {
      * @author Seven Du <shiweidu@outlook.com>
      */
     hasQuestionRouteActive() {
-      return this.routePath === '/question'
+      return this.routePath === "/question";
     },
 
     /**
@@ -112,10 +112,10 @@ export default {
      * @author Seven Du <shiweidu@outlook.com>
      */
     hasTopicRouteActive() {
-      return this.routePath === '/question/topics'
+      return this.routePath === "/question/topics";
     }
   }
-}
+};
 </script>
 
 <style lang="less">

@@ -23,104 +23,108 @@
     </div>
 </template>
 <script>
-import HeadTop from '@/components/HeadTop'
+import HeadTop from "@/components/HeadTop";
 export default {
-  name: 'findIndex',
+  name: "findIndex",
   components: {
     HeadTop
   },
-  data () {
-    return {}
+  data() {
+    return {};
   },
   computed: {
-    location () {
-      const location = this.$store.state.LOCATION || {}
-      if (JSON.stringify(location) === '{}') {
-        this.$store.dispatch('GET_LOCATION')
+    location() {
+      const location = this.$store.state.LOCATION || {};
+      if (JSON.stringify(location) === "{}") {
+        this.$store.dispatch("GET_LOCATION");
       }
-      return location
+      return location;
     },
 
-    cur_txt () {
-      const { label = '' } = this.location
-      return (label.length > 5 ? `${label.slice(0, 2)}…${label.slice(-2)}` : label) || '选择城市'
+    cur_txt() {
+      const { label = "" } = this.location;
+      return (
+        (label.length > 5
+          ? `${label.slice(0, 2)}…${label.slice(-2)}`
+          : label) || "选择城市"
+      );
     }
   },
   methods: {
-    goBack () {
-      this.to('/discover')
+    goBack() {
+      this.to("/discover");
     },
-    to (patch) {
+    to(patch) {
       if (patch) {
-        this.$router.push(patch)
+        this.$router.push(patch);
       }
     }
   }
-}
+};
 </script>
 <style lang='less'>
 .page-find .find-top-append {
-    width: 160px;
-    font-size: 24px;
-    color: #333;
-    text-align: left;
-    white-space: nowrap;
+  width: 160px;
+  font-size: 24px;
+  color: #333;
+  text-align: left;
+  white-space: nowrap;
 }
 
 .head-search {
-    position: relative;
-    left: -13%;
-    width: 100%;
-    height: 54px;
-    background-color: #ededed;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    color: #999;
-    font-size: 24px;
-    padding: 12px;
-    .v-icon {
-        width: 24px;
-        height: 24px;
-        margin-right: 12px;
-    }
+  position: relative;
+  left: -13%;
+  width: 100%;
+  height: 54px;
+  background-color: #ededed;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  color: #999;
+  font-size: 24px;
+  padding: 12px;
+  .v-icon {
+    width: 24px;
+    height: 24px;
+    margin-right: 12px;
+  }
 }
 
 .find-nav {
-    position: fixed;
-    z-index: 100;
-    top: 90px;
-    padding-top: 0 !important;
-    display: flex;
-    align-items: center;
-    height: 90px;
-    width: 100%;
-    line-height: 89px;
-    border-bottom: 1px solid #ededed;
-    /*no*/
-    background-color: #fff;
-    justify-content: center;
-    &-item {
-        padding: 0 10px;
-        font-size: 28px;
-        color: #999;
-        border-bottom: 3px solid transparent;
-        &+& {
-            margin-left: 90px;
-        }
-
-        &.router-link-active {
-            border-color: #59b6d7;
-            color: #333;
-        }
+  position: fixed;
+  z-index: 100;
+  top: 90px;
+  padding-top: 0 !important;
+  display: flex;
+  align-items: center;
+  height: 90px;
+  width: 100%;
+  line-height: 89px;
+  border-bottom: 1px solid #ededed;
+  /*no*/
+  background-color: #fff;
+  justify-content: center;
+  &-item {
+    padding: 0 10px;
+    font-size: 28px;
+    color: #999;
+    border-bottom: 3px solid transparent;
+    & + & {
+      margin-left: 90px;
     }
+
+    &.router-link-active {
+      border-color: #59b6d7;
+      color: #333;
+    }
+  }
 }
 
 .find-content {
-    padding-top: 180px;
-    min-height: 100vh;
-    position: relative;
-    background-color: #fff;
+  padding-top: 180px;
+  min-height: 100vh;
+  position: relative;
+  background-color: #fff;
 }
 </style>

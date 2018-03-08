@@ -9,13 +9,13 @@
   </div>
 </template>
 <script>
-import pswp from '@/components/pswp.vue';
+import pswp from "@/components/pswp.vue";
 export default {
-  name: 'app',
+  name: "app",
   components: {
     pswp,
     svgIcon: () =>
-      import(/* webpackChunkName: 'svgIcon' */ '@/components/common/svgIcon')
+      import(/* webpackChunkName: 'svgIcon' */ "@/components/common/svgIcon")
   }
 };
 </script>

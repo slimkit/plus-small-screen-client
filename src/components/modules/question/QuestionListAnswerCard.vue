@@ -9,15 +9,15 @@
 </template>
 
 <script>
-import UserAvatar from '../UserAvatar';
-import { syntaxTextAndImage } from '../../../util/markdown';
+import UserAvatar from "../UserAvatar";
+import { syntaxTextAndImage } from "../../../util/markdown";
 
 /**
  * The module name.
  *
  * @type {string}
  */
-const name = 'module-question-list-answer-card';
+const name = "module-question-list-answer-card";
 
 /**
  * Question list item answer card.
@@ -89,7 +89,7 @@ export default {
      */
     showUsername() {
       if (this.anonymity) {
-        return '匿名用户';
+        return "匿名用户";
       }
 
       return this.user.name;
@@ -98,7 +98,7 @@ export default {
     body() {
       const { body } = this.answer;
 
-      return syntaxTextAndImage(body || '').text;
+      return syntaxTextAndImage(body || "").text;
     }
   }
 };

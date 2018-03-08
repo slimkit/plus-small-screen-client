@@ -23,10 +23,10 @@
   </div>
 </template>
 <script>
-import HeadTop from '@/components/HeadTop'
-import groupItem from '../components/groupListItem'
+import HeadTop from "@/components/HeadTop";
+import groupItem from "../components/groupListItem";
 export default {
-  name: 'groupAll',
+  name: "groupAll",
   components: {
     HeadTop,
     groupItem
@@ -41,31 +41,31 @@ export default {
       showBackStatus: false, // 显示返回顶部按钮
       showLoading: true, // 显示加载动画
       touchend: false, // 没有更多数据
-      loadTips: '下拉加载更多'
-    }
+      loadTips: "下拉加载更多"
+    };
   },
   computed: {
     categorys() {
-      return this.$store.state.GROUPTYPES
+      return this.$store.state.GROUPTYPES;
     }
   },
   watch: {
     cur_cate() {
-      this.getGroupByCate()
+      this.getGroupByCate();
     }
   },
   methods: {
     cancel() {
-      this.$router.go(-1)
+      this.$router.go(-1);
     },
     to(path) {
-      path = typeof path === 'string' ? { path } : path
+      path = typeof path === "string" ? { path } : path;
       if (path) {
-        this.$router.push(path)
+        this.$router.push(path);
       }
     },
     createdGroup() {
-      this.$router.push('/group/add')
+      this.$router.push("/group/add");
       // this.$Modal.info({
       //     content: '只有认证通过的用户才可以创建圈子, 是否去认证?',
       //     okText: '去认证',
@@ -77,60 +77,65 @@ export default {
     },
 
     setlectCurCate(id) {
-      this.switchStatus = false
-      this.cur_cate = id
+      this.switchStatus = false;
+      this.cur_cate = id;
       this.$nextTick(() => {
-        document.getElementById(`group-categorys-${id}`).scrollIntoViewIfNeeded()
-      })
+        document
+          .getElementById(`group-categorys-${id}`)
+          .scrollIntoViewIfNeeded();
+      });
     },
 
     async loaderMore() {
       if (this.touchend) {
-        return
+        return;
       }
       // 防止重复请求
       if (this.preventRepeatReuqest) {
-        return
+        return;
       }
-      this.showLoading = true
-      this.preventRepeatReuqest = true
-      this.loadTips = '加载中...'
+      this.showLoading = true;
+      this.preventRepeatReuqest = true;
+      this.loadTips = "加载中...";
 
-      const {
-        data = []
-      } = await this.$http.get(`/plus-group/groups?category_id=${this.cur_cate}`, {
-        params: {
-          offset: this.groups.length
+      const { data = [] } = await this.$http.get(
+        `/plus-group/groups?category_id=${this.cur_cate}`,
+        {
+          params: {
+            offset: this.groups.length
+          }
         }
-      })
+      );
 
-      this.groups = data ? [...this.groups, ...data] : this.groups
+      this.groups = data ? [...this.groups, ...data] : this.groups;
 
-      this.showLoading = false
+      this.showLoading = false;
       if (data.length < 15) {
-        this.touchend = true
-        this.loadTips = '没有更多'
-        return false
+        this.touchend = true;
+        this.loadTips = "没有更多";
+        return false;
       }
-      this.preventRepeatReuqest = false
+      this.preventRepeatReuqest = false;
     },
 
     getGroupByCate() {
-      this.loadTips = '加载中...'
-      this.$http.get(`/plus-group/groups?category_id=${this.cur_cate}`).then(({ data }) => {
-        this.groups = data
-        this.showLoading = false
-        if (data.length < 15) {
-          this.loadTips = '没有更多'
-          this.touchend = true
-        }
-      })
+      this.loadTips = "加载中...";
+      this.$http
+        .get(`/plus-group/groups?category_id=${this.cur_cate}`)
+        .then(({ data }) => {
+          this.groups = data;
+          this.showLoading = false;
+          if (data.length < 15) {
+            this.loadTips = "没有更多";
+            this.touchend = true;
+          }
+        });
     }
   },
   created() {
-    this.getGroupByCate()
+    this.getGroupByCate();
   }
-}
-
+};
 </script>
-<style lang='less' src='./groupAll.less'></style>
+<style lang='less' src='./groupAll.less'>
+</style>

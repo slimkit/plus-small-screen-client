@@ -15,44 +15,44 @@
   </div>
 </template>
 <script>
-import { mapState } from 'vuex';
-import feedItem from '../children/comments/feedItem';
-import newsItem from '../children/comments/newsItem';
-import productItem from '../children/comments/productItem';
-import questionItem from '../children/comments/questionItem';
-import groupPostItem from '../children/comments/groupPostItem';
-import questionAnswerItem from '../children/comments/questionAnswerItem';
-import _ from 'lodash';
+import { mapState } from "vuex";
+import feedItem from "../children/comments/feedItem";
+import newsItem from "../children/comments/newsItem";
+import productItem from "../children/comments/productItem";
+import questionItem from "../children/comments/questionItem";
+import groupPostItem from "../children/comments/groupPostItem";
+import questionAnswerItem from "../children/comments/questionAnswerItem";
+import _ from "lodash";
 
-const prefixCls = 'msgList';
+const prefixCls = "msgList";
 const items = {
   news: newsItem,
   feeds: feedItem,
   product: productItem,
   questions: questionItem,
-  'group-posts': groupPostItem,
-  'question-answers': questionAnswerItem
+  "group-posts": groupPostItem,
+  "question-answers": questionAnswerItem
 };
 const commentType = {
   feeds: {
-    title: '动态',
-    url: '/feed/'
+    title: "动态",
+    url: "/feed/"
   },
-  'question-answers': {
-    title: '回答',
-    url: '/question-answers/'
+  "question-answers": {
+    title: "回答",
+    url: "/question-answers/"
   },
   news: {
-    title: '头条',
-    url: '/news/'
+    title: "头条",
+    url: "/news/"
   },
   questions: {
-    title: '问题',
-    url: '/questions/'
+    title: "问题",
+    url: "/questions/"
   }
 };
 export default {
-  name: 'myComments',
+  name: "myComments",
   data: () => ({
     prefixCls,
     commentType,
@@ -67,8 +67,8 @@ export default {
   watch: {
     refreshData(data) {
       if (data.length > 0) {
-        this.$store.commit('SAVE_MY_COMMENTED', {
-          type: 'new',
+        this.$store.commit("SAVE_MY_COMMENTED", {
+          type: "new",
           data
         });
       }
@@ -79,7 +79,7 @@ export default {
     onRefresh() {
       this.refreshData = [];
       this.$http
-        .get('/user/comments', {
+        .get("/user/comments", {
           validateStatus: s => s === 200
         })
         .then(({ data }) => {
@@ -96,13 +96,13 @@ export default {
 
       this.$http
         .get(
-          '/user/comments',
+          "/user/comments",
           { params: { after: id } },
           { validateStatus: s => s === 200 }
         )
         .then(({ data }) => {
-          this.$store.commit('SAVE_MY_COMMENTED', {
-            type: 'more',
+          this.$store.commit("SAVE_MY_COMMENTED", {
+            type: "more",
             data
           });
           this.$refs.loadmore.bottomEnd(data.length < 15);
@@ -119,5 +119,4 @@ export default {
 };
 </script>
 <style lang="less" src="../style.less">
-
 </style>

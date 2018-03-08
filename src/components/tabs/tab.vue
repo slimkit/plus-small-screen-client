@@ -5,7 +5,7 @@
 </template>
 <script>
 export default {
-  name: 'v-tab',
+  name: "v-tab",
   props: {
     title: [String],
     value: {}
@@ -20,11 +20,10 @@ export default {
       if (this.$parent.handleTabClick) {
         this.$parent.handleTabClick(this.value, this);
       }
-      this.$emit('click', e);
+      this.$emit("click", e);
     }
   }
 };
 </script>
 <style lang='less'>
-
 </style>

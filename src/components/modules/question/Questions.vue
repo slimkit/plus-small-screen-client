@@ -35,10 +35,10 @@
 </template>
 
 <script>
-import { list } from '../../../api/question/questions';
-import message from 'plus-message-bundle';
-import QuestionsItem from './QuestionsItem';
-import Loading from '../../../icons/Loading';
+import { list } from "../../../api/question/questions";
+import message from "plus-message-bundle";
+import QuestionsItem from "./QuestionsItem";
+import Loading from "../../../icons/Loading";
 
 /**
  * Questions page module.
@@ -49,7 +49,7 @@ export default {
    *
    * @type {string}
    */
-  name: 'module-questions',
+  name: "module-questions",
 
   /**
    * The components.
@@ -103,7 +103,7 @@ export default {
      * @author Seven Du <shiweidu@outlook.com>
      */
     type() {
-      const { query: { type = 'hot' } } = this.$route;
+      const { query: { type = "hot" } } = this.$route;
 
       return type;
     }
@@ -124,7 +124,7 @@ export default {
      */
     navRouterLinkBuilder(type) {
       return {
-        path: '/question',
+        path: "/question",
         query: { type }
       };
     },
@@ -138,33 +138,33 @@ export default {
     fetchQuestions() {
       this.loading = true;
       this.questions = [];
-      list(this.type).then(({ data }) => {
-        this.questions = data;
-        this.loading = false;
-      }).catch(({ response: { data } = {} }) => {
-        this.loading = false;
-        this.$Message.error(
-          message(data, '加载失败，请刷新重试！')
-        );
-      });
+      list(this.type)
+        .then(({ data }) => {
+          this.questions = data;
+          this.loading = false;
+        })
+        .catch(({ response: { data } = {} }) => {
+          this.loading = false;
+          this.$Message.error(message(data, "加载失败，请刷新重试！"));
+        });
     },
 
     fetchQuestionsMore() {
       this.loadmore = true;
-      list(this.type, this.questions.length + 1).then(({ data }) => {
-        this.loadmore = false;
-        if (!data.length) {
-          this.$Message.error('没有更多数据了');
-          return;
-        }
+      list(this.type, this.questions.length + 1)
+        .then(({ data }) => {
+          this.loadmore = false;
+          if (!data.length) {
+            this.$Message.error("没有更多数据了");
+            return;
+          }
 
-        this.questions = [ ...this.questions, ...data ];
-      }).catch(({ response: { data } = {} }) => {
-        this.loadmore = false;
-        this.$Message.error(
-          message(data, '加载失败，请刷新重试！')
-        );
-      });
+          this.questions = [...this.questions, ...data];
+        })
+        .catch(({ response: { data } = {} }) => {
+          this.loadmore = false;
+          this.$Message.error(message(data, "加载失败，请刷新重试！"));
+        });
     },
 
     /**
@@ -185,15 +185,17 @@ export default {
    * @type {Object}
    */
   watch: {
-
     /**
      * Watch $route.
      *
      * @return {void}
      * @author Seven Du <shiweidu@outlook.com>
      */
-    '$route'(newRoute, oldRoute) {
-      if (newRoute.path === oldRoute.path && newRoute.query.type !== oldRoute.query.type) {
+    $route(newRoute, oldRoute) {
+      if (
+        newRoute.path === oldRoute.path &&
+        newRoute.query.type !== oldRoute.query.type
+      ) {
         this.fetchQuestions();
       }
     }
@@ -202,7 +204,7 @@ export default {
   mounted() {
     this.fetchQuestions();
   }
-}
+};
 </script>
 
 <style lang="less">

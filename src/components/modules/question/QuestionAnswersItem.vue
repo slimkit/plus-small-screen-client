@@ -33,9 +33,9 @@
 </template>
 
 <script>
-import UserAvatar from '../UserAvatar';
-import { like, unlike } from '../../../api/question/answer';
-const name = 'module-question-answers-item'
+import UserAvatar from "../UserAvatar";
+import { like, unlike } from "../../../api/question/answer";
+const name = "module-question-answers-item";
 export default {
   name,
   props: {
@@ -64,28 +64,32 @@ export default {
       return `${name}-${className}`;
     },
     handleLike() {
-      like(this.answer.id).then(() => {
-        this.likeTargetHanding = false;
-        this.answer.liked = true;
-        this.answer.likes_count += 1;
-      }).catch(({ response: { data } = {} }) => {
-        this.likeTargetHanding = false;
-        this.$Message.error(data)
-      });
+      like(this.answer.id)
+        .then(() => {
+          this.likeTargetHanding = false;
+          this.answer.liked = true;
+          this.answer.likes_count += 1;
+        })
+        .catch(({ response: { data } = {} }) => {
+          this.likeTargetHanding = false;
+          this.$Message.error(data);
+        });
     },
     handleUnlike() {
-      unlike(this.answer.id).then(() => {
-        this.likeTargetHanding = false;
-        this.answer.liked = false;
-        this.answer.likes_count -= 1;
-      }).catch(({ response: { data } = {} }) => {
-        this.likeTargetHanding = false;
-        this.$Message.error(data);
-      });
+      unlike(this.answer.id)
+        .then(() => {
+          this.likeTargetHanding = false;
+          this.answer.liked = false;
+          this.answer.likes_count -= 1;
+        })
+        .catch(({ response: { data } = {} }) => {
+          this.likeTargetHanding = false;
+          this.$Message.error(data);
+        });
     },
     handleLikeTarget() {
       if (this.likeTargetHanding) {
-        this.$Message.warning('正在执行，请勿重复点击!');
+        this.$Message.warning("正在执行，请勿重复点击!");
 
         return;
       } else if (this.answer.liked) {

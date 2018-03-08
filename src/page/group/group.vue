@@ -44,10 +44,10 @@
   </div>
 </template>
 <script>
-import HeadTop from '../../components/HeadTop';
-import groupListItem from './components/groupListItem';
+import HeadTop from "../../components/HeadTop";
+import groupListItem from "./components/groupListItem";
 export default {
-  name: 'groupIndex',
+  name: "groupIndex",
   components: {
     HeadTop,
     groupListItem
@@ -67,16 +67,16 @@ export default {
   },
   methods: {
     cancel() {
-      this.to('/discover');
+      this.to("/discover");
     },
     to(path) {
-      path = typeof path === 'string' ? { path } : path;
+      path = typeof path === "string" ? { path } : path;
       if (path) {
         this.$router.push(path);
       }
     },
     createdGroup() {
-      this.$router.push('/group/add');
+      this.$router.push("/group/add");
       // this.$Modal.info({
       //     content: '只有认证通过的用户才可以创建圈子, 是否去认证?',
       //     okText: '去认证',
@@ -90,7 +90,7 @@ export default {
     // 获取首页圈子
     getGroup() {
       this.$http
-        .get('/plus-group/user-groups')
+        .get("/plus-group/user-groups")
         .then(({ data = [] }) => {
           if (data) {
             this.joined = [...data];
@@ -98,7 +98,7 @@ export default {
         })
         .catch(err => {
           const {
-            response: { data = { message: '获取圈子列表失败' } } = {}
+            response: { data = { message: "获取圈子列表失败" } } = {}
           } = err;
           this.$Message.error(data);
         });
@@ -106,19 +106,19 @@ export default {
       this.getRec();
 
       this.$http
-        .get('/plus-group/groups/count')
+        .get("/plus-group/groups/count")
         .then(({ data: { count = 0 } }) => {
           this.count = count;
         })
         .catch(err => {
           console.log(err);
-          console.log('获取圈子动态总数失败!');
+          console.log("获取圈子动态总数失败!");
         });
     },
     // 获取推荐圈子
     getRec() {
       this.$http
-        .get('/plus-group/recommend/groups?type=random')
+        .get("/plus-group/recommend/groups?type=random")
         .then(({ data = [] }) => {
           if (data) {
             this.recommend = [...data];
@@ -129,7 +129,7 @@ export default {
   },
   created() {
     this.getGroup();
-    this.$store.dispatch('GET_GROUP_TYPES');
+    this.$store.dispatch("GET_GROUP_TYPES");
   }
 };
 </script>

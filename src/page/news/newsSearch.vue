@@ -21,15 +21,15 @@
   </div>
 </template>
 <script>
-import newsItem from './components/newsItem.vue';
+import newsItem from "./components/newsItem.vue";
 export default {
-  name: 'news-search',
+  name: "news-search",
   components: {
     newsItem
   },
   data() {
     return {
-      keyword: '',
+      keyword: "",
       list: []
     };
   },
@@ -48,9 +48,9 @@ export default {
       if (!this.keyword) return;
       const type = e.type;
       switch (type) {
-        case 'click':
+        case "click":
           return this.onRefresh();
-        case 'keypress':
+        case "keypress":
           return e.keyCode === 13 && this.onRefresh();
       }
     },
@@ -91,5 +91,4 @@ export default {
 };
 </script>
 <style lang='less' src='./style/newsSearch.less'>
-
 </style>

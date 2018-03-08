@@ -4,9 +4,9 @@
     </div>
 </template>
 <script>
-import findItem from '@/page/find/components/findItem';
+import findItem from "@/page/find/components/findItem";
 export default {
-  name: 'findNearby',
+  name: "findNearby",
   components: {
     findItem
   },
@@ -45,13 +45,13 @@ export default {
           this.$http
             .get(`/users/${id}`)
             .then(({ data = {} }) => {
-              this.$store.commit('SAVE_USER', data);
+              this.$store.commit("SAVE_USER", data);
             })
             .catch(err => {
               console.log(err);
               const { response: { status } = {} } = err;
               if (status === 404) {
-                console.error('该用户不存在, 或已删除 #ID:' + id);
+                console.error("该用户不存在, 或已删除 #ID:" + id);
               }
             });
         }
@@ -60,7 +60,7 @@ export default {
     },
     getUsers() {
       this.$http
-        .get('around-amap', {
+        .get("around-amap", {
           params: {
             limit: 10,
             offset: this.formatData.length,
@@ -82,5 +82,4 @@ export default {
 };
 </script>
 <style lang='less'>
-
 </style>

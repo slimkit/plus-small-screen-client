@@ -31,14 +31,19 @@
 
 <script>
 // import { Cell, Button } from 'mint-ui';
-import { all, followTopics, follow, unfollow } from '../../../api/question/topics';
+import {
+  all,
+  followTopics,
+  follow,
+  unfollow
+} from "../../../api/question/topics";
 
 /**
  * The component name.
  *
  * @type {String}
  */
-const name = 'module-questions-topics';
+const name = "module-questions-topics";
 
 /**
  * Topics.
@@ -82,7 +87,7 @@ export default {
      * @author Seven Du <shiweidu@outlook.com>
      */
     type() {
-      const { query: { type = 'hot' } } = this.$route;
+      const { query: { type = "hot" } } = this.$route;
 
       return type;
     },
@@ -128,7 +133,7 @@ export default {
      * @author Seven Du <shiweidu@outlook.com>
      */
     handleRefresh() {
-      if (this.type === 'follow') {
+      if (this.type === "follow") {
         this.handleRefreshByFollow();
 
         return;
@@ -146,15 +151,17 @@ export default {
     handleRefreshByAll() {
       const offset = 0;
       const limit = 15;
-      all(offset, limit).then(({ data }) => {
-        this.topics = data;
-        this.loadContainer.topEnd(false);
-        this.loadContainer.bottomEnd(data.length < limit);
-      }).catch(({ response: { data } = {} }) => {
-        this.$Message.error(data);
-        this.loadContainer.topEnd(false);
-        this.loadContainer.bottomEnd(true);
-      });
+      all(offset, limit)
+        .then(({ data }) => {
+          this.topics = data;
+          this.loadContainer.topEnd(false);
+          this.loadContainer.bottomEnd(data.length < limit);
+        })
+        .catch(({ response: { data } = {} }) => {
+          this.$Message.error(data);
+          this.loadContainer.topEnd(false);
+          this.loadContainer.bottomEnd(true);
+        });
     },
 
     /**
@@ -166,18 +173,20 @@ export default {
     handleRefreshByFollow() {
       const after = 0;
       const limit = 15;
-      followTopics(after, limit).then(({ data }) => {
-        this.topics = data;
-        this.loadContainer.topEnd(false);
-        this.loadContainer.bottomEnd(data.length < limit);
-      }).catch(({ response: { data } = {} }) => {
-        this.$Message.error(data);
-        this.loadContainer.topEnd(false);
-        this.loadContainer.bottomEnd(true);
-      });
+      followTopics(after, limit)
+        .then(({ data }) => {
+          this.topics = data;
+          this.loadContainer.topEnd(false);
+          this.loadContainer.bottomEnd(data.length < limit);
+        })
+        .catch(({ response: { data } = {} }) => {
+          this.$Message.error(data);
+          this.loadContainer.topEnd(false);
+          this.loadContainer.bottomEnd(true);
+        });
     },
     handleLoadMore() {
-      if (this.type === 'follow') {
+      if (this.type === "follow") {
         this.handleLoadMoreByFollow();
 
         return;
@@ -188,52 +197,60 @@ export default {
     handleLoadMoreByAll() {
       const offset = this.topics.length;
       const limit = 15;
-      all(offset, limit).then(({ data }) => {
-        this.topics = [ ...this.topics, ...data ];
-        this.loadContainer.bottomEnd(data.length < limit);
-      }).catch(({ response: { data } = {} }) => {
-        this.loadContainer.bottomEnd(true);
-        this.$Message.error(data);
-      });
+      all(offset, limit)
+        .then(({ data }) => {
+          this.topics = [...this.topics, ...data];
+          this.loadContainer.bottomEnd(data.length < limit);
+        })
+        .catch(({ response: { data } = {} }) => {
+          this.loadContainer.bottomEnd(true);
+          this.$Message.error(data);
+        });
     },
     handleLoadMoreByFollow() {
       const { id: after } = this.topisc[this.topics.length];
       const limit = 15;
-      followTopics(after, limit).then(({ data }) => {
-        this.topics = [ ...this.topics, ...data ];
-        this.loadContainer.bottomEnd(data.length < limit);
-      }).catch(({ response: { data } = {} }) => {
-        this.loadContainer.bottomEnd(true);
-        this.$Message.error(data);
-      });
+      followTopics(after, limit)
+        .then(({ data }) => {
+          this.topics = [...this.topics, ...data];
+          this.loadContainer.bottomEnd(data.length < limit);
+        })
+        .catch(({ response: { data } = {} }) => {
+          this.loadContainer.bottomEnd(true);
+          this.$Message.error(data);
+        });
     },
     handleFollow(topic) {
-      follow(topic.id).then(() => {
-        topic.has_follow = true;
-        this.follows_count += 1;
-      }).catch(({ response: { data } = {} }) => {
-        this.$Message.error(data);
-      });
+      follow(topic.id)
+        .then(() => {
+          topic.has_follow = true;
+          this.follows_count += 1;
+        })
+        .catch(({ response: { data } = {} }) => {
+          this.$Message.error(data);
+        });
     },
     handleUnfollow(topic) {
-      unfollow(topic.id).then(() => {
-        topic.has_follow = false;
-        topic.follows_count -= 1;
-        if (this.type === 'follow') {
-          let newTopics = [];
-          this.topics.forEach((_topic) => {
-            if (_topic.id !== topic.id) {
-              newTopics.push(_topic);
-            }
-          });
-          this.topics = newTopics;
-        }
-      }).catch(({ response: { data } = {} }) => {
-        this.$Message.error(data);
-      });
+      unfollow(topic.id)
+        .then(() => {
+          topic.has_follow = false;
+          topic.follows_count -= 1;
+          if (this.type === "follow") {
+            let newTopics = [];
+            this.topics.forEach(_topic => {
+              if (_topic.id !== topic.id) {
+                newTopics.push(_topic);
+              }
+            });
+            this.topics = newTopics;
+          }
+        })
+        .catch(({ response: { data } = {} }) => {
+          this.$Message.error(data);
+        });
     }
   }
-}
+};
 </script>
 
 <style lang="less">

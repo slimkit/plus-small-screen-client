@@ -3,13 +3,11 @@
 </template>
 <script>
 export default {
-  name: 'postWenzi',
+  name: "postWenzi",
   data() {
-    return {
-
-    }
+    return {};
   }
-}
-
+};
 </script>
-<style lang='less'></style>
+<style lang='less'>
+</style>

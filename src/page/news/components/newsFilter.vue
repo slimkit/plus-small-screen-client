@@ -31,9 +31,9 @@
   </div>
 </template>
 <script>
-const prefixCls = 'news__filter';
+const prefixCls = "news__filter";
 export default {
-  name: 'NewsFilter',
+  name: "NewsFilter",
   data() {
     return {
       prefixCls,
@@ -45,13 +45,13 @@ export default {
 
       currentCate: {
         id: 0,
-        name: '推荐'
+        name: "推荐"
       }
     };
   },
 
   watch: {
-    editing(val) {},
+    editing() {},
     showAll(val) {
       !val && (this.editing = !1);
     }
@@ -63,12 +63,12 @@ export default {
     onOk() {
       if (this.editing) {
         this.editing = false;
-        const follows = this.myCates.map(c => c.id).join(',');
-        this.$http.patch('/news/categories/follows', {
+        const follows = this.myCates.map(c => c.id).join(",");
+        this.$http.patch("/news/categories/follows", {
           follows
         });
         this.showAll = false;
-        this.$emit('onOk', this.myCates);
+        this.$emit("onOk", this.myCates);
       } else {
         this.editing = true;
       }
@@ -92,14 +92,14 @@ export default {
         if (cate.id !== this.currentCate.id) {
           const { target: el } = e;
           this.currentCate = { ...cate, el };
-          this.$emit('change', this.currentCate);
+          this.$emit("change", this.currentCate);
         }
       }
     },
     async fetchCates() {
       const {
         data: { my_cates: myCates, more_cates: moreCates } = {}
-      } = await this.$http.get('/news/cates');
+      } = await this.$http.get("/news/cates");
       this.myCates = myCates ? [...myCates] : [];
       this.moreCates = moreCates ? [...moreCates] : [];
     }
@@ -111,5 +111,4 @@ export default {
 };
 </script>
 <style lang='less' src='../style/newsFilter.less'>
-
 </style>

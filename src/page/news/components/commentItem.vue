@@ -27,7 +27,7 @@
 </template>
 <script>
 export default {
-  name: 'comment-card',
+  name: "comment-card",
   props: {
     comment: {},
     pinned: {
@@ -46,10 +46,10 @@ export default {
       return this.comment.reply;
     },
     body() {
-      return this.comment.body || '';
+      return this.comment.body || "";
     },
     time() {
-      return this.comment.created_at || '';
+      return this.comment.created_at || "";
     }
   },
   methods: {}
@@ -100,7 +100,7 @@ export default {
     -o-transform: scale(0.95);
     transform: scale(0.95);
     &:after {
-      content: '置顶';
+      content: "置顶";
     }
   }
 }

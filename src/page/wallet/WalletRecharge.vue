@@ -7,10 +7,9 @@
 
 <script>
 export default {
-  name: 'WalletRecharge'
+  name: "WalletRecharge"
 };
 </script>
 
 <style lang="less">
-
 </style>

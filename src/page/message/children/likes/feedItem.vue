@@ -31,49 +31,47 @@
   </section>
 </template>
 <script>
-  const prefixCls = 'msgList';
-  export default {
-    name: 'feedsItem',
-    props: [
-      'like'
-    ],
-    data: () => ({
-      prefixCls
-    }),
-    methods: {
-      /**
-       * 进入动态详情
-       * @Author   Wayne
-       * @DateTime 2018-01-31
-       * @Email    qiaobin@zhiyicx.com
-       * @return   {[type]}            [description]
-       */
-      goToFeedDetail () {
-        const { likeable: { id = 0 } } = this.like;
-        this.$router.push(`/feed-detail/${id}`)
-      }
-    },
-    computed: {
-      /**
-       * 获取图片,并计算地址
-       * @Author   Wayne
-       * @DateTime 2018-01-31
-       * @Email    qiaobin@zhiyicx.com
-       * @return   {[type]}            [description]
-       */
-      getImage () {
-        const { like } = this;
-        const { length } = like.likeable.images;
-        if (length > 0) {
-          const { 0: img = {} } = like.likeable.images;
-          return `/api/v2/files/${img.id}`;
-        }
-
-        return false;
-      }
-    },
-    created () {
-      // console.log(this.comment)
+const prefixCls = "msgList";
+export default {
+  name: "feedsItem",
+  props: ["like"],
+  data: () => ({
+    prefixCls
+  }),
+  methods: {
+    /**
+     * 进入动态详情
+     * @Author   Wayne
+     * @DateTime 2018-01-31
+     * @Email    qiaobin@zhiyicx.com
+     * @return   {[type]}            [description]
+     */
+    goToFeedDetail() {
+      const { likeable: { id = 0 } } = this.like;
+      this.$router.push(`/feed-detail/${id}`);
     }
+  },
+  computed: {
+    /**
+     * 获取图片,并计算地址
+     * @Author   Wayne
+     * @DateTime 2018-01-31
+     * @Email    qiaobin@zhiyicx.com
+     * @return   {[type]}            [description]
+     */
+    getImage() {
+      const { like } = this;
+      const { length } = like.likeable.images;
+      if (length > 0) {
+        const { 0: img = {} } = like.likeable.images;
+        return `/api/v2/files/${img.id}`;
+      }
+
+      return false;
+    }
+  },
+  created() {
+    // console.log(this.comment)
   }
+};
 </script>

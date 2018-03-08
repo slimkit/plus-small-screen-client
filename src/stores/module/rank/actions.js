@@ -1,5 +1,6 @@
 export default {
-  SAVE_RANK_DATA ({ commit }, data = {}) {
+  /* eslint-disable */
+  SAVE_RANK_DATA({ commit }, data = {}) {
     // commit()
   }
-}
+};

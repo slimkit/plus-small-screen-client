@@ -18,16 +18,16 @@
   </div>
 </template>
 <script>
-import { FeedItem } from '@/components/feed/feedItem';
-import { oneOf } from '../../util/';
-import HeadTop from '../../components/HeadTop';
-import FootGuide from '../../components/FootGuide';
+import { FeedItem } from "@/components/feed/feedItem";
+import { oneOf } from "../../util/";
+import HeadTop from "../../components/HeadTop";
+import FootGuide from "../../components/FootGuide";
 
 /* 有效类型 */
-const types = ['new', 'hot', 'follow'];
+const types = ["new", "hot", "follow"];
 
 export default {
-  name: 'feedIndex',
+  name: "feedIndex",
   components: {
     HeadTop,
     FeedItem,
@@ -59,7 +59,7 @@ export default {
   methods: {
     async onRefresh() {
       const { data: { ad, feeds, pinned } = {} } = await this.$http.get(
-        '/feeds',
+        "/feeds",
         {
           params: {
             type: this.feed_type,
@@ -82,7 +82,7 @@ export default {
       };
 
       const { data: { ad, feeds, pinned } = {} } = await this.$http.get(
-        '/feeds',
+        "/feeds",
         { params }
       );
       this.ad = ad ? [...this.ad, ...ad] : this.ad;
@@ -97,14 +97,13 @@ export default {
    *     确保 feed_type 为有效值
    *         @author jsonleex <jsonleex@163.com>
    */
-  beforeRouteEnter({ path, params: { type } }, from, next) {
-    types.indexOf(type) > -1 ? next() : next({ path: '/feed/new' });
+  beforeRouteEnter({ params: { type } }, from, next) {
+    types.indexOf(type) > -1 ? next() : next({ path: "/feed/new" });
   },
   beforeDestroy() {
-    this.$store.commit('SAVE_FEED_TYPE', '');
+    this.$store.commit("SAVE_FEED_TYPE", "");
   }
 };
 </script>
 <style lang="less">
-
 </style>

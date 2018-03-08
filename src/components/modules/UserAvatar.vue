@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import Avatar from './Avatar';
+import Avatar from "./Avatar";
 
 /**
  * UserAvatar component.
@@ -25,7 +25,7 @@ export default {
    *
    * @type {String}
    */
-  name: 'module-user-avatar',
+  name: "module-user-avatar",
 
   /**
    * The component props.
@@ -38,7 +38,7 @@ export default {
     anonymity: { type: Boolean, default: false },
     classes: { type: [Array, String] },
     size: { type: [String, Number], default: 0.4 },
-    sizeUnit: { type: String, default: 'rem' }
+    sizeUnit: { type: String, default: "rem" }
   },
 
   /**
@@ -56,7 +56,6 @@ export default {
    * @type {Object}
    */
   computed: {
-
     /**
      * Not image resource default avatar icon class type.
      *
@@ -66,12 +65,12 @@ export default {
     defaultAvatar() {
       switch (this.sex) {
         case 1:
-          return '#avatar-man';
+          return "#avatar-man";
         case 2:
-          return '#avatar-woman';
+          return "#avatar-woman";
         case 0:
         default:
-          return '#avatar-secret'
+          return "#avatar-secret";
       }
     }
   },
@@ -82,7 +81,6 @@ export default {
    * @type {Object}
    */
   methods: {
-
     /**
      * The component click handle.
      *
@@ -91,7 +89,7 @@ export default {
      * @author Seven Du <shiweidu@outlook.com>
      */
     handleClick(event) {
-      this.$emit('click', event);
+      this.$emit("click", event);
     }
   }
 };

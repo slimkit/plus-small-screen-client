@@ -24,11 +24,11 @@
 </template>
 
 <script>
-import walletInfo from './WalletInfo';
-import Modal from '@/plugins/modal/modal';
-import walletDetailItem from './components/WalletDetailItem';
+import walletInfo from "./WalletInfo";
+import Modal from "@/plugins/modal/modal";
+import walletDetailItem from "./components/WalletDetailItem";
 export default {
-  name: 'WalletDetail',
+  name: "WalletDetail",
   components: {
     Modal,
     walletInfo,
@@ -37,18 +37,18 @@ export default {
   data() {
     return {
       options: [
-        {value: 'all', label: '全部'},
-        {value: 'expenses', label: '支出'},
-        {value: 'income', label: '收入'}
+        { value: "all", label: "全部" },
+        { value: "expenses", label: "支出" },
+        { value: "income", label: "收入" }
       ],
-      currAction: '',
+      currAction: "",
       currInfo: null,
       list: [],
       open: false
     };
   },
   watch: {
-    currAction(val) {
+    currAction() {
       this.list = [];
       this.$refs.loadmore.beforeRefresh();
     }
@@ -66,13 +66,13 @@ export default {
     },
     onRefresh() {
       this.$http
-        .get('/wallet/charges', {
+        .get("/wallet/charges", {
           params: {
             action: this.currAction,
             limit: 15
           }
         })
-        .then(({data = []}) => {
+        .then(({ data = [] }) => {
           if (data.length > 0) {
             this.list = this.uniqById(data, this.list);
           }
@@ -82,14 +82,14 @@ export default {
 
     onLoadMore() {
       this.$http
-        .get('/wallet/charges', {
+        .get("/wallet/charges", {
           params: {
             action: this.currAction,
             limit: 15,
             after: this.after
           }
         })
-        .then(({data = []}) => {
+        .then(({ data = [] }) => {
           if (data.length > 0) {
             this.list = [...this.list, ...data];
           }

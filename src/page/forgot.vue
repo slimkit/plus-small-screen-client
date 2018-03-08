@@ -12,7 +12,7 @@
 
       <div class="signup-form--row" v-if='verifiable_type === "sms"'>
         <label class="signup-form--row-prepend" for="phone">手机号</label>
-        <input autocomplete="off" id="phone" v-model.trim.num='phone' type="number" maxlength="11" placeholder="输入11位手机号" oninput="if(value.length>11)value=value.slice(0,11)">
+        <input autocomplete="off" id="phone" v-model.trim.number='phone' type="number" maxlength="11" placeholder="输入11位手机号" oninput="if(value.length>11)value=value.slice(0,11)">
         <span 
         class="signup-form--row-append c_59b6d7" 
         :class='{ disabled: phone.length < 11 }'
@@ -60,22 +60,21 @@
         </svg>
       </button>
   </div>
-  </div>
 </template>
 <script>
-const SMS = 'sms'; // 手机
-const EMAIL = 'mail'; // 邮箱
+const SMS = "sms"; // 手机
+const EMAIL = "mail"; // 邮箱
 const phoneReg = /^(((13[0-9]{1})|14[0-9]{1}|(15[0-9]{1})|17[0-9]{1}|(18[0-9]{1}))+\d{8})$/;
 const emailReg = /^\w+((-\w+)|(\.\w+))*@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/;
 
 export default {
-  name: 'forgot',
+  name: "forgot",
   data() {
     return {
-      phone: '',
-      email: '',
-      password: '',
-      verifiable_code: '',
+      phone: "",
+      email: "",
+      password: "",
+      verifiable_code: "",
       verifiable_type: SMS,
 
       eye: false,
@@ -95,10 +94,10 @@ export default {
 
       set(val) {
         if (val) {
-          this.phone = '';
-          this.email = '';
-          this.password = '';
-          this.verifiable_code = '';
+          this.phone = "";
+          this.email = "";
+          this.password = "";
+          this.verifiable_code = "";
         }
       }
     },
@@ -109,20 +108,20 @@ export default {
       );
     },
     codeText() {
-      return this.countdown > 0 ? `${this.countdown}后重发` : '获取验证码';
+      return this.countdown > 0 ? `${this.countdown}后重发` : "获取验证码";
     },
     _$type: {
       get() {
-        let label = '';
-        let label2 = '';
+        let label = "";
+        let label2 = "";
         switch (this.verifiable_type) {
           case SMS:
-            label = '手机';
-            label2 = '邮箱';
+            label = "手机";
+            label2 = "邮箱";
             break;
           case EMAIL:
-            label = '邮箱';
-            label2 = '手机';
+            label = "邮箱";
+            label2 = "手机";
             break;
         }
         return {
@@ -147,19 +146,19 @@ export default {
       } = this.$data;
       // 手机号
       if (verifiableType === SMS && !phoneReg.test(phone)) {
-        this.$Message.error({phone: '请输入正确的手机号码'});
+        this.$Message.error({ phone: "请输入正确的手机号码" });
         return;
       }
 
       // 邮箱
       if (verifiableType !== SMS && !emailReg.test(email)) {
-        this.$Message.error({email: '请输入正确的邮箱号码'});
+        this.$Message.error({ email: "请输入正确的邮箱号码" });
         return;
       }
 
       // 密码长度
       if (password.length < 6) {
-        this.$Message.error({password: '密码长度必须大于6位'});
+        this.$Message.error({ password: "密码长度必须大于6位" });
         return;
       }
 
@@ -175,15 +174,15 @@ export default {
       this.loading = true;
       verifiableType === SMS ? delete param.email : delete param.phone;
       this.$http
-        .put('/user/retrieve-password', param)
-        .then(({data: {token} = {}}) => {
+        .put("/user/retrieve-password", param)
+        .then(({ data: { token } = {} }) => {
           if (token) {
-            this.$Message.success('密码修改成功, 返回重新登陆');
-            this.$router.push('/signin');
+            this.$Message.success("密码修改成功, 返回重新登陆");
+            this.$router.push("/signin");
           }
           this.loading = false;
         })
-        .catch(({response: {data} = {}}) => {
+        .catch(() => {
           this.loading = false;
           this.disabled = true;
         });
@@ -198,27 +197,31 @@ export default {
       };
       this.verifiable_type === SMS ? delete param.email : delete param.phone;
       this.$http
-        .post('verifycodes', param, {
+        .post("verifycodes", param, {
           validateStatus: status => status === 202
         })
         .then(() => {
           this.countdown = 60;
           this.countDown();
-          this.$Message.success('发送验证码成功');
-          this.error = '';
+          this.$Message.success("发送验证码成功");
+          this.error = "";
         })
-        .catch(({response: {status = null, data: {errors = {}} = {}} = {}}) => {
-          if (status === 500) {
-            this.error = {message: '网络错误,请联系管理员'};
-            return;
+        .catch(
+          ({
+            response: { status = null, data: { errors = {} } = {} } = {}
+          }) => {
+            if (status === 500) {
+              this.error = { message: "网络错误,请联系管理员" };
+              return;
+            }
+            if (status === 422) {
+              this.error = errors;
+            }
+            setTimeout(() => {
+              this.error = "";
+            }, 3000);
           }
-          if (status === 422) {
-            this.error = errors;
-          }
-          setTimeout(() => {
-            this.error = '';
-          }, 3000);
-        });
+        );
     },
     changeType() {
       switch (this.verifiable_type) {
@@ -234,5 +237,4 @@ export default {
 };
 </script>
 <style lang='less' src='./style/signup.less'>
-
 </style>

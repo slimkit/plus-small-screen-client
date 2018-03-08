@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import { AppBar } from '../modules/question'
+import { AppBar } from "../modules/question";
 
 /**
  * Question default export.
@@ -23,7 +23,7 @@ export default {
    *
    * @type {string}
    */
-  name: 'page-questions',
+  name: "page-questions",
 
   /**
    * The Page components.
@@ -33,7 +33,7 @@ export default {
   components: {
     [AppBar.name]: AppBar // module-question-app-bar
   }
-}
+};
 </script>
 
 <style>

@@ -1,6 +1,6 @@
-import markdownIt from 'markdown-it';
-import plusImagePlugin from 'markdown-it-plus-image';
-import axios from '../http';
+import markdownIt from "markdown-it";
+import plusImagePlugin from "markdown-it-plus-image";
+import axios from "../http";
 
 /**
  * Create a markdown it instance.
@@ -19,9 +19,7 @@ const markdown = markdownIt({
  * @author Seven Du <shiweidu@outlook.com>
  */
 export function render(markdownText) {
-  return markdown.render(
-    String(markdownText)
-  );
+  return markdown.render(String(markdownText));
 }
 
 /**
@@ -75,9 +73,10 @@ export function syntaxTextAndImage(markdownText) {
    *
    * @type {string}
    */
-  const text = html.replace(/<img.*?(?:>|\/>)/gi, '[图片]') // Replace img HTML tag to "[图片]"
-                   .replace(/<\/?.+?>/gi, '') // Removed all HTML tags.
-                   .replace(/ /g, ''); // Removed all empty character.
+  const text = html
+    .replace(/<img.*?(?:>|\/>)/gi, "[图片]") // Replace img HTML tag to "[图片]"
+    .replace(/<\/?.+?>/gi, "") // Removed all HTML tags.
+    .replace(/ /g, ""); // Removed all empty character.
 
   // Return all matched result.
   // {

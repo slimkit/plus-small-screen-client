@@ -8,39 +8,39 @@
 </template>
 <script>
 export default {
-  name: 'message',
-  props: ['type'],
+  name: "message",
+  props: ["type"],
   computed: {
-    alertClasses () {
+    alertClasses() {
       return {
-        'Alert--Success': this.type === 'success',
-        'Alert--Warning': this.type === 'warning',
-        'Alert--Error': this.type === 'error'
-      }
+        "Alert--Success": this.type === "success",
+        "Alert--Warning": this.type === "warning",
+        "Alert--Error": this.type === "error"
+      };
     }
   },
-  data () {
+  data() {
     return {
       show: true
-    }
+    };
   }
-}
+};
 </script>
 <style>
 .Alert__close {
-    font-weight: bold;
-    cursor: pointer;
+  font-weight: bold;
+  cursor: pointer;
 }
 
 .Alert--Success {
-    color: green;
+  color: green;
 }
 
 .Alert--Warning {
-    color: #aa0;
+  color: #aa0;
 }
 
 .Alert--Error {
-    color: red;
+  color: red;
 }
 </style>

@@ -16,9 +16,9 @@
   </div>
 </template>
 <script>
-import { GroupFeedItem } from '@/components/feed/feedItem';
+import { GroupFeedItem } from "@/components/feed/feedItem";
 export default {
-  name: 'my-groups-audit-list',
+  name: "my-groups-audit-list",
   components: {
     GroupFeedItem
   },
@@ -45,10 +45,10 @@ export default {
     },
     onLoadMore() {
       this.$http
-        .get('/plus-group/user-groups', {
+        .get("/plus-group/user-groups", {
           params: {
             limit: 15,
-            type: 'audit',
+            type: "audit",
             offset: this.list.length
           }
         })

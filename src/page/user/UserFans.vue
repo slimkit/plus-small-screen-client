@@ -22,9 +22,9 @@
   </div>
 </template>
 <script>
-import UserItem from '@/components/UserItem';
+import UserItem from "@/components/UserItem";
 export default {
-  name: 'UserFans',
+  name: "UserFans",
   components: {
     UserItem
   },
@@ -40,14 +40,12 @@ export default {
     },
     type() {
       const { type } = this.$route.query;
-      if (!type) {
-        this.$route.query.type = 'followers';
-      }
-      return type;
+
+      return type || "followers";
     }
   },
   watch: {
-    type(val) {
+    type() {
       this.userList = [];
       this.$refs.loadmore.beforeRefresh();
     },

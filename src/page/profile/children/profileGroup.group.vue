@@ -9,42 +9,48 @@
     </div>
 </template>
 <script>
-import groupItem from '@/page/group/components/groupListItem'
+import groupItem from "@/page/group/components/groupListItem";
 export default {
-  name: 'profileGroup_groups',
+  name: "profileGroup_groups",
   components: {
     groupItem
   },
-  data () {
+  data() {
     return {
-      curType: 'join',
-      navs: [{
-        type: 'join',
-        label: '我加入的'
-      }, {
-        type: 'audit',
-        label: '待审核的'
-      }],
+      curType: "join",
+      navs: [
+        {
+          type: "join",
+          label: "我加入的"
+        },
+        {
+          type: "audit",
+          label: "待审核的"
+        }
+      ],
 
       dataList: []
-    }
+    };
   },
   watch: {
-    curType () {
-      this.getData()
+    curType() {
+      this.getData();
     }
   },
 
   methods: {
-    getData () {
-      this.$http.get(`/plus-group/user-groups?type=${this.curType}`).then(({ data = [] }) => {
-        this.dataList = data
-      })
+    getData() {
+      this.$http
+        .get(`/plus-group/user-groups?type=${this.curType}`)
+        .then(({ data = [] }) => {
+          this.dataList = data;
+        });
     }
   },
-  created () {
-    this.getData()
+  created() {
+    this.getData();
   }
-}
+};
 </script>
-<style lang='less'></style>
+<style lang='less'>
+</style>

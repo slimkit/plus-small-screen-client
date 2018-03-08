@@ -18,9 +18,9 @@
   </div>
 </template>
 <script>
-import groupItem from './components/groupListItem';
+import groupItem from "./components/groupListItem";
 export default {
-  name: 'my-groups-join-list',
+  name: "my-groups-join-list",
   components: {
     groupItem
   },
@@ -37,10 +37,10 @@ export default {
   methods: {
     onRefresh() {
       this.$http
-        .get('/plus-group/user-groups', {
+        .get("/plus-group/user-groups", {
           params: {
             limit: 15,
-            type: 'join'
+            type: "join"
           }
         })
         .then(({ data }) => {
@@ -50,10 +50,10 @@ export default {
     },
     onLoadMore() {
       this.$http
-        .get('/plus-group/user-groups', {
+        .get("/plus-group/user-groups", {
           params: {
             limit: 15,
-            type: 'join',
+            type: "join",
             offset: this.list.length
           }
         })

@@ -47,15 +47,15 @@
   </div>
 </template>
 <script>
-import './style/pswp/pswp.min.css';
+import "./style/pswp/pswp.min.css";
 
-import PhotoSwipe from 'photoswipe';
-import PhotoSwipeUI from 'photoswipe/dist/photoswipe-ui-default.js';
-import bus from '@/bus.js';
+import PhotoSwipe from "photoswipe";
+import PhotoSwipeUI from "photoswipe/dist/photoswipe-ui-default.js";
+import bus from "@/bus.js";
 export default {
-  name: 'pswp',
+  name: "pswp",
   created() {
-    bus.$on('mvGallery', (index, images) => {
+    bus.$on("mvGallery", (index, images) => {
       this.openPhotoSwipe(index, images);
     });
   },
@@ -85,7 +85,7 @@ export default {
         index,
         fullscreenEl: !0,
         closeEl: !this.isInApp,
-        addCaptionHTMLFn(item, captionEl, isFake) {
+        addCaptionHTMLFn(/*item, captionEl, isFake*/) {
           // item      - slide object
           // captionEl - caption DOM element
           // isFake    - true when content is added to fake caption container

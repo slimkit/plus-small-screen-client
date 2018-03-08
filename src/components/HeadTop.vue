@@ -31,7 +31,7 @@
 </template>
 <script>
 export default {
-  name: 'HeadTop',
+  name: "HeadTop",
   props: {
     title: String,
     goBack: [Boolean, Function, String],
@@ -41,7 +41,7 @@ export default {
   computed: {},
   methods: {
     goBackFn() {
-      return typeof this.goBack === 'function'
+      return typeof this.goBack === "function"
         ? this.goBack()
         : this.$router.go(-1);
     },

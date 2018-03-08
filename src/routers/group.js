@@ -1,50 +1,50 @@
 /* eslint-disable one-var */
 const group = () =>
-    import(/* webpackChunkName: 'group' */ '../page/group/group'),
+    import(/* webpackChunkName: 'group' */ "../page/group/group"),
   MyGroup = () =>
-    import(/* webpackChunkName: 'group' */ '../page/group/MyGroup.vue'),
+    import(/* webpackChunkName: 'group' */ "../page/group/MyGroup.vue"),
   MyGroups = () =>
-    import(/* webpackChunkName: 'group' */ '../page/group/MyGroup.group.vue'),
+    import(/* webpackChunkName: 'group' */ "../page/group/MyGroup.group.vue"),
   MyPosts = () =>
-    import(/* webpackChunkName: 'group' */ '../page/group/MyGroup.posts.vue'),
+    import(/* webpackChunkName: 'group' */ "../page/group/MyGroup.posts.vue"),
   MyPosts1 = () =>
-    import(/* webpackChunkName: 'group' */ '../page/group/MyPosts.1.vue'),
+    import(/* webpackChunkName: 'group' */ "../page/group/MyPosts.1.vue"),
   MyPosts2 = () =>
-    import(/* webpackChunkName: 'group' */ '../page/group/MyPosts.2.vue'),
+    import(/* webpackChunkName: 'group' */ "../page/group/MyPosts.2.vue"),
   MyPosts3 = () =>
-    import(/* webpackChunkName: 'group' */ '../page/group/MyPosts.3.vue'),
+    import(/* webpackChunkName: 'group' */ "../page/group/MyPosts.3.vue"),
   MyGroupsJoin = () =>
-    import(/* webpackChunkName: 'group' */ '../page/group/MyGroups.join.vue'),
+    import(/* webpackChunkName: 'group' */ "../page/group/MyGroups.join.vue"),
   MyGroupsAudit = () =>
-    import(/* webpackChunkName: 'group' */ '../page/group/MyGroups.audit.vue'),
+    import(/* webpackChunkName: 'group' */ "../page/group/MyGroups.audit.vue"),
   addGroup = () =>
-    import(/* webpackChunkName: 'group' */ '../page/group/children/addGroup'),
+    import(/* webpackChunkName: 'group' */ "../page/group/children/addGroup"),
   chooseCategory = () =>
-    import(/* webpackChunkName: 'group' */ '../page/group/children/chooseCategory'),
+    import(/* webpackChunkName: 'group' */ "../page/group/children/chooseCategory"),
   groupJoined = () =>
-    import(/* webpackChunkName: 'group' */ '../page/group/children/groupJoined'),
+    import(/* webpackChunkName: 'group' */ "../page/group/children/groupJoined"),
   groupSearch = () =>
-    import(/* webpackChunkName: 'group' */ '../page/group/children/groupSearch'),
+    import(/* webpackChunkName: 'group' */ "../page/group/children/groupSearch"),
   groupAll = () =>
-    import(/* webpackChunkName: 'group' */ '../page/group/children/groupAll'),
+    import(/* webpackChunkName: 'group' */ "../page/group/children/groupAll"),
   groupDetail = () =>
-    import(/* webpackChunkName: 'group' */ '../page/group/children/groupDetail'),
+    import(/* webpackChunkName: 'group' */ "../page/group/children/groupDetail"),
   groupMember = () =>
-    import(/* webpackChunkName: 'group' */ '../page/group/children/groupMember'),
+    import(/* webpackChunkName: 'group' */ "../page/group/children/groupMember"),
   groupPermissions = () =>
-    import(/* webpackChunkName: 'group' */ '../page/group/children/groupPermissions'),
+    import(/* webpackChunkName: 'group' */ "../page/group/children/groupPermissions"),
   groupEdit = () =>
-    import(/* webpackChunkName: 'group' */ '../page/group/children/groupEdit'),
+    import(/* webpackChunkName: 'group' */ "../page/group/children/groupEdit"),
   groupFeedDetail = () =>
-    import(/* webpackChunkName: 'group' */ '../page/group/children/groupFeedDetail');
+    import(/* webpackChunkName: 'group' */ "../page/group/children/groupFeedDetail");
 
 export default [
   /* 圈子 */
   {
-    path: '/group',
+    path: "/group",
     component: group,
     meta: {
-      title: '圈子',
+      title: "圈子",
       keepAlive: true,
       requiresAuth: true
     }
@@ -54,10 +54,10 @@ export default [
    * 圈子详情
    */
   {
-    path: '/group/:groupID(\\d+)',
+    path: "/group/:groupID(\\d+)",
     component: groupDetail,
     meta: {
-      title: '圈子详情',
+      title: "圈子详情",
       keepAlive: true,
       requiresAuth: true
     }
@@ -67,10 +67,10 @@ export default [
    * 成员管理
    */
   {
-    path: '/group/:groupID(\\d+)/member',
+    path: "/group/:groupID(\\d+)/member",
     component: groupMember,
     meta: {
-      title: '成员管理'
+      title: "成员管理"
     }
   },
 
@@ -78,10 +78,10 @@ export default [
    * 权限管理
    */
   {
-    path: '/group/:groupID(\\d+)/permissions',
+    path: "/group/:groupID(\\d+)/permissions",
     component: groupPermissions,
     meta: {
-      title: '发帖权限'
+      title: "发帖权限"
     }
   },
 
@@ -89,11 +89,11 @@ export default [
    * 修改资料
    */
   {
-    name: 'groupEdit',
-    path: '/group/:groupID(\\d+)/info',
+    name: "groupEdit",
+    path: "/group/:groupID(\\d+)/info",
     component: groupEdit,
     meta: {
-      title: '修改资料'
+      title: "修改资料"
     }
   },
 
@@ -101,10 +101,10 @@ export default [
    * 圈子 - 帖子详情
    */
   {
-    path: '/group/:groupID(\\d+)/feed/:feedID(\\d+)',
+    path: "/group/:groupID(\\d+)/feed/:feedID(\\d+)",
     component: groupFeedDetail,
     meta: {
-      title: '帖子详情'
+      title: "帖子详情"
     }
   },
 
@@ -112,10 +112,10 @@ export default [
    * 全部圈子
    */
   {
-    path: '/group/all',
+    path: "/group/all",
     component: groupAll,
     meta: {
-      title: '全部圈子',
+      title: "全部圈子",
       keepAlive: true,
       requiresAuth: true
     }
@@ -126,45 +126,45 @@ export default [
    */
   {
     component: MyGroup,
-    path: '/own',
+    path: "/own",
     meta: {
-      title: '我的圈子',
+      title: "我的圈子",
       requiresAuth: true
     },
     children: [
       {
-        path: 'groups',
+        path: "groups",
         component: MyGroups,
-        redirect: 'groups/joined',
+        redirect: "groups/joined",
         children: [
           {
             meta: {
               index: 1,
               head: false
             },
-            path: 'joined',
+            path: "joined",
             component: MyGroupsJoin
           },
           {
             meta: {
               index: 2
             },
-            path: 'audit',
+            path: "audit",
             component: MyGroupsAudit
           }
         ]
       },
       {
-        path: 'posts',
+        path: "posts",
         component: MyPosts,
-        redirect: 'posts/1',
+        redirect: "posts/1",
         children: [
           {
             meta: {
               index: 1,
               head: false
             },
-            path: '1',
+            path: "1",
             component: MyPosts1
           },
           {
@@ -172,7 +172,7 @@ export default [
               index: 2,
               head: false
             },
-            path: '2',
+            path: "2",
             component: MyPosts2
           },
           {
@@ -180,7 +180,7 @@ export default [
               index: 3,
               head: false
             },
-            path: '3',
+            path: "3",
             component: MyPosts3
           }
         ]
@@ -192,10 +192,10 @@ export default [
    * 我加入的圈子
    */
   {
-    path: '/group/joined',
+    path: "/group/joined",
     component: groupJoined,
     meta: {
-      title: '我的圈子',
+      title: "我的圈子",
       keepAlive: true,
       requiresAuth: true
     }
@@ -205,11 +205,11 @@ export default [
    * 搜索圈子
    */
   {
-    name: 'groupSearch',
-    path: '/group/search',
+    name: "groupSearch",
+    path: "/group/search",
     component: groupSearch,
     meta: {
-      title: '我的圈子',
+      title: "我的圈子",
       keepAlive: true,
       requiresAuth: true
     }
@@ -219,19 +219,19 @@ export default [
    * 创建圈子
    */
   {
-    path: '/group/add',
+    path: "/group/add",
     component: addGroup,
     meta: {
-      title: '创建圈子',
+      title: "创建圈子",
       keepAlive: true,
       requiresAuth: true
     },
     children: [
       {
-        path: 'category',
+        path: "category",
         component: chooseCategory,
         meta: {
-          title: '选择分类',
+          title: "选择分类",
           keepAlive: true
         }
       }

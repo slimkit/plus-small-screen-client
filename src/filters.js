@@ -1,5 +1,5 @@
-import timeago from 'timeago.js';
-import plueMessageBundle from 'plus-message-bundle';
+import timeago from "timeago.js";
+import plueMessageBundle from "plus-message-bundle";
 
 /**
  * ThinkSNS Plus 消息解析器，获取顶部消息.
@@ -33,20 +33,20 @@ export function plusMessageAnalyze(message, defaultMessage) {
  */
 
 export const time2txt = str => {
-  if (!str) return '';
+  if (!str) return "";
 
   // 兼容 IOS 保证传入数据格式 YYYY/MM/dd HH:mm:ss
-  let date = new Date(str.replace(/-/g, '/'));
+  let date = new Date(str.replace(/-/g, "/"));
 
   // 现在的时间-传入的时间 = 相差的时间（单位 = 毫秒）
   let time = new Date().getTime() - date.getTime();
 
   if (time < 0) {
-    return '';
+    return "";
   } else if (time / 3600000 < 24) {
-    return '今天';
+    return "今天";
   } else {
-    return date.getMonth() + 1 + '月' + date.getDate();
+    return date.getMonth() + 1 + "月" + date.getDate();
   }
 };
 
@@ -55,34 +55,34 @@ export const time2txt = str => {
  */
 export const UTC2localTime = UTCDateString => {
   if (!UTCDateString) {
-    return '-';
+    return "-";
   }
 
   function formatFunc(str) {
     // 格式化显示
-    return str > 9 ? str : '0' + str;
+    return str > 9 ? str : "0" + str;
   }
   var date2 = new Date(UTCDateString); // 这步是关键
   var year = date2.getFullYear();
   var mon = formatFunc(date2.getMonth() + 1);
   var day = formatFunc(date2.getDate());
   var hour = date2.getHours();
-  var noon = hour >= 12 ? 'PM' : 'AM';
+  var noon = hour >= 12 ? "PM" : "AM";
   hour = hour >= 12 ? hour - 12 : hour;
   hour = formatFunc(hour);
   var min = formatFunc(date2.getMinutes());
   var dateStr =
-    year + '-' + mon + '-' + day + ' ' + noon + ' ' + hour + ':' + min;
+    year + "-" + mon + "-" + day + " " + noon + " " + hour + ":" + min;
   return dateStr;
 };
 
 // 时差
 const timeOffset = new Date().getTimezoneOffset() * 60 * 1000;
 
-export const dateFormat = timeago(null, 'zh_CN');
+export const dateFormat = timeago(null, "zh_CN");
 export const time2tips = date => {
   return dateFormat.format(
-    new Date(date.replace(/-/g, '/')).getTime() - timeOffset
+    new Date(date.replace(/-/g, "/")).getTime() - timeOffset
   );
 };
 
@@ -93,12 +93,12 @@ export const time2tips = date => {
 export const formatNum = (a = 0) => {
   return (
     a > 0 &&
-      (a > 99999999 && (a = Math.floor(a / 1e8) + '亿'),
+      (a > 99999999 && (a = Math.floor(a / 1e8) + "亿"),
       a > 9999 &&
         (a =
           a > 99999999
-            ? Math.floor(a / 1e8) + '亿'
-            : Math.floor(a / 1e4) + '万')),
+            ? Math.floor(a / 1e8) + "亿"
+            : Math.floor(a / 1e4) + "万")),
     a
   );
   // if (typeof ~~num === 'number') {
@@ -119,5 +119,5 @@ export const formatNum = (a = 0) => {
  * @author Seven Du <shiweidu@outlook.com>
  */
 export function markdownText(markdown) {
-  return require('./util/markdown').syntaxTextAndImage(markdown).text;
+  return require("./util/markdown").syntaxTextAndImage(markdown).text;
 }

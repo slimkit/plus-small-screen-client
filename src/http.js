@@ -1,8 +1,8 @@
-import axios from 'axios';
-import localEvent from 'store';
-import router from './routers/';
-import Message from '@/plugins/message';
-import { plusMessageAnalyze } from '@/filters';
+import axios from "axios";
+import localEvent from "store";
+import router from "./routers/";
+import Message from "@/plugins/message";
+import { plusMessageAnalyze } from "@/filters";
 /**
  * 添加请求拦截器
  *     @author jsonleex <jsonlseex@163.com>
@@ -10,7 +10,7 @@ import { plusMessageAnalyze } from '@/filters';
 let TOKEN;
 axios.interceptors.request.use(
   config => {
-    TOKEN = (localEvent.get('CURRENTUSER') || {}).token;
+    TOKEN = (localEvent.get("CURRENTUSER") || {}).token;
 
     // if(config.method === 'post') {
     //     // JSON 转换为 FormData
@@ -25,7 +25,7 @@ axios.interceptors.request.use(
     return config;
   },
   error => {
-    console.error('错误的传参', 'fail');
+    console.error("错误的传参", "fail");
     return Promise.reject(error);
   }
 );
@@ -38,31 +38,32 @@ axios.interceptors.response.use(
   res => res,
   /* 错误处理 */
   error => {
+    const callback = () => {
+      router.push({
+        path: "/signin",
+        query: { redirect: router.currentRoute.fullPath }
+      });
+    };
+    const setTimeoutCallback = () => {
+      setTimeout(callback, 500);
+    };
+
     if (error.response) {
       const { status, data } = error.response;
       switch (status) {
         case 401:
-          localEvent.remove('CURRENTUSER');
-          setTimeout(() => {
-            router.push({
-              path: '/signin',
-              query: { redirect: router.currentRoute.fullPath }
-            });
-          }, 500);
-          const message401 = TOKEN ? '登录失效, 请重新登录' : '您还没有登录';
-          Message.error(message401);
+          localEvent.remove("CURRENTUSER");
+          setTimeoutCallback();
+          Message.error(TOKEN ? "登录失效, 请重新登录" : "您还没有登录");
           break;
         default:
-          const message = plusMessageAnalyze(data);
-          if (message) {
-            Message.error(message);
-          }
+          Message.error(plusMessageAnalyze(data));
           break;
       }
     } else if (error.request) {
       console.log(error.request);
     } else {
-      console.log('Error', error.message);
+      console.log("Error", error.message);
     }
     return false;
   }
@@ -77,6 +78,6 @@ if (!basename) {
 }
 
 // 默认 v2 接口
-axios.defaults.baseURL = basename.content || '/api/v2';
+axios.defaults.baseURL = basename.content || "/api/v2";
 
 export default axios;

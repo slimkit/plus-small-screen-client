@@ -3,7 +3,7 @@
   :id='`m-pics${id}`'
   :class="['m-pics',`m-pics-${pics.length}`]">
     <ul class="m-pics-list">
-      <li :key='`pics-${id}-${index}` 'v-for='(img, index) in pics'>
+      <li v-for='(img, index) in pics' :key="`pics-${id}-${index}`">
         <!-- :style='{"--w": img.w, "--h": img.h}' -->
         <div
         :class="['m-pics-box',{ 'long': isLongImg(img) }]"
@@ -18,9 +18,9 @@
   </div>
 </template>
 <script>
-import bus from '@/bus.js';
+import bus from "@/bus.js";
 export default {
-  name: 'm-pics',
+  name: "m-pics",
   props: {
     id: {
       type: Number,
@@ -33,18 +33,18 @@ export default {
   methods: {
     handleClick($event, index) {
       // const clickEl = $event.target;
-      const els = this.$el.querySelectorAll('.m-pic');
+      const els = this.$el.querySelectorAll(".m-pic");
       const images = this.pics.map((img, index) => {
         return {
           ...img,
           el: els[index]
         };
       });
-      bus.$emit('mvGallery', index, images);
+      bus.$emit("mvGallery", index, images);
     },
     isLongImg(img) {
-      const [w, h] = img.size.split('x');
-      img.title = '查看原图';
+      const [w, h] = img.size.split("x");
+      img.title = "查看原图";
       img.src = `/api/v2/files/${img.file}`;
       img.w = w;
       img.h = h;
@@ -55,8 +55,8 @@ export default {
       w = w > 518 ? 518 : w;
       h = h > 960 ? 960 : h;
       return {
-        width: w + 'px',
-        paddingBottom: h / w * 100 + '%'
+        width: w + "px",
+        paddingBottom: h / w * 100 + "%"
       };
     }
   }
@@ -101,7 +101,7 @@ export default {
         position: absolute;
         bottom: 10px;
         right: 5px;
-        content: '长图';
+        content: "长图";
         background-color: #c8a06c;
         text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
         background-image: -webkit-linear-gradient(
@@ -143,8 +143,8 @@ export default {
       width: 100%;
     }
     .long {
-      width: calc(~'var(--w) * 1px');
-      padding-bottom: calc(~'var(--h) / var(--w) * 100%');
+      width: calc(~"var(--w) * 1px");
+      padding-bottom: calc(~"var(--h) / var(--w) * 100%");
       max-width: 100%;
     }
   }

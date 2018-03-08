@@ -23,11 +23,11 @@
   </div>
 </template>
 <script>
-import HeadTop from '@/components/HeadTop'
-import ChooseGroup from './children/chooseGroup'
-const prefixCls = 'post--group-feed'
+import HeadTop from "@/components/HeadTop";
+import ChooseGroup from "./children/chooseGroup";
+const prefixCls = "post--group-feed";
 export default {
-  name: 'postGroupFeed',
+  name: "postGroupFeed",
   components: {
     HeadTop,
     ChooseGroup
@@ -35,35 +35,32 @@ export default {
   data() {
     return {
       prefixCls,
-      title: '',
-      body: '',
+      title: "",
+      body: "",
       showChoose: false,
       selectGroup: {}
-    }
-  },
-  watch: {
-    body(val) {}
+    };
   },
   computed: {
     chooseTips() {
-      return this.selectGroup.name || '选择圈子'
+      return this.selectGroup.name || "选择圈子";
     },
     groupID() {
-      return this.selectGroup.id || this.$route.params.groupID
+      return this.selectGroup.id || this.$route.params.groupID;
     },
     disabled() {
-      return !(this.title.length > 0 && this.body.length > 0)
+      return !(this.title.length > 0 && this.body.length > 0);
     }
   },
   methods: {
     showChoosePage() {
-      this.showChoose = true
+      this.showChoose = true;
     },
     closeChoosePage() {
-      this.showChoose = false
+      this.showChoose = false;
     },
     goBack() {
-      this.$router.go(-1)
+      this.$router.go(-1);
     },
     postFeed() {
       if (this.groupID) {
@@ -72,23 +69,22 @@ export default {
           body: this.body,
           summary: this.body,
           feed_from: 2
-        }
+        };
         // /groups/:group/posts
-        this.$http.post(`/plus-group/groups/${this.groupID}/posts`, {
-          ...params
-        }).then(({ data: { post } }) => {
-          if (post.id) {
-            console.log('发布成功')
-            this.$router.push(`/group/${this.groupID}/feed/${post.id}`)
-          }
-        })
-      } else {
-
+        this.$http
+          .post(`/plus-group/groups/${this.groupID}/posts`, {
+            ...params
+          })
+          .then(({ data: { post } }) => {
+            if (post.id) {
+              console.log("发布成功");
+              this.$router.push(`/group/${this.groupID}/feed/${post.id}`);
+            }
+          });
       }
     }
   }
-}
-
+};
 </script>
 <style lang='less'>
 @post-group-feed-prefix: post--group-feed;
@@ -101,7 +97,7 @@ export default {
     background-color: #fff;
     color: #59b6d7;
     &[disabled] {
-      color: #ccc
+      color: #ccc;
     }
   }
   &-select {
@@ -114,12 +110,12 @@ export default {
     .v-icon {
       width: 24px;
       height: 24px;
-      color: #ccc
+      color: #ccc;
     }
   }
   &-content {
     padding: 0 30px;
-    height: calc(~'100vh -' 90px);
+    height: calc(~"100vh -" 90px);
     background-color: #fff;
   }
 
@@ -138,7 +134,7 @@ export default {
   }
 
   &-body {
-    max-height: calc(~'100% -' 100px);
+    max-height: calc(~"100% -" 100px);
     overflow-y: scroll;
     textarea {
       font-size: 30px;
@@ -150,5 +146,4 @@ export default {
     }
   }
 }
-
 </style>

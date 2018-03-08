@@ -7,7 +7,7 @@
 </template>
 <script>
 export default {
-  name: 'vIcon',
+  name: "vIcon",
   props: {
     type: {
       type: [String],
@@ -24,27 +24,27 @@ export default {
     }
   },
   computed: {
-    wrapStyles () {
+    wrapStyles() {
       return {
         width: `${this.width}rem`,
         height: `${this.height}rem`
-      }
+      };
     }
   }
-}
+};
 </script>
 <style lang='less'>
 .v-icon {
-    display: inline-flex;
-    width: 48px;
-    height: 48px;
-    justify-content: center;
-    align-items: center;
-    vertical-align: middle;
-    svg {
-        width: 100%;
-        height: 100%;
-        fill: currentColor;
-    }
+  display: inline-flex;
+  width: 48px;
+  height: 48px;
+  justify-content: center;
+  align-items: center;
+  vertical-align: middle;
+  svg {
+    width: 100%;
+    height: 100%;
+    fill: currentColor;
+  }
 }
 </style>

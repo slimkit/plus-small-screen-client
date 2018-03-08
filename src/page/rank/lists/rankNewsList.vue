@@ -24,89 +24,92 @@
 </template>
 
 <script>
-  import HeadTop from '../../../components/HeadTop'
-  const prefixCls = 'rankItem'
-  const api = '/news/ranks'
-  const config = {
-    week: {
-      vuex: 'rankNewsWeek',
-      title: '本周',
-      query: 'week'
-    },
-    today: {
-      vuex: 'rankNewsToday',
-      'title': '今日',
-      query: 'day'
-    },
-    month: {
-      vuex: 'rankNewsMonth',
-      title: '本月',
-      query: 'month'
-    }
+import HeadTop from "../../../components/HeadTop";
+const prefixCls = "rankItem";
+const api = "/news/ranks";
+const config = {
+  week: {
+    vuex: "rankNewsWeek",
+    title: "本周",
+    query: "week"
+  },
+  today: {
+    vuex: "rankNewsToday",
+    title: "今日",
+    query: "day"
+  },
+  month: {
+    vuex: "rankNewsMonth",
+    title: "本月",
+    query: "month"
   }
+};
 
-  export default {
-    components: {
-      HeadTop
-    },
-    name: 'newsList',
-    props: {
+export default {
+  components: {
+    HeadTop
+  },
+  name: "newsList",
+  props: {},
+  data() {
+    return {
+      prefixCls,
+      loading: false,
+      title: "", // 标题
+      vuex: "", // vuex主键
+      query: "" // api查询query
+    };
+  },
 
+  computed: {
+    users() {
+      return this.$store.getters.getUsersByType(this.vuex);
+    }
+  },
+
+  methods: {
+    isFollow(id) {
+      let user = this.$store.getters.getUserById(id);
+      const { follower = false, following = false } = user;
+      return follower && following
+        ? "eachFollow"
+        : follower ? "follow" : "unFollow";
     },
-    data() {
-      return {
-        prefixCls,
-        loading: false,
-        title: '', // 标题
-        vuex: '', // vuex主键
-        query: '' // api查询query
+    cancel() {
+      this.to("/rank/news");
+    },
+    to(path) {
+      path = typeof path === "string" ? { path } : path;
+      if (path) {
+        this.$router.push(path);
       }
     },
-
-    computed: {
-      users () {
-        return this.$store.getters.getUsersByType(this.vuex);
-      }
-    },
-
-    methods: {
-      isFollow (id) {
-        let user = this.$store.getters.getUserById(id)
-        const { follower = false, following = false } = user
-        return follower && following
-          ? 'eachFollow' : (follower ? 'follow' : 'unFollow')
-      },
-      cancel () {
-        this.to('/rank/news')
-      },
-      to(path) {
-        path = typeof path === 'string' ? { path } : path
-        if (path) {
-          this.$router.push(path)
-        }
-      },
-      followUser (id) {
-        if (this.loading) return
-        this.loading = true
-        let user = this.$store.getters.getUserById(id)
-        this.$store.dispatch('FOLLOW_USER', {
+    followUser(id) {
+      if (this.loading) return;
+      this.loading = true;
+      let user = this.$store.getters.getUserById(id);
+      this.$store
+        .dispatch("FOLLOW_USER", {
           id,
           status: this.isFollow(id)
-        }).then(({ status, follower }) => {
-          user.follower = follower
-          this.$store.commit('SAVE_USER', user)
-          this.loading = false
-        }).catch((err) => {
-          const { response: { data = { message: '操作失败' } } = {} } = err
-
-          this.loading = false
-          this.$Message.error(data)
-          this.loading = false
         })
-      },
+        .then(({ follower }) => {
+          user.follower = follower;
+          this.$store.commit("SAVE_USER", user);
+          this.loading = false;
+        })
+        .catch(err => {
+          const { response: { data = { message: "操作失败" } } = {} } = err;
 
-      getUsers () {
-        this.$http.get(
+          this.loading = false;
+          this.$Message.error(data);
+          this.loading = false;
+        });
+    },
+
+    getUsers() {
+      this.$http
+        .get(
           api,
           {
             params: {
@@ -118,23 +121,22 @@
           }
         )
         .then(({ data }) => {
-          this.$store.commit('SAVE_RANK_DATA', { name: this.vuex, data })
-        })
-      }
-    },
+          this.$store.commit("SAVE_RANK_DATA", { name: this.vuex, data });
+        });
+    }
+  },
 
-    created () {
-      let time = this.$route.params.time || 'today'
-      this.title = config[time].title
-      this.vuex = config[time].vuex
-      this.query = config[time].query;
-      if (this.users.length === 0) {
-        this.getUsers();
-      }
+  created() {
+    let time = this.$route.params.time || "today";
+    this.title = config[time].title;
+    this.vuex = config[time].vuex;
+    this.query = config[time].query;
+    if (this.users.length === 0) {
+      this.getUsers();
     }
   }
+};
 </script>
 
 <style lang="less" src="../style.less">
-  
 </style>

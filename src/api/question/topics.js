@@ -1,4 +1,4 @@
-import request from '../../http';
+import request from "../../http";
 
 /**
  * The topics API query function.
@@ -8,7 +8,7 @@ import request from '../../http';
  * @author Seven Du <shiweidu@outlook.com>
  */
 export function query(query = {}) {
-  return request.get('/question-topics', {
+  return request.get("/question-topics", {
     params: query,
     validateStatus: status => status === 200
   });
@@ -42,14 +42,14 @@ export function search(name = null, offset = 0, limit = 15, follow = true) {
 }
 
 export function userQuery(query = {}) {
-  return request.get('/user/question-topics', {
+  return request.get("/user/question-topics", {
     params: query,
     validateStatus: status => status === 200
   });
 }
 
 export function followTopics(after = 0, limit = 15) {
-  return userQuery({ after, limit, type: 'follow' });
+  return userQuery({ after, limit, type: "follow" });
 }
 
 /**
@@ -60,9 +60,13 @@ export function followTopics(after = 0, limit = 15) {
  * @author Seven Du <shiweidu@outlook.com>
  */
 export function follow(id) {
-  return request.put(`/user/question-topics/${id}`, {}, {
-    validateStatus: status => status === 201
-  });
+  return request.put(
+    `/user/question-topics/${id}`,
+    {},
+    {
+      validateStatus: status => status === 201
+    }
+  );
 }
 
 /**

@@ -7,7 +7,7 @@
           ref='loadmore'
           :class="`${prefixCls}-loadmore`"
         >
-          <div v-for="audit in audits" :class="`${prefixCls}-item`">
+          <div v-for="audit in audits" :class="`${prefixCls}-item`" v-bind:key="audit.id">
             <div :class="`${prefixCls}-item-top`">
               <v-avatar :sex="audit.user.sex" :src="audit.user.avatar" />
               <section class="userInfo">
@@ -38,15 +38,15 @@
 </template>
 
 <script>
-import _ from 'lodash';
-import { mapState } from 'vuex';
-import newsCommentAuditStatus from '../../components/newsCommentAuditStatus';
-const prefixCls = 'msgList';
+import _ from "lodash";
+import { mapState } from "vuex";
+import newsCommentAuditStatus from "../../components/newsCommentAuditStatus";
+const prefixCls = "msgList";
 export default {
   components: {
     newsCommentAuditStatus
   },
-  name: 'newsCommentAudit',
+  name: "newsCommentAudit",
   data: () => ({
     prefixCls
   }),
@@ -56,13 +56,13 @@ export default {
     },
     onRefresh() {
       this.$http
-        .get('/news/comments/pinneds', {
+        .get("/news/comments/pinneds", {
           validateStatus: s => s === 200
         })
         .then(({ data }) => {
           if (data.length > 0) {
-            this.$store.commit('SAVE_NEWS_COMMENT_AUDITS', {
-              type: 'new',
+            this.$store.commit("SAVE_NEWS_COMMENT_AUDITS", {
+              type: "new",
               data
             });
           }
@@ -76,26 +76,26 @@ export default {
         return false;
       }
       this.$http
-      .get(
-        '/news/comments/pinneds',
-        {
-          params: {
-            after: id
+        .get(
+          "/news/comments/pinneds",
+          {
+            params: {
+              after: id
+            }
+          },
+          {
+            validateStatus: s => s === 200
           }
-        },
-        {
-          validateStatus: s => s === 200
-        }
-      )
-      .then(({ data }) => {
-        this.$refs.loadmore.bottomEnd(data.length < 15);
-        if (data.length > 0) {
-          this.$store.commit('SAVE_NEWS_COMMENT_AUDITS', {
-            type: 'more',
-            data
-          });
-        }
-      });
+        )
+        .then(({ data }) => {
+          this.$refs.loadmore.bottomEnd(data.length < 15);
+          if (data.length > 0) {
+            this.$store.commit("SAVE_NEWS_COMMENT_AUDITS", {
+              type: "more",
+              data
+            });
+          }
+        });
     }
   },
   computed: {
@@ -107,5 +107,4 @@ export default {
 };
 </script>
 <style lang="less" src="../../style.less">
-
 </style>

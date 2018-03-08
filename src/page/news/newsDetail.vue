@@ -17,6 +17,7 @@
           <li
           v-for='(like,index) in likes.slice(0,5)'
           v-if='like.id'
+          :key="index"
           :style='{zIndex: 5-index, position: "relative"}'
           ><v-avatar :sex='like.user.sex' :src='like.user.avatar' size='small'></v-avatar></li>
         </ul>
@@ -64,17 +65,17 @@
   </div>
 </template>
 <script>
-import HeadRoom from 'headroom.js';
-import MarkdownIt from 'markdown-it';
-import newsItem from './components/newsItem.vue';
-import plusImageSyntax from 'markdown-it-plus-image';
-import newsToolBar from './components/newsToolBar.vue';
-import commentItem from './components/commentItem.vue';
+import HeadRoom from "headroom.js";
+import MarkdownIt from "markdown-it";
+import newsItem from "./components/newsItem.vue";
+import plusImageSyntax from "markdown-it-plus-image";
+import newsToolBar from "./components/newsToolBar.vue";
+import commentItem from "./components/commentItem.vue";
 
-const basename = '/api/v2/files/';
+const basename = "/api/v2/files/";
 const md = new MarkdownIt().use(plusImageSyntax, basename);
 export default {
-  name: 'news-detail',
+  name: "news-detail",
   components: {
     newsItem,
     newsToolBar,
@@ -111,10 +112,10 @@ export default {
       }
     },
     time() {
-      return this.news.created_at || '';
+      return this.news.created_at || "";
     },
     cate() {
-      const { category: { name = '未分类' } = {} } = this.news;
+      const { category: { name = "未分类" } = {} } = this.news;
       return name;
     },
     digg_count() {
@@ -124,7 +125,7 @@ export default {
       return this.news.created_at;
     },
     content() {
-      return md.render(this.news.content || '');
+      return md.render(this.news.content || "");
     },
     newsID() {
       return ~~this.$route.params.newsID;
@@ -157,7 +158,7 @@ export default {
         });
     },
     handleLike() {
-      const method = this.liked ? 'delete' : 'post';
+      const method = this.liked ? "delete" : "post";
       this.$http({
         method,
         url: `/news/${this.preID}/likes`,
@@ -180,7 +181,7 @@ export default {
             })
             .then(
               ({
-                data: { comment = {}, message = { message: '评论成功' } } = {}
+                data: { comment = {}, message = { message: "评论成功" } } = {}
               }) => {
                 if (comment && comment.id) {
                   this.$Modal.remove();
@@ -200,18 +201,18 @@ export default {
       tolerance: 5,
       offset: 50,
       classes: {
-        initial: 'headroom-head',
-        pinned: 'headroom--headShow',
-        unpinned: 'headroom--headHide'
+        initial: "headroom-head",
+        pinned: "headroom--headShow",
+        unpinned: "headroom--headHide"
       }
     });
     this.footroom = new HeadRoom(this.$refs.foot.$el, {
       tolerance: 5,
       offset: 50,
       classes: {
-        initial: 'headroom-foot',
-        pinned: 'headroom--footShow',
-        unpinned: 'headroom--footHide'
+        initial: "headroom-foot",
+        pinned: "headroom--footShow",
+        unpinned: "headroom--footHide"
       }
     });
     this.headroom.init();
@@ -220,5 +221,4 @@ export default {
 };
 </script>
 <style lang="less" src='./style/newsDetail.less'>
-
 </style>

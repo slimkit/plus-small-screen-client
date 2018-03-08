@@ -18,10 +18,10 @@
   </div>
 </template>
 <script>
-import vTab from './tab.vue';
-import vTabs from './tabs.vue';
+import vTab from "./tab.vue";
+import vTabs from "./tabs.vue";
 export default {
-  name: 'nav-tabs',
+  name: "nav-tabs",
   props: {
     fixed: null,
     id: {
@@ -40,7 +40,7 @@ export default {
   data() {
     return {
       curTab: this.value,
-      transitionName: 'router-fade-in-left'
+      transitionName: "router-fade-in-left"
     };
   },
   watch: {
@@ -49,9 +49,9 @@ export default {
     },
     $route(to, from) {
       if (to.meta.index < from.meta.index) {
-        this.transitionName = 'router-fade-in-left';
+        this.transitionName = "router-fade-in-left";
       } else {
-        this.transitionName = 'router-fade-in-right';
+        this.transitionName = "router-fade-in-right";
       }
     }
   },
@@ -61,12 +61,11 @@ export default {
       this.$router.push({
         path: val
       });
-      this.$emit('input', val);
+      this.$emit("input", val);
     }
   }
 };
 </script>
 
 <style src='./tabs.less' lang='less'>
-
 </style>

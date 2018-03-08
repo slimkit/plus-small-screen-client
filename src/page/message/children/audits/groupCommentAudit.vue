@@ -7,7 +7,7 @@
         ref='loadmore'
         :class="`${prefixCls}-loadmore`"
       >
-        <div v-for="audit in audits" :class="`${prefixCls}-item`">
+        <div v-for="audit in audits" :class="`${prefixCls}-item`" :key="audit.id">
           <div :class="`${prefixCls}-item-top`">
             <v-avatar :sex="audit.user.sex" :src="audit.user.avatar" />
             <section class="userInfo">
@@ -28,15 +28,15 @@
 </template>
 
 <script>
-import _ from 'lodash';
-import { mapState } from 'vuex';
-import groupPostCommentAuditStatus from '../../components/groupPostCommentAuditStatus';
-const prefixCls = 'msgList';
+import _ from "lodash";
+import { mapState } from "vuex";
+import groupPostCommentAuditStatus from "../../components/groupPostCommentAuditStatus";
+const prefixCls = "msgList";
 export default {
   components: {
     groupPostCommentAuditStatus
   },
-  name: 'postCommentAudit',
+  name: "postCommentAudit",
   data: () => ({
     prefixCls
   }),
@@ -46,13 +46,13 @@ export default {
     },
     onRefresh() {
       this.$http
-        .get('/plus-group/pinned/comments', {
+        .get("/plus-group/pinned/comments", {
           validateStatus: s => s === 200
         })
         .then(({ data }) => {
           if (data.length > 0) {
-            this.$store.commit('SAVE_POST_COMMENT_AUDITS', {
-              type: 'new',
+            this.$store.commit("SAVE_POST_COMMENT_AUDITS", {
+              type: "new",
               data
             });
           }
@@ -67,14 +67,14 @@ export default {
       }
 
       this.$http
-        .get('/plus-group/pinned/comments', {
+        .get("/plus-group/pinned/comments", {
           validateStatus: s => s === 200
         })
         .then(({ data }) => {
           this.$refs.loadmore.bottomEnd(data.length < 15);
           if (data.length > 0) {
-            this.$store.commit('SAVE_POST_COMMENT_AUDITS', {
-              type: 'more',
+            this.$store.commit("SAVE_POST_COMMENT_AUDITS", {
+              type: "more",
               data
             });
           }
@@ -90,5 +90,4 @@ export default {
 };
 </script>
 <style lang="less" src="../../style.less">
-
 </style>

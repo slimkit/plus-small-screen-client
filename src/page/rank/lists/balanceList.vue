@@ -23,70 +23,71 @@
 </template>
 
 <script>
-  import HeadTop from '../../../components/HeadTop'
-  const prefixCls = 'rankItem'
-  export default {
-    components: {
-      HeadTop
-    },
-    name: 'balanceList',
-    props: {
+import HeadTop from "../../../components/HeadTop";
+const prefixCls = "rankItem";
+export default {
+  components: {
+    HeadTop
+  },
+  name: "balanceList",
+  props: {},
+  data() {
+    return {
+      prefixCls,
+      loading: false
+    };
+  },
 
+  computed: {
+    users() {
+      return this.$store.getters.getUsersByType("rankBalance");
+    }
+  },
+
+  methods: {
+    isFollow(id) {
+      let user = this.$store.getters.getUserById(id);
+      const { follower = false, following = false } = user;
+      return follower && following
+        ? "eachFollow"
+        : follower ? "follow" : "unFollow";
     },
-    data() {
-      return {
-        prefixCls,
-        loading: false
+    cancel() {
+      this.to("/rank/users");
+    },
+    to(path) {
+      path = typeof path === "string" ? { path } : path;
+      if (path) {
+        this.$router.push(path);
       }
     },
-
-    computed: {
-      users () {
-        return this.$store.getters.getUsersByType('rankBalance');
-      }
-    },
-
-    methods: {
-      isFollow (id) {
-        let user = this.$store.getters.getUserById(id)
-        const { follower = false, following = false } = user
-        return follower && following
-          ? 'eachFollow' : (follower ? 'follow' : 'unFollow')
-      },
-      cancel () {
-        this.to('/rank/users')
-      },
-      to(path) {
-        path = typeof path === 'string' ? { path } : path
-        if (path) {
-          this.$router.push(path)
-        }
-      },
-      followUser (id) {
-        if (this.loading) return
-        this.loading = true
-        let user = this.$store.getters.getUserById(id)
-        this.$store.dispatch('FOLLOW_USER', {
+    followUser(id) {
+      if (this.loading) return;
+      this.loading = true;
+      let user = this.$store.getters.getUserById(id);
+      this.$store
+        .dispatch("FOLLOW_USER", {
           id,
           status: this.isFollow(id)
-        }).then(({ status, follower }) => {
-          user.follower = follower
-          this.$store.commit('SAVE_USER', user)
-          this.loading = false
-        }).catch((err) => {
-          const { response: { data = { message: '操作失败' } } = {} } = err
-
-          this.loading = false
-          this.$Message.error(data)
-          this.loading = false
         })
-      }
-    },
+        .then(({ follower }) => {
+          user.follower = follower;
+          this.$store.commit("SAVE_USER", user);
+          this.loading = false;
+        })
+        .catch(err => {
+          const { response: { data = { message: "操作失败" } } = {} } = err;
 
-    created () {}
-  }
+          this.loading = false;
+          this.$Message.error(data);
+          this.loading = false;
+        });
+    }
+  },
+
+  created() {}
+};
 </script>
 
 <style lang="less" src="../style.less">
-  
 </style>

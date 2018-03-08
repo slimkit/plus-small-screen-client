@@ -24,9 +24,9 @@
   </div>
 </template>
 <script>
-const prefixCls = 'group-list-item';
+const prefixCls = "group-list-item";
 export default {
-  name: 'groupListItem',
+  name: "groupListItem",
   props: {
     group: {
       required: true
@@ -53,21 +53,21 @@ export default {
     roles() {
       if (!this.role) return;
       const roles = {
-        label: '',
-        cls: ''
+        label: "",
+        cls: ""
       };
       const { joined } = this.group;
-      const { role = '普通成员' } = joined || {};
+      const { role = "普通成员" } = joined || {};
 
       switch (role) {
-        case 'member':
-          roles.label = '普通成员';
+        case "member":
+          roles.label = "普通成员";
           break;
-        case 'administrator':
-          roles.label = '管理员';
+        case "administrator":
+          roles.label = "管理员";
           break;
-        case 'founder':
-          roles.label = '圈主';
+        case "founder":
+          roles.label = "圈主";
           break;
       }
       roles.cls = role;
@@ -82,11 +82,11 @@ export default {
         this.$router.push({ path });
       }
     },
-    beforeJoin(group) {
+    beforeJoin() {
       // PUT /groups/:group
       // # todo
       const { mode, money } = this.group;
-      if (mode === 'paid') {
+      if (mode === "paid") {
         const price = (~~money).toFixed(2);
         this.$Modal.pay({
           price,
@@ -113,10 +113,10 @@ export default {
     },
 
     beforeToDetail() {
-      if (this.group.mode === 'public' || this.group.joined) {
+      if (this.group.mode === "public" || this.group.joined) {
         this.to(`/group/${this.group.id}`);
       } else {
-        this.$Message.error('需要先加入圈子, 才能查看圈子信息哦~');
+        this.$Message.error("需要先加入圈子, 才能查看圈子信息哦~");
       }
     }
   }
@@ -173,7 +173,7 @@ export default {
     font-size: 32px;
     color: #333;
     h3 {
-      max-width: calc(~'100% - ' 100px);
+      max-width: calc(~"100% - " 100px);
       margin: 0;
       padding: 0;
       font-weight: 400;

@@ -138,8 +138,8 @@
 </template>
 <script>
 export default {
-  name: 'upgrade'
-}
+  name: "upgrade"
+};
 </script>
 <style>
 .upgrade {
@@ -148,7 +148,7 @@ export default {
   align-items: center;
   flex-direction: column;
   font-size: 24px;
-  height: 100%
+  height: 100%;
 }
 
 .upgrade p {
@@ -194,7 +194,8 @@ export default {
   height: 84px;
   border-radius: 50%;
   border: 10px solid #b5b7ba;
-  box-shadow: inset 0 0 15px 5px rgba(0, 0, 0, 0.3), 0 0 5px 5px rgba(0, 0, 0, 0.5);
+  box-shadow: inset 0 0 15px 5px rgba(0, 0, 0, 0.3),
+    0 0 5px 5px rgba(0, 0, 0, 0.5);
   position: absolute;
   top: 50%;
   left: 50%;
@@ -458,7 +459,8 @@ export default {
   height: 138px;
   border-radius: 50%;
   border: 8px solid #c3c4c7;
-  box-shadow: inset 0 0 15px 5px rgba(0, 0, 0, 0.3), 0 0 20px 0px rgba(0, 0, 0, 0.5);
+  box-shadow: inset 0 0 15px 5px rgba(0, 0, 0, 0.3),
+    0 0 20px 0px rgba(0, 0, 0, 0.5);
   position: absolute;
   top: 50%;
   left: 50%;
@@ -733,14 +735,16 @@ export default {
   height: 67px;
   width: 8px;
   background: #c3c4c7;
-  box-shadow: 5px 0 3px -3px rgba(0, 0, 0, 0.5), -5px 0 3px -3px rgba(0, 0, 0, 0.5);
+  box-shadow: 5px 0 3px -3px rgba(0, 0, 0, 0.5),
+    -5px 0 3px -3px rgba(0, 0, 0, 0.5);
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
 }
 
-.stick:before, .stick:after {
+.stick:before,
+.stick:after {
   content: "";
   display: block;
   position: absolute;

@@ -125,16 +125,16 @@
 </template>
 
 <script>
-import { show, watch, unwatch } from '../../api/question/questions';
-import { listByDefault, listByTime } from '../../api/question/answer';
-import { render } from '../../util/markdown';
-import QuestionAnswersItem from '../modules/question/QuestionAnswersItem';
+import { show, watch, unwatch } from "../../api/question/questions";
+import { listByDefault, listByTime } from "../../api/question/answer";
+import { render } from "../../util/markdown";
+import QuestionAnswersItem from "../modules/question/QuestionAnswersItem";
 /**
  * The page name.
  *
  * @type {String}
  */
-const name = 'page-question';
+const name = "page-question";
 
 export default {
   /**
@@ -200,7 +200,7 @@ export default {
       return topics;
     },
     htmlBody() {
-      const { body = '' } = this.question;
+      const { body = "" } = this.question;
 
       return render(body);
     },
@@ -241,27 +241,31 @@ export default {
       return `${name}-${className}`;
     },
     fetch(cb = null) {
-      show(this.$route.params.id).then(({ data }) => {
-        this.question = data;
-        if (cb instanceof Function) {
-          cb();
-        }
-      }).catch(({ response: { data } = {} }) => {
-        this.loadContainer.topEnd(false);
-        this.loadContainer.bottomEnd(true);
-        this.$Message.error(data);
-      });
+      show(this.$route.params.id)
+        .then(({ data }) => {
+          this.question = data;
+          if (cb instanceof Function) {
+            cb();
+          }
+        })
+        .catch(({ response: { data } = {} }) => {
+          this.loadContainer.topEnd(false);
+          this.loadContainer.bottomEnd(true);
+          this.$Message.error(data);
+        });
     },
     refreshAnswer() {
-      this.answerRequestMethod(this.$route.params.id).then(({ data }) => {
-        this.loadContainer.topEnd(false);
-        this.loadContainer.bottomEnd(data.length < 15);
-        this.answers = data;
-      }).catch(({ response: { data } = {} }) => {
-        this.loadContainer.topEnd(false);
-        this.loadContainer.bottomEnd(true);
-        this.$Message.error(data);
-      });
+      this.answerRequestMethod(this.$route.params.id)
+        .then(({ data }) => {
+          this.loadContainer.topEnd(false);
+          this.loadContainer.bottomEnd(data.length < 15);
+          this.answers = data;
+        })
+        .catch(({ response: { data } = {} }) => {
+          this.loadContainer.topEnd(false);
+          this.loadContainer.bottomEnd(true);
+          this.$Message.error(data);
+        });
     },
     handleRefreshAnswers() {
       this.fetch(this.refreshAnswer);
@@ -270,35 +274,38 @@ export default {
       this.answersTimeOrder = !this.answersTimeOrder;
     },
     handleWatch() {
-      watch(this.$route.params.id).then(() => {
-        this.question.watched = true;
-        this.question.watchers_count += 1;
-      }).catch(({ response: { data } = {} }) => {
-        this.$Message.error(data);
-      });
+      watch(this.$route.params.id)
+        .then(() => {
+          this.question.watched = true;
+          this.question.watchers_count += 1;
+        })
+        .catch(({ response: { data } = {} }) => {
+          this.$Message.error(data);
+        });
     },
     handleUnwatch() {
-      unwatch(this.$route.params.id).then(() => {
-        this.question.watched = false;
-        this.question.watchers_count -= 1;
-      }).catch(({ response: { data } = {} }) => {
-        this.$Message.error(data);
-      });
+      unwatch(this.$route.params.id)
+        .then(() => {
+          this.question.watched = false;
+          this.question.watchers_count -= 1;
+        })
+        .catch(({ response: { data } = {} }) => {
+          this.$Message.error(data);
+        });
     },
     handleLoadMoreAnswers() {
       if (!this.answers.length) {
         return;
       }
-      this.answerRequestMethod(
-        this.$route.params.id,
-        this.answers.length
-      ).then(({ data }) => {
-        this.loadContainer.bottomEnd(data.length < 15);
-        this.answers = [ ...this.answers, ...data ];
-      }).catch(({ response: { data } = {} }) => {
-        this.loadContainer.bottomEnd(true);
-        this.$Message.error(data);
-      });
+      this.answerRequestMethod(this.$route.params.id, this.answers.length)
+        .then(({ data }) => {
+          this.loadContainer.bottomEnd(data.length < 15);
+          this.answers = [...this.answers, ...data];
+        })
+        .catch(({ response: { data } = {} }) => {
+          this.loadContainer.bottomEnd(true);
+          this.$Message.error(data);
+        });
     }
   }
 };

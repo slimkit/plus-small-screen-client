@@ -7,7 +7,7 @@
           ref='loadmore'
           :class="`${prefixCls}-loadmore`"
         >
-          <div v-for="audit in audits" :class="`${prefixCls}-item`">
+          <div v-for="audit in audits" :class="`${prefixCls}-item`" :key="audit.id">
             <div :class="`${prefixCls}-item-top`">
               <v-avatar :sex="audit.user.sex" :src="audit.user.avatar" />
               <section class="userInfo">
@@ -33,16 +33,16 @@
 </template>
 
 <script>
-import _ from 'lodash';
-import { mapState } from 'vuex';
-import feedCommentAuditStatus from '../../components/feedCommentAuditStatus';
+import _ from "lodash";
+import { mapState } from "vuex";
+import feedCommentAuditStatus from "../../components/feedCommentAuditStatus";
 
-const prefixCls = 'msgList';
+const prefixCls = "msgList";
 export default {
   components: {
     feedCommentAuditStatus
   },
-  name: 'feedCommentAudit',
+  name: "feedCommentAudit",
   data: () => ({
     prefixCls,
     currentItem: {}
@@ -53,13 +53,13 @@ export default {
     },
     onRefresh() {
       this.$http
-        .get('/user/feed-comment-pinneds', {
+        .get("/user/feed-comment-pinneds", {
           validateStatus: s => s === 200
         })
         .then(({ data }) => {
           if (data.length > 0) {
-            this.$store.commit('SAVE_FEED_COMMENT_AUDITS', {
-              type: 'new',
+            this.$store.commit("SAVE_FEED_COMMENT_AUDITS", {
+              type: "new",
               data
             });
           }
@@ -74,14 +74,14 @@ export default {
       }
 
       this.$http
-        .get('/user/feed-comment-pinneds', {
+        .get("/user/feed-comment-pinneds", {
           validateStatus: s => s === 200
         })
         .then(({ data }) => {
           this.$refs.loadmore.bottomEnd(data.length < 15);
           if (data.length > 0) {
-            this.$store.commit('SAVE_FEED_COMMENT_AUDITS', {
-              type: 'more',
+            this.$store.commit("SAVE_FEED_COMMENT_AUDITS", {
+              type: "more",
               data
             });
           }
@@ -97,5 +97,4 @@ export default {
 };
 </script>
 <style lang="less" src="../../style.less">
-
 </style>

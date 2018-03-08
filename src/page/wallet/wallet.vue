@@ -32,14 +32,14 @@
 
 <script>
 export default {
-  name: 'wallet',
+  name: "wallet",
   data() {
     return {};
   },
   computed: {
     goldName() {
       const {
-        site: { gold_name: { name = '金币' } = {} } = {}
+        site: { gold_name: { name = "金币" } = {} } = {}
       } = this.$store.state.CONFIG;
       return name;
     },
@@ -58,5 +58,4 @@ export default {
 </script>
 
 <style lang="less" src='./style/wallet.less'>
-
 </style>

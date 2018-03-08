@@ -3,18 +3,17 @@
 </template>
 
 <script>
-import findContent from './findContent'
+import findContent from "./findContent";
 export default {
-  name: 'findNew',
+  name: "findNew",
   components: {
     findContent
   },
-  mounted () {
-    this.$children[0].getUsers()
+  mounted() {
+    this.$children[0].getUsers();
   }
-}
+};
 </script>
 
 <style lang='less'>
-
 </style>

@@ -4,7 +4,7 @@
     </div>
 </template>
 <script>
-import Cropper from 'cropperjs'
+import Cropper from "cropperjs";
 
 export default {
   props: {
@@ -18,28 +18,30 @@ export default {
       default: true
     }
   },
-  data () {
+  data() {
     return {
       cropper: null,
       imgVNode: null
-    }
+    };
   },
   watch: {
-    url (val) {
+    url(val) {
       if (val && this.cropper) {
-        this.cropper.replace(val)
+        this.cropper.replace(val);
       }
     }
   },
   methods: {
-    crop () { console.log(this.cropper) }
+    crop() {
+      console.log(this.cropper);
+    }
   },
-  created () {},
-  mounted () {
-    this.imgVNode = this.$refs.cropperImg
+  created() {},
+  mounted() {
+    this.imgVNode = this.$refs.cropperImg;
     this.cropper = new Cropper(this.imgVNode, {
       viewMode: 1,
-      dragMode: 'move',
+      dragMode: "move",
       aspectRatio: this.aspectRatio,
       autoCropArea: 0.65,
       restore: false,
@@ -49,16 +51,17 @@ export default {
       cropBoxMovable: true,
       cropBoxResizable: true,
       toggleDragModeOnDblclick: false
-    })
+    });
   }
-}
+};
 </script>
 <style lang='less'>
 .round {
-    .cropper-view-box,
-    .cropper-face {
-        border-radius: 50%;
-    }
+  .cropper-view-box,
+  .cropper-face {
+    border-radius: 50%;
+  }
 }
 </style>
-<style lang="less" src='./imgCropper.less'></style>
+<style lang="less" src='./imgCropper.less'>
+</style>

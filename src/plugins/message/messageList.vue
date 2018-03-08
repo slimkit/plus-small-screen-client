@@ -4,46 +4,48 @@
   </div>
 </template>
 <script>
-import message from './message'
+import message from "./message";
 
-let seed = 0
+let seed = 0;
 const getUuid = () => {
-  return 'v_msg_' + Date.now() + '_' + (seed++)
-}
+  return "v_msg_" + Date.now() + "_" + seed++;
+};
 export default {
-  name: 'messageList',
+  name: "messageList",
   components: {
     message
   },
   data() {
     return {
       msgs: []
-    }
+    };
   },
   methods: {
     add(msg) {
-      const name = msg.name || getUuid()
-      let newMsg = Object.assign({
-        content: {},
-        duration: 3,
-        closable: false,
-        name: name
-      }, msg)
-      this.msgs.push(newMsg)
+      const name = msg.name || getUuid();
+      let newMsg = Object.assign(
+        {
+          content: {},
+          duration: 3,
+          closable: false,
+          name: name
+        },
+        msg
+      );
+      this.msgs.push(newMsg);
     },
     close(name) {
-      const oldMsgs = this.msgs
+      const oldMsgs = this.msgs;
       for (let i = 0; i < oldMsgs.length; i++) {
         if (oldMsgs[i].name === name) {
-          this.msgs.splice(i, 1)
-          break
+          this.msgs.splice(i, 1);
+          break;
         }
       }
     },
     closeAll() {
-      this.msgs = []
+      this.msgs = [];
     }
   }
-}
-
+};
 </script>

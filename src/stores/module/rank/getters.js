@@ -1,6 +1,5 @@
-
 export default {
-  getUsersByType: (state) => (type) => {
-    return state[type]
+  getUsersByType: state => type => {
+    return state[type];
   }
-}
+};

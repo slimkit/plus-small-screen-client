@@ -7,10 +7,10 @@
   </div>
 </template>
 <script>
-import HeadTop from '@/components/HeadTop';
-import groupItem from '../components/groupListItem';
+import HeadTop from "@/components/HeadTop";
+import groupItem from "../components/groupListItem";
 export default {
-  name: 'joinedGroup',
+  name: "joinedGroup",
   components: {
     HeadTop,
     groupItem
@@ -25,7 +25,7 @@ export default {
       this.$router.go(-1);
     },
     getMyGroups() {
-      this.$http.get('/plus-group/user-groups').then(({ data = [] }) => {
+      this.$http.get("/plus-group/user-groups").then(({ data = [] }) => {
         if (data) {
           this.myGroups = [...data];
         }
@@ -38,5 +38,4 @@ export default {
 };
 </script>
 <style lang='less'>
-
 </style>
