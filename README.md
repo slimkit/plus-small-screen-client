@@ -10,9 +10,7 @@
 composer require zhiyicx/plus-component-h5
 ```
 
-然后进入 SPA 目录 `cd vendor/zhiyicx/plus-component-h5`，然后使用 `Yarn` 或者 `npm` 安装前端以来，执行 `yarn` 或者 `npm install` 命令。
-
-安装完成前端以来，不代表安装完成哟，你需要继续执行 `yarn build` 或者 `npm run build` 命令来编译前端资源，编译完成后你需要回到 Plus 程序目录，执行 `php artisan vendor:publish --force` 然后页面就会出现一个列表，你找到 `\Zhiyi\Component\ZhiyiPlus\PlusComponentH5\ServiceProvider` 这一条，输入对应编号后按「enter」按键，像现在 你已经安装完成了！！
+然后执行 `php artisan vendor:publish --force` 然后页面就会出现一个列表，你找到 `\Zhiyi\Component\ZhiyiPlus\PlusComponentH5\ServiceProvider` 这一条，输入对应编号后按「enter」按键，像现在 你已经安装完成了！！
 
 > 访问 `/h5` 看看吧
 
