@@ -32,7 +32,6 @@ export default {
   },
   methods: {
     handleClick($event, index) {
-      // const clickEl = $event.target;
       const els = this.$el.querySelectorAll(".m-pic");
       const images = this.pics.map((img, index) => {
         return {
@@ -44,8 +43,10 @@ export default {
     },
     isLongImg(img) {
       const [w, h] = img.size.split("x");
-      img.title = "查看原图";
-      img.src = `/api/v2/files/${img.file}`;
+      img.title = img.paid_node > 0 && !img.paid ? "购买查看" : "";
+      img.src = `/api/v2/files/${img.file}?token=${
+        img.paid_node > 0 ? this.$store.state.CURRENTUSER.token : ""
+      }`;
       img.w = w;
       img.h = h;
       return w > 3 * h || h > 3 * w;

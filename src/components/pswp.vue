@@ -20,8 +20,8 @@
           <div class="pswp__counter"></div>
           <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
           <!-- <button class="pswp__button pswp__button--share" title="Share"></button> -->
-          <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
-          <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+          <!-- <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button> -->
+          <!-- <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button> -->
           <!-- Preloader demo https://codepen.io/dimsemenov/pen/yyBWoR -->
           <!-- element will get class pswp__preloader--active when preloader is running -->
           <div class="pswp__preloader">
@@ -54,54 +54,76 @@ import PhotoSwipeUI from "photoswipe/dist/photoswipe-ui-default.js";
 import bus from "@/bus.js";
 export default {
   name: "pswp",
+  data() {
+    return {
+      photoswipe: null
+    };
+  },
   created() {
     bus.$on("mvGallery", (index, images) => {
       this.openPhotoSwipe(index, images);
     });
   },
-  data() {
-    return {
-      isInApp: !1,
-      listLen: 1
-    };
-  },
   methods: {
+    payForImg(amount, paidNode, img) {
+      const vm = this;
+      const glodName =
+        this.$store.state.CONFIG.site.currency_name.name || "积分";
+      this.$Modal.pay({
+        content: `您只需支付${amount}${glodName}即可查看图片`,
+        price: amount,
+        onOk(callback) {
+          // /currency/purchases/:node
+          vm.$http
+            .post(`/currency/purchases/${paidNode}`, {
+              validateStatus: s => s === 201
+            })
+            .then(({ data: { message = ["付费成功"] } = {} }) => {
+              console.log(1);
+              vm.$Message.success(message);
+              const newImg = `${img.src}&=${new Date().getTime()}`;
+              img.el.style.backgroundImage = `url(${newImg})`;
+              vm.photoswipe.currItem.container.querySelector(
+                "img.pswp__img"
+              ).src = newImg;
+              callback && callback();
+            });
+        }
+      });
+    },
     openPhotoSwipe(index, images) {
+      const vm = this;
       const options = {
-        showHideOpacity: !0,
-        loop: !1,
+        index,
+        loop: false,
         arrowEl: false,
         captionEl: true,
-        // getThumbBoundsFn() {
-        //   const n = window.pageYOffset || document.documentElement.scrollTop;
-        //   const o = images[index].el.getBoundingClientRect();
-        //   console.log(o);
-        //   return {
-        //     x: o.left || 0,
-        //     y: o.top || 0 + n,
-        //     w: o.width || 0
-        //   };
-        // },
-        index,
-        fullscreenEl: !0,
-        closeEl: !this.isInApp,
-        addCaptionHTMLFn(/*item, captionEl, isFake*/) {
+        showHideOpacity: true,
+        tapToToggleControls: false,
+        errorMsg:
+          '<div class="pswp__error-msg"><a href="%url%" target="_blank">图片加载失败</a></div>',
+        addCaptionHTMLFn(item) {
           // item      - slide object
           // captionEl - caption DOM element
           // isFake    - true when content is added to fake caption container
           //             (used to get size of next or previous caption)
-          // if (!item.title) {
-          //   captionEl.children[0].innerHTML = "";
-          //   return false;
-          // }
-          // captionEl.children[0];
-          // console.log(item);
-          // console.log(isFake);
-          // console.log(captionEl);
+          const btn = document.createElement("button");
+          btn.className = "pic-action-btn";
+          if (!item.title) {
+            btn.innerHTML = "";
+            return false;
+          }
+          btn.innerHTML = item.title;
+          const { amount, paid_node } = item;
+          vm.$el.appendChild(btn);
+          btn.addEventListener("click", () => {
+            vm.payForImg(amount, paid_node, item);
+          });
           return true;
         }
       };
-      new PhotoSwipe(this.$el, PhotoSwipeUI, images, options).init();
+      this.photoswipe = new PhotoSwipe(this.$el, PhotoSwipeUI, images, options);
+      this.photoswipe.init();
     }
   }
 };

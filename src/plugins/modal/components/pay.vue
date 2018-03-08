@@ -69,6 +69,9 @@ export default {
       height: 70px;
       line-height: 35px;
       border-bottom: 1px solid #ededed;
+      p {
+        margin: 0;
+      }
     }
     &-body {
       flex: 1 1 auto;

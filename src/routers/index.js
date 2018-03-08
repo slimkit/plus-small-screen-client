@@ -1,5 +1,4 @@
 import Vue from "vue";
-import { oneOf } from "@/util";
 import localEvent from "store";
 import VueRouter from "vue-router";
 import Message from "@/plugins/message";
@@ -40,16 +39,6 @@ router.beforeEach((to, from, next) => {
   const isLogin = !!(localEvent.get("CURRENTUSER") || {}).token;
   const forGuest = to.matched.some(record => record.meta.forGuest);
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
-  const tipsRoutes = [
-    "/post/wenzi",
-    "/post/pic",
-    "/post/release",
-    "/post/checkin",
-    "/post/question"
-  ];
-  if (oneOf(to.path, tipsRoutes)) {
-    next({ path: "/upgrade" });
-  }
   if (requiresAuth) {
     if (isLogin) {
       next();

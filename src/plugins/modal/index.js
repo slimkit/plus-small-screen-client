@@ -110,9 +110,17 @@ Modal.info = (options = {}) => {
 /**
  * 支付弹窗
  * @author jsonleex <jsonlseex@163.com>
+ * @param  {Object} options
+ * @return {[type]}
  */
 Modal.pay = (options = {}) => {
+  // content: 提示信息
+  // price: 积分
+  // onOk: 回调函数
   const { content, price, onOk } = options;
+  if (!price) {
+    throw new Error('"price" is required');
+  }
   return showModal({
     render(h) {
       return h(pay, {

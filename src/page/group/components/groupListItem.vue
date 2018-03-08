@@ -163,7 +163,6 @@ export default {
       #c8a06c 100%
     );
   }
-
   &-name {
     width: 100%;
     max-width: 420px;
@@ -186,18 +185,15 @@ export default {
     justify-content: center;
     margin: 0 20px;
     flex: 1 1 auto;
-
     p {
       font-size: 0;
       white-space: nowrap;
       margin: 0;
     }
-
     span {
       font-size: 28px;
       margin-right: 30px;
     }
-
     .num {
       font-style: normal;
       color: #59b6d7;
