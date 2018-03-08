@@ -20,6 +20,9 @@
         }
     },
     "extra": {
+        "branch-alias": {
+            "dev-master": "4.0-dev"
+        },
         "laravel": {
             "providers": [
                 "Zhiyi\\Component\\ZhiyiPlus\\PlusComponentH5\\ServiceProvider"
