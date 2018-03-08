@@ -1,68 +1,31 @@
 # ThinkSNS+ HTML 5 (SPA)😊
 
-The package is a SPA for ThinkSNS+
+这是 ThinkSNS Plus 的一个 SPA 前端应用！
 
-## Stack
+## 安装
 
-- ES 6
-- webpack
-- SASS
-- LESS
-- Vue
-- vuex
-- vue-router
-- PHP 7
-- Composer
-- Yarn | NPM
-- Node
-
-## Install
+在 Plus 程序下执行
 
 ```shell
 composer require zhiyicx/plus-component-h5
 ```
 
-#### Publish font-end application （SPA）
+然后进入 SPA 目录 `cd vendor/zhiyicx/plus-component-h5`，然后使用 `Yarn` 或者 `npm` 安装前端以来，执行 `yarn` 或者 `npm install` 命令。
 
-```shell
-php artisan package:handle h5 publish
+安装完成前端以来，不代表安装完成哟，你需要继续执行 `yarn build` 或者 `npm run build` 命令来编译前端资源，编译完成后你需要回到 Plus 程序目录，执行 `php artisan vendor:publish --force` 然后页面就会出现一个列表，你找到 `\Zhiyi\Component\ZhiyiPlus\PlusComponentH5\ServiceProvider` 这一条，输入对应编号后按「enter」按键，像现在 你已经安装完成了！！
+
+> 访问 `/h5` 看看吧
+
+## 开发
+
+首先，你需要先准备一个 Plus 程序，而你并不需要把 SPA 安装到 Plus 程序当中！是的，你可以在任意位置开发 SPA。
+
+首先，进入 SPA 程序目录，你需要将 `.env.example` 文件复制一份为 `.env` 文件。文件内容如下：
+
+```env
+API_PROXY_HOST=http://localhost:8000
 ```
 
-## Remove
+那么你需要修改 `API_PROXY_HOST` 的值，修改为你的 Plus 程序地址。
 
-```shell
-composer remove zhiyicx/plus-component-h5
-```
-
-> Because h5 rely on the ThinkSNS+ other packages, so when the installation of h5 these packages will be installed together, you have not installed these packages alone, then remove the h5 when these dependent packages will be removed together.
-
-## Develop
-
- - Node 6+
- - PHP
- - Yarn
- - Composer
- - ThinkSNS+
-
-Commands:
-
-- yarn clean-dist
-- yarn dev
-- yarn hot
-- yarn watch
-- yarn dist
-
-### Link asstes
-
-```shell
-php artisan package:handle h5 link
-```
-yarn hot
-- yarn watch
-- yarn dist
-
-### Link asstes
-
-```shell
-php artisan package:handle h5 link
-```
+然后你在 SPA 文件夹下执行 `yarn dev` 或者 `npm run dev` 就可以了！！！按照命令行打开地址。

@@ -1,4 +1,14 @@
-import path from 'path'
+import path from 'path';
+import dotenv from 'dotenv';
+
+dotenv.config({
+  path: path.resolve(process.cwd(), '.env')
+});
+
+if (!process.env.API_PROXY_HOST) {
+  throw new Error('Cannot read "API_PROXY_HOST" from environment variable.');
+}
+
 export default {
   build: {
     env: {
@@ -19,7 +29,7 @@ export default {
     proxyTable: {
       // proxy all requests starting with /api to jsonplaceholder
       '/api': {
-        target: 'http://test-plus.zhibocloud.cn',
+        target: process.env.API_PROXY_HOST,
         changeOrigin: true,
         pathRewrite: {
           '^/api': '/api'
