@@ -1,12 +1,12 @@
 { 
-	"presets": ["env", "stage-2", "es2016"],
-	"plugins": [[
-    	"transform-runtime",
-	    {
-	      "helpers": false,
-	      "polyfill": true,
-	      "regenerator": true,
-	      "moduleName": "babel-runtime"
-	    }
-  	]]
+    "presets": ["env", "stage-2", "es2016"],
+    "plugins": [[
+        "transform-runtime",
+        {
+          "helpers": false,
+          "polyfill": true,
+          "regenerator": true,
+          "moduleName": "babel-runtime"
+        }
+    ]]
 }

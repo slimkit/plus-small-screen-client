@@ -1,0 +1,223 @@
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translate3d(100%, 0, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.fadeInRight {
+  animation-name: fadeInRight;
+}
+
+.router-fadeInTop-enter-active,
+.router-fadeInTop-leave-active,
+.router-fadeInLeft-enter-active,
+.router-fadeInLeft-leave-active,
+.router-fadeInRight-enter-active,
+.router-fadeInRight-leave-active,
+.router-fadeInBottom-enter-active,
+.router-fadeInBottom-leave-active {
+  transition: transform 0.3s;
+}
+
+.router-fadeInRight-enter,
+.router-fadeInRight-leave-active {
+  transform: translate3d(100%, 0, 0);
+}
+
+.router-fadeInLeft-enter,
+.router-fadeInLeft-leave-active {
+  transform: translate3d(-100%, 0, 0);
+}
+
+.router-fadeInTop-enter-active,
+.router-fadeInTop-leave-active {
+  transform: translate3d(0, 100%, 0);
+}
+
+.router-fadeInBottom-enter-active,
+.router-fadeInBottom-leave-active {
+  transform: translate3d(0, -100%, 0);
+}
+// animate.css
+.animated {
+  animation-duration: 1s;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -100%, 1);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.fadeInUp {
+  animation-name: fadeInUp;
+}
+
+.router-fade-in-left-enter-active,
+.router-fade-in-right-enter-active {
+  transition: transform 0.3s cubic-bezier(0.55, 0, 0.1, 1);
+}
+
+.router-fade-in-right-enter,
+.router-fade-in-right-leave-active {
+  transform: translate(100%, 0);
+}
+
+.router-fade-in-left-enter,
+.router-fade-in-left-leave-active {
+  transform: translate(-100%, 0);
+}
+
+// 上滑显示下滑隐藏
+.headroom {
+  &-head,
+  &-foot {
+    position: fixed;
+    left: 0;
+    right: 0;
+    -webkit-animation-duration: 0.5s;
+    animation-duration: 0.5s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+  }
+  &-head {
+    top: 0;
+  }
+  &-foot {
+    bottom: 0;
+  }
+  &--headShow {
+    -webkit-animation-name: headroom--headShow;
+    animation-name: headroom--headShow;
+  }
+  &--headHide {
+    -webkit-animation-name: headroom--headHide;
+    animation-name: headroom--headHide;
+  }
+  &--footShow {
+    -webkit-animation-name: headroom--footShow;
+    animation-name: headroom--footShow;
+  }
+  &--footHide {
+    -webkit-animation-name: headroom--footHide;
+    animation-name: headroom--footHide;
+  }
+}
+
+// head显示
+@keyframes headroom--headShow {
+  from {
+    opacity: 0;
+    -webkit-transform: translate3d(0, -100%, 0);
+    transform: translate3d(0, -100%, 0);
+  }
+
+  to {
+    opacity: 1;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+  }
+}
+@-webkit-keyframes headroom--headShow {
+  from {
+    opacity: 0;
+    -webkit-transform: translate3d(0, -100%, 0);
+    transform: translate3d(0, -100%, 0);
+  }
+
+  to {
+    opacity: 1;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+// head隐藏
+@keyframes headroom--headHide {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+    -webkit-transform: translate3d(0, -100%, 0);
+    transform: translate3d(0, -100%, 0);
+  }
+}
+@-webkit-keyframes headroom--headHide {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+    -webkit-transform: translate3d(0, -100%, 0);
+    transform: translate3d(0, -100%, 0);
+  }
+}
+
+// foot显示
+@keyframes headroom--footShow {
+  from {
+    opacity: 0;
+    -webkit-transform: translate3d(0, 100%, 0);
+    transform: translate3d(0, 100%, 0);
+  }
+
+  to {
+    opacity: 1;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@-webkit-keyframes headroom--footShow {
+  from {
+    opacity: 0;
+    -webkit-transform: translate3d(0, 100%, 0);
+    transform: translate3d(0, 100%, 0);
+  }
+
+  to {
+    opacity: 1;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+// foot隐藏
+@keyframes headroom--footHide {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+    -webkit-transform: translate3d(0, 100%, 0);
+    transform: translate3d(0, 100%, 0);
+  }
+}
+
+@-webkit-keyframes headroom--footHide {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+    -webkit-transform: translate3d(0, 100%, 0);
+    transform: translate3d(0, 100%, 0);
+  }
+}

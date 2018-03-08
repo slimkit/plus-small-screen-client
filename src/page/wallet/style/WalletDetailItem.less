@@ -1,0 +1,40 @@
+@wallet-detail-item-prefix: wallet-detail-item;
+
+.@{wallet-detail-item-prefix} {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 30px;
+  height: 80px;
+  border-bottom: 1px solid #ededed; /*no*/
+  background: #fff;
+  font-size: 28px;
+  &--time,
+  &--count {
+    flex: 0 0 auto;
+  }
+
+  &--time {
+    font-size: 24px;
+    color: #b3b3b3;
+    text-align: center;
+    min-width: 60px;
+    p {
+      margin: 0;
+      line-height: 30px;
+    }
+  }
+
+  &--count {
+    font-size: 32px;
+    color: #ff9400;
+  }
+  &--body {
+    overflow: hidden;
+    display: -webkit-box;
+    margin: 0 30px;
+    flex: 1 1 auto;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1; //文本行数
+  }
+}

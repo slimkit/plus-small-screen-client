@@ -1,0 +1,110 @@
+.c_59b6d7 {
+  color: #59b6d7;
+}
+.ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// 个人中心 入口样式
+@entry-prefix: entry;
+
+.@{entry-prefix} {
+  &__group {
+    margin-top: 20px;
+    background-color: #fff;
+    &.padding {
+      padding: 0 20px;
+    }
+  }
+
+  &__item {
+    height: 100px;
+    display: flex;
+    align-items: center;
+    &--prepend {
+      width: 34px;
+      height: 34px;
+      fill: #31a0e6;
+    }
+    span {
+      margin: 0 25px;
+      font-size: 32px;
+      flex: 1 1 auto;
+      + span {
+        text-align: right;
+        color: #999;
+      }
+    }
+    &--append {
+      width: 24px;
+      height: 24px;
+      fill: #dfdfdf;
+    }
+    & + & {
+      border-top: 1px solid #ededed;
+      /*no*/
+    }
+  }
+}
+
+// 子分类
+.sub__navs {
+  z-index: 9;
+  height: 90px;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  position: fixed;
+  top: 90px;
+  left: 0;
+  right: 0;
+  border-bottom: 1px solid #ededed; /*no*/
+  &--item {
+    height: 100%;
+    line-height: 88px;
+    font-size: 30px;
+    color: #999;
+    border-bottom: 1px solid transparent;
+    &.active {
+      color: #333;
+    }
+  }
+  .has__border &--item {
+    &.active {
+      border-bottom: 2px solid #59b6d7; /*no*/
+    }
+  }
+}
+
+.rotate {
+  animation: rotate360 2s infinite ease;
+}
+
+@keyframes rotate360 {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+/* 旋转动画 */
+@keyframes turn-around {
+  from {
+    transform: rotate(1deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.turn-around {
+  animation-name: turn-around;
+  animation-duration: 1.4s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}

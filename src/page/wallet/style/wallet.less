@@ -1,0 +1,30 @@
+@wallet-prefix: wallet;
+
+.@{wallet-prefix}{
+  .head-top{
+    position: relative;
+    background-color: #31a0e6;
+    box-shadow: none;
+    color: #fff;
+  }
+  &--balance{
+    margin-top: -.5px !important;/*no*/
+    padding: 40px 30px !important;
+    background-color: #31a0e6;
+    color: #fff;
+    p.label{
+      margin: 0;
+      font-size: 28px;
+      color: rgba(255, 255, 255, .7);
+    }
+    h1.balance{
+      margin: 50px 0 0;
+      font-size: 100px;
+      line-height: 1;
+      text-shadow: 0 0 0 1px #000
+    }
+  }
+  .entry__group{
+    margin-top: 0
+  }
+}

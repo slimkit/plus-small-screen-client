@@ -1,73 +1,78 @@
-/**
- * User Actions
- * @author leex <JsonLeex@163.com>
- */
-import _ from 'lodash';
-import localEvent from 'store';
-import { addAccessToken, createAPI } from '../../../utils/request';
+import http from '@/http';
 export default {
-    UPDATE_USER_INFO({ commit, dispatch, getters, state }, user) {
-        commit('ADD_USER_TO_VUEX', user);
-    },
-    UPDATE_INFO_OF_MINE({ commit, dispatch, getters, state }, mine) {
-        const old = state.mine;
-        try {
-            const id = mine.id;
-
-            if(_.isEmpty(old) && (id && !_.isEmpty(mine)) || _.isEmpty(mine)) {
-                state.mine = mine;
-            }else if(!_.isEmpty(old) && id === old.id){
-                state.mine = Object.assign({}, old, mine);
-            }
-
-            localEvent.set('mine', state.mine);
-            commit('ADD_USER_TO_VUEX', [state.mine]);
-        } catch(e) {
-            state.mine = old;
-        }
-    },
-    LOGOUT({ commit, dispatch, getters, state }) {
-        dispatch('UPDATE_INFO_OF_MINE', {});
-    },
-    async GET_USER_BY_ID({ commit, dispatch, getters, state }, ids) {
-        if(_.isArray(ids)) {
-            let _ids = [],
-                users2 = [],
-                users1 = ids.map(id => {
-                    if(+id) {
-                        let u = getters.getUserById(id);
-                        if(u.length === 0) {
-                            _ids = Array.from(new Set([..._ids, id]));
-                        };
-                        return u;
-
-                    }
-                });
-            if(_ids.length > 0) {
-                users2 = await addAccessToken().get(createAPI(`users?id=${_ids.join(',')}`), {
-                    validateStatus: s => s === 200
-                }).then(({ data = [] }) => {
-                    commit('ADD_USER_TO_VUEX', data);
-                    return data;
-                }).catch(err => {
-                    throw new Error('catch error at request `user?id=xxxx`');
-                });
-            }
-
-            return [...users1, ...users2];
-        } else if(+ids) {
-            let u = getters.getUserById(ids);
-            if(u.length === 0) {
-                u = await addAccessToken().get(createAPI(`users?id=${+ids}`), {
-                    validateStatus: s => s === 200
-                }).then(({ data = [] }) => {
-                    commit('ADD_USER_TO_VUEX', data);
-                    return data;
-                }).catch(err => {
-                    throw new Error('catch error at request `user?id=xxxx`');
-                });
-            }
-            return u;
-        }
+  GET_USER_DATA({ commit }, { type, limit = 15, offset = 0 }) {
+    let uri;
+    console.log(type);
+    switch (type) {
+      case 'pop':
+        uri = '/user/populars';
+        break;
+      case 'new':
+        uri = '/user/latests';
+        break;
+      case 'rec':
+        uri = '/user/find-by-tags';
+        break;
     }
+    return new Promise((resolve, reject) => {
+      let res = {
+        noMore: false,
+        data: []
+      };
+      http
+        .get(`${uri}?limit=${limit}&offset=${offset}`)
+        .then(({ data = [] }) => {
+          if (data.length > 0) {
+            res.data = data;
+            res.noMore = data.length < limit;
+            commit('SAVE_USER', data);
+          }
+          resolve(res);
+        })
+        .catch(err => {
+          reject(err);
+        });
+    });
+  },
+
+  FOLLOW_USER({ commit }, { id, status }) {
+    // PUT /user/followings/:user
+    // DELETE /user/followings/:user
+    let method;
+
+    switch (status) {
+      case 'unFollow':
+        method = 'PUT';
+        break;
+      case 'eachFollow':
+        method = 'DELETE';
+        break;
+      case 'follow':
+        method = 'DELETE';
+        break;
+    }
+
+    if (!method) return false;
+
+    let url = `/user/followings/${id}`;
+
+    const res = {
+      status: true,
+      follower: method === 'PUT'
+    };
+
+    return new Promise((resolve, reject) => {
+      http({
+        method,
+        url,
+        validateStatus: s => s === 204
+      })
+        .then(() => {
+          resolve(res);
+        })
+        .catch(err => {
+          reject(err);
+        });
+    });
+  }
 };

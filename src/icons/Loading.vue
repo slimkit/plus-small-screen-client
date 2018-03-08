@@ -1,50 +1,41 @@
 <template>
-    <div class="loading">
-        <span></span>
-        <span></span>
-        <span></span>
-    </div>
+<!-- By Sam Herbert (@sherb), for everyone. More @ http://goo.gl/7AJzbL -->
+  <svg fill="#59b6d7" width="120" height="30" v-bind="$props" viewBox="0 0 120 30" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="15" cy="15" r="15">
+        <animate attributeName="r" from="15" to="15"
+                 begin="0s" dur="0.8s"
+                 values="15;9;15" calcMode="linear"
+                 repeatCount="indefinite" />
+        <animate attributeName="fill-opacity" from="1" to="1"
+                 begin="0s" dur="0.8s"
+                 values="1;.5;1" calcMode="linear"
+                 repeatCount="indefinite" />
+    </circle>
+    <circle cx="60" cy="15" r="9" fill-opacity="0.3">
+        <animate attributeName="r" from="9" to="9"
+                 begin="0s" dur="0.8s"
+                 values="9;15;9" calcMode="linear"
+                 repeatCount="indefinite" />
+        <animate attributeName="fill-opacity" from="0.5" to="0.5"
+                 begin="0s" dur="0.8s"
+                 values=".5;1;.5" calcMode="linear"
+                 repeatCount="indefinite" />
+    </circle>
+    <circle cx="105" cy="15" r="15">
+        <animate attributeName="r" from="15" to="15"
+                 begin="0s" dur="0.8s"
+                 values="15;9;15" calcMode="linear"
+                 repeatCount="indefinite" />
+        <animate attributeName="fill-opacity" from="1" to="1"
+                 begin="0s" dur="0.8s"
+                 values="1;.5;1" calcMode="linear"
+                 repeatCount="indefinite" />
+    </circle>
+  </svg>
 </template>
+
 <script>
 export default {
-    name: "loading-icon",
-    data() {
-        return({});
-    }
+  name: 'icon-loading'
 }
 </script>
-<style lang="less">
-.loading {
-    &>span {
-        background-color: #59b6d7;
-        width: 10px;
-        height: 10px;
-        border-radius: 100%;
-        margin: 0 10px 0 0;
-        animation-fill-mode: both;
-        display: inline-block;
-        &:nth-child(1) {
-            transform: scale(1);
-            animation: loading 1.5s 0s infinite ease-out;
-        }
-        &:nth-child(2) {
-            animation: loading 1.5s 0.425s infinite ease-out;
-        }
-        &:nth-child(3) {
-            animation: loading 1.5s 0.925s infinite ease-out;
-        }
-    }
-}
-
-@keyframes loading {
-    0% {
-        transform: scale(1);
-    }
-    30% {
-        transform: scale(1.45);
-    }
-    60% {
-        transform: scale(1);
-    }
-}
-</style>
