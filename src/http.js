@@ -78,6 +78,6 @@ if (!basename) {
 }
 
 // 默认 v2 接口
-axios.defaults.baseURL = basename.content || "/api/v2";
+axios.defaults.baseURL = basename ? basename.content : "/api/v2";
 
 export default axios;

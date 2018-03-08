@@ -126,7 +126,7 @@ export default {
       return this.$refs.content.clientWidth || 0;
     },
     baseUrl() {
-      return document.head.querySelector('meta[name="api-basename"]').content;
+      return this.$http.defaults.baseURL;
     },
     // 图片展示
     imagesFormat() {

@@ -31,6 +31,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         ); 
         
         $this->loadViewsFrom(dirname(__DIR__).'/views', 'plus:h5');
+        $this->loadViewsFrom(dirname(__DIR__).'/dist', 'plus:h5://dist');
     }
 
     /**
