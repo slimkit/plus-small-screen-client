@@ -1,9 +1,9 @@
 vendor/
-.DS_Store
-composer.lock
 node_modules/
+
+.env
+.DS_Store
+
+composer.lock
 npm-debug.log
 yarn-error.log
-dist/
-*.back
-.env
