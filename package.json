@@ -1,13 +1,5 @@
 {
-  "name": "plus-component-h5",
-  "version": "1.0.0",
-  "description": "🌝The SPA of ThinkSNS+",
-  "main": "index.js",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/zhiyicx/plus-component-web.git"
-  },
-  "author": "Seven <shiweidu@outlook.com>",
+  "private": true,
   "license": "Apache-2.0",
   "scripts": {
     "dev": "node dev.js",
@@ -87,9 +79,5 @@
     "Opera >= 12",
     "Safari >= 6",
     "not ie <= 8"
-  ],
-  "bugs": {
-    "url": "https://github.com/zhiyicx/plus-component-web/issues"
-  },
-  "homepage": "https://github.com/zhiyicx/plus-component-web#readme"
+  ]
 }

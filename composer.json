@@ -2,15 +2,18 @@
     "name": "zhiyicx/plus-component-h5",
     "description": "🌝The SPA of ThinkSNS+",
     "license": "Apache-2.0",
-    "authors": [{
-        "name": "Wayne John",
-        "email": "qiaobinloverabbi@gmail.com",
-        "role": "developer"
-    }, {
-        "name": "Seven Du",
-        "email": "shiweidu@outlook.com",
-        "role": "developer"
-    }],
+    "authors": [
+        {
+            "name": "Wayne John",
+            "email": "qiaobinloverabbi@gmail.com",
+            "role": "developer"
+        },
+        {
+            "name": "Seven Du",
+            "email": "shiweidu@outlook.com",
+            "role": "developer"
+        }
+    ],
     "autoload": {
         "psr-4": {
             "Zhiyi\\Component\\ZhiyiPlus\\PlusComponentH5\\": "php/"
@@ -22,6 +25,5 @@
                 "Zhiyi\\Component\\ZhiyiPlus\\PlusComponentH5\\ServiceProvider"
             ]
         }
-    },
-    "version": "5.0.0"
+    }
 }
