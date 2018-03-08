@@ -21,7 +21,7 @@ module.exports = {
   lintOnSave: true,
   compiler: false,
   css: {
-    sourceMap: process.env.GENERATE_CSS_MAP || false,
+    sourceMap: !!eval(process.env.GENERATE_CSS_MAP),
     loaderOptions: {
       less: {
         globalVars: require('./theme'),
