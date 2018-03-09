@@ -56,6 +56,12 @@ export default {
       }
     }
   },
+  activated() {
+    this.ad = [];
+    this.feeds = [];
+    this.pinned = [];
+    this.$nextTick(this.$refs.loadmore.beforeRefresh);
+  },
   methods: {
     async onRefresh() {
       const { data: { ad, feeds, pinned } = {} } = await this.$http.get(
