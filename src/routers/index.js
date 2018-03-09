@@ -8,8 +8,8 @@ import routes from "./routes";
 Vue.use(VueRouter);
 const router = new VueRouter({
   routes,
-  mode: "history",
-  base: "/h5",
+  mode: process.env.VUE_APP_ROUTER_MODE || "hash",
+  base: process.env.BASE_URL,
   // strict: process.env.NODE_ENV !== 'production',
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) {

@@ -1,22 +1,3 @@
-/**
- * Get The Plus API "/api/*" proxy.
- *
- * @return {Object}
- * @author Seven Du <shiweidu@outlook.com>
- */
-function getPlusApiProxy() {
-  if (!process.env.API_PROXY_TARGET) {
-    return {};
-  }
-
-  return {
-    "/api": {
-      target: process.env.API_PROXY_TARGET,
-      changeOrigin: true
-    }
-  };
-}
-
 module.exports = {
   baseUrl: process.env.BASE_URL || "/",
   lintOnSave: true,

@@ -107,8 +107,7 @@ export default {
       const { comment } = this;
       const { length } = comment.commentable.images;
       if (length > 0) {
-
-        const [ img ] = comment.commentable.images;
+        const [img] = comment.commentable.images;
 
         return img;
       }
