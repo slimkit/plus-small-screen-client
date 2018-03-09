@@ -13,7 +13,7 @@
       <slot name='foot'>
         <button class="primary" @click='ok' :disabled="loading">
           确定
-          <v-icon width='0.32' height='0.32' v-if='loading' class='btn-loading' type='base-loading'></v-icon>
+          <v-icon width='0.32' height='0.32' v-if='loading' class='rotate' type='base-loading'></v-icon>
         </button>
         <button @click='cancel'>取消</button>
       </slot>

@@ -44,7 +44,7 @@
         </div>
       </div>
     </div>
-    <button class="pic-action-btn" v-show='!!title'>{{ title }}</button>
+    <button class="pic-action-btn" :data-id='file' v-show='!!title' @click='payForImg'>{{ title }}</button>
   </div>
 </template>
 <script>
@@ -58,43 +58,61 @@ export default {
   data() {
     return {
       photoswipe: null,
-      title: ""
+      title: "",
+      file: 0,
+      fid: null,
+      index: -1,
+      amount: 0,
+      paidNode: 0
     };
   },
   created() {
-    bus.$on("mvGallery", (index, images) => {
+    bus.$on("mvGallery", ({ fid, index, images }) => {
+      this.fid = fid;
       this.openPhotoSwipe(index, images);
     });
   },
+  computed: {
+    currItem: {
+      set({ amount, paidNode, index }) {
+        this.index = index;
+        this.amount = amount;
+        this.paidNode = paidNode;
+      },
+      get() {
+        return {
+          index: this.index,
+          amount: this.amount,
+          paidNode: this.paidNode
+        };
+      }
+    }
+  },
   methods: {
-    payForImg(amount, paidNode, img) {
+    payForImg() {
       const vm = this;
       const glodName =
         this.$store.state.CONFIG.site.currency_name.name || "积分";
+      if (!(this.index >= 0 && this.amount > 0 && this.paidNode > 0)) return;
       this.$Modal.pay({
-        content: `您只需支付${amount}${glodName}即可查看图片`,
-        price: amount,
+        content: `您只需支付${vm.amount}${glodName}即可查看图片`,
+        price: vm.amount,
         onOk(callback) {
-          // /currency/purchases/:node
           vm.$http
-            .post(`/currency/purchases/${paidNode}`, {
+            .post(`/currency/purchases/${vm.paidNode}`, {
               validateStatus: s => s === 201
             })
             .then(
               ({ data: { message = ["付费成功"] } = {} }) => {
                 vm.$Message.success(message);
-                const newImg = `${img.src}&=${new Date().getTime()}`;
-                img.el.style.backgroundImage = `url(${newImg})`;
-                vm.photoswipe.currItem.container.querySelector(
-                  "img.pswp__img"
-                ).src = newImg;
+                bus.$emit("updateFile", {
+                  fid: vm.fid,
+                  index: vm.index
+                });
                 callback && callback();
               },
-              err => {
-                const { response: { status } } = err;
-                if (status === 403) {
-                  callback && callback();
-                }
+              () => {
+                callback && callback();
               }
             );
         }
@@ -116,25 +134,33 @@ export default {
           // captionEl - caption DOM element
           // isFake    - true when content is added to fake caption container
           //             (used to get size of next or previous caption)
+          vm.file = item.file;
           if (!item.title) {
             vm.title = "";
             return false;
           } else {
             vm.title = item.title;
-            const { amount, paid_node } = item;
-            vm.$el
-              .querySelector(".pic-action-btn")
-              .addEventListener("click", () => {
-                vm.payForImg(amount, paid_node, item);
-              });
+            const { amount, paid_node, index } = item;
+            vm.currItem = {
+              index,
+              amount,
+              paidNode: paid_node
+            };
             return true;
           }
         }
       };
       this.photoswipe = new PhotoSwipe(this.$el, PhotoSwipeUI, images, options);
       this.photoswipe.init();
+      bus.$on("updatePhoto", src => {
+        this.title = "";
+        this.photoswipe.currItem.container.querySelector(
+          "img.pswp__img"
+        ).src = src;
+      });
       this.photoswipe.listen("close", function() {
         this.title = "";
+        bus.$off("updatePhoto");
       });
     }
   }

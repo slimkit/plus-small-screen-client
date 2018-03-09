@@ -33,6 +33,17 @@ export default {
       type: Array
     }
   },
+  created() {
+    bus.$on("updateFile", ({ fid, index }) => {
+      if (fid === this.id) {
+        this.pics[index].paid = true;
+        this.$children[index].fetch();
+        setTimeout(() => {
+          bus.$emit("updatePhoto", this.$children[index].src);
+        }, 1500);
+      }
+    });
+  },
   methods: {
     handleClick($event, index) {
       const els = this.$children;
@@ -40,10 +51,11 @@ export default {
         return {
           ...img,
           el: els[index].$el,
-          src: els[index].src
+          src: els[index].src,
+          index
         };
       });
-      bus.$emit("mvGallery", index, images);
+      bus.$emit("mvGallery", { fid: this.id, index, images });
     },
     isLongImg(img) {
       const [w, h] = img.size.split("x");
