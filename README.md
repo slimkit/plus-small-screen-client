@@ -18,7 +18,7 @@
 Composer:
 
 ```shell
-composer create-project zhiyicx/plus-component-h5
+composer create-project zhiyicx/plus-component-h5:4.0.0-rc.*
 ```
 
 Git:
