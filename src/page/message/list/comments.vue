@@ -15,6 +15,10 @@
   </div>
 </template>
 <script>
+
+/**
+ * 消息-评论列表
+ */
 import { mapState } from "vuex";
 import feedItem from "../children/comments/feedItem";
 import newsItem from "../children/comments/newsItem";
@@ -77,6 +81,7 @@ export default {
   methods: {
     // 刷新服务
     onRefresh() {
+      console.log(1);
       this.refreshData = [];
       this.$http
         .get("/user/comments", {
@@ -86,14 +91,13 @@ export default {
           if (data.length > 0) {
             this.refreshData = data;
           }
-          this.$nextTick(this.$refs.loadmore.topEnd);
+          this.$nextTick(this.$refs.loadmore.topEnd)
         });
     },
 
     // loadmore
     onLoadMore() {
       const { id = 0 } = _.last(this.comments) || {};
-
       this.$http
         .get(
           "/user/comments",
@@ -105,7 +109,7 @@ export default {
             type: "more",
             data
           });
-          this.$refs.loadmore.bottomEnd(data.length < 15);
+          this.$nextTick(this.$refs.loadmore.bottomEnd(data.length < 15));
         });
     }
   },

@@ -14,6 +14,9 @@ import questionRoutes from "./question";
 const feed = () => import(/* webpackChunkName: 'feed' */ "../page/feed/feed"),
   feedDetail = () =>
     import(/* webpackChunkName: 'feed' */ "../page/feed/components/feedDetail"),
+  // 发送文本动态组件
+  postTextFeed = () =>
+    import(/* webpackChunkName: 'feed' */ "../page/feed/children/postText"),
   discover = () =>
     import(/* webpackChunkName: 'common' */ "../page/discover/discover"),
   profile = () =>
@@ -321,8 +324,15 @@ const router = [
     meta: { title: "动态", keepAlive: true }
   } /* 动态 */,
 
-  { path: "/feed-detail/:feedID", component: feedDetail } /* 动态详情 */,
-
+  { path: "/feed-detail/:feedID", component: feedDetail }, /* 动态详情 */
+  { 
+    path: '/post/text',
+    component: postTextFeed,
+    meta: {
+      title: '发布动态',
+      requiresAuth: true
+    }
+  },
   /**
    * 消息页面路由
    */

@@ -11,7 +11,7 @@ const menus = [
     label: "文字",
     src: WENZI,
     cls: "wenzi",
-    path: "/post/wenzi"
+    path: "/post/text"
   },
   {
     label: "图片",
