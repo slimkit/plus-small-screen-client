@@ -109,6 +109,7 @@ export default {
                   fid: vm.fid,
                   index: vm.index
                 });
+                vm.photoswipe.currItem.title = "";
                 callback && callback();
               },
               () => {

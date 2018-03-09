@@ -68,7 +68,7 @@ export default {
       color: #333;
       height: 70px;
       line-height: 35px;
-      border-bottom: 1px solid #ededed;
+      border-bottom: 1px solid #ededed; /*no*/
       p {
         margin: 0;
       }
@@ -91,7 +91,7 @@ export default {
         font-size: 30px;
         color: #59b6d7;
         background-color: #fff;
-        border: 1px solid #59b6d7;
+        border: 1px solid #59b6d7; /*no*/
         border-radius: 6px;
         & + button {
           margin-top: 20px;
