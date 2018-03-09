@@ -11,7 +11,7 @@
             <div
               class="m-pic" 
               slot-scope="props"
-              @click.stop='handleClick($event, index, props.src)'
+              @click.stop='handleClick($event, index)'
               :style="{ backgroundImage: `url(${props.src})` }"
             />
           </async-file>
@@ -34,13 +34,13 @@ export default {
     }
   },
   methods: {
-    handleClick($event, index, src) {
-      const els = this.$el.querySelectorAll(".m-pic");
+    handleClick($event, index) {
+      const els = this.$children;
       const images = this.pics.map((img, index) => {
         return {
           ...img,
-          el: els[index],
-          src
+          el: els[index].$el,
+          src: els[index].src
         };
       });
       bus.$emit("mvGallery", index, images);

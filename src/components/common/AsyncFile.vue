@@ -17,7 +17,7 @@ export default {
     src: null
   }),
   methods: {
-    async fetch() {
+    fetch() {
       let params = {
         json: true
       };
@@ -34,11 +34,18 @@ export default {
         params.q = this.q;
       }
 
-      const { data: { url } } = await this.$http.get(`/files/${this.file}`, {
-        params
-      });
-
-      this.src = url;
+      this.$http
+        .get(`/files/${this.file}`, {
+          params
+        })
+        .then(
+          ({ data: { url } }) => {
+            this.src = url;
+          },
+          () => {
+            this.src = "";
+          }
+        );
     }
   },
   created() {

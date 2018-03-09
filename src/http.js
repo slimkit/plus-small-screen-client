@@ -47,6 +47,8 @@ axios.interceptors.response.use(
           setTimeoutCallback();
           Message.error(TOKEN ? "登录失效, 请重新登录" : "您还没有登录");
           break;
+        case 500:
+          throw new Error("服务器错误");
         default:
           Message.error(plusMessageAnalyze(data));
           break;
