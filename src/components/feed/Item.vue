@@ -37,10 +37,10 @@
             <!-- 图片内容 -->
             <template v-if='images.length > 0'>
                 <feed-images 
-                :pics='images'
-                :id='feed.id'
-                @viewPic='viewPic' 
-                class='feed-item-content-imgs'
+                  :pics='images'
+                  :id='feed.id'
+                  @viewPic='viewPic' 
+                  class='feed-item-content-imgs'
                 />
             </template>
             <!-- 图片内容 END -->

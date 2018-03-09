@@ -69,15 +69,11 @@ axios.interceptors.response.use(
   }
 );
 
-/* 获取配置的 api */
-const basename = document.head.querySelector('meta[name="api-basename"]');
-if (!basename) {
-  console.error(
-    '未配置api接口，请设置 "<meta name="api-basename" content="url">"'
-  );
+axios.defaults.baseURL = "/api/v2";
+if (process.env.NODE_ENV === "production") {
+  axios.defaults.baseURL = `${process.env.VUE_APP_API_HOST}/api/${
+    process.env.VUE_APP_API_VERSION
+  }`;
 }
-
-// 默认 v2 接口
-axios.defaults.baseURL = basename ? basename.content : "/api/v2";
 
 export default axios;

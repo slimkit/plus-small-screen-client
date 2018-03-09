@@ -3,7 +3,9 @@
     <head-top :go-back='goBack' title='动态详情'></head-top>
     <div class="ffd-body">
       <div ref="images" class="ffd-body-images">
-        <img v-for="image in imagesFormat" :key="image.url" :src="image.url" :width="image.width" :height="image.height" />
+        <async-file v-for="image in imagesFormat" :key="image.file" :file="image.file">
+          <img slot-scope="props" :src="props.src" :width="image.width" :height="image.height">
+        </async-file>
       </div>
       <div ref="content" class="ffd-body-content" v-html='body'>
       </div>
@@ -135,16 +137,14 @@ export default {
       }
 
       return this.images.map(item => {
-        let newItem = {};
         let size = _.split(item.size, "x");
         let rato = parseInt(size[0]) / this.clientWidth;
-        newItem.width = this.clientWidth;
-        newItem.height = parseInt(parseInt(size[1]) / rato);
-        newItem.url = `${this.baseUrl}/files/${item.file}?token=${
-          this.currentUserToken
-        }`;
 
-        return newItem;
+        return {
+          ...item,
+          width: this.clientWidth,
+          height: parseInt(parseInt(size[1]) / rato)
+        };
       });
     }
   },

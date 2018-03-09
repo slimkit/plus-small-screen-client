@@ -8,6 +8,7 @@ import loadMore from "./components/loadMore";
 import HeadTop from "./components/HeadTop";
 import FootGuide from "./components/FootGuide";
 import DiySelect from "./components/DiySelect";
+import AsyncFile from "./components/common/AsyncFile";
 
 import NavTabs from "@/components/tabs/NavTabs.vue";
 
@@ -21,5 +22,6 @@ export default [
   HeadTop,
   FootGuide,
   DiySelect,
-  NavTabs
+  NavTabs,
+  AsyncFile
 ];

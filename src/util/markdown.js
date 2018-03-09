@@ -7,7 +7,7 @@ import axios from "../http";
  *
  * @type {Object}
  */
-const markdown = markdownIt({
+export const markdown = markdownIt({
   html: false
 }).use(plusImagePlugin, `${axios.defaults.baseURL}/files/`);
 

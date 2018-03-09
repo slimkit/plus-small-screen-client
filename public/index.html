@@ -1,22 +1,19 @@
 <!DOCTYPE html>
-<html lang="{{ app()->getLocale() }}">
+<html lang="zh-CN">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, minimal-ui">
     <link rel="shortcut icon" href="<%= webpackConfig.output.publicPath %>favicon.ico">
-
-    @yield('head')
-
+    <meta name="keywords" content="<%= process.env.VUE_APP_KEYWORDS %>">
+    <meta name="description" content="<%= process.env.VUE_APP_DESCRIPTION %>">
+    <title><%= process.env.VUE_APP_NAME %></title>
   </head>
   <body>
     <noscript>
-      <strong>We're sorry but try-vue-cli doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+      <strong>We're sorry but <%= webpackConfig.output%> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
     </noscript>
     <div id="app"></div>
     <!-- built files will be auto injected -->
-
-    @yield('body')
-
   </body>
 </html>

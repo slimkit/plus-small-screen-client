@@ -66,14 +66,11 @@
 </template>
 <script>
 import HeadRoom from "headroom.js";
-import MarkdownIt from "markdown-it";
 import newsItem from "./components/newsItem.vue";
-import plusImageSyntax from "markdown-it-plus-image";
 import newsToolBar from "./components/newsToolBar.vue";
 import commentItem from "./components/commentItem.vue";
+import md from "../../util/markdown";
 
-const basename = "/api/v2/files/";
-const md = new MarkdownIt().use(plusImageSyntax, basename);
 export default {
   name: "news-detail",
   components: {

@@ -14,12 +14,14 @@
         {{ comment.body }}
       </span>
       <section v-if="comment.commentable !== null" @click="goToFeedDetail()">
-        <div :class="`${prefixCls}-item-bottom-noImg`" class="content" v-if="!getImage">
+        <div :class="`${prefixCls}-item-bottom-noImg`" class="content" v-if="!getFirstImage">
           {{ comment.commentable.feed_content }}
         </div>
         <div :class="`${prefixCls}-item-bottom-img`" v-else>
           <div class="img">
-            <img :src="getImage" :alt="comment.user.name">
+            <async-file :file="getFirstImage.id">
+              <img slot-scope="props" :src="props.src" :alt="comment.user.name" />
+            </async-file>
           </div>
           <div class="content">
             {{ comment.commentable.feed_content }}
@@ -99,14 +101,16 @@ export default {
      * @Author   Wayne
      * @DateTime 2018-01-31
      * @Email    qiaobin@zhiyicx.com
-     * @return   {[type]}            [description]
+     * @return   {false|Object}            [description]
      */
-    getImage() {
+    getFirstImage() {
       const { comment } = this;
       const { length } = comment.commentable.images;
       if (length > 0) {
-        const { 0: img = {} } = comment.commentable.images;
-        return `/api/v2/files/${img.id}`;
+
+        const [ img ] = comment.commentable.images;
+
+        return img;
       }
 
       return false;

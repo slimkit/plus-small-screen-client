@@ -8,10 +8,14 @@
         <div
         :class="['m-pics-box',{ 'long': isLongImg(img) }]"
         :style='pics.length === 1 ? longStyle(img.w, img.h) : ""'>
-          <div
-          class="m-pic" 
-          @click.stop='handleClick($event, index)'
-          :style="{ backgroundImage: `url(${img.src})` }" />
+          <async-file :file="img.file" >
+            <div
+              class="m-pic" 
+              slot-scope="props"
+              @click.stop='handleClick($event, index, props.src)'
+              :style="{ backgroundImage: `url(${props.src})` }"
+            />
+          </async-file>
         </div>
       </li>
     </ul>
@@ -31,12 +35,13 @@ export default {
     }
   },
   methods: {
-    handleClick($event, index) {
+    handleClick($event, index, src) {
       const els = this.$el.querySelectorAll(".m-pic");
       const images = this.pics.map((img, index) => {
         return {
           ...img,
-          el: els[index]
+          el: els[index],
+          src
         };
       });
       bus.$emit("mvGallery", index, images);
@@ -44,11 +49,8 @@ export default {
     isLongImg(img) {
       const [w, h] = img.size.split("x");
       img.title = img.paid_node > 0 && !img.paid ? "购买查看" : "";
-      img.src = `/api/v2/files/${img.file}?token=${
-        img.paid_node > 0 ? this.$store.state.CURRENTUSER.token : ""
-      }`;
-      img.w = w;
-      img.h = h;
+      img.w = parseInt(w);
+      img.h = parseInt(h);
       return w > 3 * h || h > 3 * w;
     },
 
