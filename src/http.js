@@ -11,14 +11,6 @@ let TOKEN;
 axios.interceptors.request.use(
   config => {
     TOKEN = (localEvent.get("CURRENTUSER") || {}).token;
-
-    // if(config.method === 'post') {
-    //     // JSON 转换为 FormData
-    //     const formData = new FormData()
-    //     Object.keys(config.data).forEach(key => formData.append(key, config.data[key]))
-    //     config.data = formData
-    // }
-
     if (TOKEN) {
       config.headers.Authorization = `Bearer ${TOKEN}`;
     }
@@ -47,7 +39,6 @@ axios.interceptors.response.use(
     const setTimeoutCallback = () => {
       setTimeout(callback, 500);
     };
-
     if (error.response) {
       const { status, data } = error.response;
       switch (status) {
@@ -65,7 +56,8 @@ axios.interceptors.response.use(
     } else {
       console.log("Error", error.message);
     }
-    return false;
+
+    return Promise.reject(error);
   }
 );
 

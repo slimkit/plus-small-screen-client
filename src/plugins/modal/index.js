@@ -67,7 +67,7 @@ Modal.info = (options = {}) => {
             directives: [
               {
                 name: "show",
-                value: typeof options.title === "boolean" && !!options.title
+                value: !!options.title
               }
             ],
             class: `${prefixCls}-info-head`

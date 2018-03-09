@@ -4,7 +4,6 @@
   :class="['m-pics',`m-pics-${pics.length}`]">
     <ul class="m-pics-list">
       <li v-for='(img, index) in pics' :key="`pics-${id}-${index}`">
-        <!-- :style='{"--w": img.w, "--h": img.h}' -->
         <div
         :class="['m-pics-box',{ 'long': isLongImg(img) }]"
         :style='pics.length === 1 ? longStyle(img.w, img.h) : ""'>
@@ -70,7 +69,7 @@ export default {
   cursor: pointer;
   background-size: cover;
   background-repeat: no-repeat;
-  background-position: 50%;
+  background-position: center;
   position: absolute;
   width: 100%;
   height: 100%;
@@ -97,6 +96,7 @@ export default {
     padding-bottom: 100%;
     width: 100%;
     height: 0;
+    max-width: 100%;
     background-color: #f4f5f6;
     &.long {
       .m-pic:after {
@@ -144,10 +144,11 @@ export default {
     }
     li {
       width: 100%;
+      .m-pics-box {
+        max-width: 100%;
+      }
     }
     .long {
-      width: calc(~"var(--w) * 1px");
-      padding-bottom: calc(~"var(--h) / var(--w) * 100%");
       max-width: 100%;
     }
   }

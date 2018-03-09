@@ -44,6 +44,7 @@
         </div>
       </div>
     </div>
+    <button class="pic-action-btn" v-show='!!title'>{{ title }}</button>
   </div>
 </template>
 <script>
@@ -56,7 +57,8 @@ export default {
   name: "pswp",
   data() {
     return {
-      photoswipe: null
+      photoswipe: null,
+      title: ""
     };
   },
   created() {
@@ -78,16 +80,23 @@ export default {
             .post(`/currency/purchases/${paidNode}`, {
               validateStatus: s => s === 201
             })
-            .then(({ data: { message = ["付费成功"] } = {} }) => {
-              console.log(1);
-              vm.$Message.success(message);
-              const newImg = `${img.src}&=${new Date().getTime()}`;
-              img.el.style.backgroundImage = `url(${newImg})`;
-              vm.photoswipe.currItem.container.querySelector(
-                "img.pswp__img"
-              ).src = newImg;
-              callback && callback();
-            });
+            .then(
+              ({ data: { message = ["付费成功"] } = {} }) => {
+                vm.$Message.success(message);
+                const newImg = `${img.src}&=${new Date().getTime()}`;
+                img.el.style.backgroundImage = `url(${newImg})`;
+                vm.photoswipe.currItem.container.querySelector(
+                  "img.pswp__img"
+                ).src = newImg;
+                callback && callback();
+              },
+              err => {
+                const { response: { status } } = err;
+                if (status === 403) {
+                  callback && callback();
+                }
+              }
+            );
         }
       });
     },
@@ -107,23 +116,26 @@ export default {
           // captionEl - caption DOM element
           // isFake    - true when content is added to fake caption container
           //             (used to get size of next or previous caption)
-          const btn = document.createElement("button");
-          btn.className = "pic-action-btn";
           if (!item.title) {
-            btn.innerHTML = "";
+            vm.title = "";
             return false;
+          } else {
+            vm.title = item.title;
+            const { amount, paid_node } = item;
+            vm.$el
+              .querySelector(".pic-action-btn")
+              .addEventListener("click", () => {
+                vm.payForImg(amount, paid_node, item);
+              });
+            return true;
           }
-          btn.innerHTML = item.title;
-          const { amount, paid_node } = item;
-          vm.$el.appendChild(btn);
-          btn.addEventListener("click", () => {
-            vm.payForImg(amount, paid_node, item);
-          });
-          return true;
         }
       };
       this.photoswipe = new PhotoSwipe(this.$el, PhotoSwipeUI, images, options);
       this.photoswipe.init();
+      this.photoswipe.listen("close", function() {
+        this.title = "";
+      });
     }
   }
 };
