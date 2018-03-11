@@ -17,6 +17,8 @@ const feed = () => import(/* webpackChunkName: 'feed' */ "../page/feed/feed"),
   // 发送文本动态组件
   postTextFeed = () =>
     import(/* webpackChunkName: 'feed' */ "../page/feed/children/postText"),
+  postImgFeed = () =>
+    import(/* webpackChunkName: 'post' */ "../page/post/PostFeed.vue"),
   discover = () =>
     import(/* webpackChunkName: 'common' */ "../page/discover/discover"),
   profile = () =>
@@ -71,8 +73,6 @@ const feed = () => import(/* webpackChunkName: 'feed' */ "../page/feed/feed"),
     import(/* webpackChunkName: 'common' */ "../page/common/searchUser"),
   postGroupFeed = () =>
     import(/* webpackChunkName: 'common' */ "../page/common/postGroupFeed/"),
-  postWenzi = () =>
-    import(/* webpackChunkName: 'common' */ "../page/common/postWenzi"),
   /**
    * 消息页面组件
    * @Author   Wayne
@@ -333,6 +333,14 @@ const router = [
       requiresAuth: true
     }
   },
+  {
+    path: "/post/pic",
+    component: postImgFeed,
+    meta: {
+      title: "发布图片",
+      requiresAuth: true
+    }
+  },
   /**
    * 消息页面路由
    */
@@ -502,15 +510,6 @@ const router = [
     meta: { title: "选择位置" }
   } /* 定位 */,
 
-  {
-    path: "/post/wenzi",
-    component: postWenzi,
-    meta: {
-      keepAlive: true,
-      title: "发布文字",
-      requiresAuth: true
-    }
-  },
   {
     path: "/post/fatie",
     name: "postGroupFeed",
