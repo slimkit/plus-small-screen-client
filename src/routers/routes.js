@@ -324,12 +324,12 @@ const router = [
     meta: { title: "动态", keepAlive: true }
   } /* 动态 */,
 
-  { path: "/feed-detail/:feedID", component: feedDetail }, /* 动态详情 */
-  { 
-    path: '/post/text',
+  { path: "/feed-detail/:feedID", component: feedDetail } /* 动态详情 */,
+  {
+    path: "/post/text",
     component: postTextFeed,
     meta: {
-      title: '发布动态',
+      title: "发布动态",
       requiresAuth: true
     }
   },

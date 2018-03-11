@@ -15,7 +15,6 @@
   </div>
 </template>
 <script>
-
 /**
  * 消息-评论列表
  */
@@ -91,7 +90,7 @@ export default {
           if (data.length > 0) {
             this.refreshData = data;
           }
-          this.$nextTick(this.$refs.loadmore.topEnd)
+          this.$nextTick(this.$refs.loadmore.topEnd);
         });
     },
 
