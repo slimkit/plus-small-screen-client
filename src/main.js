@@ -12,7 +12,7 @@ import imgLazy from "./plugins/imgLazy";
 import Message from "./plugins/message/";
 import imgCropper from "./plugins/imgCropper";
 
-import "./style/index.less";
+import "./style/tsplus.less";
 import "github-markdown-css";
 
 // Filters

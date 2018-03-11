@@ -1,87 +1,97 @@
-*,
-*:after,
-*:before {
-  border: none;
-  color: inherit;
+html,
+body,
+#app {
+  height: 100%;
+}
+.m-container-max {
+  font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+.m-wrapper {
+  position: relative;
+}
+.m-wbox,
+.m-wrapper {
+  height: 100%;
+}
+.m-main {
+  -webkit-overflow-scrolling: touch;
+  background-color: #fff;
+}
+.m-lim-width {
+  margin: 0 auto;
   box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
-  -webkit-font-smoothing: antialiased;
-  &:hover {
-    outline: none;
+  width: 100%;
+}
+
+/* display m-box */
+.m-box {
+  display: flex;
+}
+.m-box-model {
+  display: flex;
+  position: relative;
+  box-sizing: border-box;
+  align-items: stretch;
+  flex-direction: column;
+  flex-shrink: 0;
+  justify-content: flex-start;
+}
+.m-fd-row {
+  flex-direction: row;
+}
+.m-aln-center {
+  align-items: center;
+}
+.m-justify-bet {
+  justify-content: space-between;
+}
+.m-justify-end {
+  justify-content: flex-end;
+}
+.m-flex-base0 {
+  flex-basis: 0;
+  min-width: 0;
+}
+.m-flex-grow1 {
+  flex-grow: 1;
+}
+.m-flex-shrink1 {
+  flex-shrink: 1;
+}
+.m-alnf-sth {
+  align-self: stretch;
+}
+
+/* position */
+.m-pos-r {
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+.m-pos-f {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+/* button */
+.m-send-btn {
+  min-width: 0;
+  color: @primary;
+  & + & {
+    margin-left: 12px;
+  }
+  &.disabled {
+    opacity: 0.5;
   }
 }
 
-input[type='button'],
-input[type='submit'],
-input[type='search'],
-input[type='reset'],
-input[type='number'] {
-  -webkit-appearance: none;
-}
-*:focus {
-  outline: none
-}
-
-input:-webkit-autofill,
-textarea:-webkit-autofill,
-select:-webkit-autofill {
-  -webkit-box-shadow: 0 0 0 1000px #fff inset !important;
-  background: none !important;
-  color: inherit !important;
-}
-
-input[type='text']:focus,
-input[type='password']:focus,
-textarea:focus {
-  -webkit-box-shadow: 0 0 0 1000px transparent inset;
-  outline: none;
-}
-
-body {
+/* text */
+.m-wz-def {
   font-size: 16px;
-  color: #333;
-  background-color: #f4f5f5;
-  font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB',
-    'Microsoft YaHei', '微软雅黑';
-}
-
-a {
-  text-decoration: none;
-}
-
-ul,
-li {
-  padding: 0;
-  margin: 0;
-}
-
-svg {
-  fill: currentColor;
-}
-
-button,
-input[type='button'],
-input[type='submit'],
-input[type='search'],
-input[type='reset'] {
-  -webkit-appearance: none;
-}
-
-input:-webkit-autofill,
-textarea:-webkit-autofill,
-select:-webkit-autofill {
-  -webkit-box-shadow: 0 0 0 1000px #fff inset !important;
-  background: none !important;
-  color: inherit !important;
-}
-
-input[type='text']:focus,
-input[type='password']:focus,
-textarea:focus {
-  -webkit-box-shadow: 0 0 0 1000px transparent inset;
-  outline: none;
-}
-
-textarea {
-  -webkit-appearance: none;
+  font-weight: 400;
+  line-height: 1.3125;
+  word-wrap: break-word;
 }

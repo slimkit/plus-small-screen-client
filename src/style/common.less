@@ -1,5 +1,5 @@
 .c_59b6d7 {
-  color: #59b6d7;
+  color: @primary;
 }
 .ellipsis {
   overflow: hidden;
@@ -13,7 +13,7 @@
 .@{entry-prefix} {
   &__group {
     margin-top: 20px;
-    background-color: #fff;
+    background-color: @body-bg;
     &.padding {
       padding: 0 20px;
     }
@@ -43,8 +43,7 @@
       fill: #dfdfdf;
     }
     & + & {
-      border-top: 1px solid #ededed;
-      /*no*/
+      border-top: 1px solid @border-color; /*no*/
     }
   }
 }
@@ -53,7 +52,7 @@
 .sub__navs {
   z-index: 9;
   height: 90px;
-  background-color: #fff;
+  background-color: @body-bg;
   display: flex;
   align-items: center;
   justify-content: space-around;
@@ -61,20 +60,20 @@
   top: 90px;
   left: 0;
   right: 0;
-  border-bottom: 1px solid #ededed; /*no*/
+  border-bottom: 1px solid @border-color; /*no*/
   &--item {
     height: 100%;
     line-height: 88px;
     font-size: 30px;
-    color: #999;
+    color: @text-color3;
     border-bottom: 1px solid transparent;
     &.active {
-      color: #333;
+      color: @text-color1;
     }
   }
   .has__border &--item {
     &.active {
-      border-bottom: 2px solid #59b6d7; /*no*/
+      border-bottom: 2px solid @primary; /*no*/
     }
   }
 }
