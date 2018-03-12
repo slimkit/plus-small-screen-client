@@ -67,12 +67,12 @@ git clone https://github.com/zhiyicx/plus-component-h5
 
 ```
 http:
-    cros:
+    cors:
         credentials: true
         origin:
             - http://my-app.com
 ```
 
-> 因为 origin 是可以配置多个运行跨域的域名的，你将 `my-app.com` 替换为 SPA 的域名即可。
+> 因为 origin 是可以配置多个运行跨域的域名的，你将 `http://my-app.com` 替换为 SPA 的地址即可。
 
 当然，你可以将 `origin` 直接设置为 `*` 来运行所有的跨域请求。
