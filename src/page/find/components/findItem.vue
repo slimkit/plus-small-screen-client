@@ -45,11 +45,10 @@ export default {
           this.loading = false;
           this.user.follower = follower;
         })
-        .catch(err => {
-          const { response: { data = { message: "操作失败" } } = {} } = err;
-
-          this.loading = false;
-          this.$Message.error(data);
+        .catch(() => {
+          setTimeout(() => {
+            this.loading = false;
+          }, 3000);
         });
     }
   }
