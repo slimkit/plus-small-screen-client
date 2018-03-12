@@ -20,7 +20,7 @@
         <button class="long_btn" :disabled='disabled' @click='signIn'>
           <div>
             <span>登录</span>
-            <v-icon v-show='btnLoading' class='btn-loading' type='base-loading'></v-icon>
+            <v-icon v-show='btnLoading' class='rotate' type='base-loading'></v-icon>
           </div>
         </button>
         <div class="other_link">

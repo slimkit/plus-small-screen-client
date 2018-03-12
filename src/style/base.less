@@ -36,6 +36,14 @@ body,
   flex-shrink: 0;
   justify-content: flex-start;
 }
+.m-box-center {
+  display: flex;
+  justify-content: center;
+}
+.m-box-center-a {
+  display: flex;
+  align-items: center;
+}
 .m-fd-row {
   flex-direction: row;
 }
@@ -94,4 +102,49 @@ body,
   font-weight: 400;
   line-height: 1.3125;
   word-wrap: break-word;
+}
+
+/* transition */
+.m-trans {
+  transition: all 0.2s ease;
+  &.none {
+    transition: none;
+  }
+}
+
+/* form */
+
+// 隐藏input
+.m-rfile {
+  position: absolute;
+  -wekbit-appearace: none;
+  display: none;
+  background: 0 0;
+  height: 100%;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  width: 100%;
+  z-index: 1;
+}
+
+/* svg */
+
+.m-style-svg {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+  vertical-align: text-bottom;
+  user-select: none;
+  fill: currentcolor;
+}
+
+.m-svg-def {
+  width: 32px;
+  height: 32px;
+}
+
+.m-svg-big {
+  width: 48px;
+  height: 48px;
 }

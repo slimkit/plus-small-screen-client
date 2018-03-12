@@ -8,19 +8,25 @@
             </div>
             <div class="m-box-model m-flex-grow1 m-aln-center m-flex-base0 m-head-top-title">发布动态</div>
             <div class="m-box m-flex-grow1 m-aln-center m-flex-base0 m-justify-end">
+                <svg v-if="loading" class="m-style-svg m-svg-def rotate">
+                  <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-loading"></use>
+                </svg>
               <a 
+                v-else
                 class="m-send-btn"
                 :class="{ disabled }"
-                href="javascript:;">发布</a> 
+                @click="sendmessage"
+                href="javascript:;">发布</a>
             </div>
           </header>
           <main
            class="m-reles-con m-lim-width m-box-model m-flex-shrink1 m-flex-grow1"
-           @click.stop='areaFocus'>
+           @click.self='areaFocus'>
            <content-text
            :rows='8'
            class='m-reles-txt-wrap'
            ref="contentText" />
+          <image-list />
           </main>
         </div>
     </div>
@@ -28,15 +34,18 @@
 </template>
 <script>
 import { mapGetters } from "vuex";
+import ImageList from "./components/ImageList.vue";
 import ContentText from "./components/ContentText.vue";
 export default {
   name: "post-feed",
   components: {
+    ImageList,
     ContentText
   },
   data() {
     return {
       curpos: 0,
+      loading: !1,
       contentText: "",
       scrollHeight: 0
     };
@@ -60,7 +69,33 @@ export default {
     successCallback() {
       this.$refs.contentText.clean();
     },
-    sendmessage() {}
+    sendmessage() {
+      if (!this.disabled) {
+        this.loading = true;
+        this.$http
+          .post(
+            "feeds",
+            {
+              feed_content: this.compose,
+              images: this.composePhoto.map(i => ({ id: i })),
+              feed_from: 2,
+              feed_mark:
+                new Date().valueOf() + "" + this.$store.state.CURRENTUSER.id
+            },
+            {
+              validateStatus: s => s === 201
+            }
+          )
+          .then(({ data: { id, message = ["发布成功"] } }) => {
+            if (id && id > 0) {
+              this.$Message.success(message);
+            }
+            this.$router.go(-1);
+            this.loading = false;
+            this.successCallback();
+          });
+      }
+    }
   },
   mounted() {}
 };
