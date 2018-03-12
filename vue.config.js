@@ -1,5 +1,3 @@
-console.log(require('./theme'));
-
 module.exports = {
   baseUrl: process.env.BASE_URL || "/",
   lintOnSave: true,
@@ -8,7 +6,7 @@ module.exports = {
     sourceMap: !!eval(process.env.GENERATE_CSS_MAP),
     loaderOptions: {
       less: {
-        globalVars: require('./theme')
+        globalVars: require("./theme")
       }
     }
   },
