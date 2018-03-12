@@ -192,7 +192,7 @@ export default {
   }
   &-goback {
     left: 30px;
-    width: 100px;
+    // width: 100px;
     height: 100%;
     margin-left: 30px;
     font-size: 32px;
