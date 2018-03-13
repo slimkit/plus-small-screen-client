@@ -48,7 +48,7 @@ export default file => {
       .then(status => {
         status && typeof status === "number"
           ? resolve(status)
-          : sendImage(file).then(id => reject(id), err => reject(err));
+          : sendImage(file).then(id => resolve(id), err => reject(err));
       })
       .catch(err => {
         reject(err);

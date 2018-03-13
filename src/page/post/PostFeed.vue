@@ -102,16 +102,6 @@ export default {
 </script>
 
 <style lang='less'>
-.m-head-top {
-  height: 90px;
-  border: 1px solid #dedede;
-  padding: 0 30px;
-  font-size: 32px;
-}
-
-.m-head-top-title {
-  font-size: 36px;
-}
 .m-reles {
   &-con {
     overflow-y: auto;

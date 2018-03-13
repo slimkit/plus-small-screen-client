@@ -1,5 +1,5 @@
 <template>
-  <router-link tag='div' :to='`/news/${news.id}`' replace class="news-item">
+  <router-link tag='div' :to='`/news/${news.id}`' class="news-item">
     <section class="news-item--body">
       <h2>{{ title }}</h2>
       <p>

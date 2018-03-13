@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div @touchmove.prevent>
     <transition name='toast'>
       <div v-if='show' class="m-pop-box" @click='cancel'></div>
     </transition>

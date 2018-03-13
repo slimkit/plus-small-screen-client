@@ -64,7 +64,7 @@ export default {
         });
     },
     moreAction() {
-      const btns = [
+      const actions = [
         {
           text: "分享",
           method: () => {
@@ -83,14 +83,8 @@ export default {
             console.log("举报");
           }
         }
-        // {
-        //   text: "申请动态置顶",
-        //   method: () => {
-        //     console.log("申请动态置顶");
-        //   }
-        // }
       ];
-      bus.$emit("actionSheet", btns, "取消");
+      bus.$emit("actionSheet", actions, "取消");
       console.log("更多操作");
     },
     /**

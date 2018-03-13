@@ -3,6 +3,13 @@ body,
 #app {
   height: 100%;
 }
+
+/* color */
+
+.m-bg-fff {
+  background-color: @body-bg;
+}
+
 .m-container-max {
   font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
 }
@@ -53,6 +60,12 @@ body,
 .m-justify-bet {
   justify-content: space-between;
 }
+.m-justify-aro {
+  justify-content: space-around;
+}
+.m-justify-center {
+  justify-content: center;
+}
 .m-justify-end {
   justify-content: flex-end;
 }
@@ -63,8 +76,14 @@ body,
 .m-flex-grow1 {
   flex-grow: 1;
 }
+.m-flex-grow0 {
+  flex-grow: 0;
+}
 .m-flex-shrink1 {
   flex-shrink: 1;
+}
+.m-flex-shrink0 {
+  flex-shrink: 0;
 }
 .m-alnf-sth {
   align-self: stretch;
@@ -213,10 +232,15 @@ body,
 
 /* z-index */
 
+.m-pos-f {
+  z-index: 10;
+}
+.m-spinner {
+  z-index: 20;
+}
 .m-pop-box {
   z-index: 101;
 }
-
 .m-acbtn-box {
   z-index: 110;
 }

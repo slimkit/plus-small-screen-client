@@ -192,8 +192,6 @@ export default {
                 src: window.URL.createObjectURL(files[i]),
                 loading: true
               };
-
-              console.log(Object.assign({}, this.imgFormat(), imgObj));
               this.pics.push(Object.assign({}, this.imgFormat(), imgObj));
             }
             $input.value = "";
