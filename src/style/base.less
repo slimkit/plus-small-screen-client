@@ -148,3 +148,75 @@ body,
   width: 48px;
   height: 48px;
 }
+
+/* 弹层 */
+
+.m-pop-box {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.m-pop-open {
+  overflow-y: hidden;
+}
+// actionSheet
+.m-acbtn-box {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: @gray-bg;
+}
+
+.m-acbtn-list {
+  background-color: #fff;
+  display: block;
+  & + & {
+    margin-top: 15px;
+  }
+  li {
+    height: 90px;
+    line-height: 90px;
+    text-align: center;
+    border-bottom: 1px solid @border-color;
+  }
+  a {
+    color: @text-color1;
+  }
+}
+
+/* vue transition */
+// pop
+.pop-enter-active,
+.pop-leave-active {
+  transition: all 0.4s ease;
+}
+.pop-enter,
+.pop-leave-active {
+  -webkit-transform: translateY(100%);
+  transform: translateY(100%);
+}
+
+// toast
+.toast-enter-active,
+.toast-leave-active {
+  transition: all 0.2s ease;
+}
+.toast-enter,
+.toast-leave-active {
+  opacity: 0;
+}
+
+/* z-index */
+
+.m-pop-box {
+  z-index: 101;
+}
+
+.m-acbtn-box {
+  z-index: 110;
+}

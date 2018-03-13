@@ -1,3 +1,4 @@
+import bus from "@/bus.js";
 export default {
   computed: {
     // 文本内容
@@ -63,6 +64,33 @@ export default {
         });
     },
     moreAction() {
+      const btns = [
+        {
+          text: "分享",
+          method: () => {
+            console.log("分享");
+          }
+        },
+        {
+          text: "收藏",
+          method: () => {
+            console.log("收藏");
+          }
+        },
+        {
+          text: "举报",
+          method: () => {
+            console.log("举报");
+          }
+        }
+        // {
+        //   text: "申请动态置顶",
+        //   method: () => {
+        //     console.log("申请动态置顶");
+        //   }
+        // }
+      ];
+      bus.$emit("actionSheet", btns, "取消");
       console.log("更多操作");
     },
     /**
