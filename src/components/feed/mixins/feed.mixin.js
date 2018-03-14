@@ -36,7 +36,7 @@ export default {
      * @author jsonleex <jsonlseex@163.com>
      */
     viewFeed() {
-      this.$router.push(`/feed-detail/${this.feed.id}`);
+      this.$router.push(`/feed/${this.feed.id}`);
     },
     formatData() {
       console.log("format data");

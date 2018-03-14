@@ -1,549 +1,352 @@
 <template>
-  <div class="feed-detail m-main">
-    <!-- todo Refactor -->
-<!--     <header class="m-box-model m-fd-row m-head-top m-justify-bet m-aln-center m-lim-width">
-      <div class="m-box m-flex-grow1 m-aln-center m-flex-base0">
-        <svg class='m-style-svg m-svg-def' @click='goBack'>
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-back"></use>
-        </svg>
-      </div>
-      <div class="m-box-model m-flex-grow1 m-aln-center m-flex-base0 m-head-top-title">
-        <div class="m-avatar-box small"></div>
-
-      </div>
-      <div class="m-box m-flex-grow1 m-aln-center m-flex-base0 m-justify-end">
-        <svg class='m-style-svg m-svg-def'>
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-share"></use>
-        </svg>
-      </div>
-    </header> -->
-    <!-- <head-top :go-back='goBack' title='动态详情'></head-top> -->
-    <div class="ffd-body">
-      <div ref="images" class="ffd-body-images">
-        <async-file v-for="image in imagesFormat" :key="image.file" :file="image.file">
-          <img slot-scope="props" :src="props.src" :width="image.width" :height="image.height">
-        </async-file>
-      </div>
-      <div ref="content" class="ffd-body-content" v-html='body'>
-      </div>
-      <div class="ffd-body-foot">
-        <div class="ffd-body-l">
-          <div :class="{'ffd-like-list-none': likes_count === 0}" class="ffd-like-list">
-            <div class="ffd-like-list-item" v-for='({user}) in likesList' :key="user.id">
-              <v-avatar :src='user.avatar' size='small' :sex='user.sex' :key='user.id'></v-avatar>
-            </div>
-          </div>
-          <span>{{ likes_count }}人点赞</span>
-        </div>
-        <div class="ffd-body-r">
-          <p>发布于{{ created_at | time2tips }}</p>
-          <p>{{ views_count }}人预览</p>
-        </div>
+  <article-card
+  :liked="liked"
+  :loading="loading"
+  @on-like="likeFeed"
+  @on-share="shareFeed"
+  @on-more="moreAction"
+  @on-comment="commentFeed"
+  >
+  <header slot="head" class="m-box m-head-top m-justify-bet m-aln-center m-lim-width m-pos-f m-main m-bb1">
+    <div class="m-box m-flex-grow1 m-aln-center m-flex-base0">
+      <svg class='m-style-svg m-svg-def' @click='goBack'>
+        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-back"></use>
+      </svg>
+    </div>
+    <div class="m-box-model m-flex-grow1 m-aln-center m-flex-base0 m-head-top-title">
+      <div class="m-avatar-box small">
+        <img :src="user.avatar">
       </div>
     </div>
-    <div class="ffd-foot">
-      <div class="ffd-foot-head">
-        {{ comments_count }}条评论
-      </div>
-      <div class="gdf-comment-list">
-        <div class="ffd-comment-item" v-for='comment in pinneds' :key="comment.id">
-          <router-link :to="`/user/${comment.user.id}`">
-            <v-avatar :src='comment.user.avatar' :sex='comment.user.sex'></v-avatar>
-          </router-link>
-          <div class="ffd-comment-body">
-            <section class="ffd-comment-body-top">
-              <router-link :to="`/user/${comment.user.id}`" tag="span">{{ comment.user.name }}</router-link>
-              <span>置顶</span>
-              <span>{{ comment.created_at | time2tips }}</span>
-            </section>
-            <p v-if="!comment.reply_user" @click="commentAction(comment.user_id, comment.user.name, comment.id)">{{ comment.body }}</p>
-            <section v-else class="ffd-comment-body-reply" @click.stop="commentAction(comment.user_id, comment.user.name, comment.id)">
-              回复
-              <span @click.prevent="goToUserHome(comment.reply.id)">{{ comment.reply.name }}</span>>: 
-              <i @click.stop="commentAction(comment.user_id, comment.user.name, comment.id)">{{comment.body}}</i>
-            </section>
-          </div>
-        </div>
-      </div>
-      <div class="gdf-comment-list">
-        <div class="ffd-comment-item" v-for='comment in comments' :key="comment.id">
-          <router-link :to="`/user/${comment.user.id}`">
-            <v-avatar :src='comment.user.avatar' :sex='comment.user.sex'></v-avatar>
-          </router-link>
-          <div class="ffd-comment-body">
-            <section class="ffd-comment-body-usually">
-              <router-link :to="`/user/${comment.user.id}`" tag="span">{{ comment.user.name }}</router-link>
-              <span>{{ comment.created_at | time2tips }}</span>
-            </section>
-            <p v-if="!comment.reply_user" @click="commentAction(comment.user_id, comment.user.name, comment.id)">{{ comment.body }}</p>
-            <section v-else class="ffd-comment-body-reply">
-              回复
-              <span @click.prevent="goToUserHome(comment.reply.id)">{{ comment.reply.name }}</span>: 
-              <i @click.stop="commentAction(comment.user_id, comment.user.name, comment.id)">{{comment.body}}</i>
-            </section>
-          </div>
-        </div>
-      </div>
+    <div class="m-box m-flex-grow1 m-aln-center m-flex-base0 m-justify-end">
+      <svg class='m-style-svg m-svg-def'>
+        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-share"></use>
+      </svg>
     </div>
-    <div class="ffd-action">
-      <div class="ffd-action-item" @click='likeFeed'>
-        <v-icon :type='`${ liked ? "feed-like":"feed-unlike"}`'></v-icon>
-        <p>喜欢</p>
+  </header>
+  <div class="m-flex-shrink1 m-flex-grow1 m-art m-main">
+    <div class="m-art-body">
+      <async-file
+        v-for="img in images"
+        v-if="img.file"
+        :key="img.file"
+        :file="img.file">
+        <img 
+        slot-scope="props"
+        :src="props.src">
+        />
+      </async-file>
+      <p>{{ feedContent }}</p>
+    </div>
+    <div class="m-box m-aln-center m-justify-bet m-art-foot">
+        <div class="m-flex-grow1 m-flex-shrink1 m-box m-aln-center m-art-like-list">
+          <template v-if='likeCount > 0'>
+            <ul class="m-box m-flex-grow0 m-flex-shrink0">
+              <li 
+              :key="id"
+              :style="{ zIndex: 5-index }" 
+              v-for="({user, id}, index) in likes.slice(0, 5)"
+              class="m-avatar-box tiny">
+                <img :src="user.avatar">
+              </li>
+            </ul>
+            <span>{{ likeCount | formatNum }}人点赞</span>
+          </template>
+        </div>
+        <div class="m-box-model m-aln-end m-art-info">
+          <span>发布于{{ time | time2tips }}</span>
+          <span>{{ feed.feed_view_count || 0 | formatNum }}浏览</span>
+        </div>
       </div>
-      <div class="ffd-action-item" @click='showCommentInput'>
-        <v-icon type='feed-comment'></v-icon>
-        <p>评论</p>
-      </div>
-      <div class="ffd-action-item">
-        <v-icon type='base-share'></v-icon>
-        <p>分享</p>
-      </div>
-      <div class="ffd-action-item">
-        <v-icon type='feed-more'></v-icon>
-        <p>更多</p>
-      </div>
+      <!-- todo 打赏功能 -->
+      <!--<div class="m-box-model m-box-center m-box-center-a m-art-reward">
+        <button class="m-art-rew-btn">打 赏</button>
+      </div>-->
     </div>
   </div>
+  <div class="m-box-model m-art-comments">
+    <ul class="m-box m-aln-center m-art-comments-tabs">
+      <li>{{ commentCount | formatNum }}条评论</li>
+    </ul>
+    <comment-item 
+      v-for="(comment) in pinnedCom"
+      :pinned="true"
+      :key="comment.id"
+      :comment="comment"/>
+    <comment-item
+      @click="replyComment"
+      v-for="(comment) in comments"
+      :key="comment.id"
+      :comment="comment"/>
+
+      <div class="m-box m-aln-center m-justify-center load-more-box">
+        <span v-if="noMoreCom" class="load-more-ph">---没有更多---</span>
+        <span v-else class="load-more-btn" @click.stop="fetchFeedComments(maxComId)">
+          {{fetchComing ? "加载中..." : "点击加载更多"}}
+        </span>
+        <!-- <button v-else class="load-more-btn" @click.stop="fetchNewsComments(maxComId)"></button> -->
+      </div>
+    </div>
+  </article-card>
 </template>
 <script>
-import _ from "lodash";
-import HeadTop from "@/components/HeadTop";
+import bus from "@/bus.js";
+import md from "@/util/markdown.js";
+import ArticleCard from "@/page/article/ArticleCard.vue";
+import CommentItem from "@/page/article/ArticleComment.vue";
+
 export default {
-  name: "feedDetail",
+  name: "feed-detail",
   components: {
-    HeadTop
+    ArticleCard,
+    CommentItem
   },
   data() {
     return {
-      body: "",
-      created_at: "",
-      images: [],
+      oldID: 0,
+      feed: {},
+      loading: true,
+      fetching: false,
+
+      likes: [],
       comments: [],
-      comments_count: 0,
-      liked: false,
-      likes_count: 0,
-      views_count: 0,
-      user: {},
-      likesList: [],
-      pinneds: []
+      pinnedCom: [],
+
+      fetchComing: false,
+      noMoreCom: false,
+      maxComId: 0
     };
   },
   computed: {
-    bodyWith() {
-      return this.$refs.body;
-    },
     feedID() {
       return this.$route.params.feedID;
     },
-    currentUserId() {
-      return this.$store.state.CURRENTUSER.id || 0;
+    uid() {
+      return this.$store.state.CURRENTUSER.id;
     },
-    currentUserToken() {
-      return this.$store.state.CURRENTUSER.token || "";
+    user() {
+      const { user } = this.feed;
+      return user && user.id === this.feed.user_id ? user : {};
     },
-    clientWidth() {
-      return this.$refs.content.clientWidth || 0;
+    isMine() {
+      return this.feed.user_id === this.uid;
     },
-    baseUrl() {
-      return this.$http.defaults.baseURL;
-    },
-    // 图片展示
-    imagesFormat() {
-      if (this.images.length === 0) {
-        return [];
+    liked: {
+      get() {
+        return !!this.feed.has_like;
+      },
+      set(val) {
+        this.feed.has_like = val;
       }
-
-      return this.images.map(item => {
-        let size = _.split(item.size, "x");
-        let rato = parseInt(size[0]) / this.clientWidth;
-
-        return {
-          ...item,
-          width: this.clientWidth,
-          height: parseInt(parseInt(size[1]) / rato)
-        };
-      });
+    },
+    likeCount: {
+      get() {
+        return this.feed.like_count || 0;
+      },
+      set(val) {
+        val && (this.feed.like_count = val);
+      }
+    },
+    commentCount: {
+      get() {
+        return this.feed.feed_comment_count || 0;
+      },
+      set(val) {
+        val > 0, (this.feed.feed_comment_count = val);
+      }
+    },
+    images() {
+      return this.feed.images || [];
+    },
+    time() {
+      return this.feed.created_at || "";
+    },
+    feedContent() {
+      return this.feed.feed_content || "";
     }
   },
   methods: {
-    goToUserHome(id) {
-      this.$router.push(`/user/${id}`);
-    },
-    async initData() {
-      const {
-        data: {
-          feed_content: body,
-          created_at: createdAt,
-          images,
-          feed_comment_count: commentsCount,
-          has_like: liked,
-          like_count: likesCount,
-          feed_view_count: viewsCount,
-          user
-        }
-      } = await this.$http.get(`/feeds/${this.feedID}`);
-
-      this.body = body;
-      this.created_at = createdAt;
-      this.images = images;
-      this.comments_count = commentsCount;
-      this.liked = liked;
-      this.likes_count = likesCount;
-      this.views_count = viewsCount;
-      this.user = user;
-    },
-
-    // 获取评论列表
-    async getComments() {
-      const { data } = await this.$http.get(`/feeds/${this.feedID}/comments`, {
-        limit: 15
-      });
-      this.comments = data.comments;
-      this.pinneds = data.pinneds;
-    },
-
-    // 获取点赞列表
-    async getFeedLikes() {
-      const { data } = await this.$http.get(`/feeds/${this.feedID}/likes`, {
-        limit: 5
-      });
-      this.likesList = data;
-    },
-
     goBack() {
-      this.$router.go(-1);
+      this.$router.back();
     },
-    to(path) {
-      path = typeof path === "string" ? { path } : path;
-      if (path) {
-        this.$router.push(path);
-      }
+    fetchFeed() {
+      if (this.fetching) return;
+      this.fetching = true;
+      this.$http
+        .get(`/feeds/${this.feedID}`)
+        .then(({ data = {} }) => {
+          this.feed = data;
+          this.oldID = this.feedID;
+          setTimeout(() => {
+            this.loading = false;
+            this.fetching = false;
+            this.fetchFeedComments();
+            this.fetchFeedLikes();
+          }, 800);
+        })
+        .catch(err => {
+          console.log(err);
+          this.$router.back();
+        });
     },
-
+    fetchFeedLikes() {
+      this.$http.get(`/feeds/${this.feedID}/likes`).then(({ data = [] }) => {
+        data && data.length, (this.likes = data);
+      });
+    },
+    fetchFeedComments(after = 0) {
+      if (this.fetchComing) return;
+      this.fetchComing = true;
+      this.$http
+        .get(`/feeds/${this.feedID}/comments`, {
+          params: {
+            after
+          }
+        })
+        .then(({ data: { pinneds = [], comments = [] } }) => {
+          pinneds &&
+            pinneds.length &&
+            (this.pinnedCom = after ? [...this.pinneds, ...pinneds] : pinneds);
+          comments && comments.length
+            ? ((this.comments = after
+                ? [...this.comments, ...comments]
+                : comments),
+              (this.maxComId = comments[comments.length - 1].id))
+            : (this.noMoreCom = true);
+          this.fetchComing = false;
+        })
+        .catch(() => {
+          this.fetchComing = false;
+        });
+    },
     likeFeed() {
       const method = this.liked ? "delete" : "post";
       const url = this.liked
         ? `/feeds/${this.feedID}/unlike`
         : `/feeds/${this.feedID}/like`;
-      const num = this.liked ? this.likes_count - 1 : this.likes_count + 1;
+      if (this.fetching) return;
+      this.fetching = true;
       this.$http({
         method,
-        url
-      }).then(() => {
-        this.liked = !this.liked;
-        this.likes_count = num;
-        let user = this.$store.getters.getUserById(this.currentUserId);
-        if (!this.liked) {
-          _.remove(this.likesList, n => n.user_id === this.currentUserId);
-        } else {
-          this.likesList.unshift({
-            user,
-            user_id: this.currentUserId
-          });
-        }
-      });
-    },
-    /**
-     * 评论帖子
-     * @author jsonleex <jsonlseex@163.com>
-     * @param  {String} txt
-     * @param  {[type]} option
-     */
-    commentFeed(body, replyUser) {
-      this.$http
-        .post(`/feeds/${this.feedID}/comments`, {
-          body,
-          reply_user: replyUser
-        })
-        .then(({ data: { message, comment } = {} }) => {
-          this.comments.unshift(comment);
-          this.comments_count += 1;
-          this.$Modal.remove();
-          this.$Message.success(message);
-        });
-    },
-    /**
-     * 弹出评论操作框
-     * @author jsonleex <jsonlseex@163.com>
-     */
-    commentAction(uId, uName, cId) {
-      if (uId === this.$store.state.CURRENTUSER.id) {
-        this.showCommentAction(cId);
-      } else {
-        const placeholder = uName && uId ? `回复: ${uName}` : "随便说说";
-        this.showCommentInput({ placeholder, reply_user: uId });
-      }
-    },
-    deleteComment(id) {
-      this.$http
-        .delete(`/feeds/${this.feedID}/comments/${id}`, {
-          validateStatus: s => s === 204
-        })
+        url,
+        validataStatus: s => s === 201 || s === 204
+      })
         .then(() => {
-          this.$Message.success("删除成功");
-          this.comments_count -= 1;
-          _.remove(this.comments, n => n.id === id);
+          method === "post"
+            ? ((this.liked = true), (this.likeCount += 1))
+            : ((this.liked = false), (this.likeCount -= 1));
+          this.fetching = false;
+        })
+        .catch(() => {
+          this.fetching = false;
         });
     },
-    /**
-     * 显示评论操作弹层
-     * @author jsonleex <jsonlseex@163.com>
-     */
-    showCommentAction(id) {
-      const that = this;
-      that.$Modal.info({
-        render(h) {
-          return h("div", {}, [
-            h(
-              "button",
-              {
-                on: {
-                  click: () => {
-                    that.$Modal.remove();
-                    that.deleteComment(id);
-                  }
-                }
-              },
-              "删除"
-            ),
-            h(
-              "button",
-              {
-                on: {
-                  click: () => {
-                    that.$Modal.remove();
-                    // that.pinnedComment(id)
-                    that.$Message.error("还得再等等...");
-                  }
-                }
-              },
-              "申请评论置顶"
-            )
-          ]);
-        },
-        onOk() {
-          this.$Modal.remove();
+    commentFeed() {
+      bus.$emit("commentInput", {
+        onOk: text => {
+          this.sendComment({ body: text });
         }
       });
     },
-    /**
-     * 显示评论输入框
-     * @author jsonleex <jsonlseex@163.com>
-     */
-    showCommentInput(options = {}) {
-      const that = this;
-      const { reply_user } = options;
-      options = Object.assign(
-        {},
+    shareFeed() {
+      console.log("分享");
+    },
+    moreAction() {
+      const defaultActions = [
         {
-          onOk(txt) {
-            that.commentFeed(txt, reply_user);
+          text: "收藏",
+          method() {
+            console.log("收藏");
           }
-        },
-        options
-      );
-      this.$Modal.commentInpt(options);
+        }
+      ];
+
+      const actions = this.isMine
+        ? [
+            {
+              text: "申请文章置顶",
+              method: () => {
+                this.$Message.info("置顶功能开发中，敬请期待");
+              }
+            },
+            {
+              text: "删除",
+              method: () => {
+                this.$Message.info("资讯删除功能开发中，敬请期待");
+              }
+            }
+          ]
+        : [
+            {
+              text: "举报",
+              method: () => {
+                this.$Message.info("举报功能开发中，敬请期待");
+              }
+            }
+          ];
+      bus.$emit("actionSheet", [...defaultActions, ...actions], "取消");
+    },
+
+    replyComment(uid, uname, cid) {
+      uid === this.uid
+        ? bus.$emit(
+            "actionSheet",
+            [
+              {
+                text: "申请评论置顶",
+                method: () => {
+                  this.$Message.info("置顶功能开发中，敬请期待");
+                }
+              },
+              {
+                text: "删除评论",
+                method: () => {
+                  this.$Message.info("评论删除功能开发中，敬请期待");
+                }
+              }
+            ],
+            "取消"
+          )
+        : bus.$emit("commentInput", {
+            placeholder: `回复： ${uname}`,
+            onOk: text => {
+              this.sendComment({ reply_user: uid, body: text });
+            }
+          });
+    },
+    sendComment({ reply_user: replyUser, body }) {
+      const params = {};
+      if (body && body.length > 0) {
+        params.body = body;
+        replyUser && (params["reply_user"] = replyUser);
+        this.$http
+          .post(`/feeds/${this.feedID}/comments`, params, {
+            validataStatus: s => s === 201
+          })
+          .then(({ data }) => {
+            this.$Message.success("评论成功");
+            bus.$emit("commentInput:close", true);
+          })
+          .catch(() => {
+            this.$Message.error("评论失败");
+            bus.$emit("commentInput:close", true);
+          });
+      } else {
+        this.$Message.error("评论内容不能为空");
+      }
     }
   },
-  created() {
-    this.initData();
-    this.getFeedLikes();
-    this.getComments();
+  activated() {
+    if (this.feedID) {
+      this.feedID !== this.oldID
+        ? this.fetchFeed()
+        : setTimeout(() => {
+            this.loading = false;
+          }, 600);
+    }
+  },
+  deactivated() {
+    this.loading = true;
   }
 };
 </script>
-<style lang='less'>
-.feed-detail {
-  font-size: 30px;
-  &-content {
-    padding-left: 20px;
-    padding-right: 20px;
-    background-color: #fff;
-  }
-  .head-top + * {
-    padding-top: 90px;
-  }
-}
-
-.ffd {
-  &-head {
-    padding-left: 20px;
-    padding-right: 20px;
-    background-color: #fff;
-    h1 {
-      font-size: 50px;
-      padding: 0;
-      margin: 10px 0;
-    }
-    p {
-      color: #ccc;
-      font-size: 24px;
-      a {
-        color: #59b6d7;
-      }
-    }
-  }
-
-  &-like-list {
-    display: flex;
-    margin-right: 25px;
-    &-item {
-      width: 24px;
-    }
-  }
-  &-like-list-none {
-    margin-right: 0;
-  }
-
-  &-body {
-    padding-top: 90px;
-    padding: 50px 0;
-    background-color: #fff;
-    &-images {
-      width: 100%;
-      img {
-        background-color: #f4f5f5;
-      }
-    }
-
-    &-content {
-      width: 100%;
-      overflow-x: auto;
-      word-break: break-all;
-      padding: 10px 20px;
-    }
-    &-l {
-      color: #59b6d7;
-      display: flex;
-      align-items: center;
-    }
-    &-r {
-      text-align: right;
-      color: #999;
-    }
-    p {
-      padding-left: 20px;
-      padding-right: 20px;
-    }
-    &-foot {
-      margin-top: 50px;
-      padding: 0 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      p {
-        margin: 0;
-        padding: 0;
-      }
-    }
-  }
-
-  &-foot {
-    background-color: #fff;
-    margin-top: 10px;
-    padding-bottom: 95px;
-    &-head {
-      padding-left: 20px;
-      padding-right: 20px;
-      border-bottom: 1px solid #ededed;
-      /*no*/
-      height: 80px;
-      line-height: 80px;
-    }
-  }
-  &-comment {
-    &-item {
-      display: flex;
-      padding: 28px 20px 0;
-      min-height: 125px;
-      align-items: flex-start;
-      justify-content: flex-start;
-      .v-avatar {
-        flex: 0 0 auto;
-      }
-      & + & {
-        border-top: 1px solid #ededed;
-        /*no*/
-      }
-      p {
-        margin: 0;
-        margin-bottom: 28px;
-      }
-    }
-
-    &-body {
-      max-width: calc(~"100% - " 76px);
-      overflow-x: hidden;
-      flex: 1 1 auto;
-      margin: 0 0 0 30px;
-      color: #999;
-      p {
-        margin-top: 10px;
-      }
-      &-reply {
-        margin-top: 10px;
-        margin-bottom: 28px;
-        span {
-          color: #333;
-        }
-        i {
-          font-style: normal;
-        }
-      }
-      &-top {
-        span {
-          color: #333;
-          + span {
-            color: #4bb893;
-            border: 1px solid #4bb893;
-            padding: 2px;
-            font-size: 22px;
-            margin-left: 10px;
-            + span {
-              margin-right: 0;
-            }
-          }
-        }
-      }
-      &-usually {
-        display: flex;
-        justify-content: space-between;
-        span {
-          color: #333;
-          + span {
-            color: #999;
-            font-size: 22px;
-          }
-        }
-      }
-    }
-  }
-
-  &-action {
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 95px;
-    line-height: 95px;
-    text-align: center;
-    background-color: #fff;
-    border-top: 1px solid #ededed;
-    &-item {
-      line-height: 1.4;
-      font-size: 24px;
-      color: #b3b3b3;
-      .v-icon {
-        width: 38px;
-        height: 38px;
-      }
-      p {
-        margin: 0;
-      }
-    }
-  }
-}
-</style>

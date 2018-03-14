@@ -108,6 +108,10 @@ export default {
       typeof placeholder === "string" && (this.placeholder = placeholder);
       typeof onOk === "function" && (this.onOk = onOk);
       this.show = true;
+      this.$nextTick(() => {
+        this.$refs.shadow &&
+          (this.scrollHeight = this.$refs.shadow.scrollHeight);
+      });
     });
   },
   mounted() {

@@ -2,21 +2,23 @@
   <transition>
     <div class="m-wrapper m-wbox">
       <div class="m-box-model m-art-card">
-        <header ref="head" class="m-box m-head-top m-justify-bet m-aln-center m-lim-width m-pos-f m-main m-bb1">
+        <div ref="head">
           <slot name='head'>
-            <div class="m-box m-flex-grow1 m-aln-center m-flex-base0">
-              <svg class='m-style-svg m-svg-def' @click='goback'>
-                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-back"></use>
-              </svg>
-            </div>
-            <div class="m-box-model m-flex-grow1 m-aln-center m-flex-base0 m-head-top-title">资讯详情</div>
-            <div class="m-box m-flex-grow1 m-aln-center m-flex-base0 m-justify-end">
-              <svg class='m-style-svg m-svg-def'>
-                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-share"></use>
-              </svg>
-            </div>
+            <header class="m-box m-head-top m-justify-bet m-aln-center m-lim-width m-pos-f m-main m-bb1">
+              <div class="m-box m-flex-grow1 m-aln-center m-flex-base0">
+                <svg class='m-style-svg m-svg-def' @click='goback'>
+                  <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-back"></use>
+                </svg>
+              </div>
+              <div class="m-box-model m-flex-grow1 m-aln-center m-flex-base0 m-head-top-title">资讯详情</div>
+              <div class="m-box m-flex-grow1 m-aln-center m-flex-base0 m-justify-end">
+                <svg class='m-style-svg m-svg-def'>
+                  <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-share"></use>
+                </svg>
+              </div>
+            </header>
           </slot>
-        </header>
+        </div>
         <div v-if="loading" class="m-spinner pos-f">
           <div></div>
           <div></div>

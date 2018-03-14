@@ -319,12 +319,16 @@ const router = [
   // { path: '/question', component: question, meta: { title: '问答' } }, /* 问答 */
 
   {
+    path: "/feed/:feedID(\\d+)",
+    component: feedDetail,
+    meta: { title: "动态详情", keepAlive: true }
+  },
+  {
     path: "/feed/:type",
     component: feed,
     meta: { title: "动态", keepAlive: true }
-  } /* 动态 */,
+  },
 
-  { path: "/feed-detail/:feedID", component: feedDetail } /* 动态详情 */,
   {
     path: "/post/text",
     component: postTextFeed,
