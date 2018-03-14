@@ -1,0 +1,113 @@
+<template>
+  <transition>
+    <div class="m-wrapper m-wbox">
+      <div class="m-box-model m-art-card">
+        <header ref="head" class="m-box m-head-top m-justify-bet m-aln-center m-lim-width m-pos-f m-main m-bb1">
+          <slot name='head'>
+            <div class="m-box m-flex-grow1 m-aln-center m-flex-base0">
+              <svg class='m-style-svg m-svg-def' @click='goback'>
+                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-back"></use>
+              </svg>
+            </div>
+            <div class="m-box-model m-flex-grow1 m-aln-center m-flex-base0 m-head-top-title">资讯详情</div>
+            <div class="m-box m-flex-grow1 m-aln-center m-flex-base0 m-justify-end">
+              <svg class='m-style-svg m-svg-def'>
+                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-share"></use>
+              </svg>
+            </div>
+          </slot>
+        </header>
+        <div v-if="loading" class="m-spinner pos-f">
+          <div></div>
+          <div></div>
+        </div>
+        <main v-else class="m-lim-width m-box-model m-art-card-main mt90">
+          <slot></slot>
+        </main>
+        <footer ref="foot" class="m-pos-f m-box m-aln-center m-justify-aro m-bt1 m-art-card-foot">
+          <slot name='foot'>
+            <a class="m-box-model m-aln-center" @click.prevent="handelLike">
+              <svg class='m-style-svg m-svg-def'>
+                <use :xlink:href="liked ? '#feed-like' :'#feed-unlike'"></use>
+              </svg>
+              <span>喜欢</span>
+            </a>
+            <a class="m-box-model m-aln-center"  @click.prevent="handelComment">
+              <svg class='m-style-svg m-svg-def'>
+                <use xlink:href="#feed-comment"></use>
+              </svg>
+              <span>评论</span>
+            </a>    
+            <a class="m-box-model m-aln-center" @click.prevent="handelShare">
+              <svg class='m-style-svg m-svg-def'>
+                <use xlink:href="#base-share"></use>
+              </svg>
+              <span>分享</span>
+            </a>    
+            <a class="m-box-model m-aln-center" @click.prevent="handelMore">
+              <svg class='m-style-svg m-svg-def'>
+                <use xlink:href="#feed-more"></use>
+              </svg>
+              <span>更多</span>
+            </a>
+          </slot>
+        </footer>
+      </div>
+    </div>
+  </transition>
+</template>
+<script>
+import HeadRoom from "headroom.js";
+export default {
+  name: "article-card",
+  props: {
+    loading: {
+      type: Boolean,
+      default: true
+    },
+    liked: {
+      type: Boolean,
+      default: false
+    }
+  },
+  methods: {
+    handelLike() {
+      this.$emit("on-like");
+    },
+    handelComment() {
+      this.$emit("on-comment");
+    },
+    handelShare() {
+      this.$emit("on-share");
+    },
+    handelMore() {
+      this.$emit("on-more");
+    },
+    goback() {
+      this.$router.go(-1);
+    }
+  },
+  mounted() {
+    this.headroom = new HeadRoom(this.$refs.head, {
+      tolerance: 5,
+      offset: 50,
+      classes: {
+        initial: "headroom-head",
+        pinned: "headroom--headShow",
+        unpinned: "headroom--headHide"
+      }
+    });
+    this.footroom = new HeadRoom(this.$refs.foot, {
+      tolerance: 5,
+      offset: 50,
+      classes: {
+        initial: "headroom-foot",
+        pinned: "headroom--footShow",
+        unpinned: "headroom--footHide"
+      }
+    });
+    this.headroom.init();
+    this.footroom.init();
+  }
+};
+</script>

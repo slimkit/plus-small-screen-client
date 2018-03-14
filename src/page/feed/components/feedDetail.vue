@@ -1,6 +1,23 @@
 <template>
-  <div class="feed-detail">
-    <head-top :go-back='goBack' title='动态详情'></head-top>
+  <div class="feed-detail m-main">
+    <!-- todo Refactor -->
+<!--     <header class="m-box-model m-fd-row m-head-top m-justify-bet m-aln-center m-lim-width">
+      <div class="m-box m-flex-grow1 m-aln-center m-flex-base0">
+        <svg class='m-style-svg m-svg-def' @click='goBack'>
+          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-back"></use>
+        </svg>
+      </div>
+      <div class="m-box-model m-flex-grow1 m-aln-center m-flex-base0 m-head-top-title">
+        <div class="m-avatar-box small"></div>
+
+      </div>
+      <div class="m-box m-flex-grow1 m-aln-center m-flex-base0 m-justify-end">
+        <svg class='m-style-svg m-svg-def'>
+          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-share"></use>
+        </svg>
+      </div>
+    </header> -->
+    <!-- <head-top :go-back='goBack' title='动态详情'></head-top> -->
     <div class="ffd-body">
       <div ref="images" class="ffd-body-images">
         <async-file v-for="image in imagesFormat" :key="image.file" :file="image.file">

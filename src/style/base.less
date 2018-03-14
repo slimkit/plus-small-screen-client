@@ -1,7 +1,7 @@
 html,
 body,
 #app {
-  height: 100%;
+  min-height: 100%;
 }
 
 /* color */
@@ -56,6 +56,9 @@ body,
 }
 .m-aln-center {
   align-items: center;
+}
+.m-aln-end {
+  align-items: flex-end;
 }
 .m-justify-bet {
   justify-content: space-between;
@@ -116,6 +119,35 @@ body,
 }
 
 /* text */
+.m-text-box {
+  word-wrap: break-word;
+  word-break: break-all;
+}
+.m-text-more {
+  line-height: initial;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  color: @primary;
+  padding-left: 6px;
+  padding-right: 26 * 3 + 4px;
+  background-color: #fff;
+  &:before {
+    content: "";
+    line-height: inherit;
+    height: 100%;
+    display: block;
+    position: absolute;
+    bottom: 0;
+    left: -32px;
+    padding-left: 32px;
+    background: linear-gradient(
+      to right,
+      rgba(255, 255, 255, 0),
+      rgba(255, 255, 255, 0.99)
+    );
+  }
+}
 .m-wz-def {
   font-size: 16px;
   font-weight: 400;
@@ -182,7 +214,10 @@ body,
 .m-pop-open {
   overflow-y: hidden;
 }
-// actionSheet
+
+/////////////////
+// actionSheet //
+/////////////////
 .m-acbtn-box {
   position: fixed;
   bottom: 0;
@@ -205,6 +240,54 @@ body,
   }
   a {
     color: @text-color1;
+  }
+}
+
+///////////////////
+// comment input //
+///////////////////
+.m-comment-input {
+  min-height: 100px;
+  padding: 20px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: @body-bg;
+  border-top: 1px solid @border-color;
+  .m-wz-def {
+    width: 100%;
+    font-size: 30px;
+    color: @text-color3;
+  }
+  textarea {
+    font-size: 26px;
+    line-height: 1.5;
+    background-color: transparent;
+    outline: 0;
+    border: 0;
+    border-bottom: 1px solid @primary; /*no*/
+    font-size: inherit;
+    resize: none;
+    width: 100%;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+  }
+  .m-comment-submit {
+    width: 100%;
+    min-width: 90px;
+    height: 50px;
+    border-radius: 5px;
+    background-color: @primary;
+    font-size: 28px;
+    color: #fff;
+    &[disabled] {
+      background-color: #cccccc;
+    }
+  }
+  &-wrap {
   }
 }
 
@@ -241,6 +324,10 @@ body,
 .m-pop-box {
   z-index: 101;
 }
-.m-acbtn-box {
+
+.m-comment-input {
   z-index: 110;
+}
+.m-acbtn-box {
+  z-index: 120;
 }

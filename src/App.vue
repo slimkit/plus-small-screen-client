@@ -8,17 +8,20 @@
       <svg-icon />
       <pswp />
       <actionsheet />
+      <comment-input />
     </div>
   </div>
 </template>
 <script>
 import pswp from "@/components/pswp.vue";
 import actionsheet from "@/components/actionsheet.vue";
+import commentInput from "@/components/commentInput.vue";
 export default {
   name: "app",
   components: {
     pswp,
     actionsheet,
+    commentInput,
     svgIcon: () =>
       import(/* webpackChunkName: 'svgIcon' */ "@/components/common/svgIcon")
   }

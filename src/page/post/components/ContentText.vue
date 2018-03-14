@@ -26,6 +26,7 @@
  * H5_MBLOG_SAVE_CONTENT
  */
 import { mapActions } from "vuex";
+import LocalEvent from "store";
 export default {
   name: "content-text",
   props: {
@@ -59,7 +60,7 @@ export default {
     contentText(val, oval) {
       if (val !== oval) {
         this.updateCompose(this.fullContentText);
-        localStorage.setItem("H5_POST_SAVE_CONTENT", val);
+        LocalEvent.set("H5_POST_SAVE_CONTENT", val);
         this.$nextTick(() => {
           this.scrollHeight = this.$refs.shadow.scrollHeight;
         });
@@ -92,7 +93,7 @@ export default {
     }
   },
   mounted() {
-    const txt = localStorage.getItem("H5_POST_SAVE_CONTENT");
+    const txt = LocalEvent.get("H5_POST_SAVE_CONTENT");
 
     txt &&
       ((this.contentText = txt.trim()),
