@@ -259,7 +259,7 @@ export default {
       bus.$emit("actionSheet", [...defaultActions, ...actions], "取消");
     },
 
-    replyComment(uid, uname, cid) {
+    replyComment(uid, uname) {
       uid === this.uid
         ? bus.$emit(
             "actionSheet",

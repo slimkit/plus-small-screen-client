@@ -2,9 +2,9 @@
   <transition>
     <div class="m-wrapper m-wbox">
       <div class="m-box-model m-art-card">
-        <div ref="head">
+        <div ref="head" class="m-box-model m-justify-center m-pos-f m-head-top m-main m-bb1 m-lim-width">
           <slot name='head'>
-            <header class="m-box m-head-top m-justify-bet m-aln-center m-lim-width m-pos-f m-main m-bb1">
+            <header class="m-box m-justify-bet m-aln-center">
               <div class="m-box m-flex-grow1 m-aln-center m-flex-base0">
                 <svg class='m-style-svg m-svg-def' @click='goback'>
                   <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-back"></use>
@@ -59,6 +59,7 @@
   </transition>
 </template>
 <script>
+import bus from "@/bus.js";
 import HeadRoom from "headroom.js";
 export default {
   name: "article-card",
@@ -83,7 +84,21 @@ export default {
       this.$emit("on-share");
     },
     handelMore() {
-      this.$emit("on-more");
+      const actions = [
+        {
+          text: "收藏",
+          method: () => {
+            console.log("收藏");
+          }
+        },
+        {
+          text: "举报",
+          method: () => {
+            console.log("举报");
+          }
+        }
+      ];
+      bus.$emit("actionSheet", actions, "取消");
     },
     goback() {
       this.$router.go(-1);

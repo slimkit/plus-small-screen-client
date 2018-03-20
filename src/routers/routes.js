@@ -10,6 +10,9 @@ import newsRoutes from "./news";
 import groupRoutes from "./group";
 import questionRoutes from "./question";
 
+import profile from "../page/profile/profile.vue";
+import discover from "../page/discover/discover.vue";
+
 /* eslint-disable one-var */
 const feed = () => import(/* webpackChunkName: 'feed' */ "../page/feed/feed"),
   feedDetail = () =>
@@ -19,10 +22,6 @@ const feed = () => import(/* webpackChunkName: 'feed' */ "../page/feed/feed"),
     import(/* webpackChunkName: 'feed' */ "../page/feed/children/postText"),
   postImgFeed = () =>
     import(/* webpackChunkName: 'post' */ "../page/post/PostFeed.vue"),
-  discover = () =>
-    import(/* webpackChunkName: 'common' */ "../page/discover/discover"),
-  profile = () =>
-    import(/* webpackChunkName: 'profile' */ "../page/profile/profile"),
   // 排行榜
   rank = () => import(/* webpackChunkName: 'rank' */ "../page/rank/rank"),
   rankUsers = () =>

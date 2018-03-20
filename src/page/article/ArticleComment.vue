@@ -1,9 +1,7 @@
 <template>
   <div class="m-lim-width m-art-comment">
     <div class="m-box m-art-comment-wrap">
-      <router-link :to="`/user/${user.id}`" class="m-flex-shrink0 m-flex-grow0 m-avatar-box">
-        <img :src="user.avatar">
-      </router-link>
+      <avatar :user="user"></avatar>
       <section class="m-box-model m-flex-grow1 m-flex-shrink1 m-art-comment-body">
         <header class="m-box m-aln-center m-justify-bet m-art-comment-usr">
           <h4 class="m-flex-grow1 m-flex-shrink1">{{ user.name }}</h4>
@@ -12,7 +10,7 @@
             <span>{{ time | time2tips }}</span>
           </div>
         </header>
-        <article 
+        <article
         class="m-text-box m-art-comment-con"
         :class="{maxh: !isShowAll}"
         @click="handelClick">
@@ -67,7 +65,7 @@ export default {
   methods: {
     handelClick() {
       if (!this.isShowAll) return (this.isShowAll = !this.isShowAll);
-      this.$emit("click", this.user.id, this.user.name, this.comment.id);
+      this.$emit("on-click", this.user.id, this.user.name, this.comment.id);
     }
   },
   mounted() {

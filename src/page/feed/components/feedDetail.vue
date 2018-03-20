@@ -7,7 +7,7 @@
   @on-more="moreAction"
   @on-comment="commentFeed"
   >
-  <header slot="head" class="m-box m-head-top m-justify-bet m-aln-center m-lim-width m-pos-f m-main m-bb1">
+  <header slot="head" class="m-box m-justify-bet m-aln-center">
     <div class="m-box m-flex-grow1 m-aln-center m-flex-base0">
       <svg class='m-style-svg m-svg-def' @click='goBack'>
         <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-back"></use>
@@ -33,6 +33,7 @@
         :file="img.file">
         <img 
         slot-scope="props"
+        v-if="props.src"
         :src="props.src">
         />
       </async-file>
@@ -62,19 +63,20 @@
       <!--<div class="m-box-model m-box-center m-box-center-a m-art-reward">
         <button class="m-art-rew-btn">打 赏</button>
       </div>-->
-    </div>
+    <!-- </div> -->
   </div>
   <div class="m-box-model m-art-comments">
     <ul class="m-box m-aln-center m-art-comments-tabs">
       <li>{{ commentCount | formatNum }}条评论</li>
     </ul>
     <comment-item 
+      @on-click="replyComment"
       v-for="(comment) in pinnedCom"
       :pinned="true"
       :key="comment.id"
       :comment="comment"/>
     <comment-item
-      @click="replyComment"
+      @on-click="replyComment"
       v-for="(comment) in comments"
       :key="comment.id"
       :comment="comment"/>
@@ -94,7 +96,6 @@ import isWechat from "@/util/wechat.js";
 import wx from "@/util/share.js";
 import bus from "@/bus.js";
 import Wx from "weixin-js-sdk";
-import md from "@/util/markdown.js";
 import ArticleCard from "@/page/article/ArticleCard.vue";
 import CommentItem from "@/page/article/ArticleComment.vue";
 
@@ -131,9 +132,9 @@ export default {
         "onMenuShareTimeline"
       ],
       share: {
-        title: '',
-        desc: '',
-        link: '',
+        title: "",
+        desc: "",
+        link: ""
       }
     };
   },
@@ -191,7 +192,9 @@ export default {
         return "";
       }
       const file = images[0] || {};
-      return this.$http.defaults.baseURL + '/files/' + file.file + "?w=300&h=300";
+      return (
+        this.$http.defaults.baseURL + "/files/" + file.file + "?w=300&h=300"
+      );
     }
   },
   methods: {
@@ -211,7 +214,7 @@ export default {
         .get(`/feeds/${this.feedID}`)
         .then(({ data = {} }) => {
           this.feed = data;
-          this.share.title = data.user.name + '的动态';
+          this.share.title = data.user.name + "的动态";
           this.share.desc = data.feed_content;
           this.oldID = this.feedID;
           setTimeout(() => {
@@ -343,8 +346,7 @@ export default {
             nonceStr: this.config.noncestr,
             jsApiList: this.appList
           });
-          Wx.ready(() => {
-          });
+          Wx.ready(() => {});
           Wx.error(res => {
             // console.log(res);
           });
@@ -395,13 +397,11 @@ export default {
           nonceStr: this.config.noncestr,
           jsApiList: this.appList
         });
-        
-        Wx.ready(() => {
 
-        }),
-        Wx.error(res => {
-          // console.log(res);
-        });
+        Wx.ready(() => {}),
+          Wx.error(res => {
+            // console.log(res);
+          });
         Wx.onMenuShareTimeline({
           title: this.share.title,
           desc: this.share.desc,
@@ -440,7 +440,7 @@ export default {
         });
       }
     },
-    replyComment(uid, uname, cid) {
+    replyComment(uid, uname) {
       uid === this.uid
         ? bus.$emit(
             "actionSheet",
@@ -476,7 +476,7 @@ export default {
           .post(`/feeds/${this.feedID}/comments`, params, {
             validataStatus: s => s === 201
           })
-          .then(({ data }) => {
+          .then(() => {
             this.$Message.success("评论成功");
             bus.$emit("commentInput:close", true);
           })
@@ -510,7 +510,7 @@ export default {
       timestamp: 0,
       noncestr: "",
       signature: ""
-    }
+    };
   }
 };
 </script>

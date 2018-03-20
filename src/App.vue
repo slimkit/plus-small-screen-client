@@ -9,17 +9,20 @@
       <pswp />
       <actionsheet />
       <comment-input />
+      <payfor />
     </div>
   </div>
 </template>
 <script>
 import pswp from "@/components/pswp.vue";
+import payfor from "@/components/payfor.vue";
 import actionsheet from "@/components/actionsheet.vue";
 import commentInput from "@/components/commentInput.vue";
 export default {
   name: "app",
   components: {
     pswp,
+    payfor,
     actionsheet,
     commentInput,
     svgIcon: () =>

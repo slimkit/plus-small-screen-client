@@ -43,105 +43,100 @@
 </template>
 
 <script>
-  import lstore from "store";
-  function strLength(str) {
-    let totalLength = 0;
-    let i = 0;
-    let charCode;
-    for (; i < str.length; i++) {
-      charCode = str.charCodeAt(i);
-      if (charCode < 0x007f) {
-        totalLength = totalLength + 1;
-      } else if (charCode >= 0x0080 && charCode <= 0x07ff) {
-        totalLength += 2;
-      } else if (charCode >= 0x0800 && charCode <= 0xffff) {
-        totalLength += 3;
-      }
-    }
-    return totalLength;
-  }
-  const prefixCls = "signup";
-  export default {
-    name: "bindUser",
-    props: {
-      fn: Function,
-      accessToken: String,
-      goDefault: Function
-    },
-    data: () => ({
-      prefixCls,
-      account: "",
-      password: "",
-      eye: false,
-      loading: false
-    }),
-    computed: {
-      disabled() {
-        const { account, password } = this;
-
-        const res = [account, password].every(i => i !== "");
-
-        return !(res && strLength(account) > 3);
-      }
-    },
-    methods: {
-      toBack() {
-        this.goDefault();
-      },
-      hide(action) {
-        this.fn(action);
-      },
-      bindUser() {
-        if (this.loading) {
-          return;
-        }
-        const { account: login, password, accessToken: access_token } = this;
-        if (!login) {
-          this.$Message.error("请填写账号");
-          return;
-        }
-
-        if (!password) {
-          this.$Message.error("请填写密码");
-          return;
-        }
-
-        if (!access_token) {
-          this.$Messge.error("未获取到微信授权");
-          return;
-        }
-
-        let param = {
-          login,
-          access_token,
-          password
-        };
-        this.loading = true;
-        this.$http
-          .put(
-            "socialite/wechat",
-            param,
-            {
-              validateStatus: s => s === 201
-            }
-          )
-          .then(({ data: { token = "", user = {} } = {} }) => {
-            this.$store.commit("SAVE_CURRENTUSER", { ...user, token });
-            this.$nextTick(() => {
-              this.$router.push(this.$route.query.redirect || "/feed/new");
-              this.$store.dispatch("GET_UNREAD_COUNT");
-              this.$store.commit("SAVE_USER", user);
-              store.remove("H5_WECHAT_MP_OPENID");
-              lstore.remove('H5_WECHAT_MP_ASTOKEN');
-            });
-          })
-          .catch(() => {
-            this.loading = false;
-          })
-      }
+import lstore from "store";
+function strLength(str) {
+  let totalLength = 0;
+  let i = 0;
+  let charCode;
+  for (; i < str.length; i++) {
+    charCode = str.charCodeAt(i);
+    if (charCode < 0x007f) {
+      totalLength = totalLength + 1;
+    } else if (charCode >= 0x0080 && charCode <= 0x07ff) {
+      totalLength += 2;
+    } else if (charCode >= 0x0800 && charCode <= 0xffff) {
+      totalLength += 3;
     }
   }
+  return totalLength;
+}
+const prefixCls = "signup";
+export default {
+  name: "bindUser",
+  props: {
+    fn: Function,
+    accessToken: String,
+    goDefault: Function
+  },
+  data: () => ({
+    prefixCls,
+    account: "",
+    password: "",
+    eye: false,
+    loading: false
+  }),
+  computed: {
+    disabled() {
+      const { account, password } = this;
+
+      const res = [account, password].every(i => i !== "");
+
+      return !(res && strLength(account) > 3);
+    }
+  },
+  methods: {
+    toBack() {
+      this.goDefault();
+    },
+    hide(action) {
+      this.fn(action);
+    },
+    bindUser() {
+      if (this.loading) {
+        return;
+      }
+      const { account: login, password, accessToken: access_token } = this;
+      if (!login) {
+        this.$Message.error("请填写账号");
+        return;
+      }
+
+      if (!password) {
+        this.$Message.error("请填写密码");
+        return;
+      }
+
+      if (!access_token) {
+        this.$Messge.error("未获取到微信授权");
+        return;
+      }
+
+      let param = {
+        login,
+        access_token,
+        password
+      };
+      this.loading = true;
+      this.$http
+        .put("socialite/wechat", param, {
+          validateStatus: s => s === 201
+        })
+        .then(({ data: { token = "", user = {} } = {} }) => {
+          this.$store.commit("SAVE_CURRENTUSER", { ...user, token });
+          this.$nextTick(() => {
+            this.$router.push(this.$route.query.redirect || "/feed/new");
+            this.$store.dispatch("GET_UNREAD_COUNT");
+            this.$store.commit("SAVE_USER", user);
+            lstore.remove("H5_WECHAT_MP_OPENID");
+            lstore.remove("H5_WECHAT_MP_ASTOKEN");
+          });
+        })
+        .catch(() => {
+          this.loading = false;
+        });
+    }
+  }
+};
 </script>
 <style>
-  
 </style>

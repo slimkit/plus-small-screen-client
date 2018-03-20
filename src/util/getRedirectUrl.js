@@ -2,7 +2,7 @@ import http from "../http";
 
 export default redirect => {
   // 登录后跳转的url
-  const redirectUrl = 
+  const redirectUrl =
     window.location.origin + "/wechatLogin?redirect=" + redirect;
   http
     .post(

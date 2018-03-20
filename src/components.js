@@ -10,9 +10,12 @@ import FootGuide from "./components/FootGuide";
 import DiySelect from "./components/DiySelect";
 import AsyncFile from "./components/common/AsyncFile";
 
+import avatar from "@/components/avatar.vue";
+
 import NavTabs from "@/components/tabs/NavTabs.vue";
 
 export default [
+  avatar,
   vIcon,
   btnSwitch,
   badge,

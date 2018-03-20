@@ -10,8 +10,14 @@ module.exports = {
       }
     }
   },
+  configureWebpack: {
+    output: {
+      chunkFilename: "js/[name].js"
+    }
+  },
   devServer: {
     open: false,
+    disableHostCheck: true,
     proxy: {
       "/api": {
         target: process.env.VUE_APP_API_HOST,

@@ -1,27 +1,40 @@
 <template>
   <div>
-    <head-top>
-      <div slot='nav' class="head-top-nav">
-        <router-link class='head-top-nav-item' to="/feed/new">最新</router-link>
-        <router-link class='head-top-nav-item' to="/feed/hot">热门</router-link>
-        <router-link class='head-top-nav-item' to="/feed/follow">关注</router-link>
-      </div>
-    </head-top>
+    <nav class="m-box m-head-top m-lim-width m-pos-f m-main m-bb1">
+      <ul class="m-box m-flex-grow1 m-aln-center m-justify-center m-flex-base0 m-head-nav">
+        <router-link tag="li" to="/feed/new" active-class="active" exact>
+          <a>最新</a>
+        </router-link>
+        <router-link tag="li" to="/feed/hot" active-class="active" exact>
+          <a>热门</a>
+        </router-link>
+        <router-link tag="li" to="/feed/follow" active-class="active" exact>
+          <a>关注</a>
+        </router-link>
+      </ul>
+    </nav>
     <load-more 
-    :onRefresh='onRefresh'
-    :onLoadMore='onLoadMore'
-    ref='loadmore'
-    >
-      <feed-item v-for='feed in feeds' channel='feed' :feed='feed' :key='`feed-${feed_type}-${feed.id}`'></feed-item>
+      class="p-feed-main"
+      :onRefresh='onRefresh'
+      :onLoadMore='onLoadMore'
+      ref='loadmore'
+      >
+      <ul>
+        <li v-if="feed.id" v-for="feed in pinned" :key="`pinned-feed-${feed_type}-${feed.id}`">
+          <feed-card :feed="feed" :pinned="true" />
+        </li>
+        <li v-if="feed.id" v-for="feed in feeds" :key="`feed-${feed_type}-${feed.id}`">
+          <feed-card :feed="feed" />
+        </li>
+      </ul>
     </load-more>
     <foot-guide></foot-guide>
   </div>
 </template>
 <script>
-import { FeedItem } from "@/components/feed/feedItem";
 import { oneOf } from "../../util/";
-import HeadTop from "../../components/HeadTop";
-import FootGuide from "../../components/FootGuide";
+import FootGuide from "@/components/FootGuide";
+import FeedCard from "@/components/FeedCard/FeedCard.vue";
 
 /* 有效类型 */
 const types = ["new", "hot", "follow"];
@@ -29,8 +42,8 @@ const types = ["new", "hot", "follow"];
 export default {
   name: "feedIndex",
   components: {
-    HeadTop,
-    FeedItem,
+    FeedCard,
+    // FeedItem,
     FootGuide
   },
   data() {
@@ -98,11 +111,6 @@ export default {
       this.$refs.loadmore.bottomEnd(feeds.length < 15);
     }
   },
-  /**
-   * 组件内 路由守卫
-   *     确保 feed_type 为有效值
-   *         @author jsonleex <jsonleex@163.com>
-   */
   beforeRouteEnter({ params: { type } }, from, next) {
     types.indexOf(type) > -1 ? next() : next({ path: "/feed/new" });
   },
@@ -111,5 +119,12 @@ export default {
   }
 };
 </script>
-<style lang="less">
+
+<style scoped>
+.p-feed-main {
+  padding-top: 90px;
+}
+.p-feed-main li + li {
+  margin-top: 10px;
+}
 </style>
