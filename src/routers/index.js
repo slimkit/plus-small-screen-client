@@ -1,7 +1,9 @@
 import Vue from "vue";
 import localEvent from "store";
 import VueRouter from "vue-router";
+import isWechat from "../util/wechat";
 import Message from "@/plugins/message";
+import getRedirect from "../util/getRedirectUrl";
 
 import routes from "./routes";
 
@@ -27,10 +29,8 @@ const router = new VueRouter({
 
 /**
  * 路由守卫 登录检测 islogin
- *
+ *ß
  * 需要登录的页面路由需要添加
- * meta.requiresAuth = true
- *
  * 登录后不可访问的路由需要添加
  * meta.forGuest = true
  *
@@ -39,12 +39,19 @@ router.beforeEach((to, from, next) => {
   const isLogin = !!(localEvent.get("CURRENTUSER") || {}).token;
   const forGuest = to.matched.some(record => record.meta.forGuest);
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+  
   if (requiresAuth) {
     if (isLogin) {
       next();
     } else {
-      Message.error("您还没有登录, 请先登录或注册");
-      next({ path: "/signin", query: { redirect: to.fullPath } });
+      // 跳转到微信登录
+      if (isWechat()) {
+        getRedirect(to.fullPath);
+        return;
+      } else {
+        Message.error("您还没有登录, 请先登录或注册");
+        next({ path: "/signin", query: { redirect: to.fullPath } });
+      }
     }
   } else if (forGuest) {
     if (isLogin) {

@@ -101,7 +101,9 @@ const feed = () => import(/* webpackChunkName: 'feed' */ "../page/feed/feed"),
   groupCommentAudit = () =>
     import(/* webpackChunkName: 'message' */ "@/page/message/children/audits/groupCommentAudit"),
   groupJoinAudit = () =>
-    import(/* webpackChunkName: 'message' */ "@/page/message/children/audits/groupJoinAudit");
+    import(/* webpackChunkName: 'message' */ "@/page/message/children/audits/groupJoinAudit"),
+  wechatLogin = () =>
+    import(/* webpackChunkName: 'login' */ "@/page/wechat/wechat");
 
 /**
  * 钱包页面
@@ -143,6 +145,14 @@ const router = [
     component: signin,
     meta: { title: "登录", forGuest: true }
   } /* 登录 */,
+  {
+    path: "/wechatLogin",
+    component: wechatLogin,
+    meta: {
+      title: "登录中...",
+      forGuest: true
+    }
+  },
   {
     path: "/signup",
     component: signup,

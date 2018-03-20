@@ -1,8 +1,10 @@
 import axios from "axios";
 import localEvent from "store";
 import router from "./routers/";
+import isWechat from "./util/wechat";
 import Message from "@/plugins/message";
 import { plusMessageAnalyze } from "@/filters";
+import getRedirect from "./util/getRedirectUrl";
 /**
  * 添加请求拦截器
  *     @author jsonleex <jsonlseex@163.com>
@@ -31,6 +33,9 @@ axios.interceptors.response.use(
   /* 错误处理 */
   error => {
     const callback = () => {
+      if (isWechat()) {
+        getRedirect(router.currentRoute.fullPath);
+      }
       router.push({
         path: "/signin",
         query: { redirect: router.currentRoute.fullPath }
