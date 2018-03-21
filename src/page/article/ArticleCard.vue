@@ -84,21 +84,7 @@ export default {
       this.$emit("on-share");
     },
     handelMore() {
-      const actions = [
-        {
-          text: "收藏",
-          method: () => {
-            console.log("收藏");
-          }
-        },
-        {
-          text: "举报",
-          method: () => {
-            console.log("举报");
-          }
-        }
-      ];
-      // bus.$emit("actionSheet", actions, "取消");
+      this.$emit("on-more");
     },
     goback() {
       this.$router.go(-1);

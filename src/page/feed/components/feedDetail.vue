@@ -330,7 +330,7 @@ export default {
               }
             }
           ];
-      bus.$emit("actionSheet", [...defaultActions, ...actions], "取消");
+      // bus.$emit("actionSheet", [...defaultActions, ...actions], "取消");
     },
     getWeChatConfig() {
       const url = window.location.origin + this.$route.fullPath;
