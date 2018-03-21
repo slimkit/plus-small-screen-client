@@ -49,7 +49,7 @@ export default {
   }),
   methods: {
     goToDetail(id) {
-      this.$router.push(`/feed-detail/${id}`);
+      this.$router.push(`/feed/${id}`);
     },
     onRefresh() {
       this.$http

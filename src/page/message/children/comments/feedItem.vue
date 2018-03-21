@@ -57,7 +57,7 @@ export default {
      */
     goToFeedDetail() {
       const { commentable: { id = 0 } } = this.comment;
-      this.$router.push(`/feed-detail/${id}`);
+      this.$router.push(`/feed/${id}`);
     },
 
     sendComment(comment) {

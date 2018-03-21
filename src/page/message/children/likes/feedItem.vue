@@ -48,7 +48,7 @@ export default {
      */
     goToFeedDetail() {
       const { likeable: { id = 0 } } = this.like;
-      this.$router.push(`/feed-detail/${id}`);
+      this.$router.push(`/feed/${id}`);
     }
   },
   computed: {
