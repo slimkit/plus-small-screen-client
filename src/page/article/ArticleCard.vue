@@ -98,7 +98,7 @@ export default {
           }
         }
       ];
-      bus.$emit("actionSheet", actions, "取消");
+      // bus.$emit("actionSheet", actions, "取消");
     },
     goback() {
       this.$router.go(-1);
