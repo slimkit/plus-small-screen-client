@@ -44,6 +44,10 @@ export default {
           };
       this.$emit("on-click", p);
     }
+  },
+  mounted() {
+    this.user && this.$store.commit("SAVE_USER", this.user);
+    this.replyUser && this.$store.commit("SAVE_USER", this.replyUser);
   }
 };
 </script>

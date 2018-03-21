@@ -232,6 +232,9 @@ export default {
         this.$Message.error("评论内容不能为空");
       }
     }
+  },
+  mounted() {
+    this.user && this.$store.commit("SAVE_USER", this.user);
   }
 };
 </script>

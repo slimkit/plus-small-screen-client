@@ -5,7 +5,9 @@ body,
 }
 
 /* color */
-
+.m-cf94 {
+  color: #ff9400;
+}
 .m-bg-fff {
   background-color: @body-bg;
 }
@@ -188,6 +190,9 @@ body,
   vertical-align: text-bottom;
   user-select: none;
   fill: currentcolor;
+  & + & {
+    margin-left: 15px;
+  }
 }
 
 .m-svg-def {

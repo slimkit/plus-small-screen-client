@@ -6,6 +6,8 @@ import forgot from "../page/forgot";
 import about from "../page/about";
 import setting from "../page/setting/setting";
 
+import UserHome from "@/page/UserHome.vue";
+
 import newsRoutes from "./news";
 import groupRoutes from "./group";
 import questionRoutes from "./question";
@@ -58,9 +60,6 @@ const feed = () => import(/* webpackChunkName: 'feed' */ "../page/feed/feed"),
     import(/* webpackChunkName: 'find' */ "../page/find/children/findNearby"),
   /* 公共页面 */
 
-  // 个人主页
-  userHome = () =>
-    import(/* webpackChunkName: 'common' */ "../page/common/userHome"),
   // 用户标签选择
   chooseTags = () =>
     import(/* webpackChunkName: 'common' */ "../page/common/chooseTags"),
@@ -491,8 +490,8 @@ const router = [
   /* 公共页面 */
 
   {
-    path: "/user/:Uid(\\d+)",
-    component: userHome,
+    path: "/user/:userID(\\d+)",
+    component: UserHome,
     meta: {
       title: "个人主页",
       keepAlive: true
