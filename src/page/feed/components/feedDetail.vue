@@ -165,7 +165,7 @@ export default {
         return this.feed.like_count || 0;
       },
       set(val) {
-        val && (this.feed.like_count = val);
+         (this.feed.like_count = ~~val);
       }
     },
     commentCount: {
@@ -221,7 +221,7 @@ export default {
             this.loading = false;
             this.fetching = false;
             this.fetchFeedComments();
-            this.fetchFeedLikes();
+            // this.fetchFeedLikes();
             this.getWeChatConfig();
           }, 800);
         })
@@ -230,11 +230,11 @@ export default {
           this.$router.back();
         });
     },
-    fetchFeedLikes() {
-      this.$http.get(`/feeds/${this.feedID}/likes`).then(({ data = [] }) => {
-        data && data.length, (this.likes = data);
-      });
-    },
+    // fetchFeedLikes() {
+    //   this.$http.get(`/feeds/${this.feedID}/likes`).then(({ data = [] }) => {
+    //     data && data.length, (this.likes = data);
+    //   });
+    // },
     fetchFeedComments(after = 0) {
       if (this.fetchComing) return;
       this.fetchComing = true;
@@ -292,7 +292,10 @@ export default {
     shareFeed() {
       if (isWechat()) {
         this.$Message.success("请使用微信自带分享😳");
+        return;
       }
+
+      this.$Message.success("加紧开发中...😳");
     },
     moreAction() {
       const defaultActions = [
