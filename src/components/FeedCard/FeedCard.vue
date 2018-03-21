@@ -97,7 +97,7 @@ export default {
         return this.feed.like_count || 0;
       },
       set(val) {
-        val && (this.feed.like_count = val);
+        this.feed.like_count = ~~val;
       }
     },
     commentCount: {
