@@ -1,6 +1,6 @@
 <template>
   <p class="m-text-box">
-    <router-link tag="span" :to="`/user/${user.id}`" class='m-comment-usr'>
+    <router-link tag="span" :to="`/user/${user.id}`" exact class='m-comment-usr'>
       <a>{{ user.name }}</a>
     </router-link>
     <span class="m-comment-usr" v-if="replyUser">回复<router-link :to='`/user/${replyUser.id}`'>{{ replyUser.name }}</router-link></span>

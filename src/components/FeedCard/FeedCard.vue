@@ -271,7 +271,9 @@ export default {
     margin-top: -1px; /*no*/
   }
   &-time-line {
+    width: 60px;
     font-size: 24px;
+    text-align: center;
     span:last-child {
       order: -1;
       font-size: 44px;

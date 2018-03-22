@@ -218,8 +218,15 @@ export default {
     }
   },
   watch: {
-    screen(val) {
+    screen() {
       this.updateData();
+    },
+    userID(val) {
+      val !== this.preID &&
+        ((this.loading = true),
+        (this.feeds = []),
+        (this.tags = []),
+        this.updateData());
     }
   },
   methods: {
