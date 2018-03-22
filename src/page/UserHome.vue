@@ -91,7 +91,9 @@
         v-if="feed.id"
         v-for="feed in feeds"
         :key='`ush-${userID}-feed${feed.id}`'>
-          <feed-card :feed="feed"></feed-card>
+          <feed-card
+            :feed="feed"
+            :timeLine="true" />
         </li>
       </ul>
       <div class="m-box m-aln-center m-justify-center load-more-box">
@@ -396,7 +398,7 @@ export default {
     border-radius: 8px;
     background-color: #fff;
     transform: translate3d(0, 25px, 0);
-    box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5); /*no*/
+    box-shadow: 0 0 10px 0 rgba(221, 221, 221, 0.6); /*no*/
     li {
       padding: 25px 20px;
       font-size: 24px;

@@ -1,9 +1,14 @@
 <template>
   <div class="m-box-model m-card">
     <div class="m-box">
-      <avatar :user='user' />
+      <div 
+      v-if="timeLine" 
+      v-html="timeLineText"
+      class="m-box-model m-aln-center m-flex-grow0 m-flex-shrink0 m-card-time-line" 
+      ></div>
+      <avatar v-else :user='user' />
       <section class="m-box-model m-flex-grow1 m-flex-shrink1 m-card-main">
-        <header class="m-box m-aln-center m-justify-bet m-card-usr">
+        <header class="m-box m-aln-center m-justify-bet m-card-usr" v-if="!timeLine">
           <h4 class="m-flex-grow1 m-flex-shrink1">{{ user.name }}</h4>
           <div class="m-box m-aln-center">
             <span v-if="pinned" class="m-art-comment-icon-top">置顶</span>
@@ -60,6 +65,7 @@
 </template>
 <script>
 import bus from "@/bus.js";
+import { time2txt } from "@/filters.js";
 import FeedImage from "@/components/FeedCard/FeedImage.vue";
 import CommentItem from "@/components/FeedCard/CommentItem.vue";
 export default {
@@ -69,6 +75,10 @@ export default {
     CommentItem
   },
   props: {
+    timeLine: {
+      type: Boolean,
+      default: false
+    },
     pinned: {
       type: Boolean,
       default: false
@@ -127,6 +137,16 @@ export default {
     },
     body() {
       return this.feed.feed_content || "";
+    },
+    timeLineText() {
+      const text = time2txt(this.time);
+      const len = text.length;
+      return len > 4
+        ? `<span>${text.substr(0, len - 2)}</span><span>${text.substr(
+            -2,
+            2
+          )}</span>`
+        : `<span>${text}</span>`;
     }
   },
   methods: {
@@ -137,6 +157,7 @@ export default {
             onCancel: () => {},
             onSuccess: data => {
               this.$Message.success(data);
+              this.$router.push(`/feed/${this.feedID}`);
             },
             node: paid_node.node,
             amount: paid_node.amount
@@ -248,6 +269,13 @@ export default {
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /*no*/
   &:first-child {
     margin-top: -1px; /*no*/
+  }
+  &-time-line {
+    font-size: 24px;
+    span:last-child {
+      order: -1;
+      font-size: 44px;
+    }
   }
   &-usr {
     font-size: 24px;

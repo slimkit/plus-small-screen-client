@@ -44,7 +44,7 @@
         </div>
       </div>
     </div>
-    <button class="pic-action-btn" :data-id='file' v-show='!!title' @click='payForImg'>{{ title }}</button>
+    <button class="pic-action-btn" :data-id='fileID' v-show='!!btnText' @click='payForImg'>{{ btnText }}</button>
   </div>
 </template>
 <script>
@@ -58,12 +58,13 @@ export default {
   data() {
     return {
       photoswipe: null,
-      title: "",
-      file: 0,
+      btnText: "",
+      fileID: 0,
       fid: null,
       index: -1,
       amount: 0,
-      paidNode: 0
+      paidNode: 0,
+      paid: false
     };
   },
   created() {
@@ -74,15 +75,21 @@ export default {
   },
   computed: {
     currItem: {
-      set({ amount, paidNode, index }) {
+      set({ amount, paidNode, index, paid, fileID }) {
+        this.paid = paid;
         this.index = index;
         this.amount = amount;
+        this.fileID = fileID;
         this.paidNode = paidNode;
+        this.btnText = paidNode && !paid ? "购买查看" : false;
       },
       get() {
         return {
+          paid: this.paid,
           index: this.index,
           amount: this.amount,
+          fileID: this.fileID,
+          btnText: this.btnText,
           paidNode: this.paidNode
         };
       }
@@ -90,36 +97,23 @@ export default {
   },
   methods: {
     payForImg() {
-      const vm = this;
       const glodName =
         this.$store.state.CONFIG.site.currency_name.name || "积分";
-      if (!(this.index >= 0 && this.amount > 0 && this.paidNode > 0)) return;
-      this.$Modal.pay({
-        content: `您只需支付${vm.amount}${glodName}即可查看图片`,
-        price: vm.amount,
-        onOk(callback) {
-          vm.$http
-            .post(`/currency/purchases/${vm.paidNode}`, {
-              validateStatus: s => s === 201
-            })
-            .then(
-              ({ data: { message = ["付费成功"] } = {} }) => {
-                vm.$Message.success(message);
-                bus.$emit("updateFile", {
-                  fid: vm.fid,
-                  index: vm.index
-                });
-                vm.photoswipe.currItem.title = "";
-                callback && callback();
-              },
-              () => {
-                callback && callback();
-              }
-            );
-        }
+      const { paidNode, amount } = this.currItem;
+      bus.$emit("payfor", {
+        onSuccess: data => {
+          this.$Message.success(data);
+          bus.$emit("updateFile", {
+            fid: this.fid,
+            index: this.index
+          });
+          this.paid = true;
+        },
+        node: paidNode,
+        amount: amount
       });
     },
-    openPhotoSwipe(index, images) {
+    openPhotoSwipe: function(index, images) {
       const vm = this;
       const options = {
         index,
@@ -130,37 +124,34 @@ export default {
         tapToToggleControls: false,
         errorMsg:
           '<div class="pswp__error-msg"><a href="%url%" target="_blank">图片加载失败</a></div>',
-        addCaptionHTMLFn(item) {
+        addCaptionHTMLFn: function(item) {
           // item      - slide object
           // captionEl - caption DOM element
           // isFake    - true when content is added to fake caption container
           //             (used to get size of next or previous caption)
-          vm.file = item.file;
-          if (!item.title) {
-            vm.title = "";
-            return false;
-          } else {
-            vm.title = item.title;
-            const { amount, paid_node, index } = item;
-            vm.currItem = {
-              index,
-              amount,
-              paidNode: paid_node
-            };
-            return true;
-          }
+          const { file, amount, paid_node, paid, index } = item;
+          vm.currItem = {
+            paid,
+            index,
+            amount,
+            fileID: file,
+            paidNode: paid_node
+          };
+          return paid_node && !paid;
         }
       };
       this.photoswipe = new PhotoSwipe(this.$el, PhotoSwipeUI, images, options);
       this.photoswipe.init();
       bus.$on("updatePhoto", src => {
-        this.title = "";
+        this.btnText = "";
+        this.paid = true;
         this.photoswipe.currItem.container.querySelector(
           "img.pswp__img"
         ).src = src;
       });
       this.photoswipe.listen("close", function() {
-        this.title = "";
+        this.btnText = "";
+        this.paid = false;
         bus.$off("updatePhoto");
       });
     }

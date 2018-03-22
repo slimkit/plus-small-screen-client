@@ -59,7 +59,6 @@ export default {
     },
     isLongImg(img) {
       const [w, h] = img.size.split("x");
-      img.title = img.paid_node > 0 && !img.paid ? "购买查看" : "";
       img.w = parseInt(w);
       img.h = parseInt(h);
       return w > 3 * h || h > 3 * w;

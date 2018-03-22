@@ -74,17 +74,19 @@ export default {
     onCancel() {},
     onSuccess() {},
     handelOk() {
-      this.node &&
-        this.$http
-          .post(`/currency/purchases/${this.node}`)
-          .then(({ data }) => {
-            this.onSuccess(data);
-          })
-          .catch(() => {
-            this.$Message.error("支付失败!");
-          });
       this.onOk();
-      this.$nextTick(this.cancel);
+      this.node
+        ? this.$http
+            .post(`/currency/purchases/${this.node}`)
+            .then(({ data }) => {
+              this.cancel();
+              this.onSuccess(data);
+            })
+            .catch(err => {
+              this.cancel();
+              this.$Message.error("支付失败!");
+            })
+        : this.cancel();
     },
     handelCancel() {
       this.onCancel();
@@ -96,9 +98,11 @@ export default {
     cancel() {
       this.node = null;
       this.show = false;
-      this.onOk = noop;
-      this.onCancel = noop;
-      this.onSuccess = noop;
+      this.$nextTick(() => {
+        this.onOk = noop;
+        this.onCancel = noop;
+        this.onSuccess = noop;
+      });
     }
   }
 };

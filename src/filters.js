@@ -46,7 +46,9 @@ export const time2txt = str => {
   } else if (time / 3600000 < 24) {
     return "今天";
   } else {
-    return date.getMonth() + 1 + "月" + date.getDate();
+    const M = (date.getMonth() + 1 + "").padStart(2, "0");
+    const D = (date.getDate() + "").padStart(2, "0");
+    return M + "月" + D;
   }
 };
 

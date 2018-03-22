@@ -59,17 +59,14 @@ export default {
     },
     isLongImg(img) {
       const [w, h] = img.size.split("x");
-      img.title = img.paid_node > 0 && !img.paid ? "购买查看" : "";
       img.w = parseInt(w);
       img.h = parseInt(h);
       return w > 3 * h || h > 3 * w;
     },
 
     longStyle(w, h) {
-      w = w > 518 ? 518 : w;
-      h = h > 960 ? 960 : h;
       return {
-        width: w + "px",
+        width: w > 518 ? "518px" : w + "px",
         paddingBottom: h / w * 100 + "%"
       };
     }
