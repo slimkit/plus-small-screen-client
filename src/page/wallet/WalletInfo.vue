@@ -34,11 +34,21 @@ export default {
 </script>
 <style lang='less'>
 .wallet-info--detail {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  margin: auto;
+  z-index: 111;
+
   width: 650px;
-  min-height: 650px;
+  height: 650px;
+
   background-color: #fff;
   border-radius: 20px;
   overflow: hidden;
+
   &--head {
     height: 90px;
     line-height: 90px;

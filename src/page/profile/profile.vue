@@ -146,10 +146,7 @@ export default {
       return this.$store.state.CURRENTUSER;
     },
     balance() {
-      const {
-        site: { gold_name: { name = "金币" } = {} } = {}
-      } = this.$store.state.CONFIG;
-      return (+this.wallet.balance || 0).toFixed(2) + name;
+      return (+this.wallet.balance || 0).toFixed(2);
     },
     wallet() {
       return this.user.wallet || {};

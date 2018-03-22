@@ -1,10 +1,8 @@
 <template>
-  <div @click='toInfo' class="wallet-detail-item">
-    <div class="wallet-detail-item--time" v-html='created_at'></div>
-    <div class="wallet-detail-item--body">
-      {{ detail.subject }}
-    </div>
-    <div class="wallet-detail-item--count">
+  <div class="m-box m-bb1 m-aln-center m-justify-bet m-main m-wallet-detail" @click.stop="showDetail">
+    <div class="m-wallet-detail-time" v-html='created_at'></div>
+    <div class="m-wallet-detail-title" >{{ detail.subject }}</div>
+    <div class="m-wallet-detail-amount">
       {{ detail.action ? '+' : '-' }}{{ detail.amount.toFixed(2) }}
     </div>
   </div>
@@ -24,7 +22,7 @@ function splitYMD(date) {
     M,
     D,
     w,
-    d: (M + "").padStart(2, 0) + "-" + (D + "").padStart(2, 0),
+    d: (M + "").padStart(2, 0) + "/" + (D + "").padStart(2, 0),
     t: h + ":" + m
   };
 }
@@ -60,11 +58,33 @@ export default {
     }
   },
   methods: {
-    toInfo() {
-      this.$emit("selected", this.detail);
+    showDetail() {
+      this.$emit("on-click");
     }
   }
 };
 </script>
-<style lang='less' src='../style/WalletDetailItem.less'>
+
+<style lang="less">
+.m-wallet-detail {
+  padding: 30px;
+  font-size: 30px;
+  line-height: 36px;
+  &-time {
+    color: #b3b3b3;
+    font-size: 24px;
+    text-align: center;
+    line-height: 1;
+  }
+  &-title {
+    margin: 0 30px;
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  &-amount {
+    color: #ff9400;
+  }
+}
 </style>

@@ -222,7 +222,8 @@ export default {
       this.updateData();
     },
     userID(val) {
-      val !== this.preID &&
+      val &&
+        val !== this.preID &&
         ((this.loading = true),
         (this.feeds = []),
         (this.tags = []),

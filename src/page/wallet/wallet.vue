@@ -1,12 +1,22 @@
 <template lang="html">
-  <div class="wallet">
-    <head-top :go-back='true' title="钱包" append='true'>
-      <router-link :to="{ path: 'detail' }" append slot='append'>明细</router-link>
-    </head-top>
-    <div class="wallet--balance">
-      <p class="label">账户余额({{ goldName }})</p>
-      <h1 class="balance">{{ balance }}</h1>
-    </div>
+  <div class="p-wallet wallet">
+    <header class="m-box m-head-top">
+        <div class="m-box m-flex-grow1 m-flex-base0 m-aln-center">
+          <svg class="m-style-svg m-svg-def" @click="goback">
+            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-back"></use>
+          </svg>
+        </div>
+        <div class="m-box m-flex-grow1 m-flex-base0 m-aln-center m-justify-center">
+          <h2>钱包</h2>
+        </div>
+        <div class="m-box m-flex-grow1 m-flex-base0 m-aln-center m-justify-end">
+          <router-link :to="{ path: 'detail' }" append slot='append'>明细</router-link>
+        </div>
+    </header>
+    <section class="m-wallet-panel">
+      <h3>账户余额(元)</h3>
+      <p>{{ balance }}</p>
+    </section>
     <ul class="entry__group padding">
       <router-link tag='li' class="entry__item" :to='{path: "recharge"}' append>
         <svg class='entry__item--prepend'>
@@ -53,9 +63,39 @@ export default {
       return (+this.wallet.balance || 0).toFixed(2);
     }
   },
-  methods: {}
+  methods: {
+    goback() {
+      this.$router.go(-1);
+    }
+  }
 };
 </script>
 
-<style lang="less" src='./style/wallet.less'>
+<style lang="less">
+.p-wallet {
+  .m-head-top {
+    background-color: #31a0e6;
+    color: #fff;
+    a {
+      color: inherit;
+    }
+  }
+  .entry__group:first-of-type {
+    margin-top: 0;
+  }
+}
+.m-wallet-panel {
+  padding: 60px 30px;
+  color: #fff;
+  font-size: 28px;
+  background-color: #31a0e6;
+  h3 {
+    opacity: 0.7;
+  }
+  p {
+    margin-top: 80px;
+    font-size: 100px;
+    letter-spacing: 2px;
+  }
+}
 </style>
