@@ -97,8 +97,6 @@ export default {
   },
   methods: {
     payForImg() {
-      const glodName =
-        this.$store.state.CONFIG.site.currency_name.name || "积分";
       const { paidNode, amount } = this.currItem;
       bus.$emit("payfor", {
         onSuccess: data => {

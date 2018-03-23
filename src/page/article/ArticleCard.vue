@@ -59,7 +59,6 @@
   </transition>
 </template>
 <script>
-import bus from "@/bus.js";
 import HeadRoom from "headroom.js";
 export default {
   name: "article-card",

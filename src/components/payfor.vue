@@ -82,7 +82,7 @@ export default {
               this.cancel();
               this.onSuccess(data);
             })
-            .catch(err => {
+            .catch(() => {
               this.cancel();
               this.$Message.error("支付失败!");
             })

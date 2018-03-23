@@ -15,15 +15,13 @@ import questionRoutes from "./question";
 import profile from "../page/profile/profile.vue";
 import discover from "../page/discover/discover.vue";
 
+import postImgFeed from "../page/post/PostFeed.vue";
+import postTextFeed from "../page/feed/children/postText";
+
 /* eslint-disable one-var */
 const feed = () => import(/* webpackChunkName: 'feed' */ "../page/feed/feed"),
   feedDetail = () =>
     import(/* webpackChunkName: 'feed' */ "../page/feed/components/feedDetail"),
-  // 发送文本动态组件
-  postTextFeed = () =>
-    import(/* webpackChunkName: 'feed' */ "../page/feed/children/postText"),
-  postImgFeed = () =>
-    import(/* webpackChunkName: 'post' */ "../page/post/PostFeed.vue"),
   // 排行榜
   rank = () => import(/* webpackChunkName: 'rank' */ "../page/rank/rank"),
   rankUsers = () =>

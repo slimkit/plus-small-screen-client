@@ -1,33 +1,43 @@
 <template>
-    <footer id="foot_guide">
-        <section @click="to('/feed/new')" class="guide_item" :class="{active: isCurPath('/feed')}">
-            <v-icon type='foot-home' width='.45' height='.45' class='foot_guide_icon' />
-            <span>首页</span>
-        </section>
-        <section @click="to('/discover')" class="guide_item" :class="{active: isCurPath('/discover')}">
-            <v-icon type='foot-discover' width='.45' height='.45' class='foot_guide_icon' />
-            <span>发现</span>
-        </section>
-        <section @click="showPostMenu" class="guide_item plus">
-            <v-icon type='foot-plus' height='.6' width='.6' class='foot_guide_icon plus' />
-        </section>
-        <section @click="to('/message/msg')" class="guide_item" :class="{active: isCurPath('/message')}">
-            <v-badge :dot='has_msg'>
-                <v-icon type='foot-message' width='.45' height='.45' class='foot_guide_icon' />
-            </v-badge>
-            <span>消息</span>
-        </section>
-        <section @click="to('/profile')" class="guide_item" :class="{active: isCurPath('profile')}">
-            <v-badge :dot='has_fans'>
-                <v-icon type='foot-profile' width='.45' height='.45' class='foot_guide_icon' />
-            </v-badge>
-            <span>我</span>
-        </section>
-    </footer>
+  <footer id="foot_guide">
+    <section @click="to('/feed/new')" class="guide_item" :class="{active: isCurPath('/feed')}">
+      <svg class="m-style-svg m-svg-def foot_guide_icon">
+        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#foot-home"></use>
+      </svg>
+      <span>首页</span>
+    </section>
+    <section @click="to('/discover')" class="guide_item" :class="{active: isCurPath('/discover')}">
+      <svg class="m-style-svg m-svg-def foot_guide_icon">
+        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#foot-discover"></use>
+      </svg>
+      <span>发现</span>
+    </section>
+    <section @click="showPostMenu" class="guide_item plus">
+      <svg class="m-style-svg m-svg-def foot_guide_icon plus">
+        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#foot-plus"></use>
+      </svg>
+    </section>
+    <section @click="to('/message/msg')" class="guide_item" :class="{active: isCurPath('/message')}">
+      <v-badge :dot='has_msg'>
+        <svg class="m-style-svg m-svg-def foot_guide_icon">
+          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#foot-message"></use>
+        </svg>
+      </v-badge>
+      <span>消息</span>
+    </section>
+    <section @click="to('/profile')" class="guide_item" :class="{active: isCurPath('profile')}">
+      <v-badge :dot='has_fans'>
+        <svg class="m-style-svg m-svg-def foot_guide_icon">
+          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#foot-profile"></use>
+        </svg>
+      </v-badge>
+      <span>我</span>
+    </section>
+  </footer>
 </template>
 <script>
 import { mapState } from "vuex";
-import showPostMenu from "./postMenu/showPostMenu";
+import bus from "@/bus.js";
 export default {
   name: "FootGuide",
   data() {
@@ -56,7 +66,7 @@ export default {
       return this.$route.fullPath.indexOf(path) > -1;
     },
     showPostMenu() {
-      showPostMenu.show({});
+      bus.$emit("post-menu");
     }
   },
   mounted() {
@@ -66,9 +76,16 @@ export default {
 </script>
 <style lang="less">
 .foot_guide_icon {
+  width: 45px;
+  height: 45px;
+  margin-bottom: 5px;
+  &.plus {
+    width: 65px;
+    height: 65px;
+  }
   + .v-badge-dot {
     top: 0;
-    box-shadow: 0 0 0 1px #ed3f14;
+    box-shadow: 0 0 0 1px #ed3f14; /*no*/
   }
 }
 </style>

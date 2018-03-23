@@ -172,7 +172,7 @@ export default {
         return this.$store.getters.getUserById(this.userID) || {};
       },
       set(val) {
-        this.$store.commit("SAVE_USER", this.user);
+        this.$store.commit("SAVE_USER", Object.assign({}, this.user, val));
       }
     },
     extra() {

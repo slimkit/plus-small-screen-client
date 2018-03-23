@@ -6,10 +6,13 @@
     <router-view v-if="!$route.meta.keepAlive"></router-view>
     <div>
       <svg-icon />
+
       <pswp />
+      <payfor />
+      <post-menu />
       <actionsheet />
       <comment-input />
-      <payfor />
+      <check-in v-if="checkin"/>
     </div>
   </div>
 </template>
@@ -18,6 +21,12 @@ import pswp from "@/components/pswp.vue";
 import payfor from "@/components/payfor.vue";
 import actionsheet from "@/components/actionsheet.vue";
 import commentInput from "@/components/commentInput.vue";
+// icons
+import SvgIcon from "@/components/common/svgIcon.vue";
+// 签到
+import CheckIn from "@/page/checkin/CheckIn.vue";
+
+import PostMenu from "@/page/PostMenu.vue";
 export default {
   name: "app",
   components: {
@@ -25,8 +34,15 @@ export default {
     payfor,
     actionsheet,
     commentInput,
-    svgIcon: () =>
-      import(/* webpackChunkName: 'svgIcon' */ "@/components/common/svgIcon")
+
+    CheckIn,
+    SvgIcon,
+    PostMenu
+  },
+  computed: {
+    checkin() {
+      return this.$store.state.CONFIG.checkin || true;
+    }
   }
 };
 </script>

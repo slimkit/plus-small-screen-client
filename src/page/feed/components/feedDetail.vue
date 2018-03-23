@@ -46,7 +46,7 @@
               <li 
               :key="id"
               :style="{ zIndex: 5-index }" 
-              v-for="({user, id}, index) in likes.slice(0, 5)"
+              v-for="({user = {}, id}, index) in likes.slice(0, 5)"
               class="m-avatar-box tiny">
                 <img :src="user.avatar">
               </li>
@@ -86,7 +86,6 @@
         <span v-else class="load-more-btn" @click.stop="fetchFeedComments(maxComId)">
           {{fetchComing ? "加载中..." : "点击加载更多"}}
         </span>
-        <!-- <button v-else class="load-more-btn" @click.stop="fetchNewsComments(maxComId)"></button> -->
       </div>
     </div>
   </article-card>
@@ -112,7 +111,6 @@ export default {
       loading: true,
       fetching: false,
 
-      likes: [],
       comments: [],
       pinnedCom: [],
 
@@ -142,15 +140,24 @@ export default {
     feedID() {
       return this.$route.params.feedID;
     },
-    uid() {
-      return this.$store.state.CURRENTUSER.id;
+    CURRENTUSER() {
+      return this.$store.state.CURRENTUSER;
     },
     user() {
       const { user } = this.feed;
       return user && user.id === this.feed.user_id ? user : {};
     },
     isMine() {
-      return this.feed.user_id === this.uid;
+      return this.feed.user_id === this.CURRENTUSER.id;
+    },
+    likes: {
+      get() {
+        return this.feed.likes || [];
+      },
+      set(val) {
+        console.log(val);
+        this.feed.likes = val;
+      }
     },
     liked: {
       get() {
@@ -221,20 +228,13 @@ export default {
             this.loading = false;
             this.fetching = false;
             this.fetchFeedComments();
-            // this.fetchFeedLikes();
             this.getWeChatConfig();
           }, 800);
         })
-        .catch(err => {
-          console.log(err);
+        .catch(() => {
           this.$router.back();
         });
     },
-    // fetchFeedLikes() {
-    //   this.$http.get(`/feeds/${this.feedID}/likes`).then(({ data = [] }) => {
-    //     data && data.length, (this.likes = data);
-    //   });
-    // },
     fetchFeedComments(after = 0) {
       if (this.fetchComing) return;
       this.fetchComing = true;
@@ -274,8 +274,23 @@ export default {
       })
         .then(() => {
           method === "post"
-            ? ((this.liked = true), (this.likeCount += 1))
-            : ((this.liked = false), (this.likeCount -= 1));
+            ? ((this.liked = true),
+              (this.likeCount += 1),
+              this.likes.length < 5 &&
+                (this.likes = [
+                  ...this.likes,
+                  {
+                    user: this.CURRENTUSER,
+                    id: new Date().getTime(),
+                    user_id: this.CURRENTUSER.id
+                  }
+                ]))
+            : ((this.liked = false),
+              (this.likeCount -= 1),
+              (this.likes = this.likes.filter(like => {
+                return like.user_id !== this.CURRENTUSER.id;
+              })));
+
           this.fetching = false;
         })
         .catch(() => {
@@ -330,7 +345,7 @@ export default {
               }
             }
           ];
-      // bus.$emit("actionSheet", [...defaultActions, ...actions], "取消");
+      bus.$emit("actionSheet", [...defaultActions, ...actions], "取消");
     },
     getWeChatConfig() {
       const url = window.location.origin + this.$route.fullPath;
@@ -350,7 +365,7 @@ export default {
             jsApiList: this.appList
           });
           Wx.ready(() => {});
-          Wx.error(res => {
+          Wx.error(() => {
             // console.log(res);
           });
           Wx.onMenuShareTimeline({
@@ -402,7 +417,7 @@ export default {
         });
 
         Wx.ready(() => {}),
-          Wx.error(res => {
+          Wx.error(() => {
             // console.log(res);
           });
         Wx.onMenuShareTimeline({
@@ -444,7 +459,7 @@ export default {
       }
     },
     replyComment(uid, uname) {
-      uid === this.uid
+      uid === this.CURRENTUSER.id
         ? bus.$emit(
             "actionSheet",
             [
