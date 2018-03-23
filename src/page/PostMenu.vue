@@ -88,13 +88,22 @@ export default {
       document.body.style.top = -this.scrollTop + "px";
     });
   },
+  computed: {
+    login() {
+      return !!this.$store.state.CURRENTUSER.id;
+    }
+  },
   methods: {
     to(path) {
-      path && this.$router.push(path);
+      path = this.login ? path : `/signin?redirect=${path}`;
+      !this.login && this.$Message.error("请登录");
+      this.$router.push(path);
       this.$nextTick(this.cancel);
     },
     showCheckIn() {
-      bus.$emit("check-in");
+      this.login
+        ? bus.$emit("check-in")
+        : (this.$Message.error("请登录"), this.$router.push(`/signin`));
       this.$nextTick(this.cancel);
     },
     cancel() {

@@ -189,6 +189,7 @@ export default {
 }
 .m-check-in-user-list {
   margin-top: 30px;
+  font-size: 20px;
 }
 .m-check-in-user-list li + li {
   margin-left: 20px;
