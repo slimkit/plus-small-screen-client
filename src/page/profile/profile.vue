@@ -1,8 +1,11 @@
 <template>
   <div :class="prefixCls">
-    <head-top title='我'></head-top>
-    <div></div>
-    <div :class="`${prefixCls}--head`">
+    <header class="m-box m-pos-f m-main m-bb1 m-head-top">
+      <div class="m-box m-aln-center m-flex-grow1 m-flex-base0 m-justify-center m-head-top-title">
+        <span>我</span>
+      </div>
+    </header>
+    <div :class="`${prefixCls}--head`" style="padding-top: 1.1rem">
       <div :class="`${prefixCls}--head-inner`">
         <v-avatar size='large' :sex='user.sex' :src='user.avatar'></v-avatar>
         <div :class="`${prefixCls}--base-info`">

@@ -1,19 +1,28 @@
 <template>
-    <div>
-        <head-top title='发现' />
-        <div></div>
-        <transition-group tag="ul" class='entry__group padding' v-for='(group, index) in entrys' :key='`${prefix}-entry-group-${index}`' name="slide">
-            <li v-for='{icon,title, path, tips, new_tips} in group' :key='`${prefix}-entry-${icon}`' class="entry__item" @click='to(path)'>
-                <v-icon :type='`${prefix}-${icon}`' class='entry__item--prepend' />
-                <span>{{ title }}</span>
-                <v-badge :dot='new_tips'>{{ tips }}</v-badge>
-                <svg class='entry__item--append'>
-                  <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-arrow-r"></use>
-                </svg>
-            </li>
-        </transition-group>
-        <foot-guide></foot-guide>
-    </div>
+  <div class="p-discover">
+    <header class="m-box m-pos-f m-main m-bb1 m-head-top">
+      <div class="m-box m-aln-center m-flex-grow1 m-flex-base0"></div>
+      <div class="m-box m-aln-center m-flex-grow1 m-flex-base0 m-justify-center m-head-top-title">
+        <span>发现</span>
+      </div>
+      <div class="m-box m-aln-center m-flex-grow1 m-flex-base0"></div>
+    </header>
+    <main style="padding-top: 0.9rem">
+      <ul class='entry__group padding' v-for='(group, index) in entrys' :key='`${prefix}-entry-group-${index}`'>
+        <li @click='to(path)' class="entry__item" :key='`${prefix}-entry-${icon}`' v-for='{icon,title, path, tips, new_tips} in group'>
+          <svg class="m-style-svg m-svg-def entry__item--prepend">
+            <use xmlns:xlink="http://www.w3.org/1999/xlink" :xlink:href="`#${prefix}-${icon}`"></use>
+          </svg>
+          <span>{{ title }}</span>
+          <v-badge :dot='new_tips'>{{ tips }}</v-badge>
+          <svg class='m-style-svg m-svg-def entry__item--append'>
+            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-arrow-r"></use>
+          </svg>
+        </li>
+      </ul>
+    </main>
+    <foot-guide></foot-guide>
+  </div>
 </template>
 <script>
 import HeadTop from "../../components/HeadTop";

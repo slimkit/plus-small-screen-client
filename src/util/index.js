@@ -85,12 +85,13 @@ export const detectOS = () => {
     isWebApp = u.indexOf("Safari") === -1,
     isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/),
     isAndroid = u.indexOf("Android") > -1 || u.indexOf("Linux") > -1,
+    isWechat = u.toLowerCase().indexOf("micromessenger") > -1,
     /* pc 端 */
     isIE = u.indexOf("Trident") > -1,
     isOpera = u.indexOf("Presto") > -1,
     isChorme = u.indexOf("AppleWebKit") > -1,
-    isWechat = u.toLowerCase().indexOf("micromessenger") > -1,
     isFirefix = u.indexOf("Gecko") > -1 && u.indexOf("KHTML") === -1;
+
   return {
     isMobile,
     isWechat,

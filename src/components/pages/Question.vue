@@ -1,6 +1,16 @@
 <template>
   <div>
-    <head-top :go-back='true' title='问题详情'></head-top>
+    <header class="m-box m-pos-f m-main m-bb1 m-head-top">
+      <div class="m-box m-aln-center m-flex-grow1 m-flex-base0">
+        <svg class="m-style-svg m-svg-def" @click="goBack">
+          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-back"></use>
+        </svg>
+      </div>
+      <div class="m-box m-aln-center m-flex-grow1 m-flex-base0 m-justify-center m-head-top-title">
+        <span>问题详情</span>
+      </div>
+      <div class="m-box m-aln-center m-flex-grow1 m-flex-base0"></div>
+    </header>
     <div :class="classNameBuilder('container')">
       <load-more
         ref="questionLoadContainer"
@@ -315,7 +325,7 @@ export default {
 @root: page-question;
 .@{root} {
   &-container {
-    padding-bottom: 94px;
+    padding-top: 90px;
   }
   &-tabbar {
     position: fixed;

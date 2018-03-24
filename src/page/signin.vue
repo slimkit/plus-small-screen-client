@@ -1,307 +1,276 @@
 <template>
-  <transition name='router-fadeInRight' mode="out-in">
-    <div class="signin_page">
-      <head-top append='true' title='登录'></head-top>
-      <div class="normal_signin">
-        <div class="forms">
-          <div class="forms_row">
-            <label for="account">账户</label>
-            <input type="text" v-model='account' id="account" placeholder="用户名/手机号/邮箱">
-            <v-icon type='base-clean' v-if='account.length > 0' @click.native='account=""' />
-          </div>
-          <div class="forms_row">
-            <label for="password">密码</label>
-            <input type="text" v-model='password' minlength="6" maxlength="15" id="password" v-if='eye' placeholder="输入6位以上登录密码">
-            <input type="password" v-model='password' minlength="6" maxlength="15" id="password" v-else placeholder="输入6位以上登录密码">
-            <v-icon :type='`eye-${eye?"open":"close"}`' @click.native='eye=!eye' />
-          </div>
+  <transition
+  enter-active-class="animated bounceInRight"
+  leave-active-class="animated bounceOutLeft">
+    <div class="m-box-model m-pos-f p-signin">
+      <header class="m-box m-pos-f m-aln-center m-main m-head-top m-bb1">
+        <div class="m-flex-grow1 m-flex-base0"></div>
+        <div class="m-box m-flex-grow1 m-flex-base0 m-aln-center m-justify-center m-head-top-title">
+          <span>登录</span>
         </div>
-        <div class="forms_error ellipsis">{{ error }}</div>
-        <button class="long_btn" :disabled='disabled' @click='signIn'>
-          <div>
-            <span>登录</span>
-            <v-icon v-show='btnLoading' class='rotate' type='base-loading'></v-icon>
-          </div>
-        </button>
-        <div class="other_link">
-          <router-link to='/feed/new'>不登录, 先随便逛逛</router-link>
-          <router-link to='/forgot'>忘记密码</router-link>
+        <div class="m-box m-flex-grow1 m-flex-base0 m-aln-center m-justify-end">
+          <router-link to="/signup">注册</router-link>
         </div>
-      </div>
-      <!-- 三方登录 -->
-      <div class="tr_signin" v-show='false'>
-        <h3>社交账号登录</h3>
-        <div class="tr_signin_group">
-          <figure v-for='(tr, index) in tr_signin' :key='`tr-signin-${index}`'>
-            <div class="tr_signin_icon">
-              <v-icon :type='tr.icon'></v-icon>
+      </header>
+      <main class="m-box-model m-flex-grow1" style="padding-top: 0.9rem">
+        <div class="m-form-row m-main">
+          <label for="account">账户</label>
+          <div class="m-input">
+            <input
+            type="text"
+            id="account"
+            v-model="account"
+            placeholder="用户名/手机号/邮箱">
+          </div>
+          <svg 
+            @click="account = ''"
+            v-show="account.length > 0"
+            class="m-style-svg m-svg-def">
+            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-clean"></use>
+          </svg>
+        </div>
+        <div class="m-form-row m-main">
+          <label for="password">密码</label>
+          <div class="m-input">
+            <input
+            id="password"
+            type="text"
+            v-model="password"
+            v-if="eye"
+            placeholder="输入6位以上登录密码">
+            <input 
+            id="password" 
+            type="password"
+            v-model="password"
+            v-else
+            placeholder="输入6位以上登录密码" 
+            >
+          </div>
+          <svg
+          class="m-style-svg m-svg-def"
+          @click="eye=!eye">
+            <use 
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            :xlink:href='`#eye-${eye?"open":"close"}`'></use>
+          </svg>
+        </div>
+        <div class="m-box m-aln-center m-text-box m-form-err-box">
+          <span>{{ err | plusMessageFirst }}</span>
+        </div>
+        <div class="m-form-row" style="border: 0">
+          <button
+          :disabled="disabled"
+          class="m-long-btn m-signin-btn"
+          @click="signinByAccount">
+            <svg v-if="loading" class="m-style-svg m-svg-def rotate">
+              <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-loading"></use>
+            </svg>
+            <span v-else>登录</span>
+          </button>
+        </div>
+        <div class="m-box m-aln-center m-justify-bet other-link">
+          <router-link tag="span" to="/feed/new">
+            <a>不登录，先随便逛逛</a>
+          </router-link>
+          <router-link tag="span" to="/forgot">
+            <a>忘记密码?</a>
+          </router-link>
+        </div>
+      </main>
+      
+      <!-- TODO: 其他三方登录方式 -->
+      <footer class="m-box-model m-trhsignin" v-if="isWechat">
+        <div class="m-box m-aln-center m-justify-aro m-trhsignin-list">
+          <!-- <div class="m-box m-fd-col m-aln-center m-tr-item">
+            <div class="m-tr-item-icon">
+              <svg class="m-style-svg m-svg-def">
+                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#tr-QQ"></use>
+              </svg>
             </div>
-            <p>{{ tr.title }}</p>
-          </figure>
+            <span>QQ</span>
+          </div> -->
+          <div class="m-box m-fd-col m-aln-center m-tr-item" @click="signinByWechat">
+            <div class="m-tr-item-icon">
+              <svg class="m-style-svg m-svg-def">
+                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#tr-wechat"></use>
+              </svg>
+            </div>
+            <span>微信</span>
+          </div>
         </div>
-      </div>
+      </footer>
     </div>
   </transition>
 </template>
 <script>
-import HeadTop from "../components/HeadTop";
-import validate from "../util/validate";
+import { signinByWechat } from "@/util/wechat.js";
 export default {
   name: "signin",
-  components: {
-    HeadTop
-  },
   data() {
     return {
+      err: "",
+      eye: false,
       account: "",
       password: "",
-      eye: false,
-      error: "",
-      btnLoading: false,
-
-      /* 后台获取三方登录数据 */
-      tr_signin: [
-        {
-          icon: "tr-QQ",
-          title: "QQ"
-        },
-        {
-          icon: "tr-weibo",
-          title: "微博"
-        },
-        {
-          icon: "tr-wechat",
-          title: "微信"
-        }
-      ]
+      loading: false
     };
   },
   computed: {
     disabled() {
       return (
-        this.account.length < 2 || this.password.length < 6 || this.btnLoading
+        this.account.length < 4 || this.password.length < 6 || this.loading
       );
+    },
+    isWechat() {
+      return this.$store.state.BROWSER.isWechat;
     }
   },
   methods: {
-    signIn() {
-      this.error = "";
-      this.btnLoading = true;
-      // 需要验证的 数据
-      const vals = [
-        {
-          val: this.account,
-          type: "account"
-        },
-        {
-          val: this.password,
-          type: "password"
-        }
-      ];
+    signinByWechat,
+    signinByAccount() {
+      this.err = "";
+      if (this.account.length < 4) {
+        this.err = "账户不正确";
+        return false;
+      }
 
-      const r = vals.map(v => validate(v)).every(o => o.r);
+      if (this.password.length < 6) {
+        this.err = "密码不正确";
+        return false;
+      }
 
-      if (r) {
-        const deviceCode = this.$store.state.BROWSER.OS;
-        const param = {
+      this.loading = true;
+
+      this.$http
+        .post("/tokens", {
           login: this.account,
           password: this.password,
-          device_code: deviceCode
-        };
-
-        /* 用户登录 */
-        this.$http
-          .post("tokens", param, {
-            validateStatus: s => s === 201
-          })
-          .then(({ data }) => {
-            this.btnLoading = false;
-            const { token, user } = data;
-            if (token) {
-              this.$store.commit("SAVE_CURRENTUSER", { ...user, token });
-              this.$nextTick(() => {
-                this.$router.push(this.$route.query.redirect || "/feed/new");
-                this.$store.dispatch("GET_UNREAD_COUNT");
-                this.$store.commit("SAVE_USER", user);
-              });
-            }
-          })
-          .catch(err => {
-            console.log(err);
-            this.btnLoading = false;
-            const { response: { data = { message: "登录失败" } } = {} } = err;
-            this.error = this.$MessageBundle(data);
-          });
-      } else {
-        return (this.btnLoading = false);
-      }
+          device_code: this.$store.state.BROWSER.OS,
+          validateStatus: s => s === 201
+        })
+        .then(({ data: { token, user } }) => {
+          token &&
+            (this.$store.commit("SAVE_CURRENTUSER", {
+              ...user,
+              token
+            }),
+            this.$store.commit("SAVE_USER", user),
+            this.$store.dispatch("GET_UNREAD_COUNT"),
+            this.$nextTick(() => {
+              this.$router.push(this.$route.query.redirect || "/feed/new");
+              this.loading = false;
+            }));
+        })
+        .catch(err => {
+          console.log(err);
+          const { response: { data = { message: "登录失败" } } = {} } = err;
+          this.err = data;
+          this.loading = false;
+        });
     }
   }
 };
 </script>
-<style lang='less'>
-.signin_page {
-  height: 100%;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  > * {
-    flex: 0 0 auto;
-  }
-  .normal_signin {
-    flex: 1 1 auto;
-  }
 
-  .v-icon {
-    width: 38px;
-    height: 38px;
-    color: #ccc;
-  }
-}
-
-.tr_signin {
-  color: #999;
-  padding: 0 80px;
-  h3 {
-    margin: auto;
-    padding: 0;
-    text-align: center;
-    font-size: 24px;
-    &:before,
-    &:after {
-      content: "";
-      display: inline-block;
-      vertical-align: middle;
-      height: 0;
-      width: 190px;
-      border-bottom: 1px solid currentColor;
-      /*no*/
-    }
-    &:before {
-      margin-right: 20px;
-    }
-    &:after {
-      margin-left: 20px;
-    }
-  }
-  &_group {
-    text-align: center;
-    margin: 60px 0;
-    display: flex;
-    justify-content: space-between;
-    font-size: 24px;
-  }
-  &_icon {
-    width: 80px;
-    height: 80px;
-    line-height: 78px;
-    border-radius: 50%;
-    overflow: hidden;
-    margin-bottom: 20px;
-    box-shadow: 0 0 3px 3px #ededed;
-    background: #fff;
-
-    .v-icon {
-      width: 40px;
-      height: 40px;
-    }
-  }
-}
-
-.forms {
-  background: #fff;
-  input {
-    flex: 1 1 auto;
-    font-size: 30px;
-    height: 100%;
-    margin: 0 60px;
-  }
-  input::-webkit-input-placeholder {
-    font-size: 30px;
-    color: #ccc;
-  }
-  input:-moz-placeholder {
-    font-size: 30px;
-    color: #ccc;
-  }
-  input::-moz-placeholder {
-    font-size: 30px;
-    color: #ccc;
-  }
-  input:-ms-input-placeholder {
-    font-size: 30px;
-    color: #ccc;
-  }
-  svg {
-    width: 40px;
-    height: 40px;
-    fill: #b3b3b3;
-  }
-  &_row {
-    height: 110px;
-    line-height: 110px;
-    padding: 30px;
-    display: flex;
-    align-items: center;
-    font-size: 30px;
-    > * {
-      flex: 0 0 auto;
-    }
-    & + & {
-      border-top: 1px solid #ededed;
-      /*no*/
-    }
-  }
-}
-
-.forms_error {
-  padding: 30px;
-  color: #f4504d;
-  font-size: 24px;
-  height: 24 * 1.5+60px;
-}
-
-.long_btn {
-  display: block;
-  box-sizing: border-box;
-  text-align: center;
-  width: calc(~"100% - 60px");
-  margin: 0 30px;
-  height: 90px;
-  line-height: 90px;
-  text-align: center;
-  font-size: 32px;
-  color: #fff;
-  border-radius: 12px;
-  background: #59b6d7;
-  > div {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  &[disabled] {
-    background: rgb(211, 211, 211);
-    cursor: not-allowed;
-  }
-  svg {
-    width: 32px;
-    height: 32px;
-    margin-left: 5px;
-  }
-}
-
-.other_link {
-  padding: 30px;
+<style lang="less">
+.m-form-row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  font-size: 26px;
-  color: #999;
-  a {
-    color: inherit;
+  padding: 0 30px;
+  width: 100%;
+  height: 110px;
+  font-size: 28px;
+  border-bottom: 1px solid @border-color; /*no*/
+  .m-input {
+    padding: 0 30px 0;
+    flex-grow: 1;
+    display: flex;
+    justify-content: space-between;
+    input {
+      width: 100%;
+      height: 100%;
+      font-size: 28px;
+    }
+  }
+  .m-svg-def {
+    width: 40px;
+    height: 40px;
+    color: #ccc;
+  }
+}
+.m-form-err-box {
+  padding: 0 30px;
+  height: 100px;
+  font-size: 24px;
+  color: @error;
+}
+
+.m-long-btn {
+  width: 100%;
+  height: 90px;
+  color: #fff;
+  font-size: 32px;
+  border-radius: 12px;
+  background-color: @primary;
+  &[disabled] {
+    background-color: #ccc;
+  }
+}
+.p-signin {
+  background-color: #f4f5f6;
+  .other-link {
+    margin-top: 25px;
+    margin-bottom: 25px;
+    padding: 0 30px;
+    font-size: 26px;
+    a {
+      color: @text-color3;
+    }
+  }
+  .m-trhsignin {
+    position: relative;
+    text-align: center;
+    &:before {
+      position: absolute;
+      top: 0;
+      left: 80px;
+      right: 80px;
+      content: "";
+      display: block;
+      height: 0;
+      border-top: 1px solid #ccc; /*no*/
+    }
+    &:after {
+      color: #ccc;
+      content: "社交账号登陆";
+      display: inline-block;
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 0 20px;
+      background-color: #f4f5f6;
+    }
+    padding: 60px 80px;
+    .m-tr-item {
+      font-size: 24px;
+      line-height: 26px;
+      color: @text-color3;
+      &-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+        width: 80px;
+        height: 80px;
+        border-radius: 40px;
+        background-color: #ffffff;
+        .m-svg-def {
+          width: 38px;
+          height: 38px;
+        }
+      }
+    }
   }
 }
 </style>

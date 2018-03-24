@@ -103,14 +103,6 @@ export const formatNum = (a = 0) => {
             : Math.floor(a / 1e4) + "万")),
     a
   );
-  // if (typeof ~~num === 'number') {
-  //   if (num === 0) return '0';
-  //   const k = 1000;
-  //   const sizes = ['', 'K', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y'];
-  //   const i = Math.floor(Math.log(num) / Math.log(k));
-  //   return num / Math.pow(k, i) + ' ' + sizes[i];
-  // }
-  // return '0';
 };
 
 /**

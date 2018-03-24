@@ -1,4 +1,3 @@
-import signin from "../page/signin";
 import signup from "../page/signup";
 import NotFound from "../page/notFound";
 import upgrade from "../page/upgrade";
@@ -8,9 +7,10 @@ import setting from "../page/setting/setting";
 
 import UserHome from "@/page/UserHome.vue";
 
-import newsRoutes from "./news";
-import groupRoutes from "./group";
-import questionRoutes from "./question";
+import baseRoutes from "./base.js";
+import newsRoutes from "./news.js";
+import groupRoutes from "./group.js";
+import questionRoutes from "./question.js";
 
 import profile from "../page/profile/profile.vue";
 import discover from "../page/discover/discover.vue";
@@ -97,9 +97,7 @@ const feed = () => import(/* webpackChunkName: 'feed' */ "../page/feed/feed"),
   groupCommentAudit = () =>
     import(/* webpackChunkName: 'message' */ "@/page/message/children/audits/groupCommentAudit"),
   groupJoinAudit = () =>
-    import(/* webpackChunkName: 'message' */ "@/page/message/children/audits/groupJoinAudit"),
-  wechatLogin = () =>
-    import(/* webpackChunkName: 'login' */ "@/page/wechat/wechat");
+    import(/* webpackChunkName: 'message' */ "@/page/message/children/audits/groupJoinAudit");
 
 /**
  * 钱包页面
@@ -133,22 +131,10 @@ const UserFans = () =>
 const router = [
   /* 基础入口 */
   { path: "/", redirect: "/signin" },
+  ...baseRoutes,
   ...newsRoutes,
   ...groupRoutes,
   ...questionRoutes,
-  {
-    path: "/signin",
-    component: signin,
-    meta: { title: "登录", forGuest: true }
-  } /* 登录 */,
-  {
-    path: "/wechatLogin",
-    component: wechatLogin,
-    meta: {
-      title: "登录中...",
-      forGuest: true
-    }
-  },
   {
     path: "/signup",
     component: signup,

@@ -1,16 +1,22 @@
 <template>
   <div :class="`${prefixCls}`">
-    <head-top>
-      <div slot='nav' class="head-top-tabs-nav">
-        <router-link class='head-top-tabs-nav-item' to="/message/msg">
-          <v-badge :dot="has_msg">消息</v-badge>
+    <nav class="m-box m-head-top m-lim-width m-pos-f m-main m-bb1">
+      <ul class="m-box m-flex-grow1 m-aln-center m-justify-center m-flex-base0 m-head-nav">
+        <router-link tag="li" to="/message/msg" active-class="active" exact>
+          <v-badge :dot="has_msg">
+            <a>消息</a>
+          </v-badge>
         </router-link>
-        <router-link class='head-top-tabs-nav-item' to="/message/charts">
-          <v-badge :dot='notification'>聊天</v-badge>
+        <router-link tag="li" to="/message/charts" active-class="active" exact>
+          <v-badge :dot='notification'>
+            <a>聊天</a>
+          </v-badge>
         </router-link>
-      </div>
-    </head-top>
-    <router-view></router-view>
+      </ul>
+    </nav>
+    <main style="padding-top: 0.9rem">
+      <router-view></router-view>
+    </main>
     <foot-guide></foot-guide>
   </div>
 </template>

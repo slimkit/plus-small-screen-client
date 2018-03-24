@@ -1,24 +1,6 @@
 <template>
-  <div :class="`${prefixCls}`">
-    <div class="mask" v-if="signed">
-      登录中...
-    </div>
-    <div v-if="!signed">
-      <div class="mask" v-if="!showRegister && !showBind">
-        <div class="entries">
-          <div @click='action("showRegister")'>注册新用户</div>
-          <div @click='action("showBind")'>绑定已有用户</div>
-        </div>
-      </div>
-      <!-- 完善资料, 相当于新注册用户, 设置用户昵称-->
-      <div v-else-if="showRegister">
-        <register-user :name="name" :goDefault="goDefault" :accessToken="accessToken" :fn="action" />
-      </div>
-      <!-- 绑定已有用户 -->
-      <div v-else>
-        <bind-user :accessToken="accessToken" :goDefault="goDefault" :fn="action" />
-      </div>
-    </div>
+  <div>
+    <div class="m-spinner"></div>
   </div>
 </template>
 <script>
@@ -60,15 +42,6 @@ export default {
     }
   },
   methods: {
-    // countDown() {
-    //   const t = setInterval(() => {
-    //     if (--this.countdown <= 0) {
-    //       this.loading = 0;
-    //       this.countdown = 0;
-    //       clearInterval(t);
-    //     }
-    //   }, 1000);
-    // },
     goDefault() {
       this.showRegister = false;
       this.showBind = false;
@@ -76,7 +49,6 @@ export default {
     action(action) {
       this[action] = true;
     },
-
     async resolveUser(query) {
       const { code } = query;
       let accessToken = lstore.get("H5_WECHAT_MP_ASTOKEN");
@@ -142,9 +114,6 @@ export default {
   }
 };
 </script>
-<style lang='less' src='../style/signup.less'>
-</style>
-
 <style lang="less">
 .mask {
   background: rgba(0, 0, 0, 0.1);

@@ -91,7 +91,6 @@
   </article-card>
 </template>
 <script>
-import isWechat from "@/util/wechat.js";
 import wx from "@/util/share.js";
 import bus from "@/bus.js";
 import Wx from "weixin-js-sdk";
@@ -202,6 +201,9 @@ export default {
       return (
         this.$http.defaults.baseURL + "/files/" + file.file + "?w=300&h=300"
       );
+    },
+    isWechat() {
+      return this.$store.state.BROWSER.isWechat;
     }
   },
   methods: {
@@ -210,9 +212,6 @@ export default {
     },
     shareCancel() {
       this.$Message.success("取消分享");
-    },
-    goBack() {
-      this.$router.back();
     },
     fetchFeed() {
       if (this.fetching) return;
@@ -305,7 +304,7 @@ export default {
       });
     },
     shareFeed() {
-      if (isWechat()) {
+      if (this.isWechat) {
         this.$Message.success("请使用微信自带分享😳");
         return;
       }
