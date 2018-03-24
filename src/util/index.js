@@ -89,9 +89,11 @@ export const detectOS = () => {
     isIE = u.indexOf("Trident") > -1,
     isOpera = u.indexOf("Presto") > -1,
     isChorme = u.indexOf("AppleWebKit") > -1,
+    isWechat = u.toLowerCase().indexOf("micromessenger") > -1,
     isFirefix = u.indexOf("Gecko") > -1 && u.indexOf("KHTML") === -1;
   return {
     isMobile,
+    isWechat,
     OS: (() => {
       if (isMobile) {
         if (isIOS) return "IOS";

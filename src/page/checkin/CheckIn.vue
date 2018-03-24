@@ -54,8 +54,8 @@ export default {
     };
   },
   created() {
-    this.updateDate();
     bus.$on("check-in", () => {
+      this.updateDate();
       this.show = true;
       this.scrollTop = document.scrollingElement.scrollTop;
       document.body.classList.add("m-pop-open");
