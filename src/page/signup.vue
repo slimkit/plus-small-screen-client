@@ -114,7 +114,7 @@
         </div>
         <div class="m-form-row" style="border: 0">
           <button
-          :disabled="disabled"
+          :disabled="loading||disabled"
           class="m-long-btn m-signin-btn"
           @click="signIn">
             <svg v-if="loading" class="m-style-svg m-svg-def rotate">

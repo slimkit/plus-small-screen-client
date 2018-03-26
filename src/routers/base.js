@@ -1,5 +1,15 @@
 import lstore from "store";
+import about from "@/page/about";
+import signup from "@/page/signup";
+import forgot from "@/page/forgot";
 import signin from "@/page/signin.vue";
+
+/* TODO */
+import setting from "@/page/setting/setting.vue";
+import profile from "@/page/profile/profile.vue";
+/* TODO END */
+
+import discover from "@/page/discover.vue";
 import wechatSignin from "@/page/wechat/wechat";
 import wechatSignup from "@/page/wechat/wechatSignup.vue";
 import wechatBindUser from "@/page/wechat/wechatBindUser.vue";
@@ -11,6 +21,48 @@ export default [
     meta: {
       title: "登录",
       forGuest: true
+    }
+  },
+  {
+    path: "/signup",
+    component: signup,
+    meta: {
+      title: "注册",
+      forGuest: true
+    }
+  },
+  {
+    path: "/forgot",
+    component: forgot,
+    meta: {
+      title: "忘记密码"
+    }
+  },
+  {
+    path: "/discover",
+    component: discover,
+    meta: {
+      title: "发现"
+    }
+  },
+  {
+    path: "/profile",
+    component: profile,
+    meta: { title: "我", requiresAuth: true }
+  },
+  {
+    path: "/setting",
+    component: setting,
+    meta: {
+      title: "设置",
+      requiresAuth: true
+    }
+  },
+  {
+    path: "/about",
+    component: about,
+    meta: {
+      title: "关于我们"
     }
   },
   {

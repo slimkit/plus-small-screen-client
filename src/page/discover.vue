@@ -25,14 +25,8 @@
   </div>
 </template>
 <script>
-import HeadTop from "../../components/HeadTop";
-import FootGuide from "../../components/FootGuide";
 export default {
-  name: "discoverIndex",
-  components: {
-    HeadTop,
-    FootGuide
-  },
+  name: "discover",
   data() {
     return {
       prefix: "discover",

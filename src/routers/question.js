@@ -4,7 +4,8 @@
  * @return {Promise}
  * @author Seven Du <shiweidu@outlook.com>
  */
-const Questions = () => import("../components/pages/Questions");
+const Questions = () =>
+  import(/* webpackChunkName: 'question' */ "../components/pages/Questions");
 
 /**
  * Questions page module.
@@ -13,7 +14,7 @@ const Questions = () => import("../components/pages/Questions");
  * @author Seven Du <shiweidu@outlook.com>
  */
 const QuestionsModule = () =>
-  import("../components/modules/question/Questions");
+  import(/* webpackChunkName: 'question' */ "../components/modules/question/Questions");
 
 /**
  * Quesrion Tags module.
@@ -22,7 +23,7 @@ const QuestionsModule = () =>
  * @author Seven Du <shiweidu@outlook.com>
  */
 const QuestionTopicsModule = () =>
-  import("../components/modules/question/Topics");
+  import(/* webpackChunkName: 'question' */ "../components/modules/question/Topics");
 
 /**
  * The a question page.
@@ -30,7 +31,8 @@ const QuestionTopicsModule = () =>
  * @return {Promise} [description]
  * @author Seven Du <shiweidu@outlook.com>
  */
-const Question = () => import("../components/pages/Question");
+const Question = () =>
+  import(/* webpackChunkName: 'question' */ "../components/pages/Question");
 
 /**
  * The a topic page.
@@ -38,7 +40,8 @@ const Question = () => import("../components/pages/Question");
  * @return {Promise}
  * @author Seven Du <shiweidu@outlook.com>
  */
-const Topic = () => import("../components/pages/Topic");
+const Topic = () =>
+  import(/* webpackChunkName: 'question' */ "../components/pages/Topic");
 
 export default [
   /**
