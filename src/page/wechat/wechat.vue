@@ -1,30 +1,51 @@
 <template>
-  <div>
-    <div class="m-spinner"></div>
+  <div class="p-wechat-signin">
+    <header class="m-box m-aln-center m-head-top m-pos-f m-main m-bb1">
+      <router-link tag="div" to="/" class="m-box m-aln-center m-flex-grow1 m-flex-base0">
+        <svg class="m-style-svg m-svg-def">
+          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-back"></use>
+        </svg>
+      </router-link>
+      <div class="m-box m-aln-center m-justify-center m-flex-grow1 m-flex-base0 m-head-top-title">
+        <span>绑定账号</span>
+      </div>
+      <div class="m-box m-aln-center m-justify-end m-flex-grow1 m-flex-base0"></div>
+    </header>
+    <!-- loading -->
+    <div v-if="loading" class="m-spinner pos-f">
+      <div></div>
+      <div></div>
+    </div>
+
+    <div v-else>
+      <transition name='toast'>
+        <div class="m-pop-box"></div>
+      </transition>
+      <transition name='pop'>
+        <div class="m-lim-width m-pos-f m-wechat-box">
+          <router-link tag="button" to="/wechat/signup">
+            <a>注册新用户</a>
+          </router-link>
+          <router-link tag="button" to="/wechat/bind">
+            <a>绑定已有用户</a>
+          </router-link>
+        </div>
+      </transition>
+    </div>
   </div>
 </template>
 <script>
 import lstore from "store";
-import bindUser from "./bindUser";
-import registerUser from "./registerUser";
-
-const prefixCls = "signup";
 
 export default {
-  components: {
-    bindUser,
-    registerUser
+  name: "wechat-signin",
+  data() {
+    return {
+      loading: true,
+      accessToken: "",
+      WechatUname: ""
+    };
   },
-  name: "wechatLogin",
-  data: () => ({
-    accessToken: "",
-    name: "",
-    showRegister: false,
-    showBind: false,
-    loading: false,
-    prefixCls,
-    signed: true // 是否已经绑定
-  }),
 
   watch: {
     // 根据获取到access_token检查用户是否已经被楚泽
@@ -49,20 +70,23 @@ export default {
     action(action) {
       this[action] = true;
     },
-    async resolveUser(query) {
-      const { code } = query;
-      let accessToken = lstore.get("H5_WECHAT_MP_ASTOKEN");
+    async resolveUser(code) {
       let openId = lstore.get("H5_WECHAT_MP_OPENID");
-      if (!accessToken || !openId) {
-        const result = await this.$http.get(`socialite/getAccess/${code}`, {
-          validateStatus: status => status === 200
-        });
+      let accessToken = lstore.get("H5_WECHAT_MP_ASTOKEN");
 
-        let { data: { access_token, openid } = {} } = result;
-        accessToken = access_token;
+      if (!accessToken || !openId) {
+        const { data: { access_token, openid } = {} } = await this.$http.get(
+          `socialite/getAccess/${code}`,
+          {
+            validateStatus: status => status === 200
+          }
+        );
+
         openId = openid;
-        lstore.set("H5_WECHAT_MP_ASTOKEN", accessToken);
+        accessToken = access_token;
+
         lstore.set("H5_WECHAT_MP_OPENID", openid);
+        lstore.set("H5_WECHAT_MP_ASTOKEN", accessToken);
       }
       this.accessToken = accessToken;
       this.$http
@@ -77,17 +101,17 @@ export default {
         )
         .then(({ data: { token = "", user = {} } = {} }) => {
           // 保存用户信息 并跳转
-          this.$store.commit("SAVE_CURRENTUSER", { ...user, token });
+          this.$router.push(this.$route.query.redirect || "/feed/new");
           this.$nextTick(() => {
-            this.$router.push(this.$route.query.redirect || "/feed/new");
-            this.$store.dispatch("GET_UNREAD_COUNT");
-            this.$store.commit("SAVE_USER", user);
             lstore.remove("H5_WECHAT_MP_OPENID");
             lstore.remove("H5_WECHAT_MP_ASTOKEN");
+            this.$store.commit("SAVE_USER", user);
+            this.$store.dispatch("GET_UNREAD_COUNT");
+            this.$store.commit("SAVE_CURRENTUSER", { ...user, token });
           });
         })
         .catch(() => {
-          this.signed = false;
+          this.loading = false;
           this.getWechatUserInfo(accessToken, openId);
         });
     },
@@ -97,45 +121,39 @@ export default {
         .post(
           "socialite/getWechatUser",
           {
-            access_token,
-            openid
+            openid,
+            access_token
           },
           {
             validateStatus: s => s === 200
           }
         )
         .then(({ data: { nickname = "" } = {} }) => {
-          this.name = nickname;
+          this.WechatUname = nickname;
+          lstore.set("H5_WECHAT_NICKNAME", nickname);
         });
     }
   },
   mounted() {
-    this.resolveUser(this.$route.query);
+    const { code } = this.$route.query;
+    this.resolveUser(code);
   }
 };
 </script>
 <style lang="less">
-.mask {
-  background: rgba(0, 0, 0, 0.1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  .entries {
-    border: 1px solid #f4f5f5;
-    background: #fff;
-    border-radius: 5px;
-    div {
-      padding: 35px 71px;
-      text-align: center;
-      color: #333;
+.m-wechat-box {
+  overflow: hidden;
+  width: 70%;
+  height: 95 * 2px;
+  border-radius: 12px;
+  margin: auto;
+  button {
+    background-color: #fff;
+    width: 100%;
+    height: 95px;
+    + button {
+      border-top: 1px solid @border-color;
     }
-    div:not(:last-child) {
-      border-bottom: 1px solid #ededed;
-    }
-  }
-  .canNotAction {
-    color: #d3d3d3;
   }
 }
 </style>

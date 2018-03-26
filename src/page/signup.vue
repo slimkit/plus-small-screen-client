@@ -1,73 +1,131 @@
 <template>
-  <div :class="`${prefixCls}`">
-    <head-top :title='`${_$type.label}注册`' :append='true' :go-back='true'>
-      <div 
-      slot='append' 
-      class="c_59b6d7" 
-      @click='changeType'
-      >{{ _$type.label2 }}</div>
-    </head-top>
-    <div :class="`${prefixCls}--main`">
-      <div class="signup-form--row">
-        <label class="signup-form--row-prepend" for="username">用户名</label>
-        <input id="username" v-model.trim='name' type="text" placeholder="输入2-8位用户名" maxlength="8">
-        <span class="signup-form--row-append">
-          <svg v-show='name.length > 0' @click='name = ""'>
+  <transition
+  enter-active-class="animated bounceInRight"
+  leave-active-class="animated bounceOutLeft">
+    <div class="p-signup">
+      <header class="m-box m-aln-center m-head-top m-pos-f m-main m-bb1">
+        <div class="m-box m-aln-center m-flex-grow1 m-flex-base0"></div>
+        <div class="m-box m-aln-center m-justify-center m-flex-grow1 m-flex-base0 m-head-top-title">
+          <span>完善资料</span>
+        </div>
+        <div class="m-box m-aln-center m-justify-end m-flex-grow1 m-flex-base0">
+          <a @click.prevent="changeType">{{ _$type.label2 }}</a>
+        </div>
+      </header>
+      <main style="padding-top: 0.9rem">
+
+        <div class="m-form-row m-main">
+          <label for="username">账户</label>
+          <div class="m-input">
+            <input
+            type="text"
+            id="username"
+            v-model.trim='name'
+            placeholder="输入2-8位用户名"
+            maxlength="8">
+          </div>
+          <svg 
+            @click="name = ''"
+            v-show="name.length > 0"
+            class="m-style-svg m-svg-def">
             <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-clean"></use>
           </svg>
-        </span>
-      </div>
-
-      <div class="signup-form--row" v-if='verifiable_type === "sms"'>
-        <label class="signup-form--row-prepend" for="phone">手机号</label>
-        <input id="phone" v-model.trim.number='phone' type="number" maxlength="11" placeholder="输入11位手机号" oninput="if(value.length>11)value=value.slice(0,11)">
-        <span 
-        class="signup-form--row-append c_59b6d7" 
-        :class='{ disabled: phone.length < 11 }'
-        @click='getCode'
-        >{{ codeText }}</span>
-      </div>
-
-      <div class="signup-form--row" v-if='verifiable_type === "mail"'>
-        <label class="signup-form--row-prepend" for="mail">邮箱</label>
-        <input id="mail" type="email" v-model.trim='email' placeholder="输入邮箱地址">
-        <span 
-        class="signup-form--row-append c_59b6d7" 
-        :class='{ disabled: email.length < 4 }'
-        @click='getCode'
-        >{{ codeText }}</span>
-      </div>
-
-      <div class="signup-form--row">
-        <label class="signup-form--row-prepend" for="code">验证码</label>
-        <input id="code" type="text" v-model.trim='verifiable_code' placeholder="输入4-6位验证码" maxlength="6">
-        <span class="signup-form--row-append">
-          <svg v-show='verifiable_code.length > 0' @click='verifiable_code = ""'>
+        </div>        
+        <div class="m-form-row m-main" v-if='verifiable_type === "sms"'>
+          <label for="phone">手机号</label>
+          <div class="m-input">
+            <input
+            id="phone"
+            v-model.trim='phone'
+            type="number" 
+            maxlength="11"
+            placeholder="输入11位手机号"
+            @input="phone = phone.length > 11 ? phone.slice(0,11) : phone"
+            >
+          </div>
+          <span 
+          class="signup-form--row-append c_59b6d7" 
+          :class='{ disabled: phone.length < 11 }'
+          @click='getCode'
+          >{{ codeText }}</span>
+        </div>
+        <div class="m-form-row m-main" v-if='verifiable_type === "mail"'>
+          <label for="email">邮箱</label>
+          <div class="m-input">
+            <input
+            id="email"
+            v-model.trim='email'
+            type="email" 
+            placeholder="输入邮箱地址"
+            >
+          </div>
+          <span 
+          class="signup-form--row-append c_59b6d7" 
+          :class='{ disabled: email.length < 4 }'
+          @click='getCode'
+          >{{ codeText }}</span>
+        </div>
+        <div class="m-form-row m-main">
+          <label for="code">验证码</label>
+          <div class="m-input">
+            <input
+            id="code"
+            v-model.trim='verifiable_code'
+            type="code" 
+            maxlength="6"
+            placeholder="输入4-6位验证码"
+            >
+          </div>
+          <svg 
+            @click="verifiable_code = ''"
+            v-show="verifiable_code.length > 0"
+            class="m-style-svg m-svg-def">
             <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-clean"></use>
           </svg>
-        </span>
-      </div>
+        </div>
 
-      <div class="signup-form--row">
-        <label class="signup-form--row-prepend" for="psw">密码</label>
-        <input id="psw" v-if='eye' type="text" v-model.trim='password' placeholder="输入6位以上登录密码">
-        <input id="psw" v-else type="password" v-model.trim='password' placeholder="输入6位以上登录密码">
-        <span class="signup-form--row-append">
-          <svg @click='eye = !eye'>
-            <use xmlns:xlink="http://www.w3.org/1999/xlink" :xlink:href="`#eye-${eye ? 'open' : 'close'}`"></use>
+        <div class="m-form-row m-main">
+          <label for="password">密码</label>
+          <div class="m-input">
+            <input
+            id="password"
+            type="text"
+            v-model="password"
+            v-if="eye"
+            placeholder="输入6位以上登录密码">
+            <input 
+            id="password" 
+            type="password"
+            v-model="password"
+            v-else
+            placeholder="输入6位以上登录密码" 
+            >
+          </div>
+          <svg
+          class="m-style-svg m-svg-def"
+          @click="eye=!eye">
+            <use 
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            :xlink:href='`#eye-${eye?"open":"close"}`'></use>
           </svg>
-        </span>
-      </div>
-      <!-- {{ error | plusMessageAnalyze }} -->
-      <div class="signup-form--error ellipsis"></div>
+        </div>
+        <div class="m-box m-aln-center m-text-box m-form-err-box">
+          <span>{{ error | plusMessageFirst }}</span>
+        </div>
+        <div class="m-form-row" style="border: 0">
+          <button
+          :disabled="disabled"
+          class="m-long-btn m-signin-btn"
+          @click="signIn">
+            <svg v-if="loading" class="m-style-svg m-svg-def rotate">
+              <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-loading"></use>
+            </svg>
+            <span v-else>注册</span>
+          </button>
+        </div>
+      </main>
     </div>
-      <button class="signup-form--submit-btn" :disabled='disabled' @click='signIn'>
-        <span>注册</span>
-        <svg v-if='loading' class="rotate">
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-loading"></use>
-        </svg>
-      </button>
-  </div>
+  </transition>
 </template>
 <script>
 function strLength(str) {

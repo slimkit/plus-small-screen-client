@@ -1,6 +1,6 @@
 import http from "@/http.js";
 export const signinByWechat = () => {
-  const redirectUrl = window.location.origin + "/signin/wechat/";
+  const redirectUrl = window.location.origin + "/wechat/";
   http
     .post("socialite/getOriginUrl", {
       redirectUrl,

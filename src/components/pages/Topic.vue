@@ -1,21 +1,24 @@
 <template>
   <div>
-    <!-- Header bar. -->
-    <head-top
-      :title="topic.name || '话题详情'"
-      :go-back="true"
-      :append="true"
-    >
-      <button slot="append" :class="classNameBuilder('share')">
-        <svg class="icon">
-          <use xlink:href="#base-share" />
+    <header class="m-box m-pos-f m-main m-head-top m-bb1">
+      <div class="m-box m-aln-center m-flex-grow1 m-flex-base0">
+        <svg class="m-style-svg m-svg-def" @click="goBack">
+          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-back"></use>
         </svg>
-      </button>
-    </head-top>
+      </div>
+      <div class="m-box m-aln-center m-justify-center m-flex-grow1 m-flex-base-0 m-head-top-title">
+        <span>{{ topic.name || "话题详情" }}</span>
+      </div>
+      <div class="m-box m-aln-center m-justify-end m-flex-grow1 m-flex-base0">
+        <svg class="m-style-svg m-svg-def">
+          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-share"></use>
+        </svg>
+      </div>
+    </header>
 
     <!-- Topic base -->
-    <div><!-- 我是占位空元素 --></div>
-    <div :class="classNameBuilder('topic')">
+    <main style="padding-top: 0.9rem">
+      <div :class="classNameBuilder('topic')">
       <img src="https://images.zhibocloud.cn/question/topics/000/000/000/02.png">
       <div class="title">
         <h3 class="topic">{{ topic.name }}</h3>
@@ -81,6 +84,7 @@
         :question="question"
       />
     </load-more>
+    </main>
 
   </div>
 </template>

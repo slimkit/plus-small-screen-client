@@ -355,6 +355,51 @@
   }
 }
 
+/* form */
+.m-form-row {
+  display: flex;
+  align-items: center;
+  padding: 0 30px;
+  width: 100%;
+  height: 110px;
+  font-size: 28px;
+  border-bottom: 1px solid @border-color; /*no*/
+  .m-input {
+    padding: 0 30px 0;
+    flex-grow: 1;
+    display: flex;
+    justify-content: space-between;
+    input {
+      width: 100%;
+      height: 100%;
+      font-size: 28px;
+    }
+  }
+  .m-svg-def {
+    width: 40px;
+    height: 40px;
+    color: #ccc;
+  }
+}
+.m-form-err-box {
+  padding: 0 30px;
+  height: 100px;
+  font-size: 24px;
+  color: @error;
+}
+
+.m-long-btn {
+  width: 100%;
+  height: 90px;
+  color: #fff;
+  font-size: 32px;
+  border-radius: 12px;
+  background-color: @primary;
+  &[disabled] {
+    background-color: #ccc;
+  }
+}
+
 .c_59b6d7 {
   color: @primary;
 }
