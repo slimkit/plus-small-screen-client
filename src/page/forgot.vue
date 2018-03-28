@@ -1,64 +1,111 @@
 <template>
   <div class="forgot signup">
-    <head-top :go-back='true' title='找回密码' :append='true'>
-      <div 
-      slot='append' 
-      class="c_59b6d7" 
-      @click='changeType'
-      >{{ _$type.label2 }}找回</div>
-    </head-top>
-
-    <div :class="`signup-form--main`">
-
-      <div class="signup-form--row" v-if='verifiable_type === "sms"'>
-        <label class="signup-form--row-prepend" for="phone">手机号</label>
-        <input autocomplete="off" id="phone" v-model.trim.number='phone' type="number" maxlength="11" placeholder="输入11位手机号" oninput="if(value.length>11)value=value.slice(0,11)">
-        <span 
-        class="signup-form--row-append c_59b6d7" 
-        :class='{ disabled: phone.length < 11 }'
-        @click='getCode'
-        >{{ codeText }}</span>
+    <header class="m-pos-f m-box m-justify-bet m-aln-center m-main m-bb1 m-head-top">
+      <div class="m-box m-flex-grow1 m-aln-center m-flex-base0">
+        <svg class='m-style-svg m-svg-def' @click='goBack'>
+          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-back"></use>
+        </svg>
       </div>
-
-      <div class="signup-form--row" v-if='verifiable_type === "mail"'>
-        <label class="signup-form--row-prepend" for="mail">邮箱</label>
-        <input autocomplete="off" id="mail" type="email" v-model.trim='email' placeholder="输入邮箱地址">
-        <span 
-        class="signup-form--row-append c_59b6d7" 
-        :class='{ disabled: email.length < 4 }'
-        @click='getCode'
-        >{{ codeText }}</span>
+      <div class="m-box-model m-flex-grow1 m-aln-center m-flex-base0 m-head-top-title">
+        <span>找回密码</span>
       </div>
-
-      <div class="signup-form--row">
-        <label class="signup-form--row-prepend" for="code">验证码</label>
-        <input autocomplete="off" id="code" type="text" v-model.trim='verifiable_code' placeholder="输入4-6位验证码" maxlength="6">
-        <span class="signup-form--row-append">
-          <svg v-show='verifiable_code.length > 0' @click='verifiable_code = ""'>
+      <div class="m-box m-flex-grow1 m-aln-center m-flex-base0 m-justify-end">
+        <a href="javascript:;" @click='changeType'>{{ _$type.label2 }}找回</a>
+      </div>
+    </header>
+    <main style="padding-top: 0.9rem">
+      <div class="m-form-row m-main" v-if='verifiable_type === "sms"'>
+        <label for="phone">手机号</label>
+        <div class="m-input">
+          <input
+          type="text"
+          id="phone"
+          v-model="phone"
+          autocomplete="off"
+          placeholder="输入11位手机号">
+        </div>
+        <span 
+          class="signup-form--row-append c_59b6d7" 
+          :class='{ disabled: phone.length < 11 }'
+          @click='getCode'
+          >{{ codeText }}</span>
+      </div>
+      <div class="m-form-row m-main" v-if='verifiable_type === "mail"'>
+        <label for="mail">邮箱</label>
+        <div class="m-input">
+          <input
+          type="mail"
+          id="mail"
+          v-model="mail"
+          autocomplete="off"
+          placeholder="输入邮箱地址">
+        </div>
+        <span 
+          class="signup-form--row-append c_59b6d7" 
+          :class='{ disabled: email.length < 11 }'
+          @click='getCode'
+          >{{ codeText }}</span>
+      </div>
+      <div class="m-form-row m-main">
+          <label for="code">验证码</label>
+          <div class="m-input">
+            <input
+            id="code"
+            v-model.trim='verifiable_code'
+            type="code" 
+            maxlength="6"
+            placeholder="输入4-6位验证码"
+            >
+          </div>
+          <svg 
+            @click="verifiable_code = ''"
+            v-show="verifiable_code.length > 0"
+            class="m-style-svg m-svg-def">
             <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-clean"></use>
           </svg>
-        </span>
-      </div>
+        </div>
 
-      <div class="signup-form--row">
-        <label class="signup-form--row-prepend" for="psw">密码</label>
-        <input autocomplete="off" id="psw" v-if='eye' type="text" v-model.trim='password' placeholder="输入6位以上登录密码">
-        <input autocomplete="off" id="psw" v-else type="password" v-model.trim='password' placeholder="输入6位以上登录密码">
-        <span class="signup-form--row-append">
-          <svg @click='eye = !eye'>
-            <use xmlns:xlink="http://www.w3.org/1999/xlink" :xlink:href="`#eye-${eye ? 'open' : 'close'}`"></use>
+        <div class="m-form-row m-main">
+          <label for="password">密码</label>
+          <div class="m-input">
+            <input
+            id="password"
+            type="text"
+            v-model="password"
+            v-if="eye"
+            placeholder="输入6位以上登录密码">
+            <input 
+            id="password" 
+            type="password"
+            v-model="password"
+            v-else
+            placeholder="输入6位以上登录密码" 
+            >
+          </div>
+          <svg
+          class="m-style-svg m-svg-def"
+          @click="eye=!eye">
+            <use 
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            :xlink:href='`#eye-${eye?"open":"close"}`'></use>
           </svg>
-        </span>
-      </div>
-      <!-- {{ error | plusMessageAnalyze }} -->
-      <div class="signup-form--error ellipsis"></div>
-    </div>
-      <button class="signup-form--submit-btn" :disabled='disabled' @click='signIn'>
-        <span>修改</span>
-        <svg v-if='loading' class="rotate">
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-loading"></use>
-        </svg>
-      </button>
+        </div>
+        <div class="m-box m-aln-center m-text-box m-form-err-box">
+          <span>{{ error | plusMessageFirst }}</span>
+        </div>
+
+        <div class="m-form-row" style="border: 0">
+          <button
+          :disabled="loading||disabled"
+          class="m-long-btn m-signin-btn"
+          @click="signIn">
+            <svg v-if="loading" class="m-style-svg m-svg-def rotate">
+              <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-loading"></use>
+            </svg>
+            <span v-else>修改</span>
+          </button>
+        </div>
+    </main>
   </div>
 </template>
 <script>
@@ -79,7 +126,8 @@ export default {
 
       eye: false,
       countdown: 0,
-      loading: false
+      loading: false,
+      error: ""
     };
   },
   computed: {
@@ -236,5 +284,9 @@ export default {
   }
 };
 </script>
-<style lang='less' src='./style/signup.less'>
+
+<style>
+.signup-form--row-append[disabled] {
+  color: #d3d3d3;
+}
 </style>

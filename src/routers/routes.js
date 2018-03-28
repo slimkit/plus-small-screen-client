@@ -12,9 +12,6 @@ import groupRoutes from "./group.js";
 import messageRoutes from "./message.js";
 import questionRoutes from "./question.js";
 
-import postImgFeed from "../page/post/PostFeed.vue";
-import postTextFeed from "../page/feed/children/postText";
-
 /* eslint-disable one-var */
 const /* 公共页面 */
 
@@ -72,22 +69,6 @@ const router = [
   ...messageRoutes,
   ...questionRoutes,
 
-  {
-    path: "/post/text",
-    component: postTextFeed,
-    meta: {
-      title: "发布动态",
-      requiresAuth: true
-    }
-  },
-  {
-    path: "/post/pic",
-    component: postImgFeed,
-    meta: {
-      title: "发布图片",
-      requiresAuth: true
-    }
-  },
   /**
    * 消息页面路由
    */

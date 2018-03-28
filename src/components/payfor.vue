@@ -39,8 +39,8 @@ export default {
   computed: {
     currency_name() {
       return (
-        ((this.$store.state.CONFIG || {}).site || {}).currency_name.name ||
-        "积分"
+        (((this.$store.state.CONFIG || {}).site || {}).currency_name || {})
+          .name || "积分"
       );
     }
   },

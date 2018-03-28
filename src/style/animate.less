@@ -44,40 +44,10 @@
 .router-fadeInBottom-leave-active {
   transform: translate3d(0, -100%, 0);
 }
+
 // animate.css
 .animated {
   animation-duration: 1s;
-}
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translate3d(0, -100%, 1);
-  }
-
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-.fadeInUp {
-  animation-name: fadeInUp;
-}
-
-.router-fade-in-left-enter-active,
-.router-fade-in-right-enter-active {
-  transition: transform 0.3s cubic-bezier(0.55, 0, 0.1, 1);
-}
-
-.router-fade-in-right-enter,
-.router-fade-in-right-leave-active {
-  transform: translate(100%, 0);
-}
-
-.router-fade-in-left-enter,
-.router-fade-in-left-leave-active {
-  transform: translate(-100%, 0);
 }
 
 @keyframes bounceIn {

@@ -70,10 +70,10 @@ export default {
     }
   },
   activated() {
-    this.ad = [];
-    this.feeds = [];
-    this.pinned = [];
-    this.$nextTick(this.$refs.loadmore.beforeRefresh);
+    // this.ad = [];
+    // this.feeds = [];
+    // this.pinned = [];
+    // this.$nextTick(this.$refs.loadmore.beforeRefresh);
   },
   methods: {
     async onRefresh() {

@@ -213,7 +213,7 @@ export default {
         ? str.replace(
             reg,
             link =>
-              `<a class="m-art-links" href="${link}" target="__blank">${link}</a>`
+              `<a class="m-art-links" href="${link}" target="__blank">#网页链接#</a>`
           )
         : "";
     },
