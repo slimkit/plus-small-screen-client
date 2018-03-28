@@ -1,6 +1,6 @@
 const feed = () => import(/* webpackChunkName: 'feed' */ "../page/feed/feed");
 const feedDetail = () =>
-  import(/* webpackChunkName: 'feed' */ "../page/feed/components/feedDetail");
+  import(/* webpackChunkName: 'feed' */ "../page/feed/feedDetail");
 export default [
   {
     path: "/feed/:feedID(\\d+)",

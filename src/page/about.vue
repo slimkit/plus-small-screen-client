@@ -2,7 +2,7 @@
   <div class="about-us">
     <header class="m-box m-aln-center m-head-top m-pos-f m-main m-bb1">
       <div class="m-box m-aln-center m-flex-grow1 m-flex-base0">
-        <svg class="m-style-svg m-svg-def" @clcik="goBack">
+        <svg class="m-style-svg m-svg-def" @click="goBack">
           <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-back"></use>
         </svg>
       </div>

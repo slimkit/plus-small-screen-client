@@ -1,24 +1,36 @@
 <template lang="html">
   <div class="user-fans">
-    <head-top :go-back='true'>
-      <div slot='nav' class="head-top-nav">
-        <router-link class='head-top-nav-item' exact replace :to="navTo('followers')">粉丝</router-link>
-        <router-link class='head-top-nav-item' exact replace :to="navTo('followings')">关注</router-link>
+    <nav class="m-box m-head-top m-justify-bet m-lim-width m-pos-f m-main m-bb1">
+      <div class="m-box m-aln-center">
+        <svg class='m-style-svg m-svg-def' @click='goBack'>
+          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-back"></use>
+        </svg>
       </div>
-    </head-top>
-    <load-more
-    ref='loadmore'
-    :onRefresh='onRefresh'
-    :onLoadMore='onLoadMore'
-    class="user-fans--list"
-    >
-      <user-item
-      v-for='user in userList'
-      v-if='user.id'
-      :user='user'
-      :key='`user-item-${user.id}`'
-      ></user-item>
-    </load-more>
+      <ul class="m-box m-flex-grow1 m-flex-shrink0 m-aln-center m-justify-center m-flex-base0 m-head-nav">
+        <router-link tag="li" :to="navTo('followers')" active-class="active" exact>
+          <a>粉丝</a>
+        </router-link>
+        <router-link tag="li" :to="navTo('followings')" active-class="active" exact>
+          <a>关注</a>
+        </router-link>
+      </ul>
+      <div class="m-box m-justify-end"></div>
+    </nav>
+    <main style="padding-top: 0.9rem">
+      <load-more
+      ref='loadmore'
+      :onRefresh='onRefresh'
+      :onLoadMore='onLoadMore'
+      class="user-fans--list"
+      >
+        <user-item
+        v-for='user in userList'
+        v-if='user.id'
+        :user='user'
+        :key='`user-item-${user.id}`'
+        ></user-item>
+      </load-more>
+    </main>
   </div>
 </template>
 <script>

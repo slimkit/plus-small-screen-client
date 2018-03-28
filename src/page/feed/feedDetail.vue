@@ -37,7 +37,7 @@
         :src="props.src">
         />
       </async-file>
-      <p>{{ feedContent }}</p>
+      <p v-html="replaceURI(feedContent)"></p>
     </div>
     <div class="m-box m-aln-center m-justify-bet m-art-foot">
         <div class="m-flex-grow1 m-flex-shrink1 m-box m-aln-center m-art-like-list">
@@ -207,6 +207,16 @@ export default {
     }
   },
   methods: {
+    replaceURI(str) {
+      const reg = /(https?|http|ftp|file):\/\/[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]/g;
+      return str
+        ? str.replace(
+            reg,
+            link =>
+              `<a class="m-art-links" href="${link}" target="__blank">${link}</a>`
+          )
+        : "";
+    },
     shareSuccess() {
       this.$Message.success("分享成功");
     },

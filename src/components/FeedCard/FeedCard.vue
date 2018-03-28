@@ -16,7 +16,9 @@
           </div>
         </header>
         <article class="m-text-box m-card-body" @click="handelView">
-          <p class="m-text-box m-box m-card-con" v-if="body.length > 0">{{ body }}<span class="m-text-shadow" v-if="needPay"> 付费节点，购买后方可查看原文详情</span></p>
+          <p class="m-text-box m-box m-card-con" v-if="body.length > 0">
+            <span v-html="replaceURI(body)"></span>
+            <span class="m-text-shadow" v-if="needPay"> 付费节点，购买后方可查看原文详情</span></p>
           <feed-image
             v-if="images.length > 0"
             :id="feedID"
@@ -150,6 +152,16 @@ export default {
     }
   },
   methods: {
+    replaceURI(str) {
+      const reg = /(https?|http|ftp|file):\/\/[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]/g;
+      return str
+        ? str.replace(
+            reg,
+            link =>
+              `<a class="m-art-links" href="${link}" target="__blank"> ##网页链接## </a>`
+          )
+        : "";
+    },
     handelView() {
       const { paid_node } = this.feed;
       paid_node && !paid_node.paid
@@ -256,6 +268,11 @@ export default {
   },
   mounted() {
     this.user && this.$store.commit("SAVE_USER", this.user);
+    this.$el.querySelectorAll(".m-art-links").forEach(node => {
+      node.addEventListener("click", e => {
+        e.stopPropagation();
+      });
+    });
   }
 };
 </script>
