@@ -37,7 +37,7 @@
             <input
             id="phone"
             v-model.trim='phone'
-            type="number" 
+            type="text"
             maxlength="11"
             placeholder="输入11位手机号"
             @input="phone = phone.length > 11 ? phone.slice(0,11) : phone"
@@ -149,7 +149,7 @@ const SMS = "sms"; // 手机
 const EMAIL = "mail"; // 邮箱
 
 // 手机号码规则
-const phoneReg = /^(((13[0-9]{1})|14[0-9]{1}|(15[0-9]{1})|17[0-9]{1}|(18[0-9]{1}))+\d{8})$/;
+const phoneReg = /^1[345678]\d{9}$/;
 // 邮箱验证
 const emailReg = /^\w+((-\w+)|(\.\w+))*@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/;
 // 用户名验证
