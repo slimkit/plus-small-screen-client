@@ -3,7 +3,7 @@
   :id='`m-pics${id}`'
   :class="['m-pics',`m-pics-${pics.length}`]">
     <ul class="m-pics-list">
-      <li v-for='(img, index) in pics' :key="`pics-${id}-${index}`">
+      <li v-for='(img, index) in pics.slice(0, 9)' :key="`pics-${id}-${index}`">
         <div
         :class="['m-pics-box',{ 'long': isLongImg(img) }]"
         :style='pics.length === 1 ? longStyle(img.w, img.h) : ""'>
