@@ -65,11 +65,11 @@
       </div>-->
     <!-- </div> -->
   </div>
-  <div class="m-box-model m-art-comments">
+  <div class="m-box-model m-art-comments" id="comment_list">
     <ul class="m-box m-aln-center m-art-comments-tabs">
       <li>{{ commentCount | formatNum }}条评论</li>
     </ul>
-    <comment-item 
+    <comment-item
       @on-click="replyComment"
       v-for="(comment) in pinnedCom"
       :pinned="true"
@@ -233,12 +233,9 @@ export default {
           this.share.title = data.user.name + "的动态";
           this.share.desc = data.feed_content;
           this.oldID = this.feedID;
-          setTimeout(() => {
-            this.loading = false;
-            this.fetching = false;
-            this.fetchFeedComments();
-            this.getWeChatConfig();
-          }, 800);
+          this.fetching = false;
+          this.fetchFeedComments();
+          this.getWeChatConfig();
         })
         .catch(() => {
           this.$router.back();
@@ -263,9 +260,13 @@ export default {
                 : comments),
               (this.maxComId = comments[comments.length - 1].id))
             : (this.noMoreCom = true);
-          this.fetchComing = false;
+          this.$nextTick(() => {
+            this.fetchComing = false;
+            this.loading = false;
+          });
         })
         .catch(() => {
+          this.loading = false;
           this.fetchComing = false;
         });
     },

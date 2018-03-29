@@ -62,6 +62,9 @@
         <comment-item :comment="com" @on-click="commentAction"/>
       </li>
     </ul>
+    <router-link tag="div" class="m-router-link" v-if="commentCount > 5" :to="`/feed/${feedID}/#comment_list`">
+      <a>查看全部评论>></a>
+    </router-link>
    </footer>
   </div>
 </template>
@@ -366,5 +369,14 @@ export default {
   margin-left: -5px;
   content: "：";
   color: @text-color3;
+}
+.m-router-link {
+  a {
+    color: inherit;
+  }
+  font-size: 24px;
+  color: @text-color1;
+  margin-top: -15px;
+  margin-bottom: 30px;
 }
 </style>

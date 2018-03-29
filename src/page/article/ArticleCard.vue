@@ -23,7 +23,7 @@
           <div></div>
           <div></div>
         </div>
-        <main v-else class="m-lim-width m-box-model m-art-card-main mt90">
+        <main class="m-lim-width m-box-model m-art-card-main mt90">
           <slot></slot>
         </main>
         <footer ref="foot" class="m-pos-f m-box m-aln-center m-justify-aro m-bt1 m-art-card-foot">

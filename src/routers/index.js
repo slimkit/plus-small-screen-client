@@ -12,6 +12,11 @@ const router = new VueRouter({
   strict: process.env.NODE_ENV !== "production",
   mode: process.env.VUE_APP_ROUTER_MODE || "hash",
   scrollBehavior(to, from, savedPosition) {
+    if (to.hash) {
+      return {
+        selector: to.hash
+      };
+    }
     if (savedPosition) {
       return savedPosition;
     } else {
