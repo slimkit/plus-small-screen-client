@@ -73,7 +73,7 @@
       @on-click="replyComment"
       v-for="(comment) in pinnedCom"
       :pinned="true"
-      :key="comment.id"
+      :key="`pinned-comment-${comment.id}`"
       :comment="comment"/>
     <comment-item
       @on-click="replyComment"

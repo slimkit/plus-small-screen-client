@@ -20,13 +20,34 @@
             </span>
           </template>
           {{ body }}
-          <span @click.stop="isShowAll = !isShowAll" v-show="body.length > 60 && !isShowAll" class="m-text-more"> >>更多</span>
+          <span @click.stop="isShowAll = !isShowAll" v-show="bodyLength > 60 && !isShowAll" class="m-text-more"> >>更多</span>
         </article>
       </section>
     </div>
   </div>
 </template>
 <script>
+/**
+ * 字符串长度计算(仅获取中文字符字数)
+ * @author jsonleex <jsonlseex@163.com>
+ * 按 4个英文字符 = 1个中文字符 计算
+ */
+function strLength(str) {
+  let totalLength = 0;
+  let i = 0;
+  let charCode;
+  for (; i < str.length; i++) {
+    charCode = str.charCodeAt(i);
+    if (charCode < 0x007f) {
+      totalLength = totalLength + 0.25;
+    } else if (charCode >= 0x0080 && charCode <= 0x07ff) {
+      totalLength += 1;
+    } else if (charCode >= 0x0800 && charCode <= 0xffff) {
+      totalLength += 1.5;
+    }
+  }
+  return totalLength;
+}
 export default {
   name: "comment-item",
   props: {
@@ -41,7 +62,7 @@ export default {
   computed: {
     isShowAll: {
       get() {
-        return this.body.length < 60 || this.showAll;
+        return this.bodyLength < 60 || this.showAll;
       },
       set(val) {
         this.showAll = val;
@@ -57,6 +78,9 @@ export default {
     },
     body() {
       return this.comment.body || "";
+    },
+    bodyLength() {
+      return strLength(this.body);
     },
     time() {
       return this.comment.created_at || "";

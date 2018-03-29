@@ -5,6 +5,7 @@
     </router-link>
     <span class="m-comment-usr" v-if="replyUser">回复<router-link :to='`/user/${replyUser.id}`'>{{ replyUser.name }}</router-link></span>
     <span class="m-comment-body" @click="handelClick">{{ body }}</span>
+    <span v-if="pinned" class="m-art-comment-icon-top" style="margin-left: 5px; height: auto">置顶</span>
   </p>
 </template>
 <script>
@@ -26,6 +27,9 @@ export default {
     replyUser() {
       const { reply } = this.comment;
       return reply && reply.id ? reply : null;
+    },
+    pinned() {
+      return this.comment.pinned;
     },
     body() {
       return this.comment.body || "";
