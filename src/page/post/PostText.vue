@@ -54,7 +54,7 @@
              <span>自定义金额</span>
              <div class="m-box m-aln-center">
               <input type="number" v-model="customAmount" placeholder="输入金额" dir="rtl">
-              <p>积分</p>
+              <span>积分</span>
              </div>
            </div>
            <p class="m-pinned-amount-label plr20">注：超过{{limit}}字部分内容收费</p>
@@ -116,9 +116,17 @@ export default {
           : this.compose.length <= this.limit
             ? this.$Message.error(`正文内容不足${this.limit}字, 无法设置收费`)
             : this.postText()
-        : this.postText();
+        : ((this.amount = 0), this.postText());
+    },
+    setContentText(txt) {
+      this.$refs.contentText.setContentText(txt);
+    },
+    successCallback() {
+      this.$refs.contentText.clean();
     },
     postText() {
+      if (this.loading) return;
+      this.loading = true;
       this.$http
         .post(
           "feeds",
@@ -134,10 +142,13 @@ export default {
         )
         .then(({ data }) => {
           this.$Message.success(data);
+          this.successCallback();
           this.goBack();
+          this.loading = false;
         })
         .catch(error => {
           console.log(error);
+          this.loading = false;
         });
     }
   }

@@ -1,34 +1,40 @@
 <template>
-  <div class="m-wrapper m-wbox">
-    <div class="m-pos-f m-box-model m-main">
-      <header class="m-box-model m-fd-row m-head-top m-justify-bet m-aln-center m-lim-width m-bb1">
-        <div class="m-box m-flex-grow1 m-aln-center m-flex-base0">
-          <a class="m-send-btn" href="javascript:;" @click='goback'>取消</a>
-        </div>
-        <div class="m-box-model m-flex-grow1 m-aln-center m-flex-base0 m-head-top-title">发布动态</div>
-        <div class="m-box m-flex-grow1 m-aln-center m-flex-base0 m-justify-end">
-          <svg v-if="loading" class="m-style-svg m-svg-def rotate">
-            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-loading"></use>
-          </svg>
-          <a 
-            v-else
-            class="m-send-btn"
-            :class="{ disabled }"
-            @click="sendmessage"
-            href="javascript:;">发布</a>
-        </div>
-      </header>
-      <main
-       class="m-reles-con m-lim-width m-box-model m-flex-shrink1 m-flex-grow1"
+  <div class="m-pos-f m-box-model m-main">
+    <header class="m-box-model m-fd-row m-head-top m-justify-bet m-aln-center m-lim-width m-bb1">
+      <div class="m-box m-flex-grow1 m-aln-center m-flex-base0">
+        <a class="m-send-btn" href="javascript:;" @click='goback'>取消</a>
+      </div>
+      <div class="m-box-model m-flex-grow1 m-aln-center m-flex-base0 m-head-top-title">发布动态</div>
+      <div class="m-box m-flex-grow1 m-aln-center m-flex-base0 m-justify-end">
+        <svg v-if="loading" class="m-style-svg m-svg-def rotate">
+          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-loading"></use>
+        </svg>
+        <a 
+          v-else
+          class="m-send-btn"
+          :class="{ disabled }"
+          @click="sendmessage"
+          href="javascript:;">发布</a>
+      </div>
+    </header>
+    <main
+       class="m-reles-con m-lim-width m-box-model m-flex-shrink1"
        @click.self='areaFocus'>
        <content-text
        :rows='8'
        class='m-reles-txt-wrap'
        ref="contentText" />
-      <image-list />
-      </main>
-    </div>
-</div>
+      <image-list :edit="pinned"/>
+    </main>
+    <footer class="m-box-model m-flex-shrink1 m-aln-center">
+      <v-switch
+       class="m-box m-bt1 m-bb1 m-lim-width m-pinned-row"
+       type="checkbox"
+       v-model="pinned">
+         <slot>是否收费</slot>
+       </v-switch>
+    </footer>
+  </div>
 </template>
 <script>
 import { mapGetters } from "vuex";
@@ -42,6 +48,8 @@ export default {
   },
   data() {
     return {
+      pinned: false,
+
       curpos: 0,
       loading: !1,
       contentText: "",
@@ -51,7 +59,13 @@ export default {
   computed: {
     ...mapGetters(["compose", "composePhoto"]),
     disabled() {
-      return !(this.composePhoto.length > 0 || this.compose.length > 0);
+      const imageAllCompleted = this.composePhoto.some(img => {
+        return !!img.id;
+      });
+      return !(
+        this.composePhoto.length > 0 ||
+        (this.compose.length > 0 && imageAllCompleted)
+      );
     }
   },
   methods: {
@@ -75,7 +89,7 @@ export default {
             "feeds",
             {
               feed_content: this.compose,
-              images: this.composePhoto.map(i => ({ id: i })),
+              images: this.composePhoto,
               feed_from: 2,
               feed_mark:
                 new Date().valueOf() + "" + this.$store.state.CURRENTUSER.id
