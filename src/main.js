@@ -1,3 +1,5 @@
+import "./style/tsplus.less";
+import "github-markdown-css";
 import Vue from "vue";
 import store from "./stores/";
 import router from "./routers/";
@@ -11,9 +13,6 @@ import Modal from "./plugins/modal/";
 import imgLazy from "./plugins/imgLazy";
 import Message from "./plugins/message/";
 import imgCropper from "./plugins/imgCropper";
-
-import "./style/tsplus.less";
-import "github-markdown-css";
 
 // Filters
 import * as filters from "./filters";
