@@ -5,7 +5,6 @@ import forgot from "@/page/forgot";
 import signin from "@/page/signin.vue";
 
 /* TODO */
-import setting from "@/page/setting/setting.vue";
 import profile from "@/page/profile/profile.vue";
 /* TODO END */
 

@@ -232,6 +232,11 @@ body,
   left: 0;
   right: 0;
   background-color: @gray-bg;
+  .m-acbtn-tips {
+    padding: 20px 30px;
+    text-align: center;
+    font-size: 28px;
+  }
 }
 
 .m-acbtn-list {
@@ -240,14 +245,15 @@ body,
   & + & {
     margin-top: 15px;
   }
-  li {
+  .m-acbtn {
+    color: @text-color1;
     height: 90px;
     line-height: 90px;
     text-align: center;
     border-bottom: 1px solid @border-color;
   }
   a {
-    color: @text-color1;
+    color: inherit;
   }
 }
 

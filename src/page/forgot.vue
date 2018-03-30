@@ -36,7 +36,7 @@
           <input
           type="mail"
           id="mail"
-          v-model="mail"
+          v-model="email"
           autocomplete="off"
           placeholder="输入邮箱地址">
         </div>
@@ -157,7 +157,7 @@ export default {
       );
     },
     codeText() {
-      return this.countdown > 0 ? `${this.countdown}后重发` : "获取验证码";
+      return this.countdown > 0 ? `${this.countdown}s后重发` : "获取验证码";
     },
     _$type: {
       get() {
@@ -236,6 +236,14 @@ export default {
           this.disabled = true;
         });
     },
+    countDown() {
+      const t = setInterval(() => {
+        if (--this.countdown <= 0) {
+          this.countdown = 0;
+          clearInterval(t);
+        }
+      }, 1000);
+    },
     getCode() {
       if (!this.canGetCode) return;
       const phone = this.phone;
@@ -287,6 +295,7 @@ export default {
 </script>
 
 <style>
+.signup-form--row-append.disabled,
 .signup-form--row-append[disabled] {
   color: #d3d3d3;
 }
