@@ -24,7 +24,8 @@
       </svg>
     </div>
   </header>
-  <div class="m-flex-shrink1 m-flex-grow1 m-art m-main">
+  <!-- 内容 -->
+  <main class="m-flex-shrink1 m-flex-grow1 m-art m-main">
     <div class="m-art-body">
       <async-file
         v-for="img in images"
@@ -40,31 +41,40 @@
       <p v-html="replaceURI(feedContent)"></p>
     </div>
     <div class="m-box m-aln-center m-justify-bet m-art-foot">
-        <div class="m-flex-grow1 m-flex-shrink1 m-box m-aln-center m-art-like-list">
-          <template v-if='likeCount > 0'>
-            <ul class="m-box m-flex-grow0 m-flex-shrink0">
-              <li 
-              :key="id"
-              :style="{ zIndex: 5-index }" 
-              v-for="({user = {}, id}, index) in likes.slice(0, 5)"
-              class="m-avatar-box tiny">
-                <img :src="user.avatar">
-              </li>
-            </ul>
-            <span>{{ likeCount | formatNum }}人点赞</span>
-          </template>
-        </div>
-        <div class="m-box-model m-aln-end m-art-info">
-          <span>发布于{{ time | time2tips }}</span>
-          <span>{{ feed.feed_view_count || 0 | formatNum }}浏览</span>
-        </div>
+      <div class="m-flex-grow1 m-flex-shrink1 m-box m-aln-center m-art-like-list">
+        <template v-if='likeCount > 0'>
+          <ul class="m-box m-flex-grow0 m-flex-shrink0">
+            <li 
+            :key="id"
+            :style="{ zIndex: 5-index }" 
+            v-for="({user = {}, id}, index) in likes.slice(0, 5)"
+            class="m-avatar-box tiny m-avatar-box-secret">
+              <img :src="user.avatar">
+            </li>
+          </ul>
+          <span>{{ likeCount | formatNum }}人点赞</span>
+        </template>
       </div>
-      <!-- todo 打赏功能 -->
-      <!--<div class="m-box-model m-box-center m-box-center-a m-art-reward">
-        <button class="m-art-rew-btn">打 赏</button>
-      </div>-->
-    <!-- </div> -->
-  </div>
+      <div class="m-box-model m-aln-end m-art-info">
+        <span>发布于{{ time | time2tips }}</span>
+        <span>{{ feed.feed_view_count || 0 | formatNum }}浏览</span>
+      </div>
+    </div>
+    <!-- todo 打赏功能 -->
+    <div class="m-box-model m-box-center m-box-center-a m-art-reward">
+      <button class="m-art-rew-btn" @click="rewardFeed">打 赏</button>
+      <p class="m-art-rew-label"><a href="javascript:;">{{ reward.count | formatNum }}</a>人打赏，共<a href="javascript:;">{{ ~~(reward.amount)/100 }}</a>元</p>
+      <ul class="m-box m-aln-center m-art-rew-list">
+        <li 
+        class="m-flex-grow0 m-flex-shrink0 m-art-rew m-avatar-box tiny m-avatar-box-secret" 
+        :key="rew.id"
+        v-for="rew in rewardList">
+          <img :src="rew.user.avatar">
+        </li>
+      </ul>
+    </div>
+  </main>
+  <!-- 评论列表 -->
   <div class="m-box-model m-art-comments" id="comment_list">
     <ul class="m-box m-aln-center m-art-comments-tabs">
       <li>{{ commentCount | formatNum }}条评论</li>
@@ -112,6 +122,7 @@ export default {
 
       comments: [],
       pinnedCom: [],
+      rewardList: [],
 
       fetchComing: false,
       noMoreCom: false,
@@ -154,7 +165,6 @@ export default {
         return this.feed.likes || [];
       },
       set(val) {
-        console.log(val);
         this.feed.likes = val;
       }
     },
@@ -181,6 +191,9 @@ export default {
       set(val) {
         val > 0, (this.feed.feed_comment_count = val);
       }
+    },
+    reward() {
+      return this.feed.reward || {};
     },
     images() {
       return this.feed.images || [];
@@ -235,6 +248,7 @@ export default {
           this.oldID = this.feedID;
           this.fetching = false;
           this.fetchFeedComments();
+          this.fetchRewards();
           this.getWeChatConfig();
         })
         .catch(() => {
@@ -269,6 +283,19 @@ export default {
           this.loading = false;
           this.fetchComing = false;
         });
+    },
+    fetchRewards() {
+      this.$http
+        .get(`/feeds/${this.feedID}/rewards`, {
+          params: { limit: 10 }
+        })
+        .then(({ data = [] }) => {
+          console.log(data);
+          this.rewardList = data;
+        });
+    },
+    rewardFeed() {
+      bus.$emit("reward:feed", this.feedID);
     },
     likeFeed() {
       const method = this.liked ? "delete" : "post";

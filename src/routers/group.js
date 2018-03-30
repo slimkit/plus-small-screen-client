@@ -43,6 +43,7 @@ export default [
   {
     path: "/group",
     component: group,
+    redirect: "/upgrade",
     meta: {
       title: "圈子",
       keepAlive: true,
@@ -127,6 +128,7 @@ export default [
   {
     component: MyGroup,
     path: "/own",
+    redirect: "/upgrade",
     meta: {
       title: "我的圈子",
       requiresAuth: true
@@ -135,7 +137,8 @@ export default [
       {
         path: "groups",
         component: MyGroups,
-        redirect: "groups/joined",
+        // redirect: "groups/joined",
+        redirect: "/upgrade",
         children: [
           {
             meta: {

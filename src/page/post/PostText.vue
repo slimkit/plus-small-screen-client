@@ -98,7 +98,7 @@ export default {
   },
   watch: {
     customAmount(val) {
-      val && (this.amount = ~~val);
+      this.amount = ~~val;
     }
   },
   methods: {

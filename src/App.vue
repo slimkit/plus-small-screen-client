@@ -8,6 +8,7 @@
       <svg-icon />
 
       <pswp />
+      <reward />
       <payfor />
       <post-menu />
       <actionsheet />
@@ -31,6 +32,8 @@ import commentInput from "@/components/commentInput.vue";
 import SvgIcon from "@/components/common/svgIcon.vue";
 // 签到
 import CheckIn from "@/page/checkin/CheckIn.vue";
+// 打赏
+import Reward from "@/components/reward.vue";
 
 export default {
   name: "app",
@@ -42,6 +45,7 @@ export default {
 
     SvgIcon,
 
+    Reward,
     CheckIn,
     PostMenu
   },

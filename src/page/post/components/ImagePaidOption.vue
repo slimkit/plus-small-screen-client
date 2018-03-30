@@ -101,7 +101,7 @@ export default {
       }
     },
     customAmount(val) {
-      val && (this.amount = ~~val);
+      this.amount = ~~val;
     }
   },
   methods: {

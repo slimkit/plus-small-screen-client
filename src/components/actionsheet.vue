@@ -47,19 +47,6 @@ export default {
       this.call(btnLists, cancelTxt);
     });
   },
-  watch: {
-    show(val) {
-      if (val) {
-        this.scrollTop = document.scrollingElement.scrollTop;
-        document.body.classList.add("m-pop-open");
-        document.body.style.top = -this.scrollTop + "px";
-      } else {
-        document.body.style.top = "";
-        document.body.classList.remove("m-pop-open");
-        document.scrollingElement.scrollTop = this.scrollTop;
-      }
-    }
-  },
   methods: {
     call(btnLists, cancelTxt) {
       this.cancelBtn = cancelTxt || this.cancelBtn;
@@ -74,11 +61,13 @@ export default {
         });
       }
       this.show = true;
+      this.scrollable = false;
     },
     cancel() {
       this.lists = [];
       this.tips = null;
       this.show = false;
+      this.scrollable = true;
     }
   }
 };

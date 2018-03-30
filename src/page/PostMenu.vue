@@ -47,14 +47,14 @@
             <img src="../images/ico_question@3x.png">
             <span>提问</span>
           </div>
-          <div 
+<!--           <div 
           v-if="open"
           key="ico_fatie"
           @click="to('/post/fatie')"
           class="m-box-model m-aln-center m-post-menu-item">
             <img src="../images/ico_fatie@3x.png">
             <span>发帖</span>
-          </div>
+          </div> -->
         </transition-group>
         <transition name="pop">        
           <button

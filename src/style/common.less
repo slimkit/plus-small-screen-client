@@ -265,6 +265,17 @@
       }
     }
   }
+  &-reward {
+    margin-bottom: 40px;
+  }
+  &-rew-label {
+    font-size: 24px;
+    color: @text-color1;
+    margin: 15px 0;
+    a {
+      color: #f76c69;
+    }
+  }
   &-rew-btn {
     display: flex;
     width: 160px;
@@ -275,6 +286,11 @@
     background-color: #f76c69;
     align-items: center;
     justify-content: center;
+  }
+  &-rew {
+    & + & {
+      margin-left: 10px;
+    }
   }
   &-comments {
     margin-top: 10px;
