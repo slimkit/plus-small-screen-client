@@ -3,9 +3,11 @@ import about from "@/page/about";
 import signup from "@/page/signup";
 import forgot from "@/page/forgot";
 import signin from "@/page/signin.vue";
+import upgrade from "@/page/upgrade.vue";
 
 /* TODO */
-import profile from "@/page/profile/profile.vue";
+import setting from "@/page/setting.vue";
+import profile from "@/page/profile.vue";
 /* TODO END */
 
 import discover from "@/page/discover.vue";
@@ -100,6 +102,13 @@ export default [
     beforeEnter(to, from, next) {
       const accessToken = lstore.get("H5_WECHAT_MP_ASTOKEN");
       accessToken ? next() : next("/wechat");
+    }
+  },
+  {
+    path: "/upgrade",
+    component: upgrade,
+    meta: {
+      title: "功能开发中..."
     }
   }
 ];

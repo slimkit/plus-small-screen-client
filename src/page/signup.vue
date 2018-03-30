@@ -177,7 +177,7 @@ export default {
   },
   computed: {
     codeText() {
-      return this.countdown > 0 ? `${this.countdown}后重发` : "获取验证码";
+      return this.countdown > 0 ? `${this.countdown}s后重发` : "获取验证码";
     },
     canGetCode() {
       return (

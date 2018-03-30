@@ -8,17 +8,22 @@
       <div class="m-box m-aln-center m-flex-grow1 m-flex-base0"></div>
     </header>
     <main style="padding-top: 0.9rem">
-      <ul class='entry__group padding' v-for='(group, index) in entrys' :key='`${prefix}-entry-group-${index}`'>
-        <li @click='to(path)' class="entry__item" :key='`${prefix}-entry-${icon}`' v-for='{icon,title, path, tips, new_tips} in group'>
-          <svg class="m-style-svg m-svg-def entry__item--prepend">
-            <use xmlns:xlink="http://www.w3.org/1999/xlink" :xlink:href="`#${prefix}-${icon}`"></use>
+      <ul class='m-entry-group padding' v-for='(group, index) in entrys' :key='`${prefix}-entry-group-${index}`'>
+        <router-link 
+          tag="li"
+          :to="path"
+          class="m-entry"
+          :key='`$discover-entry-${icon}`'
+          v-for='{icon, title, path, tips, new_tips} in group'>
+          <svg class="m-style-svg m-svg-def m-entry-prepend">
+            <use xmlns:xlink="http://www.w3.org/1999/xlink" :xlink:href="`#discover-${icon}`"></use>
           </svg>
-          <span>{{ title }}</span>
-          <v-badge :dot='new_tips'>{{ tips }}</v-badge>
+          <span class="m-flex-grow1">{{ title }}</span>
+          <v-badge class="m-entry-extra" :dot='new_tips'>{{ tips }}</v-badge>
           <svg class='m-style-svg m-svg-def entry__item--append'>
             <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-arrow-r"></use>
           </svg>
-        </li>
+        </router-link>
       </ul>
     </main>
     <foot-guide></foot-guide>

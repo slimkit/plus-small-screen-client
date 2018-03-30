@@ -2,7 +2,7 @@
   <div class="p-wallet wallet">
     <header class="m-box m-head-top">
         <div class="m-box m-flex-grow1 m-flex-base0 m-aln-center">
-          <svg class="m-style-svg m-svg-def" @click="goback">
+          <svg class="m-style-svg m-svg-def" @click="goBack">
             <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-back"></use>
           </svg>
         </div>
@@ -17,22 +17,22 @@
       <h3>账户余额(元)</h3>
       <p>{{ balance }}</p>
     </section>
-    <ul class="entry__group padding">
-      <router-link tag='li' class="entry__item" :to='{path: "recharge"}' append>
-        <svg class='entry__item--prepend'>
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#wallet-recharge"></use>
+    <ul class="m-box-model m-entry-group padding">
+      <router-link :to='{path: "recharge"}' append tag="li" class="m-entry">
+        <svg class='m-style-svg m-svg-def m-entry-prepend'>
+          <use xlink:href="#wallet-recharge"></use>
         </svg>
-        <span>充值</span>
-        <svg class='entry__item--append'>
+        <span class="m-text-box m-flex-grow1">充值</span>
+        <svg class="m-style-svg m-svg-def m-entry-append">
           <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-arrow-r"></use>
         </svg>
       </router-link>
-      <router-link tag='li' class="entry__item" :to='{path: "withdraw"}' append>
-        <svg class='entry__item--prepend'>
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#wallet-withdraw"></use>
+      <router-link :to='{path: "withdraw"}' append tag="li" class="m-entry">
+        <svg class='m-style-svg m-svg-def m-entry-prepend'>
+          <use xlink:href="#wallet-withdraw"></use>
         </svg>
-        <span>提现</span>
-        <svg class='entry__item--append'>
+        <span class="m-text-box m-flex-grow1">提现</span>
+        <svg class="m-style-svg m-svg-def m-entry-append">
           <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-arrow-r"></use>
         </svg>
       </router-link>
@@ -61,11 +61,6 @@ export default {
     },
     balance() {
       return (+this.wallet.balance || 0).toFixed(2);
-    }
-  },
-  methods: {
-    goback() {
-      this.$router.go(-1);
     }
   }
 };

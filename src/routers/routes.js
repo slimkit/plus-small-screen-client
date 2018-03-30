@@ -1,8 +1,5 @@
 import NotFound from "../page/notFound";
-import upgrade from "../page/upgrade";
-
 import UserHome from "@/page/UserHome.vue";
-
 import baseRoutes from "./base.js";
 import feedRoutes from "./feed.js";
 import newsRoutes from "./news.js";
@@ -151,7 +148,6 @@ const router = [
       requiresAuth: true
     }
   },
-  { path: "/upgrade", component: upgrade } /* 网站升级中 */,
   { path: "*", component: NotFound } /* 404 页面 */
 ];
 

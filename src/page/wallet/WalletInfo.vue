@@ -11,7 +11,7 @@
         <div><v-avatar :sex='user.sex' :src='user.avatar' size='small'></v-avatar> {{ user.name }}</div>
       </div>
       <div class="wallet-info--detail--content-row">
-        <span class="wallet-info--detail--content-row--label">交易说明</span>
+        <span class="wallet-info--detail--content-row--label m-flex-shrink0">交易说明</span>
         <div>{{ detail.body }}</div>
       </div>
       <div class="wallet-info--detail--content-row">
@@ -34,16 +34,17 @@ export default {
 </script>
 <style lang='less'>
 .wallet-info--detail {
-  position: absolute;
-  top: 0;
+  position: fixed;
   left: 0;
-  bottom: 0;
   right: 0;
+  top: 50%;
+  transform: translate(0, -50%);
   margin: auto;
   z-index: 111;
 
   width: 650px;
-  height: 650px;
+  min-height: 650px;
+  max-height: 85%;
 
   background-color: #fff;
   border-radius: 20px;
@@ -61,6 +62,7 @@ export default {
     padding: 0 20px;
     &-row {
       display: flex;
+      padding: 20px 0;
       align-items: center;
       min-height: 100px;
       font-size: 24px;
