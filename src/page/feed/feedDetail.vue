@@ -101,9 +101,9 @@
   </article-card>
 </template>
 <script>
-import wx from "@/util/share.js";
 import bus from "@/bus.js";
 import Wx from "weixin-js-sdk";
+import wx from "@/util/share.js";
 import ArticleCard from "@/page/article/ArticleCard.vue";
 import CommentItem from "@/page/article/ArticleComment.vue";
 
@@ -249,7 +249,9 @@ export default {
           this.fetching = false;
           this.fetchFeedComments();
           this.fetchRewards();
-          this.getWeChatConfig();
+          if (this.isWechat) {
+            this.getWeChatConfig();
+          }
         })
         .catch(() => {
           this.$router.back();
