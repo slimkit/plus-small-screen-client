@@ -38,7 +38,7 @@
         :src="props.src">
         />
       </async-file>
-      <p v-html="replaceURI(feedContent)"></p>
+      <p class="m-text-box" v-html="replaceURI(feedContent)"></p>
     </div>
     <div class="m-box m-aln-center m-justify-bet m-art-foot">
       <div class="m-flex-grow1 m-flex-shrink1 m-box m-aln-center m-art-like-list">
@@ -48,7 +48,8 @@
             :key="id"
             :style="{ zIndex: 5-index }" 
             v-for="({user = {}, id}, index) in likes.slice(0, 5)"
-            class="m-avatar-box tiny m-avatar-box-secret">
+            class="m-avatar-box tiny"
+            :class="`m-avatar-box-${user.sex}`">
               <img :src="user.avatar">
             </li>
           </ul>
@@ -66,9 +67,10 @@
       <p class="m-art-rew-label"><a href="javascript:;">{{ reward.count | formatNum }}</a>人打赏，共<a href="javascript:;">{{ ~~(reward.amount)/100 }}</a>元</p>
       <ul class="m-box m-aln-center m-art-rew-list">
         <li 
-        class="m-flex-grow0 m-flex-shrink0 m-art-rew m-avatar-box tiny m-avatar-box-secret" 
         :key="rew.id"
-        v-for="rew in rewardList">
+        v-for="rew in rewardList"
+        :class="`m-avatar-box-${rew.user.sex}`"
+        class="m-flex-grow0 m-flex-shrink0 m-art-rew m-avatar-box tiny">
           <img :src="rew.user.avatar">
         </li>
       </ul>

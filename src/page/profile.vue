@@ -3,7 +3,7 @@
     <header class="m-box m-aln-center m-justify-center m-main m-pos-f m-bb1 m-head-top">我</header>
     <main class="m-box-model" style="padding-top: .9rem">
       <div class="m-box-model m-main m-pr-info">
-        <div class="m-box m-aln-center">
+        <router-link tag="section" class="m-box m-aln-center" to="/info">
           <avatar :user="user" size="big" />
           <div class="m-text-box m-flex-grow1 m-flex-shrink1 m-flex-base0 m-pr-user-info">
             <h4 class="m-pr-username">{{ user.name }}</h4>
@@ -12,7 +12,7 @@
           <svg class="m-style-svg m-svg-def m-entry-append">
             <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-arrow-r"></use>
           </svg>
-        </div>
+        </router-link>
         <div class="m-box m-aln-center m-justify-aro m-bt1 m-pr-extra-box">
           <router-link
           tag="div"

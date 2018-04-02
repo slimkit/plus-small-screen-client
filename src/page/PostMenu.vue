@@ -36,7 +36,7 @@
             <span>投稿</span>
           </div>
           <div 
-          v-if="open"
+          v-if="open && checkin"
           key="ico_attendance"
           @click="showCheckIn"
           class="m-box-model m-aln-center m-post-menu-item">
@@ -91,6 +91,14 @@ export default {
   computed: {
     login() {
       return !!this.$store.state.CURRENTUSER.id;
+    },
+    /**
+     * 检查后台是否开启签到功能
+     * @author jsonleex <jsonlseex@163.com>
+     * @return {Boolean}
+     */
+    checkin() {
+      return this.$store.state.CONFIG.checkin || true;
     }
   },
   methods: {

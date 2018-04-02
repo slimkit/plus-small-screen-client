@@ -49,7 +49,7 @@
         <p class="m-cf94" v-if="verified">认证：<span>{{ verified.description }}</span></p>
         <p>地址：<span>{{ user.location }}</span></p>
         <p>简介：<span>{{ user.bio }}</span></p>
-        <p style="margin-top: 0">
+        <p style="margin-top: 0; margin-left: -0.1rem">
           <i
           v-if="tag.id"
           class="m-urh-tag"
@@ -376,15 +376,13 @@ export default {
 
 .m-urh-tag {
   margin-top: 10px;
+  margin-left: 10px;
   display: inline-block;
   padding: 0 15px;
   font-size: 20px;
   height: 36px;
   background-color: rgba(102, 102, 102, 0.1);
   border-radius: 18px;
-  & + & {
-    margin-left: 10px;
-  }
 }
 .m-urh-filter {
   position: relative;

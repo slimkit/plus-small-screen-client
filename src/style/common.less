@@ -159,14 +159,17 @@
   }
 
   .secret,
+  &-0,
   &-secret {
     background-image: url("../images/pic_default_secret.png");
   }
   .man,
+  &-1,
   &-man {
     background-image: url("../images/pic_default_man.png");
   }
   .woman,
+  &-2,
   &-woman {
     background-image: url("../images/pic_default_woman.png");
   }
@@ -526,6 +529,21 @@
   }
 }
 
+/* 用户标签 */
+.m-tags {
+  margin: -10px 0 0 -10px;
+}
+
+.m-tag {
+  display: inline-block;
+  padding: 0 20px;
+  margin: 10px 0 0 10px;
+  background-color: #f4f5f5;
+  height: 48px;
+  line-height: 48px;
+  font-size: 24px;
+  color: @text-color2;
+}
 .c_59b6d7 {
   color: @primary;
 }

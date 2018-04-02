@@ -5,7 +5,7 @@
         <textarea 
           v-model='contentText'
           :placeholder="placeholder"
-          :style="{ height: `${scrollHeight}px` }"
+          :style="{ height: `${scrollHeight}px`, overflow: 'hidden' }"
           ref='textarea'
           @focus='focusArea'
           @blur='moveCurPos'

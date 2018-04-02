@@ -10,10 +10,13 @@
       <pswp />
       <reward />
       <payfor />
+      <check-in />
       <post-menu />
       <actionsheet />
       <comment-input />
-      <check-in v-if="checkin"/>
+
+      <info-tips />
+      <choose-tags />
     </div>
   </div>
 </template>
@@ -34,6 +37,10 @@ import SvgIcon from "@/components/common/svgIcon.vue";
 import CheckIn from "@/page/checkin/CheckIn.vue";
 // 打赏
 import Reward from "@/components/reward.vue";
+// 选择标签
+import chooseTags from "@/page/chooseTags.vue";
+// 提示性 弹窗
+import infoTips from "@/components/infoTips.vue";
 
 export default {
   name: "app",
@@ -42,22 +49,14 @@ export default {
     payfor,
     actionsheet,
     commentInput,
+    infoTips,
 
     SvgIcon,
 
     Reward,
     CheckIn,
-    PostMenu
-  },
-  computed: {
-    /**
-     * 检查后台是否开启签到功能
-     * @author jsonleex <jsonlseex@163.com>
-     * @return {Boolean}
-     */
-    checkin() {
-      return this.$store.state.CONFIG.checkin || true;
-    }
+    PostMenu,
+    chooseTags
   }
 };
 </script>

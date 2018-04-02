@@ -1,6 +1,7 @@
 import lstore from "store";
 import about from "@/page/about";
 import signup from "@/page/signup";
+import info from "@/page/info.vue";
 import forgot from "@/page/forgot";
 import signin from "@/page/signin.vue";
 import upgrade from "@/page/upgrade.vue";
@@ -49,7 +50,18 @@ export default [
   {
     path: "/profile",
     component: profile,
-    meta: { title: "我", requiresAuth: true }
+    meta: {
+      title: "我",
+      requiresAuth: true
+    }
+  },
+  {
+    path: "/info",
+    component: info,
+    meta: {
+      title: "个人资料",
+      requiresAuth: true
+    }
   },
   {
     path: "/setting",
