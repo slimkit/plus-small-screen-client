@@ -242,7 +242,6 @@ export default {
        */
       bus.$emit("choose-tags", {
         nextStep: tags => {
-          console.log(this.CURRENTUSER.tags);
           this.change =
             tags.map(n => n.id).join(",") !== this.CURRENTUSER.tags.join(",");
           this.tags = tags;

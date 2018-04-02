@@ -15,8 +15,11 @@
       <actionsheet />
       <comment-input />
 
+      <apply-top />
+      
       <info-tips />
       <choose-tags />
+
     </div>
   </div>
 </template>
@@ -41,6 +44,8 @@ import Reward from "@/components/reward.vue";
 import chooseTags from "@/page/chooseTags.vue";
 // 提示性 弹窗
 import infoTips from "@/components/infoTips.vue";
+// 通用置顶弹窗
+import applyTop from "@/components/applyForTop.vue";
 
 export default {
   name: "app",
@@ -50,6 +55,7 @@ export default {
     actionsheet,
     commentInput,
     infoTips,
+    applyTop,
 
     SvgIcon,
 

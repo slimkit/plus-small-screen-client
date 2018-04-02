@@ -56,6 +56,7 @@ export default {
             (btn.methods = (btn, index) => {
               btn.method(btn, index);
               this.show = false;
+              this.scrollable = true;
             });
           return btn;
         });

@@ -1,6 +1,6 @@
 <template>
-  <transition name='pop'>
-    <div v-if='show' class="m-box-model m-pos-f" style="background-color: #f4f5f6">
+  <transition name='toast'>
+    <div v-if='show' class="m-box-model m-pos-f" style="background-color: #f4f5f6; z-index: 101">
       <header class="m-box m-aln-center m-head-top m-main m-bb1">
         <div class="m-flex-grow1">
           <svg class="m-style-svg m-svg-def" @click="cancel">
@@ -8,32 +8,45 @@
           </svg>
         </div>
         <div class="m-flex-grow1 m-text-c m-head-top-title">
-          <span>打赏</span>
+          <span>申请置顶</span>
         </div>
-        <div class="m-flex-grow1 m-text-r">
-          <a @click.stop.prevent="resetProps">重置</a>
-        </div>
+        <div class="m-flex-grow1 m-text-r"></div>
       </header>
       <main class="m-box-model m-aln-center m-justify-center">
         <div class="m-box-model m-lim-width m-main">
           <div class="m-pinned-amount-btns">
-            <p class="m-pinned-amount-label">选择打赏金额</p>
+            <p class="m-pinned-amount-label">选择置顶天数</p>
             <div class="m-box m-aln-center ">
                 <button 
                   :key="item"
                   v-for="item in items"
                   class="m-pinned-amount-btn"
                   :style="{ width: `${1 / items.length * 100}%` }"
-                  :class="{ active: ~~amount === ~~item &&  !customAmount }"
-                  @click="chooseDefaultAmount(item)">{{((~~item) / 100).toFixed(2) }} 元</button>
+                  :class="{ active: ~~day === ~~item }"
+                  @click="chooseDefaultDay(item)">{{((~~item))}} D</button>
 
             </div>
           </div>
           <div class="m-box m-aln-center m-justify-bet m-bb1 m-bt1 m-pinned-row plr20 m-pinned-amount-customize">
-            <span>自定义金额</span>
+            <span>置顶金额</span>
             <div class="m-box m-aln-center">
-              <input type="number" pattern="[0-9]*" v-model="customAmount" placeholder="输入金额" dir="rtl">
-              <span>元</span>
+              <input type="number" v-model="customAmount" placeholder="输入金额" dir="rtl">
+              <span>积分</span>
+            </div>
+          </div>
+          <div class="m-box m-aln-center m-justify-bet m-bb1 m-bt1 m-pinned-row plr20 m-pinned-amount-customize">
+            <span>总金额</span>
+            <div class="m-box m-aln-center">
+              <input 
+              dir="rtl"
+              type="number"
+              disabled="true"
+              readonly="true"
+              placeholder="总金额"
+              v-model="amount"
+              pattern="[0-9]*"
+              style="background-color: transparent">
+              <span>积分</span>
             </div>
           </div>
         </div>
@@ -45,7 +58,7 @@
             <svg v-if="loading" class="m-style-svg m-svg-def rotate">
               <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-loading"></use>
             </svg>
-            <span v-else>确定</span>
+            <span v-else>申请置顶</span>
           </button>
         </div>
       </main>
@@ -56,59 +69,63 @@
 import bus from "@/bus.js";
 const noop = () => {};
 export default {
-  name: "reward",
+  name: "apply-top",
   data() {
     return {
       show: false,
-      amount: null,
       loading: false,
       customAmount: null,
-      rewardType: ""
+      day: 0,
+      applyType: ""
     };
   },
   computed: {
+    amount() {
+      const total = this.day * this.customAmount;
+      return total > 0 ? total.toFixed(2) : "";
+    },
     items() {
-      return this.$store.state.CONFIG.site.reward.amounts.split(",") || [];
+      return [1, 5, 10];
     },
     disabled() {
       return !this.amount > 0;
     }
   },
-  watch: {
-    customAmount(val) {
-      this.amount = ~~val * 100;
-    }
-  },
   created() {
-    bus.$on("reward", () => {
+    bus.$on("apply-top", () => {
       this.open();
     });
-    bus.$on("reward:feed", feedID => {
-      this.rewardType = "feed";
+    bus.$on("apply-top:feed", feedID => {
+      this.applyType = "feed";
       this.open();
-      this.rewardFeed = () => {
+      this.applyTopFeed = () => {
         if (this.loading) return;
         this.loading = true;
+        // /feeds/:feed/pinneds
         this.$http
-          .post(`/feeds/${feedID}/new-rewards`, {
-            amount: this.amount
+          .post(`/feeds/${feedID}/pinneds`, {
+            amount: ~~this.amount,
+            day: this.day
           })
           .then(({ data = {} }) => {
             this.loading = false;
             this.$Message.success(data);
             this.$nextTick(this.cancel);
+          })
+          .catch(err => {
+            console.log(err);
+            this.loading = false;
           });
       };
     });
   },
   methods: {
-    rewardFeed() {},
+    applyTopFeed() {},
     handleOk() {
-      this.rewardType === "feed" ? this.rewardFeed() : "";
+      this.applyType === "feed" ? this.applyTopFeed() : "";
     },
-    chooseDefaultAmount(amount) {
-      this.customAmount && (this.customAmount = null);
-      this.amount = amount;
+    chooseDefaultDay(day) {
+      this.day = day;
     },
     resetProps() {
       this.amount = null;
@@ -119,8 +136,10 @@ export default {
     },
     cancel() {
       this.show = false;
-      this.rewardType = "";
-      this.rewardFeed = noop;
+      this.applyType = "";
+      this.day = null;
+      this.customAmount = null;
+      this.applyTopFeed = noop;
       this.scrollable = true;
     }
   }

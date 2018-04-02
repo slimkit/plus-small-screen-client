@@ -70,6 +70,7 @@
 </template>
 <script>
 import bus from "@/bus.js";
+import { mapState } from "vuex";
 import { time2txt } from "@/filters.js";
 import FeedImage from "@/components/FeedCard/FeedImage.vue";
 import CommentItem from "@/components/FeedCard/CommentItem.vue";
@@ -93,6 +94,10 @@ export default {
     }
   },
   computed: {
+    ...mapState(["CURRENTUSER"]),
+    isMine() {
+      return this.feed.user_id === this.CURRENTUSER.id;
+    },
     feedID() {
       return this.feed.id;
     },
@@ -142,6 +147,14 @@ export default {
     },
     body() {
       return this.feed.feed_content || "";
+    },
+    has_collect: {
+      get() {
+        return this.feed.has_collect;
+      },
+      set(val) {
+        this.feed.has_collect = val;
+      }
     },
     timeLineText() {
       const text = time2txt(this.time);
@@ -210,21 +223,84 @@ export default {
       });
     },
     handelMore() {
-      const actions = [
+      const base = [
         {
-          text: "收藏",
+          text: this.has_collect ? "取消收藏" : "收藏",
           method: () => {
-            console.log("收藏");
-          }
-        },
-        {
-          text: "举报",
-          method: () => {
-            console.log("举报");
+            // POST /feeds/:feed/collections
+            // DELETE /feeds/:feed/uncollect
+            let url;
+            let txt;
+            let method;
+            this.has_collect
+              ? ((txt = "取消收藏"),
+                (method = "delete"),
+                (url = `/feeds/${this.feedID}/uncollect`))
+              : ((txt = "已加入我的收藏"),
+                (method = "post"),
+                (url = `/feeds/${this.feedID}/collections`));
+            this.$http({
+              url,
+              method,
+              validataStatus: s => s === 204 || s === 201
+            }).then(() => {
+              this.$Message.success(txt);
+              this.has_collect = !this.has_collect;
+            });
           }
         }
       ];
-      bus.$emit("actionSheet", actions, "取消");
+      const actions = this.isMine
+        ? [
+            {
+              text: "申请动态置顶",
+              method: () => {
+                bus.$emit("apply-top:feed", this.feedID);
+              }
+            },
+            {
+              text: "删除动态",
+              method: () => {
+                // DELETE /feeds/:feed
+                setTimeout(() => {
+                  bus.$emit(
+                    "actionSheet",
+                    [
+                      {
+                        text: "删除",
+                        style: {
+                          color: "#f4504d"
+                        },
+                        method: () => {
+                          this.$http
+                            .delete(`/feeds/${this.feedID}`, {
+                              validataStatus: s => s === 204
+                            })
+                            .then(() => {
+                              this.$Message.success("删除动态成功");
+                              this.$nextTick(() => {
+                                this.$el.remove();
+                              });
+                            });
+                        }
+                      }
+                    ],
+                    "取消",
+                    "确认删除?"
+                  );
+                }, 200);
+              }
+            }
+          ]
+        : [
+            {
+              text: "举报",
+              method: () => {
+                console.log("举报");
+              }
+            }
+          ];
+      bus.$emit("actionSheet", [...base, ...actions], "取消");
     },
     commentAction({ isMine = false, placeholder, reply_user }) {
       isMine
