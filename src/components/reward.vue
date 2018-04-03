@@ -97,6 +97,9 @@ export default {
             this.loading = false;
             this.$Message.success(data);
             this.$nextTick(this.cancel);
+          })
+          .catch(() => {
+            this.loading = false;
           });
       };
     });
