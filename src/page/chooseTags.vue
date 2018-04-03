@@ -75,9 +75,13 @@ export default {
       isFirst: false,
       chooseTags: [],
       loading: false,
-      disabled: false,
       tags: []
     };
+  },
+  computed: {
+    disabled() {
+      return this.chooseTags.length === 0;
+    }
   },
   created() {
     this.fetchTags();
@@ -114,6 +118,7 @@ export default {
   },
   methods: {
     nextFuc() {
+      if (this.disabled) return;
       typeof this.nextStep === "function" && this.nextStep(this.chooseTags);
       this.$nextTick(this.cancel);
     },
@@ -146,6 +151,12 @@ export default {
       this.chooseTags = chooseTags;
     },
     cancel() {
+      this.chooseTags.forEach(tag => {
+        delete tag.Gindex;
+        delete tag.Tindex;
+        delete tag.selected;
+      });
+
       this.show = false;
       this.chooseTags = [];
       this.scrollable = true;
@@ -188,7 +199,7 @@ export default {
   .m-tag {
     position: relative;
     margin: 30px 0 0 30px;
-    width: calc(~"1/3 * 100% - 30px");
+    width: calc((1 / 3 * 100%) ~" - 30px");
     height: 60px;
     line-height: 60px;
     border-radius: 3px;

@@ -2,7 +2,7 @@
   <div class="m-box-model m-pos-r">
     <div class="m-box-model m-fd-row m-reles-body">
       <span class="m-wz-def">
-        <textarea 
+        <textarea
           v-model='contentText'
           :placeholder="placeholder"
           :style="{ height: `${scrollHeight}px`, overflow: 'hidden' }"

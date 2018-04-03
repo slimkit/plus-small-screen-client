@@ -5,7 +5,6 @@ import info from "@/page/info.vue";
 import forgot from "@/page/forgot";
 import signin from "@/page/signin.vue";
 import upgrade from "@/page/upgrade.vue";
-
 /* TODO */
 import setting from "@/page/setting.vue";
 import profile from "@/page/profile.vue";

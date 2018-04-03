@@ -73,10 +73,10 @@
           </svg>
         </div>
       </section>
-      <section class="m-box m-aln-st m-justify-bet m-main p-info-row">
+      <section class="m-box m-aln-st m-justify-bet m-main p-info-row" @click="switchTags">
         <label>标签</label>
         <div class="m-box m-aln-center m-justify-bet m-flex-grow1 m-flex-shrink1 m-bb1 input">
-          <div class="m-tag-list m-tags" @click="switchTags">
+          <div class="m-tag-list m-tags">
             <span v-if="tags.length === 0" class="placeholder">选择标签</span>
             <span class="m-tag" :key="tag.id" v-for="tag in tags">{{ tag.name }}</span>
           </div>

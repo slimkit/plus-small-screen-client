@@ -5,10 +5,10 @@ import feedRoutes from "./feed.js";
 import newsRoutes from "./news.js";
 import findRoutes from "./find.js";
 import rankRoutes from "./rank.js";
+import postRoutes from "./post.js";
 import groupRoutes from "./group.js";
 import messageRoutes from "./message.js";
 import questionRoutes from "./question.js";
-
 /* eslint-disable one-var */
 const /* 公共页面 */
 
@@ -59,6 +59,7 @@ const router = [
   ...baseRoutes,
 
   ...feedRoutes,
+  ...postRoutes,
   ...newsRoutes,
   ...findRoutes,
   ...rankRoutes,

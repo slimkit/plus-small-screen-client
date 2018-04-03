@@ -28,15 +28,15 @@
           </svg>
         </button>
         <div class="fixed-loading" v-if="!img.error && img.loading">
-        <div class="u-loading" style="height: 58px;width: 58px">
-          <svg class="loading" width="100%" height="100%" viewBox="0 0 29 29">
-            <circle class="c1" cx="14.5" cy="14.5" r="12.5" fill="none" stroke-width="4"
-            stroke="#b1b1b1" />
-            <circle class="c2" cx="14.5" cy="14.5" r="12.5" fill="none" stroke-width="4"
-            stroke="#c7c7c7" />
-          </svg>
+          <div class="u-loading" style="height: 58px;width: 58px; background-color: transprent">
+            <svg class="loading" width="100%" height="100%" viewBox="0 0 29 29">
+              <circle class="c1" cx="14.5" cy="14.5" r="12.5" fill="none" stroke-width="4"
+              stroke="#b1b1b1" />
+              <circle class="c2" cx="14.5" cy="14.5" r="12.5" fill="none" stroke-width="4"
+              stroke="#c7c7c7" />
+            </svg>
+          </div>
         </div>
-      </div>
       </div> 
       <label 
         v-if="showLabel"
@@ -362,79 +362,5 @@ export default {
 .more-image {
   border: 1px dashed @gray; /*no*/
   color: @gray;
-}
-
-@keyframes long2 {
-  0% {
-    stroke-dasharray: 60.6 78;
-    /*78*/
-  }
-  50% {
-    stroke-dasharray: 23.9 78;
-  }
-  100% {
-    stroke-dasharray: 60.6 78;
-  }
-}
-
-@keyframes short2 {
-  0% {
-    stroke-dasharray: 9.36 78;
-    /*12*/
-    stroke-dashoffset: 17.72;
-    /* 34.56*2 - 1 */
-  }
-  50% {
-    stroke-dasharray: 5.46 78;
-    /*4*/
-    stroke-dashoffset: 9.92;
-  }
-  100% {
-    stroke-dasharray: 9.36 78;
-    /*12*/
-    stroke-dashoffset: 17.72;
-  }
-}
-
-@keyframes rotate {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(720deg);
-  }
-}
-
-.fixed-loading {
-  width: 126px;
-  height: 126px;
-  border-radius: 8px;
-  background-color: rgba(255, 255, 255, 0.8);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translateY(-50%) translateX(-50%);
-}
-
-svg.loading {
-  display: block;
-  animation: rotate 1.832s linear 0s infinite;
-}
-
-svg.loading circle.c1 {
-  stroke-dasharray: 60.6 78;
-  /*78*/
-  stroke-dashoffset: 0;
-  animation: long2 1.832s cubic-bezier(0.18, 0, 0.58, 1) 0s infinite;
-}
-
-svg.loading circle.c2 {
-  stroke-dasharray: 9.36 78;
-  /*12*/
-  stroke-dashoffset: 68.12;
-  animation: short2 1.832s cubic-bezier(0.18, 0, 0.58, 1) 0s infinite;
 }
 </style>

@@ -7,7 +7,7 @@
       <div v-if='show' class="m-box-model m-justify-bet m-payfor-box">
         <h2 class="m-payfor-head">
           <slot name="title">
-            <span>{{ title }}</span>
+            <span>{{ title || "购买支付" }}</span>
           </slot>
         </h2>
         <div class="m-payfor-body">
@@ -15,8 +15,8 @@
           <p>您只需{{ amount.toFixed(2) }}{{ currency_name }}就可查看图片</p>
         </div>
         <div class="m-payfor-foot">
-          <button class="m-payfor-btn primary" @click="handelOk">购买</button>
-          <button class="m-payfor-btn" @click="handelCancel">返回</button>
+          <button class="m-payfor-btn primary" @click="handelOk">{{ confirmText || "购买" }}</button>
+          <button class="m-payfor-btn" @click="handelCancel">{{ cancelText || "返回" }}</button>
         </div>
       </div>
     </transition>
@@ -33,7 +33,9 @@ export default {
       amount: 0,
       show: false,
       scrollTop: 0,
-      title: "购买支付"
+      title: "",
+      cancelText: "",
+      confirmText: ""
     };
   },
   computed: {
@@ -46,10 +48,22 @@ export default {
   },
   created: function() {
     bus.$on("payfor", options => {
-      const { title, amount, onOk, onCancel, node, onSuccess } = options;
-      title && (this.title = title);
+      const {
+        title,
+        cancelText,
+        confirmText,
+        amount,
+        onOk,
+        onCancel,
+        node,
+        onSuccess
+      } = options;
       node && (this.node = node);
+      title && (this.title = title);
+      cancelText && (this.cancelText = cancelText);
+      confirmText && (this.confirmText = confirmText);
       (amount || +amount === 0) && (this.amount = amount);
+
       typeof onOk === "function" && (this.onOk = onOk);
       typeof onCancel === "function" && (this.onCancel = onCancel);
       typeof onSuccess === "function" && (this.onSuccess = onSuccess);
@@ -99,6 +113,10 @@ export default {
       this.node = null;
       this.show = false;
       this.$nextTick(() => {
+        this.title = "";
+        this.cancelText = "";
+        this.confirmText = "";
+
         this.onOk = noop;
         this.onCancel = noop;
         this.onSuccess = noop;
