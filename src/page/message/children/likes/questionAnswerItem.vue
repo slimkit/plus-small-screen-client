@@ -1,9 +1,10 @@
 <template>
   <section>
     <div :class="`${prefixCls}-item-top`">
-      <v-avatar :sex="like.user.sex" :src="like.user.avatar" />
+      <v-avatar :sex="user.sex || 1" :src="user.avatar" />
       <section class="userInfo">
-        <router-link :class="`${prefixCls}-item-top-link`" :to="`/user/${like.user_id}`">{{ like.user.name }}</router-link>
+        <span v-if="!user.id" :class="`${prefixCls}-item-top-link`">未知用户 </span>
+        <router-link v-else :class="`${prefixCls}-item-top-link`" :to="`/user/${user._id}`">{{ user.name || "未知用户" }} </router-link>
         <span>赞了你的回答</span>
         <p>{{ like.created_at | time2tips }}</p>
       </section>
@@ -15,7 +16,7 @@
         </div>
         <!-- <div :class="`${prefixCls}-item-bottom-img`" v-else>
           <div class="img">
-            <img :src="getImage" :alt="like.user.name">
+            <img :src="getImage" :alt="user.name">
           </div>
           <div class="content">
             {{ like.likeable.feed_content }}
@@ -68,6 +69,9 @@ export default {
       }
 
       return false;
+    },
+    user() {
+      return this.like.user || {};
     }
   },
   created() {

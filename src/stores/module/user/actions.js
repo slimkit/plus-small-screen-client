@@ -2,7 +2,6 @@ import http from "@/http";
 export default {
   GET_USER_DATA({ commit }, { type, limit = 15, offset = 0 }) {
     let uri;
-    console.log(type);
     switch (type) {
       case "pop":
         uri = "/user/populars";

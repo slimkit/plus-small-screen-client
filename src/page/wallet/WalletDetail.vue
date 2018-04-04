@@ -127,6 +127,7 @@ export default {
   }
   .diy-select {
     text-align: center;
+    height: 100%;
   }
   .diy-select--label:after {
     display: inline-block;

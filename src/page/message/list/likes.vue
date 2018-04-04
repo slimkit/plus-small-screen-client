@@ -1,6 +1,6 @@
 <template>
   <div :class="`${prefixCls}`">
-    <head-top :go-back='true' title='赞过的'></head-top>
+    <head-top :go-back="true" title='赞过的'></head-top>
     <div></div>
     <div :class="`${prefixCls}-container`">
       <load-more
