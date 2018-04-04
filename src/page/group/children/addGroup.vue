@@ -226,8 +226,9 @@ export default {
           .post(`/plus-group/categories/${category}/groups`, formData, {
             validateStatus: s => s === 200
           })
-          .then(() => {
-            this.$Message.success("创建圈子成功");
+          .then(({ data }) => {
+            this.$Message.success(data);
+            this.$router.push("/group");
           })
           .catch(err => {
             const {

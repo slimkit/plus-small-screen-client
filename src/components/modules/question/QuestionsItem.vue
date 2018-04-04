@@ -131,11 +131,12 @@ export default {
   // z-index: -1;
   .module-question-list-item_title {
     margin: 0;
-    margin-bottom: 24px;
+    margin-bottom: 46px;
     font-size: 32px;
     font-weight: normal;
     font-stretch: normal;
     color: #333;
+    line-height: 1.4;
   }
   .module-question-list-item_image {
     width: 100%;
@@ -143,7 +144,7 @@ export default {
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
-    margin-bottom: 24px;
+    margin-bottom: 46px;
   }
   .module-question-list-item_button {
     width: 100%;

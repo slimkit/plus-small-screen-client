@@ -27,6 +27,10 @@ const groupCommentAudit = () =>
   import(/* webpackChunkName: 'message' */ "@/page/message/children/audits/groupCommentAudit");
 const groupJoinAudit = () =>
   import(/* webpackChunkName: 'message' */ "@/page/message/children/audits/groupJoinAudit");
+const chats = () =>
+  import(/* webpackChunkName: 'message' */ "@/page/message/chats");
+const chatRoom = () =>
+  import(/* webpackChunkName: 'message' */ "@/page/message/chat/chatRoom");
 
 export default [
   {
@@ -47,6 +51,22 @@ export default [
         }
       }
     ]
+  },
+  {
+    path: "/chats",
+    component: chats,
+    meta: {
+      title: "聊天",
+      requiresAuth: true
+    }
+  },
+  {
+    path: "/chats/:uid(\\d+)",
+    component: chatRoom,
+    meta: {
+      title: "对话",
+      requiresAuth: true
+    }
   },
   {
     path: "/message/notification",

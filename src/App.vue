@@ -6,7 +6,6 @@
     <router-view v-if="!$route.meta.keepAlive"></router-view>
     <div>
       <svg-icon />
-
       <pswp />
       <reward />
       <payfor />
@@ -14,9 +13,7 @@
       <post-menu />
       <actionsheet />
       <comment-input />
-
       <apply-top />
-      
       <info-tips />
       <choose-tags />
 
@@ -47,6 +44,9 @@ import infoTips from "@/components/infoTips.vue";
 // 通用置顶弹窗
 import applyTop from "@/components/applyForTop.vue";
 
+import localStore from "store";
+import bus from "@/bus.js";
+
 export default {
   name: "app",
   components: {
@@ -56,13 +56,17 @@ export default {
     commentInput,
     infoTips,
     applyTop,
-
     SvgIcon,
-
     Reward,
     CheckIn,
     PostMenu,
     chooseTags
+  },
+  mounted() {
+    const TOKEN = (localStore.get("CURRENTUSER") || {}).token;
+    if (TOKEN) {
+      bus.$emit("connect-easemob");
+    }
   }
 };
 </script>

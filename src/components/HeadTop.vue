@@ -34,7 +34,7 @@ export default {
   name: "HeadTop",
   props: {
     title: String,
-    goBack: [Boolean, Function, String],
+    goBack: [Boolean, Function],
     append: [Boolean, String],
     transparent: Boolean
   },
@@ -86,6 +86,7 @@ export default {
     right: 0;
     margin: auto;
     text-align: center;
+    height: 100%;
     &--label {
       display: inline-block;
       &:after {

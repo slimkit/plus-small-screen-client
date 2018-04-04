@@ -103,7 +103,9 @@
   </transition>
 </template>
 <script>
+import bus from "@/bus.js";
 import { signinByWechat } from "@/util/wechat.js";
+
 export default {
   name: "signin",
   data() {
@@ -154,6 +156,7 @@ export default {
               ...user,
               token
             }),
+            bus.$emit("connect-easemob"),
             this.$store.commit("SAVE_USER", user),
             this.$store.dispatch("GET_UNREAD_COUNT"),
             this.$nextTick(() => {

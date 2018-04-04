@@ -16,8 +16,8 @@
       <div :class="classNameBuilder('main-body')">{{ answer.body | markdownText }}</div>
       <div :class="classNameBuilder('main-button')">
         <button @click="handleLikeTarget">
-          <svg :class="[classNameBuilder('icon'), { active: answer.liked }]">
-            <use xlink:href="#message-likes" />
+          <svg :class="[classNameBuilder('icon')]">
+            <use  :xlink:href="answer.liked ? '#feed-like' : '#feed-unlike'" />
           </svg>
           {{ answer.likes_count | formatNum }}
         </button>
@@ -158,6 +158,7 @@ export default {
       font-stretch: normal;
       color: #666;
       margin-bottom: 28px;
+      line-height: 1.4;
     }
     &-button {
       display: flex;
@@ -187,6 +188,7 @@ export default {
     width: 30px;
     height: 30px;
     margin-bottom: -6px;
+    fill: #999;
   }
 }
 </style>

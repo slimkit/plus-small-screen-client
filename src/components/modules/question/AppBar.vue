@@ -124,7 +124,7 @@ export default {
   width: 100%;
   height: 116px;
   background: #fff;
-  border-bottom: solid 1px #d7d8d8;
+  border-bottom: solid 1px #dedede;
   display: flex;
   justify-content: space-between;
   align-items: center;

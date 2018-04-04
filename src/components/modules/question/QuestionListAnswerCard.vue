@@ -118,7 +118,8 @@ export default {
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
-  margin-bottom: 24px;
+  margin-bottom: 46px;
+  line-height: 1.4;
 }
 .@{root}-empty {
   display: none;
