@@ -4,7 +4,9 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "test": "vue-cli-service test",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "deploy": "gh-pages -d dist -m \"chore: Build SPA & Update assets.\" -t",
+    "predeploy": "npm run build"
   },
   "dependencies": {
     "axios": "^0.18.0",
@@ -42,6 +44,7 @@
     "@vue/test-utils": "^1.0.0-beta.10",
     "babel-core": "^7.0.0-0",
     "babel-jest": "^22.0.4",
+    "gh-pages": "^1.1.0",
     "less": "^2.7.3",
     "less-loader": "^4.0.5",
     "postcss-px2rem": "^0.3.0",
