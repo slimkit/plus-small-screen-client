@@ -107,6 +107,8 @@
 </template>
 <script>
 import _ from "lodash";
+import Wx from "weixin-js-sdk";
+import wx from "@/util/share.js";
 import FeedCard from "@/components/FeedCard/FeedCard.vue";
 export default {
   name: "user-home",
@@ -157,10 +159,25 @@ export default {
       noMoreData: false,
       fetchFeeding: false,
 
-      tags: []
+      tags: [],
+      appList: [
+        "onMenuShareQZone",
+        "onMenuShareQQ",
+        "onMenuShareAppMessage",
+        "onMenuShareTimeline"
+      ],
+      config: {
+        appid: "",
+        signature: "",
+        timestamp: "",
+        noncestr: ""
+      }
     };
   },
   computed: {
+    isWechat() {
+      return this.$store.state.BROWSER.isWechat;
+    },
     currentUser() {
       return this.$store.state.CURRENTUSER;
     },
@@ -312,6 +329,122 @@ export default {
     stopDrag() {
       this.dragging = false;
       this.dY > 300 && this.scrollTop <= 0 ? this.updateData() : (this.dY = 0);
+    },
+    shareSuccess() {
+      this.$Message.success("分享成功");
+    },
+    shareCancel() {
+      this.$Message.success("取消分享");
+    },
+    // 微信内分享
+    getWeChatConfig() {
+      const url = window.location.origin + this.$route.fullPath;
+      if (this.config.appid === "") {
+        wx.getOauth(url).then(res => {
+          this.config.timestamp = res.timestamp || "";
+          this.config.signature = res.signature || "";
+          this.config.appid = res.appid || "";
+          this.config.noncestr = res.noncestr || "";
+          Wx.config({
+            debug: true,
+            appId: this.config.appid,
+            timestamp: this.config.timestamp,
+            signature: this.config.signature,
+            nonceStr: this.config.noncestr,
+            jsApiList: this.appList
+          });
+          Wx.ready(() => {});
+          Wx.error(() => {
+            // console.log(res);
+          });
+          Wx.onMenuShareTimeline({
+            title: this.user.name,
+            desc: "我发现了一个好玩的家伙,来看看吧",
+            link: window.location.origin + this.$route.fullPath,
+            imgUrl: this.user.avatar,
+            success: () => {
+              this.shareSuccess();
+            },
+            cancel: () => {
+              this.shareCancel();
+            }
+          });
+          Wx.onMenuShareAppMessage({
+            title: this.user.name,
+            desc: "我发现了一个好玩的家伙,来看看吧",
+            link: window.location.origin + this.$route.fullPath,
+            imgUrl: this.user.avatar,
+            success: () => {
+              this.shareSuccess();
+            },
+            cancel: () => {
+              this.shareCancel();
+            }
+          });
+          Wx.onMenuShareQQ({
+            title: this.user.name,
+            desc: "我发现了一个好玩的家伙,来看看吧",
+            link: window.location.origin + this.$route.fullPath,
+            imgUrl: this.user.avatar,
+            success: () => {
+              this.shareSuccess();
+            },
+            cancel: () => {
+              this.shareCancel();
+            }
+          });
+        });
+      } else {
+        Wx.config({
+          debug: false,
+          appId: this.config.appid,
+          timestamp: this.config.timestamp,
+          signature: this.config.signature,
+          nonceStr: this.config.noncestr,
+          jsApiList: this.appList
+        });
+
+        Wx.ready(() => {}),
+          Wx.error(() => {
+            // console.log(res);
+          });
+        Wx.onMenuShareTimeline({
+          title: this.user.name,
+          desc: "我发现了一个好玩的家伙,来看看吧",
+          link: window.location.origin + this.$route.fullPath,
+          imgUrl: this.user.avatar,
+          success: () => {
+            this.shareSuccess();
+          },
+          cancel: () => {
+            this.shareCancel();
+          }
+        });
+        Wx.onMenuShareAppMessage({
+          title: this.user.name,
+          desc: "我发现了一个好玩的家伙,来看看吧",
+          link: window.location.origin + this.$route.fullPath,
+          imgUrl: this.user.avatar,
+          success: () => {
+            this.shareSuccess();
+          },
+          cancel: () => {
+            this.shareCancel();
+          }
+        });
+        Wx.onMenuShareQQ({
+          title: this.user.name,
+          desc: "我发现了一个好玩的家伙,来看看吧",
+          link: window.location.origin + this.$route.fullPath,
+          imgUrl: this.user.avatar,
+          success: () => {
+            this.shareSuccess();
+          },
+          cancel: () => {
+            this.shareCancel();
+          }
+        });
+      }
     }
   },
   mounted() {
@@ -325,6 +458,9 @@ export default {
           this.loading = false;
         }, 600);
     window.addEventListener("scroll", this.onScroll);
+    if (this.isWechat) {
+      this.getWeChatConfig();
+    }
   },
   deactivated() {
     this.loading = true;
