@@ -6,7 +6,8 @@
     "test": "vue-cli-service test",
     "lint": "vue-cli-service lint",
     "deploy": "gh-pages -d dist -m \"chore: Build SPA & Update assets.\" -t",
-    "predeploy": "npm run build"
+    "predeploy": "npm run build && npm run build:404",
+    "build:404": "node script/build-404.js"
   },
   "dependencies": {
     "axios": "^0.18.0",
