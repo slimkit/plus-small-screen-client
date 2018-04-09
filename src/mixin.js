@@ -8,13 +8,15 @@ export default {
   },
   watch: {
     scrollable(val) {
+      const el = document.scrollingElement;
+      console.log(el);
       if (val) {
         document.body.style.top = "";
         document.body.classList.remove("m-pop-open");
-        document.scrollingElement.scrollTop = this.windowScrollTop;
+        el && (el.scrollTop = this.windowScrollTop);
       } else {
         document.body.classList.add("m-pop-open");
-        this.windowScrollTop = document.scrollingElement.scrollTop;
+        this.windowScrollTop = el ? el.scrollTop : 0;
         document.body.style.top = -this.windowScrollTop + "px";
       }
     }

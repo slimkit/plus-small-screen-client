@@ -167,7 +167,7 @@ export default {
         : this.scrollTarget;
     },
     visibleHeight() {
-      return this.scrollTarget.clientHeight;
+      return this.scrollTarget.clientHeight * 1.325;
     },
     distance() {
       return 0.05 * this.visibleHeight;
@@ -316,11 +316,7 @@ export default {
       });
     }
   },
-  // 激活时 自动刷新一次
-  activated() {
-    this.init();
-  },
-  // 挂载时 自动刷新一次
+  // 挂载时 触发一次刷新
   mounted() {
     this.init();
   },

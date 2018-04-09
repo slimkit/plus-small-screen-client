@@ -5,7 +5,6 @@ import actions from "./action";
 import getters from "./getters";
 import mutations from "./mutations";
 import { detectOS } from "../util/";
-import http from "../http";
 
 import modules from "./module/";
 

@@ -93,6 +93,9 @@ body,
   flex-basis: 0;
   min-width: 0;
 }
+.m-flex-grow2 {
+  flex-grow: 2;
+}
 .m-flex-grow1 {
   flex-grow: 1;
 }
@@ -154,12 +157,25 @@ body,
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
 .m-text-cut-2 {
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+.m-text-cut-3 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+.m-text-cut-4 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
 }
 .m-text-box {

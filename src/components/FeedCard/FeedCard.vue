@@ -16,9 +16,10 @@
           </div>
         </header>
         <article class="m-text-box m-card-body" @click="handelView">
-          <p class="m-text-box m-box m-card-con" v-if="body.length > 0">
-            <span v-html="replaceURI(body)"></span>
-            <span class="m-text-shadow" v-if="needPay"> 付费节点，购买后方可查看原文详情</span></p>
+          <div class="m-text-box m-card-con m-text-cut-4" v-if="body.length > 0">
+            <span class="m-text-cut-4" v-html="replaceURI(body)"></span>
+            <span class="m-text-shadow" v-if="needPay"> 付费节点，购买后方可查看原文详情</span>
+          </div>
           <feed-image
             v-if="images.length > 0"
             :id="feedID"
@@ -174,7 +175,7 @@ export default {
         ? str.replace(
             reg,
             link =>
-              `<a class="m-art-links" href="${link}" target="__blank">#网页链接#</a>`
+              `<a class="m-art-links" href="${link}" onclick='event.stopPropagation()' target="__blank">#网页链接#</a>`
           )
         : "";
     },
@@ -347,11 +348,11 @@ export default {
   },
   mounted() {
     this.user && this.$store.commit("SAVE_USER", this.user);
-    this.$el.querySelectorAll(".m-art-links").forEach(node => {
-      node.addEventListener("click", e => {
-        e.stopPropagation();
-      });
-    });
+    // this.$el.querySelectorAll(".m-art-links").forEach(node => {
+    //   node.addEventListener("click", e => {
+    //     e.stopPropagation();
+    //   });
+    // });
   }
 };
 </script>
@@ -396,11 +397,6 @@ export default {
     line-height: 42px;
     color: @text-color2;
     display: -webkit-box;
-    text-overflow: ellipsis;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    text-overflow: -o-ellipsis-lastline;
-    max-height: 43 * 3px;
     margin-bottom: 20px;
     .m-text-shadow {
       text-shadow: 0 0 10px @text-color2;
