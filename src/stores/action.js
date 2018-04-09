@@ -1,6 +1,10 @@
 import http from "../http";
 import getLocation from "../util/location";
 export default {
+  async BOOTSTRAPPERS({ commit }) {
+    const { data = {} } = await http.get("/bootstrappers");
+    commit("BOOTSTRAPPERS", data);
+  },
   // 获取圈子分类数据
   GET_GROUP_TYPES({ commit }) {
     http.get("/plus-group/categories").then(({ data = [] }) => {

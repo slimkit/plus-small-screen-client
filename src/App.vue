@@ -47,6 +47,8 @@ import applyTop from "@/components/applyForTop.vue";
 import localStore from "store";
 import bus from "@/bus.js";
 
+import { mapActions } from "vuex";
+
 export default {
   name: "app",
   components: {
@@ -61,6 +63,12 @@ export default {
     CheckIn,
     PostMenu,
     chooseTags
+  },
+  methods: {
+    ...mapActions(["BOOTSTRAPPERS"])
+  },
+  created() {
+    this.BOOTSTRAPPERS();
   },
   mounted() {
     const TOKEN = (localStore.get("CURRENTUSER") || {}).token;

@@ -11,14 +11,8 @@ import modules from "./module/";
 
 Vue.use(Vuex);
 
-async function bootstrappers() {
-  const { data = {} } = await http.get("/bootstrappers");
-  LocalEvent.set("CONFIG", data || {});
-  return data;
-}
-
 const state = {
-  CONFIG: Object.assign({}, LocalEvent.get("CONFIG"), bootstrappers()),
+  CONFIG: LocalEvent.get("BOOTSTRAPPERS") || {},
   /* 终端信息 */
   BROWSER: detectOS(),
   /* 当前动态 type */
