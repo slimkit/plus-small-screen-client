@@ -43,7 +43,11 @@
             <img src="../images/ico_attendance@3x.png">
             <span>签到</span>
           </div>
-          <div v-if="open" key="ico_question" class="m-box-model m-aln-center m-post-menu-item">
+          <div
+          v-if="open"
+          key="ico_question"
+          @click="to('/post/question')"
+          class="m-box-model m-aln-center m-post-menu-item">
             <img src="../images/ico_question@3x.png">
             <span>提问</span>
           </div>
