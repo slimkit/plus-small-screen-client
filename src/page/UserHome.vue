@@ -338,7 +338,8 @@ export default {
     },
     // 微信内分享
     getWeChatConfig() {
-      const url = window.location.origin + this.$route.fullPath;
+      const url =
+        window.location.origin + process.env.BASE_URL + this.$route.fullPath;
       if (this.config.appid === "") {
         wx.getOauth(url).then(res => {
           this.config.timestamp = res.timestamp || "";
