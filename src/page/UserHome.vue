@@ -363,7 +363,7 @@ export default {
           Wx.onMenuShareTimeline({
             title: this.user.name,
             desc: "我发现了一个好玩的家伙,来看看吧",
-            link: window.location.origin + this.$route.fullPath,
+            link: url,
             imgUrl: this.user.avatar,
             success: () => {
               this.shareSuccess();
@@ -375,7 +375,7 @@ export default {
           Wx.onMenuShareAppMessage({
             title: this.user.name,
             desc: "我发现了一个好玩的家伙,来看看吧",
-            link: window.location.origin + this.$route.fullPath,
+            link: url,
             imgUrl: this.user.avatar,
             success: () => {
               this.shareSuccess();
@@ -387,7 +387,7 @@ export default {
           Wx.onMenuShareQQ({
             title: this.user.name,
             desc: "我发现了一个好玩的家伙,来看看吧",
-            link: window.location.origin + this.$route.fullPath,
+            link: url,
             imgUrl: this.user.avatar,
             success: () => {
               this.shareSuccess();
@@ -414,7 +414,7 @@ export default {
         Wx.onMenuShareTimeline({
           title: this.user.name,
           desc: "我发现了一个好玩的家伙,来看看吧",
-          link: window.location.origin + this.$route.fullPath,
+          link: url,
           imgUrl: this.user.avatar,
           success: () => {
             this.shareSuccess();
@@ -426,7 +426,7 @@ export default {
         Wx.onMenuShareAppMessage({
           title: this.user.name,
           desc: "我发现了一个好玩的家伙,来看看吧",
-          link: window.location.origin + this.$route.fullPath,
+          link: url,
           imgUrl: this.user.avatar,
           success: () => {
             this.shareSuccess();
@@ -438,7 +438,7 @@ export default {
         Wx.onMenuShareQQ({
           title: this.user.name,
           desc: "我发现了一个好玩的家伙,来看看吧",
-          link: window.location.origin + this.$route.fullPath,
+          link: url,
           imgUrl: this.user.avatar,
           success: () => {
             this.shareSuccess();
