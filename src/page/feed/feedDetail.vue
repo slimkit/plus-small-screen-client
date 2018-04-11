@@ -294,7 +294,6 @@ export default {
           params: { limit: 10 }
         })
         .then(({ data = [] }) => {
-          console.log(data);
           this.rewardList = data;
         });
     },
@@ -390,7 +389,9 @@ export default {
     },
     getWeChatConfig() {
       const url =
-        window.location.origin + process.env.BASE_URL + this.$route.fullPath;
+        window.location.origin +
+        process.env.BASE_URL.substr(0, process.env.BASE_URL.length - 1) +
+        this.$route.fullPath;
       this.share.link = url;
       if (this.config.appid === "") {
         wx.getOauth(url).then(res => {

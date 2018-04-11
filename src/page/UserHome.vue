@@ -339,7 +339,9 @@ export default {
     // 微信内分享
     getWeChatConfig() {
       const url =
-        window.location.origin + process.env.BASE_URL + this.$route.fullPath;
+        window.location.origin +
+        process.env.BASE_URL.substr(0, process.env.BASE_URL.length - 1) +
+        this.$route.fullPath;
       if (this.config.appid === "") {
         wx.getOauth(url).then(res => {
           this.config.timestamp = res.timestamp || "";
@@ -347,7 +349,7 @@ export default {
           this.config.appid = res.appid || "";
           this.config.noncestr = res.noncestr || "";
           Wx.config({
-            debug: true,
+            debug: false,
             appId: this.config.appid,
             timestamp: this.config.timestamp,
             signature: this.config.signature,
