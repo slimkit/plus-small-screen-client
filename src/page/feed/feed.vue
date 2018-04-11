@@ -57,12 +57,12 @@ export default {
   },
   watch: {
     feed_type(val, oval) {
-      return val === oval
-        ? false
-        : ((this.ad = []),
-          (this.feeds = []),
-          (this.pinned = []),
-          this.$nextTick(this.$refs.loadmore.beforeRefresh));
+      val &&
+        val !== oval &&
+        ((this.ad = []),
+        (this.feeds = []),
+        (this.pinned = []),
+        this.$nextTick(this.$refs.loadmore.beforeRefresh));
     }
   },
   methods: {
