@@ -7,14 +7,11 @@
         <div
         :class="['m-pics-box',{ 'long': isLongImg(img) }]"
         :style='pics.length === 1 ? longStyle(img.w, img.h) : ""'>
-          <async-file :file="img.file" >
-            <div
-              class="m-pic" 
-              slot-scope="props"
-              @click.stop='handleClick($event, index)'
-              :style="{ backgroundImage: `url(${props.src})` }"
-            />
-          </async-file>
+          <div
+            class="m-pic" 
+            @click.stop='handleClick($event, index)'
+            :style="img.src ? { backgroundImage:  `url(${img.src})` } : { backgroundColor: '#f4f5f6' }"
+          />
         </div>
       </li>
     </ul>
@@ -43,15 +40,29 @@ export default {
         }, 1500);
       }
     });
+    this.pics.map((pic, index) => {
+      this.getImageById(pic, index);
+    });
   },
   methods: {
+    getImageById(pic, index) {
+      this.$http
+        .get(`/files/${pic.file}?q=40&json=true`)
+        .then(({ data: { url } }) => {
+          this.$set(this.pics, index, { ...pic, src: url });
+        })
+        .catch(() => {
+          this.$set(this.pics, index, { ...pic, src: null });
+        });
+    },
     handleClick($event, index) {
-      const els = this.$children;
+      const els = this.$el.querySelectorAll(".m-pic");
       const images = this.pics.map((img, index) => {
         return {
           ...img,
-          el: els[index].$el,
-          src: els[index].src,
+          original: false,
+          el: els[index],
+          src: img.src,
           index
         };
       });
@@ -63,7 +74,6 @@ export default {
       img.h = parseInt(h);
       return w > 3 * h || h > 3 * w;
     },
-
     longStyle(w, h) {
       return {
         width: w > 518 ? "518px" : w + "px",

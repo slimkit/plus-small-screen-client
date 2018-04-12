@@ -44,7 +44,7 @@
         </div>
       </div>
     </div>
-    <button class="pic-action-btn" :data-id='fileID' v-show='!!btnText' @click='payForImg'>{{ btnText }}</button>
+    <button class="pic-action-btn" :data-id='fileID' v-show="btnText" @click='payForImg(btnText === "查看原图")'>{{ btnText }}</button>
   </div>
 </template>
 <script>
@@ -64,7 +64,8 @@ export default {
       index: -1,
       amount: 0,
       paidNode: 0,
-      paid: false
+      paid: false,
+      original: false
     };
   },
   created() {
@@ -75,16 +76,19 @@ export default {
   },
   computed: {
     currItem: {
-      set({ amount, paidNode, index, paid, fileID }) {
+      set({ amount, paidNode, index, paid, fileID, original = false }) {
         this.paid = paid;
         this.index = index;
         this.amount = amount;
         this.fileID = fileID;
         this.paidNode = paidNode;
-        this.btnText = paidNode && !paid ? "购买查看" : false;
+        this.original = original;
+        this.btnText =
+          paidNode && !paid ? "购买查看" : original ? "" : "查看原图";
       },
       get() {
         return {
+          original: this.original,
           paid: this.paid,
           index: this.index,
           amount: this.amount,
@@ -96,20 +100,28 @@ export default {
     }
   },
   methods: {
-    payForImg() {
-      const { paidNode, amount } = this.currItem;
-      bus.$emit("payfor", {
-        onSuccess: data => {
-          this.$Message.success(data);
-          bus.$emit("updateFile", {
-            fid: this.fid,
-            index: this.index
+    payForImg(original = false) {
+      if (original) {
+        this.$http
+          .get(`/files/${this.currItem.fileID}?json=true`)
+          .then(({ data: { url } }) => {
+            bus.$emit("updatePhoto", url);
           });
-          this.paid = true;
-        },
-        node: paidNode,
-        amount: amount
-      });
+      } else {
+        const { paidNode, amount } = this.currItem;
+        bus.$emit("payfor", {
+          onSuccess: data => {
+            this.$Message.success(data);
+            bus.$emit("updateFile", {
+              fid: this.fid,
+              index: this.index
+            });
+            this.paid = true;
+          },
+          node: paidNode,
+          amount: amount
+        });
+      }
     },
     openPhotoSwipe: function(index, images) {
       const vm = this;
@@ -127,11 +139,12 @@ export default {
           // captionEl - caption DOM element
           // isFake    - true when content is added to fake caption container
           //             (used to get size of next or previous caption)
-          const { file, amount, paid_node, paid, index } = item;
+          const { file, amount, paid_node, paid, index, original } = item;
           vm.currItem = {
             paid,
             index,
             amount,
+            original: original === "undefined" ? true : original,
             fileID: file,
             paidNode: paid_node
           };
@@ -143,6 +156,7 @@ export default {
       bus.$on("updatePhoto", src => {
         this.btnText = "";
         this.paid = true;
+        this.photoswipe.currItem.original = true;
         this.photoswipe.currItem.container.querySelector(
           "img.pswp__img"
         ).src = src;

@@ -5,8 +5,7 @@
 </style>
 <script>
 import bus from "@/bus.js";
-import store from "store";
-import { mapActions } from "vuex";
+import { mapActions, mapState } from "vuex";
 import { connect, getLocalId, getEasemobPassword } from "@/easemob/init.js";
 
 export default {
@@ -18,9 +17,9 @@ export default {
     ...mapActions(["INIT_ROOMS"])
   },
   computed: {
-    me() {
-      return store.get("CURRENTUSER") || {};
-    }
+    ...mapState({
+      me: state => state.CURRENTUSER
+    })
   },
   created() {
     bus.$on("connect-easemob", () => {

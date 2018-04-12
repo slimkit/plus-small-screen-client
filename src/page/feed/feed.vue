@@ -2,13 +2,13 @@
   <div>
     <nav class="m-box m-head-top m-lim-width m-pos-f m-main m-bb1">
       <ul class="m-box m-flex-grow1 m-aln-center m-justify-center m-flex-base0 m-head-nav">
-        <router-link tag="li" to="/feed/new" active-class="active" exact>
+        <router-link tag="li" to="/feed/new" active-class="active" exact replace>
           <a>最新</a>
         </router-link>
-        <router-link tag="li" to="/feed/hot" active-class="active" exact>
+        <router-link tag="li" to="/feed/hot" active-class="active" exact replace>
           <a>热门</a>
         </router-link>
-        <router-link tag="li" to="/feed/follow" active-class="active" exact>
+        <router-link tag="li" to="/feed/follow" active-class="active" exact replace>
           <a>关注</a>
         </router-link>
       </ul>

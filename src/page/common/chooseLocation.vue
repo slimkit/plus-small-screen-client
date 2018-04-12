@@ -13,7 +13,7 @@
             <div class="location-current">
                 <span>当前定位</span>
                 <span class="location-current-txt" :class='{c999: !cur_txt }'>{{cur_txt || "未定位"}}</span>
-                <v-icon :type='cur_icon' :class='{"btn-loading": cur_icon === "base-loading"}' class="location-current-append" @click.native.stop='updateLocation'></v-icon>
+                <v-icon :type='cur_icon' class="location-current-append" @click.native.stop='updateLocation'></v-icon>
             </div>
             <div class="location-hot">
                 <label>热门城市</label>

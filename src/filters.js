@@ -26,20 +26,52 @@ export function plusMessageAnalyze(message, defaultMessage) {
 }
 
 /**
- * 格式化 时间
- * @author Jsonleex <jsonlseex@163.com>
- * @param  {String}
+ * 格式化时间
+ * @author jsonleex <jsonlseex@163.com>
+ * @param  {Object} date
+ * @param  {String} fmt
  * @return {String}
  */
+export function formatDate(date, fmt = "yyyy/MM/dd hh:mm") {
+  const o = {
+    "M+": date.getMonth() + 1,
+    "d+": date.getDate(),
+    "h+": date.getHours(),
+    "m+": date.getMinutes(),
+    "s+": date.getSeconds(),
+    "q+": Math.floor((date.getMonth() + 3) / 3),
+    S: date.getMilliseconds()
+  };
+  if (/(y+)/.test(fmt)) {
+    fmt = fmt.replace(
+      RegExp.$1,
+      (date.getFullYear() + "").substr(4 - RegExp.$1.length)
+    );
+  }
+  for (const k in o) {
+    if (new RegExp("(" + k + ")").test(fmt)) {
+      fmt = fmt.replace(
+        RegExp.$1,
+        RegExp.$1.length === 1 ? o[k] : ("00" + o[k]).substr(("" + o[k]).length)
+      );
+    }
+  }
+  return fmt;
+}
 
+/**
+ * 时间转提示
+ * @author jsonleex <jsonlseex@163.com>
+ * @param  {String} str
+ * @return {String}
+ */
 export const time2txt = str => {
   if (!str) return "";
-
   // 兼容 IOS 保证传入数据格式 YYYY/MM/dd HH:mm:ss
   let date = new Date(str.replace(/-/g, "/"));
 
-  // 现在的时间-传入的时间 = 相差的时间（单位 = 毫秒）
-  let time = new Date().getTime() - date.getTime();
+  // 时间差 = 当前时间 - date (单位: 毫秒)
+  let time = new Date() - date;
 
   if (time < 0) {
     return "";
@@ -52,40 +84,12 @@ export const time2txt = str => {
   }
 };
 
-/**
- * 时区转换
- */
-export const UTC2localTime = UTCDateString => {
-  if (!UTCDateString) {
-    return "-";
-  }
-
-  function formatFunc(str) {
-    // 格式化显示
-    return str > 9 ? str : "0" + str;
-  }
-  var date2 = new Date(UTCDateString); // 这步是关键
-  var year = date2.getFullYear();
-  var mon = formatFunc(date2.getMonth() + 1);
-  var day = formatFunc(date2.getDate());
-  var hour = date2.getHours();
-  var noon = hour >= 12 ? "PM" : "AM";
-  hour = hour >= 12 ? hour - 12 : hour;
-  hour = formatFunc(hour);
-  var min = formatFunc(date2.getMinutes());
-  var dateStr =
-    year + "-" + mon + "-" + day + " " + noon + " " + hour + ":" + min;
-  return dateStr;
-};
-
-// 时差
+// 格林威治时间和本地时间之间的时差 (单位:毫秒)
 const timeOffset = new Date().getTimezoneOffset() * 60 * 1000;
 
 export const dateFormat = timeago(null, "zh_CN");
 export const time2tips = date => {
-  return dateFormat.format(
-    new Date(date.replace(/-/g, "/")).getTime() - timeOffset
-  );
+  return dateFormat.format(new Date(date.replace(/-/g, "/")) - timeOffset);
 };
 
 /**

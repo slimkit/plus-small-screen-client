@@ -34,7 +34,7 @@
       </div>
       <button class="signup-form--submit-btn" :disabled='disabled' @click='bindUser'>
         <span>绑定</span>
-        <svg v-if='loading' class="rotate">
+        <svg v-if='loading'>
           <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-loading"></use>
         </svg>
       </button>

@@ -40,7 +40,7 @@
           :disabled="err||loading"
           class="m-long-btn m-signin-btn"
           @click="signupByWechat">
-            <svg v-if="loading" class="m-style-svg m-svg-def rotate">
+            <svg v-if="loading" class="m-style-svg m-svg-def">
               <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-loading"></use>
             </svg>
             <span v-else>提交</span>

@@ -42,7 +42,7 @@
           :disabled="disabled || loading"
           class="m-long-btn m-signin-btn"
           @click="handleOk">
-            <svg v-if="loading" class="m-style-svg m-svg-def rotate">
+            <svg v-if="loading" class="m-style-svg m-svg-def">
               <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-loading"></use>
             </svg>
             <span v-else>确定</span>
@@ -80,8 +80,25 @@ export default {
     }
   },
   created() {
-    bus.$on("reward", () => {
+    bus.$on("reward:user", userID => {
+      this.rewardType = "user";
       this.open();
+      this.rewardUser = () => {
+        if (this.loading) return;
+        this.loading = true;
+        this.$http
+          .post(`/user/${userID}/rewards`, {
+            amount: this.amount
+          })
+          .then(({ data = {} }) => {
+            this.loading = false;
+            this.$Message.success(data);
+            this.$nextTick(this.cancel);
+          })
+          .catch(() => {
+            this.loading = false;
+          });
+      };
     });
     bus.$on("reward:feed", feedID => {
       this.rewardType = "feed";
@@ -106,8 +123,10 @@ export default {
   },
   methods: {
     rewardFeed() {},
+    rewardUser() {},
     handleOk() {
       this.rewardType === "feed" ? this.rewardFeed() : "";
+      this.rewardType === "user" ? this.rewardUser() : "";
     },
     chooseDefaultAmount(amount) {
       this.customAmount && (this.customAmount = null);

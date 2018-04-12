@@ -9,7 +9,6 @@ export default {
   watch: {
     scrollable(val) {
       const el = document.scrollingElement;
-      console.log(el);
       if (val) {
         document.body.style.top = "";
         document.body.classList.remove("m-pop-open");

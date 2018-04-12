@@ -1,66 +1,64 @@
 <template>
-  <div class="m-wrapper m-wbox">
-    <div class="m-pos-f m-box-model m-main">
-      <header class="m-box m-justify-bet m-aln-center m-main m-bb1 m-head-top">
-        <div class="m-box m-flex-grow1 m-aln-center m-flex-base0">
-          <a href="javascript:;" @click="goBack">取消</a>
-        </div>
-        <div class="m-box-model m-flex-grow1 m-aln-center m-flex-base0 m-head-top-title">
-          <span>发布动态</span>
-        </div>
-        <div class="m-box m-flex-grow1 m-aln-center m-flex-base0 m-justify-end">
-          <svg v-if="loading" class="m-style-svg m-svg-def rotate">
-            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-loading"></use>
-          </svg>
-          <a 
-            v-else
-            class="m-send-btn"
-            :class="{ disabled }"
-            @click="beforePost"
-            href="javascript:;">发布</a>
-        </div>
-      </header>
-      <main
-         class="m-reles-con m-lim-width m-box-model m-flex-shrink1 m-flex-grow1"
-         @click.self='areaFocus'>
-         <content-text
-         :rows='10'
-         class='m-reles-txt-wrap'
-         ref="contentText" />
-      </main>
-       <footer class="m-box-model m-flex-shrink1 m-flex-grow1 m-aln-center">
-         <v-switch
-         class="m-box m-bt1 m-bb1 m-lim-width m-pinned-row"
-         type="checkbox"
-         v-model="pinned">
-           <slot>是否收费</slot>
-         </v-switch>
-         <div 
-         class="m-box-model m-lim-width"
-         :style="{visibility: pinned ? '' : 'hidden'}">
-           <div class="m-pinned-amount-btns">
-              <p class="m-pinned-amount-label">设置文字收费金额</p>
-              <div class="m-box m-aln-center ">              
-                <button 
-                  :key="item"
-                  v-for="item in items"
-                  class="m-pinned-amount-btn"
-                  :style="{ width: `${1 / items.length * 100}%` }"
-                  :class="{ active: ~~amount === ~~item }"
-                  @click="chooseDefaultAmount(item)">{{ ~~item.toFixed(2) }}</button>
-              </div>
-           </div>
-           <div class="m-box m-aln-center m-justify-bet m-bb1 m-bt1 m-pinned-row plr20 m-pinned-amount-customize">
-             <span>自定义金额</span>
-             <div class="m-box m-aln-center">
-              <input type="number" v-model="customAmount" placeholder="输入金额" dir="rtl">
-              <span>积分</span>
-             </div>
-           </div>
-           <p class="m-pinned-amount-label plr20">注：超过{{limit}}字部分内容收费</p>
+  <div class="m-pos-f m-box-model m-main">
+    <header class="m-box m-flex-shrink0 m-flex-grow0 m-justify-bet m-aln-center m-main m-bb1 m-head-top">
+      <div class="m-box m-flex-grow1 m-aln-center m-flex-base0">
+        <a href="javascript:;" @click="goBack">取消</a>
+      </div>
+      <div class="m-box-model m-flex-grow1 m-aln-center m-flex-base0 m-head-top-title">
+        <span>发布动态</span>
+      </div>
+      <div class="m-box m-flex-grow1 m-aln-center m-flex-base0 m-justify-end">
+        <svg v-if="loading" class="m-style-svg m-svg-def">
+          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-loading"></use>
+        </svg>
+        <a 
+          v-else
+          class="m-send-btn"
+          :class="{ disabled }"
+          @click="beforePost"
+          href="javascript:;">发布</a>
+      </div>
+    </header>
+    <main
+       class="m-reles-con m-lim-width m-box-model m-flex-shrink0 m-flex-grow1"
+       @click.self='areaFocus'>
+       <content-text
+       :rows='8'
+       class='m-reles-txt-wrap'
+       ref="contentText" />
+    </main>
+     <footer class="m-box-model m-flex-shrink0 m-flex-grow1 m-aln-center">
+       <v-switch
+       class="m-box m-bt1 m-bb1 m-lim-width m-pinned-row"
+       type="checkbox"
+       v-model="pinned">
+         <slot>是否收费</slot>
+       </v-switch>
+       <div 
+       class="m-box-model m-lim-width"
+       :style="{visibility: pinned ? '' : 'hidden'}">
+         <div class="m-pinned-amount-btns">
+            <p class="m-pinned-amount-label">设置文字收费金额</p>
+            <div class="m-box m-aln-center ">              
+              <button 
+                :key="item"
+                v-for="item in items"
+                class="m-pinned-amount-btn"
+                :style="{ width: `${1 / items.length * 100}%` }"
+                :class="{ active: ~~amount === ~~item }"
+                @click="chooseDefaultAmount(item)">{{ ~~item.toFixed(2) }}</button>
+            </div>
          </div>
-       </footer>
-    </div>
+         <div class="m-box m-aln-center m-justify-bet m-bb1 m-bt1 m-pinned-row plr20 m-pinned-amount-customize">
+           <span>自定义金额</span>
+           <div class="m-box m-aln-center">
+            <input type="number" v-model="customAmount" placeholder="输入金额" dir="rtl">
+            <span>积分</span>
+           </div>
+         </div>
+         <p class="m-pinned-amount-label plr20">注：超过{{limit}}字部分内容收费</p>
+       </div>
+     </footer>
   </div>
 </template>
 <script>

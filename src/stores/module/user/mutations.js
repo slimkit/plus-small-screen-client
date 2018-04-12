@@ -9,7 +9,9 @@ export default {
         if (_.isArrayLikeObject(user)) {
           _new = _.keyBy(user, u => `user_${u.id}`);
         } else if (_.isPlainObject(user)) {
-          _new[`user_${user.id}`] = user;
+          _new[`user_${user.id}`] = oldUsers[`user_${user.id}`]
+            ? Object.assign(oldUsers[`user_${user.id}`], user)
+            : user;
         }
         state.users = Object.assign({}, oldUsers, _new);
         localEvent.set("USERS", state.users);

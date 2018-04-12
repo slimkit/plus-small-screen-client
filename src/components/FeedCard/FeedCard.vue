@@ -348,11 +348,6 @@ export default {
   },
   mounted() {
     this.user && this.$store.commit("SAVE_USER", this.user);
-    // this.$el.querySelectorAll(".m-art-links").forEach(node => {
-    //   node.addEventListener("click", e => {
-    //     e.stopPropagation();
-    //   });
-    // });
   }
 };
 </script>
