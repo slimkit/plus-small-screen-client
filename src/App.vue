@@ -16,7 +16,7 @@
       <apply-top />
       <info-tips />
       <choose-tags />
-
+      <EasemobRoot />
     </div>
   </div>
 </template>
@@ -43,6 +43,7 @@ import chooseTags from "@/page/chooseTags.vue";
 import infoTips from "@/components/infoTips.vue";
 // 通用置顶弹窗
 import applyTop from "@/components/applyForTop.vue";
+import EasemobRoot from "@/page/message/msg.vue";
 
 import localStore from "store";
 import bus from "@/bus.js";
@@ -62,7 +63,8 @@ export default {
     Reward,
     CheckIn,
     PostMenu,
-    chooseTags
+    chooseTags,
+    EasemobRoot
   },
   methods: {
     ...mapActions(["BOOTSTRAPPERS"])
