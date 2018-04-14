@@ -9,7 +9,7 @@ export const connect = token => {
   let conn = new webim.connection({
     isMultiLoginSessions: config.isMultiLoginSessions,
     https:
-      typeof config.https === "boolean"
+      typeof config.https === false
         ? config.https
         : location.protocol === "https:",
     url: config.xmppURL,
@@ -43,7 +43,6 @@ export const connect = token => {
       vuex.dispatch("PUSH_NEW_MESSAGE", singleChatMsg);
     },
     onEmojiMessage: message => {
-      console.log("Emoji");
       var data = message.data;
       for (var i = 0, l = data.length; i < l; i++) {
         console.log(data[i]);
@@ -86,7 +85,6 @@ export const connect = token => {
     pwd: token,
     appKey: config.appkey,
     success: function(res) {
-      console.log(res);
       var tokenAccess = res.access_token;
       webim.utils.setCookie("webim_" + mid, tokenAccess, 1);
     },
