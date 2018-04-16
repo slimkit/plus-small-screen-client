@@ -1,6 +1,7 @@
 export default {
   xmppURL: "im-api.easemob.com", // xmpp Server地址，对于在console.easemob.com创建的appKey，固定为该值
-  apiURL: "http://a1.easemob.com", // rest Server地址，对于在console.easemob.com创建的appkey，固定为该值
+  // apiURL: "a1.easemob.com", // rest Server地址，对于在console.easemob.com创建的appkey，固定为该值
+  apiURL: process.env.VUE_APP_EASEMOB_API_URL, // 请附带协议
   appkey: process.env.VUE_APP_EASEMOB_APP_KEY, // App key
   https: false, // 是否使用https
   isMultiLoginSessions: false, // 是否开启多页面同步收消息，注意，需要先联系商务开通此功能

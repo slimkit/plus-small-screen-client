@@ -616,12 +616,11 @@ export default {
 }
 
 .m-urh-tag {
-  margin-top: 10px;
+  margin-top: 20px;
   margin-left: 10px;
   display: inline-block;
-  padding: 0 15px;
-  font-size: 20px;
-  height: 36px;
+  padding: 5px 20px;
+  font-size: 24px;
   background-color: rgba(102, 102, 102, 0.1);
   border-radius: 18px;
 }
