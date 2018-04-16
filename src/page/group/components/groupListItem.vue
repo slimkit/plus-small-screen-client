@@ -1,7 +1,7 @@
 <template>
   <div :class="prefixCls" :id='`group-${group.id}`' @click='beforeToDetail'>
     <div :class="`${prefixCls}-header`">
-      <img v-lazyload="header">
+      <img :src="header">
     </div>
     <div :class="`${prefixCls}-info`">
       <div :class="`${prefixCls}-name`">

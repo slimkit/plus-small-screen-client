@@ -284,8 +284,8 @@ export default {
     } = this.CURRENTUSER;
     this.name = name;
     this.sex = sex;
-    this.bio = bio;
-    this.tags = tags;
+    this.bio = bio || "";
+    this.tags = tags || [];
     this.avatar = avatar;
     this.location = location;
   },

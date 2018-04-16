@@ -35,16 +35,13 @@
         <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
           <div class="pswp__share-tooltip"></div>
         </div>
-        <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
-        </button>
-        <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
-        </button>
+        <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button>
+        <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button>
         <div class="pswp__caption">
           <div class="pswp__caption__center"></div>
         </div>
       </div>
     </div>
-    <button class="pic-action-btn" :data-id='fileID' v-show="btnText" @click='payForImg(btnText === "查看原图")'>{{ btnText }}</button>
   </div>
 </template>
 <script>
@@ -58,114 +55,79 @@ export default {
   data() {
     return {
       photoswipe: null,
-      btnText: "",
-      fileID: 0,
-      fid: null,
-      index: -1,
-      amount: 0,
-      paidNode: 0,
-      paid: false,
-      original: false
+      component: null
     };
   },
   created() {
-    bus.$on("mvGallery", ({ fid, index, images }) => {
-      this.fid = fid;
+    bus.$on("mvGallery", ({ component, index, images }) => {
+      if (!component) return;
+      this.component = component;
       this.openPhotoSwipe(index, images);
     });
   },
-  computed: {
-    currItem: {
-      set({ amount, paidNode, index, paid, fileID, original = false }) {
-        this.paid = paid;
-        this.index = index;
-        this.amount = amount;
-        this.fileID = fileID;
-        this.paidNode = paidNode;
-        this.original = original;
-        this.btnText =
-          paidNode && !paid ? "购买查看" : original ? "" : "查看原图";
-      },
-      get() {
-        return {
-          original: this.original,
-          paid: this.paid,
-          index: this.index,
-          amount: this.amount,
-          fileID: this.fileID,
-          btnText: this.btnText,
-          paidNode: this.paidNode
-        };
-      }
-    }
-  },
   methods: {
-    payForImg(original = false) {
-      if (original) {
+    payForImg(currItem) {
+      const { paid_node, amount, index } = currItem;
+      bus.$emit("payfor", {
+        onSuccess: data => {
+          this.$Message.success(data);
+          this.component.feed.images[index].paid = true;
+          this.photoswipe.currItem.paid = true;
+          this.updateImage(index, true);
+        },
+        node: paid_node,
+        amount: amount
+      });
+    },
+    checkImage() {
+      if (!this.photoswipe) return;
+      const currItem = this.photoswipe.currItem;
+      const { paid_node, paid, amount, file, index } = currItem;
+      paid_node > 0 &&
+        (paid
+          ? !currItem.updated && this.updateImage(index)
+          : this.payForImg(currItem));
+    },
+    updateImage(index) {
+      if (!this.photoswipe) return;
+      const items = this.photoswipe.items || [];
+      const currItem = items[index];
+      if (currItem) {
         this.$http
-          .get(`/files/${this.currItem.fileID}?json=true`)
+          .get(`/files/${currItem.file}?json=1`)
           .then(({ data: { url } }) => {
-            bus.$emit("updatePhoto", url);
+            url &&
+              ((this.photoswipe.currItem.src = url),
+              (this.photoswipe.currItem.updated = true),
+              this.photoswipe.invalidateCurrItems(),
+              this.photoswipe.updateSize(),
+              (currItem.el.style.backgroundImage = `url(${url})`));
           });
-      } else {
-        const { paidNode, amount } = this.currItem;
-        bus.$emit("payfor", {
-          onSuccess: data => {
-            this.$Message.success(data);
-            bus.$emit("updateFile", {
-              fid: this.fid,
-              index: this.index
-            });
-            this.paid = true;
-          },
-          node: paidNode,
-          amount: amount
-        });
       }
     },
     openPhotoSwipe: function(index, images) {
-      const vm = this;
       const options = {
         index,
         loop: false,
+        history: true,
         arrowEl: false,
-        captionEl: true,
+
         showHideOpacity: true,
         tapToToggleControls: false,
+
+        maxSpreadZoom: 4,
         errorMsg:
-          '<div class="pswp__error-msg"><a href="%url%" target="_blank">图片加载失败</a></div>',
-        addCaptionHTMLFn: function(item) {
-          // item      - slide object
-          // captionEl - caption DOM element
-          // isFake    - true when content is added to fake caption container
-          //             (used to get size of next or previous caption)
-          const { file, amount, paid_node, paid, index, original } = item;
-          vm.currItem = {
-            paid,
-            index,
-            amount,
-            original: original === "undefined" ? true : original,
-            fileID: file,
-            paidNode: paid_node
-          };
-          return paid_node && !paid;
-        }
+          '<div class="pswp__error-msg"><a href="%url%" target="_blank">图片加载失败</a></div>'
       };
       this.photoswipe = new PhotoSwipe(this.$el, PhotoSwipeUI, images, options);
-      this.photoswipe.init();
-      bus.$on("updatePhoto", src => {
-        this.btnText = "";
-        this.paid = true;
-        this.photoswipe.currItem.original = true;
-        this.photoswipe.currItem.container.querySelector(
-          "img.pswp__img"
-        ).src = src;
-      });
-      this.photoswipe.listen("close", function() {
-        this.btnText = "";
-        this.paid = false;
+      this.photoswipe.listen("close", () => {
         bus.$off("updatePhoto");
       });
+      this.photoswipe.listen("beforeChange", () => {
+        // BUG: Iphone 8p 无痕模式下事件绑定不上 !!!!
+        this.checkImage();
+      });
+      this.photoswipe.init();
     }
   }
 };

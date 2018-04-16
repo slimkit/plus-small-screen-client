@@ -68,20 +68,8 @@ export default {
       typeof onCancel === "function" && (this.onCancel = onCancel);
       typeof onSuccess === "function" && (this.onSuccess = onSuccess);
       this.show = true;
+      this.scrollable = false;
     });
-  },
-  watch: {
-    show(val) {
-      if (val) {
-        this.scrollTop = document.scrollingElement.scrollTop;
-        document.body.classList.add("m-pop-open");
-        document.body.style.top = -this.scrollTop + "px";
-      } else {
-        document.body.style.top = "";
-        document.body.classList.remove("m-pop-open");
-        document.scrollingElement.scrollTop = this.scrollTop;
-      }
-    }
   },
   methods: {
     onOk() {},
@@ -93,12 +81,11 @@ export default {
         ? this.$http
             .post(`/currency/purchases/${this.node}`)
             .then(({ data }) => {
-              this.cancel();
               this.onSuccess(data);
+              this.cancel();
             })
             .catch(() => {
               this.cancel();
-              this.$Message.error("支付失败!");
             })
         : this.cancel();
     },
@@ -108,10 +95,12 @@ export default {
     },
     call() {
       this.show = true;
+      this.scrollable = false;
     },
     cancel() {
       this.node = null;
       this.show = false;
+      this.scrollable = true;
       this.$nextTick(() => {
         this.title = "";
         this.cancelText = "";

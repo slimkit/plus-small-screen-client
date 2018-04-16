@@ -8,7 +8,6 @@ import router from "./routers/";
 import App from "./App";
 
 import Modal from "./plugins/modal/";
-import imgLazy from "./plugins/imgLazy";
 import Message from "./plugins/message/";
 import imgCropper from "./plugins/imgCropper";
 
@@ -31,7 +30,6 @@ Vue.prototype.$Modal = Modal;
 Vue.prototype.$Message = Message;
 Vue.prototype.$MessageBundle = filters.plusMessageFirst;
 
-Vue.use(imgLazy);
 Vue.use(imgCropper);
 
 for (const k in filters) {

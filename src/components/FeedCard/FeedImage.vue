@@ -8,10 +8,10 @@
         :class="['m-pics-box',{ 'long': isLongImg(img) }]"
         :style='pics.length === 1 ? longStyle(img.w, img.h) : ""'>
           <div
-            class="m-pic" 
+            class="m-pic"
+            :data-src="img.file"
             @click.stop='handleClick($event, index)'
-            :style="img.src ? { backgroundImage:  `url(${img.src})` } : { backgroundColor: '#f4f5f6' }"
-          />
+            v-async-image="img"/>
         </div>
       </li>
     </ul>
@@ -30,43 +30,21 @@ export default {
       type: Array
     }
   },
-  created() {
-    bus.$on("updateFile", ({ fid, index }) => {
-      if (fid === this.id) {
-        this.pics[index].paid = true;
-        this.$children[index].fetch();
-        setTimeout(() => {
-          bus.$emit("updatePhoto", this.$children[index].src);
-        }, 1500);
-      }
-    });
-    this.pics.map((pic, index) => {
-      this.getImageById(pic, index);
-    });
-  },
   methods: {
-    getImageById(pic, index) {
-      this.$http
-        .get(`/files/${pic.file}?q=40&json=true`)
-        .then(({ data: { url } }) => {
-          this.$set(this.pics, index, { ...pic, src: url });
-        })
-        .catch(() => {
-          this.$set(this.pics, index, { ...pic, src: null });
-        });
-    },
     handleClick($event, index) {
+      const component = this.$parent;
       const els = this.$el.querySelectorAll(".m-pic");
       const images = this.pics.map((img, index) => {
+        const el = els[index];
+        const src = `${this.$http.defaults.baseURL}/files/${img.file}`;
         return {
           ...img,
-          original: false,
-          el: els[index],
-          src: img.src,
+          el,
+          src,
           index
         };
       });
-      bus.$emit("mvGallery", { fid: this.id, index, images });
+      bus.$emit("mvGallery", { component, index, images });
     },
     isLongImg(img) {
       const [w, h] = img.size.split("x");
@@ -103,10 +81,12 @@ export default {
     max-width: 518px;
     max-height: 692px;
     li {
+      font-size: 0;
+      line-height: 1;
       width: 1/3 * 100%;
+      // vertical-align: top;
       display: inline-block;
-      vertical-align: top;
-      padding: 0 4px 4px 0;
+      padding: 0 2px 2px 0; /*no*/
     }
   }
   &-box {

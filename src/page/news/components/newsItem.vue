@@ -8,7 +8,7 @@
       </p>
     </section>
     <div class="news-item--poster" v-if='image'>
-      <img v-lazyload="image">
+      <img :src="image">
     </div>
   </router-link>
 </template>
