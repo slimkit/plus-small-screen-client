@@ -88,7 +88,7 @@
               <use xlink:href="#profile-wallet"></use>
             </svg>
             <span class="m-text-box m-flex-grow1">钱包</span>
-            <span class="m-entry-extra">{{ balance }}</span>
+            <span class="m-entry-extra">{{ new_balance }}</span>
             <svg class="m-style-svg m-svg-def m-entry-append">
               <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-arrow-r"></use>
             </svg>
@@ -98,7 +98,7 @@
               <use xlink:href="#profile-integral"></use>
             </svg>
             <span class="m-text-box m-flex-grow1">积分</span>
-            <span class="m-entry-extra">{{ new_balance }}</span>
+            <span class="m-entry-extra">{{ sum }}</span>
             <svg class="m-style-svg m-svg-def m-entry-append">
               <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-arrow-r"></use>
             </svg>
@@ -143,17 +143,17 @@ export default {
     extra() {
       return this.user.extra || {};
     },
-    wallet() {
-      return this.user.wallet || {};
-    },
     new_wallet() {
       return this.user.new_wallet || {};
     },
     new_balance() {
-      return (~~this.new_wallet.balance).toFixed(2);
+      return this.new_wallet.balance.toFixed(2);
     },
-    balance() {
-      return (~~this.wallet.balance).toFixed(2);
+    currency() {
+      return this.user.currency || {};
+    },
+    sum() {
+      return this.currency.sum.toFixed(2);
     },
     verified() {
       return this.user.verified;
