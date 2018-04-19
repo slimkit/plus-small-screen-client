@@ -10,6 +10,7 @@ import App from "./App";
 import Modal from "./plugins/modal/";
 import Message from "./plugins/message/";
 import imgCropper from "./plugins/imgCropper";
+import AsyncImage from "./components/FeedCard/v-async-image.js";
 
 import Ajax from "./http";
 import mixin from "./mixin.js";
@@ -30,6 +31,7 @@ Vue.prototype.$Modal = Modal;
 Vue.prototype.$Message = Message;
 Vue.prototype.$MessageBundle = filters.plusMessageFirst;
 
+Vue.use(AsyncImage);
 Vue.use(imgCropper);
 
 for (const k in filters) {
