@@ -76,7 +76,6 @@
       :class="[classNameBuilder('questions')]"
       :on-refresh="handleRefresh"
       :on-load-more="handleLoadQuestions"
-      :scrolling="handleScrolling"
     >
       <question-item
         v-for="question in questions"
@@ -226,11 +225,7 @@ export default {
   },
   mounted() {
     this.typeNavOffsetTop = this.$refs.types.offsetTop;
-    if (!(this.loadContainer.onLoadMore instanceof Function)) {
-      document.onscroll = () => {
-        this.handleScrolling();
-      };
-    }
+    document.addEventListener("scroll", this.handleScrolling);
   }
 };
 </script>

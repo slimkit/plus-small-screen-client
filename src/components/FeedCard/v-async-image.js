@@ -25,7 +25,7 @@ if (!Array.prototype.remove) {
     }
   };
 }
-export default (Vue, options = {}) => {
+export default Vue => {
   const listenList = [];
   const imageFileCatch = [];
   const imageCatcheList = [];
@@ -46,10 +46,11 @@ export default (Vue, options = {}) => {
     );
   };
   const isCanShow = item => {
-    const { el, src, file, q = 40 } = item;
+    const { el, file, q = 40 } = item;
     const isIMG = el.nodeName === "IMG";
     if (checkInView(el)) {
       let image = new Image();
+      el.classList.add("loading");
       http.get(`/files/${file}?q=${q}&json=true`).then(({ data: { url } }) => {
         image.src = url;
         image.onload = () => {
@@ -58,9 +59,11 @@ export default (Vue, options = {}) => {
           imageFileCatch.push(file);
           imageCatcheList.push(url);
           image = null;
+          el.classList.remove("loading");
         };
         image.onerror = () => {
           listenList.remove(item);
+          el.classList.remove("loading");
         };
       });
       return true;

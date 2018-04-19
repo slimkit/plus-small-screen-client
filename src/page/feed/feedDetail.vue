@@ -553,7 +553,7 @@ export default {
   activated() {
     if (this.feedID) {
       this.feedID !== this.oldID
-        ? this.fetchFeed()
+        ? ((this.components = []), (this.rewardList = []), this.fetchFeed())
         : setTimeout(() => {
             this.loading = false;
           }, 600);

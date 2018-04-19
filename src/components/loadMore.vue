@@ -1,6 +1,6 @@
 <template lang="html">
   <div
-  :style="{transform: translate,transitionDuration: transition}"
+  :style="{ transform: translate, transitionDuration: transition }"
   @mousedown='startDrag'
   @touchstart='startDrag'
   @mousemove.stop='onDrag'
@@ -8,7 +8,6 @@
   @mouseup='stopDrag'
   @touchend='stopDrag'
   @mouseleave='stopDrag'
-  @transitionend='transitionEnd'
   >
     <div class="load-more-tips">
       <slot name='head'>
@@ -26,15 +25,11 @@
           <span></span>
           <span></span>
         </div>
-        <i
-        v-else
-        :class="{up: (dragging && dY > topDistance)}"
-        >↓</i>
+        <i v-else :class="{up: (dragging && dY > topDistance)}">↓</i>
         <span v-if='showText'>{{ status }}</span>
       </slot>
     </div>
-    <slot>
-    </slot>
+    <slot></slot>
     <div class="load-more-tips" v-if='onLoadMore'>
       <template v-if='loading'>
         <div class="load-more-loading">
@@ -76,29 +71,9 @@ const getScrollTarget = el => {
   }
   return document.documentElement;
 };
-/**
- * 节流函数
- * @auth:  jsonleex   <jsonleex@163.com>
- * @param  {Function} fn
- * @param  {Number}   delay
- */
-function throttle(fn, delay, scrolling = () => {}) {
-  let timer = null;
-  return function(event) {
-    if (scrolling instanceof Function) {
-      scrolling(event);
-    }
-
-    const context = this;
-    const args = arguments;
-    clearTimeout(timer);
-    timer = setTimeout(() => {
-      fn.apply(context, args);
-    }, delay);
-  };
-}
+import _ from "lodash";
 export default {
-  name: "loadMore",
+  name: "load-more",
   props: {
     noTranslateAnimation: {
       type: Boolean,
@@ -135,10 +110,6 @@ export default {
     onLoadMore: {
       type: Function,
       default: null
-    },
-    scrolling: {
-      type: Function,
-      default: () => () => {}
     }
   },
   data() {
@@ -190,7 +161,9 @@ export default {
   },
   watch: {
     loading(val) {
-      this.scEl.onscroll = val ? null : this.handleScrolling();
+      val
+        ? this.scEl.removeEventListener("scroll", this.handleScrolling)
+        : this.scEl.addEventListener("scroll", this.handleScrolling);
     },
     requesting(val) {
       val || (this.dY = 0);
@@ -203,18 +176,14 @@ export default {
      * @return {Function}
      * @author Seven Du <shiweidu@outlook.com>
      */
-    handleScrolling() {
-      const timeout = 300;
-      const fn = () => {
-        if (this.noMore) return;
-        if (this.loading) return;
-        if (!this.bottomReached()) return;
-        // 加载...
-        this.loading = true;
-        this.onLoadMore();
-      };
-      return throttle(fn, timeout, this.scrolling);
-    },
+    handleScrolling: _.throttle(function() {
+      if (this.noMore) return;
+      if (this.loading) return;
+      if (!this.bottomReached()) return;
+      // 加载...
+      this.loading = true;
+      this.onLoadMore();
+    }, 300),
     bottomReached() {
       const elBottom = this.$el.getBoundingClientRect().bottom;
       return elBottom - this.visibleHeight <= this.distance && !this.loading;
@@ -300,31 +269,33 @@ export default {
         this.dY = 0;
       }
     },
-    // 过渡
-    transitionEnd() {},
-    // 初始化
-    init() {
-      this.$nextTick(() => {
-        this.topBarHeight = this.$el.children[0].clientHeight;
-        this.scrollTarget = getScrollTarget(this.$el);
-        if (typeof this.onLoadMore === "function") {
-          this.scEl.onscroll = this.handleScrolling();
-        }
-        if (this.canPulldown && !this.fulled()) {
-          this.beforeRefresh();
-        }
-      });
+    bindEvent() {
+      if (typeof this.onLoadMore === "function") {
+        this.scEl.addEventListener("scroll", this.handleScrolling);
+      }
+    },
+    autoLoad() {
+      if (this.canPulldown && !this.fulled()) {
+        this.beforeRefresh();
+      }
     }
   },
-  // 挂载时 触发一次刷新
+
   mounted() {
-    this.init();
+    this.scrollTarget = getScrollTarget(this.$el);
+    this.topBarHeight = this.$el.children[0].clientHeight;
+    this.bindEvent();
+
+    this.autoLoad();
+  },
+  activated() {
+    this.$nextTick(this.bindEvent);
   },
   deactivated() {
-    this.scEl.onscroll = null;
+    this.scEl.removeEventListener("scroll", this.handleScrolling);
   },
   destroyed() {
-    this.scEl.onscroll = null;
+    this.scEl.removeEventListener("scroll", this.handleScrolling);
   }
 };
 </script>

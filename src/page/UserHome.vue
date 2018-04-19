@@ -21,7 +21,7 @@
         </svg>
       </div>
       <div class="m-box m-flex-grow1 m-aln-center m-flex-base0 m-justify-center m-trans-y">
-        <span>{{ user.name }}</span>
+        <span class="m-text-cut">{{ user.name }}</span>
       </div>
       <div class="m-box m-flex-grow1 m-aln-center m-flex-base0 m-justify-end">
         <svg class="m-style-svg m-svg-def">
@@ -630,6 +630,10 @@ export default {
     padding: 25px 20px;
     color: @text-color3;
     font-size: 26px;
+    position: sticky;
+    top: 88px;
+    z-index: 9;
+    background-color: #f4f5f6;
     .m-style-svg {
       margin-left: 20px;
     }

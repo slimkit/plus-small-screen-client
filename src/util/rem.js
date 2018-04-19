@@ -6,7 +6,9 @@
     let clientWidth = docEl.clientWidth;
     if (!clientWidth) return;
     clientWidth = clientWidth > 780 ? 780 : clientWidth;
-    docEl.style.fontSize = 100 * (clientWidth / 750) + "px";
+    const rem = 100 * (clientWidth / 750);
+    win.$REM = rem;
+    docEl.style.fontSize = `${rem}px`;
   };
   if (!doc.addEventListener) return;
   win.addEventListener(resizeEvt, recalc, false);

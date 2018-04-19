@@ -15,10 +15,12 @@
             <span>{{ time | time2tips }}</span>
           </div>
         </header>
-        <article class="m-text-box m-card-body" @click="handelView">
-          <div class="m-text-box m-card-con m-text-cut-4" v-if="body.length > 0">
-            <span class="m-text-cut-4" v-html="replaceURI(body)"></span>
-            <span class="m-text-shadow" v-if="needPay"> 付费节点，购买后方可查看原文详情</span>
+        <article class="m-card-body" @click="handelView">
+          <div class="m-card-con" v-if="body.length > 0">
+            <p 
+            class="m-text-box m-text-cut-4"
+            :class="{needPay}"
+            v-html="replaceURI(body)"></p>
           </div>
           <feed-image
             v-if="images.length > 0"
@@ -393,7 +395,8 @@ export default {
     color: @text-color2;
     display: -webkit-box;
     margin-bottom: 20px;
-    .m-text-shadow {
+    .needPay:after {
+      content: "付费节点，购买后方可查看原文详情";
       text-shadow: 0 0 10px @text-color2;
       color: rgba(255, 255, 255, 0);
       // filter: DXImageTransform.Microsoft.Blur(pixelradius=2);

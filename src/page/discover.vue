@@ -72,7 +72,7 @@ export default {
           {
             title: "找人",
             icon: "find",
-            path: "/find",
+            path: "/find/pop",
             new_tips: true,
             tips: "500米内有一大波玩家赶来"
           }
@@ -82,7 +82,7 @@ export default {
   },
   methods: {
     to(path) {
-      this.$router.push({ path });
+      this.$router.push(path);
     }
   }
 };

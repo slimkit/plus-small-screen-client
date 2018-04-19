@@ -144,16 +144,16 @@ export default {
       return this.user.extra || {};
     },
     new_wallet() {
-      return this.user.new_wallet || {};
+      return this.user.new_wallet || { balance: 0 };
     },
     new_balance() {
-      return this.new_wallet.balance.toFixed(2);
+      return (this.new_wallet.balance / 100).toFixed(2);
     },
     currency() {
-      return this.user.currency || {};
+      return this.user.currency || { sum: 0 };
     },
     sum() {
-      return this.currency.sum.toFixed(2);
+      return this.currency.sum;
     },
     verified() {
       return this.user.verified;
@@ -161,14 +161,13 @@ export default {
   },
   methods: {
     RefreshUserData() {
-      const id = this.user.id;
-      this.$http.get(`users/${id}`).then(({ data = {} }) => {
+      this.$http.get(`/user`).then(({ data = {} }) => {
         data &&
-          data.id === id &&
+          (this.$store.commit("SAVE_USER", Object.assign(this.user, data)),
           this.$store.commit(
             "SAVE_CURRENTUSER",
             Object.assign({}, this.user, data)
-          );
+          ));
       });
     }
   },
