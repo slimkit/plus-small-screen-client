@@ -45,11 +45,11 @@ import infoTips from "@/components/infoTips.vue";
 import applyTop from "@/components/applyForTop.vue";
 import EasemobRoot from "@/page/message/msg.vue";
 
-import localStore from "store";
 import bus from "@/bus.js";
 
 import { mapActions } from "vuex";
 
+import Message from "@/plugins/message-box";
 export default {
   name: "app",
   components: {
@@ -73,7 +73,7 @@ export default {
     this.BOOTSTRAPPERS();
   },
   mounted() {
-    const TOKEN = (localStore.get("CURRENTUSER") || {}).token;
+    const TOKEN = (this.$lstore.getData("CURRENTUSER") || {}).token;
     if (TOKEN) {
       bus.$emit("connect-easemob");
     }

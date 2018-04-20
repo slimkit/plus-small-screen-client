@@ -5,7 +5,7 @@
     <ul class="m-pics-list">
       <li v-for='(img, index) in pics.slice(0, 9)' :key="`pics-${id}-${index}`">
         <div
-        :class="['m-pics-box',{ 'long': isLongImg(img) }]"
+        :class="['m-pics-box',{ 'long': isLongImg(img) }, { 'gif': img.mime.indexOf('gif') > -1 }]"
         :style='pics.length === 1 ? longStyle(img.w, img.h) : ""'>
           <div
             class="m-pic"
@@ -50,7 +50,7 @@ export default {
       const [w, h] = img.size.split("x");
       img.w = parseInt(w);
       img.h = parseInt(h);
-      return w > 3 * h || h > 3 * w;
+      return h > 3 * w;
     },
     longStyle(w, h) {
       return {
@@ -70,6 +70,10 @@ export default {
   position: absolute;
   width: 100%;
   height: 100%;
+  // TODO
+  // 图片加载效果
+  &.loading {
+  }
 }
 .m-pics {
   width: 100%;
@@ -97,42 +101,52 @@ export default {
     height: 0;
     max-width: 100%;
     background-color: #f4f5f6;
+    .m-pic:after {
+      position: absolute;
+      bottom: 10px;
+      right: 5px;
+      background-color: #c8a06c;
+      text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
+      background-image: -webkit-linear-gradient(
+        25deg,
+        #e8d1b3 0%,
+        rgba(232, 209, 179, 0.6) 100%
+      );
+      background-image: -o-linear-gradient(
+        25deg,
+        #e8d1b3 0%,
+        rgba(232, 209, 179, 0.6) 100%
+      );
+      background-image: linear-gradient(
+        115deg,
+        #e8d1b3 40%,
+        rgba(232, 209, 179, 0.6) 50%
+      );
+      text-align: center;
+      width: 60px;
+      padding: 5px;
+      height: 30px;
+      line-height: 20px;
+      font-size: 20px;
+      color: #fff;
+    }
+
     &.long {
       .m-pic:after {
         display: block;
-        position: absolute;
-        bottom: 10px;
-        right: 5px;
         content: "长图";
-        background-color: #c8a06c;
-        text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
-        background-image: -webkit-linear-gradient(
-          25deg,
-          #e8d1b3 0%,
-          rgba(232, 209, 179, 0.6) 100%
-        );
-        background-image: -o-linear-gradient(
-          25deg,
-          #e8d1b3 0%,
-          rgba(232, 209, 179, 0.6) 100%
-        );
-        background-image: linear-gradient(
-          115deg,
-          #e8d1b3 40%,
-          rgba(232, 209, 179, 0.6) 50%
-        );
-        text-align: center;
-        width: 60px;
-        padding: 5px;
-        height: 30px;
-        line-height: 20px;
-        font-size: 20px;
-        color: #fff;
       }
-      .m-pic {
-        background-position: top center;
-        max-height: 690px;
+    }
+    &.gif {
+      .m-pic:after {
+        display: block;
+        content: "GIF";
+        display: block;
       }
+    }
+    .m-pic {
+      background-position: top center;
+      max-height: 690px;
     }
   }
   &-1 {

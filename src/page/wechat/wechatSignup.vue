@@ -51,7 +51,6 @@
   </transition>
 </template>
 <script>
-import lstore from "store";
 const UNAME_REG = /^[a-zA-Z_\u4E00-\u9FA5\uF900-\uFA2D][a-zA-Z0-9_\u4E00-\u9FA5\uF900-\uFA2D]*$/;
 
 export default {
@@ -138,9 +137,9 @@ export default {
             this.$router.push("/feed/new");
             this.$store.dispatch("GET_UNREAD_COUNT");
             this.$store.commit("SAVE_USER", user);
-            lstore.remove("H5_WECHAT_MP_OPENID");
-            lstore.remove("H5_WECHAT_MP_ASTOKEN");
-            lstore.remove("H5_WECHAT_NICKNAME");
+            this.$lstore.removeData("H5_WECHAT_MP_OPENID");
+            this.$lstore.removeData("H5_WECHAT_MP_ASTOKEN");
+            this.$lstore.removeData("H5_WECHAT_NICKNAME");
           });
         })
         .catch(
@@ -156,8 +155,8 @@ export default {
     }
   },
   created() {
-    this.nickname = lstore.get("H5_WECHAT_NICKNAME") || "";
-    this.accessToken = lstore.get("H5_WECHAT_MP_ASTOKEN") || "";
+    this.nickname = this.$lstore.getData("H5_WECHAT_NICKNAME") || "";
+    this.accessToken = this.$lstore.getData("H5_WECHAT_MP_ASTOKEN") || "";
     this.checkName(this.nickname);
   }
 };

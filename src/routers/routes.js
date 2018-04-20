@@ -3,7 +3,6 @@ import UserHome from "@/page/UserHome.vue";
 import baseRoutes from "./base.js";
 import feedRoutes from "./feed.js";
 import newsRoutes from "./news.js";
-import findRoutes from "./find.js";
 import rankRoutes from "./rank.js";
 import postRoutes from "./post.js";
 import groupRoutes from "./group.js";
@@ -61,7 +60,6 @@ const router = [
   ...feedRoutes,
   ...postRoutes,
   ...newsRoutes,
-  ...findRoutes,
   ...rankRoutes,
   ...groupRoutes,
   ...messageRoutes,

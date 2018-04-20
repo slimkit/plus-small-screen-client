@@ -1,39 +1,35 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import LocalEvent from "store";
 import actions from "./action";
 import getters from "./getters";
 import mutations from "./mutations";
-import { detectOS } from "../util/";
+
+import { detectOS } from "@/util/";
+import lstore from "@/plugins/lstore/";
 
 import modules from "./module/";
 
 Vue.use(Vuex);
 
 const state = {
-  CONFIG: LocalEvent.get("BOOTSTRAPPERS") || {},
+  CONFIG: lstore.getData("BOOTSTRAPPERS") || {},
   /* 终端信息 */
   BROWSER: detectOS(),
-  /* 当前动态 type */
-  FEEDTYPE: "",
   /* 用户标签 */
-  USERTAGS: LocalEvent.get("USERTAGS") || [],
+  USERTAGS: lstore.getData("USERTAGS") || [],
   /* 圈子分类 */
-  GROUPTYPES: LocalEvent.get("GROUPTYPES") || [],
+  GROUPTYPES: lstore.getData("GROUPTYPES") || [],
   /* 当前登录用户信息 */
-  CURRENTUSER: LocalEvent.get("CURRENTUSER") || {},
-
+  CURRENTUSER: lstore.getData("CURRENTUSER") || {},
   /* 搜索历史 */
-  SEARCHHISTORY: LocalEvent.get("SEARCHHISTORY") || [],
-
-  /* 当前定位 */
-  LOCATION: LocalEvent.get("LOCATION") || {},
-  /* 热门城市 */
-  HOTCTIYS: LocalEvent.get("HOTCTIYS") || [],
+  SEARCHHISTORY: lstore.getData("SEARCHHISTORY") || [],
   /* 当前选择的标签 临时数据 */
   CUR_SELECTED_TAGS: [],
   /* 当前圈子的位置信息 临时数据 */
-  CUR_GROUP_LOCATION: {}
+  CUR_GROUP_LOCATION: {},
+
+  //定位信息
+  POSITION: lstore.getData("H5_CURRENT_POSITION") || {}
 };
 
 export default new Vuex.Store({

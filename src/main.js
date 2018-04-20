@@ -2,21 +2,24 @@ import "./style/tsplus.less";
 import "github-markdown-css";
 import "./util/rem";
 import Vue from "vue";
-import store from "./stores/";
-import router from "./routers/";
-
-import App from "./App";
 
 import Modal from "./plugins/modal/";
+// import imgLazy from "./plugins/imgLazy";
 import Message from "./plugins/message/";
-import imgCropper from "./plugins/imgCropper";
 import AsyncImage from "./components/FeedCard/v-async-image.js";
+
+import imgCropper from "@/plugins/imgCropper";
+// import Toast from "@/plugins/toast/index.js";
+import lstore from "@/plugins/lstore/index.js";
 
 import Ajax from "./http";
 import mixin from "./mixin.js";
-// import directives from "./directives/";
 import * as filters from "./filters.js";
 import components from "./components.js";
+
+import store from "./stores/";
+import router from "./routers/";
+import App from "./App";
 
 Vue.mixin(mixin);
 
@@ -31,8 +34,11 @@ Vue.prototype.$Modal = Modal;
 Vue.prototype.$Message = Message;
 Vue.prototype.$MessageBundle = filters.plusMessageFirst;
 
+// Vue.use(imgLazy);
 Vue.use(AsyncImage);
 Vue.use(imgCropper);
+// Vue.use(Toast);
+Vue.use(lstore);
 
 for (const k in filters) {
   Vue.filter(k, filters[k]);

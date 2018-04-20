@@ -1,8 +1,13 @@
-import lstore from "store";
+import lstore from "@/plugins/lstore/lstore.js";
 export default {
   BOOTSTRAPPERS(state, config) {
     state.CONFIG = config;
-    lstore.set("BOOTSTRAPPERS", config);
+    lstore.setData("BOOTSTRAPPERS", config);
+  },
+
+  SAVE_H5_POSITION(state, position) {
+    state.POSITION = position;
+    lstore.setData("H5_CURRENT_POSITION");
   },
 
   SAVE_FEED_TYPE(state, type) {
@@ -11,25 +16,19 @@ export default {
   // 保存当前登录用户信息
   SAVE_CURRENTUSER(state, info) {
     state.CURRENTUSER = info;
-    lstore.set("CURRENTUSER", state.CURRENTUSER);
+    lstore.setData("CURRENTUSER", state.CURRENTUSER);
   },
 
   // 保存圈子分类信息
   SAVE_GROUP_TYPES(state, list) {
     state.GROUPTYPES = list;
-    lstore.set("GROUPTYPES", state.GROUPTYPES);
+    lstore.setData("GROUPTYPES", state.GROUPTYPES);
   },
 
   // 保存用户标签数据
   SAVE_USER_TAGS(state, list) {
     state.USERTAGS = list;
-    lstore.set("USERTAGS", state.USERTAGS);
-  },
-
-  // 保存定位信息
-  SAVE_LOCATION(state, location) {
-    state.LOCATION = location;
-    lstore.set("LOCATION", state.LOCATION);
+    lstore.setData("USERTAGS", state.USERTAGS);
   },
 
   // 保存创建圈子时选择的位置 临时数据
@@ -37,17 +36,11 @@ export default {
     state.CUR_GROUP_LOCATION = location;
   },
 
-  // 保存热门城市
-  SAVE_HOT_CITYS(state, list) {
-    state.HOTCTIYS = list;
-    lstore.set("HOTCTIYS", state.HOTCTIYS);
-  },
-
   // 保存用户搜索历史
   ADD_SEARCH_HISTORY(state, list) {
     const old = state.SEARCHHISTORY;
     state.SEARCHHISTORY = Array.from(new Set([list, ...old]));
-    lstore.set("SEARCHHISTORY", state.SEARCHHISTORY);
+    lstore.setData("SEARCHHISTORY", state.SEARCHHISTORY);
   },
 
   // 清空搜索历史
@@ -57,14 +50,14 @@ export default {
       state.SEARCHHISTORY.splice(index, 1);
     } else {
       state.SEARCHHISTORY = [];
-      lstore.remove("SEARCHHISTORY");
+      lstore.removeData("SEARCHHISTORY");
     }
   },
 
   // 注销登录
   SIGN_OUT(state) {
     try {
-      lstore.clearAll();
+      lstore.clearData();
       state.CURRENTUSER = null;
     } catch (e) {
       console.log(e);

@@ -1,4 +1,4 @@
-import store from "store";
+import store from "@/plugins/lstore/lstore.js";
 import http from "@/http.js";
 import webim from "easemob-websdk";
 import dataBase from "@/util/database.js";
@@ -20,7 +20,7 @@ export const connect = token => {
     isAutoLogin: true
   });
 
-  const mid = (store.get("CURRENTUSER") || {}).id;
+  const mid = (store.getData("CURRENTUSER") || {}).id;
   // 添加成功的回调
   conn.listen({
     onOpened: message => {

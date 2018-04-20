@@ -33,7 +33,6 @@
 </template>
 <script>
 import bus from "@/bus";
-import LocalEvent from "store";
 export default {
   name: "comment-input",
   data() {
@@ -61,7 +60,7 @@ export default {
         document.body.classList.add("m-pop-open");
         document.body.style.top = -this.scrollTop + "px";
 
-        const txt = LocalEvent.get("H5_COMMENT_SAVE_CONTENT");
+        const txt = this.$lstore.getData("H5_COMMENT_SAVE_CONTENT");
         txt &&
           ((this.contentText = txt.trim() || ""),
           (this.curpos = this.contentText.length));
@@ -73,7 +72,7 @@ export default {
     },
     contentText(val, oval) {
       if (val !== oval) {
-        LocalEvent.set("H5_COMMENT_SAVE_CONTENT", val);
+        this.$lstore.setData("H5_COMMENT_SAVE_CONTENT", val);
         this.$nextTick(() => {
           this.$refs.shadow &&
             (this.scrollHeight = this.$refs.shadow.scrollHeight);

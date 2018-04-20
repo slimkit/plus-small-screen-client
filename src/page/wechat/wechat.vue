@@ -35,8 +35,6 @@
   </div>
 </template>
 <script>
-import lstore from "store";
-
 export default {
   name: "wechat-signin",
   data() {
@@ -71,8 +69,8 @@ export default {
       this[action] = true;
     },
     async resolveUser(code) {
-      let openId = lstore.get("H5_WECHAT_MP_OPENID");
-      let accessToken = lstore.get("H5_WECHAT_MP_ASTOKEN");
+      let openId = this.$lstore.getData("H5_WECHAT_MP_OPENID");
+      let accessToken = this.$lstore.getData("H5_WECHAT_MP_ASTOKEN");
 
       if (!accessToken || !openId) {
         const { data: { access_token, openid } = {} } = await this.$http.get(
@@ -85,8 +83,8 @@ export default {
         openId = openid;
         accessToken = access_token;
 
-        lstore.set("H5_WECHAT_MP_OPENID", openid);
-        lstore.set("H5_WECHAT_MP_ASTOKEN", accessToken);
+        this.$lstore.setData("H5_WECHAT_MP_OPENID", openid);
+        this.$lstore.setData("H5_WECHAT_MP_ASTOKEN", accessToken);
       }
       this.accessToken = accessToken;
       this.$http
@@ -103,8 +101,8 @@ export default {
           // 保存用户信息 并跳转
           this.$router.push(this.$route.query.redirect || "/feed/new");
           this.$nextTick(() => {
-            lstore.remove("H5_WECHAT_MP_OPENID");
-            lstore.remove("H5_WECHAT_MP_ASTOKEN");
+            this.$lstore.removeData("H5_WECHAT_MP_OPENID");
+            this.$lstore.removeData("H5_WECHAT_MP_ASTOKEN");
             this.$store.commit("SAVE_USER", user);
             this.$store.dispatch("GET_UNREAD_COUNT");
             this.$store.commit("SAVE_CURRENTUSER", { ...user, token });
@@ -130,7 +128,7 @@ export default {
         )
         .then(({ data: { nickname = "" } = {} }) => {
           this.WechatUname = nickname;
-          lstore.set("H5_WECHAT_NICKNAME", nickname);
+          this.$lstore.setData("H5_WECHAT_NICKNAME", nickname);
         });
     }
   },

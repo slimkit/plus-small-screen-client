@@ -1,4 +1,3 @@
-import lstore from "store";
 import about from "@/page/about";
 import signup from "@/page/signup";
 import info from "@/page/info.vue";
@@ -11,9 +10,18 @@ import profile from "@/page/profile.vue";
 /* TODO END */
 
 import discover from "@/page/discover.vue";
+import findIndex from "@/page/find/find.vue";
+import findPop from "@/page/find/FindPop.vue";
+import findRec from "@/page/find/FindRec.vue";
+import findNew from "@/page/find/FindNew.vue";
+import findNer from "@/page/find/FindNer.vue";
+
 import wechatSignin from "@/page/wechat/wechat";
 import wechatSignup from "@/page/wechat/wechatSignup.vue";
 import wechatBindUser from "@/page/wechat/wechatBindUser.vue";
+
+import location from "@/page/location.vue";
+import searchUser from "@/page/find/FindSearch.vue";
 
 export default [
   {
@@ -45,6 +53,57 @@ export default [
     meta: {
       title: "发现"
     }
+  },
+  {
+    name: "find",
+    path: "/find",
+    redirect: "/find/pop",
+    component: findIndex,
+    meta: {
+      title: "找人",
+      requiresAuth: true
+    },
+    children: [
+      {
+        path: "pop",
+        component: findPop,
+        meta: {
+          keepAlive: true
+        }
+      },
+      {
+        path: "new",
+        component: findNew,
+        meta: {
+          keepAlive: true
+        }
+      },
+      {
+        path: "rec",
+        component: findRec,
+        meta: {
+          keepAlive: true
+        }
+      },
+      {
+        path: "ner",
+        component: findNer,
+        meta: {
+          keepAlive: true
+        }
+      }
+    ]
+  },
+  {
+    path: "/search/user",
+    component: searchUser,
+    meta: {
+      keepAlive: true
+    }
+  },
+  {
+    path: "/location",
+    component: location
   },
   {
     path: "/profile",
@@ -98,8 +157,8 @@ export default [
       forGuest: true
     },
     beforeEnter(to, from, next) {
-      const accessToken = lstore.get("H5_WECHAT_MP_ASTOKEN");
-      const nickname = lstore.get("H5_WECHAT_NICKNAME");
+      const accessToken = window.$lstore.getData("H5_WECHAT_MP_ASTOKEN");
+      const nickname = window.$lstore.getData("H5_WECHAT_NICKNAME");
       accessToken && nickname ? next() : next("/wechat");
     }
   },
@@ -111,7 +170,7 @@ export default [
       forGuest: true
     },
     beforeEnter(to, from, next) {
-      const accessToken = lstore.get("H5_WECHAT_MP_ASTOKEN");
+      const accessToken = window.$lstore.getData("H5_WECHAT_MP_ASTOKEN");
       accessToken ? next() : next("/wechat");
     }
   },

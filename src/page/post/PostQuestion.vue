@@ -103,7 +103,6 @@
 <script>
 import _ from "lodash";
 import bus from "@/bus.js";
-import lstore from "store";
 export default {
   name: "post-question",
   data() {
@@ -269,7 +268,7 @@ export default {
         .then(({ data: { message, question } }) => {
           this.$Message.success(message);
           this.$router.push(`/questions/${question.id}`);
-          lstore.remove("H5_POST_QUESTION_DRAFT");
+          this.$lstore.removeData("H5_POST_QUESTION_DRAFT");
         });
     },
     cancel() {
@@ -287,7 +286,7 @@ export default {
               {
                 text: "保存草稿",
                 method: () => {
-                  lstore.set("H5_POST_QUESTION_DRAFT", this.question);
+                  this.$lstore.setData("H5_POST_QUESTION_DRAFT", this.question);
                   this.goBack();
                 }
               }
@@ -299,7 +298,7 @@ export default {
     }
   },
   created() {
-    const question = lstore.get("H5_POST_QUESTION_DRAFT");
+    const question = this.$lstore.getData("H5_POST_QUESTION_DRAFT");
 
     question &&
       (question.title || question.body) &&

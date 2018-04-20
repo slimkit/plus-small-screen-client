@@ -97,36 +97,12 @@
 .m-sub-nav {
   height: 90px;
   &-item {
-    position: relative;
     margin: 0 40px;
-    height: 100%;
     padding: 0 10px;
     color: @text-color3;
+    border-bottom: 2px solid transparent; /*no*/
     a {
       color: inherit;
-    }
-    &:before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 100%;
-      width: 0;
-      height: 100%;
-      border-bottom: 2px solid @primary; /*no*/
-      transition: 0.2s all ease;
-    }
-
-    &.active {
-      color: @text-color1;
-      &::before {
-        width: 100%;
-        top: 0;
-        left: 0;
-        transition-delay: 0.1;
-      }
-      ~ .m-sub-nav-item::before {
-        left: 0;
-      }
     }
   }
 }
@@ -420,6 +396,33 @@
 }
 
 /* form */
+
+.m-search-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 10px;
+
+  height: 55px;
+  border-radius: 10px;
+  background-color: #ebebeb;
+
+  color: #999;
+
+  .m-svg-def {
+    width: 24px;
+    height: 24px;
+  }
+
+  input {
+    padding: 0 10px 0 5px;
+    flex: 1 1 auto;
+    background-color: transparent;
+    font-size: 24px;
+  }
+}
+
 .m-form-row {
   display: flex;
   align-items: center;
@@ -494,7 +497,7 @@
 .m-pinned-amount-customize {
   font-size: 30px;
   input {
-    line-height: 1;
+    line-height: normal;
     font-size: 28px;
     padding: 0 20px;
   }
@@ -583,6 +586,14 @@
   line-height: 48px;
   font-size: 24px;
   color: @text-color2;
+}
+
+/* 占位图 */
+.m-no-find {
+  background-size: 400px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-image: url("../images/img_default_search@2x.png");
 }
 .c_59b6d7 {
   color: @primary;

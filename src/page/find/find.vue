@@ -1,130 +1,140 @@
 <template>
-    <div class="page-find">
-        <head-top :go-back='goBack' title='true' :append='true'>
-            <div class="find-top-append ellipsis" slot='append' @click='to(`/location`)'>
-                <v-icon type='find-location'></v-icon>{{ cur_txt }}
-            </div>
-            <div class="head-search" slot='title' @click='to(`/search_user`)'>
-                <v-icon type='base-search'></v-icon> 搜索
-            </div>
-        </head-top>
-        <div class="find-nav">
-            <router-link tag='div' class='find-nav-item' to='/find/pop'>热门</router-link>
-            <router-link tag='div' class='find-nav-item' to='/find/new'>最新</router-link>
-            <router-link tag='div' class='find-nav-item' to='/find/rec'>推荐</router-link>
-            <router-link tag='div' class='find-nav-item' to='/find/nearby'>附近</router-link>
-        </div>
-        <div class="find-content">
-            <keep-alive>
-                <router-view v-if="$route.meta.keepAlive"></router-view>
-            </keep-alive>
-            <router-view v-if="!$route.meta.keepAlive"></router-view>
-        </div>
-    </div>
+  <div class="p-find-person">
+    <header class="m-pos-f m-box m-aln-center m-justify-bet m-lim-width m-bb1 m-main m-head-top">
+      <div class="m-flex-grow0 m-flex-shrink0">
+        <svg class="m-style-svg m-svg-def" @click="goBack">
+          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-back"></use>
+        </svg>
+      </div>
+      <div class="m-box m-aln-center m-flex-grow1 m-flex-shrink1 m-head-search-box" @click="showSearchUser">
+        <svg class="m-style-svg m-svg-def placeholder"> 
+          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-search"></use>
+        </svg>
+        <span class="placeholder">搜索</span>
+      </div>
+      <div class="m-box m-aln-center m-flex-grow0 m-flex-shrink0 m-justify-end m-location" @click="switchLocation">
+        <svg class="m-style-svg m-svg-def">
+          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#find-location"></use>
+        </svg>
+        <span class="m-location-label m-text-cut">{{ location }}</span>
+      </div>
+    </header>
+    <main style="padding-top: 0.9rem">
+      <div class="m-pos-f m-box m-aln-center m-justify-bet m-sub-nav m-bb1 m-main">
+        <router-link replace exact tag="div" exact-active-class="active" to="/find/pop" class="m-sub-nav-item">
+          <a>热门</a>
+        </router-link>
+        <router-link replace exact tag="div" exact-active-class="active" to="/find/new" class="m-sub-nav-item">
+          <a>最新</a>
+        </router-link>
+        <router-link replace exact tag="div" exact-active-class="active" to="/find/rec" class="m-sub-nav-item">
+          <a>推荐</a>
+        </router-link>
+        <router-link replace exact tag="div" exact-active-class="active" to="/find/ner" class="m-sub-nav-item">
+          <a>附近</a>
+        </router-link>
+      </div>
+      <keep-alive>
+        <router-view class="p-find-body" style="padding-top: 0.9rem"></router-view>
+      </keep-alive>
+    </main>
+  </div>
 </template>
 <script>
-import HeadTop from "@/components/HeadTop";
+import { getCurrentPosition } from "@/api/bootstrappers.js";
 export default {
-  name: "findIndex",
-  components: {
-    HeadTop
-  },
+  name: "find",
   data() {
     return {};
   },
   computed: {
     location() {
-      const location = this.$store.state.LOCATION || {};
-      if (JSON.stringify(location) === "{}") {
-        this.$store.dispatch("GET_LOCATION");
-      }
-      return location;
-    },
-
-    cur_txt() {
-      const { label = "" } = this.location;
-      return (
-        (label.length > 5
-          ? `${label.slice(0, 2)}…${label.slice(-2)}`
-          : label) || "选择城市"
-      );
+      const pos = this.$store.POSITION || {};
+      return pos.label || "选择城市";
     }
   },
   methods: {
     goBack() {
-      this.to("/discover");
+      this.$router.push("/discover");
     },
-    to(patch) {
-      if (patch) {
-        this.$router.push(patch);
-      }
+    showSearchUser() {
+      this.$router.push("/search/user");
+    },
+    switchLocation() {
+      this.$router.push("/location");
+    },
+    getCurrentPosition() {
+      this.$lstore.hasData("H5_CURRENT_POSITION") ||
+        getCurrentPosition().then(
+          data => {
+            this.$store.commit("SAVE_H5_POSITION", data);
+            this.loading = false;
+          },
+          err => {
+            this.loading = false;
+            this.$Message.error("定位失败，请手动选择城市");
+          }
+        );
     }
   }
 };
 </script>
-<style lang='less'>
-.page-find .find-top-append {
-  width: 160px;
-  font-size: 24px;
-  color: #333;
-  text-align: left;
-  white-space: nowrap;
-}
 
-.head-search {
-  position: relative;
-  left: -13%;
-  width: 100%;
-  height: 54px;
-  background-color: #ededed;
+<style lang="less">
+.p-find-person {
+  .m-sub-nav {
+    top: 90px;
+    padding: 0 30px;
+    &-item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      height: 100%;
+
+      &.active {
+        color: #333;
+        border-bottom-color: @primary;
+      }
+    }
+  }
+  .m-tab {
+    top: 180px;
+    background: #134;
+    height: 200px;
+  }
+  .p-find-main {
+    color: inherit;
+  }
+}
+.m-head-search-box {
+  margin-left: 30px;
+  margin-right: 30px;
+  padding: 0 15px;
+  height: 55px;
   border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  color: #999;
+  background-color: #ebebeb;
+  .placeholder {
+    color: #ccc;
+    font-size: 24px;
+    &.m-svg-def {
+      width: 24px;
+      height: 24px;
+    }
+    + .placeholder {
+      margin-left: 15px;
+    }
+  }
+}
+.m-location {
   font-size: 24px;
-  padding: 12px;
-  .v-icon {
-    width: 24px;
-    height: 24px;
-    margin-right: 12px;
+  .m-svg-def {
+    width: 42px;
+    height: 42px;
   }
-}
-
-.find-nav {
-  position: fixed;
-  z-index: 100;
-  top: 90px;
-  padding-top: 0 !important;
-  display: flex;
-  align-items: center;
-  height: 90px;
-  width: 100%;
-  line-height: 89px;
-  border-bottom: 1px solid #ededed;
-  /*no*/
-  background-color: #fff;
-  justify-content: center;
-  &-item {
-    padding: 0 10px;
-    font-size: 28px;
-    color: #999;
-    border-bottom: 3px solid transparent;
-    & + & {
-      margin-left: 90px;
-    }
-
-    &.router-link-active {
-      border-color: #59b6d7;
-      color: #333;
-    }
+  &-label {
+    display: inline-block;
+    max-width: 5 * 24px;
   }
-}
-
-.find-content {
-  padding-top: 180px;
-  min-height: 100vh;
-  position: relative;
-  background-color: #fff;
 }
 </style>

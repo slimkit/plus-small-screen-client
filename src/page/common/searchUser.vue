@@ -23,13 +23,13 @@
 <script>
 import _ from "lodash";
 import HeadTop from "@/components/HeadTop";
-import findItem from "@/page/find/components/findItem";
+import FindItem from "@/page/find/FindItem";
 let sources = [];
 export default {
   name: "searchUser",
   components: {
     HeadTop,
-    findItem
+    FindItem
   },
   data() {
     return {

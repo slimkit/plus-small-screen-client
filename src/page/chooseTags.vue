@@ -66,7 +66,6 @@
 </template>
 <script>
 import bus from "@/bus.js";
-import lstore from "store";
 export default {
   name: "choose-tags",
   data() {
@@ -86,11 +85,7 @@ export default {
   created() {
     this.fetchTags();
     bus.$on("choose-tags", ({ nextStep, chooseTags = [] } = {}) => {
-      const isFirst = lstore.get("H5_CHOOSE_TAGS_ISFIRST");
-      this.isFirst =
-        typeof isFirst === "undefined"
-          ? lstore.set("H5_CHOOSE_TAGS_ISFIRST", true)
-          : isFirst;
+      this.isFirst = !this.$lstore.hasData("H5_CHOOSE_TAGS_FIRST");
       typeof nextStep === "function" && (this.nextStep = nextStep);
       chooseTags &&
         chooseTags.length > 0 &&
@@ -110,7 +105,7 @@ export default {
             content:
               "标签为全局标签，选择合适的标签，系统可推荐你感兴趣的内容，方便找到相同身份或爱好的人，很重要哦！",
             onCancel: () => {
-              lstore.set("H5_CHOOSE_TAGS_ISFIRST", false);
+              this.$lstore.setData("H5_CHOOSE_TAGS_FIRST", false);
             }
           });
         });

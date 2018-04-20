@@ -57,7 +57,6 @@
 <script>
 import http from "@/http.js";
 import bus from "@/bus.js";
-import store from "store";
 import MyMsg from "./myMsg";
 import dataBase from "@/util/database.js";
 
@@ -92,6 +91,7 @@ export default {
       });
     },
     sendCallback(msg) {
+      console.log(msg);
       this.txt = "";
       this.$store.dispatch("PUSH_NEW_MESSAGE", msg);
     }
@@ -119,7 +119,7 @@ export default {
     },
     txt(val, oval) {
       if (val !== oval) {
-        store.set(`H5_CHAT_SAVE_${this.cid}`, val);
+        this.$lstore.setData(`H5_CHAT_SAVE_${this.cid}`, val);
         this.$nextTick(() => {
           this.$refs.shadow &&
             (this.scrollHeight = this.$refs.shadow.scrollHeight);
@@ -134,7 +134,7 @@ export default {
   },
   async beforeRouteEnter(to, from, next) {
     let uid = ~~to.params.uid;
-    const me = store.get("CURRENTUSER");
+    const me = window.$lstore.getData("CURRENTUSER");
     const mid = ~~me.id;
     let user = {};
     try {

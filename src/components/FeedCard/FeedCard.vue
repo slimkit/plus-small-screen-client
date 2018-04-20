@@ -396,9 +396,10 @@ export default {
     display: -webkit-box;
     margin-bottom: 20px;
     .needPay:after {
-      content: "付费节点，购买后方可查看原文详情";
+      content: " 付费节点，购买后方可查看原文详情";
       text-shadow: 0 0 10px @text-color2;
       color: rgba(255, 255, 255, 0);
+      margin-left: 5px;
       // filter: DXImageTransform.Microsoft.Blur(pixelradius=2);
       zoom: 1;
       pause-before: 3s;

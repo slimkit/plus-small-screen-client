@@ -37,12 +37,14 @@ export default Vue => {
  *  check el is in view
  *  @return {Boolean} el is in view
  */
+  const wH = window.innerHeight;
+  const wW = window.innerWidth;
   const checkInView = el => {
     const rect = el.getBoundingClientRect();
     return (
-      rect.top < window.innerHeight * 1.3 &&
+      rect.top < wH * 1.3 &&
       rect.bottom > 1.3 &&
-      (rect.left < window.innerWidth * 1.3 && rect.right > 0)
+      (rect.left < wW * 1.3 && rect.right > 0)
     );
   };
   const isCanShow = item => {

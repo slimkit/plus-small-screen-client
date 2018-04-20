@@ -14,6 +14,7 @@ Message.newInstance = props => {
   });
 
   const component = MessageInstance.$mount();
+
   document.body.appendChild(component.$el);
   const msgs = MessageInstance.$children[0];
 

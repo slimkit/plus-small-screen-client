@@ -1,5 +1,4 @@
 import _ from "lodash";
-import localEvent from "store";
 export default {
   SAVE_USER(state, user) {
     const oldUsers = state.users;
@@ -14,7 +13,7 @@ export default {
             : user;
         }
         state.users = Object.assign({}, oldUsers, _new);
-        localEvent.set("USERS", state.users);
+        window.$lstore.setData("H5_USERS", state.users);
       }
     } catch (e) {
       state.users = oldUsers;

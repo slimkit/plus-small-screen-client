@@ -4,7 +4,7 @@
       <svg class="m-style-svg m-svg-def foot_guide_icon">
         <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#foot-home"></use>
       </svg>
-      <span>首页</span>
+      <span>动态</span>
     </section>
     <section @click="to('/discover')" class="guide_item" :class="{active: isCurPath('/discover')}">
       <svg class="m-style-svg m-svg-def foot_guide_icon">

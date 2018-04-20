@@ -43,7 +43,6 @@
 </template>
 
 <script>
-import lstore from "store";
 function strLength(str) {
   let totalLength = 0;
   let i = 0;
@@ -127,8 +126,8 @@ export default {
             this.$router.push(this.$route.query.redirect || "/feed/new");
             this.$store.dispatch("GET_UNREAD_COUNT");
             this.$store.commit("SAVE_USER", user);
-            lstore.remove("H5_WECHAT_MP_OPENID");
-            lstore.remove("H5_WECHAT_MP_ASTOKEN");
+            this.$lstore.removeData("H5_WECHAT_MP_OPENID");
+            this.$lstore.removeData("H5_WECHAT_MP_ASTOKEN");
           });
         })
         .catch(() => {

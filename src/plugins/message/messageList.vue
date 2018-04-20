@@ -1,6 +1,16 @@
 <template>
   <div class="v-msg-list">
-    <message v-for="msg in msgs" :key="msg.name" :type="msg.type" :icon="msg.icon" :content="msg.content" :duration="msg.duration" :closable="msg.closable" :name="msg.name" :transition-name="msg.transitionName" :on-close="msg.onClose"></message>
+    <message
+    v-for="msg in msgs"
+    :key="msg.name"
+    :type="msg.type"
+    :icon="msg.icon"
+    :content="msg.content"
+    :duration="msg.duration"
+    :closable="msg.closable"
+    :name="msg.name"
+    :transition-name="msg.transitionName"
+    :on-close="msg.onClose"></message>
   </div>
 </template>
 <script>
