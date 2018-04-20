@@ -47,7 +47,7 @@ export default {
     );
     return this.isSupported
       ? new Promise((resolve, resject) => {
-          navigator.geolocation.getCurrentPosition(
+          navigator.geolocation.getCurrentPosition();
           const geo = navigator.geolocation;
           geo.getCurrentPosition(
             position => {

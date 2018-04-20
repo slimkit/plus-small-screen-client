@@ -14,9 +14,7 @@
       </svg>
     </div>
     <div class="m-box-model m-flex-grow1 m-aln-center m-flex-base0 m-head-top-title">
-      <div class="m-avatar-box small">
-        <avatar :user="user" />
-      </div>
+      <avatar :user="user" />
     </div>
     <div class="m-box m-flex-grow1 m-aln-center m-flex-base0 m-justify-end">
       <svg v-if="!isWechat" class='m-style-svg m-svg-def'>
