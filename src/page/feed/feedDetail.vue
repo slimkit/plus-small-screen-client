@@ -15,11 +15,11 @@
     </div>
     <div class="m-box-model m-flex-grow1 m-aln-center m-flex-base0 m-head-top-title">
       <div class="m-avatar-box small">
-        <img :src="user.avatar">
+        <avatar :user="user" />
       </div>
     </div>
     <div class="m-box m-flex-grow1 m-aln-center m-flex-base0 m-justify-end">
-      <svg class='m-style-svg m-svg-def'>
+      <svg v-if="!isWechat" class='m-style-svg m-svg-def'>
         <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-share"></use>
       </svg>
     </div>
@@ -27,16 +27,25 @@
   <!-- 内容 -->
   <main class="m-flex-shrink1 m-flex-grow1 m-art m-main">
     <div class="m-art-body">
+      <video
+        v-if="feed.video"
+        class="feed-detail-video"
+        controls
+        autoplay
+        :poster="cover_file"
+      >
+        <source :src="video_file" type="video/mp4" />
+      </video>
       <async-file
         v-for="img in images"
         v-if="img.file"
         :key="img.file"
         :file="img.file">
         <img 
-        slot-scope="props"
-        v-if="props.src"
-        :src="props.src">
-        />
+          slot-scope="props"
+          v-if="props.src"
+          :src="props.src">
+          />
       </async-file>
       <p class="m-text-box" v-html="replaceURI(feedContent)"></p>
     </div>
@@ -151,6 +160,16 @@ export default {
   computed: {
     feedID() {
       return this.$route.params.feedID;
+    },
+    video_file() {
+      return this.feed.video
+        ? `/api/v2/files/${this.feed.video.video_id}`
+        : false;
+    },
+    cover_file() {
+      return this.feed.video
+        ? `/api/v2/files/${this.feed.video.video_id}`
+        : false;
     },
     CURRENTUSER() {
       return this.$store.state.CURRENTUSER;
@@ -575,3 +594,11 @@ export default {
   }
 };
 </script>
+<style lang="less">
+.feed-detail-video {
+  width: calc(~"100% + 40px");
+  margin-left: -20px;
+  height: calc(~"100vh - 185px");
+  background: #000;
+}
+</style>

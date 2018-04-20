@@ -26,6 +26,11 @@
             v-if="images.length > 0"
             :id="feedID"
             :pics="images" />
+          <feed-video
+            v-if="video"
+            :id="feedID"
+            :video="video"
+          />
        </article>
      </section>
    </div>
@@ -75,13 +80,15 @@
 import bus from "@/bus.js";
 import { mapState } from "vuex";
 import { time2txt } from "@/filters.js";
-import FeedImage from "@/components/FeedCard/FeedImage.vue";
-import CommentItem from "@/components/FeedCard/CommentItem.vue";
+import FeedImage from "./FeedImage.vue";
+import FeedVideo from "./FeedVideo.vue";
+import CommentItem from "./CommentItem.vue";
 export default {
   name: "feed-card",
   components: {
     FeedImage,
-    CommentItem
+    CommentItem,
+    FeedVideo
   },
   props: {
     timeLine: {
@@ -147,6 +154,9 @@ export default {
     },
     images() {
       return this.feed.images || [];
+    },
+    video() {
+      return this.feed.video || false;
     },
     body() {
       return this.feed.feed_content || "";
