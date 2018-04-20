@@ -263,7 +263,7 @@ export default {
       if (this.requesting) return;
       if (typeof this.onRefresh === "function") {
         this.requesting = true;
-        this.dY = this.topDistance;
+        this.dY = Math.tan(this.topBarHeight / 80) * 200;
         this.onRefresh();
       } else {
         this.dY = 0;
