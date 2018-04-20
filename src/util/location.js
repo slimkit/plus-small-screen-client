@@ -1,3 +1,4 @@
+import api from "@/api/api.js";
 /**
  * 定位
  */
@@ -47,7 +48,10 @@ export default {
     return this.isSupported
       ? new Promise((resolve, resject) => {
           navigator.geolocation.getCurrentPosition(
+          const geo = navigator.geolocation;
+          geo.getCurrentPosition(
             position => {
+              console.log(position);
               const { coords: { latitude, longitude } } = position;
               api
                 .get(

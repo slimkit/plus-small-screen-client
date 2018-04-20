@@ -51,6 +51,7 @@ import {
   getHotCities,
   getCurrentPosition
 } from "@/api/bootstrappers.js";
+import _ from "lodash";
 export default {
   name: "location",
   data() {
