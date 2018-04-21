@@ -70,6 +70,8 @@
 </template>
 <script>
 import bus from "@/bus.js";
+import Wx from "weixin-js-sdk";
+import wx from "@/util/share.js";
 import md from "@/util/markdown.js";
 import ArticleCard from "@/page/article/ArticleCard.vue";
 import CommentItem from "@/page/article/ArticleComment.vue";
@@ -92,7 +94,24 @@ export default {
 
       fetchComing: false,
       noMoreCom: false,
-      maxComId: 0
+      maxComId: 0,
+      config: {
+        appid: "",
+        signature: "",
+        timestamp: "",
+        noncestr: ""
+      },
+      appList: [
+        "onMenuShareQZone",
+        "onMenuShareQQ",
+        "onMenuShareAppMessage",
+        "onMenuShareTimeline"
+      ],
+      share: {
+        title: "",
+        desc: "",
+        link: ""
+      }
     };
   },
   computed: {
@@ -138,9 +157,18 @@ export default {
     },
     body() {
       return md(this.news.content || "");
+    },
+    isWechat() {
+      return this.$store.state.BROWSER.isWechat;
     }
   },
   methods: {
+    shareSuccess() {
+      this.$Message.success("分享成功");
+    },
+    shareCancel() {
+      this.$Message.success("取消分享");
+    },
     fetchNews() {
       if (this.fetching) return;
       this.fetching = true;
@@ -155,11 +183,128 @@ export default {
             this.fetchNewsComments();
             this.fetchNewsLikes();
           }, 800);
+          if (this.isWechat) {
+            this.getWeChatConfig();
+          }
         })
         .catch(err => {
           console.log(err);
           this.$router.back();
         });
+    },
+    getWeChatConfig() {
+      const url =
+        window.location.origin +
+        process.env.BASE_URL.substr(0, process.env.BASE_URL.length - 1) +
+        this.$route.fullPath;
+      this.share.link = url;
+      if (this.config.appid === "") {
+        wx.getOauth(url).then(res => {
+          this.config.timestamp = res.timestamp || "";
+          this.config.signature = res.signature || "";
+          this.config.appid = res.appid || "";
+          this.config.noncestr = res.noncestr || "";
+          Wx.config({
+            debug: true,
+            appId: this.config.appid,
+            timestamp: this.config.timestamp,
+            signature: this.config.signature,
+            nonceStr: this.config.noncestr,
+            jsApiList: this.appList
+          });
+          Wx.ready(() => {});
+          Wx.error(() => {
+            // console.log(res);
+          });
+          Wx.onMenuShareTimeline({
+            title: this.share.title,
+            desc: this.share.desc,
+            link: this.share.link,
+            imgUrl: this.firstImage,
+            success: () => {
+              this.shareSuccess();
+            },
+            cancel: () => {
+              this.shareCancel();
+            }
+          });
+          Wx.onMenuShareAppMessage({
+            title: this.share.title,
+            desc: this.share.desc,
+            link: this.share.link,
+            imgUrl: this.firstImage,
+            success: () => {
+              this.shareSuccess();
+            },
+            cancel: () => {
+              this.shareCancel();
+            }
+          });
+          Wx.onMenuShareQQ({
+            title: this.share.title,
+            desc: this.share.desc,
+            link: this.share.link,
+            imgUrl: this.firstImage,
+            success: () => {
+              this.shareSuccess();
+            },
+            cancel: () => {
+              this.shareCancel();
+            }
+          });
+        });
+      } else {
+        this.$Message.success("请使用微信自带分享😳");
+        Wx.config({
+          debug: true,
+          appId: this.config.appid,
+          timestamp: this.config.timestamp,
+          signature: this.config.signature,
+          nonceStr: this.config.noncestr,
+          jsApiList: this.appList
+        });
+
+        Wx.ready(() => {}),
+          Wx.error(() => {
+            // console.log(res);
+          });
+        Wx.onMenuShareTimeline({
+          title: this.share.title,
+          desc: this.share.desc,
+          link: this.share.link,
+          imgUrl: this.firstImage,
+          success: () => {
+            this.shareSuccess();
+          },
+          cancel: () => {
+            this.shareCancel();
+          }
+        });
+        Wx.onMenuShareAppMessage({
+          title: this.share.title,
+          desc: this.share.desc,
+          link: this.share.link,
+          imgUrl: this.firstImage,
+          success: () => {
+            this.shareSuccess();
+          },
+          cancel: () => {
+            this.shareCancel();
+          }
+        });
+        Wx.onMenuShareQQ({
+          title: this.share.title,
+          desc: this.share.desc,
+          link: this.share.link,
+          imgUrl: this.firstImage,
+          success: () => {
+            this.shareSuccess();
+          },
+          cancel: () => {
+            this.shareCancel();
+          }
+        });
+      }
     },
     fetchNewsLikes() {
       // GET /news/{news}/likes
