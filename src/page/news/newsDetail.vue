@@ -116,7 +116,7 @@ export default {
   },
   computed: {
     firstImage() {
-      let images = this.image;
+      let images = this.news.image;
       if (!Object.keys(images).length) {
         return "";
       }
