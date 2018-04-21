@@ -115,6 +115,15 @@ export default {
     };
   },
   computed: {
+    firstImage() {
+      let images = this.image;
+      if (!Object.keys(images).length) {
+        return "";
+      }
+      return (
+        this.$http.defaults.baseURL + "/files/" + images.id + "?w=300&h=300"
+      );
+    },
     newsID() {
       return this.$route.params.newsID;
     },
@@ -177,6 +186,8 @@ export default {
         .then(({ data = {} }) => {
           this.news = data;
           this.oldID = this.newsID;
+          this.share.title = data.title;
+          this.share.desc = data.subject;
           setTimeout(() => {
             this.loading = false;
             this.fetching = false;
@@ -205,7 +216,7 @@ export default {
           this.config.appid = res.appid || "";
           this.config.noncestr = res.noncestr || "";
           Wx.config({
-            debug: true,
+            debug: false,
             appId: this.config.appid,
             timestamp: this.config.timestamp,
             signature: this.config.signature,
@@ -256,7 +267,7 @@ export default {
       } else {
         this.$Message.success("请使用微信自带分享😳");
         Wx.config({
-          debug: true,
+          debug: false,
           appId: this.config.appid,
           timestamp: this.config.timestamp,
           signature: this.config.signature,
