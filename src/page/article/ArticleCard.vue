@@ -93,7 +93,7 @@ export default {
     isWechat() {
       return this.$store.state.BROWSER.isWechat;
     }
-  }
+  },
   mounted() {
     this.headroom = new HeadRoom(this.$refs.head, {
       tolerance: 5,
