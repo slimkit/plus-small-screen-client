@@ -89,7 +89,7 @@ export default {
       this.$router.go(-1);
     }
   },
-  computed() {
+  computed: {
     isWechat() {
       return this.$store.state.BROWSER.isWechat;
     }
