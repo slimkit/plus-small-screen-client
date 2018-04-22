@@ -56,11 +56,11 @@ export default {
     user() {
       return this.$store.state.CURRENTUSER;
     },
-    wallet() {
-      return this.user.wallet || {};
+    new_wallet() {
+      return this.user.new_wallet || { balance: 0 };
     },
     balance() {
-      return (+this.wallet.balance || 0).toFixed(2);
+      return (this.new_wallet.balance / 100).toFixed(2);
     }
   }
 };

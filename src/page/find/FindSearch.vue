@@ -9,7 +9,17 @@
             <svg class="m-style-svg m-svg-def">
               <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-search"></use>
             </svg>
-            <input @focus="onFocus" @blur="onBlur" v-model="keyword" @input="searchUserByKey" type="search" placeholder="搜索">
+            <!-- input[type=search] 使用 form 标签包裹起来，呼出键盘的enter才会有搜索按钮 -->
+            <form action="#" onsubmit="return false">
+              <input
+                type="search"
+                @blur="onBlur"
+                @focus="onFocus"
+                v-model="keyword"
+                placeholder="搜索"
+                @input="searchUserByKey"
+                @keyup.enter="searchUserByKey" >
+            </form>
           </div>
         </div>
         <div class="m-flex-grow0 m-flex-shrink0">
@@ -90,9 +100,9 @@ export default {
 
 <style lang="less">
 .p-search-user {
+  z-index: 100;
   background-color: #f4f5f6;
   animation-duration: 0.3s;
-  z-index: 100;
   header {
     padding: 20px 30px;
     bottom: initial;
@@ -103,7 +113,6 @@ export default {
   .p-search-user-body {
     overflow-y: auto;
   }
-
   .m-no-find {
     width: 100vw;
     height: 100vh;

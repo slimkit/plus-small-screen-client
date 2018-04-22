@@ -415,11 +415,19 @@
     height: 24px;
   }
 
-  input {
-    padding: 0 10px 0 5px;
+  form,
+  > input　 {
     flex: 1 1 auto;
+    padding: 0 10px 0 5px;
     background-color: transparent;
+    color: @text-color1;
     font-size: 24px;
+  }
+
+  form input {
+    width: 100%;
+    background-color: inherit;
+    color: inherit;
   }
 }
 
