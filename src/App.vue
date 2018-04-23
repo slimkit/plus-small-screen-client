@@ -49,7 +49,6 @@ import bus from "@/bus.js";
 
 import { mapActions } from "vuex";
 
-import Message from "@/plugins/message-box";
 export default {
   name: "app",
   components: {

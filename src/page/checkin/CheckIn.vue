@@ -144,7 +144,6 @@ export default {
   border-radius: 22px;
   background-color: rgba(255, 255, 255, 0.2);
 }
-
 .m-check-in-close {
   display: block;
   width: 36px;

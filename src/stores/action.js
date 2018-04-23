@@ -1,5 +1,4 @@
 import http from "../http";
-import getLocation from "../util/location";
 export default {
   async BOOTSTRAPPERS({ commit }) {
     const { data = {} } = await http.get("/bootstrappers");

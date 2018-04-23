@@ -53,6 +53,9 @@ export default {
       return pos.label || "选择城市";
     }
   },
+  created() {
+    this.getCurrentPosition();
+  },
   methods: {
     goBack() {
       this.$router.push("/discover");
@@ -72,7 +75,7 @@ export default {
           },
           err => {
             this.loading = false;
-            this.$Message.error("定位失败，请手动选择城市");
+            this.$Message.error(err.message);
           }
         );
     }

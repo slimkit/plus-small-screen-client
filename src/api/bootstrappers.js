@@ -1,7 +1,6 @@
-import api, { get } from "./api.js";
+import { get } from "./api.js";
 import lstore from "@/plugins/lstore";
 import location from "@/util/location.js";
-import $Message from "@/plugins/message-box";
 /**
  * 获取热门城市列表
  * @author jsonleex <jsonlseex@163.com>
@@ -34,9 +33,12 @@ export function getCurrentPosition() {
   return location.getCurrentPosition().then(
     position => {
       console.log(position);
+      //   str.push("经度：" + position.getLng());
+      //   str.push("纬度：" + position.getLat());
       return position;
     },
     err => {
+      console.log(err);
       throw err;
     }
   );
