@@ -1,6 +1,8 @@
 import vuex from "@/stores";
 import api, { get } from "./api.js";
 
+const userState = vuex.state.USERS;
+
 const resArray = { data: [] };
 
 /**
@@ -74,5 +76,32 @@ export const findUserByType = (type, param) => {
   return get(`/user/${type}`, param).catch(() => {
     // 错误处理
     return resArray;
+  });
+};
+
+export const findNearbyUser = ({ lat: latitude, lng: longitude }, page = 0) => {
+  const param = {
+    limit: 10,
+    latitude,
+    longitude
+  };
+
+  page > 0 && (param.page = page);
+  return get("around-amap", param).then(data => data, () => resArray);
+};
+
+export const getUserInfoById = id => {
+  const user = userState[`user_${id}`];
+  return new Promise((resolve, reject) => {
+    user
+      ? resolve(user)
+      : api
+          .get(`/users/${id}`, {
+            validateStatus: s => s === 404 || s === 201 || s === 200
+          })
+          .then(({ data }) => {
+            data = data.id ? data : {};
+            resolve(data);
+          });
   });
 };

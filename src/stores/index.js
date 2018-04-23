@@ -29,7 +29,12 @@ const state = {
   CUR_GROUP_LOCATION: {},
 
   //定位信息
-  POSITION: lstore.getData("H5_CURRENT_POSITION") || {}
+  POSITION: lstore.getData("H5_CURRENT_POSITION") || {},
+
+  /**
+   * 用户信息
+   */
+  USERS: lstore.getData("H5_USERS") || {}
 };
 
 export default new Vuex.Store({

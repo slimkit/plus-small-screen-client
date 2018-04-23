@@ -1,22 +1,45 @@
 import lstore from "@/plugins/lstore/lstore.js";
 export default {
+  /**
+   * 应用启动信息
+   * @author jsonleex <jsonlseex@163.com>
+   */
   BOOTSTRAPPERS(state, config) {
     state.CONFIG = config;
     lstore.setData("BOOTSTRAPPERS", config);
   },
 
+  /**
+   * 保存当前定位信息
+   * @author jsonleex <jsonlseex@163.com>
+   */
   SAVE_H5_POSITION(state, position) {
     state.POSITION = position;
-    lstore.setData("H5_CURRENT_POSITION");
+    lstore.setData("H5_CURRENT_POSITION", position);
   },
 
-  SAVE_FEED_TYPE(state, type) {
-    state.FEEDTYPE = type;
+  /**
+   * 保存用户信息
+   * @author jsonleex <jsonlseex@163.com>
+   */
+  SAVE_USER(state, user) {
+    if (!user.id) return;
+    const key = `user_${user.id}`;
+    const oldUser = state.USERS[key];
+
+    oldUser
+      ? (state.USERS[key] = Object.assign(oldUser, user))
+      : (state.USERS[key] = user);
+
+    lstore.setData("H5_USERS", state.USERS);
   },
+
   // 保存当前登录用户信息
   SAVE_CURRENTUSER(state, info) {
     state.CURRENTUSER = info;
+    state.USERS[`user_${info.id}`] = info;
     lstore.setData("CURRENTUSER", state.CURRENTUSER);
+    lstore.setData("H5_CUR_USER", state.CURRENTUSER);
   },
 
   // 保存圈子分类信息
@@ -56,9 +79,12 @@ export default {
 
   // 注销登录
   SIGN_OUT(state) {
+    const cur_user_id = state.CURRENTUSER.id;
     try {
+      state.USERS = {};
+      state.CURRENTUSER = {};
+
       lstore.clearData();
-      state.CURRENTUSER = null;
     } catch (e) {
       console.log(e);
     }

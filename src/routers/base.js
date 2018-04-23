@@ -23,6 +23,8 @@ import wechatBindUser from "@/page/wechat/wechatBindUser.vue";
 import location from "@/page/location.vue";
 import searchUser from "@/page/find/FindSearch.vue";
 
+import $lstore from "@/plugins/lstore";
+
 export default [
   {
     path: "/signin",
@@ -90,6 +92,11 @@ export default [
         component: findNer,
         meta: {
           keepAlive: true
+        },
+        beforeEnter(to, from, next) {
+          to,
+            from,
+            $lstore.hasData("H5_CURRENT_POSITION") ? next() : next("/location");
         }
       }
     ]

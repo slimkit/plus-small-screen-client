@@ -110,9 +110,6 @@ export default {
   },
   mounted() {
     this.$refs.loadmore.beforeRefresh();
-  },
-  beforeDestroy() {
-    this.$store.commit("SAVE_FEED_TYPE", "");
   }
 };
 </script>

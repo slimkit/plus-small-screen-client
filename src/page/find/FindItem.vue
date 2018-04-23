@@ -50,6 +50,9 @@ export default {
         this.loading = false;
       });
     }
+  },
+  created() {
+    this.$store.commit("SAVE_USER", this.user);
   }
 };
 </script>
