@@ -1,27 +1,31 @@
-<template lang="html">
-  <div class="user-item" :id='`user-item-${user.id}`'>
-    <v-avatar :uid='user.id' class="user-item-avatar" :sex='user.sex' :src='user.avatar'></v-avatar>
-    <div class="user-item-info">
-        <p class="user-item-name ellipsis">{{ user.name }}</p>
-        <p class="user-item-bio ellipsis">{{ user.bio || '这家伙很懒,什么也没留下' }}</p>
-    </div>
-    <svg class="user-item-follow-icon" @click.stop='followUser'>
+<template>
+  <div class="m-box m-aln-center m-main user-item" @click='toUserHome'>
+    <avatar :user="user" />
+    <section 
+      class="m-box-model m-flex-grow1 m-flex-shrink1 m-flex-base0 m-text-cut user-item-body">
+      <h2 class="m-text-box m-text-cut">{{ user.name }}</h2>
+      <p class="m-text-box m-text-cut">{{ user.bio || "这家伙很懒，什么也没留下" }}</p>
+    </section>
+    <svg class="m-style-svg m-svg-def" @click.stop="followUser">
       <use xmlns:xlink="http://www.w3.org/1999/xlink" :xlink:href="`#base-${isFollow}`"></use>
     </svg>
   </div>
 </template>
-
 <script>
+import { followUserByStatus } from "@/api/user.js";
 export default {
-  name: "UserItem",
+  name: "user-item",
   props: {
-    user: {
-      type: Object,
-      required: true
+    user: null,
+    link: {
+      type: Boolean,
+      default: true
     }
   },
   data() {
-    return {};
+    return {
+      loading: false
+    };
   },
   computed: {
     isFollow() {
@@ -32,28 +36,48 @@ export default {
     }
   },
   methods: {
+    toUserHome() {
+      this.link && this.$router.push(`/user/${this.user.id}`);
+    },
     followUser() {
-      if (this.loading) return false;
+      if (this.loading) return;
       this.loading = true;
-      this.$store
-        .dispatch("FOLLOW_USER", {
-          id: this.user.id,
-          status: this.isFollow
-        })
-        .then(({ follower }) => {
-          this.loading = false;
-          this.user.follower = follower;
-        })
-        .catch(err => {
-          const { response: { data = { message: "操作失败" } } = {} } = err;
-
-          this.loading = false;
-          this.$Message.error(data);
-        });
+      followUserByStatus({
+        id: this.user.id,
+        status: this.isFollow
+      }).then(follower => {
+        this.user.follower = follower;
+        this.loading = false;
+      });
     }
+  },
+  created() {
+    this.$store.commit("SAVE_USER", this.user);
   }
 };
 </script>
-
-<style lang="less" src='./style/UserItem.less'>
+<style lang='less'>
+.user-item {
+  padding: 30px 20px;
+  & + & {
+    border-top: 1px solid #ededed; /*no*/
+  }
+  .user-item-body {
+    margin-left: 30px;
+    margin-right: 30px;
+    h2 {
+      margin: 9px 0;
+      font-size: 32px;
+    }
+    p {
+      margin: 9px 0;
+      font-size: 28px;
+      color: @text-color3;
+    }
+  }
+  .m-svg-def {
+    width: 42px;
+    height: 42px;
+  }
+}
 </style>

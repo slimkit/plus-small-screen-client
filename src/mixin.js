@@ -3,7 +3,8 @@ export default {
   data() {
     return {
       scrollable: true,
-      windowScrollTop: 0
+      windowScrollTop: 0,
+      isCurrentView: false
     };
   },
   watch: {
@@ -19,6 +20,12 @@ export default {
         document.body.style.top = -this.windowScrollTop + "px";
       }
     }
+  },
+  activated() {
+    this.isCurrentView = true;
+  },
+  deactivated() {
+    this.isCurrentView = false;
   },
   methods: {
     uniqById(target = [], source = []) {

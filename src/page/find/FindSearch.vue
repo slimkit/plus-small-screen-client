@@ -29,10 +29,10 @@
 
       <main class="m-flex-grow1 m-flex-shrink1 p-search-user-body" style="padding-top: 0.95rem">
         <load-more v-show="showRec" ref="loadmoreRecs" :on-refresh="fetchRecs">
-          <find-item :user="user" :key="user.id" v-for="user in recs" />          
+          <user-item :user="user" :key="user.id" v-for="user in recs" />          
         </load-more>
         <load-more v-show="users.length > 0" :noTranslateAnimation="true" style="margin-top: -40px;" ref="loadmore" :on-load-more="onLoadMore">
-          <find-item :user="user" :key="user.id" v-for="user in users" />          
+          <user-item :user="user" :key="user.id" v-for="user in users" />          
         </load-more>
         <div v-if="noData" class="placeholder m-no-find"></div>
       </main>
@@ -41,12 +41,12 @@
 </template>
 <script>
 import _ from "lodash";
-import FindItem from "./FindItem.vue";
+import UserItem from "@/components/UserItem.vue";
 import { findUserByType, searchUserByKey } from "@/api/user.js";
 export default {
   name: "search-user",
   components: {
-    FindItem
+    UserItem
   },
   data() {
     return {

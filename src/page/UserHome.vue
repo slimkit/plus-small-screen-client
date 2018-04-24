@@ -36,12 +36,12 @@
     <main :style="{'padding-bottom': isMine ? '0' : '0.9rem'}">    
       <div ref="banner" class="m-urh-banner" 
       :style="[userBackGround,paddingTop, {transitionDuration: dragging ? '0s' : '300ms'}]">
-        <div class="m-box-model m-aln-center m-justify-end m-pos-f">
+        <div class="m-box-model m-aln-center m-justify-end m-pos-f m-urh-bg-mask">
           <avatar :user="user" size="big" />
           <h3>{{ user.name }}</h3>
           <p>
-            <router-link append to="fans??type=followers" tag="span">粉丝<i>{{ followersCount | formatNum }}</i></router-link>
-            <router-link append to="fans?type=followings" tag="span">关注<i>{{ followingsCount | formatNum }}</i></router-link>
+            <router-link append to="followers" tag="span">粉丝<i>{{ followersCount | formatNum }}</i></router-link>
+            <router-link append to="followings" tag="span">关注<i>{{ followingsCount | formatNum }}</i></router-link>
           </p>
         </div>
       </div>
@@ -660,6 +660,25 @@ export default {
   }
 }
 
+.m-urh-bg-mask:after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index: -1;
+  margin: auto;
+  opacity: 0.7;
+  background-image: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.95),
+    rgba(0, 0, 0, 0) 40%,
+    rgba(0, 0, 0, 0) 50%,
+    rgba(0, 0, 0, 0.95)
+  );
+}
+
 .m-urh-feeds {
   li + li {
     margin-top: 10px;
@@ -667,16 +686,17 @@ export default {
 }
 
 .m-head-top {
+  border-bottom: 0;
   &.bg-transp {
+    color: #fff;
     transition: background 0.3s ease;
     background-color: transparent;
-    color: #fff;
-    border-bottom: 1px solid transparent; /*no*/
   }
   &.show-title {
+    background-image: none;
     background-color: #fff;
+    border-bottom: 1px solid @border-color; /*no*/
     color: #000;
-    border-bottom-color: @border-color;
     .m-trans-y {
       transform: none;
     }

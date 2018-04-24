@@ -79,7 +79,6 @@ export default {
 
   // 注销登录
   SIGN_OUT(state) {
-    const cur_user_id = state.CURRENTUSER.id;
     try {
       state.USERS = {};
       state.CURRENTUSER = {};

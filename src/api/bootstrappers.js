@@ -53,9 +53,12 @@ export function getGeo(address) {
   return get(`around-amap/geo?address=${address}`).then(
     ({
       data: {
-        geocodes: [{ city, district, province, location, formatted_address }]
+        geocodes: [
+          { /*city, district, province, location,*/ formatted_address }
+        ]
       } = {}
     }) => {
+      // city, district, province, location, formatted_address;
       const label = formatted_address;
       const [lng, lat] = location.split(",");
       return Object.assign(res, { lng, lat, label });

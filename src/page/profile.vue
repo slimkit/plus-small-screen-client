@@ -16,7 +16,7 @@
         <div class="m-box m-aln-center m-justify-aro m-bt1 m-pr-extra-box">
           <router-link
           tag="div"
-          :to="`/user/${user.id}/fans`"
+          :to="`/user/${user.id}/followers`"
           class="m-box-model m-aln-center m-justify-center m-flex-grow1 m-pr-extra">
             <v-badge count='0'>
               <a>{{ ~~(extra.followers_count) | formatNum }}</a>
@@ -25,7 +25,7 @@
           </router-link>
           <router-link
           tag="div"
-          :to="`/user/${user.id}/fans`"
+          :to="`/user/${user.id}/followings`"
           class="m-box-model m-aln-center m-justify-center m-flex-grow1 m-pr-extra">
             <v-badge count='0'>
               <a>{{ ~~(extra.followings_count) | formatNum }}</a>

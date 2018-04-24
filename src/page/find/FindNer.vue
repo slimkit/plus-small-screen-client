@@ -4,18 +4,18 @@
   ref="loadmore"
   :onRefresh="onRefresh"
   :onLoadMore="onLoadMore">
-    <find-item v-for="user in users" :user="user" :key="user.id"></find-item>
+    <user-item v-for="user in users" :user="user" :key="user.id"></user-item>
   </load-more>
 </template>
 
 <script>
 import { mapState } from "vuex";
-import FindItem from "./FindItem.vue";
+import UserItem from "@/components/UserItem.vue";
 import { findNearbyUser, getUserInfoById } from "@/api/user.js";
 export default {
   name: "find-ner",
   components: {
-    FindItem
+    UserItem
   },
   computed: {
     ...mapState(["POSITION"]),

@@ -1,15 +1,22 @@
-import about from "@/page/about";
-import signup from "@/page/signup";
-import info from "@/page/info.vue";
+import about from "@/page/about.vue";
+
 import forgot from "@/page/forgot";
+import signup from "@/page/signup.vue";
 import signin from "@/page/signin.vue";
+
 import upgrade from "@/page/upgrade.vue";
+
 /* TODO */
 import setting from "@/page/setting.vue";
+
+import info from "@/page/info.vue";
 import profile from "@/page/profile.vue";
+import userHome from "@/page/UserHome.vue";
+import userFans from "@/page/UserFans.vue";
 /* TODO END */
 
 import discover from "@/page/discover.vue";
+
 import findIndex from "@/page/find/find.vue";
 import findPop from "@/page/find/FindPop.vue";
 import findRec from "@/page/find/FindRec.vue";
@@ -105,6 +112,7 @@ export default [
     path: "/search/user",
     component: searchUser,
     meta: {
+      title: "找人",
       keepAlive: true
     }
   },
@@ -117,6 +125,24 @@ export default [
     component: profile,
     meta: {
       title: "我",
+      requiresAuth: true
+    }
+  },
+  {
+    path: "/user/:userID(\\d+)",
+    component: userHome,
+    meta: {
+      title: "个人主页",
+      keepAlive: true
+    }
+  },
+  {
+    name: "userfans",
+    component: userFans,
+    path: "/user/:userID(\\d+)/:type(followers|followings)",
+    meta: {
+      title: "粉丝",
+      keepAlive: true,
       requiresAuth: true
     }
   },

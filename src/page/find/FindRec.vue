@@ -4,16 +4,16 @@
   ref="loadmore"
   :onRefresh="onRefresh"
   :onLoadMore="onLoadMore">
-    <find-item v-for="user in users" :user="user" :key="user.id"></find-item>
+    <user-item v-for="user in users" :user="user" :key="user.id"></user-item>
   </load-more>
 </template>
 <script>
-import findItem from "./FindItem.vue";
+import UserItem from "@/components/UserItem.vue";
 import { findUserByType } from "@/api/user.js";
 export default {
   name: "find-pop",
   components: {
-    findItem
+    UserItem
   },
   data() {
     return {

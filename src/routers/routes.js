@@ -1,5 +1,4 @@
 import NotFound from "../page/notFound";
-import UserHome from "@/page/UserHome.vue";
 import baseRoutes from "./base.js";
 import feedRoutes from "./feed.js";
 import newsRoutes from "./news.js";
@@ -14,12 +13,6 @@ const /* 公共页面 */
   // 用户标签选择
   chooseTags = () =>
     import(/* webpackChunkName: 'common' */ "../page/common/chooseTags"),
-  // 定位选择
-  chooseLocation = () =>
-    import(/* webpackChunkName: 'common' */ "../page/common/chooseLocation"),
-  // 搜索用户
-  searchUser = () =>
-    import(/* webpackChunkName: 'common' */ "../page/common/searchUser"),
   postGroupFeed = () =>
     import(/* webpackChunkName: 'common' */ "../page/common/postGroupFeed/");
 
@@ -48,9 +41,6 @@ const WalletWithdraw = () =>
  */
 const WalletDetail = () =>
   import(/* webpackChunkName: 'wallet' */ "@/page/wallet/WalletDetail");
-
-const UserFans = () =>
-  import(/* webpackChunkName: 'user' */ "@/page/user/UserFans");
 
 const router = [
   /* 基础入口 */
@@ -103,39 +93,11 @@ const router = [
   },
 
   /* 公共页面 */
-
-  {
-    path: "/user/:userID(\\d+)",
-    component: UserHome,
-    meta: {
-      title: "个人主页",
-      keepAlive: true
-    }
-  } /* 个人主页 */,
-  {
-    path: "/user/:userID(\\d+)/fans",
-    component: UserFans,
-    meta: {
-      title: "粉丝",
-      keepAlive: true,
-      requiresAuth: true
-    }
-  },
-  {
-    path: "/search_user/",
-    component: searchUser,
-    meta: { title: "搜索用户", keepAlive: true }
-  } /* 搜索用户 */,
   {
     path: "/tags",
     component: chooseTags,
     meta: { title: "选择标签" }
   } /* 选择标签 */,
-  {
-    path: "/location",
-    component: chooseLocation,
-    meta: { title: "选择位置" }
-  } /* 定位 */,
 
   {
     path: "/post/fatie",

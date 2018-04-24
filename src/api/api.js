@@ -1,6 +1,6 @@
 import axios from "axios";
-import lstore from "@/plugins/lstore/lstore.js";
 import Message from "@/plugins/message-box";
+import lstore from "@/plugins/lstore/lstore.js";
 
 let cancel;
 let pending = {};

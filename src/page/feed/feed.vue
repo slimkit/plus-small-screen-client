@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="p-feed">
     <nav class="m-box m-head-top m-lim-width m-pos-f m-main m-bb1">
       <ul class="m-box m-flex-grow1 m-aln-center m-justify-center m-flex-base0 m-head-nav">
         <router-link tag="li" to="/feed/new" active-class="active" exact replace>
@@ -114,11 +114,13 @@ export default {
 };
 </script>
 
-<style scoped>
-.p-feed-main {
-  padding-top: 90px;
-}
-.p-feed-main li + li {
-  margin-top: 10px;
+<style lang="less">
+.p-feed {
+  .p-feed-main {
+    padding-top: 90px;
+  }
+  .p-feed-main li + li {
+    margin-top: 10px;
+  }
 }
 </style>
