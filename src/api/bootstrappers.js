@@ -54,7 +54,7 @@ export function getGeo(address) {
     ({
       data: {
         geocodes: [
-          { /*city, district, province, location,*/ formatted_address }
+          { /*city, district, province, */ location, formatted_address }
         ]
       } = {}
     }) => {
