@@ -1,6 +1,14 @@
-import http from "@/http.js";
+import http from "@/api/api.js";
 import _ from "lodash";
 
+/**
+ * 绑定事件
+ * @author jsonleex <jsonlseex@163.com>
+ * @param  {DOM}        el
+ * @param  {String}     type
+ * @param  {Function}   func
+ * @param  {Boolean}    capture
+ */
 function onEvent(el, type, func, capture = false) {
   el.addEventListener(type, func, {
     capture: capture
@@ -9,65 +17,70 @@ function onEvent(el, type, func, capture = false) {
 /**
  *  图片懒加载, 支持背景图片
  */
-
-/* eslint-disable no-extend-native */
-/**
- * 数组item remove方法
- * @author jsonleex <jsonlseex@163.com>
- */
-if (!Array.prototype.remove) {
-  Array.prototype.remove = function(item) {
-    if (!this.length) return;
-    var index = this.indexOf(item);
-    if (index > -1) {
-      this.splice(index, 1);
-      return this;
-    }
-  };
-}
 export default Vue => {
-  const listenList = [];
-  const imageFileCatch = [];
-  const imageCatcheList = [];
-  const isAlredyLoad = fileID => {
-    return imageFileCatch.indexOf(fileID);
-  };
+  // 图片监听列表
+  const listenList = new Map();
 
-  /*
- *  check el is in view
- *  @return {Boolean} el is in view
- */
+  // 图片缓存列表
+  const imageCatche = new Map();
+
   const wH = window.innerHeight;
   const wW = window.innerWidth;
+
+  /**
+   * 判断节点是否在视口内
+   * @author jsonleex <jsonlseex@163.com>
+   * @param  {DOM} el
+   * @return {Boolean}
+   */
   const checkInView = el => {
     const rect = el.getBoundingClientRect();
+
     return (
       rect.top < wH * 1.3 &&
       rect.bottom > 1.3 &&
       (rect.left < wW * 1.3 && rect.right > 0)
     );
   };
+
   const isCanShow = item => {
     const { el, file, q = 40 } = item;
     const isIMG = el.nodeName === "IMG";
     if (checkInView(el)) {
       let image = new Image();
       el.classList.add("loading");
-      http.get(`/files/${file}?q=${q}&json=true`).then(({ data: { url } }) => {
-        image.src = url;
-        image.onload = () => {
-          isIMG ? (el.src = url) : (el.style.backgroundImage = `url(${url})`);
-          listenList.remove(item);
-          imageFileCatch.push(file);
-          imageCatcheList.push(url);
-          image = null;
-          el.classList.remove("loading");
-        };
-        image.onerror = () => {
-          listenList.remove(item);
-          el.classList.remove("loading");
-        };
-      });
+      /**
+       * 获取图片真实链接
+       */
+      http
+        .get(`/files/${file}?q=${q}&json=true`, {
+          // 验证 status ; 屏蔽 404 抛错
+          vaildateStatus: s => s === 200 || s === 201 || s === 204 || s === 400
+        })
+        .then(({ data: { url } }) => {
+          if (url) {
+            image.src = url;
+
+            image.onload = () => {
+              isIMG
+                ? (el.src = url)
+                : (el.style.backgroundImage = `url(${url})`);
+
+              listenList.delete(file);
+              imageCatche.set(file, url);
+
+              el.classList.remove("loading");
+
+              image = null;
+            };
+
+            image.onerror = () => {
+              listenList.delete(file);
+              el.classList.remove("loading");
+              el.classList.add("error");
+            };
+          }
+        });
       return true;
     } else {
       return false;
@@ -75,12 +88,14 @@ export default Vue => {
   };
   const addListener = (el, binding) => {
     const file = binding.value;
-    const index = isAlredyLoad(file.file);
     const isIMG = el.nodeName === "IMG";
-    if (index > -1)
+
+    // 检查图片是否已加载过
+    if (imageCatche.has(file.file))
       return isIMG
-        ? (el.src = imageCatcheList[index])
-        : (el.style.backgroundImage = `url(${imageCatcheList[index]})`);
+        ? (el.src = imageCatche.get(file.file))
+        : (el.style.backgroundImage = `url(${imageCatche.get(file.file)})`);
+
     const item = {
       el,
       nodeName: el.nodeName,
@@ -88,13 +103,19 @@ export default Vue => {
       loading: true,
       ...file
     };
+
+    // 检查图片是否刚好在视口内
     if (isCanShow(item)) return;
-    listenList.push(item);
+
+    listenList.set(file.file, item);
   };
+
+  // 注册 vue 自定义指令
   Vue.directive("async-image", {
     inserted: addListener,
     updated: addListener
   });
+
   [
     "scroll",
     "wheel",
@@ -108,10 +129,10 @@ export default Vue => {
       window,
       evt,
       _.debounce(() => {
-        listenList.map(img => {
+        listenList.forEach(img => {
           isCanShow(img);
         });
-      }, 1000 / 60)
+      }, 1e3)
     )
   );
 };

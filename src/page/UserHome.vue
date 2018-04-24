@@ -163,7 +163,7 @@ export default {
   },
   data() {
     return {
-      preID: 0,
+      preUID: 0,
       scrollTop: 0,
       bannerHeight: 0,
       loading: true,
@@ -289,14 +289,6 @@ export default {
   watch: {
     screen() {
       this.updateData();
-    },
-    userID(val) {
-      val &&
-        val !== this.preID &&
-        ((this.loading = true),
-        (this.feeds = []),
-        (this.tags = []),
-        this.updateData());
     }
   },
   methods: {
@@ -332,7 +324,6 @@ export default {
         .get(`/users/${this.userID}`)
         .then(({ data = {} }) => {
           this.user = Object.assign(this.user, data);
-          this.preID = this.userID;
           this.loading = false;
         })
         .catch(
@@ -540,15 +531,22 @@ export default {
       this.footroom.init());
   },
   activated() {
-    this.preID !== this.userID
-      ? this.updateData()
+    this.preUID !== this.userID
+      ? ((this.loading = true),
+        (this.feeds = []),
+        (this.tags = []),
+        this.updateData())
       : setTimeout(() => {
           this.loading = false;
-        }, 600);
+        }, 300);
+
     window.addEventListener("scroll", this.onScroll);
+
     if (this.isWechat) {
       this.getWeChatConfig();
     }
+
+    this.preUID = this.userID;
   },
   deactivated() {
     this.loading = true;

@@ -46,6 +46,7 @@ export default {
     return {
       followers,
       followings,
+      preUID: 0,
       USERSChangeTracker: 1
     };
   },
@@ -76,6 +77,18 @@ export default {
     type(val) {
       this.isCurrentView && val && this.$refs.loadmore.beforeRefresh();
     }
+  },
+  activated() {
+    this.isCurrentView = true;
+
+    // 判断是否清空上一次的数据
+    this.userID === this.preUID ||
+      (this.followers.clear(), this.followings.clear());
+    this.$refs.loadmore.beforeRefresh();
+    this.preUID = this.userID;
+  },
+  deactivated() {
+    this.isCurrentView = false;
   },
   methods: {
     formatedUsers(users) {

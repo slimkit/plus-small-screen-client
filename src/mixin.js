@@ -21,12 +21,6 @@ export default {
       }
     }
   },
-  activated() {
-    this.isCurrentView = true;
-  },
-  deactivated() {
-    this.isCurrentView = false;
-  },
   methods: {
     uniqById(target = [], source = []) {
       return _.unionBy([...target, ...source], "id");
