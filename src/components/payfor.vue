@@ -12,7 +12,7 @@
         </h2>
         <div class="m-payfor-body">
           <h3 class="m-payfor-amount">{{ amount.toFixed(2) }}</h3>
-          <p>您只需{{ amount.toFixed(2) }}{{ currency_name }}就可查看图片</p>
+          <p>{{ content ||  `您只需${ amount.toFixed(2) }${ currency_name }就可查看图片` }}</p>
         </div>
         <div class="m-payfor-foot">
           <button class="m-payfor-btn primary" @click="handelOk">{{ confirmText || "购买" }}</button>
@@ -35,7 +35,8 @@ export default {
       scrollTop: 0,
       title: "",
       cancelText: "",
-      confirmText: ""
+      confirmText: "",
+      content: ""
     };
   },
   computed: {
@@ -56,8 +57,12 @@ export default {
         onOk,
         onCancel,
         node,
-        onSuccess
+        onSuccess,
+        content = ""
       } = options;
+
+      this.content = content;
+
       node && (this.node = node);
       title && (this.title = title);
       cancelText && (this.cancelText = cancelText);
