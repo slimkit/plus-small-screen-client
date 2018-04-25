@@ -57,7 +57,7 @@
       :multiple="multiple" 
       :accept="acceptType" 
       @change="selectPhoto">
-      <image-paid-option ref="imageOption"/>
+    <image-paid-option ref="imageOption"/>
   </div>
 </template>
 <script>
@@ -181,6 +181,14 @@ export default {
   watch: {
     pics() {
       this.updateComposePhoto(this.pics);
+    },
+    edit(val) {
+      val ||
+        this.pics.forEach((pic /*, index*/) => {
+          delete pic.amount;
+          delete pic.amountType;
+          // this.$set(this.pics, index, pic);
+        });
     }
   },
   methods: {

@@ -29,11 +29,11 @@ export default {
       /**
        * Vue 暂时没有实现监听 Map Set, 手动触发更新
        */
-      return this.USERSChangeTracker && [...this.USERS];
+      return this.USERSChangeTracker && Array.from(this.USERS.values());
     }
   },
   data() {
-    const USERS = new Set();
+    const USERS = new Map();
     return {
       USERSChangeTracker: 1,
       USERS,
@@ -50,7 +50,7 @@ export default {
   methods: {
     async formateUser(id) {
       const user = await getUserInfoById(id);
-      this.USERS.add(user);
+      this.USERS.set(id, user);
       this.USERSChangeTracker += 1;
     },
     onRefresh() {

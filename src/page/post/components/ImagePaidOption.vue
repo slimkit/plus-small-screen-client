@@ -10,7 +10,7 @@
             <span>{{ title }}</span>
           </slot>
         </h2>
-        <div class="m-image-paid-option-row">
+<!--         <div class="m-image-paid-option-row">
           <p class="m-image-paid-option-label">选择图片收费方式</p>
           <div class="m-box m-aln-center m-justify-bet m-image-paid-option-btns">
             <div 
@@ -38,7 +38,7 @@
                 style="position: absolute; z-index: -9999; visibility: hidden;">
             </div>
           </div>
-        </div>
+        </div> -->
         <div class="m-image-paid-option-row m-bt1">
           <p class="m-image-paid-option-label">选择图片收费金额</p>
           <div class="m-box m-aln-center m-justify-bet m-image-paid-option-btns">
@@ -77,7 +77,7 @@ export default {
     return {
       isShow: false,
       title: "图片收费选项",
-      type: "",
+      // type: "",
       amount: null,
       customAmount: null,
       curIndex: -1
@@ -110,33 +110,33 @@ export default {
       this.amount = amount;
     },
     handleOk() {
-      const { curIndex, type, amount } = this.$data;
+      const { curIndex, /* type,*/ amount } = this.$data;
       curIndex > -1
-        ? type
-          ? amount > 0
-            ? (this.$parent.$set(
-                this.$parent.pics,
-                curIndex,
-                Object.assign(this.$parent.pics[curIndex], {
-                  amount,
-                  amountType: type
-                })
-              ),
-              this.cancel())
-            : this.$Message.error("请输入或选择 收费金额")
-          : this.$Message.error("请选择 收费方式")
-        : this.cancel();
+        ? // ? type
+          amount > 0
+          ? (this.$parent.$set(
+              this.$parent.pics,
+              curIndex,
+              Object.assign(this.$parent.pics[curIndex], {
+                amount,
+                amountType: "read"
+              })
+            ),
+            this.cancel())
+          : this.$Message.error("请输入或选择 收费金额")
+        : // : this.$Message.error("请选择 收费方式")
+          this.cancel();
     },
     show(image, index) {
-      const { amountType, amount } = image;
-      this.type = amountType;
+      const { /*amountType*/ amount } = image;
+      // this.type = amountType;
       this.amount = amount;
       this.curIndex = index;
       this.isShow = true;
     },
     cancel() {
       this.isShow = false;
-      this.type = null;
+      // this.type = null;
       this.amount = null;
       this.curIndex = -1;
       this.customAmount = null;
@@ -151,9 +151,9 @@ export default {
   left: 50%;
   z-index: 120;
   transform: translate(-50%, -50%);
-  padding: 0 50px 50px;
+  padding: 0 50px;
   width: 650px;
-  min-height: 850px;
+  // min-height: 650px;
   border-radius: 10px;
   background-color: #fff;
 }
