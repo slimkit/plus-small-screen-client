@@ -5,7 +5,7 @@
     <ul class="m-pics-list">
       <li v-for='(img, index) in pics.slice(0, 9)' :key="`pics-${id}-${index}`">
         <div
-        :class="['m-pics-box',{ 'long': isLongImg(img) }, { 'gif': img.mime.indexOf('gif') > -1 }]"
+        :class="['m-pics-box',{ 'long': isLongImg(img) }, { 'gif': (img.mime || '').indexOf('gif') > -1 }]"
         :style='pics.length === 1 ? longStyle(img.w, img.h) : ""'>
           <div
             class="m-pic"

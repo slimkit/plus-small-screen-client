@@ -99,3 +99,11 @@ export function getGroupsByCate(cate = -1, limit = 15, offset = 0) {
       return [];
     });
 }
+
+export function collectGroupPost(postId, status) {
+  const url = status
+    ? `/plus-group/group-posts/${postId}/uncollect`
+    : `/plus-group/group-posts/${postId}/collections`;
+  const method = status ? "delete" : "post";
+  return api({ method, url, validateStatus: s => s === 201 || s === 204 });
+}
