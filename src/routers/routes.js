@@ -7,15 +7,6 @@ import postRoutes from "./post.js";
 import groupRoutes from "./group.js";
 import messageRoutes from "./message.js";
 import questionRoutes from "./question.js";
-/* eslint-disable one-var */
-const /* 公共页面 */
-
-  // 用户标签选择
-  chooseTags = () =>
-    import(/* webpackChunkName: 'common' */ "../page/common/chooseTags"),
-  postGroupFeed = () =>
-    import(/* webpackChunkName: 'common' */ "../page/common/postGroupFeed/");
-
 /**
  * 钱包页面
  * @auth:  jsonleex <jsonleex@163.com>
@@ -55,13 +46,6 @@ const router = [
   ...messageRoutes,
   ...questionRoutes,
 
-  /**
-   * 消息页面路由
-   */
-  /**
-   * 消息页面路由结束
-   */
-
   {
     path: "/wallet",
     component: wallet,
@@ -91,24 +75,16 @@ const router = [
       title: "明细"
     }
   },
-
-  /* 公共页面 */
-  {
-    path: "/tags",
-    component: chooseTags,
-    meta: { title: "选择标签" }
-  } /* 选择标签 */,
-
-  {
-    path: "/post/fatie",
-    name: "postGroupFeed",
-    component: postGroupFeed,
-    meta: {
-      keepAlive: true,
-      title: "发布帖子",
-      requiresAuth: true
-    }
-  },
+  // {
+  //   path: "/post/fatie",
+  //   name: "postGroupFeed",
+  //   component: postGroupFeed,
+  //   meta: {
+  //     keepAlive: true,
+  //     title: "发布帖子",
+  //     requiresAuth: true
+  //   }
+  // },
   { path: "*", component: NotFound } /* 404 页面 */
 ];
 

@@ -42,10 +42,10 @@ export default {
     lstore.setData("H5_CUR_USER", state.CURRENTUSER);
   },
 
-  // 保存圈子分类信息
-  SAVE_GROUP_TYPES(state, list) {
-    state.GROUPTYPES = list;
-    lstore.setData("GROUPTYPES", state.GROUPTYPES);
+  // 保存圈子分类列表
+  SAVE_GROUP_CATES(state, cates) {
+    state.GROUP_CATES = cates;
+    lstore.setData("GROUP_CATES", cates);
   },
 
   // 保存用户标签数据

@@ -1,195 +1,160 @@
 <template>
-  <div>
-    <head-top :go-back='cancel' append='true' title='圈子'>
-      <div slot='append'>
-        <v-icon type='base-search' @click.native='to(`/group/search`)'></v-icon>
-        <v-icon type='group-add' @click.native='createdGroup'></v-icon>
+  <div class="p-group">
+    <header class="m-box m-aln-center m-justify-bet m-head-top m-pos-f m-main m-bb1">
+      <div class="m-box m-aln-center m-flex-grow1 m-flex-shrink1">
+        <svg class="m-style-svg m-svg-def" @click="goBack">
+          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-back"></use>
+        </svg>
       </div>
-    </head-top>
-    <div>
-      <!-- 等待加入 -->
-      <div class="entry__group padding group-count">
-        <div class="entry__item" @click='to(`/group/all`)'>
-            <p class="entry__title"><span class="num">{{ count }}</span>个兴趣小组, 等待你的加入</p>
-          <svg class='entry__item--append'>
-            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-arrow-r"></use>
-          </svg>
-        </div>  
+      <div class="m-box m-aln-center m-flex-grow1 m-flex-shrink1 m-justify-center m-head-top">
+        <span>圈子</span>
       </div>
+      <div class="m-box m-aln-center m-flex-grow1 m-flex-shrink1">
+        <!-- <router-link to="group/search" tag='svg' class="m-style-svg m-svg-def">
+          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-search"></use>
+        </router-link>
+        <router-link to="group/new" tag='svg' class="m-style-svg m-svg-def">
+          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#group-add"></use>
+        </router-link> -->
+      </div>
+    </header>
+
+    <main style="padding-top: 0.9rem">
+      <router-link :to="{ name: 'groups', query: { type: 'recommend' } }" class="m-box m-aln-center m-justify-bet m-main mt10 group-label m-bb1">
+        <h2><strong>{{ groupTotalNumber }}</strong>个兴趣小组，等待你的加入！</h2>
+        <svg class="m-style-svg m-svg-def m-entry-append">
+          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-arrow-r"></use>
+        </svg>
+      </router-link>
       <!-- 我加入的 -->
-      <div class="group-list-group joined">
-        <div class="group-list-label" @click='to(`/group/joined`)'>
+      <div class="m-box-model">
+        <router-link 
+          tag="div"
+          :to="`/users/${currentUserID}/group`"
+          class="m-box m-aln-center m-justify-bet m-main mt10 group-label m-bb1 m-bt1 m-pos-stick">
           <span>我加入的</span>
-          <div class="group-list-more">
-            <span>查看更多</span>
-            <v-icon type='base-arrow-r'></v-icon>
-          </div>
-        </div>
-        <group-list-item :role='true' v-for='item in joined' v-if='item.id' :key='`group-${item.id}`' :group='item'></group-list-item>
+          <div class="m-box m-aln-center m-justify-end">
+            <span>查看全部</span>
+            <svg class="m-style-svg m-svg-def m-entry-append">
+              <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-arrow-r"></use>
+            </svg>
+          </div>      
+        </router-link>
+        <ul class="group-list">
+          <li v-for="group in groups" :key="`mygroup-${group.id}`">
+            <group-item :group="group" />
+          </li>
+        </ul>
       </div>
-      <!-- 我加入的 END -->
-      <!-- 推荐 -->
-      <div class="group-list-group recommend" v-if='showRecommend'>
-        <div class="group-list-label">
+
+      <!-- 推荐圈子 -->
+      <div class="m-box-model" v-if="recGroups.length > 0">
+        <div class="m-box m-aln-center m-justify-bet m-main mt10 group-label m-bb1 m-bt1 m-pos-stick">
           <span>热门推荐</span>
-          <div class="group-list-more" @click='getRec'>
-            <v-icon type='base-refresh' :style='{ transform: `rotate(${clickCount}turn)` }'></v-icon>
-            <span>换一批</span>
+          <div class="m-box m-aln-center m-justify-end" @click="fetchRecGroups">
+            <svg class="m-style-svg m-svg-small" :style='{ transform: `rotate(${clickCount}turn)` }'>
+              <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-refresh"></use>
+            </svg>
+            <span style="margin-left: 0.05rem">换一批</span>
           </div>
-        </div>
-        <group-list-item v-for='item in recommend' v-if='item.id' :key='`group-${item.id}`' :group='item'></group-list-item>
+        </div>  
+        <ul class="group-list">
+          <li v-for="group in recGroups" :key="`recgroup-${group.id}`">
+            <group-item :group="group" />
+          </li>
+        </ul>
       </div>
-      <!-- 推荐 END -->
-    </div>
+    </main>
   </div>
 </template>
 <script>
-import HeadTop from "../../components/HeadTop";
-import groupListItem from "./components/groupListItem";
+import GroupItem from "./GroupItem.vue";
+import { getGroupTotalNumber, getMyGroups, getRecGroups } from "@/api/group.js";
 export default {
-  name: "groupIndex",
+  name: "group",
   components: {
-    HeadTop,
-    groupListItem
+    GroupItem
   },
   data() {
+    const myGroups = new Map();
     return {
-      joined: [],
-      recommend: [],
-      count: 0, // 圈子总数
-      clickCount: 0
+      myGroups,
+      recGroups: [],
+      clickCount: 0,
+      groupTotalNumber: 1,
+
+      fetchRecing: false,
+      myGroupChangeTracker: 0
     };
   },
   computed: {
-    showRecommend() {
-      return this.recommend.length > 0;
+    currentUserID() {
+      return this.$store.state.CURRENTUSER.id;
+    },
+    groups() {
+      return this.myGroupChangeTracker && [...this.myGroups.values()];
     }
   },
+  mounted() {
+    getGroupTotalNumber().then(count => {
+      this.groupTotalNumber = count;
+    });
+  },
   methods: {
-    cancel() {
-      this.to("/discover");
+    formateGroups(groups) {
+      groups.forEach(group => {
+        this.myGroups.set(group.id, group);
+        this.myGroupChangeTracker += 1;
+      });
     },
-    to(path) {
-      path = typeof path === "string" ? { path } : path;
-      if (path) {
-        this.$router.push(path);
-      }
+    fetchMyGroups() {
+      getMyGroups().then(groups => {
+        this.formateGroups(groups);
+      });
     },
-    createdGroup() {
-      this.$router.push("/group/add");
-      // this.$Modal.info({
-      //     content: '只有认证通过的用户才可以创建圈子, 是否去认证?',
-      //     okText: '去认证',
-      //     showOk: true,
-      //     onOk() {
-      //         console.log('去认证');
-      //     }
-      // })
-    },
-
-    // 获取首页圈子
-    getGroup() {
-      this.$http
-        .get("/plus-group/user-groups")
-        .then(({ data = [] }) => {
-          if (data) {
-            this.joined = [...data];
-          }
-        })
-        .catch(err => {
-          const {
-            response: { data = { message: "获取圈子列表失败" } } = {}
-          } = err;
-          this.$Message.error(data);
-        });
-
-      this.getRec();
-
-      this.$http
-        .get("/plus-group/groups/count")
-        .then(({ data: { count = 0 } }) => {
-          this.count = count;
-        })
-        .catch(err => {
-          console.log(err);
-          console.log("获取圈子动态总数失败!");
-        });
-    },
-    // 获取推荐圈子
-    getRec() {
-      this.$http
-        .get("/plus-group/recommend/groups?type=random")
-        .then(({ data = [] }) => {
-          if (data) {
-            this.recommend = [...data];
-            this.clickCount += 1;
-          }
-        });
+    fetchRecGroups() {
+      if (this.fetchRecing) return;
+      this.fetchRecing = true;
+      getRecGroups().then(groups => {
+        this.recGroups = groups;
+        this.clickCount += 1;
+        this.fetchRecing = false;
+      });
     }
   },
   created() {
-    this.getGroup();
-    this.$store.dispatch("GET_GROUP_TYPES");
-  }
+    this.fetchMyGroups();
+    this.fetchRecGroups();
+  },
+  activated() {}
 };
 </script>
+
 <style lang="less">
-@group-list-prefixCls: group-list;
+.p-group {
+  .group-label {
+    font-size: 24px;
+    color: @text-color3;
+    padding: 20px;
+    strong {
+      font-size: 40px;
+      color: #f4504d;
+    }
 
-.entry__group.group-count {
-  margin: 10px 0;
-  margin-top: 0 !important;
-  font-size: 24px;
-  span.num {
-    margin: 0;
-    font-size: 40px;
-    color: #f4504d;
-  }
+    .m-svg-small {
+      transition: transform 0.5s ease;
+    }
 
-  .entry__title {
-    margin: 0;
-    flex: 1 1 auto;
-    color: #999;
-  }
-
-  .entry__item--append.v-icon {
-    color: #999;
-    margin-right: 0;
-    width: 24px;
-    height: 24px;
-  }
-}
-
-.@{group-list-prefixCls} {
-  &-group {
-    background-color: #fff;
-    font-size: 26px;
-    color: #999;
-    & + & {
-      margin-top: 10px;
+    &.m-pos-stick {
+      position: sticky;
+      top: 90px;
+      z-index: 9;
     }
   }
-  &-label {
-    padding: 0 20px;
-    border-bottom: 1px solid #ededed;
-    /*no*/
-    height: 70px;
-    line-height: 68px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
 
-  &-more {
-    display: flex;
-    align-items: center;
-    span {
-      margin: 0 5px;
-    }
-    .v-icon {
-      width: 24px;
-      height: 24px;
-      transition: 0.5s ease;
+  .group-list {
+    li {
+      border-top: 1px solid @border-color; /*no*/
     }
   }
 }

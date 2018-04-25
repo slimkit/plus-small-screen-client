@@ -34,7 +34,8 @@ const state = {
   /**
    * 用户信息
    */
-  USERS: lstore.getData("H5_USERS") || {}
+  USERS: lstore.getData("H5_USERS") || {},
+  GROUP_CATES: lstore.getData("H5_GROUP_CATES") || []
 };
 
 export default new Vuex.Store({

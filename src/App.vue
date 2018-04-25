@@ -17,6 +17,7 @@
       <info-tips />
       <choose-tags />
       <EasemobRoot />
+      <chooseGroupCate />
     </div>
   </div>
 </template>
@@ -39,6 +40,8 @@ import CheckIn from "@/page/checkin/CheckIn.vue";
 import Reward from "@/components/reward.vue";
 // 选择标签
 import chooseTags from "@/page/chooseTags.vue";
+//
+import chooseGroupCate from "@/page/chooseGroupCate.vue";
 // 提示性 弹窗
 import infoTips from "@/components/infoTips.vue";
 // 通用置顶弹窗
@@ -63,7 +66,8 @@ export default {
     CheckIn,
     PostMenu,
     chooseTags,
-    EasemobRoot
+    EasemobRoot,
+    chooseGroupCate
   },
   methods: {
     ...mapActions(["BOOTSTRAPPERS"])
