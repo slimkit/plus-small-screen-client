@@ -122,7 +122,7 @@
               @change="selectPhoto">
           </div>
           <p>不上传封面则默认为文章内第一张图</p>
-          <button class="m-long-btn m-signin-btn" @click="handleOk">支付并发布文章</button>
+          <button class="m-long-btn m-signin-btn" @click="handleOk">{{ this.newsPay ? '支付并发布资讯' : '发布资讯' }}</button>
         </div>
       </template>
     </transition-group>
@@ -131,12 +131,19 @@
 </template>
 <script>
 import bus from "@/bus.js";
+import { mapState } from "vuex";
 import sendImage from "@/util/SendImage.js";
 import chooseCate from "@/page/chooseCate.vue";
 export default {
   name: "post-news",
   components: {
     chooseCate
+  },
+  created() {
+    if (!this.canPostNews) {
+      this.$Message.error("请先认证");
+      this.$router.go(-1);
+    }
   },
   data() {
     return {
@@ -161,6 +168,15 @@ export default {
     };
   },
   computed: {
+    ...mapState({
+      newsPay: state => state.CONFIG["news:contribute"].pay,
+      newCurrency: state => state.CONFIG["news:pay_conyribute"],
+      newsVerified: state => state.CONFIG["news:contribute"].verified,
+      verified: state => state.CURRENTUSER.verified
+    }),
+    canPostNews() {
+      return !this.newsVerified || (this.newsVerified && this.verified);
+    },
     contentText: {
       get() {
         return this.news.content;
@@ -268,6 +284,24 @@ export default {
     posterError() {
       this.$Message.error("封面图上传失败, 请重试");
     },
+    handlePostNews(param) {
+      this.news.form && (param.form = this.news.form);
+      this.poster.id > 0 && (param.image = this.poster.id);
+      this.news.author && (param.author = this.news.author);
+      this.news.subject && (param.subject = this.news.subject);
+
+      // POST /news/categories/:category/news
+      this.$http
+        .post(`/news/categories/${this.category.id}/news`, param)
+        .then(({ data }) => {
+          this.$Message.success(data);
+          this.goBack();
+        })
+        .catch(err => {
+          console.log(err);
+          this.$Message.error("发生了一些错误");
+        });
+    },
     handleOk() {
       const { title, content } = this.news;
       if (!(title && content))
@@ -277,38 +311,23 @@ export default {
       if (this.tags.length === 0) {
         return this.$Message.error("请选择标签"), (this.step = 2);
       }
-
-      bus.$emit("payfor", {
-        title: "投稿支付",
-        amount: 20,
-        content: "本次投稿您需要支付20.00金币是否继续投稿？",
-        confirmText: "确认投稿",
-        cancelText: "暂不考虑",
-        onOk: () => {
-          const param = {
-            title,
-            content,
-            tags: this.tags.map(t => t.id).join(",")
-          };
-
-          this.news.form && (param.form = this.news.form);
-          this.poster.id > 0 && (param.image = this.poster.id);
-          this.news.author && (param.author = this.news.author);
-          this.news.subject && (param.subject = this.news.subject);
-
-          // POST /news/categories/:category/news
-          this.$http
-            .post(`/news/categories/${this.category.id}/news`, param)
-            .then(({ data }) => {
-              this.$Message.success(data);
-              this.goBack();
-            })
-            .catch(err => {
-              console.log(err);
-              this.$Message.error("发生了一些错误");
-            });
-        }
-      });
+      const param = {
+        title,
+        content,
+        tags: this.tags.map(t => t.id).join(",")
+      };
+      this.newsPay
+        ? bus.$emit("payfor", {
+            title: "投稿支付",
+            amount: this.newCurrency,
+            content: `本次投稿您需要支付${this.newCurrency}积分,是否继续投稿？`,
+            confirmText: "确认投稿",
+            cancelText: "暂不考虑",
+            onOk: () => {
+              this.handlePostNews(param);
+            }
+          })
+        : this.handlePostNews(param);
     },
     preStep() {
       this.step > 1 &&

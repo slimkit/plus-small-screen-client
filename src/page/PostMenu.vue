@@ -30,7 +30,7 @@
           <div
           v-if="open"
           key="ico_contribute"
-          @click="to('/post/release')"
+          @click="canPostNews ? to('/post/release') : message()"
           class="m-box-model m-aln-center m-post-menu-item">
             <img src="../images/ico_contribute@3x.png">
             <span>投稿</span>
@@ -75,6 +75,7 @@
 </template>
 <script>
 import bus from "@/bus.js";
+import { mapState } from "vuex";
 export default {
   name: "post-menu",
   data() {
@@ -90,6 +91,13 @@ export default {
     });
   },
   computed: {
+    ...mapState({
+      verified: state => state.CURRENTUSER.verified,
+      newsVerified: state => state.CONFIG["news:contribute"].verified
+    }),
+    canPostNews() {
+      return !this.newsVerified || (this.newsVerified && this.verified);
+    },
     login() {
       return !!this.$store.state.CURRENTUSER.id;
     },
@@ -103,6 +111,9 @@ export default {
     }
   },
   methods: {
+    message() {
+      this.$Message.error("请先进行身份认证");
+    },
     to(path) {
       path = this.login ? path : `/signin?redirect=${path}`;
       !this.login && this.$Message.error("请登录");
