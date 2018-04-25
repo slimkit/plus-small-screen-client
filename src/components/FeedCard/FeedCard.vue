@@ -16,8 +16,9 @@
           </div>
         </header>
         <article class="m-card-body" @click="handelView">
+          <h2 v-if="title">{{ title }}</h2>
           <div class="m-card-con" v-if="body.length > 0">
-            <p 
+            <p
             class="m-text-box m-text-cut-4"
             :class="{needPay}"
             v-html="replaceURI(body)"></p>
@@ -178,6 +179,9 @@ export default {
             2
           )}</span>`
         : `<span>${text}</span>`;
+    },
+    title() {
+      return this.feed.title || "";
     }
   },
   methods: {
@@ -413,6 +417,13 @@ export default {
       // filter: DXImageTransform.Microsoft.Blur(pixelradius=2);
       zoom: 1;
       pause-before: 3s;
+    }
+  }
+  &-body {
+    > h2 {
+      font-size: 32px;
+      font-weight: bold;
+      margin-bottom: 20px;
     }
   }
   &-foot {

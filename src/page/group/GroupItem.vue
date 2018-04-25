@@ -1,12 +1,12 @@
 <template>
-  <section class="m-box m-aln-center m-justify-bet m-main group-item">
+  <section class="m-box m-aln-center m-justify-bet m-main group-item" @click="beforeViewDetail">
     <div class="m-flex-grow0 m-flex-shrink0 group-item-avatar">
       <img :src="avatar">
     </div>
     <div class="m-flex-grow1 m-flex-shrink1 group-item-info">
       <div class="m-box m-aln-center m-text-cut">
         <h2>{{ name }}</h2>
-        <svg class="m-style-svg m-svg-def">
+        <svg class="m-style-svg m-svg-def" v-if="mode === 'paid'">
           <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#id"></use>
         </svg>
       </div>
@@ -19,11 +19,18 @@
       <span>{{ role }}</span>
     </div>
     <div class="m-box m-aln-center m-flex-grow0 m-flex-shink0 group-item-action" v-if="showAction">
-      <button class="m-text-cut" v-if="!joined" :disabled="loading" @click="beforeJoined">
-        <svg class="m-style-svg m-svg-def" :style="loading ? {} : {width: '0.2rem', height:'0.2rem'}">
+      <button 
+        class="m-text-cut"
+        v-if="!joined || joined.audit === 0"
+        :disabled="loading || joined.audit === 0"
+        @click.stop="beforeJoined">
+        <svg 
+        v-if="!(joined.audit ===0)"
+        class="m-style-svg m-svg-def"
+        :style="loading ? {} : {width: '0.2rem', height:'0.2rem'}">
           <use xmlns:xlink="http://www.w3.org/1999/xlink" :xlink:href="`#${loading?'base-loading':'foot-plus'}`"></use>
         </svg>
-        <span>加入</span>
+        <span>{{ joined.audit === 0 ? "审核中" : "加入" }}</span>
       </button>
     </div>
   </section>
@@ -102,7 +109,19 @@ export default {
               this.loading = false;
             }
           })
-        : joinGroup(this.group.id);
+        : joinGroup(this.group.id).then(() => {
+            this.loading = false;
+            this.group.joined = true;
+          });
+    },
+    beforeViewDetail() {
+      this.joined
+        ? this.joined.audit === 1
+          ? this.$router.push(`/groups/${this.group.id}`)
+          : this.$Message.error("审核通过后，才能查看圈子信息哦~")
+        : this.mode === "paid"
+          ? this.$Message.error("需要先加入圈子，才能查看圈子信息哦~")
+          : this.$router.push(`/groups/${this.group.id}`);
     }
   }
 };
@@ -146,35 +165,36 @@ export default {
       object-fit: cover;
     }
   }
-  &-action {
-    button {
-      display: flex;
-      align-items: center;
-      justify-content: center;
+}
 
-      width: 126px;
-      height: 50px;
+.group-item-action {
+  button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-      border: 1px solid currentColor; /*no*/
-      border-radius: 8px;
-      background-color: #fff;
+    width: 126px;
+    height: 50px;
 
-      font-size: 24px;
-      color: @primary;
+    border: 1px solid currentColor; /*no*/
+    border-radius: 8px;
+    background-color: #fff;
+
+    font-size: 24px;
+    color: @primary;
+    transition: all 0.3s ease;
+    span {
       transition: all 0.3s ease;
+      margin-left: 5px;
+    }
+    &[disabled] {
+      color: @border-color;
+      cursor: not-allowed;
       span {
-        transition: all 0.3s ease;
-        margin-left: 5px;
+        color: @text-color3;
       }
-      &[disabled] {
-        color: @border-color;
-        cursor: not-allowed;
-        span {
-          color: @text-color3;
-        }
-        svg {
-          opacity: 0.5;
-        }
+      svg {
+        opacity: 0.5;
       }
     }
   }

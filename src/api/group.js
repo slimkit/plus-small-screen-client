@@ -85,6 +85,14 @@ export function getGroupsByUser(UID, limit = 15, offset = 0) {
   );
 }
 
+/**
+ * 获取指定分类下的圈子列表
+ * @author jsonleex <jsonlseex@163.com>
+ * @param  {Number} cate    分类id (cate === -1  && 获取推荐圈子)
+ * @param  {Number} limit
+ * @param  {Number} offset
+ * @return {Promise -> Array}
+ */
 export function getGroupsByCate(cate = -1, limit = 15, offset = 0) {
   const url =
     cate > -1
@@ -100,10 +108,57 @@ export function getGroupsByCate(cate = -1, limit = 15, offset = 0) {
     });
 }
 
+/**
+ * 收藏圈子帖子
+ * @author jsonleex <jsonlseex@163.com>
+ * @param  {Number} postId
+ * @param  {Boolean} status
+ */
 export function collectGroupPost(postId, status) {
   const url = status
     ? `/plus-group/group-posts/${postId}/uncollect`
     : `/plus-group/group-posts/${postId}/collections`;
   const method = status ? "delete" : "post";
   return api({ method, url, validateStatus: s => s === 201 || s === 204 });
+}
+
+/**
+ * 获取指定圈子的圈子详情
+ * @author jsonleex <jsonlseex@163.com>
+ * @param  {Number} groupID
+ * @return {Promise -> Object}
+ */
+export function getGroupInfoById(groupID) {
+  return get(`/plus-group/groups/${groupID}`).then(
+    ({ data = {} }) => {
+      // TODO 错误处理
+      if (data.message === "未加入该圈子") {
+        throw data;
+      }
+      return data;
+    },
+    err => {
+      throw err;
+    }
+  );
+}
+
+export function getGroudFeedsByType(
+  groupID,
+  type = "latest_post",
+  limit = 15,
+  offset = 0
+) {
+  // /groups/:group/posts
+  return get(
+    `/plus-group/groups/${groupID}/posts?type=${type}&offset=${offset}&limit=${limit}`
+  ).then(
+    ({ data }) => {
+      return data;
+    },
+    err => {
+      console.log(err);
+      return { pinneds: [], posts: [] };
+    }
+  );
 }
