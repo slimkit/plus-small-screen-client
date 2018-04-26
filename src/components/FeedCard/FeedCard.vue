@@ -199,6 +199,7 @@ export default {
       const { paid_node } = this.feed;
       paid_node && !paid_node.paid
         ? bus.$emit("payfor", {
+            content: `您只需支付${paid_node.amount}积分就可查看内容`,
             onCancel: () => {},
             onSuccess: data => {
               this.$Message.success(data);

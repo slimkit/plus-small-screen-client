@@ -27,10 +27,12 @@
       <div></div>
       <div></div>
     </div>
-    <main style="padding-bottom: 0.9rem">    
+    <main 
+      style="overflow-x: hidden; overflow-y:auto; min-height: 100vh"
+      >
       <div ref="banner" class="p-group-detail-banner"
       :style="[groupBackGround,paddingTop, {transitionDuration: dragging ? '0s' : '300ms'}]">
-        <div class="m-box m-aln-center m-justify-st m-pos-f p-group-detail-bg-mask">
+        <div class="m-box m-aln-end m-justify-st m-pos-f p-group-detail-bg-mask">
           <div class="p-group-detail-avatar">
             <img :src="groupAvatar">
           </div>
@@ -86,16 +88,14 @@
         </div>
       </div>
       <ul class="p-group-detail-feeds">
-        <li 
-        v-if="feed.id"
+        <li
         v-for="feed in pinneds"
-        :key='`gdf-${groupID}-pinned-feed${feed.id}`'>
+        :key='`gdf-${groupID}-pinned-feed-${feed.id}`'>
           <group-feed-card :pinned="true" :feed="feed" />
         </li>
         <li 
-        v-if="feed.id"
         v-for="feed in posts"
-        :key='`gdf-${groupID}-feed${feed.id}`'>
+        :key='`gdf-${groupID}-feed-${feed.id}`'>
           <group-feed-card :feed="feed" />
         </li>
       </ul>
@@ -353,7 +353,7 @@ export default {
   }
 }
 .p-group-detail-banner {
-  overflow: hidden;
+  // overflow-x: hidden;
   padding-top: 320/640 * 100%;
   width: 100%;
   transform: translate3d(0, 0, 0);
@@ -390,7 +390,6 @@ export default {
 
   //背景虚化
   &:after {
-    overflow: hidden;
     content: "";
     position: absolute;
     top: 0;
@@ -407,7 +406,7 @@ export default {
 }
 
 .p-group-detail-bg-mask {
-  padding: 0 25px;
+  padding: 0 25px 50px;
   background-color: rgba(124, 124, 124, 0.2);
 }
 

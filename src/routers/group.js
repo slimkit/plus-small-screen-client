@@ -12,7 +12,8 @@ export default [
     component: group,
     meta: {
       title: "圈子首页",
-      keepAlive: true
+      keepAlive: true,
+      requiresAuth: true
     }
   },
   {
@@ -21,7 +22,8 @@ export default [
     component: Groups,
     meta: {
       title: "全部圈子",
-      keepAlive: true
+      keepAlive: true,
+      requiresAuth: true
     }
   },
   {
@@ -30,7 +32,8 @@ export default [
     component: GroupDetail,
     meta: {
       title: "圈子详情",
-      keepAlive: true
+      keepAlive: true,
+      requiresAuth: true
     }
   },
   {
@@ -38,7 +41,8 @@ export default [
     component: GroupsForUser,
     meta: {
       title: "TA的圈子",
-      keepAlive: true
+      keepAlive: true,
+      requiresAuth: true
     }
   },
   {
