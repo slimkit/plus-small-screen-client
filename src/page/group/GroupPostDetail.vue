@@ -3,9 +3,9 @@ import bus from "@/bus.js";
 import Wx from "weixin-js-sdk";
 import wx from "@/util/share.js";
 import markdownIt from "markdown-it";
-import { likeGroupPost } from "@/api/group.js";
 import FeedDetail from "../feed/feedDetail.vue";
 import plusImagePlugin from "markdown-it-plus-image";
+import { likeGroupPost, collectGroupPost } from "@/api/group.js";
 
 export default {
   name: "group-post-detail",
