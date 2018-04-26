@@ -162,3 +162,9 @@ export function getGroudFeedsByType(
     }
   );
 }
+
+export function likeGroupPost(postID, status) {
+  const url = `/plus-group/group-posts/${postID}/likes`;
+  const method = status ? "delete" : "post";
+  return api({ method, url, validateStatus: s => s === 201 || s === 204 });
+}

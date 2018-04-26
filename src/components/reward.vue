@@ -120,6 +120,26 @@ export default {
           });
       };
     });
+    bus.$on("reward:groupPost", postID => {
+      this.rewardType = "feed";
+      this.open();
+      this.rewardFeed = () => {
+        if (this.loading) return;
+        this.loading = true;
+        this.$http
+          .post(`/plus-group/group-posts/${postID}/rewards`, {
+            amount: this.amount
+          })
+          .then(({ data = {} }) => {
+            this.loading = false;
+            this.$Message.success(data);
+            this.$nextTick(this.cancel);
+          })
+          .catch(() => {
+            this.loading = false;
+          });
+      };
+    });
   },
   methods: {
     rewardFeed() {},

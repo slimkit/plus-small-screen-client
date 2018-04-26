@@ -45,7 +45,7 @@
           :src="props.src">
           />
       </async-file>
-      <p class="m-text-box" v-html="replaceURI(feedContent)"></p>
+      <p class="m-text-box" v-html="formatBody(feedContent)"></p>
     </div>
     <div class="m-box m-aln-center m-justify-bet m-art-foot">
       <div class="m-flex-grow1 m-flex-shrink1 m-box m-aln-center m-art-like-list">
@@ -236,11 +236,20 @@ export default {
     },
     isWechat() {
       return this.$store.state.BROWSER.isWechat;
+    },
+    has_collect: {
+      get() {
+        return this.feed.has_collect;
+      },
+      set(val) {
+        this.feed.has_collect = val;
+      }
     }
   },
   methods: {
-    replaceURI(str) {
+    formatBody(str) {
       const reg = /(https?|http|ftp|file):\/\/[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]/g;
+
       return str
         ? str.replace(
             reg,
@@ -372,9 +381,28 @@ export default {
     moreAction() {
       const defaultActions = [
         {
-          text: "收藏",
-          method() {
-            console.log("收藏");
+          text: this.has_collect ? "取消收藏" : "收藏",
+          method: () => {
+            // POST /feeds/:feed/collections
+            // DELETE /feeds/:feed/uncollect
+            let url;
+            let txt;
+            let method;
+            this.has_collect
+              ? ((txt = "取消收藏"),
+                (method = "delete"),
+                (url = `/feeds/${this.feedID}/uncollect`))
+              : ((txt = "已加入我的收藏"),
+                (method = "post"),
+                (url = `/feeds/${this.feedID}/collections`));
+            this.$http({
+              url,
+              method,
+              validataStatus: s => s === 204 || s === 201
+            }).then(() => {
+              this.$Message.success(txt);
+              this.has_collect = !this.has_collect;
+            });
           }
         }
       ];
@@ -545,6 +573,7 @@ export default {
             }
           });
     },
+
     sendComment({ reply_user: replyUser, body }) {
       const params = {};
       if (body && body.length > 0) {
@@ -554,8 +583,9 @@ export default {
           .post(`/feeds/${this.feedID}/comments`, params, {
             validataStatus: s => s === 201
           })
-          .then(() => {
+          .then(({ data: { comment } = { comment: {} } }) => {
             this.$Message.success("评论成功");
+            this.comments.unshift(comment);
             bus.$emit("commentInput:close", true);
           })
           .catch(() => {

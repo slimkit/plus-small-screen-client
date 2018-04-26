@@ -141,7 +141,7 @@ export default {
   },
   created() {
     if (!this.canPostNews) {
-      this.$Message.error("请先认证");
+      this.$Message.error("请先进行身份认证");
       this.$router.go(-1);
     }
   },

@@ -253,7 +253,7 @@ export default {
               ? ((txt = "取消收藏"),
                 (method = "delete"),
                 (url = `/feeds/${this.feedID}/uncollect`))
-              : ((txt = "已加入我的收藏"),
+              : ((txt = "收藏成功"),
                 (method = "post"),
                 (url = `/feeds/${this.feedID}/collections`));
             this.$http({
