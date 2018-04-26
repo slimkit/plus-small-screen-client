@@ -24,9 +24,9 @@
         <span class="m-text-cut">{{ user.name }}</span>
       </div>
       <div class="m-box m-flex-grow1 m-aln-center m-flex-base0 m-justify-end">
-        <svg class="m-style-svg m-svg-def">
+        <!-- <svg class="m-style-svg m-svg-def">
           <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#feed-more"></use>
-        </svg>
+        </svg> -->
       </div>
     </header>
     <div v-if="loading" class="m-pos-f m-spinner">
@@ -402,7 +402,7 @@ export default {
     },
     // 微信内分享
     getWeChatConfig(title = "", desc = "") {
-      const url =
+      const link =
         window.location.origin +
         process.env.BASE_URL.substr(0, process.env.BASE_URL.length - 1) +
         this.$route.fullPath;
@@ -410,7 +410,7 @@ export default {
       const imgUrl = this.user.avatar;
       imgUrl ? imgUrl : "";
       if (this.config.appid === "") {
-        wx.getOauth(url).then(res => {
+        wx.getOauth(link).then(res => {
           this.config.timestamp = res.timestamp || "";
           this.config.signature = res.signature || "";
           this.config.appid = res.appid || "";
@@ -430,7 +430,7 @@ export default {
             Wx.onMenuShareTimeline({
               title,
               desc,
-              link: url,
+              link,
               imgUrl,
               success: () => {
                 this.shareSuccess();
@@ -442,7 +442,7 @@ export default {
             Wx.onMenuShareAppMessage({
               title,
               desc,
-              link: url,
+              link,
               success: () => {
                 this.shareSuccess();
               },
@@ -453,7 +453,7 @@ export default {
             Wx.onMenuShareQQ({
               title,
               desc,
-              link: url,
+              link,
               imgUrl,
               success: () => {
                 this.shareSuccess();
@@ -478,7 +478,7 @@ export default {
           Wx.onMenuShareTimeline({
             title,
             desc,
-            link: url,
+            link,
             imgUrl,
             success: () => {
               this.shareSuccess();
@@ -490,7 +490,7 @@ export default {
           Wx.onMenuShareAppMessage({
             title,
             desc,
-            link: url,
+            link,
             success: () => {
               this.shareSuccess();
             },
@@ -501,7 +501,7 @@ export default {
           Wx.onMenuShareQQ({
             title,
             desc,
-            link: url,
+            link,
             imgUrl,
             success: () => {
               this.shareSuccess();
