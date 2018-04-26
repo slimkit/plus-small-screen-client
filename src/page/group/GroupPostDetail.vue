@@ -43,8 +43,8 @@ export default {
         .get(`/plus-group/groups/${this.groupID}/posts/${this.postID}`)
         .then(({ data = {} }) => {
           this.feed = { ...data };
-          this.share.title = data.user.name + "的帖子";
-          this.share.desc = data.body;
+          this.share.title = data.title;
+          this.share.desc = data.summary;
           this.oldID = this.postID;
           this.fetching = false;
           this.fetchFeedComments();
