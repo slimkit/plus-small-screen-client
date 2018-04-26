@@ -438,6 +438,9 @@ export default {
         process.env.BASE_URL.substr(0, process.env.BASE_URL.length - 1) +
         this.$route.fullPath;
       this.share.link = url;
+      const imgUrl = this.firstImage
+        ? process.env.VUE_APP_API_HOST + this.firstImage
+        : "";
       if (this.config.appid === "") {
         wx.getOauth(url).then(res => {
           this.config.timestamp = res.timestamp || "";
@@ -445,7 +448,7 @@ export default {
           this.config.appid = res.appid || "";
           this.config.noncestr = res.noncestr || "";
           Wx.config({
-            debug: true,
+            debug: false,
             appId: this.config.appid,
             timestamp: this.config.timestamp,
             signature: this.config.signature,
@@ -460,7 +463,7 @@ export default {
               title,
               desc,
               link: this.share.link,
-              imgUrl: this.firstImage,
+              imgUrl,
               success: () => {
                 this.shareSuccess();
               },
@@ -472,7 +475,6 @@ export default {
               title,
               desc,
               link: this.share.link,
-              imgUrl: this.firstImage,
               success: () => {
                 this.shareSuccess();
               },
@@ -484,7 +486,7 @@ export default {
               title,
               desc,
               link: this.share.link,
-              imgUrl: this.firstImage,
+              imgUrl,
               success: () => {
                 this.shareSuccess();
               },
@@ -496,7 +498,7 @@ export default {
         });
       } else {
         Wx.config({
-          debug: true,
+          debug: false,
           appId: this.config.appid,
           timestamp: this.config.timestamp,
           signature: this.config.signature,
@@ -509,7 +511,7 @@ export default {
             title,
             desc,
             link: this.share.link,
-            imgUrl: this.firstImage,
+            imgUrl,
             success: () => {
               this.shareSuccess();
             },
@@ -521,7 +523,6 @@ export default {
             title,
             desc,
             link: this.share.link,
-            imgUrl: this.firstImage,
             success: () => {
               this.shareSuccess();
             },
@@ -533,7 +534,7 @@ export default {
             title,
             desc,
             link: this.share.link,
-            imgUrl: this.firstImage,
+            imgUrl,
             success: () => {
               this.shareSuccess();
             },

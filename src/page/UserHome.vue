@@ -401,11 +401,14 @@ export default {
       this.$Message.success("取消分享");
     },
     // 微信内分享
-    getWeChatConfig() {
+    getWeChatConfig(title = "", desc = "") {
       const url =
         window.location.origin +
         process.env.BASE_URL.substr(0, process.env.BASE_URL.length - 1) +
         this.$route.fullPath;
+
+      const imgUrl = this.user.avatar;
+      imgUrl ? imgUrl : "";
       if (this.config.appid === "") {
         wx.getOauth(url).then(res => {
           this.config.timestamp = res.timestamp || "";
@@ -420,45 +423,45 @@ export default {
             nonceStr: this.config.noncestr,
             jsApiList: this.appList
           });
-          Wx.ready(() => {});
           Wx.error(() => {
             // console.log(res);
           });
-          Wx.onMenuShareTimeline({
-            title: this.user.name,
-            desc: "我发现了一个好玩的家伙,来看看吧",
-            link: url,
-            imgUrl: this.user.avatar,
-            success: () => {
-              this.shareSuccess();
-            },
-            cancel: () => {
-              this.shareCancel();
-            }
-          });
-          Wx.onMenuShareAppMessage({
-            title: this.user.name,
-            desc: "我发现了一个好玩的家伙,来看看吧",
-            link: url,
-            imgUrl: this.user.avatar,
-            success: () => {
-              this.shareSuccess();
-            },
-            cancel: () => {
-              this.shareCancel();
-            }
-          });
-          Wx.onMenuShareQQ({
-            title: this.user.name,
-            desc: "我发现了一个好玩的家伙,来看看吧",
-            link: url,
-            imgUrl: this.user.avatar,
-            success: () => {
-              this.shareSuccess();
-            },
-            cancel: () => {
-              this.shareCancel();
-            }
+          Wx.ready(() => {
+            Wx.onMenuShareTimeline({
+              title,
+              desc,
+              link: url,
+              imgUrl,
+              success: () => {
+                this.shareSuccess();
+              },
+              cancel: () => {
+                this.shareCancel();
+              }
+            });
+            Wx.onMenuShareAppMessage({
+              title,
+              desc,
+              link: url,
+              success: () => {
+                this.shareSuccess();
+              },
+              cancel: () => {
+                this.shareCancel();
+              }
+            });
+            Wx.onMenuShareQQ({
+              title,
+              desc,
+              link: url,
+              imgUrl,
+              success: () => {
+                this.shareSuccess();
+              },
+              cancel: () => {
+                this.shareCancel();
+              }
+            });
           });
         });
       } else {
@@ -471,46 +474,44 @@ export default {
           jsApiList: this.appList
         });
 
-        Wx.ready(() => {}),
-          Wx.error(() => {
-            // console.log(res);
+        Wx.ready(() => {
+          Wx.onMenuShareTimeline({
+            title,
+            desc,
+            link: url,
+            imgUrl,
+            success: () => {
+              this.shareSuccess();
+            },
+            cancel: () => {
+              this.shareCancel();
+            }
           });
-        Wx.onMenuShareTimeline({
-          title: this.user.name,
-          desc: "我发现了一个好玩的家伙,来看看吧",
-          link: url,
-          imgUrl: this.user.avatar,
-          success: () => {
-            this.shareSuccess();
-          },
-          cancel: () => {
-            this.shareCancel();
-          }
-        });
-        Wx.onMenuShareAppMessage({
-          title: this.user.name,
-          desc: "我发现了一个好玩的家伙,来看看吧",
-          link: url,
-          imgUrl: this.user.avatar,
-          success: () => {
-            this.shareSuccess();
-          },
-          cancel: () => {
-            this.shareCancel();
-          }
-        });
-        Wx.onMenuShareQQ({
-          title: this.user.name,
-          desc: "我发现了一个好玩的家伙,来看看吧",
-          link: url,
-          imgUrl: this.user.avatar,
-          success: () => {
-            this.shareSuccess();
-          },
-          cancel: () => {
-            this.shareCancel();
-          }
-        });
+          Wx.onMenuShareAppMessage({
+            title,
+            desc,
+            link: url,
+            success: () => {
+              this.shareSuccess();
+            },
+            cancel: () => {
+              this.shareCancel();
+            }
+          });
+          Wx.onMenuShareQQ({
+            title,
+            desc,
+            link: url,
+            imgUrl,
+            success: () => {
+              this.shareSuccess();
+            },
+            cancel: () => {
+              this.shareCancel();
+            }
+          });
+        }),
+          Wx.error(() => {});
       }
     }
   },
@@ -543,7 +544,7 @@ export default {
     window.addEventListener("scroll", this.onScroll);
 
     if (this.isWechat) {
-      this.getWeChatConfig();
+      this.getWeChatConfig(this.user.name, this.user.bio);
     }
 
     this.preUID = this.userID;
