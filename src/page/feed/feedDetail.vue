@@ -455,6 +455,56 @@ export default {
           Wx.error(() => {
             // console.log(res);
           });
+          Wx.ready(() => {
+            Wx.onMenuShareTimeline({
+              title,
+              desc,
+              link: this.share.link,
+              imgUrl: this.firstImage,
+              success: () => {
+                this.shareSuccess();
+              },
+              cancel: () => {
+                this.shareCancel();
+              }
+            });
+            Wx.onMenuShareAppMessage({
+              title,
+              desc,
+              link: this.share.link,
+              imgUrl: this.firstImage,
+              success: () => {
+                this.shareSuccess();
+              },
+              cancel: () => {
+                this.shareCancel();
+              }
+            });
+            Wx.onMenuShareQQ({
+              title,
+              desc,
+              link: this.share.link,
+              imgUrl: this.firstImage,
+              success: () => {
+                this.shareSuccess();
+              },
+              cancel: () => {
+                this.shareCancel();
+              }
+            });
+          });
+        });
+      } else {
+        Wx.config({
+          debug: true,
+          appId: this.config.appid,
+          timestamp: this.config.timestamp,
+          signature: this.config.signature,
+          nonceStr: this.config.noncestr,
+          jsApiList: this.appList
+        });
+
+        Wx.ready(() => {
           Wx.onMenuShareTimeline({
             title,
             desc,
@@ -491,54 +541,8 @@ export default {
               this.shareCancel();
             }
           });
-        });
-      } else {
-        Wx.config({
-          debug: true,
-          appId: this.config.appid,
-          timestamp: this.config.timestamp,
-          signature: this.config.signature,
-          nonceStr: this.config.noncestr,
-          jsApiList: this.appList
-        });
-
-        Wx.ready(() => {}), Wx.error(() => {});
-        Wx.onMenuShareTimeline({
-          title,
-          desc,
-          link: this.share.link,
-          imgUrl: this.firstImage,
-          success: () => {
-            this.shareSuccess();
-          },
-          cancel: () => {
-            this.shareCancel();
-          }
-        });
-        Wx.onMenuShareAppMessage({
-          title,
-          desc,
-          link: this.share.link,
-          imgUrl: this.firstImage,
-          success: () => {
-            this.shareSuccess();
-          },
-          cancel: () => {
-            this.shareCancel();
-          }
-        });
-        Wx.onMenuShareQQ({
-          title,
-          desc,
-          link: this.share.link,
-          imgUrl: this.firstImage,
-          success: () => {
-            this.shareSuccess();
-          },
-          cancel: () => {
-            this.shareCancel();
-          }
-        });
+        }),
+          Wx.error(() => {});
       }
     },
     replyComment(uid, uname) {

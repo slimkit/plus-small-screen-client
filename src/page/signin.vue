@@ -69,7 +69,7 @@
           </button>
         </div>
         <div class="m-box m-aln-center m-justify-bet other-link">
-          <router-link tag="span" to="/feed/new">
+          <router-link tag="span" to="/feeds/new">
             <a>不登录，先随便逛逛</a>
           </router-link>
           <router-link tag="span" to="/forgot">
