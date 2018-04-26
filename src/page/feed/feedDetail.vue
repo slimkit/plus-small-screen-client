@@ -278,7 +278,7 @@ export default {
           this.fetchFeedComments();
           this.fetchRewards();
           if (this.isWechat) {
-            this.getWeChatConfig();
+            this.getWeChatConfig(data.user.name + "的动态", data.feed_content);
           }
         })
         .catch(() => {
@@ -432,7 +432,7 @@ export default {
           ];
       bus.$emit("actionSheet", [...defaultActions, ...actions], "取消");
     },
-    getWeChatConfig() {
+    getWeChatConfig(title = "", desc = "") {
       const url =
         window.location.origin +
         process.env.BASE_URL.substr(0, process.env.BASE_URL.length - 1) +
@@ -445,20 +445,19 @@ export default {
           this.config.appid = res.appid || "";
           this.config.noncestr = res.noncestr || "";
           Wx.config({
-            debug: false,
+            debug: true,
             appId: this.config.appid,
             timestamp: this.config.timestamp,
             signature: this.config.signature,
             nonceStr: this.config.noncestr,
             jsApiList: this.appList
           });
-          Wx.ready(() => {});
           Wx.error(() => {
             // console.log(res);
           });
           Wx.onMenuShareTimeline({
-            title: this.share.title,
-            desc: this.share.desc,
+            title,
+            desc,
             link: this.share.link,
             imgUrl: this.firstImage,
             success: () => {
@@ -469,8 +468,8 @@ export default {
             }
           });
           Wx.onMenuShareAppMessage({
-            title: this.share.title,
-            desc: this.share.desc,
+            title,
+            desc,
             link: this.share.link,
             imgUrl: this.firstImage,
             success: () => {
@@ -481,8 +480,8 @@ export default {
             }
           });
           Wx.onMenuShareQQ({
-            title: this.share.title,
-            desc: this.share.desc,
+            title,
+            desc,
             link: this.share.link,
             imgUrl: this.firstImage,
             success: () => {
@@ -494,9 +493,8 @@ export default {
           });
         });
       } else {
-        this.$Message.success("请使用微信自带分享😳");
         Wx.config({
-          debug: false,
+          debug: true,
           appId: this.config.appid,
           timestamp: this.config.timestamp,
           signature: this.config.signature,
@@ -504,13 +502,10 @@ export default {
           jsApiList: this.appList
         });
 
-        Wx.ready(() => {}),
-          Wx.error(() => {
-            // console.log(res);
-          });
+        Wx.ready(() => {}), Wx.error(() => {});
         Wx.onMenuShareTimeline({
-          title: this.share.title,
-          desc: this.share.desc,
+          title,
+          desc,
           link: this.share.link,
           imgUrl: this.firstImage,
           success: () => {
@@ -521,8 +516,8 @@ export default {
           }
         });
         Wx.onMenuShareAppMessage({
-          title: this.share.title,
-          desc: this.share.desc,
+          title,
+          desc,
           link: this.share.link,
           imgUrl: this.firstImage,
           success: () => {
@@ -533,8 +528,8 @@ export default {
           }
         });
         Wx.onMenuShareQQ({
-          title: this.share.title,
-          desc: this.share.desc,
+          title,
+          desc,
           link: this.share.link,
           imgUrl: this.firstImage,
           success: () => {

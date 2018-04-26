@@ -6,10 +6,10 @@ export default {
   name: "group-feed-card",
   extends: FeedCard,
   methods: {
-    handelView() {
+    handleView() {
       this.$router.push(`/groups/${this.feed.group.id}/posts/${this.feed.id}`);
     },
-    handelLike() {
+    handleLike() {
       console.log(3242);
       const method = this.liked ? "delete" : "post";
       const url = `/plus-group/group-posts/${this.feed.id}/likes`;
@@ -57,7 +57,7 @@ export default {
         this.has_collect = !this.has_collect;
       });
     },
-    handelMore() {
+    handleMore() {
       const base = [
         {
           text: this.has_collect ? "取消收藏" : "收藏",

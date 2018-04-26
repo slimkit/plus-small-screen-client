@@ -15,7 +15,7 @@
             <span>{{ time | time2tips }}</span>
           </div>
         </header>
-        <article class="m-card-body" @click="handelView">
+        <article class="m-card-body" @click="handleView">
           <h2 v-if="title">{{ title }}</h2>
           <div class="m-card-con" v-if="body.length > 0">
             <p
@@ -37,26 +37,26 @@
    </div>
    <footer class="m-box-model m-card-foot m-bt1">
      <div class="m-box m-aln-center m-card-tools m-lim-width">
-      <a class="m-box m-aln-center" @click.prevent="handelLike">
+      <a class="m-box m-aln-center" @click.prevent="handleLike">
         <svg class='m-style-svg m-svg-def'>
           <use :xlink:href="liked ? '#feed-like' :'#feed-unlike'"></use>
         </svg>
         <span>{{ likeCount | formatNum }}</span>
       </a>
-      <a class="m-box m-aln-center"  @click.prevent="handelComment">
+      <a class="m-box m-aln-center"  @click.prevent="handleComment">
         <svg class='m-style-svg m-svg-def'>
           <use xlink:href="#feed-comment"></use>
         </svg>
         <span>{{ commentCount | formatNum }}</span>
       </a>
-      <a class="m-box m-aln-center" @click.prevent="handelView">
+      <a class="m-box m-aln-center" @click.prevent="handleView">
         <svg class='m-style-svg m-svg-def'>
           <use xlink:href="#feed-eye"></use>
         </svg>
         <span>{{ viewCount | formatNum }}</span>
       </a>
       <div class="m-box m-justify-end m-flex-grow1 m-flex-shrink1">
-        <a class="m-box m-aln-center" @click.prevent="handelMore">
+        <a class="m-box m-aln-center" @click.prevent="handleMore">
           <svg class='m-style-svg m-svg-def'>
             <use xlink:href="#feed-more"></use>
           </svg>
@@ -71,7 +71,7 @@
         <comment-item :comment="com" @on-click="commentAction"/>
       </li>
     </ul>
-    <router-link tag="div" class="m-router-link" v-if="commentCount > 5" :to="`/feed/${feedID}/#comment_list`">
+    <router-link tag="div" class="m-router-link" v-if="commentCount > 5" :to="`/feeds/${feedID}/#comment_list`">
       <a>查看全部评论>></a>
     </router-link>
    </footer>
@@ -195,7 +195,7 @@ export default {
           )
         : "";
     },
-    handelView() {
+    handleView() {
       const { paid_node } = this.feed;
       paid_node && !paid_node.paid
         ? bus.$emit("payfor", {
@@ -203,14 +203,14 @@ export default {
             onCancel: () => {},
             onSuccess: data => {
               this.$Message.success(data);
-              this.$router.push(`/feed/${this.feedID}`);
+              this.$router.push(`/feeds/${this.feedID}`);
             },
             node: paid_node.node,
             amount: paid_node.amount
           })
-        : this.$router.push(`/feed/${this.feedID}`);
+        : this.$router.push(`/feeds/${this.feedID}`);
     },
-    handelLike() {
+    handleLike() {
       const method = this.liked ? "delete" : "post";
       const url = this.liked
         ? `/feeds/${this.feedID}/unlike`
@@ -232,7 +232,7 @@ export default {
           this.fetching = false;
         });
     },
-    handelComment({ placeholder, reply_user }) {
+    handleComment({ placeholder, reply_user }) {
       bus.$emit("commentInput", {
         placeholder,
         onOk: text => {
@@ -240,7 +240,7 @@ export default {
         }
       });
     },
-    handelMore() {
+    handleMore() {
       const base = [
         {
           text: this.has_collect ? "取消收藏" : "收藏",
@@ -336,7 +336,7 @@ export default {
               }
             }
           ])
-        : this.handelComment({
+        : this.handleComment({
             placeholder,
             reply_user
           });
