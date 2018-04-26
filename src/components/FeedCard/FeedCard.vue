@@ -19,7 +19,7 @@
           <h2 v-if="title">{{ title }}</h2>
           <div class="m-card-con" v-if="body.length > 0">
             <p
-            class="m-text-box m-text-cut-4"
+            class="m-text-box m-text-cut-3"
             :class="{needPay}"
             v-html="replaceURI(body)"></p>
           </div>
