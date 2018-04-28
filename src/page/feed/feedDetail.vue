@@ -111,11 +111,10 @@
 </template>
 <script>
 import bus from "@/bus.js";
-import Wx from "weixin-js-sdk";
-import wx from "@/util/share.js";
 import ArticleCard from "@/page/article/ArticleCard.vue";
 import CommentItem from "@/page/article/ArticleComment.vue";
 
+import wechatShare from "@/util/wechatShare.js";
 export default {
   name: "feed-detail",
   components: {
@@ -271,15 +270,19 @@ export default {
         .get(`/feeds/${this.feedID}`)
         .then(({ data = {} }) => {
           this.feed = data;
-          this.share.title = data.user.name + "的动态";
-          this.share.desc = data.feed_content;
           this.oldID = this.feedID;
           this.fetching = false;
           this.fetchFeedComments();
           this.fetchRewards();
-          if (this.isWechat) {
-            this.getWeChatConfig(data.user.name + "的动态", data.feed_content);
-          }
+          wechatShare(window.location.href, {
+            title: `${data.user.name}的动态`,
+            desc: `${data.feed_content}`,
+            link: window.location.href,
+            imgUrl:
+              data.images.length > 0
+                ? `${this.$http.defaults.baseURL}files/${data.images[0].file}`
+                : ""
+          });
         })
         .catch(() => {
           this.$router.back();
@@ -432,117 +435,7 @@ export default {
           ];
       bus.$emit("actionSheet", [...defaultActions, ...actions], "取消");
     },
-    getWeChatConfig(title = "", desc = "") {
-      const link =
-        window.location.origin +
-        process.env.BASE_URL.substr(0, process.env.BASE_URL.length - 1) +
-        this.$route.fullPath;
-      const imgUrl = this.firstImage ? this.firstImage : "";
-      if (this.config.appid === "") {
-        wx.getOauth(link).then(res => {
-          this.config.timestamp = res.timestamp || "";
-          this.config.signature = res.signature || "";
-          this.config.appid = res.appid || "";
-          this.config.noncestr = res.noncestr || "";
-          Wx.config({
-            debug: false,
-            appId: this.config.appid,
-            timestamp: this.config.timestamp,
-            signature: this.config.signature,
-            nonceStr: this.config.noncestr,
-            jsApiList: this.appList
-          });
-          Wx.error(() => {
-            // console.log(res);
-          });
-          Wx.ready(() => {
-            Wx.onMenuShareTimeline({
-              title,
-              desc,
-              link,
-              imgUrl,
-              success: () => {
-                this.shareSuccess();
-              },
-              cancel: () => {
-                this.shareCancel();
-              }
-            });
-            Wx.onMenuShareAppMessage({
-              title,
-              desc,
-              link,
-              success: () => {
-                this.shareSuccess();
-              },
-              cancel: () => {
-                this.shareCancel();
-              }
-            });
-            Wx.onMenuShareQQ({
-              title,
-              desc,
-              link,
-              imgUrl,
-              success: () => {
-                this.shareSuccess();
-              },
-              cancel: () => {
-                this.shareCancel();
-              }
-            });
-          });
-        });
-      } else {
-        Wx.config({
-          debug: false,
-          appId: this.config.appid,
-          timestamp: this.config.timestamp,
-          signature: this.config.signature,
-          nonceStr: this.config.noncestr,
-          jsApiList: this.appList
-        });
-
-        Wx.ready(() => {
-          Wx.onMenuShareTimeline({
-            title,
-            desc,
-            link,
-            imgUrl,
-            success: () => {
-              this.shareSuccess();
-            },
-            cancel: () => {
-              this.shareCancel();
-            }
-          });
-          Wx.onMenuShareAppMessage({
-            title,
-            desc,
-            link,
-            success: () => {
-              this.shareSuccess();
-            },
-            cancel: () => {
-              this.shareCancel();
-            }
-          });
-          Wx.onMenuShareQQ({
-            title,
-            desc,
-            link,
-            imgUrl,
-            success: () => {
-              this.shareSuccess();
-            },
-            cancel: () => {
-              this.shareCancel();
-            }
-          });
-        }),
-          Wx.error(() => {});
-      }
-    },
+    // const imgUrl = this.firstImage ? this.firstImage : "";
     replyComment(uid, uname) {
       uid === this.CURRENTUSER.id
         ? bus.$emit(

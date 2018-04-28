@@ -91,7 +91,7 @@ export default {
       // vertical-align: top;
       display: inline-block;
       padding: 0 2px 2px 0; /*no*/
-      margin: 0;
+      margin: 0 !important;
     }
   }
   &-box {
