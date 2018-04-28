@@ -134,24 +134,7 @@ export default {
 
       fetchComing: false,
       noMoreCom: false,
-      maxComId: 0,
-      config: {
-        appid: "",
-        signature: "",
-        timestamp: "",
-        noncestr: ""
-      },
-      appList: [
-        "onMenuShareQZone",
-        "onMenuShareQQ",
-        "onMenuShareAppMessage",
-        "onMenuShareTimeline"
-      ],
-      share: {
-        title: "",
-        desc: "",
-        link: ""
-      }
+      maxComId: 0
     };
   },
   computed: {
@@ -280,7 +263,7 @@ export default {
             link: window.location.href,
             imgUrl:
               data.images.length > 0
-                ? `${this.$http.defaults.baseURL}files/${data.images[0].file}`
+                ? `${this.$http.defaults.baseURL}/files/${data.images[0].file}`
                 : ""
           });
         })
