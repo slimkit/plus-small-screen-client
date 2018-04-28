@@ -45,16 +45,7 @@
               <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-arrow-r"></use>
             </svg>
           </router-link>
-          <router-link to="/upgrade" tag="li" class="m-entry">
-            <svg class='m-style-svg m-svg-def m-entry-prepend'>
-              <use xlink:href="#profile-collect"></use>
-            </svg>
-            <span class="m-text-box m-flex-grow1">收藏</span>
-            <svg class="m-style-svg m-svg-def m-entry-append">
-              <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-arrow-r"></use>
-            </svg>
-          </router-link>
-          <router-link to="/upgrade" tag="li" class="m-entry">
+          <router-link to="/profile/news/released" tag="li" class="m-entry">
             <svg class='m-style-svg m-svg-def m-entry-prepend'>
               <use xlink:href="#profile-plane"></use>
             </svg>
@@ -99,6 +90,15 @@
             </svg>
             <span class="m-text-box m-flex-grow1">积分</span>
             <span class="m-entry-extra">{{ sum }}</span>
+            <svg class="m-style-svg m-svg-def m-entry-append">
+              <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-arrow-r"></use>
+            </svg>
+          </router-link>
+          <router-link to="/profile/collection/feeds" tag="li" class="m-entry">
+            <svg class='m-style-svg m-svg-def m-entry-prepend'>
+              <use xlink:href="#profile-collect"></use>
+            </svg>
+            <span class="m-text-box m-flex-grow1">收藏</span>
             <svg class="m-style-svg m-svg-def m-entry-append">
               <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-arrow-r"></use>
             </svg>

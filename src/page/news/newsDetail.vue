@@ -2,6 +2,7 @@
   <article-card
   :liked="liked"
   :loading="loading"
+  :canOprate="news.audit_status===0"
   @on-like="likeNews"
   @on-share="shareNews"
   @on-more="moreAction"
@@ -19,7 +20,7 @@
       <div class="m-art-body" v-html='body'></div>
       <div class="m-box m-aln-center m-justify-bet m-art-foot">
         <div class="m-flex-grow1 m-flex-shrink1 m-box m-aln-center m-art-like-list">
-          <template v-if='likeCount > 0'>
+          <template v-if='likeCount > 0 && audit_status===0'>
             <ul class="m-box m-flex-grow0 m-flex-shrink0">
               <li 
               :key="id"
@@ -48,17 +49,19 @@
         <li>{{ commentCount | formatNum }}条评论</li>
       </ul>
       <comment-item 
+        v-if="news.audit_status===0"
         v-for="(comment) in pinnedCom"
         :pinned="true"
         :key="comment.id"
         :comment="comment"/>
       <comment-item
+        v-if="news.audit_status===0"
         @click="replyComment"
         v-for="(comment) in comments"
         :key="comment.id"
         :comment="comment"/>
 
-        <div class="m-box m-aln-center m-justify-center load-more-box">
+        <div v-if="news.audit_status===0" class="m-box m-aln-center m-justify-center load-more-box">
           <span v-if="noMoreCom" class="load-more-ph">---没有更多---</span>
           <span v-else class="load-more-btn" @click.stop="fetchNewsComments(maxComId)">
             {{fetchComing ? "加载中..." : "点击加载更多"}}

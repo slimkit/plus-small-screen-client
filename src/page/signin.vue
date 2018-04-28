@@ -160,7 +160,7 @@ export default {
             this.$store.commit("SAVE_USER", user),
             this.$store.dispatch("GET_UNREAD_COUNT"),
             this.$nextTick(() => {
-              this.$router.push(this.$route.query.redirect || "/feed/new");
+              this.$router.push(this.$route.query.redirect || "/feeds/new");
               this.loading = false;
             }));
         })

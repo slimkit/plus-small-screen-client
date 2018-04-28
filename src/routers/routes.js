@@ -7,6 +7,7 @@ import postRoutes from "./post.js";
 import groupRoutes from "./group.js";
 import messageRoutes from "./message.js";
 import questionRoutes from "./question.js";
+import profileRoutes from "./profile.js";
 /**
  * 钱包页面
  * @auth:  jsonleex <jsonleex@163.com>
@@ -45,6 +46,7 @@ const router = [
   ...groupRoutes,
   ...messageRoutes,
   ...questionRoutes,
+  ...profileRoutes,
 
   {
     path: "/wallet",

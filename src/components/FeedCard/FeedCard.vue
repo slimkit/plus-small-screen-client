@@ -35,7 +35,7 @@
        </article>
      </section>
    </div>
-   <footer class="m-box-model m-card-foot m-bt1">
+   <footer v-if="showFooter" class="m-box-model m-card-foot m-bt1">
      <div class="m-box m-aln-center m-card-tools m-lim-width">
       <a class="m-box m-aln-center" @click.prevent="handleLike">
         <svg class='m-style-svg m-svg-def'>
@@ -102,6 +102,10 @@ export default {
     },
     feed: {
       required: true
+    },
+    showFooter: {
+      type: Boolean,
+      default: true
     }
   },
   computed: {
