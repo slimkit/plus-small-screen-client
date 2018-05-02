@@ -146,7 +146,7 @@ export default {
       }
     }
     .m-pic {
-      background-position: top center;
+      // background-position: top center;
       max-height: 690px;
     }
   }
