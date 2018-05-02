@@ -1,7 +1,8 @@
 <template>
   <transition
   enter-active-class="animated slideInRight"
-  leave-active-class="animated slideOutLeft">
+  leave-active-class="animated slideOutLeft"
+  v-if="show">
     <div class="m-box-model m-pos-f p-location">
       <header class="m-pos-f m-box m-aln-center m-justify-bet m-main m-bb1">
         <div class="m-flex-grow1 m-flex-shrink1 m-flex-base0">
@@ -70,6 +71,16 @@ import {
 import _ from "lodash";
 export default {
   name: "location",
+  props: {
+    show: {
+      type: Boolean,
+      default: true
+    },
+    isComponent: {
+      type: Boolean,
+      default: false
+    }
+  },
   data() {
     return {
       keyword: "",
@@ -105,6 +116,11 @@ export default {
     }
   },
   methods: {
+    goBack() {
+      this.isComponent
+        ? this.$emit("close", this.currentPos)
+        : this.$router.go(-1);
+    },
     onFocus() {
       this.isFocus = true;
     },

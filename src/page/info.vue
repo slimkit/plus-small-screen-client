@@ -1,15 +1,15 @@
 <template>
   <div class="m-box-model p-info">
     <header class="m-box m-aln-center m-head-top m-pos-f m-main m-bb1">
-      <div class="m-flex-grow1 m-flex-shrink1">
+      <div class="m-box m-aln-center m-flex-grow1 m-flex-shrink1 m-flex-base0">
         <svg class="m-style-svg m-svg-def" @click="goBack">
           <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-back"></use>
         </svg>
       </div>
-      <div class="m-flex-grow1 m-flex-shrink1 m-text-c m-head-top-title">
+      <div class="m-box m-aln-center m-flex-grow1 m-flex-shrink1 m-flex-base0 m-justify-center m-head-top-title">
         <span>个人资料</span>
       </div>
-      <div class="m-flex-grow1 m-flex-shrink1 m-text-r">
+      <div class="m-box m-aln-center m-justify-end m-flex-grow1 m-flex-shrink1 m-flex-base0">
         <svg v-if="loading" class="m-style-svg m-svg-def">
           <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-loading"></use>
         </svg>
@@ -20,8 +20,8 @@
           @click.prevent="handleOk">完成</a>
       </div>
     </header>
-    <main style="padding-top: 0.9rem">
-      <section class="m-box m-aln-center m-justify-bet m-main m-bb1 p-info-row" @click="beforeSelectFile">
+    <main style="padding-top: 0.9rem; background-color: #fff">
+      <section style="margin-left: 0; padding-left: .3rem" class="m-box m-aln-center m-justify-bet m-main m-bb1 p-info-row" @click="beforeSelectFile">
         <div
         class="m-flex-shrink0 m-flex-grow0 m-avatar-box"
         :class="avatarStyles">
@@ -39,9 +39,9 @@
           @change="selectPhoto">
 
       </section>
-      <section class="m-box m-aln-center m-justify-bet m-main p-info-row">
+      <section class="m-box m-aln-stre m-justify-bet p-info-row m-bb1">
         <label for="name">用户名</label>
-        <div class="m-box m-aln-center m-justify-bet m-flex-grow1 m-flex-shrink1 m-bb1 input">
+        <div class="m-box m-aln-center m-justify-bet m-flex-grow1 m-flex-shrink1 input">
           <input 
             id="name"
             type="text"
@@ -55,29 +55,29 @@
           </svg>
         </div>
       </section>
-      <section class="m-box m-aln-center m-justify-bet m-main p-info-row">
+      <section class="m-box m-aln-stre m-justify-bet p-info-row m-bb1">
         <label>性别</label>
-        <div class="m-box m-aln-center m-justify-bet m-flex-grow1 m-flex-shrink1 m-bb1 input" @click="switchSex">
+        <div class="m-box m-aln-center m-justify-bet m-flex-grow1 m-flex-shrink1 input" @click="switchSex">
           <span :class="{ placeholder: !(sex >= 0) }">{{ sexTxt }}</span>
           <svg class="m-style-svg m-svg-def m-entry-append">
             <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-arrow-r"></use>
           </svg>
         </div>
       </section>
-      <section class="m-box m-aln-center m-justify-bet m-main p-info-row">
+      <section class="m-box m-aln-stre m-justify-bet p-info-row m-bb1">
         <label>城市</label>
-        <div class="m-box m-aln-center m-justify-bet m-flex-grow1 m-flex-shrink1 m-bb1 input">
-          <span :class="{placeholder: !location}">{{ location }}</span>
+        <div class="m-box m-aln-center m-justify-bet m-flex-grow1 m-flex-shrink1 input" @click="switchPosition">
+          <span :class="{placeholder: !location}">{{ location || "选择居住地" }}</span>
           <svg class="m-style-svg m-svg-def m-entry-append">
             <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-arrow-r"></use>
           </svg>
         </div>
       </section>
-      <section class="m-box m-aln-st m-justify-bet m-main p-info-row" @click="switchTags">
+      <section class="m-box m-aln-stre m-justify-bet p-info-row m-bb1" @click="switchTags">
         <label>标签</label>
-        <div class="m-box m-aln-center m-justify-bet m-flex-grow1 m-flex-shrink1 m-bb1 input">
-          <div class="m-tag-list m-tags">
-            <span v-if="tags.length === 0" class="placeholder">选择标签</span>
+        <div class="m-box m-aln-center m-justify-bet m-flex-grow1 m-flex-shrink1 input">
+          <span v-if="tags.length === 0" class="placeholder">选择标签</span>
+          <div v-else class="m-tag-list m-tags">
             <span class="m-tag" :key="tag.id" v-for="tag in tags">{{ tag.name }}</span>
           </div>
           <svg class="m-style-svg m-svg-def m-entry-append">
@@ -85,39 +85,41 @@
           </svg>
         </div>
       </section>
-      <section class="m-box m-aln-st m-justify-bet m-main p-info-row">
-        <label for="bio">简介</label>
-        <div class="m-box m-aln-center m-justify-bet m-flex-grow1 m-flex-shrink1 input">
-          <div class="m-box-model m-fd-row m-flex-grow1 m-flex-shrink1 m-aln-end m-justify-end m-wz-def">
-            <textarea
-            id="bio"
-            placeholder="编辑简介"
-            v-model="bio"
-            maxlength="50"
-            :style="{ height: `${scrollHeight}px` }"
-            ></textarea>
-            <textarea
-            row="1"
-            ref="bioShadow"
-            style="position: absolute; z-index: -9999; visibility: hidden;"
-            v-model="bioShadow"></textarea>
-            <i 
-            v-show="bio.length>25"
-            style="font-size: 10px; margin-right: 0.2rem"
-            ><b style="color: #f4504d">{{ bio.length }}</b>/50</i>
-          </div>
+      <section class="m-box m-aln-stre m-justify-bet p-info-row">
+        <label for="bio" class="m-flex-grow0 m-flex-shrink0">简介</label>
+        <div class="m-box m-aln-center m-justify-bet m-flex-grow1 m-flex-shrink1 input" @click="editBio">
+          <span v-if="bio.length === 0 && !bioIsFoucs" class="placeholder">编辑简介</span>
+          <div v-else class="m-box-model m-fd-row m-flex-grow1 m-flex-shrink1 m-aln-end m-justify-end m-wz-def">
+            <div
+              ref="bioEditor"
+              contenteditable="plaintext-only"
+              class="m-flex-grow1 m-shrink-1 m-flex-base0 m-textarea" 
+              @input="bioInput"
+              @foucs="bioFoucs"
+              @blur="bioBlur"
+              maxLangth="50"
+              ></div>
+              <i
+              style="font-size: 10px; margin-right: 0.2rem"
+              ><b :style="{color: bio.length > 50 ? `#f4504d`: `inherit`}">{{ bio.length }}</b>/50</i>
+            </div>
         </div>
       </section>
     </main>
+    <location :show="showPosition" @close="switchPosition" :isComponent="true" />
   </div>
 </template>
 <script>
 import bus from "@/bus.js";
 import { mapState } from "vuex";
 import { getFileUrl } from "@/util/";
+import location from "@/page/location.vue";
 
 export default {
   name: "info",
+  components: {
+    location
+  },
   data() {
     return {
       loading: false,
@@ -130,7 +132,10 @@ export default {
       tags: [],
       location: "",
       avatar: null,
-      change: false
+      change: false,
+      bioIsFoucs: false,
+
+      showPosition: false
     };
   },
   computed: {
@@ -158,13 +163,32 @@ export default {
   watch: {
     bio(val, oval) {
       if (val !== oval) {
-        this.$nextTick(() => {
-          this.scrollHeight = this.$refs.bioShadow.scrollHeight;
-        });
+        this.$nextTick(() => {});
       }
+    },
+    bioIsFoucs(val) {
+      val &&
+        this.$nextTick(() => {
+          this.$refs.bioEditor.focus();
+        });
     }
   },
   methods: {
+    editBio() {
+      this.bioIsFoucs = true;
+    },
+    bioFoucs() {},
+    bioBlur() {
+      this.bioIsFoucs = false;
+    },
+    bioInput(e) {
+      const $el = e.target;
+      const value = $el.textContent;
+      // value.length >= 50 &&
+      //   (($el.textContent = value.substr(0, 50)), this.$refs.bioEditor.blur());
+      // this.bio = value.substr(0, 50);
+      this.bio = value;
+    },
     beforeSelectFile() {
       this.$refs.imagefile.click();
     },
@@ -207,6 +231,11 @@ export default {
       this.change = false;
       this.loading = true;
       // PATCH /user
+      if (this.bio.length > 50) {
+        this.$Message.error("简介不能超过50字");
+        this.loading = false;
+        return false;
+      }
       const param = {
         name: this.name,
         bio: this.bio,
@@ -249,6 +278,10 @@ export default {
         chooseTags
       });
     },
+    switchPosition(val) {
+      this.showPosition = !this.showPosition;
+      val && (this.location = val.label);
+    },
     switchSex() {
       const options = [
         {
@@ -288,17 +321,16 @@ export default {
     this.tags = tags || [];
     this.avatar = avatar;
     this.location = location;
-  },
-  mounted() {
     this.$http
       .get(`users/${this.CURRENTUSER.id}/tags`)
       .then(({ data = [] }) => {
-        this.CURRENTUSER.tags = data;
         this.tags = data;
+        this.CURRENTUSER.tags = data;
+        this.$store.commit("SAVE_CURRENTUSER", this.CURRENTUSER);
       });
-    this.$nextTick(() => {
-      this.scrollHeight = this.$refs.bioShadow.offsetHeight;
-    });
+  },
+  mounted() {
+    this.$refs.bioEditor.textContent = this.bio;
   }
 };
 </script>
@@ -327,18 +359,18 @@ export default {
 }
 .p-info-row {
   position: relative;
-  padding: 35px 0 35px 30px;
+  padding: 35px 0 35px 0;
+  margin-left: 140px;
+  min-height: 100px;
 }
 .p-info-row .input {
-  margin-bottom: -35px;
-  margin-top: -35px;
-  padding-top: 35px;
-  padding-bottom: 35px;
-  font-size: 28px;
+  font-size: 30px;
   line-height: 1;
 }
 .p-info-row label {
-  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  margin-left: -110px;
   width: 110px;
   font-size: 30px;
   line-height: inherit;

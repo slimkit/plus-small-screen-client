@@ -1,22 +1,24 @@
-import http from "@/api/api.js";
+/**
+ *  图片懒加载, 支持背景图片
+ */
+
 import _ from "lodash";
+import api from "@/api/api.js";
 
 /**
  * 绑定事件
  * @author jsonleex <jsonlseex@163.com>
- * @param  {DOM}        el
- * @param  {String}     type
- * @param  {Function}   func
- * @param  {Boolean}    capture
+ * @param  {Object -> DOM}        el
+ * @param  {String}               type
+ * @param  {Function}             func
+ * @param  {Boolean}              capture
  */
 function onEvent(el, type, func, capture = false) {
   el.addEventListener(type, func, {
     capture: capture
   });
 }
-/**
- *  图片懒加载, 支持背景图片
- */
+
 export default Vue => {
   // 图片监听列表
   const listenList = new Map();
@@ -24,8 +26,8 @@ export default Vue => {
   // 图片缓存列表
   const imageCatche = new Map();
 
-  const wH = window.innerHeight;
   const wW = window.innerWidth;
+  const wH = window.innerHeight;
 
   /**
    * 判断节点是否在视口内
@@ -36,6 +38,9 @@ export default Vue => {
   const checkInView = el => {
     const rect = el.getBoundingClientRect();
 
+    /**
+     * 以三分之一屏高为偏移量
+     */
     return (
       rect.top < wH * 1.3 &&
       rect.bottom > 1.3 &&
@@ -52,8 +57,8 @@ export default Vue => {
       /**
        * 获取图片真实链接
        */
-      http
-        .get(`/files/${file}?q=${q}&json=true`, {
+      api
+        .get(`/files/${file}?q=${q}&json=1`, {
           // 验证 status ; 屏蔽 404 抛错
           vaildateStatus: s => s === 200 || s === 201 || s === 204 || s === 400
         })
@@ -116,6 +121,9 @@ export default Vue => {
     updated: addListener
   });
 
+  /**
+   * 绑定滚动监听, 兼容 ios 和 pc
+   */
   [
     "scroll",
     "wheel",

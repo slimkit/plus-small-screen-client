@@ -76,6 +76,31 @@ export default {
       default: true
     }
   },
+  data() {
+    return {
+      headroom: null,
+      footroom: null
+    };
+  },
+  watch: {
+    canOprate(val) {
+      val &&
+        this.$nextTick(() => {
+          this.footroom
+            ? this.footroom.init()
+            : ((this.footroom = new HeadRoom(this.$refs.foot, {
+                tolerance: 5,
+                offset: 50,
+                classes: {
+                  initial: "headroom-foot",
+                  pinned: "headroom--footShow",
+                  unpinned: "headroom--footHide"
+                }
+              })),
+              this.footroom.init());
+        });
+    }
+  },
   methods: {
     handelLike() {
       this.$emit("on-like");
@@ -108,17 +133,22 @@ export default {
         unpinned: "headroom--headHide"
       }
     });
-    this.footroom = new HeadRoom(this.$refs.foot, {
-      tolerance: 5,
-      offset: 50,
-      classes: {
-        initial: "headroom-foot",
-        pinned: "headroom--footShow",
-        unpinned: "headroom--footHide"
-      }
-    });
     this.headroom.init();
-    this.canOprate && this.footroom.init();
+
+    this.canOprate &&
+      this.$nextTick(() => {
+        this.footroom = new HeadRoom(this.$refs.foot, {
+          tolerance: 5,
+          offset: 50,
+          classes: {
+            initial: "headroom-foot",
+            pinned: "headroom--footShow",
+            unpinned: "headroom--footHide"
+          }
+        });
+
+        this.footroom.init();
+      });
   }
 };
 </script>
