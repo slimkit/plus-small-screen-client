@@ -5,11 +5,16 @@
   >
     <video
       controls
-      :poster="cover_file" 
+      x-webkit-airplay="true"
+      webkit-playsinline="true" 
+      playsinline="true"
+      preload="none"
+      v-if="videoFile"
+      :poster="coverFile" 
       :ref="`video_${id}`"
     >
        <source 
-        :src="video_file" 
+        :src="videoFile" 
         type="video/mp4"
       >
        Your browser does not support the video tag.
@@ -40,13 +45,13 @@ export default {
       return this.video.width < this.video.height
         ? 5.18
         : parseInt(this.video.height * this.ratio) / 100;
-    },
-    video_file() {
-      return `/api/v2/files/${this.video.video_id}`;
-    },
-    cover_file() {
-      return `/api/v2/files/${this.video.cover_id}`;
     }
+    // video_file() {
+    //   return `/api/v2/files/${this.video.video_id}`;
+    // },
+    // cover_file() {
+    //   return `/api/v2/files/${this.video.cover_id}`;
+    // }
   },
   methods: {
     getVideoUrl() {
