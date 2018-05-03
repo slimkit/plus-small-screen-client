@@ -10,6 +10,8 @@ import FootGuide from "./components/FootGuide";
 import DiySelect from "./components/DiySelect";
 import AsyncFile from "./components/common/AsyncFile";
 
+import JoLoadMore from "@/components/JoLoadMore.vue";
+
 import avatar from "@/components/avatar.vue";
 
 import NavTabs from "@/components/tabs/NavTabs.vue";
@@ -26,5 +28,6 @@ export default [
   FootGuide,
   DiySelect,
   NavTabs,
-  AsyncFile
+  AsyncFile,
+  JoLoadMore
 ];

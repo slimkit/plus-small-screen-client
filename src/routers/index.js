@@ -43,7 +43,7 @@ router.beforeEach((to, from, next) => {
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
 
   if (logged) {
-    forGuest ? next({ path: "/feeds/new" }) : next();
+    forGuest ? next({ path: "/feeds?type=new" }) : next();
   } else {
     forGuest
       ? next()

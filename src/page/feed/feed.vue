@@ -2,114 +2,100 @@
   <div class="p-feed">
     <nav class="m-box m-head-top m-lim-width m-pos-f m-main m-bb1">
       <ul class="m-box m-flex-grow1 m-aln-center m-justify-center m-flex-base0 m-head-nav">
-        <router-link tag="li" to="/feeds/new" active-class="active" exact replace>
+        <router-link tag="li" :to="{ name:'feeds', query: { type: 'new' } }" active-class="active" exact replace>
           <a>最新</a>
         </router-link>
-        <router-link tag="li" to="/feeds/hot" active-class="active" exact replace>
+        <router-link tag="li" :to="{ name:'feeds', query: { type: 'hot' } }" active-class="active" exact replace>
           <a>热门</a>
         </router-link>
-        <router-link tag="li" to="/feeds/follow" active-class="active" exact replace>
+        <router-link tag="li" :to="{ name:'feeds', query: { type: 'follow' } }" active-class="active" exact replace>
           <a>关注</a>
         </router-link>
       </ul>
     </nav>
-    <load-more 
+    <jo-load-more 
       class="p-feed-main"
-      :onRefresh='onRefresh'
-      :onLoadMore='onLoadMore'
+      @onRefresh='onRefresh'
+      @onLoadMore='onLoadMore'
       ref='loadmore'
       >
-      <ul>
-        <li v-if="feed.id" v-for="feed in pinned" :key="`pinned-feed-${feed_type}-${feed.id}`">
-          <feed-card :feed="feed" :pinned="true" />
-        </li>
-        <li v-if="feed.id" v-for="feed in feeds" :key="`feed-${feed_type}-${feed.id}`">
-          <feed-card :feed="feed" />
-        </li>
-      </ul>
-    </load-more>
+      <!-- :auto-load="false" -->
+        <ul>
+          <li v-if="feed.id" v-for="feed in pinned" :key="`pinned-feed-${feedType}-${feed.id}`">
+            <feed-card :feed="feed" :pinned="true" />
+          </li>
+          <li v-if="feed.id" v-for="feed in feeds" :key="`feed-${feedType}-${feed.id}`">
+            <feed-card :feed="feed" />
+          </li>
+        </ul>
+      </jo-load-more>
     <foot-guide></foot-guide>
   </div>
 </template>
 <script>
-import FootGuide from "@/components/FootGuide";
+import { getFeedsByType } from "@/api/feeds.js";
+import JoLoadMore from "@/components/JoLoadMore.vue";
 import FeedCard from "@/components/FeedCard/FeedCard.vue";
+const feedTypesMap = ["new", "hot", "follow"];
 export default {
   name: "feedIndex",
   components: {
     FeedCard,
-    // FeedItem,
-    FootGuide
+    JoLoadMore
   },
   data() {
     return {
       ad: [], // 广告
-      feeds: [], // 动态
       pinned: [], // 置顶
 
-      maxId: 0
+      newFeeds: [],
+      hotFeeds: [],
+      followFeeds: [],
+      feedsChangeTracker: 1
     };
   },
   computed: {
-    feed_type() {
-      return this.$route.params.type;
+    feedType() {
+      return this.$route.query.type || "new";
+    },
+    feeds: {
+      get() {
+        return this.feedType ? this.$data[`${this.feedType}Feeds`] : [];
+      },
+      set(val) {
+        this.$data[`${this.feedType}Feeds`] = val;
+      }
+    },
+    maxId() {
+      const len = this.feeds.length;
+      return len ? this.feeds[len - 1].id : 0;
     }
   },
   watch: {
-    feed_type(val, oval) {
-      val &&
-        val !== oval &&
-        ((this.ad = []),
-        (this.feeds = []),
-        (this.pinned = []),
-        this.$nextTick(this.$refs.loadmore.beforeRefresh));
+    feedType(val) {
+      feedTypesMap.includes(val) &&
+        ((this.feedsChangeTracker = 1), this.$refs.loadmore.beforeRefresh());
     }
   },
   methods: {
-    onRefresh() {
-      this.$http
-        .get("/feeds", {
-          params: {
-            type: this.feed_type,
-            limit: 15
-          }
-        })
-        .then(({ data: { ad, feeds, pinned } = {} }) => {
-          this.ad = ad ? [...ad] : [];
-          this.feeds = feeds ? [...feeds] : [];
-          this.pinned = pinned ? [...pinned] : [];
-          this.maxId = feeds.length ? feeds[feeds.length - 1].id : 0;
-          this.$refs.loadmore.topEnd(!(feeds.length < 15));
-        })
-        .catch(err => {
-          console.log(err);
-          this.$refs.loadmore.topEnd(false);
-        });
+    onRefresh(callback) {
+      getFeedsByType(this.feedType, 15).then(({ ad, pinneds, feeds }) => {
+        this.ad = ad;
+        this.feeds = feeds;
+        this.pinneds = pinneds;
+        callback(feeds.length < 15);
+      });
     },
-    onLoadMore() {
-      if (!this.feed_type) return this.$refs.loadmore.bottomEnd();
-      const params = {
-        type: this.feed_type,
-        limit: 15,
-        after: this.maxId
-      };
-      this.$http
-        .get("/feeds", { params })
-        .then(({ data: { ad, feeds, pinned } = {} }) => {
-          this.ad = ad ? [...this.ad, ...ad] : this.ad;
-          this.feeds = feeds ? [...this.feeds, ...feeds] : this.feeds;
-          this.pinned = pinned ? [...this.pinned, ...pinned] : this.pinned;
-          this.maxId = feeds.length ? feeds[feeds.length - 1].id : this.maxId;
-          this.$refs.loadmore.bottomEnd(feeds.length < 15);
-        })
-        .catch(err => {
-          console.log(err);
-          this.$refs.loadmore.bottomEnd(true);
-        });
+    onLoadMore(callback) {
+      getFeedsByType(this.feedType, 15, this.maxId).then(
+        ({ ad, pinneds, feeds }) => {
+          this.ad = ad;
+          this.pinneds = pinneds;
+          this.feeds = [...this.feeds, ...feeds];
+          callback(feeds.length < 15);
+        }
+      );
     }
-  },
-  mounted() {
-    this.$refs.loadmore.beforeRefresh();
   }
 };
 </script>
@@ -118,6 +104,9 @@ export default {
 .p-feed {
   .p-feed-main {
     padding-top: 90px;
+    .jo-loadmore-head {
+      top: 90px;
+    }
   }
   .p-feed-main li + li {
     margin-top: 10px;

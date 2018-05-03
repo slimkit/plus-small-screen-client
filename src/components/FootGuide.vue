@@ -1,6 +1,6 @@
 <template>
   <footer id="foot_guide">
-    <section @click="to('/feeds/new')" class="guide_item" :class="{active: isCurPath('/feed')}">
+    <section @click="to('/feeds?type=new')" class="guide_item" :class="{active: isCurPath('/feed')}">
       <svg class="m-style-svg m-svg-def foot_guide_icon">
         <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#foot-home"></use>
       </svg>
