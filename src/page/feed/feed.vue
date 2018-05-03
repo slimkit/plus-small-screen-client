@@ -19,7 +19,6 @@
       @onLoadMore='onLoadMore'
       ref='loadmore'
       >
-      <!-- :auto-load="false" -->
         <ul>
           <li v-if="feed.id" v-for="feed in pinned" :key="`pinned-feed-${feedType}-${feed.id}`">
             <feed-card :feed="feed" :pinned="true" />
@@ -34,14 +33,12 @@
 </template>
 <script>
 import { getFeedsByType } from "@/api/feeds.js";
-import JoLoadMore from "@/components/JoLoadMore.vue";
 import FeedCard from "@/components/FeedCard/FeedCard.vue";
 const feedTypesMap = ["new", "hot", "follow"];
 export default {
   name: "feedIndex",
   components: {
-    FeedCard,
-    JoLoadMore
+    FeedCard
   },
   data() {
     return {

@@ -118,6 +118,11 @@ export default {
   .p-find-main {
     color: inherit;
   }
+  .p-find-body {
+    .jo-loadmore-head {
+      top: 90px;
+    }
+  }
 }
 .m-head-search-box {
   margin-left: 30px;

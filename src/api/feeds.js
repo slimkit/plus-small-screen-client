@@ -1,4 +1,4 @@
-import { get } from "./api.js";
+import api, { get } from "./api.js";
 
 /**
  * 获取 首页动态列表
@@ -13,7 +13,7 @@ export function getFeedsByType(type, limit = 15, after) {
   const res = { ad: [], feeds: [], pinned: [] };
   const baseUrl = `/feeds?type=${type}&limit=${limit}`;
   const url = after > 0 ? baseUrl + `&after=${after}` : baseUrl;
-  return get(url).then(
+  return api.get(url).then(
     ({ data = res }) => {
       return data;
     },

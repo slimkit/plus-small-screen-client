@@ -48,7 +48,7 @@
       <!-- 底部 -->
       <div
       :class="`${prefix}-foot status-${bottomStatus}`"
-      v-if="bottomStatus > 0"
+      v-if="bottomStatus > 0 && showBottom"
       @click="beforeLoadMore">
         <slot name="foot">
           <div 
@@ -103,7 +103,15 @@ export default {
     topDistance: {
       type: Number
     },
+    noAnimation: {
+      type: Boolean,
+      default: false
+    },
     autoLoad: {
+      type: Boolean,
+      default: true
+    },
+    showBottom: {
       type: Boolean,
       default: true
     }
@@ -200,19 +208,25 @@ export default {
 
       if (this.refreshing) return;
 
+      this.noMore = false;
       this.refreshing = true;
 
-      this.$emit("onRefresh", (next = false) => {
-        this.afterRefresh(next);
+      this.$emit("onRefresh", (noMore = false) => {
+        this.afterRefresh(noMore);
       });
     },
-    afterRefresh(next) {
+    afterRefresh(noMore) {
       this.dY = 0;
+      this.noMore = noMore;
       this.refreshing = false;
       this.$emit("afterRefresh");
 
       this.$nextTick(() => {
-        next || (this.autoLoad && !this.isFulled() && this.beforeLoadMore());
+        noMore ||
+          (this.showBottom &&
+            this.autoLoad &&
+            !this.isFulled() &&
+            this.beforeLoadMore());
       });
     },
     beforeLoadMore() {
@@ -223,8 +237,8 @@ export default {
       });
     },
     afterLoadMore(noMore) {
-      this.loading = false;
       this.noMore = noMore;
+      this.loading = false;
       this.$emit("afterLoadMore");
 
       this.$nextTick(() => {
@@ -242,7 +256,7 @@ export default {
     this.scrollTarget = getScrollTarget(this.$el);
     this.topBarHeight = this.$refs.head.clientHeight;
     if (this.autoLoad && !this.isFulled()) {
-      this.beforeLoadMore();
+      this.beforeRefresh();
     }
   }
 };
@@ -261,10 +275,16 @@ export default {
     z-index: 0;
 
     &-box {
-      height: 90px;
+      height: 45px; /*no*/
       display: flex;
       align-items: center;
       justify-content: center;
+      color: #7c7c7c;
+      font-size: 0.28rem;
+      > span {
+        vertical-align: middle;
+        margin-left: 0.2rem;
+      }
       i {
         font-style: normal;
         transition: all 0.3s ease;

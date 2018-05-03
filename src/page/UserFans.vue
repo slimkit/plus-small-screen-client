@@ -17,17 +17,17 @@
       <div class="m-box m-justify-end"></div>
     </nav>
     <main style="padding-top: 0.9rem">
-      <load-more
+      <jo-load-more
       ref='loadmore'
-      :onRefresh='onRefresh'
-      :onLoadMore='onLoadMore'>
+      @onRefresh='onRefresh'
+      @onLoadMore='onLoadMore'>
         <user-item
         v-for='user in users'
         v-if='user.id'
         :user='user'
         :key='`user-item-${user.id}`'
         ></user-item>
-      </load-more>
+      </jo-load-more>
     </main>
   </div>
 </template>
@@ -35,17 +35,17 @@
 <script>
 import UserItem from "@/components/UserItem";
 import { getUserFansByType } from "@/api/user.js";
+
+const typeMap = ["followers", "followings"];
 export default {
   name: "UserFans",
   components: {
     UserItem
   },
   data() {
-    const followers = new Map();
-    const followings = new Map();
     return {
-      followers,
-      followings,
+      followers: [],
+      followings: [],
       preUID: 0,
       USERSChangeTracker: 1
     };
@@ -64,51 +64,47 @@ export default {
         uid: this.userID
       };
     },
-    users() {
-      return (
-        this.isCurrentView &&
-        this.type &&
-        this.USERSChangeTracker &&
-        Array.from(this.$data[this.type].values())
-      );
+    users: {
+      get() {
+        return this.type && this.$data[this.type];
+      },
+      set(val) {
+        this.$data[this.type] = val;
+      }
     }
   },
   watch: {
     type(val) {
-      this.isCurrentView && val && this.$refs.loadmore.beforeRefresh();
+      typeMap.includes(val) && this.$refs.loadmore.beforeRefresh();
+    },
+    users(val) {
+      val &&
+        val.length > 0 &&
+        val.forEach(user => {
+          this.$store.commit("SAVE_USER", user);
+        });
     }
   },
   activated() {
-    this.isCurrentView = true;
-
     // 判断是否清空上一次的数据
     this.userID === this.preUID ||
-      (this.followers.clear(), this.followings.clear());
+      ((this.followers = []), (this.followings = []));
+
     this.$refs.loadmore.beforeRefresh();
     this.preUID = this.userID;
   },
-  deactivated() {
-    this.isCurrentView = false;
-  },
   methods: {
-    formatedUsers(users) {
-      users.forEach(user => {
-        this.$store.commit("SAVE_USER", user);
-        this.$data[this.type].set(user.id, user);
-        this.USERSChangeTracker += 1;
+    onRefresh(callback) {
+      getUserFansByType(this.param).then(data => {
+        this.users = data;
+        callback(data.length < this.param.limit);
       });
     },
-    onRefresh() {
-      getUserFansByType(this.param).then(({ data }) => {
-        this.formatedUsers(data);
-        this.$refs.loadmore.topEnd(!(data.length < this.param.limit));
-      });
-    },
-    onLoadMore() {
+    onLoadMore(callback) {
       getUserFansByType({ ...this.param, offset: this.users.length }).then(
-        ({ data = [] }) => {
-          this.formatedUsers(data);
-          this.$refs.loadmore.bottomEnd(data.length < this.param.limit);
+        data => {
+          this.users = [...this.users, ...data];
+          callback(data.length < this.param.limit);
         }
       );
     }

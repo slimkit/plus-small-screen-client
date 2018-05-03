@@ -1,11 +1,11 @@
 <template>
-  <load-more
+  <jo-load-more
   key="find-new"
   ref="loadmore"
-  :onRefresh="onRefresh"
-  :onLoadMore="onLoadMore">
+  @onRefresh="onRefresh"
+  @onLoadMore="onLoadMore">
     <user-item v-for="user in users" :user="user" :key="user.id"></user-item>
-  </load-more>
+  </jo-load-more>
 </template>
 
 <script>
@@ -24,55 +24,40 @@ export default {
     },
     lng() {
       return this.POSITION.lng;
-    },
-    users() {
-      /**
-       * Vue 暂时没有实现监听 Map Set, 手动触发更新
-       */
-      return this.USERSChangeTracker && Array.from(this.USERS.values());
     }
   },
   data() {
-    const USERS = new Map();
     return {
-      USERSChangeTracker: 1,
-      USERS,
+      users: [],
       page: 1,
       isActive: false
     };
   },
-  activated() {
-    this.isActive = true;
-  },
-  deactivated() {
-    this.isActive = false;
-  },
   methods: {
-    async formateUser(id) {
-      const user = await getUserInfoById(id);
-      this.USERS.set(id, user);
-      this.USERSChangeTracker += 1;
+    formateUsers(users) {
+      for (let i = 0; i < users.length; i++) {
+        getUserInfoById(users[i]["user_id"]).then(user => {
+          this.users.push(user);
+        });
+      }
     },
-    onRefresh() {
+    onRefresh(callback) {
       this.page = 1;
       findNearbyUser({ lat: this.lat, lng: this.lng }, this.page).then(
         ({ data = [] }) => {
-          data.forEach(({ user_id }) => {
-            this.formateUser(user_id);
-          });
+          this.users = [];
+          this.formateUsers(data);
           this.page = 2;
-          this.$refs.loadmore.topEnd(!(data.length < 15));
+          callback(data.length < 15);
         }
       );
     },
-    onLoadMore() {
+    onLoadMore(callback) {
       findNearbyUser({ lat: this.lat, lng: this.lng }, this.page).then(
         ({ data = [] }) => {
-          data.forEach(user => {
-            this.formateUser(user.user_id);
-          });
           this.page += 1;
-          this.$refs.loadmore.bottomEnd(data.length < 15);
+          this.formateUsers(data);
+          callback(data.length < 15);
         }
       );
     }

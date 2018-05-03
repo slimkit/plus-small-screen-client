@@ -28,12 +28,21 @@
       </header>
 
       <main class="m-flex-grow1 m-flex-shrink1 p-search-user-body" style="padding-top: 0.95rem">
-        <load-more v-show="showRec" ref="loadmoreRecs" :on-refresh="fetchRecs">
+        <jo-load-more 
+        v-show="showRec"
+        ref="loadmoreRecs"
+        :showBottom="false"
+        :noAnimation="true"
+        @onRefresh="fetchRecs">
           <user-item :user="user" :key="user.id" v-for="user in recs" />          
-        </load-more>
-        <load-more v-show="users.length > 0" :noTranslateAnimation="true" style="margin-top: -40px;" ref="loadmore" :on-load-more="onLoadMore">
+        </jo-load-more>
+        <jo-load-more
+        ref="loadmore"
+        v-show="users.length > 0"
+        @onRefresh="onRefresh"
+        @onLoadMore="onLoadMore">
           <user-item :user="user" :key="user.id" v-for="user in users" />          
-        </load-more>
+        </jo-load-more>
         <div v-if="noData" class="placeholder m-no-find"></div>
       </main>
     </div>
@@ -75,10 +84,16 @@ export default {
         this.noData = data.length === 0 && this.keyword.length > 0;
       });
     }, 1e3),
-    onLoadMore() {
+    onRefresh(callback) {
+      searchUserByKey(this.keyword).then(({ data }) => {
+        this.users = data;
+        callback(data.length < 15);
+      });
+    },
+    onLoadMore(callback) {
       searchUserByKey(this.keyword, this.users.length).then(({ data }) => {
         this.users = [...this.users, ...data];
-        this.$refs.loadmore.bottomEnd(data.length < 15);
+        callback(data.length < 15);
       });
     },
     onFocus() {
@@ -88,10 +103,10 @@ export default {
     onBlur() {
       this.isFocus = false;
     },
-    fetchRecs() {
+    fetchRecs(callback) {
       findUserByType("recommends").then(({ data }) => {
         this.recs = data;
-        this.$refs.loadmoreRecs.topEnd(!(data.length < 15));
+        callback(data.length < 15);
       });
     }
   }

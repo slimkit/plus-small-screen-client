@@ -131,12 +131,14 @@ export const getUserInfoById = id => {
  * @param  {Number} options.offset
  * @return {Promise -> Array}
  */
-export function getUserFansByType({ uid, type, offset = 0 }) {
-  return get(`/users/${uid}/${type}`, {
-    limit: 15,
-    offset
-  }).catch(err => {
-    console.log(err);
-    Promise.reject(resArray);
-  });
+export function getUserFansByType({ uid, type, limit = 15, offset = 0 }) {
+  return get(`/users/${uid}/${type}?limit=${limit}&offset=${offset}`).then(
+    ({ data = [] }) => {
+      return data;
+    },
+    err => {
+      console.log(err);
+      return [];
+    }
+  );
 }
