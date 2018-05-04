@@ -15,3 +15,25 @@ export function getMyNews({ type = 0, limit = 15, after = 0 }) {
     after
   });
 }
+
+/**
+ * 搜索资讯
+ * @author jsonleex <jsonlseex@163.com>
+ * @param  {String} key
+ * @param  {Number} limit
+ * @param  {Number} after
+ * @return {Promise -> Array}
+ */
+export function searchNewsByKey(key = "", limit = 15, after = 0) {
+  return !key
+    ? Promise.resolve([])
+    : get(`/news?key=${key}&limit=${limit}&after=${after}`).then(
+        ({ data = [] }) => {
+          return data;
+        },
+        err => {
+          console.log(err);
+          return [];
+        }
+      );
+}

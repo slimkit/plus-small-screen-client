@@ -17,7 +17,7 @@
     <div 
     ref="head"
     :class="`${prefix}-head ${prefix}-head-box`"
-    :style="{transform: `translateY(${tY - topBarHeight >= 0 ? 0 : tY - topBarHeight }px)`}">    
+    :style="{transform: `translateY(${ tY - topBarHeight }px)`, transitionDuration}">    
       <slot name="head">
         <div v-if="refreshing" :class="`${prefix}-loading ${prefix}-icon`">
           <span></span>
