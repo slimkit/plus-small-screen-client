@@ -53,7 +53,7 @@ export default {
   },
   computed: {
     feedType() {
-      return this.$route.query.type || "new";
+      return this.$route.query.type;
     },
     feeds: {
       get() {
