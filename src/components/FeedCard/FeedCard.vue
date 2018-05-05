@@ -354,7 +354,9 @@ export default {
           .post(`/feeds/${this.feedID}/comments`, params, {
             validataStatus: s => s === 201
           })
-          .then(() => {
+          .then(({ data = { comment: {} } }) => {
+            this.feed.feed_comment_count += 1;
+            this.feed.comments.unshift(data.comment);
             this.$Message.success("评论成功");
             bus.$emit("commentInput:close", true);
           })
