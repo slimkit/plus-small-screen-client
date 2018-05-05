@@ -2,8 +2,8 @@
   <div :class="`${prefixCls}`">
     <ul class="entry__group padding">
       <router-link v-for="item in system" tag='li' class="entry__item" :key="item.url" :to='item.url'>
-        <div :style="`background-color: ${item.bgColor}; border-radius: 100%`">
-          <svg class='entry__item--prepend'>
+        <div>
+          <svg >
             <use xmlns:xlink="http://www.w3.org/1999/xlink" :xlink:href="`#${item.icon}`"></use>
           </svg>
         </div>
@@ -37,7 +37,7 @@ export default {
         system: {
           title: "系统消息",
           placeholder: "sPlaceholder",
-          icon: "message-likes",
+          icon: "message-tongzhi",
           hanBadge: 0,
           url: "/message/notification",
           bgColor: "#59b6d7",
@@ -47,7 +47,7 @@ export default {
         comments: {
           title: "评论的",
           placeholder: "cPlaceholder",
-          icon: "message-comments",
+          icon: "message-pinglun",
           hanBadge: 0,
           url: "/message/comments",
           bgColor: "#59b6d7",
@@ -57,7 +57,7 @@ export default {
         diggs: {
           title: "赞过的",
           placeholder: "dPlaceholder",
-          icon: "message-likes",
+          icon: "message-zan",
           hanBadge: 0,
           url: "/message/likes",
           bgColor: "#fe8f90",
@@ -67,7 +67,7 @@ export default {
         audits: {
           title: "审核",
           placeholder: "aPlaceholder",
-          icon: "msg-error",
+          icon: "message-shenghe",
           hanBadge: 0,
           url: "/message/audits/feedcomments",
           bgColor: "#fbb12a",
