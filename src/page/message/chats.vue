@@ -42,13 +42,16 @@ export default {
     ...mapState({
       // 新消息提示
       has_msg: state =>
-        state.MESSAGE.UNREAD_COUNT.msg.diggs.count +
-          state.MESSAGE.UNREAD_COUNT.msg.comments.count +
-          state.MESSAGE.UNREAD_COUNT.msg.audits.feedCommentCount +
-          state.MESSAGE.UNREAD_COUNT.msg.audits.groupJoinCount +
-          state.MESSAGE.UNREAD_COUNT.msg.audits.groupPostCommentCount +
-          state.MESSAGE.UNREAD_COUNT.msg.audits.groupPostCount +
-          state.MESSAGE.UNREAD_COUNT.msg.audits.newsCommentCount >
+        state.MESSAGE.NEW_UNREAD_COUNT.commented +
+          state.MESSAGE.NEW_UNREAD_COUNT["feed-comment-pinned"] +
+          state.MESSAGE.NEW_UNREAD_COUNT.following +
+          state.MESSAGE.NEW_UNREAD_COUNT["group-join-pinned"] +
+          state.MESSAGE.NEW_UNREAD_COUNT.liked +
+          state.MESSAGE.NEW_UNREAD_COUNT.mutual +
+          state.MESSAGE.NEW_UNREAD_COUNT["news-comment-pinned"] +
+          state.MESSAGE.NEW_UNREAD_COUNT["post-comment-pinned"] +
+          state.MESSAGE.NEW_UNREAD_COUNT["post-pinned"] +
+          state.MESSAGE.NEW_UNREAD_COUNT.system >
         0,
       unread_chat: state => state.MESSAGE.UNREAD_COUNT.notification,
       ROOMS: state => state.easemob.ROOMS

@@ -7,6 +7,12 @@ export default {
       ...options
     };
   },
+  SAVE_NEW_UNREAD_COUNT(state, counts) {
+    state.NEW_UNREAD_COUNT = {
+      ...state.NEW_UNREAD_COUNT,
+      ...counts
+    }
+  },
   /**
    * 保存我收到的评论
    * @Author   Wayne

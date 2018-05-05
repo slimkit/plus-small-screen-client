@@ -19,6 +19,7 @@
  * 消息-评论列表
  */
 import { mapState } from "vuex";
+import { resetUserCount } from "@/api/message.js";
 import feedItem from "../children/comments/feedItem";
 import newsItem from "../children/comments/newsItem";
 import productItem from "../children/comments/productItem";
@@ -111,7 +112,8 @@ export default {
         });
     }
   },
-  activated() {
+  created() {
+    resetUserCount("commented");
     this.$refs.loadmore.noMore = false;
   }
 };

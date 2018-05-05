@@ -18,12 +18,15 @@ const state = {
         time: ""
       },
       audits: {
-        placeholder: "暂无未审核的申请",
         newsCommentCount: 0,
         feedCommentCount: 0,
         groupPostCommentCount: 0,
         groupJoinCount: 0,
         groupPostCount: 0
+      },
+      system: {
+        placeholder: "",
+        time: ""
       }
     },
     notification: false
@@ -34,7 +37,8 @@ const state = {
   MY_POST_AUDIT: [],
   MY_POST_COMMENT_AUDIT: [],
   MY_NEWS_COMMENT_AUDIT: [],
-  MY_GROUP_JOIN_AUDIT: []
+  MY_GROUP_JOIN_AUDIT: [],
+  NEW_UNREAD_COUNT: {}
 };
 
 export default {

@@ -5,7 +5,7 @@
       <section class="userInfo">
         <span v-if="!user.id" :class="`${prefixCls}-item-top-link`">未知用户 </span>
         <router-link :class="`${prefixCls}-item-top-link`" :to="`/user/${user._id}`">{{ user.name }}</router-link>
-        <span>赞了你的文章</span>
+        <span>赞了你的资讯</span>
         <p>{{ like.created_at | time2tips }}</p>
       </section>
     </div>
@@ -26,7 +26,7 @@
       </section>
       <section v-if="like.likeable === null">
         <div :class="`${prefixCls}-item-bottom-noImg`" class="content">
-          该文章已被删除
+          资讯已被删除
         </div>
       </section>
     </div>
@@ -49,7 +49,9 @@ export default {
      * @return   {[type]}            [description]
      */
     goToFeedDetail() {
-      const { likeable: { id = 0 } } = this.like;
+      const {
+        likeable: { id = 0 }
+      } = this.like;
       this.$router.push(`/news/${id}`);
     }
   },

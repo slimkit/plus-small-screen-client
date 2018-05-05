@@ -28,78 +28,53 @@
     </div>
 </template>
 <script>
-  import _ from "lodash";
+import _ from "lodash";
+import { getNotifications } from "@/api/message.js";
 
-  const prefixCls = "notification";
+const prefixCls = "notification";
 
-  export default {
-    name: "notification",
-    data() {
-      return {
-        prefixCls,
-        notifications: []
-      };
+export default {
+  name: "notification",
+  data() {
+    return {
+      prefixCls,
+      notifications: []
+    };
+  },
+  methods: {
+    /**
+     * 下拉刷新
+     * @Author   Wayne
+     * @DateTime 2018-02-10
+     * @Email    qiaobin@zhiyicx.com
+     * @return   {[type]}            [description]
+     */
+    onRefresh() {
+      getNotifications().then(({ data }) => {
+        this.$refs.loadmore.topEnd(!(data.length < 15));
+        this.notifications = data;
+      });
     },
-    methods: {
-      /**
-       * 下拉刷新
-       * @Author   Wayne
-       * @DateTime 2018-02-10
-       * @Email    qiaobin@zhiyicx.com
-       * @return   {[type]}            [description]
-       */
-      onRefresh() {
-        this.$http
-          .get(`/user/notifications`, {
-            validateStatus: s => s === 200
-          })
-          .then(({data}) => {
-            this.$refs.loadmore.topEnd(!(data.length < 15));
-            this.notifications = data;
-          });
-      },
-      /**
-       * 上拉加载
-       * @Author   Wayne
-       * @DateTime 2018-02-10
-       * @Email    qiaobin@zhiyicx.com
-       * @return   {[type]}            [description]
-       */
-      onLoadMore() {
-        const {length: offset = 0} = this.notifications;
-        this.$http
-          .get(
-            `/user/notifications`,
-            {
-              params: {
-                offset
-              }
-            },
-            {
-              validateStatus: s => s === 200
-            }
-          )
-          .then(({data}) => {
-            this.$refs.loadmore.bottomEnd(data.length < 15);
-            this.notifications = _.unionBy([...this.notifications, ...data]);
-          });
-      },
-
-      getNotifications() {
-        this.$http
-          .get(`/user/notifications`, {
-            validateStatus: s => s === 200
-          })
-          .then(({data}) => {
-            this.notifications = data;
-          });
-      }
-    },
-
-    created() {
-      // this.getNotifications();
+    /**
+     * 上拉加载
+     * @Author   Wayne
+     * @DateTime 2018-02-10
+     * @Email    qiaobin@zhiyicx.com
+     * @return   {[type]}            [description]
+     */
+    onLoadMore() {
+      const { length: offset = 0 } = this.notifications;
+      getNotifications(offset).then(({ data }) => {
+        this.$refs.loadmore.bottomEnd(data.length < 15);
+        this.notifications = _.unionBy([...this.notifications, ...data]);
+      });
     }
-  };
+  },
+
+  created() {
+    this.$http.put("/user/notifications/all");
+  }
+};
 </script>
 <style lang="less">
 </style>

@@ -19,6 +19,7 @@
 <script>
 import _ from "lodash";
 import { mapState } from "vuex";
+import { resetUserCount } from "@/api/message.js";
 import feedItem from "../children/likes/feedItem";
 import newsItem from "../children/likes/newsItem";
 import productItem from "../children/likes/productItem";
@@ -91,11 +92,8 @@ export default {
       likes: state => state.MESSAGE.MY_LIKED || []
     })
   },
-  activated() {
-    this.$refs.loadmore.noMore = false;
-  },
   created() {
-    // this.$store.dispatch('GET_MY_LIKED_ALL');
+    resetUserCount("liked");
   }
 };
 </script>

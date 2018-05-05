@@ -105,6 +105,7 @@ export default {
             this.$lstore.removeData("H5_WECHAT_MP_ASTOKEN");
             this.$store.commit("SAVE_USER", user);
             this.$store.dispatch("GET_UNREAD_COUNT");
+            this.$store.dispatch("GET_NEW_UNREAD_COUNT");
             this.$store.commit("SAVE_CURRENTUSER", { ...user, token });
           });
         })

@@ -12,7 +12,11 @@
           <p>{{ computedGetter(item.placeholder) }}</p>
         </div>
         <div :class="`${prefixCls}-time`">
-          <h5 v-if="computedGetter(item.time) !== '' && item.time">{{ (computedGetter(item.time)) || '' | time2tips }}</h5>
+          <h5 
+            v-if="computedGetter(item.time) !== '' && item.time"
+          >
+            {{ (computedGetter(item.time)) || '' | time2tips }}
+          </h5>
           <h5 v-else></h5>
           <span :class="`${prefixCls}-time-count`" v-if="computedGetter(item.count) !== 0">{{ computedGetter(item.count) }}</span>
         </div>
@@ -81,7 +85,8 @@ export default {
   computed: {
     ...mapState({
       msg: state => state.MESSAGE.UNREAD_COUNT.msg,
-      notification: state => state.MESSAGE.UNREAD_COUNT.notification
+      newMsg: state => state.MESSAGE.NEW_UNREAD_COUNT,
+      sCount: state => state.MESSAGE.NEW_UNREAD_COUNT.system
     }),
 
     // 新消息提示
@@ -98,10 +103,10 @@ export default {
       return this.msg.diggs.placeholder;
     },
     aPlaceholder() {
-      return this.msg.audits.placeholder;
+      return this.aCount ? "你有未审核的信息请及时处理" : "没有未审核的申请";
     },
     sPlaceholder() {
-      return "系统通知";
+      return this.msg.system.placeholder;
     },
     cTime() {
       return this.msg.comments.time;
@@ -110,25 +115,22 @@ export default {
       return this.msg.diggs.time;
     },
     sTime() {
-      return "";
+      return this.msg.system.time;
     },
     cCount() {
-      return this.msg.comments.count;
+      return this.newMsg.commented;
     },
     dCount() {
-      return this.msg.diggs.count;
+      return this.newMsg.liked;
     },
     aCount() {
       return (
-        this.msg.audits.feedCommentCount +
-        this.msg.audits.groupJoinCount +
-        this.msg.audits.groupPostCommentCount +
-        this.msg.audits.groupPostCount +
-        this.msg.audits.newsCommentCount
+        ~~this.newMsg["feed-comment-pinned"] +
+        ~~this.newMsg["news-comment-pinned"] +
+        ~~this.newMsg["post-comment-pinned"] +
+        ~~this.newMsg["post-pinned"] +
+        ~~this.newMsg["group-join-pinned"]
       );
-    },
-    sCount() {
-      return 0;
     }
   },
 

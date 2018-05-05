@@ -159,6 +159,7 @@ export default {
             bus.$emit("connect-easemob"),
             this.$store.commit("SAVE_USER", user),
             this.$store.dispatch("GET_UNREAD_COUNT"),
+            this.$store.dispatch("GET_NEW_UNREAD_COUNT"),
             this.$nextTick(() => {
               this.$router.push(
                 this.$route.query.redirect || "/feeds?type=new"
