@@ -17,9 +17,9 @@
       <avatar :user="user" />
     </div>
     <div class="m-box m-flex-grow1 m-aln-center m-flex-base0 m-justify-end">
-      <svg v-if="!isWechat" class='m-style-svg m-svg-def'>
+      <!-- <svg v-if="!isWechat" class='m-style-svg m-svg-def'>
         <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-share"></use>
-      </svg>
+      </svg> -->
     </div>
   </header>
   <!-- 内容 -->
@@ -113,8 +113,10 @@
 import bus from "@/bus.js";
 import ArticleCard from "@/page/article/ArticleCard.vue";
 import CommentItem from "@/page/article/ArticleComment.vue";
-
 import wechatShare from "@/util/wechatShare.js";
+import { limit } from "@/api/api.js";
+import { getFeedComments } from "@/api/feeds.js";
+
 export default {
   name: "feed-detail",
   components: {
@@ -257,15 +259,19 @@ export default {
           this.fetching = false;
           this.fetchFeedComments();
           this.fetchRewards();
-          wechatShare(window.location.href, {
-            title: `${data.user.name}的动态`,
-            desc: `${data.feed_content}`,
-            link: window.location.href,
-            imgUrl:
-              data.images.length > 0
-                ? `${this.$http.defaults.baseURL}/files/${data.images[0].file}`
-                : ""
-          });
+          if (this.isWechat) {
+            wechatShare(window.location.href, {
+              title: `${data.user.name}的动态`,
+              desc: `${data.feed_content}`,
+              link: window.location.href,
+              imgUrl:
+                data.images.length > 0
+                  ? `${this.$http.defaults.baseURL}/files/${
+                      data.images[0].file
+                    }`
+                  : ""
+            });
+          }
         })
         .catch(() => {
           this.$router.back();
@@ -274,21 +280,24 @@ export default {
     fetchFeedComments(after = 0) {
       if (this.fetchComing) return;
       this.fetchComing = true;
-      this.$http
-        .get(`/feeds/${this.feedID}/comments`, {
-          params: {
-            after
-          }
-        })
+      // this.$http.get(`/feeds/${this.feedID}/comments`, {
+      //   params: {
+      //     after
+      //   }
+      // });
+      getFeedComments({ feedId: this.feedID, after })
         .then(({ data: { pinneds = [], comments = [] } }) => {
           pinneds &&
             pinneds.length &&
             (this.pinnedCom = after ? [...this.pinneds, ...pinneds] : pinneds);
-          comments && comments.length
-            ? ((this.comments = after
-                ? [...this.comments, ...comments]
-                : comments),
-              (this.maxComId = comments[comments.length - 1].id))
+          if (comments && comments.length) {
+            (this.comments = after
+              ? [...this.comments, ...comments]
+              : comments),
+              (this.maxComId = comments[comments.length - 1].id);
+          }
+          comments.length === limit
+            ? (this.noMoreCom = false)
             : (this.noMoreCom = true);
           this.$nextTick(() => {
             this.fetchComing = false;
@@ -459,6 +468,7 @@ export default {
           .then(({ data: { comment } = { comment: {} } }) => {
             this.$Message.success("评论成功");
             this.comments.unshift(comment);
+            this.commentCount += 1;
             bus.$emit("commentInput:close", true);
           })
           .catch(() => {

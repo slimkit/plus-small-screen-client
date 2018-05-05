@@ -131,10 +131,9 @@
 <script>
 import _ from "lodash";
 import bus from "@/bus.js";
-import Wx from "weixin-js-sdk";
-import wx from "@/util/share.js";
 import FeedCard from "@/components/FeedCard/FeedCard.vue";
 import HeadRoom from "headroom.js";
+import wechatShare from "@/util/wechatShare.js";
 
 export default {
   name: "user-home",
@@ -399,120 +398,6 @@ export default {
     },
     shareCancel() {
       this.$Message.success("取消分享");
-    },
-    // 微信内分享
-    getWeChatConfig(title = "", desc = "") {
-      const link =
-        window.location.origin +
-        process.env.BASE_URL.substr(0, process.env.BASE_URL.length - 1) +
-        this.$route.fullPath;
-
-      const imgUrl = this.user.avatar;
-      imgUrl ? imgUrl : "";
-      if (this.config.appid === "") {
-        wx.getOauth(link).then(res => {
-          this.config.timestamp = res.timestamp || "";
-          this.config.signature = res.signature || "";
-          this.config.appid = res.appid || "";
-          this.config.noncestr = res.noncestr || "";
-          Wx.config({
-            debug: false,
-            appId: this.config.appid,
-            timestamp: this.config.timestamp,
-            signature: this.config.signature,
-            nonceStr: this.config.noncestr,
-            jsApiList: this.appList
-          });
-          Wx.error(() => {
-            // console.log(res);
-          });
-          Wx.ready(() => {
-            Wx.onMenuShareTimeline({
-              title,
-              desc,
-              link,
-              imgUrl,
-              success: () => {
-                this.shareSuccess();
-              },
-              cancel: () => {
-                this.shareCancel();
-              }
-            });
-            Wx.onMenuShareAppMessage({
-              title,
-              desc,
-              link,
-              success: () => {
-                this.shareSuccess();
-              },
-              cancel: () => {
-                this.shareCancel();
-              }
-            });
-            Wx.onMenuShareQQ({
-              title,
-              desc,
-              link,
-              imgUrl,
-              success: () => {
-                this.shareSuccess();
-              },
-              cancel: () => {
-                this.shareCancel();
-              }
-            });
-          });
-        });
-      } else {
-        Wx.config({
-          debug: false,
-          appId: this.config.appid,
-          timestamp: this.config.timestamp,
-          signature: this.config.signature,
-          nonceStr: this.config.noncestr,
-          jsApiList: this.appList
-        });
-
-        Wx.ready(() => {
-          Wx.onMenuShareTimeline({
-            title,
-            desc,
-            link,
-            imgUrl,
-            success: () => {
-              this.shareSuccess();
-            },
-            cancel: () => {
-              this.shareCancel();
-            }
-          });
-          Wx.onMenuShareAppMessage({
-            title,
-            desc,
-            link,
-            success: () => {
-              this.shareSuccess();
-            },
-            cancel: () => {
-              this.shareCancel();
-            }
-          });
-          Wx.onMenuShareQQ({
-            title,
-            desc,
-            link,
-            imgUrl,
-            success: () => {
-              this.shareSuccess();
-            },
-            cancel: () => {
-              this.shareCancel();
-            }
-          });
-        }),
-          Wx.error(() => {});
-      }
     }
   },
   mounted() {
@@ -544,7 +429,13 @@ export default {
     window.addEventListener("scroll", this.onScroll);
 
     if (this.isWechat) {
-      this.getWeChatConfig(this.user.name, this.user.bio);
+      // 微信分享
+      wechatShare(window.location.href, {
+        title: this.user.name,
+        desc: this.user.bio,
+        link: window.location.href,
+        imgUrl: this.user.avatar || ""
+      });
     }
 
     this.preUID = this.userID;
