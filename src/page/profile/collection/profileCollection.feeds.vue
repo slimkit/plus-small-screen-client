@@ -32,7 +32,8 @@ export default {
   },
   data: () => ({
     feedList: new Map(),
-    ChangeTracker: 1
+    ChangeTracker: 1,
+    isCurrentView: false
   }),
   methods: {
     formatFeeds(feedList) {
@@ -47,7 +48,7 @@ export default {
         ...params,
         offset: 0
       };
-      getCollectedFeed({ ...params }).then(({ data }) => {
+      getCollectedFeed({ ...params }).then(({ data = [] }) => {
         this.formatFeeds(data);
         this.$refs.loadmore.topEnd(!(data.length < this.params.limit));
       });
@@ -73,17 +74,6 @@ export default {
       };
     }
   }
-  // watch: {
-  //   isCurrentView(val) {
-  //     val && this.$refs.loadmore.beforeRefresh();
-  //   }
-  // },
-  // activated() {
-  //   this.isCurrentView = true;
-  // },
-  // deactivated() {
-  //   this.isCurrentView = false;
-  // }
 };
 </script>
 <style lang="less">
