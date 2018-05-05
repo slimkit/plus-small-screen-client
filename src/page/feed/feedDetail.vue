@@ -7,14 +7,17 @@
   @on-more="moreAction"
   @on-comment="commentFeed"
   >
-  <header slot="head" class="m-box m-justify-bet m-aln-center">
+  <header slot="head" class="m-box m-justify-bet m-aln-center m-art-head">
     <div class="m-box m-flex-grow1 m-aln-center m-flex-base0">
       <svg class='m-style-svg m-svg-def' @click='goBack'>
         <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-back"></use>
       </svg>
     </div>
-    <div class="m-box-model m-flex-grow1 m-aln-center m-flex-base0 m-head-top-title">
+    <div class="m-box m-flex-grow1 m-aln-center m-flex-base0 m-head-top-title m-text-cut">
       <avatar :user="user" />
+      <span 
+      class="m-text-cut m-flex-grow1 m-flex-shrink1" 
+      style="font-size: 0.32rem; margin-left: 0.1rem">{{ user.name }}</span>
     </div>
     <div class="m-box m-flex-grow1 m-aln-center m-flex-base0 m-justify-end">
       <!-- <svg v-if="!isWechat" class='m-style-svg m-svg-def'>
@@ -26,7 +29,7 @@
   <main class="m-flex-shrink1 m-flex-grow1 m-art m-main">
     <div class="m-art-body">
       <video
-        v-if="feed.video"
+        v-if="!!video"
         class="feed-detail-video"
         controls
         autoplay
@@ -143,15 +146,14 @@ export default {
     feedID() {
       return this.$route.params.feedID;
     },
+    video() {
+      return this.feed.video;
+    },
     video_file() {
-      return this.feed.video
-        ? `/api/v2/files/${this.feed.video.video_id}`
-        : false;
+      return this.video ? `/api/v2/files/${this.video.video_id}` : false;
     },
     cover_file() {
-      return this.feed.video
-        ? `/api/v2/files/${this.feed.video.video_id}`
-        : false;
+      return this.video ? `/api/v2/files/${this.video.video_id}` : false;
     },
     CURRENTUSER() {
       return this.$store.state.CURRENTUSER;
@@ -207,17 +209,6 @@ export default {
     feedContent() {
       return this.feed.feed_content || "";
     },
-    // 分享第一张图片
-    firstImage() {
-      let images = this.images;
-      if (!images.length) {
-        return "";
-      }
-      const file = images[0] || {};
-      return (
-        this.$http.defaults.baseURL + "/files/" + file.file + "?w=300&h=300"
-      );
-    },
     isWechat() {
       return this.$store.state.BROWSER.isWechat;
     },
@@ -259,7 +250,7 @@ export default {
           this.fetching = false;
           this.fetchFeedComments();
           this.fetchRewards();
-          if (this.isWechat) {
+          this.isWechat &&
             wechatShare(window.location.href, {
               title: `${data.user.name}的动态`,
               desc: `${data.feed_content}`,
@@ -271,7 +262,6 @@ export default {
                     }`
                   : ""
             });
-          }
         })
         .catch(() => {
           this.$router.back();
@@ -427,7 +417,6 @@ export default {
           ];
       bus.$emit("actionSheet", [...defaultActions, ...actions], "取消");
     },
-    // const imgUrl = this.firstImage ? this.firstImage : "";
     replyComment(uid, uname) {
       uid === this.CURRENTUSER.id
         ? bus.$emit(
@@ -483,7 +472,10 @@ export default {
   activated() {
     if (this.feedID) {
       this.feedID !== this.oldID
-        ? ((this.components = []), (this.rewardList = []), this.fetchFeed())
+        ? ((this.components = []),
+          (this.feed = {}),
+          (this.rewardList = []),
+          this.fetchFeed())
         : setTimeout(() => {
             this.loading = false;
           }, 600);
@@ -507,9 +499,16 @@ export default {
 </script>
 <style lang="less">
 .feed-detail-video {
-  width: calc(~"100% + 40px");
+  height: 100vw;
+  width: 100vw;
+  // object-fit: cover;
   margin-left: -20px;
-  height: calc(~"100vh - 185px");
   background: #000;
+}
+.m-art-head {
+  .m-avatar-box-def {
+    width: 52px;
+    height: 52px;
+  }
 }
 </style>
