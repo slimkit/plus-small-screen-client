@@ -4,9 +4,21 @@
       <v-avatar :sex="comment.user.sex" :src="comment.user.avatar" />
       <section class="userInfo">
         <router-link :class="`${prefixCls}-item-top-link`" :to="`/user/${comment.user_id}`">{{ comment.user.name }}</router-link>
-        <span v-if="comment.reply_user">回复</span><span v-else>评论了你的帖子</span>
-        <router-link :class="`${prefixCls}-item-top-link`" v-if="comment.reply_user" :to="`/user/${comment.reply_user}`">{{ comment.reply.name }} </router-link>:
+        <span v-if="comment.reply_user"> 回复</span>
+        <span v-else> 评论了你的帖子</span>
+        <router-link
+          :class="`${prefixCls}-item-top-link`"
+          v-if="comment.reply_user"
+          :to="`/user/${comment.reply_user}`"
+        >
+          {{ comment.reply.name }}
+        </router-link>
         <p>{{ comment.created_at | time2tips }}</p>
+      </section>
+      <section class="msgList-status">
+        <section class="gray">
+          <span class="replay" @click.stop="showCommentInput">回复</span>
+        </section>
       </section>
     </div>
     <div :class="`${prefixCls}-item-bottom`">
@@ -32,6 +44,16 @@
     </div>
   </section>
 </template>
+<style lang="less">
+.gray {
+  span.replay {
+    background-color: #f3f4f4;
+    padding: 10px 15px;
+    color: #999;
+    margin-right: 0;
+  }
+}
+</style>
 <script>
 const prefixCls = "msgList";
 export default {
@@ -49,8 +71,10 @@ export default {
      * @return   {[type]}            [description]
      */
     goToFeedDetail() {
-      const { commentable: { id = 0, group_id: groupId = 0 } } = this.comment;
-      this.$router.push(`/group/${groupId}/feed/${id}`);
+      const {
+        commentable: { id = 0, group_id: groupId = 0 }
+      } = this.comment;
+      this.$router.push(`/groups/${groupId}/posts/${id}`);
     },
 
     sendComment(comment) {
