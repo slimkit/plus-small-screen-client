@@ -20,22 +20,22 @@ export default [
       {
         path: "feeds",
         component: ProfileCollectionFeeds,
-        meta: { title: "收藏的动态", keepAlive: true }
+        meta: { title: "收藏的动态" }
       },
       {
         path: "news",
         component: ProfileCollectionNews,
-        meta: { title: "收藏的资讯", keepAlive: true }
+        meta: { title: "收藏的资讯" }
       },
       {
         path: "answers",
         component: ProfileCollectionAnswers,
-        meta: { title: "收藏的回答", keepAlive: true }
+        meta: { title: "收藏的回答" }
       },
       {
         path: "posts",
         component: ProfileCollectionPosts,
-        meta: { title: "收藏的帖子", keepAlive: true }
+        meta: { title: "收藏的帖子" }
       }
     ]
   }
