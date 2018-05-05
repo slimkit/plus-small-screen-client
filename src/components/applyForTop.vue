@@ -31,7 +31,7 @@
             <span>置顶金额</span>
             <div class="m-box m-aln-center">
               <input type="number" v-model="customAmount" placeholder="输入金额" dir="rtl">
-              <span>积分</span>
+              <span>{{ currency_name }}</span>
             </div>
           </div>
           <div class="m-box m-aln-center m-justify-bet m-bb1 m-bt1 m-pinned-row plr20 m-pinned-amount-customize">
@@ -46,7 +46,7 @@
               v-model="amount"
               pattern="[0-9]*"
               style="background-color: transparent">
-              <span>积分</span>
+              <span>{{ currency_name }}</span>
             </div>
           </div>
         </div>
@@ -80,6 +80,12 @@ export default {
     };
   },
   computed: {
+    currency_name() {
+      return (
+        (((this.$store.state.CONFIG || {}).site || {}).currency_name || {})
+          .name || "积分"
+      );
+    },
     amount() {
       const total = this.day * this.customAmount;
       return total > 0 ? total.toFixed(2) : "";

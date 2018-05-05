@@ -11,8 +11,10 @@
           </slot>
         </h2>
         <div class="m-payfor-body">
-          <h3 class="m-payfor-amount">{{ amount.toFixed(2) }}</h3>
-          <p>{{ content ||  `您只需${ amount.toFixed(2) }${ currency_name }就可查看图片` }}</p>
+          <!-- amount.toFixed(2) -->
+          <h3 class="m-payfor-amount">{{ amount }}</h3>
+          <!-- 你只需要支付*积分就可查看此内容/图片/视频 -->
+          <p>{{ content ||  `你只需要支付${ amount }${ currency_name }就可查看此${ nodeType }` }}</p>
         </div>
         <div class="m-payfor-foot">
           <button class="m-payfor-btn primary" @click="handelOk">{{ confirmText || "购买" }}</button>
@@ -30,6 +32,7 @@ export default {
   data() {
     return {
       node: 0,
+      nodeType: "图片",
       amount: 0,
       show: false,
       scrollTop: 0,
@@ -58,10 +61,12 @@ export default {
         onCancel,
         node,
         onSuccess,
+        nodeType = "",
         content = ""
       } = options;
 
       this.content = content;
+      this.nodeType = nodeType;
 
       node && (this.node = node);
       title && (this.title = title);
@@ -130,7 +135,7 @@ export default {
   margin: auto;
   padding: 0 50px 50px;
   width: 500px;
-  height: 600px;
+  height: 650px;
   border-radius: 10px;
   background-color: @body-bg;
 }
@@ -159,6 +164,7 @@ export default {
     width: 100%;
     height: 70px;
     line-height: 70px;
+    font-size: 30px;
     border-radius: 6px;
     color: @primary;
     border: 1px solid @primary; /*no*/

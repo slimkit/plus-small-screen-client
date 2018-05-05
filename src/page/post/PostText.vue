@@ -53,7 +53,7 @@
            <span>自定义金额</span>
            <div class="m-box m-aln-center">
             <input type="number" v-model="customAmount" placeholder="输入金额" dir="rtl">
-            <span>积分</span>
+            <span>{{ currency_name }}</span>
            </div>
          </div>
          <p class="m-pinned-amount-label plr20">注：超过{{limit}}字部分内容收费</p>
@@ -84,6 +84,12 @@ export default {
   },
   computed: {
     ...mapGetters(["compose"]),
+    currency_name() {
+      return (
+        (((this.$store.state.CONFIG || {}).site || {}).currency_name || {})
+          .name || "积分"
+      );
+    },
     disabled() {
       return !(this.compose.length > 0);
     },

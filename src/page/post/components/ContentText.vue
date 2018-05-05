@@ -3,7 +3,7 @@
     <div class="m-box-model m-fd-row m-reles-body">
       <span class="m-wz-def">
         <textarea
-          v-model='contentText'
+          v-model.trim='contentText'
           :placeholder="placeholder"
           :style="{ height: `${scrollHeight}px`, overflow: 'hidden' }"
           ref='textarea'

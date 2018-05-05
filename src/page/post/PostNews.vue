@@ -28,11 +28,11 @@
           key="step1"
           class="m-pos-f m-box-model m-flex-grow1 m-flex-shrink1 m-justify-center m-aln-center m-main" style="padding-left: 0.3rem; padding-right: 0.3rem">
           <div class="m-box m-flex-grow0 m-shrink0 m-bb1 m-lim-width m-post-news-title">
-            <input class="m-lim-width" maxlength="20" v-model="news.title" type="text" placeholder="输入标题，20字以内">
+            <input class="m-lim-width" maxlength="20" v-model.trim="news.title" type="text" placeholder="输入标题，20字以内">
           </div>
           <div class="m-box-model m-flex-grow1 m-flex-shrink1 m-lim-width m-post-news-content">
             <textarea
-              v-model='contentText'
+              v-model.trim='contentText'
               placeholder="编辑文章正文"
               ref='textarea'></textarea>
           </div>
@@ -68,19 +68,19 @@
           <div class="m-box m-aln-center m-lim-width m-post-news-row m-main m-bb1">
             <span class="m-post-news-row-label">文章来源</span>
             <div class="m-box m-flex-grow1 m-flex-shrink1 m-aln-center m-justify-end">
-              <input type="text" dir="rtl" placeholder="不填写则默认为原创">
+              <input type="text" v-model.trim="news.from" dir="rtl" placeholder="不填写则默认为原创">
             </div>
           </div>
           <div class="m-box m-aln-center m-lim-width m-post-news-row m-main m-bb1">
             <span class="m-post-news-row-label">作者</span>
             <div class="m-box m-flex-grow1 m-flex-shrink1 m-aln-center m-justify-end">
-              <input type="text" dir="rtl" placeholder="不填写则默认为本站用户名">
+              <input type="text" v-model.trim="news.author" dir="rtl" placeholder="不填写则默认为本站用户名">
             </div>
           </div>
           <div class="m-box m-aln-center m-lim-width m-post-news-row m-main">
             <span class="m-post-news-row-label">摘要</span>
             <div class="m-box m-flex-grow1 m-flex-shrink1 m-aln-center m-justify-end">
-              <input type="text" dir="rtl" placeholder="请输入摘要信息">
+              <input type="text" v-model.trim="news.subject" dir="rtl" placeholder="请输入摘要信息">
             </div>
           </div>
         </div>
@@ -174,6 +174,12 @@ export default {
       newsVerified: state => state.CONFIG["news:contribute"].verified,
       verified: state => state.CURRENTUSER.verified
     }),
+    currency_name() {
+      return (
+        (((this.$store.state.CONFIG || {}).site || {}).currency_name || {})
+          .name || "积分"
+      );
+    },
     canPostNews() {
       return !this.newsVerified || (this.newsVerified && this.verified);
     },
@@ -320,7 +326,9 @@ export default {
         ? bus.$emit("payfor", {
             title: "投稿支付",
             amount: this.newCurrency,
-            content: `本次投稿您需要支付${this.newCurrency}积分,是否继续投稿？`,
+            content: `本次投稿您需要支付${this.newCurrency}${
+              this.currency_name
+            },是否继续投稿？`,
             confirmText: "确认投稿",
             cancelText: "暂不考虑",
             onOk: () => {

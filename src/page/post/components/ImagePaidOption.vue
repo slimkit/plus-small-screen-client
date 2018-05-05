@@ -10,35 +10,6 @@
             <span>{{ title }}</span>
           </slot>
         </h2>
-<!--         <div class="m-image-paid-option-row">
-          <p class="m-image-paid-option-label">选择图片收费方式</p>
-          <div class="m-box m-aln-center m-justify-bet m-image-paid-option-btns">
-            <div 
-              class="m-box m-aln-center m-justify-center m-flex-grow1 m-image-paid-option-radio"
-              :class="{ active: type === 'read' }">
-              <label for="read">查看收费</label>
-              <input 
-                id="read"
-                name="type"
-                v-model="type"
-                value="read"
-                type="radio"
-                style="position: absolute; z-index: -9999; visibility: hidden;">
-            </div>
-            <div
-              class="m-box m-aln-center m-justify-center m-flex-grow1 m-image-paid-option-radio"
-              :class="{ active: type === 'download' }">
-              <label for="download">下载收费</label>
-              <input
-                id="download"
-                name="type"
-                v-model="type"
-                value="download"
-                type="radio"
-                style="position: absolute; z-index: -9999; visibility: hidden;">
-            </div>
-          </div>
-        </div> -->
         <div class="m-image-paid-option-row m-bt1">
           <p class="m-image-paid-option-label">选择图片收费金额</p>
           <div class="m-box m-aln-center m-justify-bet m-image-paid-option-btns">
@@ -60,7 +31,7 @@
             v-model="customAmount"
             placeholder="输入自定义金额"
             class="m-flex-grow1 m-flex-shrink1">
-            <span>积分</span>
+            <span>{{ currency_name }}</span>
           </div>
         </div>
         <div class="m-image-paid-option-row m-bt1">
@@ -84,6 +55,12 @@ export default {
     };
   },
   computed: {
+    currency_name() {
+      return (
+        (((this.$store.state.CONFIG || {}).site || {}).currency_name || {})
+          .name || "积分"
+      );
+    },
     items() {
       return this.$store.state.CONFIG.feed.items || [];
     }

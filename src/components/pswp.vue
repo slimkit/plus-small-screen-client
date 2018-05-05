@@ -75,6 +75,7 @@ export default {
           this.photoswipe.currItem.paid = true;
           this.updateImage(index, true);
         },
+        nodeType: "图片",
         node: paid_node,
         amount: amount
       });
@@ -124,7 +125,6 @@ export default {
         bus.$off("updatePhoto");
       });
       this.photoswipe.listen("beforeChange", () => {
-        // BUG: Iphone 8p 无痕模式下事件绑定不上 !!!!
         this.checkImage();
       });
       this.photoswipe.init();

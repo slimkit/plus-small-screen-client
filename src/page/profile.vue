@@ -88,7 +88,7 @@
             <svg class='m-style-svg m-svg-def m-entry-prepend'>
               <use xlink:href="#profile-integral"></use>
             </svg>
-            <span class="m-text-box m-flex-grow1">积分</span>
+            <span class="m-text-box m-flex-grow1">{{ currency_name }}</span>
             <span class="m-entry-extra">{{ sum }}</span>
             <svg class="m-style-svg m-svg-def m-entry-append">
               <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-arrow-r"></use>
@@ -137,6 +137,12 @@ export default {
     return {};
   },
   computed: {
+    currency_name() {
+      return (
+        (((this.$store.state.CONFIG || {}).site || {}).currency_name || {})
+          .name || "积分"
+      );
+    },
     user() {
       return this.$store.state.CURRENTUSER || {};
     },

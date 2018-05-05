@@ -19,7 +19,7 @@
         <main class="m-box-model m-aln-center m-check-in-body">
           <section class="m-check-in-con">
             <h2>+{{ attach_balance }}</h2>
-            <p>每日签到得金币</p>
+            <p>每日签到得{{ currency_name }}</p>
           </section>
           <button class="m-check-in-btn" :disabled="checked_in" @click="fetchCheckIn">{{checked_in ? "已签到" : "签到"}}</button>
           <div class="m-lim-width">
@@ -52,6 +52,14 @@ export default {
       attach_balance: 0,
       last_checkin_count: 0
     };
+  },
+  computed: {
+    currency_name() {
+      return (
+        (((this.$store.state.CONFIG || {}).site || {}).currency_name || {})
+          .name || "积分"
+      );
+    }
   },
   created() {
     bus.$on("check-in", () => {
