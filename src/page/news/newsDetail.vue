@@ -52,13 +52,13 @@
         v-if="news.audit_status===0"
         v-for="(comment) in pinnedCom"
         :pinned="true"
-        :key="comment.id"
+        :key="`pinned-${comment.id}`"
         :comment="comment"/>
       <comment-item
         v-if="news.audit_status===0"
         @click="replyComment"
         v-for="(comment) in comments"
-        :key="comment.id"
+        :key="`comment-${comment.id}`"
         :comment="comment"/>
 
         <div v-if="news.audit_status===0" class="m-box m-aln-center m-justify-center load-more-box">
