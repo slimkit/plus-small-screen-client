@@ -30,10 +30,6 @@
       <keep-alive>
         <router-view></router-view>
       </keep-alive>
-      <!-- <profile-collection-news v-if="type === 'news'" />
-      <profile-collection-feeds v-if="type === 'feeds'" />
-      <profile-collection-answers v-if="type === 'answers'" />
-      <profile-collection-posts v-if="type === 'posts'" /> -->
     </main>
   </div>
 </template>
