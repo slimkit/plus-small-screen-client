@@ -1,5 +1,5 @@
 <template>
-  <div class="m-box-model m-card">
+  <div class="m-box-model m-card" @click.self="handleView">
     <div class="m-box">
       <div 
       v-if="timeLine" 
