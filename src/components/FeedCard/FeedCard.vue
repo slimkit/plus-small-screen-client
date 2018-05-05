@@ -1,5 +1,5 @@
 <template>
-  <div class="m-box-model m-card" @click.self="handleView">
+  <div class="m-box-model m-card" @click="handleView()">
     <div class="m-box">
       <div 
       v-if="timeLine" 
@@ -15,7 +15,7 @@
             <span>{{ time | time2tips }}</span>
           </div>
         </header>
-        <article class="m-card-body" @click="handleView">
+        <article class="m-card-body" @click="handleView()">
           <h2 v-if="title">{{ title }}</h2>
           <div class="m-card-con" v-if="body.length > 0">
             <p
@@ -35,7 +35,7 @@
        </article>
      </section>
    </div>
-   <footer v-if="showFooter" class="m-box-model m-card-foot m-bt1">
+   <footer v-if="showFooter" class="m-box-model m-card-foot m-bt1" @click.stop>
      <div class="m-box m-aln-center m-card-tools m-lim-width">
       <a class="m-box m-aln-center" @click.prevent="handleLike">
         <svg class='m-style-svg m-svg-def'>
@@ -71,9 +71,9 @@
         <comment-item :comment="com" @on-click="commentAction"/>
       </li>
     </ul>
-    <router-link tag="div" class="m-router-link" v-if="commentCount > 5" :to="`/feeds/${feedID}/#comment_list`">
+    <div class="m-router-link" v-if="commentCount > 5" @click="handleView('comment_list')">
       <a>查看全部评论>></a>
-    </router-link>
+    </div>
    </footer>
   </div>
 </template>
@@ -199,7 +199,10 @@ export default {
           )
         : "";
     },
-    handleView() {
+    handleView(hash) {
+      const path = hash
+        ? `/feeds/${this.feedID}#${hash}`
+        : `/feeds/${this.feedID}`;
       const { paid_node } = this.feed;
       paid_node && !paid_node.paid
         ? bus.$emit("payfor", {
@@ -207,12 +210,12 @@ export default {
             onCancel: () => {},
             onSuccess: data => {
               this.$Message.success(data);
-              this.$router.push(`/feeds/${this.feedID}`);
+              this.$router.push(path);
             },
             node: paid_node.node,
             amount: paid_node.amount
           })
-        : this.$router.push(`/feeds/${this.feedID}`);
+        : this.$router.push(path);
     },
     handleLike() {
       const method = this.liked ? "delete" : "post";
