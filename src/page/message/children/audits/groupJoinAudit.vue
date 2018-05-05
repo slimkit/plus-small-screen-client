@@ -7,7 +7,7 @@
           ref='loadmore'
           :class="`${prefixCls}-loadmore`"
         >
-          <div v-if="audit.comment !== null" v-for="audit in audits" :class="`${prefixCls}-item`" :key="audit.id">
+          <div v-if="audit.comment !== null" v-for="audit in audits" :class="`${prefixCls}-item`" :key="`group-join-${audit.id}`">
             <div :class="`${prefixCls}-item-top`">
               <v-avatar :sex="audit.user.sex" :src="audit.user.avatar" />
               <section class="userInfo">
@@ -16,14 +16,7 @@
               </section>
               <group-join-audit-status :audit="audit" />
             </div>
-            <div :class="`${prefixCls}-item-bottom`">
-              <div class="content" @click="goToDetail(audit.news.id)" v-if="audit.group !== null">
-                审请加入你创建的圈子<span>{{ audit.group.name }}</span>”,请及时审核
-              </div>
-              <div class="content" @click="goToDetail(audit.news.id)" v-else>
-                该圈子已被删除
-              </div>
-            </div>
+            <audit-content :audit="getAuditContent(audit)" />
           </div>
         </load-more>
     </div>
@@ -34,9 +27,12 @@
 import _ from "lodash";
 import { mapState } from "vuex";
 import groupJoinAuditStatus from "../../components/groupJoinAuditStatus";
+import AuditContent from "../../components/auditContent";
+
 const prefixCls = "msgList";
 export default {
   components: {
+    AuditContent,
     groupJoinAuditStatus
   },
   name: "groupJoinAudit",
@@ -44,8 +40,27 @@ export default {
     prefixCls
   }),
   methods: {
-    goToDetail(id) {
-      this.$router.push(`/news/${id}`);
+    getAuditContent(audit) {
+      const { group } = audit || {};
+      return {
+        image: this.getGroupAvatar(group),
+        commentBody: "",
+        video: false,
+        content: this.getGroupTitle(group),
+        commentableDel: audit.group === null,
+        commentDel: null,
+        type: 'group',
+        contentId: audit.group ? group.id : 0
+      };
+    },
+    //获取动态内容
+    getGroupTitle(group) {
+      const {summary} = group || {};
+      return summary;
+    },
+    // 获取动态第一个图片
+    getGroupAvatar(group) {
+      return group.avatar;
     },
     onRefresh() {
       this.$http

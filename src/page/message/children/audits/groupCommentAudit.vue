@@ -7,7 +7,7 @@
         ref='loadmore'
         :class="`${prefixCls}-loadmore`"
       >
-        <div v-for="audit in audits" :class="`${prefixCls}-item`" :key="audit.id">
+        <div v-for="audit in audits" :class="`${prefixCls}-item`" :key="`group-comment-${audit.id}`">
           <div :class="`${prefixCls}-item-top`">
             <v-avatar :sex="audit.user.sex" :src="audit.user.avatar" />
             <section class="userInfo">
@@ -16,11 +16,12 @@
             </section>
             <group-post-comment-audit-status :audit="audit" />
           </div>
-          <div :class="`${prefixCls}-item-bottom`" v-if="audit.news !== null">
-            <div class="content" @click="goToDetail(audit.news.id)">
-              对你的帖子进行了“<span>{{ audit.comment.body }}</span>”评论并申请置顶,请及时审核
-            </div>
-          </div>
+          <!--<div :class="`${prefixCls}-item-bottom`" v-if="audit.news !== null">-->
+            <!--<div class="content" @click="goToDetail(audit.news.id)">-->
+              <!--对你的帖子进行了“<span>{{ audit.comment.body }}</span>”评论并申请置顶,请及时审核-->
+            <!--</div>-->
+          <!--</div>-->
+          <audit-content :audit="getAuditContent(audit)" />
         </div>
       </load-more>
     </div>
@@ -30,10 +31,15 @@
 <script>
 import _ from "lodash";
 import { mapState } from "vuex";
+import { getPostCommentAudits } from "@/api/group.js";
+import { limit } from "@/api/api.js";
 import groupPostCommentAuditStatus from "../../components/groupPostCommentAuditStatus";
+import AuditContent from "../../components/auditContent";
+
 const prefixCls = "msgList";
 export default {
   components: {
+    AuditContent,
     groupPostCommentAuditStatus
   },
   name: "postCommentAudit",
@@ -41,44 +47,76 @@ export default {
     prefixCls
   }),
   methods: {
-    goToDetail(id) {
-      this.$router.push(`/news/${id}`);
+    getAuditContent(audit) {
+      const {post = {}, comment = {}} = audit || {};
+      return {
+        image: this.getFirstImage(post),
+        commentBody: this.getCommentBody(comment),
+        video: false,
+        content: this.getPostTitle(post),
+        commentableDel: audit.post === null,
+        commentDel: audit.comment === null,
+        type: 'group-post',
+        contentId: audit.post ? post.id : 0,
+        extraId: this.getExtraId(post)
+      };
     },
+    // 获取圈子id
+    getExtraId(post) {
+      return post.group_id;
+    },
+    // 获取评论内容
+    getCommentBody(comment) {
+      const {body} = comment || {};
+      return body;
+    },
+    //获取动态内容
+    getPostTitle(post) {
+      const {title} = post || {};
+      return title;
+    },
+    // 获取动态第一个图片
+    getFirstImage(post) {
+      const {images} = post || {};
+      const {length} = images || [];
+      if (length > 0) {
+        const [img] = images;
+
+        return img;
+      }
+
+      return false;
+    },
+    // goToDetail(id) {
+    //   this.$router.push(`/news/${id}`);
+    // },
     onRefresh() {
-      this.$http
-        .get("/plus-group/pinned/comments", {
-          validateStatus: s => s === 200
-        })
-        .then(({ data }) => {
-          if (data.length > 0) {
-            this.$store.commit("SAVE_POST_COMMENT_AUDITS", {
-              type: "new",
-              data
-            });
-          }
-          this.$refs.loadmore.topEnd(!(data.length < 15));
-        });
+      getPostCommentAudits({}).then(({ data }) => {
+        if (data.length > 0) {
+          this.$store.commit("SAVE_POST_COMMENT_AUDITS", {
+            type: "new",
+            data
+          });
+        }
+        this.$refs.loadmore.topEnd(!(data.length < limit));
+      });
     },
     onLoadMore() {
-      const { id = 0 } = _.head(this.audits) || {};
+      const { id = 0 } = _.last(this.audits) || {};
       if (id === 0) {
         this.$refs.loadmore.bottomEnd(true);
         return false;
       }
 
-      this.$http
-        .get("/plus-group/pinned/comments", {
-          validateStatus: s => s === 200
-        })
-        .then(({ data }) => {
-          this.$refs.loadmore.bottomEnd(data.length < 15);
-          if (data.length > 0) {
-            this.$store.commit("SAVE_POST_COMMENT_AUDITS", {
-              type: "more",
-              data
-            });
-          }
-        });
+      getPostCommentAudits({ after: id }).then(({ data }) => {
+        this.$refs.loadmore.bottomEnd(data.length < limit);
+        if (data.length > 0) {
+          this.$store.commit("SAVE_POST_COMMENT_AUDITS", {
+            type: "more",
+            data
+          });
+        }
+      });
     }
   },
   computed: {

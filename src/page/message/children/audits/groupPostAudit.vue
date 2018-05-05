@@ -7,7 +7,7 @@
           ref='loadmore'
           :class="`${prefixCls}-loadmore`"
         >
-          <div v-for="audit in audits" :class="`${prefixCls}-item`" :key="audit.id">
+          <div v-for="audit in audits" :class="`${prefixCls}-item`" :key="`group-post-${audit.id}`">
             <div :class="`${prefixCls}-item-top`">
               <v-avatar :sex="audit.user.sex" :src="audit.user.avatar" />
               <section class="userInfo">
@@ -33,6 +33,8 @@
 <script>
 import _ from "lodash";
 import { mapState } from "vuex";
+import { limit } from "@/api/api.js";
+import { getPostAudits } from "@/api/group.js";
 import groupPostAuditStatus from "../../components/groupPostAuditStatus";
 const prefixCls = "msgList";
 export default {
@@ -45,22 +47,18 @@ export default {
   }),
   methods: {
     goToDetail(id) {
-      this.$router.push(`/news/${id}`);
+      this.$router.push(`/groups//${id}`);
     },
     onRefresh() {
-      this.$http
-        .get("/plus-group/pinned/posts", {
-          validateStatus: s => s === 200
-        })
-        .then(({ data }) => {
-          if (data.length > 0) {
-            this.$store.commit("SAVE_GROUP_POST_AUDITS", {
-              type: "new",
-              data
-            });
-          }
-          this.$refs.loadmore.topEnd(!(data.length < 15));
-        });
+      getPostAudits({}).then(({ data }) => {
+        if (data.length > 0) {
+          this.$store.commit("SAVE_GROUP_POST_AUDITS", {
+            type: "new",
+            data
+          });
+        }
+        this.$refs.loadmore.topEnd(!(data.length < limit));
+      });
     },
     onLoadMore() {
       const { id = 0 } = _.head(this.audits) || {};
@@ -69,19 +67,15 @@ export default {
         return false;
       }
 
-      this.$http
-        .get("/plus-group/pinned/posts", {
-          validateStatus: s => s === 200
-        })
-        .then(({ data }) => {
-          this.$refs.loadmore.bottomEnd(data.length < 15);
-          if (data.length > 0) {
-            this.$store.commit("SAVE_GROUP_POST_AUDITS", {
-              type: "more",
-              data
-            });
-          }
-        });
+      getPostAudits({ after: id }).then(({ data }) => {
+        this.$refs.loadmore.bottomEnd(data.length < limit);
+        if (data.length > 0) {
+          this.$store.commit("SAVE_GROUP_POST_AUDITS", {
+            type: "more",
+            data
+          });
+        }
+      });
     }
   },
   computed: {

@@ -2,15 +2,16 @@
   <div :class="`${prefixCls}-status`">
     <section v-if="audit.comment">
       <section v-if="audit.expires_at">
-        <section class="gray"  v-if="audit.state === 1">
-          同意置顶
+        <section class="gray"  v-if="~~audit.status === 1">
+          <span class="amount-show">{{audit.amount}}积分 / {{audit.day}}天</span>同意置顶
         </section>
-        <section class="red" v-else>
-          拒绝置顶
+        <section class="gray" v-else>
+          <span class="amount-show">{{audit.amount}}积分 / {{audit.day}}天</span>拒绝置顶
         </section>
       </section>
       <section @click="showOperations(audit)" class="green" v-else>
-        待审核
+        <span class="audit-show">{{audit.amount}}积分 / {{audit.day}}天</span>
+        <span class="audit-operation">审核</span>
       </section>
     </section>
     <section class="red" v-if="!audit.comment ">
@@ -43,7 +44,7 @@ export default {
       const { target: commentId = 0 } = currentItem;
       this.$Modal.remove();
       this.$http
-        .patch(`/plus-group/pinned/comments/${commentId}/accept`, {
+        .patch(`/plus-group/currency-pinned/comments/${commentId}/accept`, {
           validateStatus: s => s === 201
         })
         .then(({ data }) => {
@@ -65,7 +66,7 @@ export default {
       const { target: commentId = 0 } = currentItem;
       this.$Modal.remove();
       this.$http
-        .delete(`/plus-group/pinned/comments/${commentId}/reject`, {
+        .patch(`/plus-group/currency-pinned/comments/${commentId}/reject`, {
           validateStatus: s => s === 201
         })
         .then(({ data }) => {
@@ -113,3 +114,4 @@ export default {
 </script>
 <style lang="less" src="../style.less">
 </style>
+

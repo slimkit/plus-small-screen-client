@@ -1,16 +1,17 @@
 <template>
   <div :class="`${prefixCls}-status`">
     <section v-if="audit.comment">
-      <section v-if="audit.expires_at">
+      <section v-if="audit.expires_at !== null">
         <section class="gray"  v-if="audit.state === 1">
-          同意置顶
+          <span class="amount-show">{{audit.amount}}分 / {{audit.day}}天</span>同意置顶
         </section>
-        <section class="red" v-else>
-          拒绝置顶
+        <section class="gray" v-else>
+          <span class="amount-show">{{audit.amount}}分 / {{audit.day}}天</span>拒绝置顶
         </section>
       </section>
-      <section @click="showOperations(audit)" class="green" v-else>
-        待审核
+      <section @click="showOperations(audit)" class="green" v-if="audit.expires_at === null">
+        <span class="audit-show">{{audit.amount}}分 / {{audit.day}}天</span>
+        <span class="audit-operation">审核</span>
       </section>
     </section>
     <section class="red" v-if="!audit.comment ">
@@ -123,4 +124,11 @@ export default {
 };
 </script>
 <style lang="less" src="../style.less">
+</style>
+<style lang="less">
+.gray {
+  span {
+    margin-right: 30px;
+  }
+}
 </style>

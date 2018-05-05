@@ -1,0 +1,97 @@
+<template>
+    <div :class="`${prefixCls}-item-bottom`">
+        <span class="content" v-if="commentBody">
+            {{ commentBody }}
+        </span>
+        <section v-if="!commentableDel" @click="goToDetail()">
+            <div :class="`${prefixCls}-item-bottom-noImg`" class="content" v-if="!image && !video">
+                {{ content }}
+            </div>
+            <div :class="`${prefixCls}-item-bottom-img`" v-else>
+                <div class="img">
+                    <async-file v-if="image && type !== 'group'" :file="image.file">
+                        <img slot-scope="props" :src="props.src"/>
+                    </async-file>
+                    <img v-if="type === 'group'" :src="image">
+                    <img v-if="video" :src="video">
+                </div>
+                <div class="content">
+                    {{ content }}
+                </div>
+            </div>
+        </section>
+        <section v-if="commentableDel">
+            <div :class="`${prefixCls}-item-bottom-noImg`" class="content">
+                内容已被删除
+            </div>
+        </section>
+    </div>
+</template>
+
+<script>
+  const prefixCls = "msgList";
+  const detailUrl = {
+    feed: '/feeds/',
+    group: '/groups/',
+    news: '/news/',
+  };
+  export default {
+    props: {
+      audit: {
+        type: Object,
+        required: true
+      }
+    },
+    name: "auditContent",
+    data: () => ({
+      prefixCls
+    }),
+    computed: {
+      image() {
+        return this.audit.image;
+      },
+      commentBody() {
+        return this.audit.commentBody || "";
+      },
+      content() {
+        return this.audit.content || "";
+      },
+      commentDel() {
+        return this.audit.commentDel;
+      },
+      commentableDel() {
+        return this.audit.commentableDel;
+      },
+      video() {
+        return this.audit.video ? `/api/v2/files/${this.audit.video}` : false;
+      },
+      contentId() {
+        return this.audit.contentId;
+      },
+      extraId() {
+        return this.audit.extraId || 0;
+      },
+      type() {
+        return this.audit.type;
+      },
+      url() {
+        const {type} = this.audit;
+        // 特殊url， 双参数
+        if (type === 'group-post') {
+          return `/groups/${this.extraId}/posts/${this.contentId}`;
+        }
+
+        return detailUrl[type] + this.contentId;
+      }
+    },
+    methods: {
+      goToDetail() {
+        this.$router.push(this.url);
+      }
+    }
+  }
+</script>
+
+<style scoped>
+
+</style>
