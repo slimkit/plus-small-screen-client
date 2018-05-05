@@ -48,9 +48,12 @@ export default {
       } = currentItem;
       this.$Modal.remove();
       this.$http
-        .patch(`/news/${newsId}/comments/${commentId}/pinneds/${pinnedId}`, {
-          validateStatus: s => s === 201
-        })
+        .patch(
+          `/news/${newsId}/comments/${commentId}/currency-pinneds/${pinnedId}`,
+          {
+            validateStatus: s => s === 201
+          }
+        )
         .then(({ data }) => {
           this.audit.state = 1;
           this.audit.expires_at = 1;
@@ -75,7 +78,7 @@ export default {
       this.$Modal.remove();
       this.$http
         .patch(
-          `/news/${newsId}/comments/${commentId}/pinneds/${pinnedId}/reject`,
+          `/news/${newsId}/comments/${commentId}/currency-pinneds/${pinnedId}/reject`,
           {
             validateStatus: s => s === 204
           }

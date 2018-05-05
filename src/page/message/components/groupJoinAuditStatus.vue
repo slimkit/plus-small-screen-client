@@ -39,7 +39,7 @@ export default {
       this.$Modal.remove();
       this.$http
         .patch(
-          `/plus-group/groups/${group}/members/${member}/audit`,
+          `/plus-group/currency-groups/${group}/members/${member}/audit`,
           {
             status: 1
           },
@@ -67,7 +67,7 @@ export default {
       this.$Modal.remove();
       this.$http
         .patch(
-          `/plus-group/groups/${group}/members/${member}/audit`,
+          `/plus-group/currency-groups/${group}/members/${member}/audit`,
           {
             status: 2
           },
