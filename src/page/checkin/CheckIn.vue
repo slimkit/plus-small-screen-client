@@ -28,7 +28,7 @@
               v-if="user.id"
               :key="user.id"
               v-for="(user, index) in rank_users"
-              class="m-box-model m-aln-center">
+              class="m-box-model m-aln-center" @click="cancel">
                 <avatar size="tiny" :user="user" />
                 <span>{{ index + 1 }}</span>
               </li>
@@ -92,7 +92,7 @@ export default {
     fetchCheckIn() {
       if (this.checked_in) return;
       this.$http
-        .put("/user/checkin", {
+        .put("/user/checkin/currency", {
           validateStatus: s => s === 204
         })
         .then(() => {
