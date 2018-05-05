@@ -1,7 +1,7 @@
 <template>
   <div class="p-find-person">
     <header class="m-pos-f m-box m-aln-center m-justify-bet m-lim-width m-bb1 m-main m-head-top">
-      <div class="m-flex-grow0 m-flex-shrink0">
+      <div class="m-box m-aln-center m-flex-grow0 m-flex-shrink0">
         <svg class="m-style-svg m-svg-def" @click="goBack">
           <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-back"></use>
         </svg>
@@ -96,6 +96,7 @@ export default {
 .p-find-person {
   .m-sub-nav {
     top: 90px;
+    bottom: initial;
     padding: 0 30px;
     &-item {
       display: flex;

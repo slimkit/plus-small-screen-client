@@ -7,7 +7,7 @@
   @on-more="moreAction"
   @on-comment="commentFeed"
   >
-  <header slot="head" class="m-box m-justify-bet m-aln-center m-art-head">
+  <header slot="head" class="m-box m-justify-bet m-aln-center m-art-head" style="padding: 0">
     <div class="m-box m-flex-grow1 m-aln-center m-flex-base0">
       <svg class='m-style-svg m-svg-def' @click='goBack'>
         <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-back"></use>
@@ -74,7 +74,7 @@
     <!-- todo 打赏功能 -->
     <div class="m-box-model m-box-center m-box-center-a m-art-reward">
       <button class="m-art-rew-btn" @click="rewardFeed">打 赏</button>
-      <p class="m-art-rew-label"><a href="javascript:;">{{ reward.count | formatNum }}</a>人打赏，共<a href="javascript:;">{{ ~~(reward.amount)/100 }}</a>元</p>
+      <p class="m-art-rew-label"><a href="javascript:;">{{ reward.count | formatNum }}</a>人打赏，共<a href="javascript:;">{{ (~~(reward.amount)/100).toFixed(2) }}</a>元</p>
       <ul class="m-box m-aln-center m-art-rew-list">
         <li 
         :key="rew.id"
