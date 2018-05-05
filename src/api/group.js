@@ -1,4 +1,4 @@
-import api, { get } from "./api.js";
+import api, { get, limit } from "./api.js";
 import vuex from "@/stores/index.js";
 
 /**
@@ -167,4 +167,28 @@ export function likeGroupPost(postID, status) {
   const url = `/plus-group/group-posts/${postID}/likes`;
   const method = status ? "delete" : "post";
   return api({ method, url, validateStatus: s => s === 201 || s === 204 });
+}
+
+/**
+ * 获取待审核的帖子置顶申请
+ * @Author   Wayne
+ * @DateTime 2018-05-04
+ * @Email    qiaobin@zhiyicx.com
+ * @param    {Number}            after [description]
+ * @return   {[type]}                  [description]
+ */
+export function getPostAudits({ after = 0, group = 0 }) {
+  return get("/plus-group/pinned/posts", {
+    after,
+    limit,
+    group
+  });
+}
+
+export function getPostCommentAudits({ after = 0, post = 0 }) {
+  return get("/plus-group/pinned/comments", {
+    after,
+    limit,
+    post
+  });
 }

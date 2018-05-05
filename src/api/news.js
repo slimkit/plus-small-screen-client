@@ -1,4 +1,4 @@
-import { get } from "./api.js";
+import { get, limit } from "./api.js";
 const uri = "/user/news/contributes";
 /**
  * 获取当前用户投稿列表
@@ -36,4 +36,11 @@ export function searchNewsByKey(key = "", limit = 15, after = 0) {
           return [];
         }
       );
+}
+
+export function getNewsCommentPinneds(after = 0) {
+  return get("/news/comments/pinneds", {
+    limit,
+    after
+  });
 }
