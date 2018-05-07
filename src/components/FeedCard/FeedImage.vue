@@ -103,50 +103,37 @@ export default {
     max-width: 100%;
     background-color: #f4f5f6;
     .m-pic:after {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
       position: absolute;
-      bottom: 10px;
-      right: 5px;
-      background-color: #c8a06c;
-      text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
-      background-image: -webkit-linear-gradient(
-        25deg,
-        #e8d1b3 0%,
-        rgba(232, 209, 179, 0.6) 100%
-      );
-      background-image: -o-linear-gradient(
-        25deg,
-        #e8d1b3 0%,
-        rgba(232, 209, 179, 0.6) 100%
-      );
-      background-image: linear-gradient(
-        115deg,
-        #e8d1b3 40%,
-        rgba(232, 209, 179, 0.6) 50%
-      );
-      text-align: center;
+      bottom: 0;
+      right: 0;
+
       width: 60px;
-      padding: 5px;
       height: 30px;
-      line-height: 20px;
+      border-radius: 1px; /* no */
       font-size: 20px;
+      line-height: normal;
       color: #fff;
     }
 
     &.long {
       .m-pic:after {
-        display: block;
         content: "长图";
+        background-color: #c8a06c;
+        background-image: linear-gradient(135deg, #cfac7d 50%, #c8a06c 50%);
       }
     }
     &.gif {
       .m-pic:after {
-        display: block;
-        content: "GIF";
-        display: block;
+        content: "Gif";
+        backgroud-color: #5dc8ab;
+        background-image: linear-gradient(135deg, #60ceb0 50%, #5dc8ab 50%);
       }
     }
     .m-pic {
-      // background-position: top center;
       max-height: 690px;
     }
   }
