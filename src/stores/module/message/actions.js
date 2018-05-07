@@ -51,19 +51,19 @@ export default {
         } =
           data.pinneds || {};
 
-        if (data.comments.length > 0) {
+        if ((data.comments || []).length > 0) {
           let plsh = getMessageUnameTxt(data.comments);
           cPlaceholder = plsh.placeholder + "评论了我";
           cTime = plsh.time;
         }
 
-        if (data.likes.length > 0) {
+        if ((data.likes || []).length > 0) {
           let plsh = getMessageUnameTxt(data.likes);
           dPlaceholder = plsh.placeholder + "赞了我";
           dTime = plsh.time;
         }
 
-        if (Object.keys(data.system).length > 0) {
+        if (Object.keys(data.system || {}).length > 0) {
           sPlaceholder = data.system.data.content;
           sTime = data.system.created_at;
         }
