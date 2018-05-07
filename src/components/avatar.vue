@@ -40,7 +40,9 @@ export default {
     },
     styles() {
       const sex = ["secret", "man", "woman"];
-      return [`m-avatar-box-${this.size}`, `m-avatar-box-${sex[this.sex]}`];
+      return this.avatar
+        ? [`m-avatar-box-${this.size}`]
+        : [`m-avatar-box-${this.size}`, `m-avatar-box-${sex[this.sex]}`];
     },
     avatar: {
       get() {

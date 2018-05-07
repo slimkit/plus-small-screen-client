@@ -112,8 +112,26 @@
 <script>
 import bus from "@/bus.js";
 import { mapState } from "vuex";
-import { getFileUrl } from "@/util/";
 import location from "@/page/location.vue";
+
+import { getFileUrl } from "@/util/";
+import getFirstFrameOfGif from "@/util/getFirstFrameOfGif.js";
+
+if (!HTMLCanvasElement.prototype.toBlob) {
+  Object.defineProperty(HTMLCanvasElement.prototype, "toBlob", {
+    value: function(callback, type, quality) {
+      var binStr = atob(this.toDataURL(type, quality).split(",")[1]),
+        len = binStr.length,
+        arr = new Uint8Array(len);
+
+      for (var i = 0; i < len; i++) {
+        arr[i] = binStr.charCodeAt(i);
+      }
+
+      callback(new Blob([arr], { type: type || "image/png" }));
+    }
+  });
+}
 
 export default {
   name: "info",
@@ -163,7 +181,9 @@ export default {
   watch: {
     bio(val, oval) {
       if (val !== oval) {
-        this.$nextTick(() => {});
+        this.$nextTick(() => {
+          this.$refs.bioEditor.textContent = this.bio;
+        });
       }
     },
     bioIsFoucs(val) {
@@ -192,11 +212,12 @@ export default {
     beforeSelectFile() {
       this.$refs.imagefile.click();
     },
-    selectPhoto(e) {
+    async selectPhoto(e) {
       let files = e.target.files || e.dataTransfer.files;
       if (!files.length) return;
+      const cropperURL = await getFirstFrameOfGif(files[0]);
       this.$ImgCropper.show({
-        url: getFileUrl(files[0]),
+        url: cropperURL,
         round: false,
         onCancel: () => {
           this.$refs.imagefile.value = null;
@@ -221,7 +242,7 @@ export default {
                 this.$Message.error(data);
               });
             this.$refs.imagefile.value = null;
-          });
+          }, "image/png");
         }
       });
     },
@@ -328,9 +349,6 @@ export default {
         this.CURRENTUSER.tags = data;
         this.$store.commit("SAVE_CURRENTUSER", this.CURRENTUSER);
       });
-  },
-  mounted() {
-    this.$refs.bioEditor.textContent = this.bio;
   }
 };
 </script>
