@@ -38,10 +38,8 @@ export default {
       has_msg: state =>
         state.MESSAGE.NEW_UNREAD_COUNT.commented +
           state.MESSAGE.NEW_UNREAD_COUNT["feed-comment-pinned"] +
-          state.MESSAGE.NEW_UNREAD_COUNT.following +
           state.MESSAGE.NEW_UNREAD_COUNT["group-join-pinned"] +
           state.MESSAGE.NEW_UNREAD_COUNT.liked +
-          state.MESSAGE.NEW_UNREAD_COUNT.mutual +
           state.MESSAGE.NEW_UNREAD_COUNT["news-comment-pinned"] +
           state.MESSAGE.NEW_UNREAD_COUNT["post-comment-pinned"] +
           state.MESSAGE.NEW_UNREAD_COUNT["post-pinned"] +

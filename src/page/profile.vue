@@ -18,7 +18,7 @@
           tag="div"
           :to="`/user/${user.id}/followers`"
           class="m-box-model m-aln-center m-justify-center m-flex-grow1 m-pr-extra">
-            <v-badge count='0'>
+            <v-badge :count='new_followers'>
               <a>{{ ~~(extra.followers_count) | formatNum }}</a>
             </v-badge>
             <p>粉丝</p>
@@ -132,12 +132,17 @@
   </div>
 </template>
 <script>
+import { mapState } from "vuex";
 export default {
   name: "profile",
   data() {
     return {};
   },
   computed: {
+    ...mapState({
+      new_followers: state => state.MESSAGE.NEW_UNREAD_COUNT.following || 0,
+      new_mutual: state => state.MESSAGE.NEW_UNREAD_COUNT.mutual || 0
+    }),
     currency_name() {
       return (
         (((this.$store.state.CONFIG || {}).site || {}).currency_name || {})
