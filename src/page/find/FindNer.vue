@@ -1,6 +1,6 @@
 <template>
   <jo-load-more
-  key="find-new"
+  key="find-ner"
   ref="loadmore"
   @onRefresh="onRefresh"
   @onLoadMore="onLoadMore">

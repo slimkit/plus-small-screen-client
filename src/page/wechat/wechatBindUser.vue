@@ -159,7 +159,7 @@ export default {
         .then(({ data: { token = "", user = {} } = {} }) => {
           this.$store.commit("SAVE_CURRENTUSER", { ...user, token });
           this.$nextTick(() => {
-            this.$router.push(this.$route.query.redirect || "/feeds?type=new");
+            this.$router.push(this.$route.query.redirect || "/feeds?type=hot");
             this.$store.dispatch("GET_UNREAD_COUNT");
             this.$store.dispatch("GET_NEW_UNREAD_COUNT");
             this.$store.commit("SAVE_USER", user);

@@ -99,7 +99,7 @@ export default {
         )
         .then(({ data: { token = "", user = {} } = {} }) => {
           // 保存用户信息 并跳转
-          this.$router.push(this.$route.query.redirect || "/feeds?type=new");
+          this.$router.push(this.$route.query.redirect || "/feeds?type=hot");
           this.$nextTick(() => {
             this.$lstore.removeData("H5_WECHAT_MP_OPENID");
             this.$lstore.removeData("H5_WECHAT_MP_ASTOKEN");

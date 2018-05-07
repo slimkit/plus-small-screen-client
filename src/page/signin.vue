@@ -69,7 +69,7 @@
           </button>
         </div>
         <div class="m-box m-aln-center m-justify-bet other-link">
-          <router-link tag="span" to="/feeds?type=new">
+          <router-link tag="span" to="/feeds?type=hot">
             <a>不登录，先随便逛逛</a>
           </router-link>
           <router-link tag="span" to="/forgot">
@@ -162,7 +162,7 @@ export default {
             this.$store.dispatch("GET_NEW_UNREAD_COUNT"),
             this.$nextTick(() => {
               this.$router.push(
-                this.$route.query.redirect || "/feeds?type=new"
+                this.$route.query.redirect || "/feeds?type=hot"
               );
               this.loading = false;
             }));
