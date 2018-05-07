@@ -9,7 +9,7 @@
       <div :class="`${prefixCls}-list-item`" v-for="(user, index) in users" :key="user.id">
         <span :class="{ top: index < 3 }" class="rank">{{ index + 1 }}</span>
         <div :class="`${prefixCls}-info`" @click="to(`/user/${user.id}`)">
-          <v-avatar :class="`${prefixCls}-user-avatar`" :src='user.avatar' :sex='user.sex'></v-avatar>
+          <avatar :class="`${prefixCls}-user-avatar`" :user="user"></avatar>
           <div :class="`${prefixCls}-title`">
             <h6>{{ user.name }}</h6>
             <p>回答量：{{ user.extra.count || 0 }}</p>

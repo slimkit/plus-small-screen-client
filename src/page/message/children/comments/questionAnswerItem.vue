@@ -1,7 +1,7 @@
 <template>
   <section>
     <div :class="`${prefixCls}-item-top`">
-      <v-avatar :sex="comment.user.sex" :src="comment.user.avatar" />
+      <avatar :user="user" />
       <section class="userInfo">
         <router-link :class="`${prefixCls}-item-top-link`" :to="`/user/${comment.user_id}`">{{ comment.user.name }}</router-link>
         <span v-if="comment.reply_user">回复</span><span v-else>评论了你的回答</span>

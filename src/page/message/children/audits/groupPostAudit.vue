@@ -9,7 +9,7 @@
         >
           <div v-for="audit in audits" :class="`${prefixCls}-item`" :key="`group-post-${audit.id}`">
             <div :class="`${prefixCls}-item-top`">
-              <v-avatar :sex="audit.user.sex" :src="audit.user.avatar" />
+              <avatar :user="audit.user" />
               <section class="userInfo">
                 <router-link :class="`${prefixCls}-item-top-link`" :to="`/user/${audit.user_id}`">{{ audit.user.name }}</router-link>
                 <p>{{ audit.created_at | time2tips }}</p>

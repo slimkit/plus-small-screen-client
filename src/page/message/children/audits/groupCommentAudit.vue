@@ -9,7 +9,7 @@
       >
         <div v-for="audit in audits" :class="`${prefixCls}-item`" :key="`group-comment-${audit.id}`">
           <div :class="`${prefixCls}-item-top`">
-            <v-avatar :sex="audit.user.sex" :src="audit.user.avatar" />
+            <avatar :user="audit.user" />
             <section class="userInfo">
               <router-link :class="`${prefixCls}-item-top-link`" :to="`/user/${audit.user_id}`">{{ audit.user.name }}</router-link>
               <p>{{ audit.created_at | time2tips }}</p>
@@ -48,7 +48,7 @@ export default {
   }),
   methods: {
     getAuditContent(audit) {
-      const {post = {}, comment = {}} = audit || {};
+      const { post = {}, comment = {} } = audit || {};
       return {
         image: this.getFirstImage(post),
         commentBody: this.getCommentBody(comment),
@@ -56,7 +56,7 @@ export default {
         content: this.getPostTitle(post),
         commentableDel: audit.post === null,
         commentDel: audit.comment === null,
-        type: 'group-post',
+        type: "group-post",
         contentId: audit.post ? post.id : 0,
         extraId: this.getExtraId(post)
       };
@@ -67,18 +67,18 @@ export default {
     },
     // 获取评论内容
     getCommentBody(comment) {
-      const {body} = comment || {};
+      const { body } = comment || {};
       return body;
     },
     //获取动态内容
     getPostTitle(post) {
-      const {title} = post || {};
+      const { title } = post || {};
       return title;
     },
     // 获取动态第一个图片
     getFirstImage(post) {
-      const {images} = post || {};
-      const {length} = images || [];
+      const { images } = post || {};
+      const { length } = images || [];
       if (length > 0) {
         const [img] = images;
 

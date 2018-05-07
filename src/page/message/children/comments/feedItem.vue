@@ -1,7 +1,7 @@
 <template>
     <div>
         <div :class="`${prefixCls}-item-top`">
-            <v-avatar :sex="comment.user.sex" :src="comment.user.avatar"/>
+            <avatar :user="user"/>
             <section class="userInfo">
                 <router-link :class="`${prefixCls}-item-top-link`" :to="`/user/${comment.user_id}`">{{ comment.user.name
                     }}
@@ -49,94 +49,96 @@
     </div>
 </template>
 <script>
-  const prefixCls = "msgList";
-  const url = "/feeds/";
-  export default {
-    name: "feedsItem",
-    props: ["comment"],
-    data: () => ({
-      prefixCls,
-      url,
-      title: "动态"
-    }),
-    methods: {
-      /**
-       * 进入动态详情
-       * @Author   Wayne
-       * @DateTime 2018-01-31
-       * @Email    qiaobin@zhiyicx.com
-       * @return   {[type]}            [description]
-       */
-      goToFeedDetail() {
-        const {
-          commentable: {id = 0}
-        } = this.comment;
-        this.$router.push(`/feeds/${id}`);
-      },
+const prefixCls = "msgList";
+const url = "/feeds/";
+export default {
+  name: "feedsItem",
+  props: ["comment"],
+  data: () => ({
+    prefixCls,
+    url,
+    title: "动态"
+  }),
+  methods: {
+    /**
+     * 进入动态详情
+     * @Author   Wayne
+     * @DateTime 2018-01-31
+     * @Email    qiaobin@zhiyicx.com
+     * @return   {[type]}            [description]
+     */
+    goToFeedDetail() {
+      const { commentable: { id = 0 } } = this.comment;
+      this.$router.push(`/feeds/${id}`);
+    },
 
-      sendComment(comment) {
-        const {commentable_id: feedId = 0, user_id: userID = 0} = this.comment;
-        this.$http
-          .post(
-            `/feeds/${feedId}/comments`,
-            {
-              reply_user: userID,
-              body: comment
-            },
-            {
-              validateStatus: s => s === 201
-            }
-          )
-          .then(data => {
-            console.log(data);
-            this.$Message.success("回复成功");
-          });
-      },
-      /**
-       * 调起输入框
-       * @Author   Wayne
-       * @DateTime 2018-01-31
-       * @Email    qiaobin@zhiyicx.com
-       * @return   {[type]}            [description]
-       */
-      showCommentInput() {
-        this.$Modal.commentInpt({
-          placeholder: `回复: ${this.comment.user.name}`,
-          onOk: comment => {
-            this.sendComment(comment);
-            this.$Modal.remove();
+    sendComment(comment) {
+      const { commentable_id: feedId = 0, user_id: userID = 0 } = this.comment;
+      this.$http
+        .post(
+          `/feeds/${feedId}/comments`,
+          {
+            reply_user: userID,
+            body: comment
+          },
+          {
+            validateStatus: s => s === 201
           }
+        )
+        .then(data => {
+          console.log(data);
+          this.$Message.success("回复成功");
         });
+    },
+    /**
+     * 调起输入框
+     * @Author   Wayne
+     * @DateTime 2018-01-31
+     * @Email    qiaobin@zhiyicx.com
+     * @return   {[type]}            [description]
+     */
+    showCommentInput() {
+      this.$Modal.commentInpt({
+        placeholder: `回复: ${this.comment.user.name}`,
+        onOk: comment => {
+          this.sendComment(comment);
+          this.$Modal.remove();
+        }
+      });
+    }
+  },
+  computed: {
+    /**
+     * 获取图片,并计算地址
+     * @Author   Wayne
+     * @DateTime 2018-01-31
+     * @Email    qiaobin@zhiyicx.com
+     * @return   {false|Object}            [description]
+     */
+    getFirstImage() {
+      const { comment } = this;
+      const { length } = comment.commentable.images;
+      if (length > 0) {
+        const [img] = comment.commentable.images;
+
+        return img;
+      }
+
+      return false;
+    },
+    getVideo() {
+      const { comment } = this;
+      const { video } = comment.commentable;
+      if (video != null) {
+        return video.cover_id;
+      } else {
+        return false;
       }
     },
-    computed: {
-      /**
-       * 获取图片,并计算地址
-       * @Author   Wayne
-       * @DateTime 2018-01-31
-       * @Email    qiaobin@zhiyicx.com
-       * @return   {false|Object}            [description]
-       */
-      getFirstImage() {
-        const {comment} = this;
-        const {length} = comment.commentable.images;
-        if (length > 0) {
-          const [img] = comment.commentable.images;
-
-          return img;
-        }
-
-        return false;
-      },
-      getVideo() {
-        const {comment} = this;
-        const {video} = comment.commentable;
-        if (video != null) {
-          return video.cover_id;
-        } else {
-          return false;
-        }
-      }
+    user() {
+      const { user } = this.comment || { user: {} };
+      return user;
     }
-  };
+  }
+};
 </script>

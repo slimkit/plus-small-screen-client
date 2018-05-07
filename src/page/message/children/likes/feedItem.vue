@@ -1,7 +1,7 @@
 <template>
   <section>
     <div :class="`${prefixCls}-item-top`">
-      <v-avatar :sex="user.sex || 1" :src="user.avatar" />
+      <avatar :user="user" />
       <section class="userInfo">
         <span v-if="!user.id" :class="`${prefixCls}-item-top-link`">未知用户</span>
         <router-link :class="`${prefixCls}-item-top-link`" :to="`/user/${user._id}`">{{ user.name }}</router-link>
@@ -49,9 +49,7 @@ export default {
      * @return   {[type]}            [description]
      */
     goToFeedDetail() {
-      const {
-        likeable: { id = 0 }
-      } = this.like;
+      const { likeable: { id = 0 } } = this.like;
       this.$router.push(`/feeds/${id}`);
     }
   },

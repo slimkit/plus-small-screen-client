@@ -1,7 +1,7 @@
 <template>
   <section>
     <div :class="`${prefixCls}-item-top`">
-      <v-avatar :sex="comment.user.sex" :src="comment.user.avatar" />
+      <avatar :sex="comment.user.sex" :src="comment.user.avatar" />
       <section class="userInfo">
         <router-link :class="`${prefixCls}-item-top-link`" :to="`/user/${comment.user_id}`">{{ comment.user.name }}</router-link>
         <span v-if="comment.reply_user"> 回复 </span>
@@ -60,9 +60,7 @@ export default {
      * @return   {[type]}            [description]
      */
     goToFeedDetail() {
-      const {
-        commentable: { id = 0 }
-      } = this.comment;
+      const { commentable: { id = 0 } } = this.comment;
       this.$router.push(`/news/${id}`);
     },
 
@@ -117,6 +115,10 @@ export default {
       }
 
       return false;
+    },
+    user() {
+      const { user } = this.comment || { user: {} };
+      return user;
     }
   },
   created() {

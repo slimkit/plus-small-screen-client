@@ -1,5 +1,5 @@
 <template>
-  <div class="m-box-model m-card" @click="handleView()">
+  <div class="m-box-model m-card" @click="handleView('')">
     <div class="m-box">
       <div 
       v-if="timeLine" 
@@ -15,7 +15,7 @@
             <span>{{ time | time2tips }}</span>
           </div>
         </header>
-        <article class="m-card-body" @click="handleView()">
+        <article class="m-card-body" @click="handleView('')">
           <h2 v-if="title">{{ title }}</h2>
           <div class="m-card-con" v-if="body.length > 0">
             <p
@@ -49,7 +49,7 @@
         </svg>
         <span>{{ commentCount | formatNum }}</span>
       </a>
-      <a class="m-box m-aln-center" @click.prevent="handleView">
+      <a class="m-box m-aln-center" @click.prevent="handleView('')">
         <svg class='m-style-svg m-svg-def'>
           <use xlink:href="#feed-eye"></use>
         </svg>

@@ -1,7 +1,7 @@
 <template>
   <section>
     <div :class="`${prefixCls}-item-top`">
-      <v-avatar :sex="like.user.sex" :src="like.user.avatar" />
+      <avatar :user="user" />
       <section class="userInfo">
         <router-link :class="`${prefixCls}-item-top-link`" :to="`/user/${like.user_id}`">{{ like.user.name }}</router-link>
         <span>赞了你的产品</span>
@@ -52,6 +52,10 @@ export default {
     }
   },
   computed: {
+    user() {
+      const { user } = this.like || { user: {} };
+      return user;
+    },
     /**
      * 获取图片,并计算地址
      * @Author   Wayne

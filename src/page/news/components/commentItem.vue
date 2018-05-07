@@ -3,10 +3,7 @@
     <div class="card-wrap">
       <div class="card-main">
         <div class="m-box">
-          <v-avatar
-          :sex='user.sex'
-          :src='user.avatar'
-          :uid='user.id' />
+          <avatar :user="user" />
           <div class="m-box-dir m-box-col card-txt-body">
             <div class="m-box m-box-c">
               <router-link tag='h4' :to='`/user/${user.id}`'>{{ user.name }}</router-link>
@@ -60,7 +57,7 @@ export default {
 .card {
   background-color: #fff;
   border-top: 1px solid #ededed; /*no*/
-  .v-avatar {
+  .m-avatar-box {
     margin-right: 30px;
   }
   &-wrap {

@@ -9,7 +9,7 @@
         >
           <div v-if="audit.comment !== null" v-for="audit in audits" :class="`${prefixCls}-item`" :key="`group-join-${audit.id}`">
             <div :class="`${prefixCls}-item-top`">
-              <v-avatar :sex="audit.user.sex" :src="audit.user.avatar" />
+              <avatar :user="audit.user" />
               <section class="userInfo">
                 <router-link :class="`${prefixCls}-item-top-link`" :to="`/user/${audit.user_id}`">{{ audit.user.name }}</router-link>
                 <p>{{ audit.created_at | time2tips }}</p>
@@ -49,13 +49,13 @@ export default {
         content: this.getGroupTitle(group),
         commentableDel: audit.group === null,
         commentDel: null,
-        type: 'group',
+        type: "group",
         contentId: audit.group ? group.id : 0
       };
     },
     //获取动态内容
     getGroupTitle(group) {
-      const {summary} = group || {};
+      const { summary } = group || {};
       return summary;
     },
     // 获取动态第一个图片

@@ -1,7 +1,7 @@
 <template>
   <section>
     <div :class="`${prefixCls}-item-top`">
-      <v-avatar :sex="comment.user.sex" :src="comment.user.avatar" />
+      <avatar :user="user" />
       <section class="userInfo">
         <router-link :class="`${prefixCls}-item-top-link`" :to="`/user/${comment.user_id}`">{{ comment.user.name }}</router-link>
         <span v-if="comment.reply_user"> 回复</span>
@@ -71,9 +71,7 @@ export default {
      * @return   {[type]}            [description]
      */
     goToFeedDetail() {
-      const {
-        commentable: { id = 0, group_id: groupId = 0 }
-      } = this.comment;
+      const { commentable: { id = 0, group_id: groupId = 0 } } = this.comment;
       this.$router.push(`/groups/${groupId}/posts/${id}`);
     },
 
@@ -109,6 +107,12 @@ export default {
           this.$Modal.remove();
         }
       });
+    }
+  },
+  computed: {
+    user() {
+      const { user } = this.comment || { user: {} };
+      return user;
     }
   },
   created() {
