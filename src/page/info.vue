@@ -114,7 +114,7 @@ import bus from "@/bus.js";
 import { mapState } from "vuex";
 import location from "@/page/location.vue";
 
-import { getFileUrl } from "@/util/";
+// import { getFileUrl } from "@/util/";
 import getFirstFrameOfGif from "@/util/getFirstFrameOfGif.js";
 
 if (!HTMLCanvasElement.prototype.toBlob) {

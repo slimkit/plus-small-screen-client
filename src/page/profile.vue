@@ -54,7 +54,7 @@
               <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-arrow-r"></use>
             </svg>
           </router-link>
-          <router-link to="/upgrade" tag="li" class="m-entry">
+<!--           <router-link to="/upgrade" tag="li" class="m-entry">
             <svg class='m-style-svg m-svg-def m-entry-prepend'>
               <use xlink:href="#profile-question"></use>
             </svg>
@@ -62,8 +62,8 @@
             <svg class="m-style-svg m-svg-def m-entry-append">
               <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-arrow-r"></use>
             </svg>
-          </router-link>
-          <router-link to="/own/groups" tag="li" class="m-entry">
+          </router-link> -->
+<!--           <router-link to="/own/groups" tag="li" class="m-entry">
             <svg class='m-style-svg m-svg-def m-entry-prepend'>
               <use xlink:href="#profile-group"></use>
             </svg>
@@ -71,29 +71,31 @@
             <svg class="m-style-svg m-svg-def m-entry-append">
               <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-arrow-r"></use>
             </svg>
-          </router-link>
+          </router-link> -->
         </ul>
         <ul class="m-box-model m-entry-group">
-          <router-link to="/wallet" tag="li" class="m-entry">
+          <!-- to="/wallet" tag="li" -->
+          <li class="m-entry">
             <svg class='m-style-svg m-svg-def m-entry-prepend'>
               <use xlink:href="#profile-wallet"></use>
             </svg>
             <span class="m-text-box m-flex-grow1">钱包</span>
             <span class="m-entry-extra">{{ new_balance }}</span>
-            <svg class="m-style-svg m-svg-def m-entry-append">
+<!--             <svg class="m-style-svg m-svg-def m-entry-append">
               <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-arrow-r"></use>
-            </svg>
-          </router-link>
-          <router-link to="/upgrade" tag="li" class="m-entry">
+            </svg> -->
+          </li>
+          <!-- to="/upgrade" tag="li" -->
+          <li class="m-entry">
             <svg class='m-style-svg m-svg-def m-entry-prepend'>
               <use xlink:href="#profile-integral"></use>
             </svg>
             <span class="m-text-box m-flex-grow1">{{ currency_name }}</span>
             <span class="m-entry-extra">{{ sum }}</span>
-            <svg class="m-style-svg m-svg-def m-entry-append">
+<!--             <svg class="m-style-svg m-svg-def m-entry-append">
               <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-arrow-r"></use>
-            </svg>
-          </router-link>
+            </svg> -->
+          </li>
           <router-link to="/profile/collection/feeds" tag="li" class="m-entry">
             <svg class='m-style-svg m-svg-def m-entry-prepend'>
               <use xlink:href="#profile-collect"></use>
@@ -105,16 +107,15 @@
           </router-link>
         </ul>
         <ul class="m-box-model m-entry-group">
-          <router-link to="/upgrade" tag="li" class="m-entry">
+          <!-- to="/upgrade" tag="li" -->
+          <li class="m-entry">
             <svg class='m-style-svg m-svg-def m-entry-prepend'>
               <use xlink:href="#profile-approve"></use>
             </svg>
             <span class="m-text-box m-flex-grow1">认证</span>
             <span class="m-entry-extra">{{ verified ? '已认证' : '未认证' }}</span>
-            <svg class="m-style-svg m-svg-def m-entry-append">
-              <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-arrow-r"></use>
-            </svg>
-          </router-link>
+            <!-- <i class="m-style-svg m-svg-def m-entry-append"></i> -->
+          </li>
           <router-link to="/setting" tag="li" class="m-entry">
             <svg class='m-style-svg m-svg-def m-entry-prepend'>
               <use xlink:href="#profile-setting"></use>
@@ -192,7 +193,7 @@ export default {
     margin-top: 15px;
   }
   & + & {
-    border-left: 1px solid @border-color;
+    border-left: 1px solid @border-color; /*no*/
   }
   &-box {
     margin-top: 30px;
@@ -221,6 +222,10 @@ export default {
   margin-bottom: 20px;
   .m-entry-group {
     padding: 0 20px;
+  }
+
+  .m-entry-extra {
+    margin: 0;
   }
 }
 </style>
