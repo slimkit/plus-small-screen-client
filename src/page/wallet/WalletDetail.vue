@@ -125,25 +125,6 @@ export default {
   .m-head-top {
     overflow: initial;
   }
-  .diy-select {
-    text-align: center;
-    height: 100%;
-  }
-  .diy-select--label:after {
-    display: inline-block;
-    position: initial;
-  }
-  .diy-select--options {
-    position: fixed;
-    top: 90px;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.2);
-    .diy-select--option {
-      background-color: #fff;
-    }
-  }
   .m-wallet-list {
     padding-top: 90px;
   }

@@ -1,10 +1,18 @@
 <template>
   <div :class="prefixCls">
-    <head-top :go-back='cancel' append='true' title='全站粉丝排行榜'>
-      <div slot='append'>
-        
+    <header slot="head" class="m-box m-justify-bet m-aln-center m-head-top m-pos-f m-main m-bb1">
+      <div class="m-box m-flex-grow1 m-aln-center m-flex-base0">
+        <svg class='m-style-svg m-svg-def' @click='cancel'>
+          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-back"></use>
+        </svg>
       </div>
-    </head-top>
+      <div class="m-box-model m-flex-grow1 m-aln-center m-flex-base0 m-head-top-title">
+        <span>全站粉丝排行榜</span>
+      </div>
+      <div class="m-box m-flex-grow1 m-aln-center m-flex-base0 m-justify-end">
+
+      </div>
+    </header>
     <div :class="`${prefixCls}-list`">
       <div :class="`${prefixCls}-list-item`" v-for="(user, index) in users" :key="user.id">
         <span :class="{ top: index < 3 }" class="rank">{{ index + 1 }}</span>
@@ -16,7 +24,9 @@
           </div>
         </div>
         <template>
-            <v-icon :type='`base-${isFollow(user.id)}`' class='find-item-follow-icon' @click.native='followUser(user.id)'></v-icon>
+          <svg class="m-style-svg m-svg-big" @click.stop="followUser(user, isFollow(user))">
+            <use xmlns:xlink="http://www.w3.org/1999/xlink" :xlink:href="`#base-${isFollow(user)}`"></use>
+          </svg>
         </template>
       </div>
     </div>
@@ -25,6 +35,7 @@
 
 <script>
 import HeadTop from "../../../components/HeadTop";
+import { followUserByStatus } from "@/api/user.js";
 const prefixCls = "rankItem";
 export default {
   components: {
@@ -46,12 +57,13 @@ export default {
   },
 
   methods: {
-    isFollow(id) {
-      let user = this.$store.getters.getUserById(id);
+    isFollow(user) {
       const { follower = false, following = false } = user;
       return follower && following
         ? "eachFollow"
-        : follower ? "follow" : "unFollow";
+        : follower
+          ? "follow"
+          : "unFollow";
     },
     cancel() {
       this.to("/rank/users");
@@ -62,18 +74,12 @@ export default {
         this.$router.push(path);
       }
     },
-    followUser(id) {
+    followUser(user, status) {
       if (this.loading) return;
       this.loading = true;
-      let user = this.$store.getters.getUserById(id);
-      this.$store
-        .dispatch("FOLLOW_USER", {
-          id,
-          status: this.isFollow(id)
-        })
-        .then(({ follower }) => {
-          user.follower = follower;
-          this.$store.commit("SAVE_USER", user);
+      followUserByStatus({ status, id: user.id })
+        .then(state => {
+          user.follower = state;
           this.loading = false;
         })
         .catch(err => {

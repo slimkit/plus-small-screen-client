@@ -1,25 +1,26 @@
 @diySelect-prefix: diy-select;
-.@{diySelect-prefix}{
+.@{diySelect-prefix} {
   display: inline-block;
   width: 280px;
   background: #fff;
   height: 90px;
   position: relative;
-  &--label{
+  &--label {
     padding: 20px;
     height: 100%;
     line-height: 90-40px;
     position: relative;
-    &:after{
-      content: '▼';
+    &:after {
+      content: "▼";
       position: absolute;
       right: 20px;
-      transition: all .3s ease;
+      transition: all 0.3s ease;
       transform-origin: center;
+      transform: scale(0.6);
     }
   }
 
-  &--options{
+  &--options {
     background-color: #fff;
     position: absolute;
     left: 0;
@@ -27,49 +28,16 @@
     box-shadow: -1px 0 3px #ededed;
   }
 
-  &--option{
+  &--option {
     padding: 0 20px;
     height: 90px;
     border-top: 1px solid #ededed; /*no*/
     line-height: 90px;
   }
 
-  .open &--label{
-    &::after{
-      transform: rotate(180deg);
+  .open &--label {
+    &::after {
+      transform: scale(0.6) rotate(180deg);
     }
   }
 }
-
-
-
-// &-select{
-//   position: absolute;
-//   top: 0;
-//   left: 0;
-//   right: 0;
-//   bottom: 0;
-//   margin: auto;
-//   &--label{
-//     margin: 0;
-//     text-align: center;
-//     &::after{
-//       content: "▼"
-//     }
-//   }
-//   &--options{
-//     position: fixed;
-//     top: 90px;
-//     left: 0;
-//     right: 0;
-//     bottom: 0;
-//     background-color: rgba(0, 0, 0, .3);
-//   }
-//   &--option{
-//     width: 100%;
-//     height: 90px;
-//     text-align: center;
-//     background-color: #fff;
-//     border-bottom: 1px solid #ededed;
-//   }
-// }

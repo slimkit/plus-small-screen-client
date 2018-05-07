@@ -1,6 +1,6 @@
 <template>
     <div :class="`${prefixCls}`">
-        <header slot="head" class="m-box m-justify-bet m-aln-center m-head-top m-pos-f m-main">
+        <header slot="head" class="m-box m-justify-bet m-aln-center m-head-top m-pos-f m-main m-bb1">
             <div class="m-box m-flex-grow1 m-aln-center m-flex-base0">
                 <svg class='m-style-svg m-svg-def' @click='goBack'>
                     <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-back"></use>
@@ -20,9 +20,9 @@
                 ref='loadmore'
                 :class="`${prefixCls}-loadmore`"
         >
-            <section :class="`${prefixCls}-item`" v-for="notification in notifications" :key="notification.id">
-                <h5>{{ notification.data.content }}</h5>
-                <p>{{ notification.created_at | time2tips }}</p>
+            <section class="m-box m-aln-st m-main m-bb1 notification-item" v-for="notification in notifications" :key="notification.id">
+                <h5 class="m-flex-grow1 m-flex-shrink1">{{ notification.data.content }}</h5>
+                <p class="m-flex-grow0 m-flex-shrink0">{{ notification.created_at | time2tips }}</p>
             </section>
         </load-more>
     </div>
@@ -77,4 +77,17 @@ export default {
 };
 </script>
 <style lang="less">
+.notification-item {
+  padding: 30px;
+  h5 {
+    color: #333;
+    font-size: 30px;
+    font-weight: 400;
+  }
+  p {
+    margin-left: 30px;
+    color: #999;
+    font-size: 24px;
+  }
+}
 </style>

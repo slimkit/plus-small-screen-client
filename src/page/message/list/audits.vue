@@ -1,9 +1,17 @@
 <template>
   <div :class="`${prefixCls}`">
-    <head-top :go-back='goBack'>
-      <diy-select slot='nav' v-model='currentType' :options='options' placeholder='动态评论置顶'></diy-select>
-    </head-top>
-    <div :class="`${prefixCls}-container`">
+    <header class="m-box m-head-top m-pos-f m-main m-bb1">
+      <div class="m-box m-aln-center m-flex-grow1 m-flex-base0">
+        <svg class="m-style-svg m-svg-def" @click="goBack">
+          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-back"></use>
+        </svg>
+      </div>
+      <div class="m-box m-aln-center m-flex-grow2 m-flex-base2 m-justify-center">
+        <diy-select slot='nav' v-model='currentType' :options='options' placeholder='动态评论置顶'></diy-select>
+      </div>
+      <div class="m-box m-aln-center m-flex-grow1 m-flex-base0 m-justify-end"></div>
+    </header>
+    <div :class="`${prefixCls}-container`" style="padding-top: 0.9rem">
       <router-view></router-view>
     </div>
   </div>
