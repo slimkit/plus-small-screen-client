@@ -40,7 +40,6 @@ export default {
           icon: "message-tongzhi",
           hanBadge: 0,
           url: "/message/notification",
-          bgColor: "#59b6d7",
           count: "sCount",
           time: "sTime"
         },
@@ -50,7 +49,6 @@ export default {
           icon: "message-pinglun",
           hanBadge: 0,
           url: "/message/comments",
-          bgColor: "#59b6d7",
           count: "cCount",
           time: "cTime"
         },
@@ -60,7 +58,6 @@ export default {
           icon: "message-zan",
           hanBadge: 0,
           url: "/message/likes",
-          bgColor: "#fe8f90",
           count: "dCount",
           time: "dTime"
         },
@@ -70,7 +67,6 @@ export default {
           icon: "message-shenghe",
           hanBadge: 0,
           url: "/message/audits/feedcomments",
-          bgColor: "#fbb12a",
           count: "aCount"
         }
       }
@@ -86,16 +82,9 @@ export default {
     ...mapState({
       msg: state => state.MESSAGE.UNREAD_COUNT.msg,
       newMsg: state => state.MESSAGE.NEW_UNREAD_COUNT,
-      sCount: state => state.MESSAGE.NEW_UNREAD_COUNT.system
+      sCount: state => state.MESSAGE.NEW_UNREAD_COUNT.system || 0
     }),
 
-    // 新消息提示
-    has_msg() {
-      return (
-        this.msg.audits.count + this.msg.comments.count + this.msg.diggs.count >
-        0
-      );
-    },
     cPlaceholder() {
       return this.msg.comments.placeholder;
     },
@@ -118,10 +107,10 @@ export default {
       return this.msg.system.time;
     },
     cCount() {
-      return this.newMsg.commented;
+      return this.newMsg.commented || 0;
     },
     dCount() {
-      return this.newMsg.liked;
+      return this.newMsg.liked || 0;
     },
     aCount() {
       return (
