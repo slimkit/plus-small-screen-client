@@ -29,69 +29,68 @@
 </template>
 
 <script>
-  const prefixCls = "msgList";
-  const detailUrl = {
-    feed: '/feeds/',
-    group: '/groups/',
-    news: '/news/',
-  };
-  export default {
-    props: {
-      audit: {
-        type: Object,
-        required: true
-      }
+const prefixCls = "msgList";
+const detailUrl = {
+  feed: "/feeds/",
+  group: "/groups/",
+  news: "/news/"
+};
+export default {
+  props: {
+    audit: {
+      type: Object,
+      required: true
+    }
+  },
+  name: "auditContent",
+  data: () => ({
+    prefixCls
+  }),
+  computed: {
+    image() {
+      return this.audit.image;
     },
-    name: "auditContent",
-    data: () => ({
-      prefixCls
-    }),
-    computed: {
-      image() {
-        return this.audit.image;
-      },
-      commentBody() {
-        return this.audit.commentBody || "";
-      },
-      content() {
-        return this.audit.content || "";
-      },
-      commentDel() {
-        return this.audit.commentDel;
-      },
-      commentableDel() {
-        return this.audit.commentableDel;
-      },
-      video() {
-        return this.audit.video ? `/api/v2/files/${this.audit.video}` : false;
-      },
-      contentId() {
-        return this.audit.contentId;
-      },
-      extraId() {
-        return this.audit.extraId || 0;
-      },
-      type() {
-        return this.audit.type;
-      },
-      url() {
-        const {type} = this.audit;
-        // 特殊url， 双参数
-        if (type === 'group-post') {
-          return `/groups/${this.extraId}/posts/${this.contentId}`;
-        }
+    commentBody() {
+      return this.audit.commentBody || "";
+    },
+    content() {
+      return this.audit.content || "";
+    },
+    commentDel() {
+      return this.audit.commentDel;
+    },
+    commentableDel() {
+      return this.audit.commentableDel;
+    },
+    video() {
+      return this.audit.video ? `/api/v2/files/${this.audit.video}` : false;
+    },
+    contentId() {
+      return this.audit.contentId;
+    },
+    extraId() {
+      return this.audit.extraId || 0;
+    },
+    type() {
+      return this.audit.type;
+    },
+    url() {
+      const { type } = this.audit;
+      // 特殊url， 双参数
+      if (type === "group-post") {
+        return `/groups/${this.extraId}/posts/${this.contentId}`;
+      }
 
-        return detailUrl[type] + this.contentId;
-      }
-    },
-    methods: {
-      goToDetail() {
-        this.$router.push(this.url);
-      }
+      return detailUrl[type] + this.contentId;
+    }
+  },
+  methods: {
+    goToDetail() {
+      this.$router.push(this.url);
     }
   }
+};
 </script>
 
 <style scoped>
-
 </style>

@@ -22,11 +22,11 @@
     >
       <section :style="{order: msgs.length - index}" v-for="(msg, index) in msgs" :key="`msg_${msg.id}`">
         <my-msg
-          :name="msg.touid !== mid ? me.name : (room.name || user.name)"
-          :id="msg.touid !== mid ? ~~mid : ~~uid"
           :message="msg"
-          :user="msg.touid !== mid ? me : user"
           :isMine="~~msg.touid !== ~~mid"
+          :user="msg.touid !== mid ? me : user"
+          :id="msg.touid !== mid ? ~~mid : ~~uid"
+          :name="msg.touid !== mid ? me.name : (room.name || user.name)"
         />
       </section>
     </main>⁄
@@ -35,19 +35,22 @@
         <span class="m-box-model m-flex-grow1 m-flex-shrink1 m-justify-end m-wz-def">
           <textarea 
             v-model='txt'
-            :style="{ height: `${scrollHeight}px` }"
+            @keyup.enter.prevent="sendTxtMsg"
+            :style="{ height: `${scrollHeight}px`, overflowY: 'hidden' }"
             ref='textarea'
             maxlength="255"
           ></textarea>
+          <!-- maxlength="255"  -->
           <textarea 
             rows="1"
             v-model='shadowText'
-            maxlength="255" 
             style="position: absolute; z-index: -9999; visibility: hidden;"
             ref='shadow'></textarea>
         </span>
-        <div class="m-box-model m-box-justify-end" style="width: 1rem; margin: 0 0 0 15px;">
-          <span class="m-wz-def" style="font-size: 10px; margin-bottom: 10px" v-if="txt.length >= 210">{{ txt.length }}/255</span>
+        <div
+        class="m-box-model m-box-justify-end"
+        style="width: 1rem; margin: 0 0 0 15px;">
+          <!-- <span class="m-wz-def" style="font-size: 10px; margin-bottom: 10px" v-if="txt.length >= 210">{{ txt.length }}/255</span> -->
           <button class="m-comment-submit" :disabled="!txt.length" @click='sendTxtMsg'>发送</button>
         </div>
       </div>
@@ -55,10 +58,11 @@
   </div>
 </template>
 <script>
-import http from "@/http.js";
+// import http from "@/http.js";
 import bus from "@/bus.js";
 import MyMsg from "./myMsg";
 import dataBase from "@/util/database.js";
+import { getUserInfoById } from "@/api/user.js";
 
 const prefixCls = "chat-room";
 export default {
@@ -82,6 +86,7 @@ export default {
   methods: {
     // 发送文本消息
     sendTxtMsg() {
+      if (!this.txt) return;
       bus.$emit("sendTxt-easemob", {
         content: this.txt,
         cid: this.cid,
@@ -136,15 +141,7 @@ export default {
     let uid = ~~to.params.uid;
     const me = window.$lstore.getData("CURRENTUSER");
     const mid = ~~me.id;
-    let user = {};
-    try {
-      const { data } = await http.get(`users/${uid}`, {
-        validateStatus: s => s === 200
-      });
-      user = data;
-    } catch (e) {
-      uid = 0;
-    }
+    const user = await getUserInfoById(uid);
 
     uid > 0
       ? (async () => {

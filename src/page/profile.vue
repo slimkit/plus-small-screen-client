@@ -133,6 +133,8 @@
 </template>
 <script>
 import { mapState } from "vuex";
+import { refreshCurrentUserInfo } from "@/api/user.js";
+
 export default {
   name: "profile",
   data() {
@@ -141,17 +143,10 @@ export default {
   computed: {
     ...mapState({
       new_followers: state => state.MESSAGE.NEW_UNREAD_COUNT.following || 0,
-      new_mutual: state => state.MESSAGE.NEW_UNREAD_COUNT.mutual || 0
+      new_mutual: state => state.MESSAGE.NEW_UNREAD_COUNT.mutual || 0,
+      currency_name: state => state.CONFIG.site.currency_name || "积分",
+      user: state => state.CURRENTUSER
     }),
-    currency_name() {
-      return (
-        (((this.$store.state.CONFIG || {}).site || {}).currency_name || {})
-          .name || "积分"
-      );
-    },
-    user() {
-      return this.$store.state.CURRENTUSER || {};
-    },
     extra() {
       return this.user.extra || {};
     },
@@ -171,20 +166,8 @@ export default {
       return this.user.verified;
     }
   },
-  methods: {
-    RefreshUserData() {
-      this.$http.get(`/user`).then(({ data = {} }) => {
-        data &&
-          (this.$store.commit("SAVE_USER", Object.assign(this.user, data)),
-          this.$store.commit(
-            "SAVE_CURRENTUSER",
-            Object.assign({}, this.user, data)
-          ));
-      });
-    }
-  },
   mounted() {
-    this.RefreshUserData();
+    refreshCurrentUserInfo();
   }
 };
 </script>

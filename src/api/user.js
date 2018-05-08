@@ -1,5 +1,7 @@
 import vuex from "@/stores";
 import api, { get } from "./api.js";
+import $Message from "@/plugins/message-box";
+import lstore from "@/plugins/lstore/lstore.js";
 
 const userState = vuex.state.USERS;
 
@@ -118,7 +120,8 @@ export const getUserInfoById = id => {
           })
           .then(({ data }) => {
             data = data.id ? data : {};
-            resolve(data);
+            vuex.commit("SAVE_USER", data);
+            resolve(userState[`user_${id}`]);
           });
   });
 };
@@ -141,4 +144,51 @@ export function getUserFansByType({ uid, type, limit = 15, offset = 0 }) {
       return [];
     }
   );
+}
+
+export function signinByAccount(params) {
+  // POST /auth/login
+  return api
+    .post(`/auth/login`, params, {
+      validateStatus: s => s > 0
+    })
+    .then(
+      ({
+        data: { message, access_token /*token_type = "bearer"*/ },
+        status
+      }) => {
+        switch (status) {
+          case 422:
+            $Message.error(message);
+            break;
+          case 200:
+            vuex.commit("SWITCH_LOGIN_STATUS", true);
+            lstore.setData(
+              "H5_ACCESS_TOKEN",
+              `Bearer ${access_token}`
+              // `${token_type} ${access_token}`
+            );
+            refreshCurrentUserInfo();
+            break;
+        }
+      },
+      err => {
+        console.log(err);
+      }
+    );
+}
+
+/**
+ * 刷新用户信息
+ * @author jsonleex <jsonlseex@163.com>
+ * @return {Promise -> Object}
+ */
+export function refreshCurrentUserInfo() {
+  return get(`/user`).then(({ data }) => {
+    // 保存本地
+    lstore.setData("H5_CUR_USER", data);
+    // 保存 vuex
+    vuex.commit("SAVE_CURRENTUSER", data);
+    return data;
+  });
 }

@@ -103,7 +103,7 @@
   </transition>
 </template>
 <script>
-import bus from "@/bus.js";
+import { signinByAccount } from "@/api/user.js";
 import { signinByWechat } from "@/util/wechat.js";
 
 export default {
@@ -143,36 +143,42 @@ export default {
 
       this.loading = true;
 
-      this.$http
-        .post("/tokens", {
-          login: this.account,
-          password: this.password,
-          device_code: this.$store.state.BROWSER.OS,
-          validateStatus: s => s === 201
-        })
-        .then(({ data: { token, user } }) => {
-          token &&
-            (this.$store.commit("SAVE_CURRENTUSER", {
-              ...user,
-              token
-            }),
-            bus.$emit("connect-easemob"),
-            this.$store.commit("SAVE_USER", user),
-            this.$store.dispatch("GET_UNREAD_COUNT"),
-            this.$store.dispatch("GET_NEW_UNREAD_COUNT"),
-            this.$nextTick(() => {
-              this.$router.push(
-                this.$route.query.redirect || "/feeds?type=hot"
-              );
-              this.loading = false;
-            }));
-        })
-        .catch(err => {
-          console.log(err);
-          const { response: { data = { message: "登录失败" } } = {} } = err;
-          this.err = data;
-          this.loading = false;
-        });
+      signinByAccount({
+        login: this.account,
+        password: this.password
+      }).then(() => {
+        this.loading = false;
+      });
+
+      // this.$http
+      //   .post("/tokens", {
+      //     login: this.account,
+      //     password: this.password,
+      //     device_code: this.$store.state.BROWSER.OS,
+      //     validateStatus: s => s === 201
+      //   })
+      //   .then(({ data: { token, user } }) => {
+      //     token &&
+      //       (this.$store.commit("SAVE_CURRENTUSER", {
+      //         ...user,
+      //         token
+      //       }),
+      //       this.$store.commit("SAVE_USER", user),
+      //       this.$store.dispatch("GET_UNREAD_COUNT"),
+      //       this.$store.dispatch("GET_NEW_UNREAD_COUNT"),
+      //       this.$nextTick(() => {
+      //         this.$router.push(
+      //           this.$route.query.redirect || "/feeds?type=hot"
+      //         );
+      //         this.loading = false;
+      //       }));
+      //   })
+      //   .catch(err => {
+      //     console.log(err);
+      //     const { response: { data = { message: "登录失败" } } = {} } = err;
+      //     this.err = data;
+      //     this.loading = false;
+      //   });
     }
   }
 };

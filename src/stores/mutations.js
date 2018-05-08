@@ -1,6 +1,15 @@
 import lstore from "@/plugins/lstore/lstore.js";
 export default {
   /**
+   * 保存当前登录状态
+   * @author jsonleex <jsonlseex@163.com>
+   * @param  {Object}  state
+   * @param  {Boolean} status
+   */
+  SWITCH_LOGIN_STATUS(state = {}, status = false) {
+    state.loginStatus = status;
+  },
+  /**
    * 应用启动信息
    * @author jsonleex <jsonlseex@163.com>
    */
@@ -59,31 +68,13 @@ export default {
     state.CUR_GROUP_LOCATION = location;
   },
 
-  // 保存用户搜索历史
-  ADD_SEARCH_HISTORY(state, list) {
-    const old = state.SEARCHHISTORY;
-    state.SEARCHHISTORY = Array.from(new Set([list, ...old]));
-    lstore.setData("SEARCHHISTORY", state.SEARCHHISTORY);
-  },
-
-  // 清空搜索历史
-  CLEAN_SEARCH_HISTORY(state, data) {
-    const index = state.SEARCHHISTORY.indexOf(data);
-    if (data && index >= 0) {
-      state.SEARCHHISTORY.splice(index, 1);
-    } else {
-      state.SEARCHHISTORY = [];
-      lstore.removeData("SEARCHHISTORY");
-    }
-  },
-
   // 注销登录
   SIGN_OUT(state) {
     try {
       state.USERS = {};
       state.CURRENTUSER = {};
-
       lstore.clearData();
+      state.loginStatus = false;
     } catch (e) {
       console.log(e);
     }

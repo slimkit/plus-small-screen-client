@@ -27,9 +27,9 @@ instance.interceptors.request.use(
     } else {
       pending[config.url] = cancel;
     }
-    const TOKEN = (lstore.getData("CURRENTUSER") || {}).token;
+    const TOKEN = lstore.getData("H5_ACCESS_TOKEN");
     if (TOKEN) {
-      config.headers.Authorization = `Bearer ${TOKEN}`;
+      config.headers.Authorization = TOKEN;
     }
     return config;
   },
@@ -44,13 +44,15 @@ instance.interceptors.response.use(
     return response;
   },
   err => {
+    let message = "";
     if (err && err.response) {
+      message = err.response.data.message;
       switch (err.response.status) {
         case 400:
           err.message = "错误请求";
           break;
         case 401:
-          err.message = "未授权，请重新登录";
+          err.message = lstore.hasData("H5_CUR_USER") ? "请重新登录" : "请登录";
           break;
         case 403:
           err.message = "拒绝访问";
@@ -88,7 +90,7 @@ instance.interceptors.response.use(
     } else {
       err.message = "发生了一些错误";
     }
-    axios.isCancel(err) || Message.error(err.message);
+    axios.isCancel(err) || Message.error(message || err.message);
     return Promise.reject(err);
   }
 );

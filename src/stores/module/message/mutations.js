@@ -11,7 +11,7 @@ export default {
     state.NEW_UNREAD_COUNT = {
       ...state.NEW_UNREAD_COUNT,
       ...counts
-    }
+    };
   },
   /**
    * 保存我收到的评论
