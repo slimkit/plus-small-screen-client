@@ -168,12 +168,17 @@ export function signinByAccount(params) {
               `Bearer ${access_token}`
               // `${token_type} ${access_token}`
             );
-            refreshCurrentUserInfo();
+            refreshCurrentUserInfo().then(user => {
+              vuex.dispatch("EASEMOB_OPEN", user.id);
+            });
             break;
         }
+
+        return true;
       },
       err => {
         console.log(err);
+        return false;
       }
     );
 }
@@ -184,11 +189,16 @@ export function signinByAccount(params) {
  * @return {Promise -> Object}
  */
 export function refreshCurrentUserInfo() {
-  return get(`/user`).then(({ data }) => {
-    // 保存本地
-    lstore.setData("H5_CUR_USER", data);
-    // 保存 vuex
-    vuex.commit("SAVE_CURRENTUSER", data);
-    return data;
-  });
+  return get(`/user`).then(
+    ({ data }) => {
+      // 保存本地
+      lstore.setData("H5_CUR_USER", data);
+      // 保存 vuex
+      vuex.commit("SAVE_CURRENTUSER", data);
+      return data;
+    },
+    err => {
+      console.log(err);
+    }
+  );
 }

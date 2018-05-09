@@ -44,53 +44,55 @@ instance.interceptors.response.use(
     return response;
   },
   err => {
-    let message = "";
-    if (err && err.response) {
-      message = err.response.data.message;
-      switch (err.response.status) {
-        case 400:
-          err.message = "错误请求";
-          break;
-        case 401:
-          err.message = lstore.hasData("H5_CUR_USER") ? "请重新登录" : "请登录";
-          break;
-        case 403:
-          err.message = "拒绝访问";
-          break;
-        case 404:
-          err.message = "请求错误,未找到该资源";
-          break;
-        case 405:
-          err.message = "请求方法未允许";
-          break;
-        case 408:
-          err.message = "请求超时";
-          break;
-        case 500:
-          err.message = "服务器端出错";
-          break;
-        case 501:
-          err.message = "网络未实现";
-          break;
-        case 502:
-          err.message = "网络错误";
-          break;
-        case 503:
-          err.message = "服务不可用";
-          break;
-        case 504:
-          err.message = "网络超时";
-          break;
-        case 505:
-          err.message = "http版本不支持该请求";
-          break;
-        default:
-          err.message = `连接错误${err.response.status}`;
+    if (!axios.isCancel(err)) {
+      if (err && err.response) {
+        switch (err.response.status) {
+          case 400:
+            err.message = "错误请求";
+            break;
+          case 401:
+            err.message = lstore.hasData("H5_CUR_USER")
+              ? "请重新登录"
+              : "请登录";
+            break;
+          case 403:
+            err.message = "拒绝访问";
+            break;
+          case 404:
+            err.message = "请求错误,未找到该资源";
+            break;
+          case 405:
+            err.message = "请求方法未允许";
+            break;
+          case 408:
+            err.message = "请求超时";
+            break;
+          case 500:
+            err.message = "服务器端出错";
+            break;
+          case 501:
+            err.message = "网络未实现";
+            break;
+          case 502:
+            err.message = "网络错误";
+            break;
+          case 503:
+            err.message = "服务不可用";
+            break;
+          case 504:
+            err.message = "网络超时";
+            break;
+          case 505:
+            err.message = "http版本不支持该请求";
+            break;
+          default:
+            err.message = `连接错误${err.response.status}`;
+        }
+      } else {
+        err.message = "发生了一些错误";
       }
-    } else {
-      err.message = "发生了一些错误";
+      Message.error(err.message);
     }
-    axios.isCancel(err) || Message.error(message || err.message);
     return Promise.reject(err);
   }
 );

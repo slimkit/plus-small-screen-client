@@ -13,19 +13,22 @@ import modules from "./module/";
 Vue.use(Vuex);
 
 const state = {
+  loginStatus: lstore.hasData("H5_ACCESS_TOKEN"),
+
   CONFIG: lstore.getData("BOOTSTRAPPERS") || {},
+
   /* 终端信息 */
   BROWSER: detectOS(),
-  /* 用户标签 */
-  USERTAGS: lstore.getData("USERTAGS") || [],
+
   /* 圈子分类 */
   GROUPTYPES: lstore.getData("GROUPTYPES") || [],
+
   /* 当前登录用户信息 */
   CURRENTUSER: lstore.getData("CURRENTUSER") || {},
-  /* 搜索历史 */
-  SEARCHHISTORY: lstore.getData("SEARCHHISTORY") || [],
+
   /* 当前选择的标签 临时数据 */
   CUR_SELECTED_TAGS: [],
+
   /* 当前圈子的位置信息 临时数据 */
   CUR_GROUP_LOCATION: {},
 
@@ -36,6 +39,7 @@ const state = {
    * 用户信息
    */
   USERS: lstore.getData("H5_USERS") || {},
+
   GROUP_CATES: lstore.getData("H5_GROUP_CATES") || []
 };
 

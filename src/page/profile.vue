@@ -133,8 +133,8 @@
 </template>
 <script>
 import { mapState } from "vuex";
-import { refreshCurrentUserInfo } from "@/api/user.js";
 import { resetUserCount } from "@/api/message.js";
+// import { refreshCurrentUserInfo } from "@/api/user.js";
 
 const typeMap = ["followers", "mutual"];
 export default {
@@ -146,9 +146,13 @@ export default {
     ...mapState({
       new_followers: state => state.MESSAGE.NEW_UNREAD_COUNT.following || 0,
       new_mutual: state => state.MESSAGE.NEW_UNREAD_COUNT.mutual || 0,
-      currency_name: state => state.CONFIG.site.currency_name || "积分",
+      CONFIG: state =>
+        state.CONFIG || { site: { currency_name: { name: "积分" } } },
       user: state => state.CURRENTUSER
     }),
+    currency_name() {
+      return this.CONFIG.site.currency_name.name;
+    },
     extra() {
       return this.user.extra || {};
     },
@@ -169,7 +173,7 @@ export default {
     }
   },
   mounted() {
-    refreshCurrentUserInfo();
+    // refreshCurrentUserInfo();
     this.$store.dispatch("GET_NEW_UNREAD_COUNT");
   },
   beforeRouteLeave(to, from, next) {

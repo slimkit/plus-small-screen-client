@@ -146,39 +146,13 @@ export default {
       signinByAccount({
         login: this.account,
         password: this.password
-      }).then(() => {
+      }).then(state => {
         this.loading = false;
+        state &&
+          this.$nextTick(() => {
+            this.$router.push(this.$route.query.redirect || "/feeds?type=hot");
+          });
       });
-
-      // this.$http
-      //   .post("/tokens", {
-      //     login: this.account,
-      //     password: this.password,
-      //     device_code: this.$store.state.BROWSER.OS,
-      //     validateStatus: s => s === 201
-      //   })
-      //   .then(({ data: { token, user } }) => {
-      //     token &&
-      //       (this.$store.commit("SAVE_CURRENTUSER", {
-      //         ...user,
-      //         token
-      //       }),
-      //       this.$store.commit("SAVE_USER", user),
-      //       this.$store.dispatch("GET_UNREAD_COUNT"),
-      //       this.$store.dispatch("GET_NEW_UNREAD_COUNT"),
-      //       this.$nextTick(() => {
-      //         this.$router.push(
-      //           this.$route.query.redirect || "/feeds?type=hot"
-      //         );
-      //         this.loading = false;
-      //       }));
-      //   })
-      //   .catch(err => {
-      //     console.log(err);
-      //     const { response: { data = { message: "登录失败" } } = {} } = err;
-      //     this.err = data;
-      //     this.loading = false;
-      //   });
     }
   }
 };
