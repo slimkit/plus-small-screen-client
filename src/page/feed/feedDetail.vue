@@ -472,7 +472,7 @@ export default {
   activated() {
     if (this.feedID) {
       this.feedID !== this.oldID
-        ? ((this.components = []),
+        ? ((this.comments = []),
           (this.feed = {}),
           (this.rewardList = []),
           this.fetchFeed())
