@@ -9,8 +9,7 @@ export default [
     component: news,
     meta: {
       title: "资讯",
-      keepAlive: true,
-      requiresAuth: true
+      keepAlive: true
     }
   },
   {
@@ -18,8 +17,7 @@ export default [
     component: newsDetail,
     meta: {
       title: "资讯详情",
-      keepAlive: true,
-      requiresAuth: true
+      keepAlive: true
     }
   },
   {
@@ -27,8 +25,7 @@ export default [
     component: newsSearch,
     meta: {
       title: "搜索",
-      keepAlive: true,
-      requiresAuth: true
+      keepAlive: true
     }
   }
 ];
