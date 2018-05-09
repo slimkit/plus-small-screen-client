@@ -16,7 +16,7 @@
         <div class="m-box m-aln-center m-justify-aro m-bt1 m-pr-extra-box">
           <router-link
           tag="div"
-          :to="`/user/${user.id}/followers`"
+          :to="`/users/${user.id}/followers`"
           class="m-box-model m-aln-center m-justify-center m-flex-grow1 m-pr-extra">
             <v-badge :count='new_followers'>
               <a>{{ ~~(extra.followers_count) | formatNum }}</a>
@@ -25,7 +25,7 @@
           </router-link>
           <router-link
           tag="div"
-          :to="`/user/${user.id}/followings`"
+          :to="`/users/${user.id}/followings`"
           class="m-box-model m-aln-center m-justify-center m-flex-grow1 m-pr-extra">
             <v-badge count='0'>
               <a>{{ ~~(extra.followings_count) | formatNum }}</a>
@@ -36,7 +36,7 @@
       </div>
       <div class="m-box-model m-pr-entrys">
         <ul class="m-box-model m-entry-group">
-          <router-link :to="`/user/${user.id}`" tag="li" class="m-entry">
+          <router-link :to="`/users/${user.id}`" tag="li" class="m-entry">
             <svg class='m-style-svg m-svg-def m-entry-prepend'>
               <use xlink:href="#profile-home"></use>
             </svg>
@@ -134,7 +134,9 @@
 <script>
 import { mapState } from "vuex";
 import { refreshCurrentUserInfo } from "@/api/user.js";
+import { resetUserCount } from "@/api/message.js";
 
+const typeMap = ["followers", "mutual"];
 export default {
   name: "profile",
   data() {
@@ -168,6 +170,15 @@ export default {
   },
   mounted() {
     refreshCurrentUserInfo();
+    this.$store.dispatch("GET_NEW_UNREAD_COUNT");
+  },
+  beforeRouteLeave(to, from, next) {
+    const { params: { type } } = to;
+
+    const resetType =
+      type === "followers" ? "following" : type === "mutual" ? "mutual" : "";
+    resetType && resetUserCount(resetType);
+    next();
   }
 };
 </script>

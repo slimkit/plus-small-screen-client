@@ -3,7 +3,7 @@
     <div :class="`${prefixCls}-item-top`">
       <avatar :user="user" />
       <section class="userInfo">
-        <router-link :class="`${prefixCls}-item-top-link`" :to="`/user/${like.user_id}`">{{ like.user.name }}</router-link>
+        <router-link :class="`${prefixCls}-item-top-link`" :to="`/users/${like.user_id}`">{{ like.user.name }}</router-link>
         <span>赞了你的产品</span>
         <p>{{ like.created_at | time2tips }}</p>
       </section>

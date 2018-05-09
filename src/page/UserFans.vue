@@ -7,10 +7,10 @@
         </svg>
       </div>
       <ul class="m-box m-flex-grow1 m-aln-center m-justify-center m-flex-base0 m-head-nav">
-        <router-link tag="li" :to="`/user/${userID}/followers`" active-class="active" exact replace>
+        <router-link tag="li" :to="`/users/${userID}/followers`" active-class="active" exact replace>
           <a>粉丝</a>
         </router-link>
-        <router-link tag="li" :to="`/user/${userID}/followings`" active-class="active" exact replace>
+        <router-link tag="li" :to="`/users/${userID}/followings`" active-class="active" exact replace>
           <a>关注</a>
         </router-link>
       </ul>

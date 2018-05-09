@@ -129,7 +129,7 @@ export default [
     }
   },
   {
-    path: "/user/:userID(\\d+)",
+    path: "/users/:userID(\\d+)",
     component: userHome,
     meta: {
       title: "个人主页",
@@ -139,7 +139,7 @@ export default [
   {
     name: "userfans",
     component: userFans,
-    path: "/user/:userID(\\d+)/:type(followers|followings)",
+    path: "/users/:userID(\\d+)/:type(followers|followings)",
     meta: {
       title: "粉丝",
       keepAlive: true,

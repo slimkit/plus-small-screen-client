@@ -16,7 +16,7 @@
     <div :class="`${prefixCls}-list`">
       <div :class="`${prefixCls}-list-item`" v-for="(user, index) in users" :key="user.id">
         <span :class="{ top: index < 3 }" class="rank">{{ index + 1 }}</span>
-        <div :class="`${prefixCls}-info`" @click="to(`/user/${user.id}`)">
+        <div :class="`${prefixCls}-info`" @click="to(`/users/${user.id}`)">
           <avatar :class="`${prefixCls}-user-avatar`" :user="user"></avatar>
           <div :class="`${prefixCls}-title`">
             <h6>{{ user.name }}</h6>

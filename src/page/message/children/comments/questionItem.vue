@@ -3,9 +3,9 @@
     <div :class="`${prefixCls}-item-top`">
       <avatar :user="user" />
       <section class="userInfo">
-        <router-link :class="`${prefixCls}-item-top-link`" :to="`/user/${comment.user_id}`">{{ comment.user.name }}</router-link>
+        <router-link :class="`${prefixCls}-item-top-link`" :to="`/users/${comment.user_id}`">{{ comment.user.name }}</router-link>
         <span v-if="comment.reply_user">回复</span><span v-else>评论了你的问题</span>
-        <router-link :class="`${prefixCls}-item-top-link`" v-if="comment.reply_user" :to="`/user/${comment.reply_user}`">{{ comment.reply.name }} </router-link>:
+        <router-link :class="`${prefixCls}-item-top-link`" v-if="comment.reply_user" :to="`/users/${comment.reply_user}`">{{ comment.reply.name }} </router-link>:
         <p>{{ comment.created_at | time2tips }}</p>
       </section>
     </div>

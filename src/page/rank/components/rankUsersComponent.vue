@@ -8,7 +8,7 @@
       </div>
     </div>
     <div :class="`${prefixCls}-label`">
-      <div @click="to(`/user/${user.id}`)" :class="`${prefixCls}-user`" v-for="user in getShow" :key="user.id">
+      <div @click="to(`/users/${user.id}`)" :class="`${prefixCls}-user`" v-for="user in getShow" :key="user.id">
         <avatar :class="`${prefixCls}-user-avatar`" :user="user" />
         <p class="ellipsis">{{ user.name }}</p>
       </div>

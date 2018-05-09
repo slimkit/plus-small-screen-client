@@ -37,7 +37,7 @@ export default {
   },
   methods: {
     toUserHome() {
-      this.link && this.$router.push(`/user/${this.user.id}`);
+      this.link && this.$router.push(`/users/${this.user.id}`);
     },
     followUser() {
       if (this.loading) return;

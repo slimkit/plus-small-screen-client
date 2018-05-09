@@ -16,7 +16,7 @@
         @click="handelClick">
           <template v-if="replyUser">
             <span class="m-art-comment-rep">
-              回复<router-link :to='`/user/${replyUser.id}`'>{{ replyUser.name }}</router-link>：
+              回复<router-link :to='`/users/${replyUser.id}`'>{{ replyUser.name }}</router-link>：
             </span>
           </template>
           {{ body }}
