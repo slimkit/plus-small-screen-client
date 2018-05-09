@@ -1,4 +1,5 @@
 import http from "@/http";
+import lstore from "@/plugins/lstore/lstore.js";
 import getMessageUnameTxt from "@/util/getMessageUnameTxt";
 export default {
   GET_NEW_UNREAD_COUNT({ rootState, commit }) {
@@ -21,7 +22,7 @@ export default {
    */
   GET_UNREAD_COUNT({ rootState, commit }) {
     // console.log(rootState);
-    if (!rootState.CURRENTUSER || !rootState.CURRENTUSER.token) return;
+    if (!rootState.CURRENTUSER || !lstore.hasData("H5_ACCESS_TOKEN")) return;
     let options = {};
     let cPlaceholder = "还没有人评论过你";
     let dPlaceholder = "还没有人赞过你";

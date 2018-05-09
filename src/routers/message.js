@@ -32,11 +32,16 @@ const chats = () =>
 const chatRoom = () =>
   import(/* webpackChunkName: 'message' */ "@/page/message/chat/chatRoom");
 
+const MessageIndex = () =>
+  import(/* webpackChunkName: 'message' */ "@/page/message2/index.vue");
+const info = () =>
+  import(/* webpackChunkName: 'message' */ "@/page/message2/info/index.vue");
+
 export default [
   {
     path: "/message",
-    component: MessageMain,
-    redirect: "/message/msg",
+    component: MessageIndex,
+    redirect: "/message/info",
     meta: {
       title: "消息",
       requiresAuth: true
@@ -45,6 +50,14 @@ export default [
       {
         path: "msg",
         component: msg,
+        meta: {
+          title: "消息",
+          requiresAuth: true
+        }
+      },
+      {
+        path: "info",
+        component: info,
         meta: {
           title: "消息",
           requiresAuth: true

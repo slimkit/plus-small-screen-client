@@ -24,7 +24,7 @@ const state = {
   GROUPTYPES: lstore.getData("GROUPTYPES") || [],
 
   /* 当前登录用户信息 */
-  CURRENTUSER: lstore.getData("CURRENTUSER") || {},
+  CURRENTUSER: lstore.getData("H5_CUR_USER") || {},
 
   /* 当前选择的标签 临时数据 */
   CUR_SELECTED_TAGS: [],
