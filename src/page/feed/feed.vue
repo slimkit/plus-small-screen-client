@@ -76,18 +76,18 @@ export default {
   },
   methods: {
     onRefresh(callback) {
-      getFeedsByType(this.feedType, 15).then(({ ad, pinneds, feeds }) => {
+      getFeedsByType(this.feedType, 15).then(({ ad, pinned, feeds }) => {
         this.ad = ad;
         this.feeds = feeds;
-        this.pinneds = pinneds;
+        this.pinned = pinned;
         callback(feeds.length < 15);
       });
     },
     onLoadMore(callback) {
       getFeedsByType(this.feedType, 15, this.maxId).then(
-        ({ ad, pinneds, feeds }) => {
+        ({ ad, pinned, feeds }) => {
           this.ad = ad;
-          this.pinneds = pinneds;
+          this.pinned = pinned;
           this.feeds = [...this.feeds, ...feeds];
           callback(feeds.length < 15);
         }
