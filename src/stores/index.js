@@ -8,7 +8,7 @@ import { detectOS } from "@/util/";
 import lstore from "@/plugins/lstore/";
 
 import modules from "./module/";
-import EASEMOB from "./easemob/index.js";
+// import EASEMOB from "./easemob/index.js";
 
 Vue.use(Vuex);
 
@@ -44,7 +44,7 @@ export default new Vuex.Store({
   getters,
   actions,
   mutations,
-  modules,
+  modules
   // modules: {
   //   ...modules,
   //   EASEMOB
