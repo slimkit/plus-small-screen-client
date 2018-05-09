@@ -85,11 +85,14 @@ export const time2txt = str => {
 };
 
 // 格林威治时间和本地时间之间的时差 (单位:毫秒)
-const timeOffset = new Date().getTimezoneOffset() * 60 * 1000;
+export const timeOffset = new Date().getTimezoneOffset() * 60 * 1000;
 
 export const dateFormat = timeago(null, "zh_CN");
 export const time2tips = date => {
-  return dateFormat.format(new Date(date.replace(/-/g, "/")) - timeOffset);
+  const time = new Date(
+    typeof date === "string" ? date.replace(/-/g, "/") : date
+  );
+  return dateFormat.format(time - timeOffset);
 };
 
 /**

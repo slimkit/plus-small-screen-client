@@ -10,9 +10,9 @@ import { plusMessageAnalyze } from "@/filters";
 let TOKEN;
 axios.interceptors.request.use(
   config => {
-    TOKEN = (localEvent.getData("CURRENTUSER") || {}).token;
+    TOKEN = localEvent.getData("H5_ACCESS_TOKEN");
     if (TOKEN) {
-      config.headers.Authorization = `Bearer ${TOKEN}`;
+      config.headers.Authorization = TOKEN;
     }
     return config;
   },
