@@ -152,7 +152,7 @@ export default {
       this.placeholder = "定位中...";
       getCurrentPosition().then(
         data => {
-          this.autoPos = data;
+          this.currentPos = data;
           this.loading = false;
         },
         err => {

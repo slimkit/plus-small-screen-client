@@ -61,6 +61,9 @@ export default {
         }
       );
     }
+  },
+  activated() {
+    this.$refs.loadmore.beforeRefresh();
   }
 };
 </script>
