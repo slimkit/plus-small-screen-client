@@ -255,10 +255,10 @@ export default {
           this.fetchFeedComments();
           this.fetchRewards();
           this.isWechat &&
-            wechatShare(shareUrl, {
+            wechatShare(window.location.href, {
               title: `${data.user.name}的动态`,
               desc: `${data.feed_content}`,
-              link: shareUrl,
+              link: window.location.href,
               imgUrl:
                 data.images.length > 0
                   ? `${this.$http.defaults.baseURL}/files/${

@@ -421,10 +421,10 @@ export default {
         process.env.VUE_APP_API_HOST +
         "/redirect?target=" +
         encodeURI(this.$route.path);
-      wechatShare(shareUrl, {
+      wechatShare(window.location.href, {
         title: this.user.name,
         desc: this.user.bio,
-        link: shareUrl,
+        link: window.location.href,
         imgUrl: this.user.avatar || ""
       });
     }
