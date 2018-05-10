@@ -417,10 +417,14 @@ export default {
 
     if (this.isWechat) {
       // 微信分享
-      wechatShare(window.location.href, {
+      const shareUrl =
+        process.env.VUE_APP_API_HOST +
+        "/redirect?target=" +
+        encodeURI(this.$route.path);
+      wechatShare(shareUrl, {
         title: this.user.name,
         desc: this.user.bio,
-        link: window.location.href,
+        link: shareUrl,
         imgUrl: this.user.avatar || ""
       });
     }
