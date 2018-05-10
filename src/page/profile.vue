@@ -134,9 +134,7 @@
 <script>
 import { mapState } from "vuex";
 import { resetUserCount } from "@/api/message.js";
-// import { refreshCurrentUserInfo } from "@/api/user.js";
-
-const typeMap = ["followers", "mutual"];
+import { refreshCurrentUserInfo } from "@/api/user.js";
 export default {
   name: "profile",
   data() {
@@ -173,12 +171,11 @@ export default {
     }
   },
   mounted() {
-    // refreshCurrentUserInfo();
+    refreshCurrentUserInfo();
     this.$store.dispatch("GET_NEW_UNREAD_COUNT");
   },
   beforeRouteLeave(to, from, next) {
     const { params: { type } } = to;
-
     const resetType =
       type === "followers" ? "following" : type === "mutual" ? "mutual" : "";
     resetType && resetUserCount(resetType);

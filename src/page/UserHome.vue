@@ -47,8 +47,8 @@
       </div>
       <div class="m-text-box m-urh-info">
         <p class="m-cf94" v-if="verified">认证：<span>{{ verified.description }}</span></p>
-        <p>地址：<span>{{ user.location }}</span></p>
-        <p>简介：<span>{{ user.bio }}</span></p>
+        <p v-if="user.location">地址：<span>{{ user.location }}</span></p>
+        <p v-if="user.bio">简介：<span>{{ user.bio }}</span></p>
         <p style="margin-top: 0; margin-left: -0.1rem">
           <i
           v-if="tag.id"
@@ -63,7 +63,7 @@
       @click="showFilter = !showFilter" 
       class="m-box m-aln-center m-justify-bet m-urh-filter-box" 
       >
-        <span>{{ feedsCount }}个动态</span>
+        <span>{{ feedsCount }}条动态</span>
         <div class="m-box m-aln-center m-urh-filter" v-if="isMine">
           <span>{{ feedTypes[screen] }}</span>
           <svg class="m-style-svg m-svg-def">
@@ -134,6 +134,8 @@ import bus from "@/bus.js";
 import FeedCard from "@/components/FeedCard/FeedCard.vue";
 import HeadRoom from "headroom.js";
 import wechatShare from "@/util/wechatShare.js";
+
+import { followUserByStatus, getUserInfoById } from "@/api/user.js";
 
 export default {
   name: "user-home",
@@ -286,8 +288,8 @@ export default {
     }
   },
   watch: {
-    screen() {
-      this.updateData();
+    screen(val) {
+      val && this.updateData();
     }
   },
   methods: {
@@ -299,37 +301,22 @@ export default {
       if (!status) return;
       if (this.fetchFollow) return false;
       this.fetchFollow = true;
-      this.$store
-        .dispatch("FOLLOW_USER", {
-          id: this.user.id,
-          status
-        })
-        .then(({ follower }) => {
-          this.fetchFollow = false;
-          this.user.follower = follower;
-        })
-        .catch(err => {
-          const { response: { data = { message: "操作失败" } } = {} } = err;
 
-          this.fetchFollow = false;
-          this.$Message.error(data);
-        });
+      followUserByStatus({
+        id: this.user.id,
+        status
+      }).then(() => {
+        this.fetchFollow = false;
+      });
     },
     hidenFilter() {
       this.showFilter = false;
     },
     fetchUserInfo() {
-      this.$http
-        .get(`/users/${this.userID}`)
-        .then(({ data = {} }) => {
-          this.user = Object.assign(this.user, data);
-          this.loading = false;
-        })
-        .catch(
-          ({ response: { data = { message: "获取用户数据失败" } } = {} }) => {
-            this.$Message.error(data);
-          }
-        );
+      getUserInfoById(this.userID, true).then(user => {
+        this.user = Object.assign(this.user, user);
+        this.loading = false;
+      });
     },
     fetchUserTags() {
       this.$http.get(`/users/${this.userID}/tags`).then(({ data = [] }) => {

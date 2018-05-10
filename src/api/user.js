@@ -109,10 +109,10 @@ export const findNearbyUser = ({ lng: longitude, lat: latitude }, page = 0) => {
  * @param  {Number} id
  * @return {Promise -> Object}
  */
-export const getUserInfoById = id => {
+export const getUserInfoById = (id, force = false) => {
   const user = userState[`user_${id}`];
   return new Promise(resolve => {
-    user
+    user && !force
       ? resolve(user)
       : api
           .get(`/users/${id}`, {

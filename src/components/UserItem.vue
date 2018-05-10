@@ -28,11 +28,16 @@ export default {
     };
   },
   computed: {
-    isFollow() {
-      const { follower = false, following = false } = this.user;
-      return follower && following
-        ? "eachFollow"
-        : follower ? "follow" : "unFollow";
+    isFollow: {
+      get() {
+        const { follower = false, following = false } = this.user;
+        return follower && following
+          ? "eachFollow"
+          : follower ? "follow" : "unFollow";
+      },
+      set(val) {
+        this.user.follower = val;
+      }
     }
   },
   methods: {
@@ -45,8 +50,7 @@ export default {
       followUserByStatus({
         id: this.user.id,
         status: this.isFollow
-      }).then(follower => {
-        this.user.follower = follower;
+      }).then(() => {
         this.loading = false;
       });
     }
