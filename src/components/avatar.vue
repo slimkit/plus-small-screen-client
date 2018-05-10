@@ -36,7 +36,7 @@ export default {
         : false;
     },
     path() {
-      return this.uid ? `/user/${this.uid}` : "javascript:;";
+      return this.uid ? `/users/${this.uid}` : "javascript:;";
     },
     styles() {
       const sex = ["secret", "man", "woman"];
