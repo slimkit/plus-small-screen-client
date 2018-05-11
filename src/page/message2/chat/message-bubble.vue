@@ -9,7 +9,6 @@
     </div>
   </div>
 </template>
-
 <script>
 import { mapState } from "vuex";
 export default {
@@ -23,13 +22,16 @@ export default {
   computed: {
     ...mapState(["CURRENTUSER"]),
     bySelef() {
-      return this.msg.bySelef;
+      return this.msg.bySelf;
+    },
+    source() {
+      return this.msg.source;
     },
     body() {
-      return this.msg.data;
+      return this.source.data;
     },
     user() {
-      return this.bySelef ? this.CURRENTUSER : this.msg.user;
+      return this.msg.info;
     }
   }
 };

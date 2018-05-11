@@ -50,7 +50,8 @@ export default {
       followUserByStatus({
         id: this.user.id,
         status: this.isFollow
-      }).then(() => {
+      }).then(follower => {
+        this.user.follower = follower;
         this.loading = false;
       });
     }

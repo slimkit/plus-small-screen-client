@@ -160,19 +160,16 @@ export function signinByAccount(params) {
         switch (status) {
           case 422:
             $Message.error(message);
-            break;
+            return false;
           case 200:
-            vuex.commit("SWITCH_LOGIN_STATUS", true);
             lstore.setData(
               "H5_ACCESS_TOKEN",
               `Bearer ${access_token}`
               // `${token_type} ${access_token}`
             );
             refreshCurrentUserInfo();
-            break;
+            return true;
         }
-
-        return true;
       },
       err => {
         console.log(err);

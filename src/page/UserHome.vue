@@ -119,12 +119,13 @@
         </svg>
         <span>{{ relation.text }}</span>
       </div>
-      <router-link tag="div" :to="`/chats/${user.id}`" class="m-flex-grow0 m-flex-shrink0 m-box m-aln-center m-justify-center">
+      <!-- `/chats/${user.id}` -->
+      <div @click="startSingleChat" class="m-flex-grow0 m-flex-shrink0 m-box m-aln-center m-justify-center">
         <svg class="m-style-svg m-svg-def">
           <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#message-comments"></use>
         </svg>
         <span>聊天</span>
-      </router-link>
+      </div>
     </footer>
   </div>
 </template>
@@ -135,6 +136,7 @@ import FeedCard from "@/components/FeedCard/FeedCard.vue";
 import HeadRoom from "headroom.js";
 import wechatShare from "@/util/wechatShare.js";
 
+import { startSingleChat } from "@/vendor/easemob";
 import { followUserByStatus, getUserInfoById } from "@/api/user.js";
 
 export default {
@@ -293,6 +295,14 @@ export default {
     }
   },
   methods: {
+    /**
+     * 发起单聊
+     */
+    startSingleChat() {
+      startSingleChat(this.user).then(res => {
+        this.$router.push(`/chats/${res}`);
+      });
+    },
     rewardUser() {
       // POST /user/:user/rewards
       bus.$emit("reward:user", this.user.id);

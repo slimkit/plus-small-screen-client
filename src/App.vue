@@ -80,7 +80,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["BOOTSTRAPPERS", "EASEMOB_OPEN"])
+    ...mapActions(["BOOTSTRAPPERS"])
   },
   computed: {
     ...mapState({
@@ -90,14 +90,6 @@ export default {
   },
   created() {
     this.BOOTSTRAPPERS();
-
-    if (
-      this.status === 0 &&
-      !WebIM.conn.isOpened() &&
-      !WebIM.conn.isOpening()
-    ) {
-      this.EASEMOB_OPEN(this.UID);
-    }
   }
 };
 </script>

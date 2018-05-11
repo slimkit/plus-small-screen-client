@@ -10,7 +10,7 @@
       <p class="m-text-cut">{{ latest.data }}</p>
     </div>
     <div class="m-box-model m-flex-grow0 m-flex-shrink0 m-justify-center chat-item-ext">
-      <span>{{ latest.time + timeOffset | time2tips }}</span>
+      <span>{{ time + timeOffset | time2tips }}</span>
       <div class="m-box m-aln-center m-justify-end chat-item-count-wrap">
         <span class="chat-item-count" v-show='count > 0'>
           <i>{{ count }}</i>
@@ -24,7 +24,6 @@ import { mapGetter } from "vuex";
 import { timeOffset } from "@/filters.js";
 import $Message from "@/plugins/message-box";
 
-import WebIMDB from "@/vendor/easemob/WebIMDB";
 export default {
   name: "chat-item",
   props: {
@@ -43,16 +42,19 @@ export default {
       return this.item.type;
     },
     info() {
-      return this.type === "chat" ? this.item.user : this.item.group;
+      return this.item.info;
     },
     name() {
-      return this.type === "chat" ? this.info.name : this.info.name;
+      return this.item.name;
     },
     avatar() {
-      return this.info[`${this.type === "chat" ? "avatar" : "group_face"}`];
+      return this.item.avatar;
+    },
+    time() {
+      return this.item.time;
     },
     latest() {
-      return this.item.latest;
+      return this.item.latest || { data: "" };
     },
     count() {
       return this.item.unreadCount || 0;
@@ -67,12 +69,12 @@ export default {
   },
   methods: {
     handelView() {
-      this.count > 0 &&
-        WebIMDB.readMessage(this.item.type, this.item.from).then(res => {
-          res > 0 && this.$store.dispatch("initChats");
-        });
+      // this.count > 0 &&
+      //   // WebIMDB.readMessage(this.item.type, this.item.from).then(res => {
+      //   //   res > 0 && this.$store.dispatch("initChats");
+      //   // });
       this.$nextTick(() => {
-        this.$router.push(`/chats/${this.item.from}`);
+        this.$router.push(`/chats/${this.item.id}`);
       });
     }
   }

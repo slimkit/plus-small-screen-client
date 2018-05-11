@@ -28,30 +28,33 @@
         action="#"
         class="m-box-model m-aln-center m-justify-center m-flex-grow1 m-flex-shrink1 m-main p-chat-input">      
         <textarea 
-          v-model='body'
+          v-model.trim='body'
           ref='textarea'
           @focus="onFocus"
           placeholder="随便说说~"
-          @keyup.enter.prevent="sendMessage"
+          @keyup.enter.stop.prevent="sendMessage"
           :style="{ height: `${scrollHeight}px` }"></textarea>
         <textarea 
           rows="1"
-          v-model='shadowText' class="shadow-input" ref='shadow'></textarea>
+          v-model.trim='shadowText' class="shadow-input" ref='shadow'></textarea>
       </form>
       <button 
       class="m-flex-grow0 m-flex-shrink0 p-chat-button"
       @click="sendMessage"
-      :disabled="disabled">发送</button>
+      :disabled="disabled || sending">
+        <svg class="m-style-svg m-svg-def" v-if="sending">
+          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-loading"></use>
+        </svg>
+        <span v-else>发送</span>
+      </button>
     </footer>
   </div>
 </template>
 <script>
-import { mapState, mapActions, mapGetters, mapMutations } from "vuex";
-
-import WebIM, { sendTextMessage } from "@/vendor/easemob/WebIM.js";
-import WebIMDB from "@/vendor/easemob/WebIMDB.js";
+import bus from "@/bus.js";
 
 import $Message from "@/plugins/message-box";
+import WebIM, { sendTextMessage } from "@/vendor/easemob";
 
 import bubble from "./message-bubble.vue";
 export default {
@@ -61,26 +64,22 @@ export default {
   },
   data() {
     return {
-      chat: {},
-      chatID: 0,
       body: "",
+      room: {},
+      messages: [],
       scrollHeight: 0,
-      paddingBottom: 0
+      sending: false
     };
   },
   computed: {
-    ...mapState({
-      status: state => state.EASEMOB.status,
-      messages: state => state.EASEMOB.currentChatRoomMessages
-    }),
-    type() {
-      return this.chat.type;
+    CURRENTUSER() {
+      return this.$store.state.CURRENTUSER;
     },
-    info() {
-      return (this.type === "chat" ? this.chat.user : this.chat.group) || {};
+    roomId() {
+      return this.$route.params.chatID;
     },
     name() {
-      return this.info.name || "";
+      return this.room.name;
     },
     shadowText() {
       return "圈" + this.body;
@@ -92,7 +91,7 @@ export default {
   watch: {
     body(val, old) {
       if (val !== old) {
-        this.$lstore.setData(`H5_CHAT_INPUT_${this.chat.from}`, val);
+        this.$lstore.setData(`H5_CHAT_INPUT_${this.roomId}`, val);
         this.$nextTick(() => {
           this.$refs.shadow &&
             (this.scrollHeight = this.$refs.shadow.scrollHeight);
@@ -108,15 +107,13 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["getCurrentChatMessages", "setCurrentChatRoom"]),
-    init(chat) {
-      this.chat = chat;
+    init() {
       this.$nextTick(() => {
         /**
          * 提取临时输入
          */
-        this.$lstore.hasData(`H5_CHAT_INPUT_${this.chat.from}`) &&
-          (this.body = this.$lstore.getData(`H5_CHAT_INPUT_${this.chat.from}`));
+        this.$lstore.hasData(`H5_CHAT_INPUT_${this.roomId}`) &&
+          (this.body = this.$lstore.getData(`H5_CHAT_INPUT_${this.roomId}`));
 
         /**
          * 设置输入框的高度
@@ -128,20 +125,30 @@ export default {
          * @type {[type]}
          */
         this.$el.style.height = window.innerHeight + "px";
-
-        /**
-         * 设置当前操作 聊天室
-         */
-        this.setCurrentChatRoom(chat);
       });
     },
-    bodyInput(e) {},
     sendMessage() {
-      if (this.disabled) return;
-      this.body.length > 0 &&
-        sendTextMessage(this.body, this.chatID, this.type).then(data => {
-          this.body = "";
-        });
+      if (WebIM.conn.isOpened()) {
+        console.log(1);
+        if (this.body.length > 0 && !this.sending) {
+          this.sending = true;
+          sendTextMessage({
+            to: this.roomId,
+            from: this.CURRENTUSER.id,
+            body: this.body,
+            type: this.room.type,
+            bySelf: 1,
+            user: this.CURRENTUSER,
+            info: this.CURRENTUSER
+          }).then(() => {
+            this.body = "";
+            this.sending = false;
+          });
+        }
+      } else {
+        $Message.error("与服务器断开连接, 请刷新重连");
+        this.sending = false;
+      }
     },
     onFocus() {
       /**
@@ -155,18 +162,23 @@ export default {
     }
   },
   mounted() {
-    const chatID = this.$route.params.chatID;
-    this.chatID = chatID;
-
-    WebIMDB.getChatById(chatID).then(chat => {
-      chat && chat.from === chatID
-        ? this.init(chat)
-        : ($Message.error("无效的会话列表"),
-          this.$router.push("/message/chats"));
-    });
+    this.init();
   },
-  destoryed() {
-    this.setCurrentChatRoom(null);
+  created() {
+    const room = this.$store.getters.getRoomById(this.roomId)[0];
+    if (room) {
+      this.room = room;
+      bus.$on("UpdateRoomMessages", () => {
+        room.messages().then(msgs => {
+          this.messages = msgs;
+        });
+      });
+      room.messages().then(msgs => {
+        this.messages = msgs;
+      });
+    } else {
+      $Message.error("错误的会话列表");
+    }
   }
 };
 </script>
