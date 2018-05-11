@@ -20,7 +20,7 @@
       ref='loadmore'
       >
         <ul>
-          <li v-if="feed.id" v-for="feed in pinned" :key="`pinned-feed-${feedType}-${feed.id}`">
+          <li v-if="feed.id" v-for="(feed, index) in pinned" :key="`pinned-feed-${feedType}-${feed.id}-${index}`">
             <feed-card :feed="feed" :pinned="true" />
           </li>
           <li v-if="feed.id" v-for="feed in feeds" :key="`feed-${feedType}-${feed.id}`">
