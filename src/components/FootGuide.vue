@@ -17,8 +17,8 @@
         <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#foot-plus"></use>
       </svg>
     </section>
-    <section @click="to('/message/msg')" class="guide_item" :class="{active: isCurPath('/message')}">
-      <v-badge :dot='has_msg'>
+    <section @click="to('/message/info')" class="guide_item" :class="{active: isCurPath('/message')}">
+      <v-badge :dot='hasMsg'>
         <svg class="m-style-svg m-svg-def foot_guide_icon">
           <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#foot-message"></use>
         </svg>
@@ -36,7 +36,7 @@
   </footer>
 </template>
 <script>
-import { mapState } from "vuex";
+import { mapState, mapGetters } from "vuex";
 import bus from "@/bus.js";
 export default {
   name: "FootGuide",
@@ -61,7 +61,11 @@ export default {
         state.MESSAGE.NEW_UNREAD_COUNT.following +
           state.MESSAGE.NEW_UNREAD_COUNT.mutual >
         0
-    })
+    }),
+    ...mapGetters(["hasUnreadChat"]),
+    hasMsg() {
+      return this.has_msg || this.hasUnreadChat > 0;
+    }
   },
   methods: {
     to(path) {

@@ -168,9 +168,7 @@ export function signinByAccount(params) {
               `Bearer ${access_token}`
               // `${token_type} ${access_token}`
             );
-            refreshCurrentUserInfo().then(user => {
-              vuex.dispatch("EASEMOB_OPEN", user.id);
-            });
+            refreshCurrentUserInfo();
             break;
         }
 

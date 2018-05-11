@@ -8,7 +8,7 @@
           </v-badge>
         </router-link>
         <router-link tag="li" to="/message/chats" replace exact active-class="active">
-          <v-badge :dot='unread_chat'>
+          <v-badge :dot='hasUnreadChat > 0'>
             <a>聊天</a>
           </v-badge>
         </router-link>
@@ -22,13 +22,11 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapGetters } from "vuex";
 export default {
   name: "message-index",
   data() {
-    return {
-      unread_chat: true
-    };
+    return {};
   },
   computed: {
     ...mapState({
@@ -43,7 +41,8 @@ export default {
           state.MESSAGE.NEW_UNREAD_COUNT["post-pinned"] +
           state.MESSAGE.NEW_UNREAD_COUNT.system >
         0
-    })
+    }),
+    ...mapGetters(["hasUnreadChat"])
   },
 
   created() {
@@ -55,6 +54,10 @@ export default {
 
 <style lang="less">
 .p-message {
+  min-height: 100vh;
+  main {
+    height: calc(~"100vh - 90px - 100px");
+  }
   .m-entry-group {
     padding: 0 20px;
     .m-entry {

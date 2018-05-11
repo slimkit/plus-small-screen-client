@@ -9,17 +9,14 @@
         <div class="m-box-model m-flex-grow1 m-aln-center m-flex-base0 m-head-top-title">
             <span>收到的评论</span>
         </div>
-        <div class="m-box m-flex-grow1 m-aln-center m-flex-base0 m-justify-end">
-
-        </div>
+        <div class="m-box m-flex-grow1 m-aln-center m-flex-base0 m-justify-end"></div>
     </header>
     <div :class="`${prefixCls}-container`" style="padding-top: 0.9rem">
       <load-more
         :onRefresh='onRefresh'
         :onLoadMore='onLoadMore'
         ref='loadmore'
-        :class="`${prefixCls}-loadmore`"
-      >
+        :class="`${prefixCls}-loadmore`">
         <div :class="`${prefixCls}-item`" v-for="comment in comments" :key="`comment-key-${comment.id}`"><component :is="items[comment.commentable_type]" :comment="comment"></component></div>
       </load-more>
     </div>
