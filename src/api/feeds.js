@@ -12,7 +12,12 @@ import api, { get, limit } from "./api.js";
 export function getFeedsByType(type, limit = 15, after) {
   const res = { ad: [], feeds: [], pinned: [] };
   const baseUrl = `/feeds?type=${type}&limit=${limit}`;
-  const url = after > 0 ? baseUrl + `&after=${after}` : baseUrl;
+  const url =
+    after > 0
+      ? type === "hot"
+        ? baseUrl + `&offset=${after}`
+        : baseUrl + `&after=${after}`
+      : baseUrl;
   return api.get(url).then(
     ({ data = res }) => {
       return data;
