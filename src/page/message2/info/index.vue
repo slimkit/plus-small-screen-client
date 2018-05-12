@@ -1,10 +1,10 @@
 <template>
     <ul class="m-box-model m-entry-group">
       <router-link v-for="item in system" tag='li' class="m-entry" :key="item.url" :to='item.url'>
-        <svg class="m-style-svg m-svg-big m-entry-prepend">
+        <svg class="m-style-svg m-svg-big m-entry-prepend m-flex-grow0 m-flex-shrink0">
           <use xmlns:xlink="http://www.w3.org/1999/xlink" :xlink:href="`#${item.icon}`"></use>
         </svg>
-        <div class="m-box-model m-justify-bet m-flex-grow1 m-flex-shrink1 m-entry-main">
+        <div class="m-box-model m-justify-bet m-flex-grow1 m-flex-shrink1 m-flex-base0 m-entry-main">
           <h2 class="m-text-cut">{{ item.title }}</h2>
           <p class="m-text-cut">{{ computedGetter(item.placeholder) }}</p>
         </div>
