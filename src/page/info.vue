@@ -87,21 +87,24 @@
       </section>
       <section class="m-box m-aln-stre m-justify-bet p-info-row">
         <label for="bio" class="m-flex-grow0 m-flex-shrink0">简介</label>
-        <div class="m-box m-aln-center m-justify-bet m-flex-grow1 m-flex-shrink1 input" @click="editBio">
-          <span v-if="bio.length === 0 && !bioIsFoucs" class="placeholder">编辑简介</span>
-          <div v-else class="m-box-model m-fd-row m-flex-grow1 m-flex-shrink1 m-aln-end m-justify-end m-wz-def">
+        <div class="m-box m-aln-center m-justify-bet m-flex-grow1 m-flex-shrink1 input">
+          <span 
+            v-if="bio.length === 0 && !bioIsFoucs"
+            class="placeholder m-flex-grow1"
+             @click="editBio">编辑简介</span>
+          <div 
+            v-show="bio.length > 0 || bioIsFoucs" 
+            class="m-box-model m-fd-row m-flex-grow1 m-flex-shrink1 m-aln-end m-justify-end m-wz-def">
             <div
               ref="bioEditor"
-              contenteditable="plaintext-only"
-              class="m-flex-grow1 m-shrink-1 m-flex-base0 m-textarea" 
+              contenteditable="true"
               @input="bioInput"
               @foucs="bioFoucs"
               @blur="bioBlur"
-              maxLangth="50"
-              ></div>
-              <i
-              style="font-size: 10px; margin-right: 0.2rem"
-              ><b :style="{color: bio.length > 50 ? `#f4504d`: `inherit`}">{{ bio.length }}</b>/50</i>
+              class="m-flex-grow1 m-shrink-1 m-flex-base0 m-textarea"></div>
+              <i style="font-size: 10px; margin-right: 0.2rem">
+                <b :style="{color: bio.length > 50 ? `#f4504d`: `inherit`}">{{ bio.length }}</b>/50
+              </i>
             </div>
         </div>
       </section>
@@ -117,6 +120,9 @@ import location from "@/page/location.vue";
 // import { getFileUrl } from "@/util/";
 import getFirstFrameOfGif from "@/util/getFirstFrameOfGif.js";
 
+/**
+ * Canvas toBlob
+ */
 if (!HTMLCanvasElement.prototype.toBlob) {
   Object.defineProperty(HTMLCanvasElement.prototype, "toBlob", {
     value: function(callback, type, quality) {
@@ -166,9 +172,9 @@ export default {
             : key
       );
     },
-    bioShadow() {
-      return "blank" + this.bio;
-    },
+    // bioShadow() {
+    //   return "blank" + this.bio;
+    // },
     avatarStyles() {
       const sex = ["secret", "man", "woman"];
       return ["m-avatar-box-def", `m-avatar-box-${sex[this.sex]}`];
@@ -179,18 +185,8 @@ export default {
     }
   },
   watch: {
-    bio(val, oval) {
-      if (val !== oval) {
-        this.$nextTick(() => {
-          this.$refs.bioEditor.textContent = this.bio;
-        });
-      }
-    },
     bioIsFoucs(val) {
-      val &&
-        this.$nextTick(() => {
-          this.$refs.bioEditor.focus();
-        });
+      val && this.$refs.bioEditor.click() && this.$refs.bioEditor.focus();
     }
   },
   methods: {
@@ -199,14 +195,12 @@ export default {
     },
     bioFoucs() {},
     bioBlur() {
+      this.$refs.bioEditor.textContent = this.bio;
       this.bioIsFoucs = false;
     },
     bioInput(e) {
       const $el = e.target;
       const value = $el.textContent;
-      // value.length >= 50 &&
-      //   (($el.textContent = value.substr(0, 50)), this.$refs.bioEditor.blur());
-      // this.bio = value.substr(0, 50);
       this.bio = value;
     },
     beforeSelectFile() {
@@ -252,6 +246,11 @@ export default {
       this.change = false;
       this.loading = true;
       // PATCH /user
+      if (this.bio.length === 0) {
+        this.$Message.error("简介不能为空");
+        this.loading = false;
+        return false;
+      }
       if (this.bio.length > 50) {
         this.$Message.error("简介不能超过50字");
         this.loading = false;
@@ -272,6 +271,7 @@ export default {
             "SAVE_CURRENTUSER",
             Object.assign(this.CURRENTUSER, param)
           );
+          this.goBack();
           this.loading = false;
         })
         .catch(err => {
@@ -326,6 +326,9 @@ export default {
       ];
       bus.$emit("actionSheet", options, "取消");
     }
+  },
+  mounted() {
+    this.$refs.bioEditor.textContent = this.bio;
   },
   created() {
     const {
