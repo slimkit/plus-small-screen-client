@@ -8,6 +8,7 @@
       </div>
       <div class="m-box m-aln-center m-flex-grow2 m-flex-shrink2 m-flex-base0 m-justify-center m-head-top-title">
         <span class="m-text-cut">{{ name }}</span>
+        <span>{{ count }}</span>
       </div>
       <div class="m-box m-aln-center m-flex-grow1 m-flex-shrink1 m-flex-base0"></div>
     </header>
@@ -80,6 +81,14 @@ export default {
     },
     name() {
       return this.room.name;
+    },
+    count() {
+      const {
+        info: { affiliations_count: count } = {
+          info: { affiliations_count: 0 }
+        }
+      } = this.room;
+      return count > 0 ? `(${count})` : "";
     },
     shadowText() {
       return "圈" + this.body;

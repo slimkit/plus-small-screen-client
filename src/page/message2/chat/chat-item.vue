@@ -6,7 +6,12 @@
       <img v-if="avatar" :src="avatar">
     </div>
     <div class="m-box-model m-flex-grow1 m-flex-shrink1 chat-item-main">
-      <h2 class="m-text-cut">{{ name }}</h2>
+      <h2 class="m-text-cut">
+        <span 
+        class="m-text-cut"
+        style="display: inline-block; max-width: 70%;vertical-align: middle;">{{ name }}</span>
+        <span>{{ count }}</span>
+      </h2>
       <p class="m-text-cut">{{ latest.data }}</p>
     </div>
     <div class="m-box-model m-flex-grow0 m-flex-shrink0 m-justify-center chat-item-ext">
@@ -63,6 +68,10 @@ export default {
         : this.type === "chat"
           ? `m-avatar-box-${this.info.sex}`
           : `m-avatar-box-group`;
+    },
+    count() {
+      const { affiliations_count: count } = this.info;
+      return count > 0 ? `(${count})` : "";
     }
   },
   methods: {
