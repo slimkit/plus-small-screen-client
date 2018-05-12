@@ -20,9 +20,7 @@
   </section>
 </template>
 <script>
-import { mapGetter } from "vuex";
 import { timeOffset } from "@/filters.js";
-import $Message from "@/plugins/message-box";
 
 export default {
   name: "chat-item",

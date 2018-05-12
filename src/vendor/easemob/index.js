@@ -66,7 +66,7 @@ export function startSingleChat(option) {
       });
 
       AppDB.addChatRoom(room).then(res => {
-        vuex.dispatch("initChatRooms").then(rooms => {
+        vuex.dispatch("initChatRooms").then(() => {
           resolve(res);
         });
       });
@@ -87,7 +87,7 @@ export async function generateMessage(message) {
     ...message,
     bySelf: bySelf,
     isUnread: !bySelf,
-    time: message.delay ? +new Date(message.delay) : +new Date(),
+    time: delay ? +new Date(delay) : +new Date(),
     info,
     user
   };
@@ -109,19 +109,19 @@ export async function generateMessage(message) {
 }
 
 export function getGroupInfo(gid) {
-  return new Promise((resolve, reject) => {
+  return new Promise(resolve => {
     Api.get(`/easemob/group?im_group_id=${gid}`)
       .then(({ data: [group] = [{}] }) => {
         resolve(group);
       })
       .catch(err => {
-        console.log("获取群组信息失败");
+        console.log("获取群组信息失败", err);
         resolve({});
       });
   });
 }
 
-export function sendTextMessage({ to, from, body, bySelf, type, user, info }) {
+export function sendTextMessage({ to, from, body, type }) {
   return new Promise((resolve, reject) => {
     /**
      * 生成 消息 ID
@@ -146,18 +146,18 @@ export function sendTextMessage({ to, from, body, bySelf, type, user, info }) {
           from,
           source: { data: body }
         };
-        generateMessage(mess).then(({ msg: $message, room }) => {
+        generateMessage(mess).then(({ msg: $message }) => {
           /**
            * 存 $_MESSAGES
            */
-          AppDB.addMessage($message).then(res => {
+          AppDB.addMessage($message).then(() => {
             AppDB.upDateChatRoom(
               { id: to },
               {
                 latest: $message.source,
                 unreadCount: 0
               }
-            ).then(res => {
+            ).then(() => {
               vuex.dispatch("initChatRooms");
               bus.$emit("UpdateRoomMessages");
               resolve(true);

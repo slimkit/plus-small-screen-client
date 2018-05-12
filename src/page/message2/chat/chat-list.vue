@@ -34,7 +34,7 @@ export default {
     startSingleChat,
     ...mapActions(["initChatRooms"]),
     onRefresh(callback) {
-      this.initChatRooms().then(data => {
+      this.initChatRooms().then(() => {
         setTimeout(() => {
           callback(false);
         }, 1e3);

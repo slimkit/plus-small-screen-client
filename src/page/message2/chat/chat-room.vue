@@ -98,7 +98,7 @@ export default {
         });
       }
     },
-    messages(val) {
+    messages() {
       this.$nextTick(() => {
         const scrollTop =
           this.$refs.main.scrollHeight - this.$refs.main.offsetHeight;

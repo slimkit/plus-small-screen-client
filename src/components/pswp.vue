@@ -67,7 +67,7 @@ export default {
   },
   methods: {
     payForImg(currItem) {
-      const { paid_node, amount, index, type } = currItem;
+      const { paid_node, amount, index } = currItem;
       bus.$emit("payfor", {
         onSuccess: data => {
           this.$Message.success(data);
