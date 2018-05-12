@@ -106,7 +106,7 @@ export default {
             this.$store.commit("SAVE_USER", user);
             this.$store.dispatch("GET_UNREAD_COUNT");
             this.$store.dispatch("GET_NEW_UNREAD_COUNT");
-            this.$lstore.setData("H5_ACCESS_TOKEN", `Bearer ${access_token}`);
+            this.$lstore.setData("H5_ACCESS_TOKEN", `Bearer ${token}`);
             this.$store.commit("SAVE_CURRENTUSER", user);
           });
         })
