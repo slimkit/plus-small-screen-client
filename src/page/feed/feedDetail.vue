@@ -270,7 +270,7 @@ export default {
             });
         })
         .catch(() => {
-          this.$router.back();
+          this.goBack();
         });
     },
     fetchFeedComments(after = 0) {

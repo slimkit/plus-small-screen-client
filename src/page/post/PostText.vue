@@ -40,14 +40,14 @@
        :style="{visibility: pinned ? '' : 'hidden'}">
          <div class="m-pinned-amount-btns">
             <p class="m-pinned-amount-label">设置文字收费金额</p>
-            <div class="m-box m-aln-center ">              
+            <div class="m-box m-aln-center" v-if="items.length > 0">              
               <button 
                 :key="item"
                 v-for="item in items"
                 class="m-pinned-amount-btn"
                 :style="{ width: `${1 / items.length * 100}%` }"
                 :class="{ active: ~~amount === ~~item }"
-                @click="chooseDefaultAmount(item)">{{ ~~item.toFixed(2) }}</button>
+                @click="chooseDefaultAmount(item)">{{ (~~item).toFixed(2) }}</button>
             </div>
          </div>
          <div class="m-box m-aln-center m-justify-bet m-bb1 m-bt1 m-pinned-row plr20 m-pinned-amount-customize">
@@ -132,6 +132,7 @@ export default {
     },
     successCallback() {
       this.$refs.contentText.clean();
+      this.$router.push("/feeds?type=new");
     },
     postText() {
       if (this.loading) return;
@@ -153,7 +154,6 @@ export default {
         .then(({ data }) => {
           this.$Message.success(data);
           this.successCallback();
-          this.goBack();
           this.loading = false;
         })
         .catch(error => {

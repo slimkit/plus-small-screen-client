@@ -19,7 +19,7 @@
       @onLoadMore='onLoadMore'
       ref='loadmore'
       >
-        <ul>
+        <ul class="p-feed-list">
           <li v-if="feed.id" v-for="(feed, index) in pinned" :key="`pinned-feed-${feedType}-${feed.id}-${index}`">
             <feed-card :feed="feed" :pinned="true" />
           </li>
@@ -104,7 +104,7 @@ export default {
       top: 90px;
     }
   }
-  .p-feed-main li + li {
+  .p-feed-list > li + li {
     margin-top: 10px;
   }
 }
