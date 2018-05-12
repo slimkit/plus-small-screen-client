@@ -243,9 +243,9 @@ export default {
       if (this.fetching) return;
       this.fetching = true;
       const shareUrl =
-        process.env.VUE_APP_API_HOST +
-        "/redirect?target=" +
-        encodeURI(this.$route.path);
+        window.location.origin +
+        process.env.BASE_URL.substr(0, process.env.BASE_URL.length - 1) +
+        this.$route.fullPath;
       this.$http
         .get(`/feeds/${this.feedID}`)
         .then(({ data = {} }) => {
@@ -255,10 +255,10 @@ export default {
           this.fetchFeedComments();
           this.fetchRewards();
           this.isWechat &&
-            wechatShare(window.location.href, {
+            wechatShare(shareUrl, {
               title: `${data.user.name}的动态`,
               desc: `${data.feed_content}`,
-              link: window.location.href,
+              link: shareUrl,
               imgUrl:
                 data.images.length > 0
                   ? `${this.$http.defaults.baseURL}/files/${
