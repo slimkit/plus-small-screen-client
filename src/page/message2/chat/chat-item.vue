@@ -10,7 +10,7 @@
         <span 
         class="m-text-cut"
         style="display: inline-block; max-width: 70%;vertical-align: middle;">{{ name }}</span>
-        <span>{{ count }}</span>
+        <span>{{ userCount }}</span>
       </h2>
       <p class="m-text-cut">{{ latest.data }}</p>
     </div>
@@ -69,7 +69,7 @@ export default {
           ? `m-avatar-box-${this.info.sex}`
           : `m-avatar-box-group`;
     },
-    count() {
+    userCount() {
       const { affiliations_count: count } = this.info;
       return count > 0 ? `(${count})` : "";
     }

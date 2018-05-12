@@ -1,4 +1,5 @@
 import bus from "@/bus.js";
+import vuex from "@/stores";
 import WebIM from "./WebIM.js";
 import AppDB from "./AppDB.js";
 import lstore from "@/plugins/lstore";
@@ -10,7 +11,7 @@ WebIM.conn.listen({
    * 监听连接事件
    * @author jsonleex <jsonlseex@163.com>
    */
-  onOpened(msg) {
+  onOpened(/* msg */) {
     console.log("聊天服务连接成功" /*, msg*/);
     try {
       /************** 连接成功后 **************/
@@ -44,8 +45,8 @@ WebIM.conn.listen({
       /**
        * 存 $_MESSAGES
        */
-      AppDB.addMessage(msg).then(res => {
-        AppDB.addChatRoom(room).then(res => {
+      AppDB.addMessage(msg).then(() => {
+        AppDB.addChatRoom(room).then(() => {
           vuex.dispatch("initChatRooms");
           bus.$emit("UpdateRoomMessages");
         });

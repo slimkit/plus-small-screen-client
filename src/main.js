@@ -52,7 +52,6 @@ if (!window.initUrl) {
 //   Vue.directive(k, directives[k]);
 // }
 
-window.vuex = store;
 /* eslint-disable no-new */
 new Vue({
   store,
