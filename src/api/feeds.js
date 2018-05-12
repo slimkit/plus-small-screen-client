@@ -1,5 +1,5 @@
 import api, { get, limit } from "./api.js";
-
+import router from "@/routers";
 /**
  * 获取 首页动态列表
  * @author jsonleex <jsonlseex@163.com>
@@ -23,7 +23,12 @@ export function getFeedsByType(type, limit = 15, after) {
       return data;
     },
     err => {
-      console.log(err);
+      if (err.response.status === 401) {
+        router.push({
+          path: "/signin",
+          query: { redirect: router.currentRoute.fullPath }
+        });
+      }
       return res;
     }
   );
