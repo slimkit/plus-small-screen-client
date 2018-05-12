@@ -48,7 +48,7 @@
       <div class="m-text-box m-urh-info">
         <p class="m-cf94" v-if="verified">认证：<span>{{ verified.description }}</span></p>
         <p v-if="user.location">地址：<span>{{ user.location }}</span></p>
-        <p v-if="user.bio">简介：<span>{{ user.bio }}</span></p>
+        <p>简介：<span>{{ bio }}</span></p>
         <p style="margin-top: 0; margin-left: -0.1rem">
           <i
           v-if="tag.id"
@@ -224,6 +224,9 @@ export default {
         this.$store.commit("SAVE_USER", Object.assign(this.user, val));
       }
     },
+    bio() {
+      return this.user.bio || "这家伙很懒,什么也没留下";
+    },
     extra() {
       return this.user.extra || {};
     },
@@ -265,28 +268,36 @@ export default {
       const len = this.feeds.length;
       return len > 0 ? this.feeds[len - 1].id : "";
     },
-    relation() {
-      const relations = {
-        unFollow: {
-          text: "关注",
-          status: "unFollow",
-          icon: `#base-unFollow`
-        },
-        follow: {
-          text: "已关注",
-          status: "follow",
-          icon: `#base-follow`
-        },
-        eachFollow: {
-          text: "互相关注",
-          status: "eachFollow",
-          icon: `#base-eachFollow`
-        }
-      };
-      const { follower, following } = this.user;
-      return relations[
-        follower && following ? "eachFollow" : follower ? "follow" : "unFollow"
-      ];
+    relation: {
+      get() {
+        const relations = {
+          unFollow: {
+            text: "关注",
+            status: "unFollow",
+            icon: `#base-unFollow`
+          },
+          follow: {
+            text: "已关注",
+            status: "follow",
+            icon: `#base-follow`
+          },
+          eachFollow: {
+            text: "互相关注",
+            status: "eachFollow",
+            icon: `#base-eachFollow`
+          }
+        };
+        const { follower, following } = this.user;
+        return relations[
+          follower && following
+            ? "eachFollow"
+            : follower ? "follow" : "unFollow"
+        ];
+      },
+
+      set(val) {
+        this.user.follower = val;
+      }
     }
   },
   watch: {
@@ -310,14 +321,14 @@ export default {
       bus.$emit("reward:user", this.user.id);
     },
     followUserByStatus(status) {
-      if (!status) return;
-      if (this.fetchFollow) return false;
+      if (!status || this.fetchFollow) return;
       this.fetchFollow = true;
 
       followUserByStatus({
         id: this.user.id,
         status
-      }).then(() => {
+      }).then(follower => {
+        this.relation = follower;
         this.fetchFollow = false;
       });
     },
@@ -391,12 +402,6 @@ export default {
     stopDrag() {
       this.dragging = false;
       this.dY > 300 && this.scrollTop <= 0 ? this.updateData() : (this.dY = 0);
-    },
-    shareSuccess() {
-      this.$Message.success("分享成功");
-    },
-    shareCancel() {
-      this.$Message.success("取消分享");
     }
   },
   mounted() {
