@@ -66,8 +66,9 @@ export function startSingleChat(option) {
       });
 
       AppDB.addChatRoom(room).then(res => {
-        vuex.dispatch("initChatRooms");
-        resolve(res);
+        vuex.dispatch("initChatRooms").then(rooms => {
+          resolve(res);
+        });
       });
     } else {
       reject("当前用户不存在或已删除");

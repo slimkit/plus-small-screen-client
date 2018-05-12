@@ -21,6 +21,8 @@ import store from "./stores/";
 import router from "./routers/";
 import App from "./App";
 
+import * as WebIM from "@/vendor/easemob";
+
 Vue.mixin(mixin);
 
 components.forEach(component => {
@@ -48,9 +50,13 @@ for (const k in filters) {
 //   Vue.directive(k, directives[k]);
 // }
 
+window.vuex = store;
 /* eslint-disable no-new */
 new Vue({
   store,
   router,
-  render: h => h(App)
+  render: h => h(App),
+  created() {
+    WebIM.openWebIM();
+  }
 }).$mount("#app");

@@ -163,22 +163,22 @@ export default {
   },
   mounted() {
     this.init();
-  },
-  created() {
-    const room = this.$store.getters.getRoomById(this.roomId)[0];
-    if (room) {
-      this.room = room;
-      bus.$on("UpdateRoomMessages", () => {
+    this.$nextTick(() => {
+      const room = this.$store.getters.getRoomById(this.roomId)[0];
+      if (room) {
+        this.room = room;
+        bus.$on("UpdateRoomMessages", () => {
+          room.messages().then(msgs => {
+            this.messages = msgs;
+          });
+        });
         room.messages().then(msgs => {
           this.messages = msgs;
         });
-      });
-      room.messages().then(msgs => {
-        this.messages = msgs;
-      });
-    } else {
-      $Message.error("错误的会话列表");
-    }
+      } else {
+        $Message.error("错误的会话列表");
+      }
+    });
   }
 };
 </script>

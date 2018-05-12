@@ -300,7 +300,9 @@ export default {
      */
     startSingleChat() {
       startSingleChat(this.user).then(res => {
-        this.$router.push(`/chats/${res}`);
+        this.$nextTick(() => {
+          this.$router.push(`/chats/${res}`);
+        });
       });
     },
     rewardUser() {
