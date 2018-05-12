@@ -31,6 +31,7 @@
        <v-switch
        class="m-box m-bt1 m-bb1 m-lim-width m-pinned-row"
        type="checkbox"
+       v-if="paycontrol"
        v-model="pinned">
          <slot>是否收费</slot>
        </v-switch>
@@ -90,6 +91,9 @@ export default {
           .name || "积分"
       );
     },
+    paycontrol() {
+      return this.$store.state.CONFIG.feed.paycontrol;
+    },
     disabled() {
       return !(this.compose.length > 0);
     },
@@ -102,7 +106,7 @@ export default {
   },
   watch: {
     customAmount(val) {
-      this.amount = ~~val;
+      if (val) this.amount = ~~val;
     }
   },
   methods: {
@@ -110,7 +114,8 @@ export default {
       this.$refs.contentText.areaFocus();
     },
     chooseDefaultAmount(amount) {
-      this.customAmount && (this.customAmount = null);
+      console.log(amount);
+      this.customAmount = null;
       this.amount = amount;
     },
     beforePost() {
@@ -138,7 +143,8 @@ export default {
             feed_content: this.compose,
             feed_from: 2,
             feed_mark:
-              new Date().valueOf() + "" + this.$store.state.CURRENTUSER.id
+              new Date().valueOf() + "" + this.$store.state.CURRENTUSER.id,
+            amount: this.amount
           },
           {
             validateStatus: s => s === 201
