@@ -1,6 +1,8 @@
 <template>
   <div class="message-item">
-    <div class="room-tips" v-if="user.id === 0">{{ body }}</div>
+    <div class="room-tips" v-if="user.id === 0">
+      <span>{{ body }}</span>
+    </div>
     <div v-else class="m-box m-aln-st msg-bubble" :class="{selef: bySelef}">
       <avatar :user="user"></avatar>
       <section class="m-box-model m-aln-st msg-bubble-main">
@@ -75,11 +77,15 @@ export default {
 .room-tips {
   margin-left: 96px;
   margin-right: 96px;
-  padding: 5px 10px;
-  color: #fff;
-  font-size: 20px;
-  line-height: 1.5;
-  border-radius: 20px;
-  background-color: #d9d9d9;
+  text-align: center;
+  span {
+    display: inline-block;
+    padding: 5px 15px;
+    color: #fff;
+    font-size: 20px;
+    line-height: 1.5;
+    border-radius: 20px;
+    background-color: #d9d9d9;
+  }
 }
 </style>
