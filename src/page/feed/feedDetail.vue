@@ -246,6 +246,8 @@ export default {
         window.location.origin +
         process.env.BASE_URL.substr(0, process.env.BASE_URL.length - 1) +
         this.$route.fullPath;
+      const signUrl =
+        this.$store.state.BROWSER.OS === "IOS" ? window.initUrl : shareUrl;
       this.$http
         .get(`/feeds/${this.feedID}`)
         .then(({ data = {} }) => {
@@ -255,7 +257,7 @@ export default {
           this.fetchFeedComments();
           this.fetchRewards();
           this.isWechat &&
-            wechatShare(shareUrl, {
+            wechatShare(signUrl, {
               title: `${data.user.name}的动态`,
               desc: `${data.feed_content}`,
               link: shareUrl,

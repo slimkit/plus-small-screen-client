@@ -45,7 +45,9 @@ Vue.use(lstore);
 for (const k in filters) {
   Vue.filter(k, filters[k]);
 }
-
+if (!window.initUrl) {
+  window.initUrl = window.location.href;
+}
 // for (const k in directives) {
 //   Vue.directive(k, directives[k]);
 // }

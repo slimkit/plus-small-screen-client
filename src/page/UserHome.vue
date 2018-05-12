@@ -435,13 +435,15 @@ export default {
     if (this.isWechat) {
       // 微信分享
       const shareUrl =
-        process.env.VUE_APP_API_HOST +
-        "/redirect?target=" +
-        encodeURI(this.$route.path);
-      wechatShare(window.location.href, {
+        window.location.origin +
+        process.env.BASE_URL.substr(0, process.env.BASE_URL.length - 1) +
+        this.$route.fullPath;
+      const signUrl =
+        this.$store.state.BROWSER.OS === "IOS" ? window.initUrl : shareUrl;
+      wechatShare(signUrl, {
         title: this.user.name,
         desc: this.user.bio,
-        link: window.location.href,
+        link: shareUrl,
         imgUrl: this.user.avatar || ""
       });
     }
