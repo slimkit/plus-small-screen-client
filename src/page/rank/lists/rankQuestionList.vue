@@ -102,11 +102,7 @@ export default {
           user.follower = state;
           this.loading = false;
         })
-        .catch(err => {
-          const { response: { data = { message: "操作失败" } } = {} } = err;
-
-          this.loading = false;
-          this.$Message.error(data);
+        .catch(() => {
           this.loading = false;
         });
     },

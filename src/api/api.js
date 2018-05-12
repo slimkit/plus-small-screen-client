@@ -1,4 +1,5 @@
 import axios from "axios";
+import router from "@/routers";
 import Message from "@/plugins/message-box";
 import lstore from "@/plugins/lstore/lstore.js";
 
@@ -48,50 +49,53 @@ instance.interceptors.response.use(
       if (err && err.response) {
         switch (err.response.status) {
           case 400:
-            err.message = "错误请求";
+            err.tips = "错误请求";
             break;
           case 401:
-            err.message = lstore.hasData("H5_CUR_USER")
-              ? "请重新登录"
-              : "请登录";
+            err.tips = lstore.hasData("H5_CUR_USER") ? "请重新登录" : "请登录";
+            lstore.clearData();
+            router.push({
+              path: "/signin",
+              query: { redirect: router.currentRoute.fullPath }
+            });
             break;
           case 403:
-            err.message = "拒绝访问";
+            err.tips = "拒绝访问";
             break;
           case 404:
-            err.message = "请求错误,未找到该资源";
+            err.tips = "请求错误,未找到该资源";
             break;
           case 405:
-            err.message = "请求方法未允许";
+            err.tips = "请求方法未允许";
             break;
           case 408:
-            err.message = "请求超时";
+            err.tips = "请求超时";
             break;
           case 500:
-            err.message = "服务器端出错";
+            err.tips = "服务器端出错";
             break;
           case 501:
-            err.message = "网络未实现";
+            err.tips = "网络未实现";
             break;
           case 502:
-            err.message = "网络错误";
+            err.tips = "网络错误";
             break;
           case 503:
-            err.message = "服务不可用";
+            err.tips = "服务不可用";
             break;
           case 504:
-            err.message = "网络超时";
+            err.tips = "网络超时";
             break;
           case 505:
-            err.message = "http版本不支持该请求";
+            err.tips = "http版本不支持该请求";
             break;
           default:
-            err.message = `连接错误${err.response.status}`;
+            err.tips = `连接错误${err.response.status}`;
         }
       } else {
-        err.message = "发生了一些错误";
+        err.tips = "发生了一些错误";
       }
-      Message.error(err.message);
+      Message.error(err.tips);
     }
     return Promise.reject(err);
   }
