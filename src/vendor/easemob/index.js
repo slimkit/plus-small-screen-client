@@ -81,7 +81,10 @@ export async function generateMessage(message) {
   const bySelf = lstore.getData("H5_CUR_USER").id == from;
   const info =
     type === "chat" ? await getUserInfoById(from) : await getGroupInfo(to);
-  const user = await getUserInfoById(to);
+  const user =
+    from === "admin"
+      ? { name: "系统通知", id: 0 }
+      : await getUserInfoById(from);
   const msgOptions = {
     source: message,
     ...message,
@@ -92,7 +95,7 @@ export async function generateMessage(message) {
     user
   };
   const roomOption = {
-    id: bySelf ? to : from,
+    id: type === "chat" ? (bySelf ? to : from) : to,
     type,
     info,
     user,

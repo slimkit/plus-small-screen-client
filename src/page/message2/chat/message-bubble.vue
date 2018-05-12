@@ -1,6 +1,7 @@
 <template>
   <div class="message-item">
-    <div class="m-box m-aln-st msg-bubble" :class="{selef: bySelef}">
+    <div class="room-tips" v-if="user.id === 0">{{ body }}</div>
+    <div v-else class="m-box m-aln-st msg-bubble" :class="{selef: bySelef}">
       <avatar :user="user"></avatar>
       <section class="m-box-model m-aln-st msg-bubble-main">
         <h2 class="msg-bubble-user-name m-text-cut">{{ user.name }}</h2>
@@ -21,6 +22,9 @@ export default {
   },
   computed: {
     ...mapState(["CURRENTUSER"]),
+    type() {
+      return this.msg.type;
+    },
     bySelef() {
       return this.msg.bySelf;
     },
@@ -31,7 +35,7 @@ export default {
       return this.source.data;
     },
     user() {
-      return this.msg.info;
+      return this.msg.user;
     }
   }
 };
@@ -67,5 +71,15 @@ export default {
       background-color: #b3e1f2;
     }
   }
+}
+.room-tips {
+  margin-left: 96px;
+  margin-right: 96px;
+  padding: 5px 10px;
+  color: #fff;
+  font-size: 20px;
+  line-height: 1.5;
+  border-radius: 20px;
+  background-color: #d9d9d9;
 }
 </style>

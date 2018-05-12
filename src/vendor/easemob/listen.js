@@ -54,5 +54,13 @@ WebIM.conn.listen({
   },
   onPictureMessage: message => {
     console.log("onPictureMessage", message);
+  },
+
+  onReceivedMessage: message => {
+    console.log(message);
+  },
+
+  onPresence: msg => {
+    console.log(msg);
   }
 });
