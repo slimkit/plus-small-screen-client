@@ -68,11 +68,11 @@ export default {
       this.$Modal.remove();
       this.$http
         .delete(`/user/feed-comment-currency-pinneds/${pinnedId}`, {
-          validateStatus: s => s === 201
+          validateStatus: s => s === 204
         })
         .then(({ data }) => {
           this.audit.expires_at = 1;
-          this.$Message.success(data);
+          this.$Message.success("已驳回");
         })
         .catch(() => {});
     },
@@ -84,7 +84,7 @@ export default {
       this.currentItem = audit;
       const vm = this;
       this.$Modal.info({
-        title: "请选择",
+        title: false,
         render(h) {
           return h("div", {}, [
             h(
