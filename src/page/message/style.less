@@ -56,18 +56,18 @@
     }
     &-time {
         &-count {
-            height: 24px;
-            color: #fff;
-            border-radius: 50px;
-            background-color: #f00;
-            text-align: right;
-            font-size: 24px !important;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 0.07rem;
-            margin: 0 !important;
-            flex: 0.5 !important;
+            font-size: 24px;
+            height: 32px;
+            min-width: 32px;
+            color: #fff;
+            border-radius: 16px;
+            background-color: @error;
+            i {
+                transform: scale(0.9);
+            }
         }
         text-align: right;
         width: 120px;

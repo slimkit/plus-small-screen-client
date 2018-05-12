@@ -12,9 +12,13 @@
           <h5 v-if="computedGetter(item.time) !== '' && item.time">
             {{ (computedGetter(item.time)) || '' | time2tips }}
           </h5>
-          <span :class="`${prefixCls}-time-count`" v-if="computedGetter(item.count) !== 0">
-          {{ computedGetter(item.count) }}
-          </span>
+          <div class="m-box m-aln-center m-justify-end">
+            <span 
+              :class="`${prefixCls}-time-count`" 
+              v-if="computedGetter(item.count) !== 0">
+              <i>{{ computedGetter(item.count) }}</i>
+            </span>
+          </div>
         </div>
       </router-link>
     </ul>
