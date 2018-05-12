@@ -8,10 +8,11 @@
           <h2 class="m-text-cut">{{ item.title }}</h2>
           <p class="m-text-cut">{{ computedGetter(item.placeholder) }}</p>
         </div>
-        <div class="m-box-model m-flex-grow0 m-flex-shrink0 m-entry-end">
+        <div class="m-box-model m-flex-grow0 m-flex-shrink0 m-entry-end m-justify-bet">
           <h5 v-if="computedGetter(item.time) !== '' && item.time">
             {{ (computedGetter(item.time)) || '' | time2tips }}
           </h5>
+          <h5 v-else></h5>
           <div class="m-box m-aln-center m-justify-end">
             <span 
               :class="`${prefixCls}-time-count`" 
@@ -123,3 +124,13 @@ export default {
   }
 };
 </script>
+<style lang="less">
+.msg-time-count {
+  i {
+    padding: 0 10px;
+    border-radius: 50px;
+    background: red;
+    color: #fff;
+  }
+}
+</style>

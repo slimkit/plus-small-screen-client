@@ -47,7 +47,7 @@ import infoTips from "@/components/infoTips.vue";
 import applyTop from "@/components/applyForTop.vue";
 
 import { mapActions, mapState } from "vuex";
-import WebIM from "@/vendor/easemob";
+// import WebIM from "@/vendor/easemob";
 
 export default {
   name: "app",

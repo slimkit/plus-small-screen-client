@@ -70,7 +70,7 @@ export default {
         .delete(`/user/feed-comment-currency-pinneds/${pinnedId}`, {
           validateStatus: s => s === 204
         })
-        .then(({ data }) => {
+        .then(() => {
           this.audit.expires_at = 1;
           this.$Message.success("已驳回");
         })
