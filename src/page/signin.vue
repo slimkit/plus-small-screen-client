@@ -73,7 +73,7 @@
             <a>不登录，先随便逛逛</a>
           </router-link>
           <router-link tag="span" to="/forgot">
-            <a>忘记密码?</a>
+            <a>忘记密码</a>
           </router-link>
         </div>
       </main>
