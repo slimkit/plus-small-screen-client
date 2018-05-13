@@ -1,6 +1,6 @@
 <template>
   <transition name='pop'>
-    <div v-if='show' class="m-box-model m-pos-f" style="background-color: #f4f5f6">
+    <div @touchmove.prevent v-if='show' class="m-box-model m-pos-f" style="background-color: #f4f5f6">
       <header class="m-box m-aln-center m-head-top m-main m-bb1">
         <div class="m-flex-grow1">
           <svg class="m-style-svg m-svg-def" @click="cancel">
@@ -26,13 +26,18 @@
                   :style="{ width: `${1 / items.length * 100}%` }"
                   :class="{ active: ~~amount === ~~item &&  !customAmount }"
                   @click="chooseDefaultAmount(item)">{{((~~item) / 100).toFixed(2) }} <!-- 元 --></button>
-
             </div>
           </div>
           <div class="m-box m-aln-center m-justify-bet m-bb1 m-bt1 m-pinned-row plr20 m-pinned-amount-customize">
             <span>自定义金额</span>
             <div class="m-box m-aln-center">
-              <input class="m-text-r" type="number" pattern="[0-9]*" v-model="customAmount" placeholder="输入金额">
+              <input 
+                type="number"
+                class="m-text-r"
+                pattern="[0-9]*"
+                v-model="customAmount"
+                placeholder="输入金额"
+                oninput="value=value.slice(0,8)">
               <span>元</span>
             </div>
           </div>

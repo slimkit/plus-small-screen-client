@@ -4,24 +4,27 @@
   leave-active-class="animated bounceOutLeft">
     <div class="p-signup">
       <header class="m-box m-aln-center m-head-top m-pos-f m-main m-bb1">
-        <div class="m-box m-aln-center m-flex-grow1 m-flex-base0"></div>
+        <div class="m-box m-aln-center m-flex-grow1 m-flex-base0">
+          <svg class="m-style-svg m-svg-def" @click="goBack">
+            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-back"></use>
+          </svg>
+        </div>
         <div class="m-box m-aln-center m-justify-center m-flex-grow1 m-flex-base0 m-head-top-title">
-          <span>完善资料</span>
+          <span>{{ _$type.label }}注册</span>
         </div>
         <div class="m-box m-aln-center m-justify-end m-flex-grow1 m-flex-base0">
           <a @click.prevent="changeType">{{ _$type.label2 }}</a>
         </div>
       </header>
       <main style="padding-top: 0.9rem">
-
         <div class="m-form-row m-main">
-          <label for="username">账户</label>
+          <label for="username">用户名</label>
           <div class="m-input">
             <input
             type="text"
             id="username"
             v-model.trim='name'
-            placeholder="输入2-8位用户名"
+            placeholder="用户名不能低于2个中文或4个英文"
             maxlength="8">
           </div>
           <svg 
@@ -36,12 +39,12 @@
           <div class="m-input">
             <input
             id="phone"
-            v-model.trim='phone'
             type="text"
-            maxlength="11"
-            placeholder="输入11位手机号"
-            @input="phone = phone.length > 11 ? phone.slice(0,11) : phone"
-            >
+            pattern="[0-9]*"
+            v-model='phone'
+            input="value=value.slice(0, 11)"
+            placeholder="输入11位手机号">
+            <!-- maxlength="11" -->
           </div>
           <span 
           class="signup-form--row-append c_59b6d7" 
@@ -70,9 +73,9 @@
           <div class="m-input">
             <input
             id="code"
+            type="code"
+            input="value=value.splice(0, 6)"
             v-model.trim='verifiable_code'
-            type="code" 
-            maxlength="6"
             placeholder="输入4-6位验证码"
             >
           </div>
@@ -355,4 +358,32 @@ export default {
 };
 </script>
 <style lang='less' src='./style/signup.less'>
+</style>
+
+<style lang="less">
+.p-signup {
+  .m-form-row {
+    label {
+      flex: 0 0 30 * 4px;
+      width: 30 * 4px;
+    }
+    .m-input {
+      padding: 0 30px 0 0;
+    }
+    .c_59b6d7.disabled,
+    .c_59b6d7[disabled] {
+      color: #ccc;
+    }
+    &-append {
+      flex: 0 0 170px;
+      width: 170px;
+      text-align: right;
+      svg {
+        width: 38px;
+        height: 38px;
+        fill: #b3b3b3;
+      }
+    }
+  }
+}
 </style>

@@ -1,7 +1,7 @@
 <template>
   <transition
-  enter-active-class="animated bounceInRight"
-  leave-active-class="animated bounceOutLeft">
+    enter-active-class="animated bounceInRight"
+    leave-active-class="animated bounceOutLeft">
     <div class="m-box-model m-pos-f p-signin">
       <header class="m-box m-pos-f m-aln-center m-main m-head-top m-bb1">
         <div class="m-flex-grow1 m-flex-base0"></div>
@@ -17,10 +17,10 @@
           <label for="account">账户</label>
           <div class="m-input">
             <input
-            type="text"
-            id="account"
-            v-model="account"
-            placeholder="用户名/手机号/邮箱">
+              type="text"
+              id="account"
+              v-model="account"
+              placeholder="用户名/手机号/邮箱">
           </div>
           <svg 
             @click="account = ''"
@@ -33,25 +33,22 @@
           <label for="password">密码</label>
           <div class="m-input">
             <input
-            id="password"
-            type="text"
-            v-model="password"
-            v-if="eye"
-            placeholder="输入6位以上登录密码">
+              v-if="eye"
+              type="text"
+              id="password"
+              maxlength="16"
+              v-model="password"
+              placeholder="输入6位以上登录密码">
             <input 
-            id="password" 
-            type="password"
-            v-model="password"
-            v-else
-            placeholder="输入6位以上登录密码" 
-            >
+              v-else
+              id="password" 
+              maxlength="16"
+              type="password"
+              v-model="password"
+              placeholder="输入6位以上登录密码">
           </div>
-          <svg
-          class="m-style-svg m-svg-def"
-          @click="eye=!eye">
-            <use 
-            xmlns:xlink="http://www.w3.org/1999/xlink"
-            :xlink:href='`#eye-${eye?"open":"close"}`'></use>
+          <svg class="m-style-svg m-svg-def" @click="eye=!eye">
+            <use :xlink:href='`#eye-${eye?"open":"close"}`'></use>
           </svg>
         </div>
         <div class="m-box m-aln-center m-text-box m-form-err-box">
@@ -120,7 +117,7 @@ export default {
   computed: {
     disabled() {
       return (
-        this.account.length < 4 || this.password.length < 6 || this.loading
+        this.account.length === 0 || this.password.length < 6 || this.loading
       );
     },
     isWechat() {
@@ -131,7 +128,7 @@ export default {
     signinByWechat,
     signinByAccount() {
       this.err = "";
-      if (this.account.length < 4) {
+      if (this.account.length === 0) {
         this.err = "账户不正确";
         return false;
       }

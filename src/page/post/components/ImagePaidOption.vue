@@ -19,7 +19,7 @@
               class="m-box m-aln-center m-justify-center m-flex-grow1 m-flex-shrink1 m-pinned-amount-btn"
               :style="{ width: `${1 / items.length * 100}%` }"
               :class="{ active: ~~amount === ~~item }"
-              @click="chooseDefaultAmount(item)">{{ ~~item.toFixed(2) }}</button>
+              @click="chooseDefaultAmount(item)">{{ (~~item).toFixed(2) }}</button>
           </div>
         </div>
         <div class="m-image-paid-option-row m-bt1">
