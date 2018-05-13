@@ -36,7 +36,11 @@ export default {
   methods: {
     formateUsers(users) {
       for (let i = 0; i < users.length; i++) {
-        getUserInfoById(users[i]["user_id"]).then(user => {
+        /**
+         * 强制从后端获取用户数据, 同时刷新本地存储的用户信息
+         * @author jsonleex <jsonlseex@163.com>
+         */
+        getUserInfoById(users[i]["user_id"], true).then(user => {
           this.users.push(user);
         });
       }

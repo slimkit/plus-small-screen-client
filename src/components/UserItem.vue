@@ -28,15 +28,23 @@ export default {
     };
   },
   computed: {
-    isFollow: {
+    follower: {
       get() {
-        const { follower = false, following = false } = this.user;
-        return follower && following
-          ? "eachFollow"
-          : follower ? "follow" : "unFollow";
+        return this.user.follower;
       },
       set(val) {
         this.user.follower = val;
+      }
+    },
+    isFollow: {
+      get() {
+        const following = this.user.following;
+        return this.follower && following
+          ? "eachFollow"
+          : this.follower ? "follow" : "unFollow";
+      },
+      set(val) {
+        this.follower = val;
       }
     }
   },
