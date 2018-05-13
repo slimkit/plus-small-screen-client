@@ -283,9 +283,7 @@ export default {
       // });
       getFeedComments({ feedId: this.feedID, after })
         .then(({ data: { pinneds = [], comments = [] } }) => {
-          pinneds &&
-            pinneds.length &&
-            (this.pinnedCom = after ? [...this.pinneds, ...pinneds] : pinneds);
+          this.pinnedCom = after ? [...this.pinneds, ...pinneds] : pinneds;
           if (comments && comments.length) {
             (this.comments = after
               ? [...this.comments, ...comments]
