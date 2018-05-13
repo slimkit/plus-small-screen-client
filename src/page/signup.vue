@@ -149,7 +149,7 @@ const SMS = "sms"; // 手机
 const EMAIL = "mail"; // 邮箱
 
 // 手机号码规则
-const phoneReg = /^1[345678]\d{9}$/;
+const phoneReg = /^1[3-9]\d{9}$/;
 // 邮箱验证
 const emailReg = /^\w+((-\w+)|(\.\w+))*@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/;
 // 用户名验证

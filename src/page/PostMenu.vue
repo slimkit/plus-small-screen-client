@@ -180,8 +180,7 @@ export default {
     margin: auto;
     display: block;
     width: 60px;
-    height: 2.5px; /*no*/
-    border-radius: 100%;
+    height: 1px; /*no*/
     background-color: @primary;
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.22, 1);
   }

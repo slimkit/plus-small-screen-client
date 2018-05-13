@@ -61,7 +61,7 @@ export default {
         ],
         [
           {
-            title: "排行",
+            title: "排行榜",
             icon: "rank",
             path: "/rank",
             new_tips: false,

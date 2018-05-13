@@ -1,9 +1,9 @@
 <template>
   <router-link
-  @click.native.stop
   :to="path"
-  class="m-flex-shrink0 m-flex-grow0 m-avatar-box"
-  :class="styles" >
+  @click.native.stop
+  :class="styles"
+  class="m-flex-shrink0 m-flex-grow0 m-avatar-box">
     <img v-if="avatar" :src="avatar" @error="handelError" class="m-avatar-img">
     <i v-if="icon" :style='icon' class="m-avatar-icon"></i>
   </router-link>

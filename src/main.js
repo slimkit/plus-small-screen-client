@@ -1,7 +1,7 @@
 import "./style/tsplus.less";
 import "github-markdown-css";
-import "./util/rem";
 import Vue from "vue";
+import "./util/rem";
 
 import Modal from "./plugins/modal/";
 // import imgLazy from "./plugins/imgLazy";
