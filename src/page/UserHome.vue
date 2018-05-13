@@ -218,7 +218,7 @@ export default {
     },
     user: {
       get() {
-        return this.$store.getters.getUserById(this.userID) || {};
+        return this.$store.getters.getUserById(this.userID, true) || {};
       },
       set(val) {
         this.$store.commit("SAVE_USER", Object.assign(this.user, val));
