@@ -87,7 +87,7 @@ export default {
         if (this.loading) return;
         this.loading = true;
         this.$http
-          .post(`/user/${userID}/rewards`, {
+          .post(`/user/${userID}/new-rewards`, {
             amount: this.amount
           })
           .then(({ data = {} }) => {
@@ -127,7 +127,7 @@ export default {
         if (this.loading) return;
         this.loading = true;
         this.$http
-          .post(`/plus-group/group-posts/${postID}/rewards`, {
+          .post(`/plus-group/group-posts/${postID}/new-rewards`, {
             amount: this.amount
           })
           .then(({ data = {} }) => {
