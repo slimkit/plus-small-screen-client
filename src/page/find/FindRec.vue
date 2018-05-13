@@ -22,13 +22,13 @@ export default {
   },
   methods: {
     onRefresh(callback) {
-      findUserByType("find-by-tags").then(({ data: users } = {}) => {
+      findUserByType("recommends").then(({ data: users } = {}) => {
         users && (this.users = users);
         callback(users.length < 15);
       });
     },
     onLoadMore(callback) {
-      findUserByType("find-by-tags", {
+      findUserByType("recommends", {
         offset: this.users.length
       }).then(({ data: users }) => {
         this.users = [...this.users, ...users];
