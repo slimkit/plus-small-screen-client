@@ -7,11 +7,11 @@
             <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-back"></use>
           </svg>
         </div>
-        <div class="m-flex-grow1 m-text-c m-head-top-title">
+        <div class="m-box m-aln-center m-justify-center m-flex-grow1 m-head-top-title">
           <span>打赏</span>
         </div>
-        <div class="m-flex-grow1 m-text-r">
-          <a @click.stop.prevent="resetProps">重置</a>
+        <div class="m-box m-aln-center m-justify-end m-flex-grow1 m-text-r">
+          <button class="m-btn" @click.stop.prevent="resetProps" :disabled="!(amount > 0)">重置</button>
         </div>
       </header>
       <main class="m-box-model m-aln-center m-justify-center">
@@ -25,14 +25,14 @@
                   class="m-pinned-amount-btn"
                   :style="{ width: `${1 / items.length * 100}%` }"
                   :class="{ active: ~~amount === ~~item &&  !customAmount }"
-                  @click="chooseDefaultAmount(item)">{{((~~item) / 100).toFixed(2) }} 元</button>
+                  @click="chooseDefaultAmount(item)">{{((~~item) / 100).toFixed(2) }} <!-- 元 --></button>
 
             </div>
           </div>
           <div class="m-box m-aln-center m-justify-bet m-bb1 m-bt1 m-pinned-row plr20 m-pinned-amount-customize">
             <span>自定义金额</span>
             <div class="m-box m-aln-center">
-              <input type="number" pattern="[0-9]*" v-model="customAmount" placeholder="输入金额" dir="rtl">
+              <input class="m-text-r" type="number" pattern="[0-9]*" v-model="customAmount" placeholder="输入金额">
               <span>元</span>
             </div>
           </div>
@@ -153,6 +153,8 @@ export default {
       this.amount = amount;
     },
     resetProps() {
+      this.customAmount = null;
+      // this.amount = this.items[0];
       this.amount = null;
     },
     open() {
@@ -165,6 +167,12 @@ export default {
       this.rewardFeed = noop;
       this.scrollable = true;
     }
+  },
+  mounted() {
+    /**
+     * 默认选择 1.00
+     */
+    // this.resetProps();
   }
 };
 </script>

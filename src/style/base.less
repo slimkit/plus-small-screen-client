@@ -142,6 +142,24 @@ body,
   }
 }
 
+.m-btn {
+  font-size: 100%;
+  color: @primary;
+  background-color: transparent;
+  &[disabled],
+  &.disabled {
+    color: #ccc;
+  }
+  &.primary {
+    color: #fff;
+    background-color: @primary;
+    &[disabled],
+    &.disabled {
+      background-color: #ccc;
+    }
+  }
+}
+
 /* img */
 .m-img-box {
   display: inline-block;
