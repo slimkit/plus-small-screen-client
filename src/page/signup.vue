@@ -39,10 +39,10 @@
           <div class="m-input">
             <input
             id="phone"
-            type="text"
-            pattern="[0-9]*"
+            type="number"
             v-model='phone'
-            input="value=value.slice(0, 11)"
+            pattern="[0-9]*"
+            oninput="value=value.slice(0, 11)"
             placeholder="输入11位手机号">
             <!-- maxlength="11" -->
           </div>
@@ -57,8 +57,8 @@
           <div class="m-input">
             <input
             id="email"
-            v-model.trim='email'
             type="email" 
+            v-model.trim='email'
             placeholder="输入邮箱地址"
             >
           </div>
@@ -71,11 +71,12 @@
         <div class="m-form-row m-main">
           <label for="code">验证码</label>
           <div class="m-input">
-            <input
+            <input 
             id="code"
-            type="code"
-            input="value=value.splice(0, 6)"
-            v-model.trim='verifiable_code'
+            type="number"
+            pattern="[0-9]*" 
+            v-model='verifiable_code'
+            oninput="value=value.slice(0, 6)"
             placeholder="输入4-6位验证码"
             >
           </div>
@@ -91,16 +92,18 @@
           <label for="password">密码</label>
           <div class="m-input">
             <input
-            id="password"
-            type="text"
-            v-model="password"
             v-if="eye"
+            type="text"
+            id="password"
+            maxlength='16'
+            v-model="password"
             placeholder="输入6位以上登录密码">
             <input 
+            v-else
             id="password" 
+            maxlength='16'
             type="password"
             v-model="password"
-            v-else
             placeholder="输入6位以上登录密码" 
             >
           </div>

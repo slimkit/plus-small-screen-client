@@ -1,5 +1,5 @@
 <template>
-  <div class="forgot signup">
+  <div class="p-forgot forgot signup">
     <header class="m-pos-f m-box m-justify-bet m-aln-center m-main m-bb1 m-head-top">
       <div class="m-box m-flex-grow1 m-aln-center m-flex-base0">
         <svg class='m-style-svg m-svg-def' @click='goBack'>
@@ -18,14 +18,16 @@
         <label for="phone">手机号</label>
         <div class="m-input">
           <input
-          type="text"
           id="phone"
+          type="number"
           v-model="phone"
           autocomplete="off"
+          pattern="[0-9]*"
+          oninput="value=value.slice(0, 11)"
           placeholder="输入11位手机号">
         </div>
         <span 
-          class="signup-form--row-append c_59b6d7" 
+          class="m-flex-grow0 m-flex-shrink0 signup-form--row-append c_59b6d7" 
           :class='{ disabled: phone.length < 11 }'
           @click='getCode'
           >{{ codeText }}</span>
@@ -51,9 +53,10 @@
           <div class="m-input">
             <input
             id="code"
+            type="number"
+            pattern="[0-9]*"
+            oninput="value=value.slice(0, 6)"
             v-model.trim='verifiable_code'
-            type="code" 
-            maxlength="6"
             placeholder="输入4-6位验证码"
             >
           </div>
@@ -73,11 +76,13 @@
             type="text"
             v-model="password"
             v-if="eye"
+            maxlength='16'
             placeholder="输入6位以上登录密码">
             <input 
             id="password" 
             type="password"
             v-model="password"
+            maxlength='16'
             v-else
             placeholder="输入6位以上登录密码" 
             >
@@ -294,9 +299,14 @@ export default {
 };
 </script>
 
-<style>
+<style lang="less">
 .signup-form--row-append.disabled,
 .signup-form--row-append[disabled] {
   color: #d3d3d3;
+}
+
+.p-forgot .m-form-row label {
+  flex: 0 0 30 * 4px;
+  width: 30 * 4px;
 }
 </style>
