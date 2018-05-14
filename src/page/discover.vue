@@ -87,3 +87,11 @@ export default {
   }
 };
 </script>
+
+<style lang="less">
+.p-discover {
+  .entry__item--append {
+    fill: #999;
+  }
+}
+</style>
