@@ -199,6 +199,7 @@ export default {
               (this.maxComId = comments[comments.length - 1].id))
             : (this.noMoreCom = true);
           this.$nextTick(() => {
+            console.log("loading change");
             this.fetchComing = false;
             this.loading = false;
           });
