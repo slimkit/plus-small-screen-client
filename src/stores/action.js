@@ -12,12 +12,10 @@ export default {
   },
 
   // 注销登录
-  async SIGN_OUT({ commit }) {
+  SIGN_OUT({ commit }) {
     try {
-      const { status } = await Api.post(`/auth/logout`, {
-        vaildateStatus: s => s === 200
-      });
-      status === 200 && commit("SIGN_OUT");
+      Api.post(`/auth/logout`);
+      commit("SIGN_OUT");
     } catch (e) {
       console.log(e);
     }
