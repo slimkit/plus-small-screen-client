@@ -407,7 +407,32 @@ export default {
             {
               text: "删除",
               method: () => {
-                this.$Message.info("资讯删除功能开发中，敬请期待");
+                // DELETE /feeds/:feed
+                setTimeout(() => {
+                  bus.$emit(
+                    "actionSheet",
+                    [
+                      {
+                        text: "删除",
+                        style: {
+                          color: "#f4504d"
+                        },
+                        method: () => {
+                          this.$http
+                            .delete(`/feeds/${this.feedID}`, {
+                              validataStatus: s => s === 204
+                            })
+                            .then(() => {
+                              this.$Message.success("删除动态成功");
+                              this.goBack();
+                            });
+                        }
+                      }
+                    ],
+                    "取消",
+                    "确认删除?"
+                  );
+                }, 200);
               }
             }
           ]
