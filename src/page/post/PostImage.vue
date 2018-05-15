@@ -25,7 +25,7 @@
        ref="contentText" />
       <image-list :edit="pinned"/>
     </main>
-    <footer class="m-box-model m-flex-shrink1 m-aln-center">
+    <footer class="m-box-model m-flex-shrink1 m-aln-center" style="z-index: 10">
       <v-switch
        class="m-box m-bt1 m-bb1 m-lim-width m-pinned-row"
        type="checkbox"

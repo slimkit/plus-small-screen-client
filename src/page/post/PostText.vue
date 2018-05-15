@@ -27,7 +27,7 @@
        class='m-reles-txt-wrap'
        ref="contentText" />
     </main>
-     <footer class="m-box-model m-flex-shrink0 m-flex-grow1 m-aln-center">
+     <footer class="m-box-model m-flex-shrink0 m-flex-grow1 m-aln-center" style="z-index: 10">
        <v-switch
        type="checkbox"
        v-model="pinned"
