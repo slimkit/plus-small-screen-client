@@ -8,6 +8,21 @@
   @on-more="moreAction"
   @on-comment="commentNews"
   >
+    <header slot="head" class="m-box m-justify-bet m-aln-center m-art-head" style="padding: 0">
+      <div class="m-box m-flex-grow1 m-aln-center m-flex-base0">
+        <svg class='m-style-svg m-svg-def' @click='goBack'>
+          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-back"></use>
+        </svg>
+      </div>
+      <div class="m-box m-flex-grow1 m-aln-center m-flex-base0 m-head-top-title m-text-cut">
+        资讯详情
+      </div>
+      <div class="m-box m-flex-grow1 m-aln-center m-flex-base0 m-justify-end">
+        <!-- <svg v-if="!isWechat" class='m-style-svg m-svg-def'>
+          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-share"></use>
+        </svg> -->
+      </div>
+    </header>
     <div class="m-flex-shrink1 m-flex-grow1 m-art m-main">
       <section class="m-art-head">
          <h1>{{ news.title }}</h1>
