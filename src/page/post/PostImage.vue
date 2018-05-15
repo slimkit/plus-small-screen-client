@@ -36,6 +36,7 @@
   </div>
 </template>
 <script>
+import bus from "@/bus.js";
 import { mapGetters } from "vuex";
 import ImageList from "./components/ImageList.vue";
 import ContentText from "./components/ContentText.vue";
@@ -83,6 +84,22 @@ export default {
     sendmessage() {
       if (!this.disabled) {
         this.loading = true;
+        if (this.pinned) {
+          if (!this.composePhoto.some(item => item.amount > 0)) {
+            bus.$emit(
+              "actionSheet",
+              [
+                {
+                  text: "应配置至少一张图片收费",
+                  method: () => {}
+                }
+              ],
+              "取消"
+            );
+            this.loading = false;
+            return;
+          }
+        }
         this.$http
           .post(
             "feeds",
