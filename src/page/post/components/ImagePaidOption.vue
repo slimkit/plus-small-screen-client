@@ -19,19 +19,20 @@
               class="m-box m-aln-center m-justify-center m-flex-grow1 m-flex-shrink1 m-pinned-amount-btn"
               :style="{ width: `${1 / items.length * 100}%` }"
               :class="{ active: ~~amount === ~~item }"
-              @click="chooseDefaultAmount(item)">{{ (~~item).toFixed(2) }}</button>
+              @click="chooseDefaultAmount(item)">{{ (~~item) }}</button>
           </div>
         </div>
-        <div class="m-image-paid-option-row m-bt1">
-          <p class="m-image-paid-option-label">自定义金额</p>
-          <div class="m-box m-aln-center m-justify-end m-lim-width m-pinned-amount-customize">
-            <input 
-            dir="rtl"
-            type="number"
-            v-model="customAmount"
-            placeholder="输入自定义金额"
-            class="m-flex-grow1 m-flex-shrink1">
-            <span>{{ currency_name }}</span>
+        <div class="m-image-paid-option-row m-bt1 m-box" style="overflow: hidden;">
+          <p class="m-image-paid-option-label m-flex-grow0 m-flex-shrink0" style="margin-bottom: 0">自定义金额</p>
+          <div class="m-box m-aln-center m-flex-grow1 m-flex-shrink1 m-justify-end m-lim-width m-pinned-amount-customize">
+            <input  
+              type="number"
+              pattern="[0-9]*"
+              v-model="customAmount"
+              placeholder="输入自定义金额"
+              oninput="value=value.slice(0, 8)" 
+              class="m-text-r m-flex-grow1 m-flex-shrink1">
+            <span class="m-flex-grow0 m-flex-shrink0">{{ currency_name }}</span>
           </div>
         </div>
         <div class="m-image-paid-option-row m-bt1">

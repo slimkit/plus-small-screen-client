@@ -13,15 +13,14 @@
           v-else
           class="m-send-btn"
           :class="{ disabled }"
-          @click="sendmessage"
-          href="javascript:;">发布</a>
+          @click.prevent.stop="sendmessage">发布</a>
       </div>
     </header>
     <main
        class="m-reles-con m-lim-width m-box-model m-flex-shrink1"
        @click.self='areaFocus'>
        <content-text
-       :rows='8'
+       :rows='4'
        class='m-reles-txt-wrap'
        ref="contentText" />
       <image-list :edit="pinned"/>

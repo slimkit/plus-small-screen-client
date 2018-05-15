@@ -4,7 +4,7 @@
       <div
         :key='img.src'
         v-for='(img, index) in pics'
-        class="m-box-center m-box-center-a image-wrap m-trans"
+        class="m-box-center m-box-center-a image-wrap"
         :class="[picClass, { error: img.error }, { loading: img.loading }, {edit}]"
         >
         <div class="image-placeholder"></div>
@@ -12,15 +12,24 @@
           :id="`compose-photo-${img.id}`"
           :src="img.src"
           class="compose-image"
-          :class='{edit, loading: img.loading }'
+          :class='{loading: img.loading }'
           @load.stop='loadedImg(img)'
           @error='delPhoto(pics, index)'
           @click='thumbnails(index)'>
-        <button class="m-rpic-edit m-box m-trans" v-if="edit && !img.loading"  @click="editImg(img, index)">
-          <svg viewBox="0 0 1024 1024" class="m-style-svg m-flex-grow1 m-svg-def">
-            <path d="M823.672974 299.313993L679.488107 155.13936l72.121598-72.086805c23.899316-23.86657 62.591547-23.86657 86.48677 0l57.665351 57.659211c23.901363 23.901363 23.901363 62.654992 0 86.549192L823.672974 299.313993 823.672974 299.313993zM404.795884 718.17164L260.615111 573.995983l391.976416-388.894218 144.18282 144.175657L404.795884 718.17164 404.795884 718.17164zM144.786059 836.410578l87.722924-234.313583L375.482255 745.103012 144.786059 836.410578 144.786059 836.410578zM792.286126 885.688911c20.181645 0 36.519752 16.33913 36.519752 36.520775 0 20.152992-16.33913 36.494169-36.519752 36.494169L146.485771 958.703855c-20.147876 0-36.494169-16.341177-36.494169-36.494169 0-20.182668 16.34527-36.520775 36.494169-36.520775L792.286126 885.688911 792.286126 885.688911zM792.286126 885.688911" fill="rgba(255,255,255,.9)"></path>
+        <div 
+          v-if="edit && !img.loading"  
+          @click="editImg(img, index)"
+          class="m-rpic-edit-wrap m-rpic-edit m-box m-aln-center m-justify-center m-trans">
+          <svg v-if="img.amount > 0" viewBox="0 0 1024 1024" class="m-style-svg m-svg-def" fill="#fff">
+            <path d="M112.127 284.09a390.766 200.815 0 1 0 799.746 0 390.766 200.815 0 1 0-799.746 0z"></path>
+            <path d="M512 551.409c-163.335 0-303.792-50.328-365.87-122.452-21.857 25.394-34.003 53.489-34.003 83.043 0 113.492 179.03 205.495 399.873 205.495S911.873 625.492 911.873 512c0-29.554-12.145-57.649-34.003-83.043C815.792 501.08 675.335 551.409 512 551.409z"></path>
+            <path d="M512 784.985c-165.467 0-307.456-51.648-368.263-125.285-20.35 24.644-31.61 51.752-31.61 80.21 0 113.492 179.03 205.495 399.873 205.495s399.873-92.003 399.873-205.495c0-28.46-11.26-55.566-31.61-80.21C819.456 733.337 677.467 784.985 512 784.985z"></path>
           </svg>
-        </button>
+          <svg v-else viewBox="0 0 1024 1024" class="m-style-svg m-svg-def">
+            <path d="M823.672974 299.313993L679.488107 155.13936l72.121598-72.086805c23.899316-23.86657 62.591547-23.86657 86.48677 0l57.665351 57.659211c23.901363 23.901363 23.901363 62.654992 0 86.549192L823.672974 299.313993 823.672974 299.313993zM404.795884 718.17164L260.615111 573.995983l391.976416-388.894218 144.18282 144.175657L404.795884 718.17164 404.795884 718.17164zM144.786059 836.410578l87.722924-234.313583L375.482255 745.103012 144.786059 836.410578 144.786059 836.410578zM792.286126 885.688911c20.181645 0 36.519752 16.33913 36.519752 36.520775 0 20.152992-16.33913 36.494169-36.519752 36.494169L146.485771 958.703855c-20.147876 0-36.494169-16.341177-36.494169-36.494169 0-20.182668 16.34527-36.520775 36.494169-36.520775L792.286126 885.688911 792.286126 885.688911zM792.286126 885.688911"></path>
+          </svg>
+          <span> {{ img.amount || "设置金额" }} </span>
+        </div>
         <button class="m-rpic-close m-trans m-box"
           @click.stop='delPhoto(pics, index)'>
           <svg viewBox="0 0 46 72" class="m-style-svg m-flex-grow1 m-svg-def">
@@ -271,7 +280,7 @@ export default {
         };
       });
       bus.$emit("mvGallery", {
-        fid: -1,
+        component: this,
         index,
         images
       });
@@ -300,7 +309,7 @@ export default {
     flex-basis: 99%;
   }
   &.img3 {
-    flex-basis: 32%;
+    flex-basis: 24%;
   }
   &.loading:before {
     content: "";
@@ -311,17 +320,17 @@ export default {
       content: "上传失败";
     }
   }
-  &.edit:before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    z-index: 2;
-    background-color: rgba(0, 0, 0, 0.4);
-    pointer-events: none;
-  }
+  // &.edit:before {
+  //   content: "";
+  //   position: absolute;
+  //   top: 0;
+  //   left: 0;
+  //   bottom: 0;
+  //   right: 0;
+  //   z-index: 2;
+  //   background-color: rgba(0, 0, 0, 0.4);
+  //   pointer-events: none;
+  // }
 }
 .image-placeholder {
   padding-top: 100%;
@@ -344,10 +353,21 @@ export default {
   position: relative;
   background: transparent;
   transition: all 0.4s ease;
-
-  .m-svg-def {
-    width: 60px;
-    height: 60px;
+  &-wrap {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 50px;
+    background-color: rgba(0, 0, 0, 0.3);
+    font-size: 24px;
+    color: #fff;
+    z-index: 1;
+    .m-svg-def {
+      width: 32px;
+      height: 32px;
+      margin-right: 10px;
+    }
   }
 }
 .m-rpic-close {

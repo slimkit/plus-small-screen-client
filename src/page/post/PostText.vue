@@ -20,8 +20,8 @@
       </div>
     </header>
     <main
-       class="m-reles-con m-lim-width m-box-model m-flex-shrink0 m-flex-grow1"
-       @click.self='areaFocus'>
+       @click.self='areaFocus'
+       class="m-reles-con m-lim-width m-box-model m-flex-shrink0 m-flex-grow1">
        <content-text
        :rows='8'
        class='m-reles-txt-wrap'
@@ -29,15 +29,15 @@
     </main>
      <footer class="m-box-model m-flex-shrink0 m-flex-grow1 m-aln-center">
        <v-switch
-       class="m-box m-bt1 m-bb1 m-lim-width m-pinned-row"
        type="checkbox"
+       v-model="pinned"
        v-if="paycontrol"
-       v-model="pinned">
+       class="m-box m-bt1 m-bb1 m-lim-width m-pinned-row">
          <slot>是否收费</slot>
        </v-switch>
        <div 
-       class="m-box-model m-lim-width"
-       :style="{visibility: pinned ? '' : 'hidden'}">
+       class="m-box-model m-lim-width m-main"
+       :style="{visibility: pinned ? '' : 'hidden', marginTop: '-1px'}">
          <div class="m-pinned-amount-btns">
             <p class="m-pinned-amount-label">设置文字收费金额</p>
             <div class="m-box m-aln-center" v-if="items.length > 0">              
@@ -53,7 +53,11 @@
          <div class="m-box m-aln-center m-justify-bet m-bb1 m-bt1 m-pinned-row plr20 m-pinned-amount-customize">
            <span>自定义金额</span>
            <div class="m-box m-aln-center">
-            <input type="number" v-model="customAmount" placeholder="输入金额" dir="rtl">
+            <input 
+              type="number"
+              class="m-text-r" 
+              v-model="customAmount"
+              placeholder="输入金额">
             <span>{{ currency_name }}</span>
            </div>
          </div>
