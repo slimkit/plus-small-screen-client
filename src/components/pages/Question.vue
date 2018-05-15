@@ -317,6 +317,9 @@ export default {
           this.$Message.error(data);
         });
     }
+  },
+  mounted() {
+    this.loadContainer.beforeRefresh();
   }
 };
 </script>
