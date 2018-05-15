@@ -44,6 +44,11 @@ export default {
           index
         };
       });
+      // const { paid_node, paid, type } = this.pics[index];
+      // paid_node > 0 && type === "read" && paid
+      //   ? this.payForImg(currItem)
+      //   : bus.$emit("mvGallery", { component, index, images });
+
       bus.$emit("mvGallery", { component, index, images });
     },
     isLongImg(img) {

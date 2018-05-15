@@ -51,6 +51,7 @@ export default {
     }
   },
   created: function() {
+    window.addEventListener("popstate", this.cancel, false);
     bus.$on("payfor", options => {
       const {
         title,
@@ -80,6 +81,9 @@ export default {
       this.show = true;
       this.scrollable = false;
     });
+  },
+  beforeDestroy() {
+    window.removeEventListener("popstate", this.cancel, false);
   },
   methods: {
     onOk() {},
