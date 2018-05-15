@@ -1,13 +1,18 @@
 <template>
   <div :class="`${prefixCls}`">
-    <header class="m-box m-head-top m-pos-f m-main m-bb1">
+    <header class="m-box m-head-top m-pos-f m-main m-bb1" style="overflow: visible;">
       <div class="m-box m-aln-center m-flex-grow1 m-flex-base0">
         <svg class="m-style-svg m-svg-def" @click="goBack">
           <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-back"></use>
         </svg>
       </div>
       <div class="m-box m-aln-center m-flex-grow2 m-flex-base2 m-justify-center">
-        <diy-select slot='nav' v-model='currentType' :options='options' placeholder='动态评论置顶'></diy-select>
+        <diy-select 
+        slot='nav'
+        :options='options'
+        v-model='currentType'
+        placeholder='动态评论置顶' 
+        style="margin-top: -1px"></diy-select>
       </div>
       <div class="m-box m-aln-center m-flex-grow1 m-flex-base0 m-justify-end"></div>
     </header>
@@ -68,4 +73,12 @@ export default {
 };
 </script>
 <style lang="less" src="../style.less">
+</style>
+
+<style lang="less">
+.auditList {
+  .diy-select--options {
+    margin-top: -1px; /* no */
+  }
+}
 </style>
