@@ -48,7 +48,7 @@
           </div>
           <span 
           class="signup-form--row-append c_59b6d7" 
-          :class='{ disabled: phone.length < 11 }'
+          :class='{ disabled: phone.length < 11 || countdown > 0 }'
           @click='getCode'
           >{{ codeText }}</span>
         </div>
@@ -64,7 +64,7 @@
           </div>
           <span 
           class="signup-form--row-append c_59b6d7" 
-          :class='{ disabled: email.length < 4 }'
+          :class='{ disabled: email.length < 4 || countdown > 0 }'
           @click='getCode'
           >{{ codeText }}</span>
         </div>

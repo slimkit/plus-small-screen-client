@@ -10,7 +10,7 @@
         <span>找回密码</span>
       </div>
       <div class="m-box m-flex-grow1 m-aln-center m-flex-base0 m-justify-end">
-        <a href="javascript:;" @click='changeType'>{{ _$type.label2 }}找回</a>
+        <a v-show="countdown === 0" @click.prevent='changeType'>{{ _$type.label2 }}找回</a>
       </div>
     </header>
     <main style="padding-top: 0.9rem">
@@ -28,7 +28,7 @@
         </div>
         <span 
           class="m-flex-grow0 m-flex-shrink0 signup-form--row-append c_59b6d7" 
-          :class='{ disabled: phone.length < 11 }'
+          :class='{ disabled: phone.length < 11 || countdown > 0 }'
           @click='getCode'
           >{{ codeText }}</span>
       </div>
@@ -44,7 +44,7 @@
         </div>
         <span 
           class="signup-form--row-append c_59b6d7" 
-          :class='{ disabled: email.length < 11 }'
+          :class='{ disabled: email.length < 11 || countdown > 0 }'
           @click='getCode'
           >{{ codeText }}</span>
       </div>
@@ -103,7 +103,7 @@
           <button
           :disabled="loading||disabled"
           class="m-long-btn m-signin-btn"
-          @click="signIn">
+          @click="handleOk">
             <svg v-if="loading" class="m-style-svg m-svg-def">
               <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-loading"></use>
             </svg>
@@ -190,7 +190,7 @@ export default {
     }
   },
   methods: {
-    signIn() {
+    handleOk() {
       const {
         phone,
         email,
@@ -215,9 +215,12 @@ export default {
         this.$Message.error({ password: "密码长度必须大于6位" });
         return;
       }
+      if (!(password.length < 16)) {
+        this.$Message.error({ password: "密码长度不得超过16位" });
+        return;
+      }
 
       let param = {
-        name,
         phone,
         email,
         verifiable_code: verifiableCode,
@@ -229,14 +232,16 @@ export default {
       verifiableType === SMS ? delete param.email : delete param.phone;
       this.$http
         .put("/user/retrieve-password", param)
-        .then(({ data: { token } = {} }) => {
-          if (token) {
-            this.$Message.success("密码修改成功, 返回重新登陆");
-            this.$router.push("/signin");
-          }
+        .then(() => {
+          this.$Message.success("密码修改成功, 返回重新登陆");
+          this.$lstore.removeData("H5_CUR_USER");
+          this.$lstore.removeData("H5_ACCESS_TOKEN");
+          this.$store.dispatch("SIGN_OUT");
+          this.$router.push("/signin");
           this.loading = false;
         })
-        .catch(() => {
+        .catch(e => {
+          console.log(e);
           this.loading = false;
           this.disabled = true;
         });
@@ -305,6 +310,9 @@ export default {
   color: #d3d3d3;
 }
 
+.p-forgot .m-form-row .m-input {
+  padding: 0 30px 0 0;
+}
 .p-forgot .m-form-row label {
   flex: 0 0 30 * 4px;
   width: 30 * 4px;
