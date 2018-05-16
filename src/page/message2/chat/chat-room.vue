@@ -33,7 +33,7 @@
           ref='textarea'
           @focus="onFocus"
           placeholder="随便说说~"
-          @keyup.enter.stop.prevent="sendMessage"
+          @keydown.enter.prevent="sendMessage"
           :style="{ height: `${scrollHeight}px` }"></textarea>
         <textarea 
           rows="1"
@@ -138,7 +138,6 @@ export default {
     },
     sendMessage() {
       if (WebIM.conn.isOpened()) {
-        console.log(1);
         if (this.body.length > 0 && !this.sending) {
           this.sending = true;
           sendTextMessage({

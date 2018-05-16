@@ -553,19 +553,19 @@
 
 .m-reles {
   &-con {
-    padding: 0 30px 30px;
-    .m-wz-def {
-      width: 100%;
-      font-size: 30px;
-    }
     textarea {
-      overflow: hidden;
+      font-size: 32px;
+      line-height: 1.5;
+
+      overflow: auto;
+      margin-top: 35px;
+      padding: 0 30px;
       background-color: transparent;
       outline: 0;
       border: 0;
-      font-size: inherit;
       resize: none;
       width: 100%;
+      max-height: 100%;
       -webkit-box-sizing: border-box;
       box-sizing: border-box;
       -webkit-appearance: none !important;
@@ -574,11 +574,10 @@
   }
 
   &-body {
-    overflow-y: auto;
-    overflow-x: hidden;
+    overflow: hidden;
+    padding-bottom: 40px;
+    height: 32 * 1.5 * 8px;
     margin-bottom: 35px;
-    margin-top: 35px;
-    height: 200px;
     border-radius: 5px;
   }
 }

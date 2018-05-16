@@ -2,7 +2,7 @@
   <div class="m-pos-f m-box-model m-main">
     <header class="m-box-model m-fd-row m-head-top m-justify-bet m-aln-center m-lim-width m-bb1">
       <div class="m-box m-flex-grow1 m-aln-center m-flex-base0">
-        <a class="m-send-btn" href="javascript:;" @click='goback'>取消</a>
+        <a class="m-send-btn" href="javascript:;" @click='beforeGoBack'>取消</a>
       </div>
       <div class="m-box-model m-flex-grow1 m-aln-center m-flex-base0 m-head-top-title">发布动态</div>
       <div class="m-box m-flex-grow1 m-aln-center m-flex-base0 m-justify-end">
@@ -20,10 +20,12 @@
        class="m-reles-con m-lim-width m-box-model m-flex-shrink1"
        @click.self='areaFocus'>
        <content-text
-       :rows='4'
+       :rows='8'
+       ref="contentText" 
+       :maxlength="255"
        class='m-reles-txt-wrap'
-       ref="contentText" />
-      <image-list :edit="pinned"/>
+       :placeholder="`输入要说的话，图文结合更精彩哦`" />
+      <image-list style="padding: 0 .3rem .3rem" :edit="pinned"/>
     </main>
     <footer class="m-box-model m-flex-shrink1 m-aln-center" style="z-index: 10">
       <v-switch
@@ -69,8 +71,23 @@ export default {
     }
   },
   methods: {
-    goback() {
-      this.$router.go(-1);
+    beforeGoBack() {
+      this.contentText.length > 0
+        ? bus.$emit(
+            "actionSheet",
+            [
+              {
+                text: "确定",
+                method: () => {
+                  this.goBack();
+                  this.setContentText("");
+                }
+              }
+            ],
+            "取消",
+            "你还有没有发布的内容,是否放弃发布?"
+          )
+        : this.goBack();
     },
     areaFocus() {
       this.$refs.contentText.areaFocus();

@@ -1,8 +1,8 @@
 <template>
-  <div class="m-pos-f m-box-model m-main">
-    <header class="m-box m-flex-shrink0 m-flex-grow0 m-justify-bet m-aln-center m-main m-bb1 m-head-top">
+  <div class="p-post-text m-box-model">
+    <header class="m-box m-flex-shrink0 m-flex-grow0 m-justify-bet m-aln-center m-main m-bb1 m-head-top m-pos-f">
       <div class="m-box m-flex-grow1 m-aln-center m-flex-base0">
-        <a href="javascript:;" @click="goBack">取消</a>
+        <a href="javascript:;" @click="beforeGoBack">取消</a>
       </div>
       <div class="m-box-model m-flex-grow1 m-aln-center m-flex-base0 m-head-top-title">
         <span>发布动态</span>
@@ -11,23 +11,15 @@
         <svg v-if="loading" class="m-style-svg m-svg-def">
           <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-loading"></use>
         </svg>
-        <a 
-          v-else
-          class="m-send-btn"
-          :class="{ disabled }"
-          @click="beforePost"
-          href="javascript:;">发布</a>
+        <a v-else class="m-send-btn" :class="{ disabled }" @click.prevent.stop="beforePost">发布</a>
       </div>
     </header>
-    <main
-       @click.self='areaFocus'
-       class="m-reles-con m-lim-width m-box-model m-flex-shrink0 m-flex-grow1">
-       <content-text
-       :rows='8'
-       class='m-reles-txt-wrap'
-       ref="contentText" />
+    <main class="m-flex-grow1 m-flex-shrink1 m-reles-con" style="padding-top: 0.9rem" @click.self='areaFocus'>
+      <content-text :rows="8" :maxlength="255" ref="contentText" class='m-reles-txt-wrap' />
     </main>
-     <footer class="m-box-model m-flex-shrink0 m-flex-grow1 m-aln-center" style="z-index: 10">
+    <footer 
+        class="m-box-model m-flex-shrink0 m-flex-grow1 m-aln-center m-main"
+        style="z-index: 10;">
        <v-switch
        type="checkbox"
        v-model="pinned"
@@ -36,18 +28,20 @@
          <slot>是否收费</slot>
        </v-switch>
        <div 
+       style="margin-top: -1px"
        class="m-box-model m-lim-width m-main"
-       :style="{visibility: pinned ? '' : 'hidden', marginTop: '-1px'}">
+       :style="{ visibility: pinned ? 'visible' : 'hidden' }"
+       >
          <div class="m-pinned-amount-btns">
             <p class="m-pinned-amount-label">设置文字收费金额</p>
             <div class="m-box m-aln-center" v-if="items.length > 0">              
-              <button 
+              <button
                 :key="item"
                 v-for="item in items"
                 class="m-pinned-amount-btn"
                 :style="{ width: `${1 / items.length * 100}%` }"
-                :class="{ active: ~~amount === ~~item }"
-                @click="chooseDefaultAmount(item)">{{ (~~item).toFixed(2) }}</button>
+                :class="{ active: amount === item }"
+                @click="chooseDefaultAmount(item)">{{ item }}</button>
             </div>
          </div>
          <div class="m-box m-aln-center m-justify-bet m-bb1 m-bt1 m-pinned-row plr20 m-pinned-amount-customize">
@@ -55,9 +49,11 @@
            <div class="m-box m-aln-center">
             <input 
               type="number"
+              pattern="[0-9]*" 
               class="m-text-r" 
               v-model="customAmount"
-              placeholder="输入金额">
+              placeholder="输入金额"
+              oninput="value=value.slice(0, 8)" >
             <span>{{ currency_name }}</span>
            </div>
          </div>
@@ -67,8 +63,8 @@
   </div>
 </template>
 <script>
+import bus from "@/bus.js";
 import { mapGetters } from "vuex";
-
 import ContentText from "./components/ContentText.vue";
 export default {
   name: "post-text",
@@ -84,7 +80,9 @@ export default {
       pinned: false,
 
       amount: 0,
-      customAmount: null
+      customAmount: null,
+
+      appBackgroundColor: null
     };
   },
   computed: {
@@ -113,7 +111,26 @@ export default {
       if (val) this.amount = ~~val;
     }
   },
+
   methods: {
+    beforeGoBack() {
+      this.contentText.length > 0
+        ? bus.$emit(
+            "actionSheet",
+            [
+              {
+                text: "确定",
+                method: () => {
+                  this.goBack();
+                  this.setContentText("");
+                }
+              }
+            ],
+            "取消",
+            "你还有没有发布的内容,是否放弃发布?"
+          )
+        : this.goBack();
+    },
     areaFocus() {
       this.$refs.contentText.areaFocus();
     },
@@ -165,16 +182,16 @@ export default {
           this.loading = false;
         });
     }
+  },
+  mounted() {
+    const app = document.querySelector("#app");
+    this.appBackgroundColor = app.style.backgroundColor;
+    app.style.backgroundColor = "#fff";
+  },
+  destroyed() {
+    document.querySelector(
+      "#app"
+    ).style.backgroundColor = this.appBackgroundColor;
   }
 };
 </script>
-<style>
-.plr20 {
-  padding-left: 20px;
-  padding-right: 20px;
-}
-.m-pinned-row {
-  font-size: 30px;
-  height: 100px;
-}
-</style>

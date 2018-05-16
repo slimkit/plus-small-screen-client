@@ -1,22 +1,27 @@
 <template>
   <div class="m-box-model m-pos-r">
-    <div class="m-box-model m-fd-row m-reles-body">
-      <span class="m-wz-def">
-        <textarea
-          v-model.trim='contentText'
-          :placeholder="placeholder"
-          :style="{ height: `${scrollHeight}px`, overflow: 'hidden' }"
-          ref='textarea'
-          @focus='focusArea'
-          @blur='moveCurPos'
-          @input='moveCurPos'
-          @keyup.delete='deleteHandler'></textarea>
-        <textarea 
-          :rows="rows"
-          v-model='shadowText'
-          style="position: absolute; z-index: -9999; visibility: hidden;"
-          ref='shadow'></textarea>
-      </span>
+    <div class="m-box-model m-reles-body">
+      <textarea 
+        ref='textarea'
+        v-model.trim='contentText'
+        :placeholder="placeholder"
+        :maxlength="maxlength" 
+
+        @focus='focusArea'
+        @blur='moveCurPos'
+        @input='moveCurPos'
+        @keyup.delete='deleteHandler' 
+        :style="{ height: `${scrollHeight}px`}"/>
+      <textarea 
+      ref='shadow'
+      :rows="rows"
+      v-model='shadowText'
+      style="position: absolute; z-index: -9999; visibility: hidden;" />
+      <span
+        class="m-textarea-count"
+        v-show="count > 200">
+          <b style="color: #f4504d">{{ count }}</b>/{{ maxlength }}
+        </span>
     </div>
   </div>
 </template>
@@ -30,7 +35,11 @@ export default {
   name: "content-text",
   props: {
     type: Number,
-    limit: Number,
+    maxlength: [Number, String],
+    placeholder: {
+      type: String,
+      default: "输入要说的话"
+    },
     rows: {
       type: Number,
       default: 3
@@ -51,8 +60,8 @@ export default {
     fullContentText() {
       return this.contentText;
     },
-    placeholder() {
-      return "输入要说的话";
+    count() {
+      return this.contentText.length;
     }
   },
   watch: {
@@ -107,3 +116,12 @@ export default {
   }
 };
 </script>
+
+<style lang="less">
+.m-textarea-count {
+  position: absolute;
+  bottom: 0;
+  right: 20px;
+  font-size: 24px;
+}
+</style>
