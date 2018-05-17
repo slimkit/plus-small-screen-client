@@ -42,6 +42,7 @@ export default {
       curpos: 0,
       onOk: null,
       show: false,
+      loading: false,
       scrollHeight: 0,
       contentText: "",
       placeholder: "随便说说~"
@@ -93,13 +94,18 @@ export default {
       this.contentText = "";
     },
     sendText() {
+      if (this.loading) return;
+      this.loading = true;
+
       this.onOk &&
         typeof this.onOk === "function" &&
-        this.onOk(this.contentText) &&
-        this.cancel();
+        this.onOk(this.contentText);
+
+      this.cancel();
     },
     cancel() {
       this.placeholder = "随便说说~";
+      this.loading = false;
       this.onOk = null;
       this.show = false;
     },
