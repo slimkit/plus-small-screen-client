@@ -93,7 +93,7 @@ instance.interceptors.response.use(
             err.tips = `连接错误${err.response.status}`;
         }
       } else {
-        err.tips = "发生了一些错误";
+        err.tips = "网络不可用，请检查！";
       }
       Message.error(err.tips);
     }

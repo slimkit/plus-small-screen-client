@@ -180,18 +180,18 @@ export default {
         });
     },
     handleScrolling() {
-      const nav = this.$refs.types;
-      const offsetTop = this.typeNavOffsetTop;
-      const y = document.documentElement.scrollTop + 48;
-      if (y >= offsetTop) {
-        nav.style.position = "fixed";
-        nav.style.marginTop = 0;
-        nav.style.top = "0.9rem";
-        return;
-      }
-      nav.style.position = "relative";
-      nav.style.marginTop = "-1rem";
-      nav.style.top = "1.16rem";
+      // const nav = this.$refs.types;
+      // const offsetTop = this.typeNavOffsetTop;
+      // const y = document.documentElement.scrollTop + 48;
+      // if (y >= offsetTop) {
+      //   nav.style.position = "fixed";
+      //   nav.style.marginTop = 0;
+      //   nav.style.top = "0.9rem";
+      //   return;
+      // }
+      // nav.style.position = "relative";
+      // nav.style.marginTop = "-1rem";
+      // nav.style.top = "1.16rem";
     },
     handleFollow(topic) {
       follow(topic.id)

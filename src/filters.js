@@ -89,10 +89,10 @@ export const timeOffset = new Date().getTimezoneOffset() * 60 * 1000;
 
 export const dateFormat = timeago(null, "zh_CN");
 export const time2tips = date => {
-  const time = new Date(
-    typeof date === "string" ? date.replace(/-/g, "/") : date
-  );
-  return dateFormat.format(time - timeOffset);
+  const time =
+    new Date(typeof date === "string" ? date.replace(/-/g, "/") : date) -
+    timeOffset;
+  return dateFormat.format(time - new Date() > 0 ? new Date() : time);
 };
 
 /**

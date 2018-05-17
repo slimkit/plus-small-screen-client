@@ -1,5 +1,5 @@
 <template>
-  <div class="module-question-answers-item">
+  <div class="module-question-answers-item" @click="viewDetail">
     <div :class="classNameBuilder('avatar')">
       <module-user-avatar
         :size="0.56"
@@ -15,7 +15,7 @@
       </h3>
       <div :class="classNameBuilder('main-body')">{{ answer.body | markdownText }}</div>
       <div :class="classNameBuilder('main-button')">
-        <button @click="handleLikeTarget">
+        <button @click.stop="handleLikeTarget">
           <svg :class="[classNameBuilder('icon')]">
             <use  :xlink:href="answer.liked ? '#feed-like' : '#feed-unlike'" />
           </svg>
@@ -99,6 +99,11 @@ export default {
       }
 
       this.handleLike();
+    },
+    viewDetail() {
+      this.$router.push(
+        `/questions/${this.answer.question_id}/answers/${this.answer.id}`
+      );
     }
   },
   created() {

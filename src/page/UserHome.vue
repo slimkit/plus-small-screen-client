@@ -33,7 +33,8 @@
       <div></div>
       <div></div>
     </div>
-    <main style="overflow-x: hidden; overflow-y:auto; min-height: 100vh">    
+    <!-- style="overflow-x: hidden; overflow-y:auto; min-height: 100vh" -->
+    <main>    
       <div ref="banner" class="m-urh-banner" 
       :style="[userBackGround,paddingTop, {transitionDuration: dragging ? '0s' : '300ms'}]">
         <div class="m-box-model m-aln-center m-justify-end m-pos-f m-urh-bg-mask">

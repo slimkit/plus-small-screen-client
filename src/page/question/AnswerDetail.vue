@@ -1,0 +1,294 @@
+<template>
+  <article-card :liked="liked" :loading="loading" @on-like="likeAnswer" @on-share="shareAnswer" @on-more="moreAction" @on-comment="commentAnswer" v-if="answer.id">
+    <header slot="head" class="m-box m-justify-bet m-aln-center m-art-head m-main" style="padding: 0">
+      <div class="m-box m-flex-grow1 m-aln-center m-flex-base0">
+        <svg class='m-style-svg m-svg-def' @click='goBack'>
+          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-back"></use>
+        </svg>
+      </div>
+      <div class="m-box m-flex-grow2 m-flex-shrink2 m-aln-center m-flex-base0 m-head-top-title m-justify-center">
+        <span class="m-text-cut">{{ answer.question.subject }}</span>
+      </div>
+      <div class="m-box m-flex-grow1 m-aln-center m-flex-base0 m-justify-end"></div>
+    </header>
+    <main class="m-flex-shrink1 m-flex-grow1 m-art m-main">
+      <!-- 回答者信息 -->
+      <!--<div class="m-box user-info-wrap">
+        <avatar :user="user" />
+        <div class="m-box-model m-aln-st m-flex-grow1 m-flex-shrink1 user-info">
+          <h2 class="m-text-cut">{{ user.name }}</h2>
+          <p class="m-text-cut">{{ user.bio || "这家伙很懒,什么也没留下" }}</p>
+        </div>
+        <button></button>
+      </div> -->
+      <div class="m-art-body">
+        <p class="m-text-box" v-html="formatBody(content)"></p>
+      </div>
+      <div class="m-box m-aln-center m-justify-bet m-art-foot">
+        <div class="m-flex-grow1 m-flex-shrink1 m-box m-aln-center m-art-like-list">
+          <template v-if='likeCount > 0'>
+            <ul class="m-box m-flex-grow0 m-flex-shrink0">
+              <li :key="id" :style="{ zIndex: 5-index }" v-for="({user = {}, id}, index) in likes.slice(0, 5)" class="m-avatar-box tiny" :class="`m-avatar-box-${user.sex}`">
+                <img :src="user.avatar">
+              </li>
+            </ul>
+            <span>{{ likeCount | formatNum }}人点赞</span>
+          </template>
+        </div>
+        <div class="m-box-model m-aln-end m-art-info">
+          <span>发布于{{ time | time2tips }}</span>
+          <span>{{ viewsCount | formatNum }}浏览</span>
+        </div>
+      </div>
+      <!-- todo 打赏功能 -->
+      <!--<div class="m-box-model m-box-center m-box-center-a m-art-reward">
+        <button class="m-art-rew-btn" @click="rewardFeed">打 赏</button>
+        <p class="m-art-rew-label">
+          <a href="javascript:;">{{ reward.count | formatNum }}</a>人打赏，共
+          <a href="javascript:;">{{ (~~(reward.amount)/100).toFixed(2) }}</a>元</p>
+        <ul class="m-box m-aln-center m-art-rew-list">
+          <li :key="rew.id" v-for="rew in rewardList" :class="`m-avatar-box-${rew.user.sex}`" class="m-flex-grow0 m-flex-shrink0 m-art-rew m-avatar-box tiny">
+            <img :src="rew.user.avatar">
+          </li>
+        </ul>
+      </div> -->
+    </main>
+    <!-- 评论列表 -->
+    <div class="m-box-model m-art-comments" id="comment_list">
+      <ul class="m-box m-aln-center m-art-comments-tabs">
+        <li>{{ commentCount | formatNum }}条评论</li>
+      </ul>
+      <comment-item @on-click="replyComment" v-for="(comment) in pinnedCom" :pinned="true" :key="`pinned-comment-${comment.id}`" :comment="comment" />
+      <comment-item @on-click="replyComment" v-for="(comment) in comments" :key="comment.id" :comment="comment" />
+      <div class="m-box m-aln-center m-justify-center load-more-box">
+        <span v-if="noMoreCom" class="load-more-ph">---没有更多---</span>
+        <span v-else class="load-more-btn" @click.stop="fetchAnswerComments(maxComId)">
+          {{fetchComing ? "加载中..." : "点击加载更多"}}
+        </span>
+      </div>
+    </div>
+  </article-card>
+</template>
+<script>
+import bus from "@/bus.js";
+import { mapState } from "vuex";
+import markdownIt from "markdown-it";
+import plusImagePlugin from "markdown-it-plus-image";
+
+import ArticleCard from "@/page/article/ArticleCard.vue";
+import CommentItem from "@/page/article/ArticleComment.vue";
+
+import { likeAnswersByStatus } from "@/api/question/answer.js";
+export default {
+  name: "answer-detailt",
+  components: {
+    ArticleCard,
+    CommentItem
+  },
+  data() {
+    return {
+      loading: false,
+      answer: {},
+
+      comments: [],
+      pinnedCom: [],
+
+      fetchComing: false,
+      noMoreCom: false,
+      maxComId: 0
+    };
+  },
+  computed: {
+    ...mapState(["CURRENTUSER"]),
+    questionId() {
+      return this.$route.params.questionId;
+    },
+    answerId() {
+      return this.$route.params.answerId;
+    },
+    user() {
+      return this.answer.user;
+    },
+    time() {
+      return this.answer.created_at || "";
+    },
+    liked: {
+      get() {
+        return !!this.answer.liked;
+      },
+      set(val) {
+        this.answer.liked = val;
+      }
+    },
+    likes() {
+      return this.answer.likes || [];
+    },
+    likeCount: {
+      get() {
+        return this.answer.likes_count || 0;
+      },
+      set(val) {
+        this.answer.likes_count = ~~val;
+      }
+    },
+    viewsCount() {
+      return this.answer.views_count || 0;
+    },
+    commentCount: {
+      get() {
+        return this.answer.comments_count || 0;
+      },
+      set(val) {
+        val > 0, (this.answer.comments_count = ~~val);
+      }
+    },
+    content() {
+      const { body = "" } = this.answer;
+      return body;
+    }
+  },
+  methods: {
+    formatBody(body) {
+      return markdownIt({
+        html: true
+      })
+        .use(plusImagePlugin, `${this.$http.defaults.baseURL}/files/`)
+        .render(body);
+    },
+    likeAnswer() {
+      likeAnswersByStatus(this.answerId, this.liked)
+        .then(() => {
+          !this.liked
+            ? ((this.liked = true),
+              (this.likeCount += 1),
+              this.answer.likes.length < 5 &&
+                (this.answer.likes = [
+                  ...this.answer.likes,
+                  {
+                    user: this.CURRENTUSER,
+                    id: +new Date(),
+                    user_id: this.CURRENTUSER.id
+                  }
+                ]))
+            : ((this.liked = false),
+              (this.likeCount -= 1),
+              (this.answer.likes = this.answer.likes.filter(like => {
+                return like.user_id !== this.CURRENTUSER.id;
+              })));
+
+          this.fetching = false;
+        })
+        .catch(() => {
+          this.fetching = false;
+        });
+    },
+    shareAnswer() {
+      console.log("shareAnswer");
+    },
+    commentAnswer() {
+      bus.$emit("commentInput", {
+        onOk: text => {
+          this.sendComment({ body: text });
+        }
+      });
+    },
+    moreAction() {},
+
+    fetchAnswer() {
+      if (this.loading) return;
+      this.loading = true;
+
+      this.$http.get(`/question-answers/${this.answerId}`).then(({ data }) => {
+        this.answer = data;
+        this.fetchAnswerComments();
+        this.loading = false;
+      });
+    },
+    fetchAnswerComments(after = 0) {
+      // /question-answers/:answer/comments
+      if (this.fetchComing) return;
+      this.fetchComing = true;
+      this.$http
+        .get(`/question-answers/${this.answerId}/comments`, {
+          params: {
+            limit: 15,
+            after
+          }
+        })
+        .then(({ data: comments = [] }) => {
+          if (comments && comments.length) {
+            (this.comments = after
+              ? [...this.comments, ...comments]
+              : comments),
+              (this.maxComId = comments[comments.length - 1].id);
+          }
+          this.noMoreCom = comments.length < 15;
+          this.$nextTick(() => {
+            this.fetchComing = false;
+            this.loading = false;
+          });
+        })
+        .catch(e => {
+          console.log(e);
+          this.loading = false;
+          this.fetchComing = false;
+        });
+    },
+    replyComment(uid, uname) {
+      uid === this.CURRENTUSER.id
+        ? bus.$emit(
+            "actionSheet",
+            [
+              {
+                text: "申请评论置顶",
+                method: () => {
+                  this.$Message.info("置顶功能开发中，敬请期待");
+                }
+              },
+              {
+                text: "删除评论",
+                method: () => {
+                  this.$Message.info("评论删除功能开发中，敬请期待");
+                }
+              }
+            ],
+            "取消"
+          )
+        : bus.$emit("commentInput", {
+            placeholder: `回复： ${uname}`,
+            onOk: text => {
+              this.sendComment({ reply_user: uid, body: text });
+            }
+          });
+    },
+    sendComment({ reply_user: replyUser, body }) {
+      // 评论答案
+      // POST /question-answers/:answer/comments
+      const params = {};
+      if (body && body.length > 0) {
+        params.body = body;
+        replyUser && (params["reply_user"] = replyUser);
+        this.$http
+          .post(`/question-answers/${this.answerId}/comments`, params, {
+            validataStatus: s => s === 201
+          })
+          .then(({ data: { comment } = { comment: {} } }) => {
+            this.$Message.success("评论成功");
+            this.comments.unshift(comment);
+            this.commentCount += 1;
+            bus.$emit("commentInput:close", true);
+          })
+          .catch(() => {
+            this.$Message.error("评论失败");
+            bus.$emit("commentInput:close", true);
+          });
+      } else {
+        this.$Message.error("评论内容不能为空");
+      }
+    }
+  },
+  created() {
+    this.fetchAnswer();
+  }
+};
+</script>

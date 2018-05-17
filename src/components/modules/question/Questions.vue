@@ -228,6 +228,9 @@ export default {
     line-height: 0;
     letter-spacing: 0;
     border-bottom: solid 0.01rem #d7d8d8;
+    @media screen and (min-width: 769px) {
+      width: 768px;
+    }
     .active {
       color: #333;
     }

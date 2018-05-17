@@ -14,6 +14,7 @@
               ref='textarea'
               maxlength="255" 
               @blur='moveCurPos'
+              @keydown.enter.prevent="sendText"
               @input='moveCurPos'></textarea>
             <textarea 
               rows="1"

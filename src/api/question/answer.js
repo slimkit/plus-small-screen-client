@@ -61,3 +61,11 @@ export function unlike(answer) {
     validateStatus: status => status === 204
   });
 }
+
+/**
+ * Switch like status
+ * @author jsonleex <jsonlseex@163.com>
+ */
+export function likeAnswersByStatus(answer, status) {
+  return status ? unlike(answer) : like(answer);
+}

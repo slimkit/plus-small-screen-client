@@ -132,6 +132,9 @@ export default {
   padding-left: 30px;
   position: fixed;
   z-index: 100;
+  @media screen and (min-width: 769px) {
+    width: 768px;
+  }
   // App bar tab box class name.
   .module-question-app-bar_tab {
     width: 250px;

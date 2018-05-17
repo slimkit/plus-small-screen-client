@@ -341,6 +341,9 @@ export default {
     background-color: #fff;
     bottom: 0;
     border-top: solid 1px #d7d8d8;
+    @media screen and (min-width: 769px) {
+      width: 768px;
+    }
     &-item {
       flex-grow: 1;
       display: inline-flex;
@@ -480,6 +483,9 @@ export default {
     }
   }
   &-answers-tool {
+    position: sticky;
+    top: 90+25px;
+    background: @gray-bg;
     display: flex;
     justify-content: space-between;
     align-items: center;

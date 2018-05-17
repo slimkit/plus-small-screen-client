@@ -43,6 +43,9 @@ const Question = () =>
 const Topic = () =>
   import(/* webpackChunkName: 'question' */ "../components/pages/Topic");
 
+const AnswerDetail = () =>
+  import(/* webpackChunkName: 'question' */ "@/page/question/AnswerDetail.vue");
+
 export default [
   /**
    * Questions page entry.
@@ -79,5 +82,12 @@ export default [
     path: "/question-topics/:id",
     component: Topic,
     meta: { requiresAuth: true }
+  },
+  {
+    path: "/questions/:questionId/answers/:answerId",
+    component: AnswerDetail,
+    meta: {
+      title: "问题详情"
+    }
   }
 ];
