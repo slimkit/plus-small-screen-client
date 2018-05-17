@@ -88,6 +88,8 @@ export default {
   data() {
     return {
       loading: false,
+      fetching: false,
+
       answer: {},
 
       comments: [],
@@ -156,6 +158,8 @@ export default {
         .render(body);
     },
     likeAnswer() {
+      if (this.fetching) return;
+      this.fetching = true;
       likeAnswersByStatus(this.answerId, this.liked)
         .then(() => {
           !this.liked

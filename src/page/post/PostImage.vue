@@ -138,6 +138,10 @@ export default {
             this.$router.go(-1);
             this.loading = false;
             this.successCallback();
+          })
+          .catch(e => {
+            console.log(e);
+            this.loading = false;
           });
       }
     }
