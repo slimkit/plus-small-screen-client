@@ -95,7 +95,7 @@ export default {
             title: "申请加入圈子",
             confirmText: "支付并加入",
             amount: this.money,
-            content: `您只需支付${this.money}积分来加入圈子`,
+            content: `你只需支付${this.money}积分来加入圈子`,
             onOk: () => {
               joinGroup(this.group.id).then(
                 ({ data: { message = "加圈成功" } }) => {

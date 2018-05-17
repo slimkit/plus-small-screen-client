@@ -326,7 +326,7 @@ export default {
         ? bus.$emit("payfor", {
             title: "投稿支付",
             amount: this.newCurrency,
-            content: `本次投稿您需要支付${this.newCurrency}${
+            content: `本次投稿你需要支付${this.newCurrency}${
               this.currency_name
             },是否继续投稿？`,
             confirmText: "确认投稿",
@@ -359,7 +359,7 @@ export default {
         "actionSheet",
         [{ text: "确定", method: this.goBack }],
         "取消",
-        "您还有未发布的内容，是否放弃发布？"
+        "你还有未发布的内容，是否放弃发布？"
       );
     }
   }
