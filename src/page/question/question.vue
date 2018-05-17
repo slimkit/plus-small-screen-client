@@ -9,6 +9,3 @@ export default {
   name: "questionIndex"
 };
 </script>
-
-<style lang='less'>
-</style>
