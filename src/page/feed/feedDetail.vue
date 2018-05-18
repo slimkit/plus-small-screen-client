@@ -28,6 +28,7 @@
   <!-- 内容 -->
   <main class="m-flex-shrink1 m-flex-grow1 m-art m-main">
     <div class="m-art-body">
+      <h2 v-if="title">{{ title }}</h2>
       <video
         v-if="!!video"
         class="feed-detail-video"
@@ -51,8 +52,8 @@
       <p class="m-text-box" v-html="formatBody(feedContent)"></p>
     </div>
     <div class="m-box m-aln-center m-justify-bet m-art-foot">
-      <div class="m-flex-grow1 m-flex-shrink1 m-box m-aln-center m-art-like-list">
-        <template v-if='likeCount > 0'>
+      <div class="m-flex-grow1 m-flex-shrink1 m-art-like-list">
+        <router-link tag="div" class="m-box m-aln-center" to="likers" append v-if='likeCount > 0'>
           <ul class="m-box m-flex-grow0 m-flex-shrink0">
             <li 
             :key="id"
@@ -64,7 +65,7 @@
             </li>
           </ul>
           <span>{{ likeCount | formatNum }}人点赞</span>
-        </template>
+        </router-link>
       </div>
       <div class="m-box-model m-aln-end m-art-info">
         <span>发布于{{ time | time2tips }}</span>
@@ -151,6 +152,9 @@ export default {
     },
     video_file() {
       return this.video ? `/api/v2/files/${this.video.video_id}` : false;
+    },
+    title() {
+      return this.feed.title;
     },
     cover_file() {
       return this.video ? `/api/v2/files/${this.video.video_id}` : false;
