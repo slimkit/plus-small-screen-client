@@ -76,15 +76,20 @@
     <div class="m-box-model m-box-center m-box-center-a m-art-reward">
       <button class="m-art-rew-btn" @click="rewardFeed">打 赏</button>
       <p class="m-art-rew-label"><a href="javascript:;">{{ reward.count | formatNum }}</a>人打赏，共<a href="javascript:;">{{ (~~(reward.amount)/100).toFixed(2) }}</a>元</p>
-      <ul class="m-box m-aln-center m-art-rew-list">
-        <li 
+      <router-link tag="ul" to="rewarders" append class="m-box m-aln-center m-art-rew-list">
+        <li
         :key="rew.id"
         v-for="rew in rewardList"
         :class="`m-avatar-box-${rew.user.sex}`"
         class="m-flex-grow0 m-flex-shrink0 m-art-rew m-avatar-box tiny">
           <img :src="rew.user.avatar">
         </li>
-      </ul>
+        <li class="m-box m-aln-center" v-if="rewardList.length > 0">
+          <svg class="m-style-svg m-svg-def" style="fill:#bfbfbf">
+            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-arrow-r"></use>
+          </svg>
+        </li>
+      </router-link>
     </div>
   </main>
   <!-- 评论列表 -->
@@ -543,5 +548,8 @@ export default {
     width: 52px;
     height: 52px;
   }
+}
+
+.m-art-rew-list {
 }
 </style>
