@@ -1,9 +1,9 @@
-node_modules/
-dist/
-
 .env
 .DS_Store
+yarn.lock
+
 node_modules
+dist
 
 # local env files
 .env.local
