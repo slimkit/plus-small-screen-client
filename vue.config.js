@@ -1,7 +1,7 @@
 module.exports = {
   baseUrl: process.env.BASE_URL || "/",
   lintOnSave: true,
-  compiler: false,
+  // compiler: false,
   css: {
     sourceMap: !!eval(process.env.GENERATE_CSS_MAP),
     loaderOptions: {

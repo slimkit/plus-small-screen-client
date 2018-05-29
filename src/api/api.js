@@ -1,7 +1,10 @@
 import axios from "axios";
-import router from "@/routers";
+import Vue from 'vue';
+// import router from "@/routers"; // 这个地方想其他办法！
 import Message from "@/plugins/message-box";
 import lstore from "@/plugins/lstore/lstore.js";
+
+console.log(Vue);
 
 let cancel;
 let pending = {};
