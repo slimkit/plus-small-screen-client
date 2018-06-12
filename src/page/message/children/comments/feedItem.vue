@@ -68,7 +68,9 @@ export default {
      * @return   {[type]}            [description]
      */
     goToFeedDetail() {
-      const { commentable: { id = 0 } } = this.comment;
+      const {
+        commentable: { id = 0 }
+      } = this.comment;
       this.$router.push(`/feeds/${id}`);
     },
 

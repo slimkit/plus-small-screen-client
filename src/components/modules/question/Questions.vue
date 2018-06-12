@@ -103,7 +103,9 @@ export default {
      * @author Seven Du <shiweidu@outlook.com>
      */
     type() {
-      const { query: { type = "hot" } } = this.$route;
+      const {
+        query: { type = "hot" }
+      } = this.$route;
 
       return type;
     }

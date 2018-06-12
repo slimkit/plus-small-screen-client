@@ -107,7 +107,9 @@ export default {
       get() {
         return this.hotPos && this.hotPos.label
           ? this.hotPos
-          : this.autoPos && this.autoPos.label ? this.autoPos : null;
+          : this.autoPos && this.autoPos.label
+            ? this.autoPos
+            : null;
       },
       set(val) {
         this.autoPos = val;

@@ -41,7 +41,9 @@ export default {
         const following = this.user.following;
         return this.follower && following
           ? "eachFollow"
-          : this.follower ? "follow" : "unFollow";
+          : this.follower
+            ? "follow"
+            : "unFollow";
       },
       set(val) {
         this.follower = val;

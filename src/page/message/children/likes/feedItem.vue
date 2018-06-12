@@ -52,7 +52,9 @@ export default {
      * @return   {[type]}            [description]
      */
     goToFeedDetail() {
-      const { likeable: { id = 0 } } = this.like;
+      const {
+        likeable: { id = 0 }
+      } = this.like;
       this.$router.push(`/feeds/${id}`);
     }
   },

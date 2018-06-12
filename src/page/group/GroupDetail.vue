@@ -205,8 +205,8 @@ export default {
     paddingTop() {
       return {
         paddingTop:
-          (this.bannerHeight + 80 * Math.atan(this.dY / 200)) /
-            (this.bannerHeight * 2) *
+          ((this.bannerHeight + 80 * Math.atan(this.dY / 200)) /
+            (this.bannerHeight * 2)) *
             100 +
           "%"
       };

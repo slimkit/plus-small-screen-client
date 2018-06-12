@@ -214,7 +214,7 @@ export default {
         }
 
         this.topStatus =
-          this.translate >= this.maxDistance * 2 / 3 ? "drop" : "pull";
+          this.translate >= (this.maxDistance * 2) / 3 ? "drop" : "pull";
       }
 
       // if (this.direction === 'up') {

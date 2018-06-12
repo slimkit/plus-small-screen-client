@@ -83,7 +83,9 @@ export default {
       const { follower = false, following = false } = user;
       return follower && following
         ? "eachFollow"
-        : follower ? "follow" : "unFollow";
+        : follower
+          ? "follow"
+          : "unFollow";
     },
     cancel() {
       this.to("/rank/questions");

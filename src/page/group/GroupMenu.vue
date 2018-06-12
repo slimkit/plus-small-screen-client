@@ -23,7 +23,7 @@ export default {
     // 侧边栏相关
     menuStyle() {
       return {
-        transform: `translateX(${this.open ? 0 : 400 / 750 * 100 + "%"})`,
+        transform: `translateX(${this.open ? 0 : (400 / 750) * 100 + "%"})`,
         transition: `all .5s ease`,
         zIndex: this.open ? 99 : -99
       };

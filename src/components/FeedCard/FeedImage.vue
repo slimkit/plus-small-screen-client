@@ -60,7 +60,7 @@ export default {
     longStyle(w, h) {
       return {
         width: w > 518 ? "518px" : w + "px",
-        paddingBottom: h / w * 100 + "%"
+        paddingBottom: (h / w) * 100 + "%"
       };
     }
   }

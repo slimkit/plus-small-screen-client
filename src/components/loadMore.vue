@@ -156,7 +156,9 @@ export default {
     status() {
       return this.dragging && this.dY > this.topDistance
         ? this.topLoadingText
-        : this.requesting ? this.topDropText : this.topPullText;
+        : this.requesting
+          ? this.topDropText
+          : this.topPullText;
     }
   },
   watch: {
