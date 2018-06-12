@@ -178,7 +178,9 @@ export default [
     },
     beforeEnter(to, from, next) {
       navigator.userAgent.toLowerCase().indexOf("micromessenger") > -1
-        ? to.query.code ? next() : next("/signin")
+        ? to.query.code
+          ? next()
+          : next("/signin")
         : next("/signin");
     }
   },

@@ -15,6 +15,12 @@ module.exports = {
       chunkFilename: "js/[name].js"
     }
   },
+  chainWebpack: config => {
+    config.plugin("html").tap(args => {
+      args[0].chunksSortMode = "none";
+      return args;
+    });
+  },
   devServer: {
     open: false,
     disableHostCheck: true,

@@ -23,7 +23,9 @@ export default {
   async refreshCurUserData({ state, commit }) {
     const localUser = state.CURRENTUSER;
     if (localUser && localUser.token) {
-      const { data: { access_token: token } } = await Api.post("/auth/refresh");
+      const {
+        data: { access_token: token }
+      } = await Api.post("/auth/refresh");
       localUser.token = token;
     }
     commit("SAVE_CURRENTUSER", localUser);

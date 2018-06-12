@@ -70,7 +70,7 @@ export default {
       h = h > 960 ? 960 : h;
       return {
         width: w + "px",
-        paddingBottom: h / w * 100 + "%"
+        paddingBottom: (h / w) * 100 + "%"
       };
     }
   }

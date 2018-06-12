@@ -71,7 +71,9 @@ export default {
      * @return   {[type]}            [description]
      */
     goToFeedDetail() {
-      const { commentable: { id = 0, group_id: groupId = 0 } } = this.comment;
+      const {
+        commentable: { id = 0, group_id: groupId = 0 }
+      } = this.comment;
       this.$router.push(`/groups/${groupId}/posts/${id}`);
     },
 

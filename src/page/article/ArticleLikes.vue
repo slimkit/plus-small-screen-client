@@ -79,7 +79,7 @@ export default {
           callback(data.length < 15);
         });
     },
-    onLoadMore() {
+    onLoadMore(callback) {
       this.$http
         .get(this.url, {
           params: {

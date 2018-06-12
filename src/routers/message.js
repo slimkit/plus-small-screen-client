@@ -6,8 +6,6 @@
  * @return   {[type]}            [description]
  */
 
-import WebIM from "@/vendor/easemob";
-import $Message from "@/plugins/message-box";
 const notification = () =>
   import(/* webpackChunkName: 'message' */ "@/page/message/list/notification");
 const msgComments = () =>

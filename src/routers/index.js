@@ -19,7 +19,9 @@ const router = new VueRouter({
     if (savedPosition) {
       return savedPosition;
     } else {
-      const { meta: { keepAlive = false, toTop = false } } = from;
+      const {
+        meta: { keepAlive = false, toTop = false }
+      } = from;
       if (keepAlive && !toTop) {
         from.meta.savedPosition =
           document.body.scrollTop || document.documentElement.scrollTop;

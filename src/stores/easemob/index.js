@@ -1,4 +1,4 @@
-import AppDB, { ChatRoom, ChatMessage } from "@/vendor/easemob/AppDB.js";
+import AppDB from "@/vendor/easemob/AppDB.js";
 
 const state = {
   status: 0,

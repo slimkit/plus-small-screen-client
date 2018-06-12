@@ -20,7 +20,7 @@ export default {
   name: "notFound"
 };
 </script>
-<style lang='less' scode>
+<style lang='less' scope>
 .not_found {
   background: #eee;
   margin: 0;

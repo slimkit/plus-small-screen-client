@@ -72,7 +72,9 @@ export default {
   },
   watch: {
     $route(val) {
-      const { meta: { title } } = val;
+      const {
+        meta: { title }
+      } = val;
       title && (this.title = title);
     },
     title(val) {

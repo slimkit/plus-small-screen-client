@@ -175,7 +175,9 @@ export default {
     this.$store.dispatch("GET_NEW_UNREAD_COUNT");
   },
   beforeRouteLeave(to, from, next) {
-    const { params: { type } } = to;
+    const {
+      params: { type }
+    } = to;
     const resetType =
       type === "followers" ? "following" : type === "mutual" ? "mutual" : "";
     resetType && resetUserCount(resetType);
