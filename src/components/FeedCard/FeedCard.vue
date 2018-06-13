@@ -313,6 +313,7 @@ export default {
                               this.$Message.success("删除动态成功");
                               this.$nextTick(() => {
                                 this.$el.remove();
+                                this.$emit("afterDelete");
                               });
                             });
                         }

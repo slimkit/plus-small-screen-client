@@ -94,7 +94,8 @@
         :key='`ush-${userID}-feed${feed.id}`'>
           <feed-card
             :feed="feed"
-            :timeLine="true" />
+            :timeLine="true"
+            @afterDelete="fetchUserInfo()" />
         </li>
       </ul>
       <div class="m-box m-aln-center m-justify-center load-more-box">
