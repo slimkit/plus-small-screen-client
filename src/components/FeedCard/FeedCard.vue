@@ -190,6 +190,10 @@ export default {
   },
   methods: {
     replaceURI(str) {
+      // 脚本内容以纯文本方式显示
+      const scriptRegex = /<\s*script\s*>(.*?)<\s*\/\s*script\s*>/i;
+      str = str.replace(scriptRegex, "&lt;script&gt;$1&lt;/script&gt;");
+
       const reg = /(https?|http|ftp|file):\/\/[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]/g;
       return str
         ? str.replace(
