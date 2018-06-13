@@ -15,8 +15,8 @@
     </div>
     <div class="m-box m-flex-grow1 m-aln-center m-flex-base0 m-head-top-title m-text-cut">
       <avatar :user="user" />
-      <span 
-      class="m-text-cut m-flex-grow1 m-flex-shrink1" 
+      <span
+      class="m-text-cut m-flex-grow1 m-flex-shrink1"
       style="font-size: 0.32rem; margin-left: 0.1rem">{{ user.name }}</span>
     </div>
     <div class="m-box m-flex-grow1 m-aln-center m-flex-base0 m-justify-end">
@@ -43,7 +43,7 @@
         v-if="img.file"
         :key="img.file"
         :file="img.file">
-        <img 
+        <img
           slot-scope="props"
           v-if="props.src"
           :src="props.src">
@@ -55,9 +55,9 @@
       <div class="m-flex-grow1 m-flex-shrink1 m-art-like-list">
         <router-link tag="div" class="m-box m-aln-center" to="likers" append v-if='likeCount > 0'>
           <ul class="m-box m-flex-grow0 m-flex-shrink0">
-            <li 
+            <li
             :key="id"
-            :style="{ zIndex: 5-index }" 
+            :style="{ zIndex: 5-index }"
             v-for="({user = {}, id}, index) in likes.slice(0, 5)"
             class="m-avatar-box tiny"
             :class="`m-avatar-box-${user.sex}`">
@@ -548,8 +548,5 @@ export default {
     width: 52px;
     height: 52px;
   }
-}
-
-.m-art-rew-list {
 }
 </style>

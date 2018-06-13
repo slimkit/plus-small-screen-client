@@ -8,7 +8,7 @@
     @touchend='stopDrag'
     @mouseleave='stopDrag'
     >
-    <header 
+    <header
       ref="head"
       class="m-box m-lim-width m-pos-f m-head-top bg-transp"
       :class="{ 'show-title': scrollTop > 1 / 2 * bannerHeight }">
@@ -34,8 +34,8 @@
       <div></div>
     </div>
     <!-- style="overflow-x: hidden; overflow-y:auto; min-height: 100vh" -->
-    <main>    
-      <div ref="banner" class="m-urh-banner" 
+    <main>
+      <div ref="banner" class="m-urh-banner"
       :style="[userBackGround,paddingTop, {transitionDuration: dragging ? '0s' : '300ms'}]">
         <div class="m-box-model m-aln-center m-justify-end m-pos-f m-urh-bg-mask">
           <avatar :user="user" size="big" />
@@ -59,10 +59,10 @@
           >{{ tag.name }}</i>
         </p>
       </div>
-      <div 
+      <div
       v-clickoutside="hidenFilter"
-      @click="showFilter = !showFilter" 
-      class="m-box m-aln-center m-justify-bet m-urh-filter-box" 
+      @click="showFilter = !showFilter"
+      class="m-box m-aln-center m-justify-bet m-urh-filter-box"
       >
         <span>{{ feedsCount }}条动态</span>
         <div class="m-box m-aln-center m-urh-filter" v-if="isMine">
@@ -88,7 +88,7 @@
         </div>
       </div>
       <ul class="m-urh-feeds">
-        <li 
+        <li
         v-if="feed.id"
         v-for="feed in feeds"
         :key='`ush-${userID}-feed${feed.id}`'>
@@ -111,7 +111,7 @@
         </svg>
         <span>打赏</span>
       </div>
-      <div 
+      <div
       class="m-flex-grow0 m-flex-shrink0 m-box m-aln-center m-justify-center"
       :class="{ c_59b6d7: relation.status !== 'unFollow' }"
       @click="followUserByStatus(relation.status)">

@@ -27,13 +27,13 @@
             placeholder="用户名不能低于2个中文或4个英文"
             maxlength="8">
           </div>
-          <svg 
+          <svg
             @click="name = ''"
             v-show="name.length > 0"
             class="m-style-svg m-svg-def">
             <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-clean"></use>
           </svg>
-        </div>        
+        </div>
         <div class="m-form-row m-main" v-if='verifiable_type === "sms"'>
           <label for="phone">手机号</label>
           <div class="m-input">
@@ -46,8 +46,8 @@
             placeholder="输入11位手机号">
             <!-- maxlength="11" -->
           </div>
-          <span 
-          class="signup-form--row-append c_59b6d7" 
+          <span
+          class="signup-form--row-append c_59b6d7"
           :class='{ disabled: phone.length < 11 || countdown > 0 }'
           @click='getCode'
           >{{ codeText }}</span>
@@ -57,13 +57,13 @@
           <div class="m-input">
             <input
             id="email"
-            type="email" 
+            type="email"
             v-model.trim='email'
             placeholder="输入邮箱地址"
             >
           </div>
-          <span 
-          class="signup-form--row-append c_59b6d7" 
+          <span
+          class="signup-form--row-append c_59b6d7"
           :class='{ disabled: email.length < 4 || countdown > 0 }'
           @click='getCode'
           >{{ codeText }}</span>
@@ -71,16 +71,16 @@
         <div class="m-form-row m-main">
           <label for="code">验证码</label>
           <div class="m-input">
-            <input 
+            <input
             id="code"
             type="number"
-            pattern="[0-9]*" 
+            pattern="[0-9]*"
             v-model='verifiable_code'
             oninput="value=value.slice(0, 6)"
             placeholder="输入4-6位验证码"
             >
           </div>
-          <svg 
+          <svg
             @click="verifiable_code = ''"
             v-show="verifiable_code.length > 0"
             class="m-style-svg m-svg-def">
@@ -98,19 +98,19 @@
             maxlength='16'
             v-model="password"
             placeholder="输入6位以上登录密码">
-            <input 
+            <input
             v-else
-            id="password" 
+            id="password"
             maxlength='16'
             type="password"
             v-model="password"
-            placeholder="输入6位以上登录密码" 
+            placeholder="输入6位以上登录密码"
             >
           </div>
           <svg
           class="m-style-svg m-svg-def"
           @click="eye=!eye">
-            <use 
+            <use
             xmlns:xlink="http://www.w3.org/1999/xlink"
             :xlink:href='`#eye-${eye?"open":"close"}`'></use>
           </svg>

@@ -1,10 +1,10 @@
 <template>
   <div class="m-box-model m-card" @click="handleView('')">
     <div class="m-box">
-      <div 
-      v-if="timeLine" 
+      <div
+      v-if="timeLine"
       v-html="timeLineText"
-      class="m-box-model m-aln-center m-flex-grow0 m-flex-shrink0 m-card-time-line" 
+      class="m-box-model m-aln-center m-flex-grow0 m-flex-shrink0 m-card-time-line"
       ></div>
       <avatar v-else :user='user' />
       <section class="m-box-model m-flex-grow1 m-flex-shrink1 m-card-main">
