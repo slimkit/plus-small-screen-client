@@ -1,12 +1,12 @@
 <template>
   <div class="m-box m-aln-center m-main user-item" @click='toUserHome'>
     <avatar :user="user" />
-    <section 
+    <section
       class="m-box-model m-flex-grow1 m-flex-shrink1 m-flex-base0 m-text-cut user-item-body">
       <h2 class="m-text-box m-text-cut">{{ user.name }}</h2>
       <p class="m-text-box m-text-cut">{{ user.bio || "这家伙很懒，什么也没留下" }}</p>
     </section>
-    <svg class="m-style-svg m-svg-def" @click.stop="followUser">
+    <svg class="m-style-svg m-svg-def" @click.stop="followUser" v-if="!isMine">
       <use xmlns:xlink="http://www.w3.org/1999/xlink" :xlink:href="`#base-${isFollow}`"></use>
     </svg>
   </div>
@@ -48,6 +48,9 @@ export default {
       set(val) {
         this.follower = val;
       }
+    },
+    isMine() {
+      return this.$store.state.CURRENTUSER.id === this.user.id;
     }
   },
   methods: {

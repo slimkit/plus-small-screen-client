@@ -23,7 +23,7 @@
             <p>累计签到：{{ user.extra.checkin_count || 0 }}</p>
           </div>
         </div>
-        <template>
+        <template v-if="!isMine(user)">
           <svg class="m-style-svg m-svg-big" @click.stop="followUser(user, isFollow(user))">
             <use xmlns:xlink="http://www.w3.org/1999/xlink" :xlink:href="`#base-${isFollow(user)}`"></use>
           </svg>
@@ -64,6 +64,9 @@ export default {
         : follower
           ? "follow"
           : "unFollow";
+    },
+    isMine(user) {
+      return this.$store.state.CURRENTUSER.id === user.id;
     },
     cancel() {
       this.to("/rank/users");
