@@ -287,15 +287,15 @@ export default {
         verifiable_type: verifiableType
       } = this.$data;
 
-      // 判断特殊字符及空格
-      if (!usernameReg.test(name)) {
-        this.$Message.error({ name: "用户名不能包含特殊符号以及空格" });
-        return;
-      }
-
       // 判断首字符是否为数字
       if (!isNaN(name[0])) {
         this.$Message.error({ name: "用户名不能以数字开头" });
+        return;
+      }
+
+      // 判断特殊字符及空格
+      if (!usernameReg.test(name)) {
+        this.$Message.error({ name: "用户名不能包含特殊符号以及空格" });
         return;
       }
 
