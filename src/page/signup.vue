@@ -343,8 +343,11 @@ export default {
             this.$router.push("/signin");
           }
         })
-        .catch(({ response: { data: { errors = {} } = {} } = {} }) => {
-          this.$Message.error(errors);
+        .catch(err => {
+          this.loading = false;
+          this.disable = true;
+          console.warn(err);
+          // this.$Message.error(errors); // 已经弹出过 message 了
         });
     },
     changeType() {
