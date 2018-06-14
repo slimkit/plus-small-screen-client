@@ -19,10 +19,14 @@
       class="m-text-cut m-flex-grow1 m-flex-shrink1"
       style="font-size: 0.32rem; margin-left: 0.1rem">{{ user.name }}</span>
     </div>
-    <div class="m-box m-flex-grow1 m-aln-center m-flex-base0 m-justify-end">
-      <!-- <svg v-if="!isWechat" class='m-style-svg m-svg-def'>
-        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-share"></use>
-      </svg> -->
+    <div
+      class="m-box m-flex-grow1 m-aln-center m-flex-base0 m-justify-end"
+      :class="{ c_59b6d7: relation.status !== 'unFollow' }"
+      @click="followUserByStatus(relation.status)"
+      v-if="!isMine">
+      <svg class="m-style-svg m-svg-def">
+        <use xmlns:xlink="http://www.w3.org/1999/xlink" :xlink:href="relation.icon"></use>
+      </svg>
     </div>
   </header>
   <!-- 内容 -->
@@ -125,6 +129,7 @@ import CommentItem from "@/page/article/ArticleComment.vue";
 import wechatShare from "@/util/wechatShare.js";
 import { limit } from "@/api/api.js";
 import { getFeedComments } from "@/api/feeds.js";
+import { followUserByStatus, getUserInfoById } from "@/api/user.js";
 
 export default {
   name: "feed-detail",
@@ -145,7 +150,8 @@ export default {
 
       fetchComing: false,
       noMoreCom: false,
-      maxComId: 0
+      maxComId: 0,
+      user: {}
     };
   },
   computed: {
@@ -166,10 +172,6 @@ export default {
     },
     CURRENTUSER() {
       return this.$store.state.CURRENTUSER;
-    },
-    user() {
-      const { user } = this.feed;
-      return user && user.id === this.feed.user_id ? user : {};
     },
     isMine() {
       return this.feed.user_id === this.CURRENTUSER.id;
@@ -228,6 +230,39 @@ export default {
       set(val) {
         this.feed.has_collect = val;
       }
+    },
+    relation: {
+      get() {
+        const relations = {
+          unFollow: {
+            text: "关注",
+            status: "unFollow",
+            icon: `#base-unFollow`
+          },
+          follow: {
+            text: "已关注",
+            status: "follow",
+            icon: `#base-follow`
+          },
+          eachFollow: {
+            text: "互相关注",
+            status: "eachFollow",
+            icon: `#base-eachFollow`
+          }
+        };
+        const { follower, following } = this.user;
+        return relations[
+          follower && following
+            ? "eachFollow"
+            : follower
+              ? "follow"
+              : "unFollow"
+        ];
+      },
+
+      set(val) {
+        this.user.follower = val;
+      }
     }
   },
   methods: {
@@ -266,6 +301,7 @@ export default {
           this.feed = data;
           this.oldID = this.feedID;
           this.fetching = false;
+          this.fetchUserInfo();
           this.fetchFeedComments();
           this.fetchRewards();
           this.isWechat &&
@@ -284,6 +320,12 @@ export default {
         .catch(() => {
           this.goBack();
         });
+    },
+    fetchUserInfo() {
+      getUserInfoById(this.feed.user_id, true).then(user => {
+        this.user = Object.assign({}, this.user, user);
+        this.loading = false;
+      });
     },
     fetchFeedComments(after = 0) {
       if (this.fetchComing) return;
@@ -508,6 +550,18 @@ export default {
       } else {
         this.$Message.error("评论内容不能为空");
       }
+    },
+    followUserByStatus(status) {
+      if (!status || this.fetchFollow) return;
+      this.fetchFollow = true;
+
+      followUserByStatus({
+        id: this.user.id,
+        status
+      }).then(follower => {
+        this.relation = follower;
+        this.fetchFollow = false;
+      });
     }
   },
   activated() {
