@@ -127,13 +127,16 @@ export default {
       isSelected
         ? (chooseTags.splice(this.chooseTags.indexOf(tag), 1),
           (status.selected = false),
-          Object.assign(obj, status))
+          Object.assign(obj, status),
+          this.$http.delete(`/user/tags/${tag.id}`))
         : ((status.selected = true),
           (status.Gindex = Gindex),
           (status.Tindex = Tindex),
           chooseTags.length >= 5
             ? this.$Message.error("标签最多可选5个")
-            : (Object.assign(obj, status), chooseTags.push(obj)));
+            : (Object.assign(obj, status),
+              chooseTags.push(obj),
+              this.$http.put(`/user/tags/${tag.id}`)));
       this.$set(this.tags, obj);
       this.chooseTags = chooseTags;
     },
