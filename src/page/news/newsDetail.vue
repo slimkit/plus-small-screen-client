@@ -31,7 +31,7 @@
           <span>来自 {{ news.from || '原创' }}</span>
         </p>
       </section>
-      <p class="m-art-subject">{{ news.subject }}</p>
+      <p class="m-art-subject" v-if="news.subject">{{ news.subject }}</p>
       <div class="m-art-body" v-html='body'></div>
       <div class="m-box m-aln-center m-justify-bet m-art-foot">
         <div class="m-flex-grow1 m-flex-shrink1 m-box m-aln-center m-art-like-list">
