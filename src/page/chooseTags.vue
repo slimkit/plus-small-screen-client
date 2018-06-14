@@ -3,7 +3,7 @@
     <div class="m-box-model m-pos-f p-choose-tags m-main" v-if="show">
       <header class="m-box m-aln-center m-justify-bet m-flex-grow0 m-flex-shrink0 m-head-top m-main m-bb1">
         <div class="m-flex-grow1 m-flex-shrink1">
-          <svg class="m-style-svg m-svg-def" @click="cancel">
+          <svg class="m-style-svg m-svg-def" @click="nextFuc">
             <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-back"></use>
           </svg>
         </div>
@@ -11,14 +11,6 @@
           <span>选择标签</span>
         </div>
         <div class="m-flex-grow1 m-flex-shrink1 m-text-r">
-          <svg v-if="loading" class="m-style-svg m-svg-def">
-            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-loading"></use>
-          </svg>
-          <a 
-            v-else
-            class="m-send-btn"
-            :class="{ disabled }"
-            @click.prevent="nextFuc">下一步</a>
         </div>
       </header>
       <main class="m-box-model m-flex-grow1 m-flex-shrink1">
@@ -113,7 +105,7 @@ export default {
   },
   methods: {
     nextFuc() {
-      if (this.disabled) return;
+      // if (this.disabled) return;
       typeof this.nextStep === "function" && this.nextStep(this.chooseTags);
       this.$nextTick(this.cancel);
     },
