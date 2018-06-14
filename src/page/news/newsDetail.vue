@@ -35,7 +35,7 @@
       <div class="m-art-body" v-html='body'></div>
       <div class="m-box m-aln-center m-justify-bet m-art-foot">
         <div class="m-flex-grow1 m-flex-shrink1 m-box m-aln-center m-art-like-list">
-          <template v-if='likeCount > 0 && audit_status===0'>
+          <template v-if='likeCount > 0 && news.audit_status===0'>
             <ul class="m-box m-flex-grow0 m-flex-shrink0">
               <li 
               :key="id"
