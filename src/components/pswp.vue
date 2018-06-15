@@ -113,6 +113,7 @@ export default {
         loop: false,
         history: true,
         arrowEl: false,
+        tapToClose: true, // 点击关闭
 
         showHideOpacity: true,
         tapToToggleControls: false,
