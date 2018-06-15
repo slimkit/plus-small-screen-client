@@ -101,6 +101,12 @@ export default {
     sendmessage() {
       if (!this.disabled) {
         this.loading = true;
+        // 检测是否存在上传失败的图片
+        if (this.composePhoto.some(item => Object.keys(item).length === 0)) {
+          this.$Message.error("存在上传失败的图片，请确认");
+          this.loading = false;
+          return;
+        }
         if (this.pinned) {
           if (!this.composePhoto.some(item => item.amount > 0)) {
             bus.$emit(
