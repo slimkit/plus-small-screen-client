@@ -7,17 +7,14 @@
       :onLoadMore='onLoadMore'>
       <ul>
         <li
-        class="p-profile-collection-feeds-item" 
-        v-for="feed in feeds"
-        :key="`clet-${feed.id}`"
-        >
+          class="p-profile-collection-feeds-item"
+          v-for="feed in feeds"
+          :key="`clet-${feed.id}`">
           <feed-card
-        
-          :feed="feed"
-          :show-footer="false"
-        />
-      </li>
-    </ul>
+            :feed="feed"
+            :show-footer="false"/>
+        </li>
+      </ul>
     </load-more>
   </div>
 </template>

@@ -113,9 +113,9 @@
         <span>打赏</span>
       </div>
       <div
-      class="m-flex-grow0 m-flex-shrink0 m-box m-aln-center m-justify-center"
-      :class="{ c_59b6d7: relation.status !== 'unFollow' }"
-      @click="followUserByStatus(relation.status)">
+        class="m-flex-grow0 m-flex-shrink0 m-box m-aln-center m-justify-center"
+        :class="{ c_59b6d7: relation.status !== 'unFollow' }"
+        @click="followUserByStatus(relation.status)">
         <svg class="m-style-svg m-svg-def">
           <use xmlns:xlink="http://www.w3.org/1999/xlink" :xlink:href="relation.icon"></use>
         </svg>
@@ -246,11 +246,7 @@ export default {
     },
     userBackGround() {
       const ubg = this.user.bg;
-      return ubg
-        ? {
-            "background-image": `url("${ubg}")`
-          }
-        : {};
+      return ubg ? { "background-image": `url("${ubg}")` } : {};
     },
     verified() {
       return this.user.verified;

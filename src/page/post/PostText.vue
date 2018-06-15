@@ -17,7 +17,7 @@
     <main class="m-flex-grow1 m-flex-shrink1 m-reles-con" style="padding-top: 0.9rem" @click.self='areaFocus'>
       <content-text :rows="8" :maxlength="255" ref="contentText" class='m-reles-txt-wrap' />
     </main>
-    <footer 
+    <footer
         class="m-box-model m-flex-shrink0 m-flex-grow1 m-aln-center m-main"
         style="z-index: 10;">
        <v-switch
@@ -27,14 +27,14 @@
        class="m-box m-bt1 m-bb1 m-lim-width m-pinned-row">
          <slot>是否收费</slot>
        </v-switch>
-       <div 
+       <div
        style="margin-top: -1px"
        class="m-box-model m-lim-width m-main"
        :style="{ visibility: pinned ? 'visible' : 'hidden' }"
        >
          <div class="m-pinned-amount-btns">
             <p class="m-pinned-amount-label">设置文字收费金额</p>
-            <div class="m-box m-aln-center" v-if="items.length > 0">              
+            <div class="m-box m-aln-center" v-if="items.length > 0">
               <button
                 :key="item"
                 v-for="item in items"
@@ -47,10 +47,10 @@
          <div class="m-box m-aln-center m-justify-bet m-bb1 m-bt1 m-pinned-row plr20 m-pinned-amount-customize">
            <span>自定义金额</span>
            <div class="m-box m-aln-center">
-            <input 
+            <input
               type="number"
-              pattern="[0-9]*" 
-              class="m-text-r" 
+              pattern="[0-9]*"
+              class="m-text-r"
               v-model="customAmount"
               placeholder="输入金额"
               oninput="value=value.slice(0, 8)" >

@@ -16,8 +16,8 @@
           @load.stop='loadedImg(img)'
           @error='delPhoto(pics, index)'
           @click='thumbnails(index)'>
-        <div 
-          v-if="edit && !img.loading"  
+        <div
+          v-if="edit && !img.loading"
           @click="editImg(img, index)"
           class="m-rpic-edit-wrap m-rpic-edit m-box m-aln-center m-justify-center m-trans">
           <svg v-if="img.amount > 0" viewBox="0 0 1024 1024" class="m-style-svg m-svg-def" fill="#fff">
@@ -46,25 +46,25 @@
             </svg>
           </div>
         </div>
-      </div> 
-      <label 
+      </div>
+      <label
         v-if="showLabel"
-        for="selectphoto" 
+        for="selectphoto"
         class="m-box-center m-box-center-a image-wrap more-image"
         :class='picClass'>
         <div class="image-placeholder"></div>
-        <svg viewBox="0 0 24 24" class='m-style-svg m-flex-grow1 m-svg-big'> 
-          <path d="M21.8,20.8H2.1c-0.5,0-1.1-0.4-1.1-1V6.3c0-0.5,0.4-1.1,1.1-1.1h4.3L8,3.6c0.1-0.3,0.5-0.4,0.8-0.4H15 c0.3,0,0.5,0.1,0.7,0.3l1.9,1.8h4.3c0.5,0,1.1,0.4,1.1,1.1V20C22.9,20.4,22.5,20.8,21.8,20.8L21.8,20.8z M12,6.6 c-3.4,0-6.1,2.7-6.1,6.1s2.7,6.1,6.1,6.1s6.1-2.7,6.1-6.1S15.4,6.6,12,6.6L12,6.6z M12,16.8c-2.3,0-4.1-1.8-4.1-4.1S9.7,8.6,12,8.6 s4.1,1.8,4.1,4.1S14.3,16.8,12,16.8L12,16.8z"></path> 
+        <svg viewBox="0 0 24 24" class='m-style-svg m-flex-grow1 m-svg-big'>
+          <path d="M21.8,20.8H2.1c-0.5,0-1.1-0.4-1.1-1V6.3c0-0.5,0.4-1.1,1.1-1.1h4.3L8,3.6c0.1-0.3,0.5-0.4,0.8-0.4H15 c0.3,0,0.5,0.1,0.7,0.3l1.9,1.8h4.3c0.5,0,1.1,0.4,1.1,1.1V20C22.9,20.4,22.5,20.8,21.8,20.8L21.8,20.8z M12,6.6 c-3.4,0-6.1,2.7-6.1,6.1s2.7,6.1,6.1,6.1s6.1-2.7,6.1-6.1S15.4,6.6,12,6.6L12,6.6z M12,16.8c-2.3,0-4.1-1.8-4.1-4.1S9.7,8.6,12,8.6 s4.1,1.8,4.1,4.1S14.3,16.8,12,16.8L12,16.8z"></path>
         </svg>
       </label>
     </div>
     <input
-      type="file" 
+      type="file"
       ref="imagefile"
       class="m-rfile"
       id="selectphoto"
-      :multiple="multiple" 
-      :accept="acceptType" 
+      :multiple="multiple"
+      :accept="acceptType"
       @change="selectPhoto">
     <image-paid-option ref="imageOption"/>
   </div>

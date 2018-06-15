@@ -3,7 +3,7 @@
     <div
       @transitionend="transitionend"
       :class="[
-        'v-message', 
+        'v-message',
         `v-message-${type}`]"
       v-show="visible"
       role="alert"

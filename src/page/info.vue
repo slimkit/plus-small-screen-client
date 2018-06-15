@@ -13,7 +13,7 @@
         <svg v-if="loading" class="m-style-svg m-svg-def">
           <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-loading"></use>
         </svg>
-        <a 
+        <a
           v-else
           class="m-send-btn"
           :class="{ disabled }"
@@ -32,7 +32,7 @@
           <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-arrow-r"></use>
         </svg>
         <input
-          type="file" 
+          type="file"
           ref="imagefile"
           class="m-rfile"
           accept="image/jpeg,image/webp,image/jpg,image/png,image/bmp"
@@ -42,7 +42,7 @@
       <section class="m-box m-aln-stre m-justify-bet p-info-row m-bb1">
         <label for="name">用户名</label>
         <div class="m-box m-aln-center m-justify-bet m-flex-grow1 m-flex-shrink1 input">
-          <input 
+          <input
             id="name"
             type="text"
             v-model="name"
@@ -88,12 +88,12 @@
       <section class="m-box m-aln-stre m-justify-bet p-info-row">
         <label for="bio" class="m-flex-grow0 m-flex-shrink0">简介</label>
         <div class="m-box m-aln-center m-justify-bet m-flex-grow1 m-flex-shrink1 input">
-          <span 
+          <span
             v-if="bio.length === 0 && !bioIsFoucs"
             class="placeholder m-flex-grow1"
              @click="editBio">编辑简介</span>
-          <div 
-            v-show="bio.length > 0 || bioIsFoucs" 
+          <div
+            v-show="bio.length > 0 || bioIsFoucs"
             class="m-box-model m-fd-row m-flex-grow1 m-flex-shrink1 m-aln-end m-justify-end m-wz-def">
             <div
               ref="bioEditor"

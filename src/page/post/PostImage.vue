@@ -9,7 +9,7 @@
         <svg v-if="loading" class="m-style-svg m-svg-def">
           <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-loading"></use>
         </svg>
-        <a 
+        <a
           v-else
           class="m-send-btn"
           :class="{ disabled }"
@@ -21,7 +21,7 @@
        @click.self='areaFocus'>
        <content-text
        :rows='8'
-       ref="contentText" 
+       ref="contentText"
        :maxlength="255"
        class='m-reles-txt-wrap'
        :placeholder="`输入要说的话，图文结合更精彩哦`" />

@@ -13,7 +13,7 @@
         </router-link>
       </ul>
     </nav>
-    <jo-load-more 
+    <jo-load-more
       class="p-feed-main"
       @onRefresh='onRefresh'
       @onLoadMore='onLoadMore'
