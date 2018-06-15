@@ -146,6 +146,7 @@ export default {
             this.successCallback();
           })
           .catch(e => {
+            this.$Message.error("发送失败，请稍后再试");
             console.log(e);
             this.loading = false;
           });

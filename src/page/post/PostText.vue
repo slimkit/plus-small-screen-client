@@ -178,6 +178,7 @@ export default {
           this.loading = false;
         })
         .catch(error => {
+          this.$Message.error("发送失败，请稍后重试");
           console.log(error);
           this.loading = false;
         });
