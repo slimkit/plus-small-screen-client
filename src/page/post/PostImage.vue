@@ -61,13 +61,10 @@ export default {
   computed: {
     ...mapGetters(["compose", "composePhoto"]),
     disabled() {
-      const imageAllCompleted = this.composePhoto.some(img => {
-        return !!img.id;
-      });
-      return !(
-        this.composePhoto.length > 0 ||
-        (this.compose.length > 0 && imageAllCompleted)
+      const imageAllCompleted = !this.composePhoto.some(
+        img => Object.keys(img).length === 0
       );
+      return !(imageAllCompleted && this.composePhoto.length > 0);
     }
   },
   methods: {
