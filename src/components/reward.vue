@@ -25,7 +25,7 @@
                   class="m-pinned-amount-btn"
                   :style="{ width: `${1 / items.length * 100}%` }"
                   :class="{ active: ~~amount === ~~item &&  !customAmount }"
-                  @click="chooseDefaultAmount(item)">{{((~~item) / 100).toFixed(2) }} <!-- 元 --></button>
+                  @click="chooseDefaultAmount(item)">{{((~~item) / 100) }}</button>
             </div>
           </div>
           <div class="m-box m-aln-center m-justify-bet m-bb1 m-bt1 m-pinned-row plr20 m-pinned-amount-customize">
@@ -38,7 +38,7 @@
                 v-model="customAmount"
                 placeholder="输入金额"
                 oninput="value=value.slice(0,8)">
-              <span>元</span>
+              <span>积分</span>
             </div>
           </div>
         </div>

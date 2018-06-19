@@ -79,7 +79,7 @@
     <!-- todo 打赏功能 -->
     <div class="m-box-model m-box-center m-box-center-a m-art-reward">
       <button class="m-art-rew-btn" @click="rewardFeed">打 赏</button>
-      <p class="m-art-rew-label"><a href="javascript:;">{{ reward.count | formatNum }}</a>人打赏，共<a href="javascript:;">{{ (~~(reward.amount)/100).toFixed(2) }}</a>元</p>
+      <p class="m-art-rew-label"><a href="javascript:;">{{ reward.count | formatNum }}</a>人打赏，共<a href="javascript:;">{{ (~~(reward.amount)/100) }}</a>积分</p>
       <router-link tag="ul" to="rewarders" append class="m-box m-aln-center m-art-rew-list">
         <li
         :key="rew.id"

@@ -45,7 +45,7 @@
         <button class="m-art-rew-btn" @click="rewardFeed">打 赏</button>
         <p class="m-art-rew-label">
           <a href="javascript:;">{{ reward.count | formatNum }}</a>人打赏，共
-          <a href="javascript:;">{{ (~~(reward.amount)/100).toFixed(2) }}</a>元</p>
+          <a href="javascript:;">{{ (~~(reward.amount)/100) }}</a>积分</p>
         <ul class="m-box m-aln-center m-art-rew-list">
           <li :key="rew.id" v-for="rew in rewardList" :class="`m-avatar-box-${rew.user.sex}`" class="m-flex-grow0 m-flex-shrink0 m-art-rew m-avatar-box tiny">
             <img :src="rew.user.avatar">
