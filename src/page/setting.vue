@@ -13,7 +13,7 @@
     </header>
     <main style="padding-top: 0.9rem">
       <ul class="m-box-model m-entry-group padding">
-        <router-link to="/forgot" tag="li" class="m-entry">
+        <router-link to="/changePassword" tag="li" class="m-entry">
           <span>修改密码</span>
           <svg class="m-style-svg m-svg-def m-entry-append">
             <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-arrow-r"></use>

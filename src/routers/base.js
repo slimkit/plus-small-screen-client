@@ -1,6 +1,7 @@
 import about from "@/page/about.vue";
 
 import forgot from "@/page/forgot";
+import changePassword from "@/page/changePassword";
 import signup from "@/page/signup.vue";
 import signin from "@/page/signin.vue";
 
@@ -54,6 +55,13 @@ export default [
     component: forgot,
     meta: {
       title: "忘记密码"
+    }
+  },
+  {
+    path: "/changePassword",
+    component: changePassword,
+    meta: {
+      title: "修改密码"
     }
   },
   {
