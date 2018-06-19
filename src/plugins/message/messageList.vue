@@ -32,6 +32,7 @@ export default {
   },
   methods: {
     add(msg) {
+      this.closeAll();
       const name = msg.name || getUuid();
       let newMsg = Object.assign(
         {
