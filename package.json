@@ -26,7 +26,6 @@
     "register-service-worker": "^1.0.0",
     "strophe.js": "^1.2.14",
     "swiper": "^4.1.6",
-    "timeago.js": "^3.0.2",
     "underscore": "^1.8.3",
     "vue": "^2.5.16",
     "vue-router": "^3.0.1",
@@ -51,5 +50,7 @@
     "not ie <= 8",
     "Safari 6"
   ],
-  "eslintIgnore": ["dist/*"]
+  "eslintIgnore": [
+    "dist/*"
+  ]
 }

@@ -1,4 +1,3 @@
-import timeago from "timeago.js";
 import plueMessageBundle from "plus-message-bundle";
 
 /**
@@ -61,6 +60,7 @@ export function formatDate(date, fmt = "yyyy/MM/dd hh:mm") {
 
 /**
  * 时间转提示
+ * 用于显示在我的动态时间轴
  * @author jsonleex <jsonlseex@163.com>
  * @param  {String} str
  * @return {String}
@@ -87,12 +87,22 @@ export const time2txt = str => {
 // 格林威治时间和本地时间之间的时差 (单位:毫秒)
 export const timeOffset = new Date().getTimezoneOffset() * 60 * 1000;
 
-export const dateFormat = timeago(null, "zh_CN");
 export const time2tips = date => {
   const time =
     new Date(typeof date === "string" ? date.replace(/-/g, "/") : date) -
     timeOffset;
-  return dateFormat.format(time - new Date() > 0 ? new Date() : time);
+  const offset = (new Date().getTime() - time) / 1000;
+  if (offset < 60) return "1分钟内";
+  if (offset < 3600) return `${~~(offset / 60)}分钟前`;
+  if (offset < 3600 * 24) return `${~~(offset / 3600)}小时前`;
+  // 根据 time 获取到 "16:57"
+  const timeStr = new Date(time).toTimeString().match(/^\d{2}:\d{2}/)[0];
+  if (offset < 3600 * 24 * 2) return `昨天 ${timeStr}`;
+  if (offset < 3600 * 24 * 9) return `${~~(offset / 3600 / 24)}天前 ${timeStr}`;
+  // 根据 time 获取到 "2018/6/19 16:57:39" 然后正则转化为 6-19 16:57
+  return new Date(time)
+    .toLocaleString("zh-CN", { hour12: false })
+    .replace(/^\d+\/(\d+)\/(\d+) (\d+:\d+):\d+$/, "$1-$2 $3");
 };
 
 /**
