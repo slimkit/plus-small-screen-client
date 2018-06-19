@@ -14,8 +14,8 @@
           class="compose-image"
           :class='{loading: img.loading }'
           @load.stop='loadedImg(img)'
-          @error='delPhoto(pics, index)'
-          @click='thumbnails(index)'>
+          @error='reUpload(pics, index)'
+          @click='onClickThumb(index)' />
         <div
           v-if="edit && !img.loading"
           @click="editImg(img, index)"
@@ -252,20 +252,30 @@ export default {
           Object.assign(img, {
             id,
             file: null,
-            loading: !1,
-            error: !1
+            loading: false,
+            error: false
           });
           this.updateComposePhoto(this.pics);
         })
         .catch(() => {
-          img.error = !0;
+          img.error = true;
         });
     },
     delPhoto(pics, index) {
       pics.splice(index, 1);
     },
+    reUpload(pics, index) {
+      pics[index].error = false;
+      this.loadedImg(pics[index]);
+    },
     editImg(img, index) {
       this.$refs.imageOption.show(img, index);
+    },
+    onClickThumb(index) {
+      // 图片上传失败时点击会重新上传，否则打开预览
+      this.pics[index].error
+        ? this.reUpload(this.pics, index)
+        : this.thumbnails(index);
     },
     // 图片预览
     thumbnails(index) {
@@ -313,7 +323,6 @@ export default {
   }
   &.loading:before {
     content: "";
-    display: ;
   }
   &.error {
     &:after {
