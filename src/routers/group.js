@@ -50,7 +50,7 @@ export default [
     component: GroupsPostDetail,
     meta: {
       title: "帖子详情",
-      // keepAlive: true,
+      keepAlive: true,
       requiresAuth: true
     }
   }
