@@ -77,6 +77,14 @@ export default {
         this.feed.liked = val;
       }
     },
+    commentCount: {
+      get() {
+        return this.feed.comments_count || 0;
+      },
+      set(val) {
+        this.feed.comments_count = ~~val;
+      }
+    },
     likeCount: {
       get() {
         return this.feed.likes_count || 0;
@@ -84,9 +92,6 @@ export default {
       set(val) {
         this.feed.likes_count = ~~val;
       }
-    },
-    commentCount() {
-      return this.feed.comments_count;
     },
     body() {
       return this.feed.body || "";
@@ -102,11 +107,14 @@ export default {
     },
     has_collect: {
       get() {
-        return this.feed.collected;
+        return this.feed.collected || 0;
       },
       set(val) {
         this.feed.collected = val;
       }
+    },
+    viewCount() {
+      return this.feed.views_count || 0;
     }
   }
 };
