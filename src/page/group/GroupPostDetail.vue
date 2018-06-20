@@ -6,6 +6,7 @@ import plusImagePlugin from "markdown-it-plus-image";
 
 import FeedDetail from "../feed/feedDetail.vue";
 import { likeGroupPost, collectGroupPost } from "@/api/group.js";
+import { limit } from "@/api/api.js";
 
 import wechatShare from "@/util/wechatShare.js";
 
@@ -173,14 +174,14 @@ export default {
             pinneds.length &&
             (this.pinnedCom = after ? [...this.pinneds, ...pinneds] : pinneds);
 
-          comments && comments.length
-            ? ((this.comments = after
-                ? [...this.comments, ...comments]
-                : comments),
-              (this.maxComId = comments[comments.length - 1].id))
+          if (comments.length) {
+            this.comments = after ? [...this.comments, ...comments] : comments;
+            this.maxComId = comments[comments.length - 1].id;
+          }
+          comments.length === limit
+            ? (this.noMoreCom = false)
             : (this.noMoreCom = true);
           this.$nextTick(() => {
-            console.log("loading change");
             this.fetchComing = false;
             this.loading = false;
           });
