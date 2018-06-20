@@ -85,6 +85,9 @@ export default {
         this.feed.likes_count = ~~val;
       }
     },
+    commentCount() {
+      return this.feed.comments_count;
+    },
     body() {
       return this.feed.body || "";
     },
