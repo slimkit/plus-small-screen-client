@@ -39,6 +39,14 @@
         class="m-urh-banner"
         :style="bannerStyle">
         <div class="m-box-model m-aln-center m-justify-end m-pos-f m-urh-bg-mask">
+          <label class="banner-click-area">
+            <input
+              type="file"
+              ref="imagefile"
+              class="m-rfile"
+              :accept="accept"
+              @change="onBannerChange" />
+          </label>
           <avatar :user="user" size="big" />
           <h3>{{ user.name }}</h3>
           <p>
@@ -140,7 +148,12 @@ import HeadRoom from "headroom.js";
 import wechatShare from "@/util/wechatShare.js";
 
 import { startSingleChat } from "@/vendor/easemob";
-import { followUserByStatus, getUserInfoById } from "@/api/user.js";
+import { checkImageType } from "@/util/imageCheck.js";
+import {
+  followUserByStatus,
+  getUserInfoById,
+  uploadUserBanner
+} from "@/api/user.js";
 
 export default {
   name: "user-home",
@@ -177,11 +190,20 @@ export default {
       startY: 0,
       dragging: false,
       updating: false,
-      bannerStyle: [
-        this.userBackGround,
-        this.paddingTop,
-        { transitionDuration: this.dragging ? "0s" : "300ms" }
-      ],
+
+      accept: {
+        type: [Array, String],
+        default() {
+          return [
+            "image/gif",
+            "image/jpeg",
+            "image/webp",
+            "image/jpg",
+            "image/png",
+            "image/bmp"
+          ];
+        }
+      },
 
       typeFilter: null,
       showFilter: false,
@@ -249,6 +271,13 @@ export default {
     },
     feedsCount() {
       return this.extra.feeds_count || 0;
+    },
+    bannerStyle() {
+      return [
+        this.userBackGround,
+        this.paddingTop,
+        { transitionDuration: this.dragging ? "0s" : "300ms" }
+      ];
     },
     userBackGround() {
       const ubg = this.user.bg;
@@ -382,6 +411,27 @@ export default {
       this.fetchUserInfo();
       this.fetchUserFeed();
       this.fetchUserTags();
+    },
+    onBannerChange() {
+      const $input = this.$refs.imagefile;
+      const file = $input.files[0];
+
+      checkImageType([file])
+        .then(() => {
+          uploadUserBanner(file)
+            .then(() => {
+              this.$Message.success("更新个人背景成功！");
+              this.fetchUserInfo();
+            })
+            .catch(({ response: { data } = {} }) => {
+              console.warn(data);
+              this.$Message.error(data.message);
+            });
+        })
+        .catch(() => {
+          this.$Message.info("请上传正确格式的图片文件");
+          $input.value = "";
+        });
     },
     onScroll: _.debounce(function() {
       this.scrollTop = Math.max(
@@ -611,5 +661,15 @@ export default {
     transform: translateY(100%);
     transition: transform 0.3s ease;
   }
+}
+
+.banner-click-area {
+  display: block;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
 }
 </style>

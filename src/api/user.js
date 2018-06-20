@@ -197,3 +197,17 @@ export function refreshCurrentUserInfo() {
     }
   );
 }
+
+/**
+ * 上传用户主页背景图
+ * @author mutoe <mutoe@foxmail.com>
+ * @param {File} file 图像文件
+ */
+export function uploadUserBanner(file) {
+  const formData = new FormData();
+  formData.append("image", file);
+  return api.post(`/user/bg`, formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+    validateStatus: s => s === 204
+  });
+}
