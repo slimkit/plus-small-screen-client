@@ -6,8 +6,7 @@
     @touchmove.stop='onDrag'
     @mouseup='stopDrag'
     @touchend='stopDrag'
-    @mouseleave='stopDrag'
-    >
+    @mouseleave='stopDrag'>
     <header
       ref="head"
       class="m-box m-lim-width m-pos-f m-head-top bg-transp"
@@ -27,9 +26,7 @@
       <div></div>
       <div></div>
     </div>
-    <main 
-      style="overflow-x: hidden; overflow-y:auto; min-height: 100vh"
-      >
+    <main style="overflow-x: hidden; overflow-y:auto; min-height: 100vh">
       <div ref="banner" class="p-group-detail-banner"
       :style="[groupBackGround,paddingTop, {transitionDuration: dragging ? '0s' : '300ms'}]">
         <div class="m-box m-aln-end m-justify-st m-pos-f p-group-detail-bg-mask">
@@ -59,11 +56,10 @@
         <p>圈主：<span>{{ groupOwner.name }}</span></p>
         <p>简介：<span>{{ summary }}</span></p>
       </div>
-      <div 
-      v-clickoutside="hidenFilter"
-      @click="showFilter = !showFilter" 
-      class="m-box m-aln-center m-justify-bet p-group-detail-filter-box" 
-      >
+      <div
+        v-clickoutside="hidenFilter"
+        @click="showFilter = !showFilter"
+        class="m-box m-aln-center m-justify-bet p-group-detail-filter-box">
         <span>帖子数量<em>{{ groupPostsCount }}</em></span>
         <div class="m-box m-aln-center p-group-detail-filter">
           <span>{{ feedTypes[screen] }}</span>
@@ -73,11 +69,10 @@
           <transition v-if="showFilter">
             <ul class="p-group-detail-filter-options">
               <li
-              :key="key"
-              @click="screen = key"
-              v-for="(val, key) of feedTypes"
-              class="m-box m-aln-center m-justify-bet"
-              >
+                :key="key"
+                @click="screen = key"
+                v-for="(val, key) of feedTypes"
+                class="m-box m-aln-center m-justify-bet">
                 <span>{{ val }}</span>
                 <svg class="m-style-svg m-svg-def" v-if="screen === key">
                   <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-checked"></use>
@@ -89,21 +84,19 @@
       </div>
       <ul class="p-group-detail-feeds">
         <li
-        v-for="feed in pinneds"
-        :key='`gdf-${groupID}-pinned-feed-${feed.id}`'>
+          v-for="feed in pinneds"
+          :key='`gdf-${groupID}-pinned-feed-${feed.id}`'>
           <group-feed-card :pinned="true" :feed="feed" />
         </li>
-        <li 
-        v-for="feed in posts"
-        :key='`gdf-${groupID}-feed-${feed.id}`'>
+        <li
+          v-for="feed in posts"
+          :key='`gdf-${groupID}-feed-${feed.id}`'>
           <group-feed-card :feed="feed" />
         </li>
       </ul>
       <div class="m-box m-aln-center m-justify-center load-more-box">
         <span v-if="noMoreData" class="load-more-ph">---没有更多---</span>
-        <span v-else class="load-more-btn"
-          @click.stop="getFeeds(true)"
-        >
+        <span v-else class="load-more-btn" @click.stop="getFeeds(true)">
           {{fetchFeeding ? "加载中..." : "点击加载更多"}}
         </span>
       </div>

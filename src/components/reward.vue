@@ -19,7 +19,7 @@
           <div class="m-pinned-amount-btns">
             <p class="m-pinned-amount-label">选择打赏金额</p>
             <div class="m-box m-aln-center ">
-                <button 
+                <button
                   :key="item"
                   v-for="item in items"
                   class="m-pinned-amount-btn"
@@ -31,7 +31,7 @@
           <div class="m-box m-aln-center m-justify-bet m-bb1 m-bt1 m-pinned-row plr20 m-pinned-amount-customize">
             <span>自定义金额</span>
             <div class="m-box m-aln-center">
-              <input 
+              <input
                 type="number"
                 class="m-text-r"
                 pattern="[0-9]*"

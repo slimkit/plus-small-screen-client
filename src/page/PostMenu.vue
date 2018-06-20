@@ -10,7 +10,7 @@
         enter-active-class="animated bounceIn"
         class="m-box m-aln-center m-post-menu-list">
           <!-- @click="to('/post/feed?type=1')" -->
-          <div 
+          <div
           v-if="open"
           key="ico_word"
           @click="to('/post/text')"
@@ -19,7 +19,7 @@
             <span>文字</span>
           </div>
           <!-- @click="to('/post/feed?type=2')" -->
-          <div 
+          <div
           v-if="open"
           key="ico_potoablum"
           @click="to('/post/pic')"
@@ -35,7 +35,7 @@
             <img src="../images/ico_contribute@3x.png">
             <span>投稿</span>
           </div>
-          <div 
+          <div
           v-if="open && checkin"
           key="ico_attendance"
           @click="showCheckIn"
@@ -51,7 +51,7 @@
             <img src="../images/ico_question@3x.png">
             <span>提问</span>
           </div>
-<!--           <div 
+<!--           <div
           v-if="open"
           key="ico_fatie"
           @click="to('/post/fatie')"
@@ -60,7 +60,7 @@
             <span>发帖</span>
           </div> -->
         </transition-group>
-        <transition name="pop">        
+        <transition name="pop">
           <button
           @click="cancel"
           class="m-post-menu-btn"

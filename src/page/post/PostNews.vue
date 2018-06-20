@@ -42,7 +42,7 @@
         <div key="step2" class="m-pos-f m-box-model m-flex-grow1 m-flex-shrink1">
           <div class="m-box m-aln-center m-lim-width m-post-news-row m-main m-bb1" @click="switchCate">
             <span class="m-post-news-row-label">选择栏目</span>
-            <div 
+            <div
               class="m-box m-flex-grow1 m-flex-shrink1 m-aln-center m-justify-end"
               :class="{placeholder: !(category.id > 0)}">
               <span>{{ category.name || "选择栏目" }}</span>
@@ -87,15 +87,15 @@
       </template>
       <template v-if="step === 3">
         <div key="step3" class="m-box-model m-flex-grow1 m-flex-shrink1 m-aln-center step3 m-main">
-          <div 
+          <div
             @click="addPoster"
             class="m-box m-aln-center m-justify-center m-poster-box"
             :class="{ loading: poster.loading, error: poster.error }">
-            <img 
+            <img
               v-if="poster.src"
               @load.stop='loadedPoster(poster)'
               @error='posterError'
-              :src="poster.src" 
+              :src="poster.src"
               class="m-poster">
             <div v-else class="m-box-model m-aln-center m-justify-center m-lim-width m-poster-placeholder">
               <svg viewBox="0 0 24 24" class="m-style-svg m-svg-big">
@@ -115,7 +115,7 @@
             </div>
 
             <input
-              type="file" 
+              type="file"
               ref="imagefile"
               class="m-rfile"
               id="selectimage"

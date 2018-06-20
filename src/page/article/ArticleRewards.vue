@@ -13,7 +13,7 @@
     </header>
     <main>
       <jo-load-more ref="loadmore" :autoLoad="false" @onRefresh="onRefresh" @onLoadMore="onLoadMore">
-        <section 
+        <section
           class="m-box m-aln-center m-justify-bet m-art-reward-item m-bb1 m-main"
           v-for="({ user, id, created_at }, index) in rewards"
           :key="`reward-${id}-${index}`">
@@ -67,7 +67,7 @@ export default {
     onRefresh(callback) {
       /**
        * 刷新列表
-       * 
+       *
        *    名称          类型         说明
             limit         integer     默认 15 ，数据返回条数 默认为15
             offset        integer     默认 0 ，翻页标识。

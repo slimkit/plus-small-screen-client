@@ -6,8 +6,7 @@
     @touchmove.stop='onDrag'
     @mouseup='stopDrag'
     @touchend='stopDrag'
-    @mouseleave='stopDrag'
-    >
+    @mouseleave='stopDrag'>
     <header
       ref="head"
       class="m-box m-lim-width m-pos-f m-head-top bg-transp"
@@ -35,8 +34,10 @@
     </div>
     <!-- style="overflow-x: hidden; overflow-y:auto; min-height: 100vh" -->
     <main>
-      <div ref="banner" class="m-urh-banner"
-      :style="[userBackGround,paddingTop, {transitionDuration: dragging ? '0s' : '300ms'}]">
+      <div
+        ref="banner"
+        class="m-urh-banner"
+        :style="bannerStyle">
         <div class="m-box-model m-aln-center m-justify-end m-pos-f m-urh-bg-mask">
           <avatar :user="user" size="big" />
           <h3>{{ user.name }}</h3>
@@ -52,18 +53,18 @@
         <p>简介：<span>{{ bio }}</span></p>
         <p style="margin-top: 0; margin-left: -0.1rem">
           <i
-          v-if="tag.id"
-          class="m-urh-tag"
-          v-for="tag in tags"
-          :key="`tag-${tag.id}`"
-          >{{ tag.name }}</i>
+            v-if="tag.id"
+            class="m-urh-tag"
+            v-for="tag in tags"
+            :key="`tag-${tag.id}`">
+            {{ tag.name }}
+          </i>
         </p>
       </div>
       <div
-      v-clickoutside="hidenFilter"
-      @click="showFilter = !showFilter"
-      class="m-box m-aln-center m-justify-bet m-urh-filter-box"
-      >
+        v-clickoutside="hidenFilter"
+        @click="showFilter = !showFilter"
+        class="m-box m-aln-center m-justify-bet m-urh-filter-box">
         <span>{{ feedsCount }}条动态</span>
         <div class="m-box m-aln-center m-urh-filter" v-if="isMine">
           <span>{{ feedTypes[screen] }}</span>
@@ -73,11 +74,10 @@
           <transition v-if="showFilter">
             <ul class="m-urh-filter-options">
               <li
-              :key="key"
-              @click="screen = key"
-              v-for="(val, key) of feedTypes"
-              class="m-box m-aln-center m-justify-bet"
-              >
+                :key="key"
+                @click="screen = key"
+                v-for="(val, key) of feedTypes"
+                class="m-box m-aln-center m-justify-bet">
                 <span>{{ val }}</span>
                 <svg class="m-style-svg m-svg-def" v-if="screen === key">
                   <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-checked"></use>
@@ -89,9 +89,9 @@
       </div>
       <ul class="m-urh-feeds">
         <li
-        v-if="feed.id"
-        v-for="feed in feeds"
-        :key='`ush-${userID}-feed${feed.id}`'>
+          v-if="feed.id"
+          v-for="feed in feeds"
+          :key='`ush-${userID}-feed${feed.id}`'>
           <feed-card
             :feed="feed"
             :timeLine="true"
@@ -131,6 +131,7 @@
     </footer>
   </div>
 </template>
+
 <script>
 import _ from "lodash";
 import bus from "@/bus.js";
@@ -174,11 +175,16 @@ export default {
       loading: true,
       dY: 0,
       startY: 0,
-      dragging: !1,
-      updating: !1,
+      dragging: false,
+      updating: false,
+      bannerStyle: [
+        this.userBackGround,
+        this.paddingTop,
+        { transitionDuration: this.dragging ? "0s" : "300ms" }
+      ],
 
       typeFilter: null,
-      showFilter: !1,
+      showFilter: false,
       screen: "all",
 
       feeds: [],

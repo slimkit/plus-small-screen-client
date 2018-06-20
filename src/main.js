@@ -6,22 +6,22 @@ import "./util/rem";
 import Modal from "./plugins/modal/";
 // import imgLazy from "./plugins/imgLazy";
 import Message from "./plugins/message/";
-import AsyncImage from "./components/FeedCard/v-async-image.js"; // 存在循环依赖
+import AsyncImage from "./components/FeedCard/v-async-image.js";
 
 import imgCropper from "@/plugins/imgCropper";
 // import Toast from "@/plugins/toast/index.js";
 import lstore from "@/plugins/lstore/index.js";
 
-import Ajax from "./http"; // 存在循环依赖
+import Ajax from "./http";
 import mixin from "./mixin.js";
-import * as filters from "./filters.js"; // 存在循环依赖
+import * as filters from "./filters.js";
 import components from "./components.js";
 
-import store from "./stores/"; // 存在循环依赖
-import router from "./routers/"; // 存在循环依赖
-import App from "./App.vue"; // 存在循环依赖
+import store from "./stores/";
+import router from "./routers/";
+import App from "./App.vue";
 
-import * as WebIM from "@/vendor/easemob"; // 存在循环依赖
+import * as WebIM from "@/vendor/easemob";
 
 Vue.mixin(mixin);
 
@@ -48,9 +48,6 @@ for (const k in filters) {
 if (!window.initUrl) {
   window.initUrl = window.location.href.replace(/(\/$)/, "");
 }
-// for (const k in directives) {
-//   Vue.directive(k, directives[k]);
-// }
 
 /* eslint-disable no-new */
 new Vue({

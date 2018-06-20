@@ -28,7 +28,7 @@
       </router-link>
       <!-- 我加入的 -->
       <div class="m-box-model">
-        <router-link 
+        <router-link
           tag="div"
           :to="`/users/${currentUserID}/group`"
           class="m-box m-aln-center m-justify-bet m-main mt10 group-label m-bb1 m-bt1 m-pos-stick">
@@ -38,7 +38,7 @@
             <svg class="m-style-svg m-svg-def m-entry-append">
               <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-arrow-r"></use>
             </svg>
-          </div>      
+          </div>
         </router-link>
         <ul class="group-list">
           <li v-for="group in groups" :key="`mygroup-${group.id}`">
@@ -57,7 +57,7 @@
             </svg>
             <span style="margin-left: 0.05rem">换一批</span>
           </div>
-        </div>  
+        </div>
         <ul class="group-list">
           <li v-for="group in recGroups" :key="`recgroup-${group.id}`">
             <group-item :group="group" />
