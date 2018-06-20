@@ -306,6 +306,9 @@ export default {
       this.dY > 300 && this.scrollTop <= 0 ? this.updateData() : (this.dY = 0);
     }
   },
+  created() {
+    this.updateData();
+  },
   mounted() {
     this.typeFilter = this.$refs.typeFilter;
     this.bannerHeight = this.$refs.banner.getBoundingClientRect().height;
