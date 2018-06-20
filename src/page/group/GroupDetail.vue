@@ -252,7 +252,7 @@ export default {
       if (this.fetchFeeding) return;
       this.fetchFeeding = true;
       const offset = more ? this.pinneds.length + this.posts.length : 0;
-      getGroudFeedsByType(this.groupID, this.screen, 3, offset).then(
+      getGroudFeedsByType(this.groupID, this.screen, 10, offset).then(
         ({ pinneds = [], posts = [] }) => {
           this.posts = more ? [...this.posts, ...posts] : posts;
           this.pinneds = more ? [...this.pinneds, ...pinneds] : pinneds;

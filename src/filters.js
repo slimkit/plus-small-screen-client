@@ -96,7 +96,12 @@ export const time2tips = date => {
   if (offset < 3600) return `${~~(offset / 60)}分钟前`;
   if (offset < 3600 * 24) return `${~~(offset / 3600)}小时前`;
   // 根据 time 获取到 "16:57"
-  const timeStr = new Date(time).toTimeString().match(/^\d{2}:\d{2}/)[0];
+  let timeStr;
+  try {
+    timeStr = new Date(time).toTimeString().match(/^\d{2}:\d{2}/)[0];
+  } catch (e) {
+    return offset;
+  }
   if (offset < 3600 * 24 * 2) return `昨天 ${timeStr}`;
   if (offset < 3600 * 24 * 9) return `${~~(offset / 3600 / 24)}天前 ${timeStr}`;
   // 根据 time 获取到 "2018/6/19 16:57:39" 然后正则转化为 6-19 16:57

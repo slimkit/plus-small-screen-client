@@ -88,6 +88,9 @@ export default {
       );
     }
   },
+  created() {
+    this.fetchFeed();
+  },
   methods: {
     /**
      * 收藏
@@ -124,6 +127,7 @@ export default {
         .get(`/plus-group/groups/${this.groupID}/posts/${this.feedID}`)
         .then(({ data = {} }) => {
           this.feed = { ...data };
+          this.user = this.feed.user;
           this.oldID = this.feedID;
           this.fetching = false;
           this.fetchFeedComments();
