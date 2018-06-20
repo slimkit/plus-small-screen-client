@@ -17,7 +17,7 @@
       <main class="m-box-model m-aln-center m-justify-center">
         <div class="m-box-model m-lim-width m-main">
           <div class="m-pinned-amount-btns">
-            <p class="m-pinned-amount-label">选择打赏金额</p>
+            <p class="m-pinned-amount-label">选择打赏积分</p>
             <div class="m-box m-aln-center ">
                 <button
                   :key="item"
@@ -25,7 +25,7 @@
                   class="m-pinned-amount-btn"
                   :style="{ width: `${1 / items.length * 100}%` }"
                   :class="{ active: ~~amount === ~~item &&  !customAmount }"
-                  @click="chooseDefaultAmount(item)">{{((~~item) / 100) }}</button>
+                  @click="chooseDefaultAmount(item)">{{ ~~item }}</button>
             </div>
           </div>
           <div class="m-box m-aln-center m-justify-bet m-bb1 m-bt1 m-pinned-row plr20 m-pinned-amount-customize">
@@ -36,7 +36,7 @@
                 class="m-text-r"
                 pattern="[0-9]*"
                 v-model="customAmount"
-                placeholder="输入金额"
+                placeholder="输入积分"
                 oninput="value=value.slice(0,8)">
               <span>积分</span>
             </div>
@@ -81,7 +81,7 @@ export default {
   },
   watch: {
     customAmount(val) {
-      this.amount = ~~val * 100;
+      this.amount = ~~val;
     }
   },
   created() {
