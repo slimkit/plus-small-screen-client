@@ -1,10 +1,10 @@
-import _ from "lodash";
+//import _ from "lodash";
 
 import Api from "@/api/api.js";
 import WebIM from "@/vendor/easemob/index.js";
 import WebIMDB from "@/vendor/easemob/WebIMDB.js";
 
-import lstore from "@/plugins/lstore/lstore.js";
+//import lstore from "@/plugins/lstore/lstore.js";
 
 import { getUserInfoById } from "@/api/user.js";
 
@@ -76,7 +76,7 @@ const actions = {
         type === "chat"
           ? state.currentChatRoom.from != from
           : state.currentChatRoom.from != to
-      ).then(res => {
+      ).then((/*res*/) => {
         /**
          * 添加消息惠后, 触发页面更新
          */
@@ -86,7 +86,7 @@ const actions = {
     });
   },
 
-  setCurrentChatRoom({ commit, dispatch, state }, chatRoom) {
+  setCurrentChatRoom({ /*commit, */ dispatch /*, state*/ }, chatRoom) {
     dispatch("getCurrentChatMessages", chatRoom);
   },
 
