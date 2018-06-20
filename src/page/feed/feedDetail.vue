@@ -70,48 +70,47 @@
             <span>{{ likeCount | formatNum }}人点赞</span>
           </router-link>
         </div>
-        <div class="m-box-model m-aln-end m-art-info">
-          <span>发布于{{ time | time2tips }}</span>
-          <span>{{ feed.feed_view_count || 0 | formatNum }}浏览</span>
-        </div>
+      <div class="m-box-model m-aln-end m-art-info">
+        <span v-if="time">发布于{{ time | time2tips }}</span>
+        <span>{{ feed.feed_view_count || 0 | formatNum }}浏览</span>
       </div>
-      <!-- todo 打赏功能 -->
-      <div class="m-box-model m-box-center m-box-center-a m-art-reward">
-        <button class="m-art-rew-btn" @click="rewardFeed">打 赏</button>
-        <p class="m-art-rew-label"><a href="javascript:;">{{ reward.count | formatNum }}</a>人打赏，共<a href="javascript:;">{{ (~~(reward.amount)/100) }}</a>积分</p>
-        <router-link tag="ul" to="rewarders" append class="m-box m-aln-center m-art-rew-list">
-          <li
-            :key="rew.id"
-            v-for="rew in rewardList"
-            :class="`m-avatar-box-${rew.user.sex}`"
-            class="m-flex-grow0 m-flex-shrink0 m-art-rew m-avatar-box tiny">
-            <img :src="rew.user.avatar">
-          </li>
-          <li class="m-box m-aln-center" v-if="rewardList.length > 0">
-            <svg class="m-style-svg m-svg-def" style="fill:#bfbfbf">
-              <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-arrow-r"></use>
-            </svg>
-          </li>
-        </router-link>
-      </div>
-    </main>
-    <!-- 评论列表 -->
-    <div class="m-box-model m-art-comments" id="comment_list">
-      <ul class="m-box m-aln-center m-art-comments-tabs">
-        <li>{{ commentCount | formatNum }}条评论</li>
-      </ul>
-      <comment-item
-        @on-click="replyComment"
-        v-for="(comment) in pinnedCom"
-        :pinned="true"
-        :key="`pinned-comment-${comment.id}`"
-        :comment="comment"/>
-      <comment-item
-        @on-click="replyComment"
-        v-for="(comment) in comments"
-        :key="comment.id"
-        :comment="comment"/>
-
+    </div>
+    <!-- todo 打赏功能 -->
+    <div class="m-box-model m-box-center m-box-center-a m-art-reward">
+      <button class="m-art-rew-btn" @click="rewardFeed">打 赏</button>
+      <p class="m-art-rew-label"><a href="javascript:;">{{ reward.count | formatNum }}</a>人打赏，共<a href="javascript:;">{{ ~~reward.amount }}</a>积分</p>
+      <router-link tag="ul" to="rewarders" append class="m-box m-aln-center m-art-rew-list">
+        <li
+        :key="rew.id"
+        v-for="rew in rewardList"
+        :class="`m-avatar-box-${rew.user.sex}`"
+        class="m-flex-grow0 m-flex-shrink0 m-art-rew m-avatar-box tiny">
+          <img :src="rew.user.avatar">
+        </li>
+        <li class="m-box m-aln-center" v-if="rewardList.length > 0">
+          <svg class="m-style-svg m-svg-def" style="fill:#bfbfbf">
+            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-arrow-r"></use>
+          </svg>
+        </li>
+      </router-link>
+    </div>
+  </main>
+  <!-- 评论列表 -->
+  <div class="m-box-model m-art-comments" id="comment_list">
+    <ul class="m-box m-aln-center m-art-comments-tabs">
+      <li>{{ commentCount | formatNum }}条评论</li>
+    </ul>
+    <comment-item
+      @on-click="replyComment"
+      v-for="(comment) in pinnedCom"
+      :pinned="true"
+      :key="`pinned-comment-${comment.id}`"
+      :comment="comment"/>
+    <comment-item
+      @on-click="replyComment"
+      v-for="(comment) in comments"
+      :key="comment.id"
+      :comment="comment"/>
       <div class="m-box m-aln-center m-justify-center load-more-box">
         <span v-if="noMoreCom" class="load-more-ph">---没有更多---</span>
         <span v-else class="load-more-btn" @click.stop="fetchFeedComments(maxComId)">
@@ -339,13 +338,15 @@ export default {
       // });
       getFeedComments({ feedId: this.feedID, after })
         .then(({ data: { pinneds = [], comments = [] } }) => {
-          this.pinnedCom = after ? [...this.pinneds, ...pinneds] : pinneds;
-          if (comments && comments.length) {
+          !after && (this.pinnedCom = pinneds);
+
+          if (comments.length) {
             (this.comments = after
               ? [...this.comments, ...comments]
               : comments),
               (this.maxComId = comments[comments.length - 1].id);
           }
+
           comments.length === limit
             ? (this.noMoreCom = false)
             : (this.noMoreCom = true);
