@@ -12,34 +12,29 @@
       <div class="m-box m-flex-grow1 m-aln-center m-flex-base0 m-justify-end"></div>
     </header>
     <div :class="`${prefixCls}-list`">
-      <div :class="`${prefixCls}-list-item`" v-for="(user, index) in users" :key="user.id">
-        <span :class="{ top: index < 3 }" class="rank">{{ index + 1 }}</span>
-        <div :class="`${prefixCls}-info`" @click="to(`/users/${user.id}`)">
-          <avatar :class="`${prefixCls}-user-avatar`" :user="user"></avatar>
-          <div :class="`${prefixCls}-title m-text-c`">
-            <h6>{{ user.name }}</h6>
-          </div>
-        </div>
-        <template v-if="!isMine(user)">
-          <svg class="m-style-svg m-svg-big" @click.stop="followUser(user, isFollow(user))">
-            <use xmlns:xlink="http://www.w3.org/1999/xlink" :xlink:href="`#base-${isFollow(user)}`"></use>
-          </svg>
-        </template>
-      </div>
+      <rank-list-item
+        v-for="(user, index) in users"
+        :prefixCls="prefixCls"
+        :key="user.id"
+        :user="user"
+        :index="index">
+      </rank-list-item>
     </div>
   </div>
 </template>
 
 <script>
-import HeadTop from "../../../components/HeadTop";
-import { followUserByStatus } from "@/api/user.js";
+import HeadTop from "@/components/HeadTop";
+import rankListItem from "../components/rankListItem.vue";
 
 const prefixCls = "rankItem";
+
 export default {
-  components: {
-    HeadTop
-  },
   name: "balanceList",
+  components: {
+    HeadTop,
+    rankListItem
+  },
   data() {
     return {
       prefixCls,
@@ -54,17 +49,6 @@ export default {
   },
 
   methods: {
-    isFollow(user) {
-      const { follower = false, following = false } = user;
-      return follower && following
-        ? "eachFollow"
-        : follower
-          ? "follow"
-          : "unFollow";
-    },
-    isMine(user) {
-      return this.$store.state.CURRENTUSER.id === user.id;
-    },
     cancel() {
       this.to("/rank/users");
     },
@@ -73,18 +57,6 @@ export default {
       if (path) {
         this.$router.push(path);
       }
-    },
-    followUser(user, status) {
-      if (this.loading) return;
-      this.loading = true;
-      followUserByStatus({ status, id: user.id })
-        .then(state => {
-          user.follower = state;
-          this.loading = false;
-        })
-        .catch(() => {
-          this.loading = false;
-        });
     }
   }
 };
