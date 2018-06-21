@@ -11,23 +11,32 @@
       </div>
       <div class="m-box m-flex-grow1 m-aln-center m-flex-base0 m-justify-end"></div>
     </header>
-    <div :class="`${prefixCls}-list`">
-      <rank-list-item
-        v-for="(user, index) in users"
-        :prefixCls="prefixCls"
-        :key="user.id"
-        :user="user"
-        :index="index">
-        <p>粉丝：{{ user.extra.followers_count || 0 }}</p>
-      </rank-list-item>
-    </div>
+    <load-more
+      style="padding-top: .9rem"
+      ref="loadmore"
+      :onRefresh="onRefresh"
+      :onLoadMore="onLoadMore">
+      <div :class="`${prefixCls}-list`">
+        <rank-list-item
+          v-for="(user, index) in users"
+          :prefixCls="prefixCls"
+          :key="user.id"
+          :user="user"
+          :index="index">
+          <p>粉丝：{{ user.extra.followers_count || 0 }}</p>
+        </rank-list-item>
+      </div>
+    </load-more>
   </div>
 </template>
 
 <script>
 import HeadTop from "@/components/HeadTop";
 import rankListItem from "../components/rankListItem.vue";
+import { getRankUsers } from "@/api/ranks.js";
+import { limit } from "@/api/api.js";
 
+const api = "/ranks/followers";
 const prefixCls = "rankItem";
 
 export default {
@@ -39,13 +48,14 @@ export default {
   data() {
     return {
       prefixCls,
-      loading: false
+      loading: false,
+      vuex: "rankFollowers" // vuex主键
     };
   },
 
   computed: {
     users() {
-      return this.$store.getters.getUsersByType("rankFollowers");
+      return this.$store.getters.getUsersByType(this.vuex);
     }
   },
 
@@ -58,6 +68,23 @@ export default {
       if (path) {
         this.$router.push(path);
       }
+    },
+    onRefresh() {
+      getRankUsers(api).then(data => {
+        this.$store.commit("SAVE_RANK_DATA", { name: this.vuex, data });
+        this.$refs.loadmore.topEnd(false);
+      });
+    },
+    onLoadMore() {
+      getRankUsers(api, { offset: this.users.length || 0 }).then(
+        (data = []) => {
+          this.$store.commit("SAVE_RANK_DATA", {
+            name: this.vuex,
+            data: [...this.users, ...data]
+          });
+          this.$refs.loadmore.bottomEnd(data.length < limit);
+        }
+      );
     }
   }
 };

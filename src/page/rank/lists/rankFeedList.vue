@@ -11,22 +11,30 @@
       </div>
       <div class="m-box m-flex-grow1 m-aln-center m-flex-base0 m-justify-end"></div>
     </header>
-    <div :class="`${prefixCls}-list`">
-      <rank-list-item
-        v-for="(user, index) in users"
-        :prefixCls="prefixCls"
-        :key="user.id"
-        :user="user"
-        :index="index">
-        <p>点赞量：{{ user.extra.count || 0 }}</p>
-      </rank-list-item>
-    </div>
+    <load-more
+      style="padding-top: .9rem"
+      ref="loadmore"
+      :onRefresh="onRefresh"
+      :onLoadMore="onLoadMore">
+      <div :class="`${prefixCls}-list`">
+        <rank-list-item
+          v-for="(user, index) in users"
+          :prefixCls="prefixCls"
+          :key="user.id"
+          :user="user"
+          :index="index">
+          <p>点赞量：{{ user.extra.count || 0 }}</p>
+        </rank-list-item>
+      </div>
+    </load-more>
   </div>
 </template>
 
 <script>
 import HeadTop from "@/components/HeadTop";
 import rankListItem from "../components/rankListItem.vue";
+import { getRankUsers } from "@/api/ranks.js";
+import { limit } from "@/api/api.js";
 
 const prefixCls = "rankItem";
 const api = "/feeds/ranks";
@@ -80,23 +88,23 @@ export default {
         this.$router.push(path);
       }
     },
-
-    getUsers() {
-      this.$http
-        .get(
-          api,
-          {
-            params: {
-              type: this.query
-            }
-          },
-          {
-            validateStatus: status => status === 200
-          }
-        )
-        .then(({ data }) => {
-          this.$store.commit("SAVE_RANK_DATA", { name: this.vuex, data });
+    onRefresh() {
+      getRankUsers(api, { type: this.query }).then(data => {
+        this.$store.commit("SAVE_RANK_DATA", { name: this.vuex, data });
+        this.$refs.loadmore.topEnd(false);
+      });
+    },
+    onLoadMore() {
+      getRankUsers(api, {
+        type: this.query,
+        offset: this.users.length || 0
+      }).then((data = []) => {
+        this.$store.commit("SAVE_RANK_DATA", {
+          name: this.vuex,
+          data: [...this.users, ...data]
         });
+        this.$refs.loadmore.bottomEnd(data.length < limit);
+      });
     }
   },
   created() {
@@ -105,7 +113,7 @@ export default {
     this.vuex = config[time].vuex;
     this.query = config[time].query;
     if (this.users.length === 0) {
-      this.getUsers();
+      this.onRefresh();
     }
   }
 };
