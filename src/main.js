@@ -1,3 +1,6 @@
+// 当前构建版本号
+const version = "v4.0.0-rc.4";
+
 import "./style/tsplus.less";
 import "github-markdown-css";
 import Vue from "vue";
@@ -48,6 +51,11 @@ for (const k in filters) {
 if (!window.initUrl) {
   window.initUrl = window.location.href.replace(/(\/$)/, "");
 }
+
+console.log(
+  `%cWelcome to ThinkSNS Plus! Release ${version} by zhiyicx.`,
+  "color: #00A9E0;"
+);
 
 /* eslint-disable no-new */
 new Vue({
