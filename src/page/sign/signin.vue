@@ -22,7 +22,7 @@
               v-model="account"
               placeholder="用户名/手机号/邮箱">
           </div>
-          <svg 
+          <svg
             @click="account = ''"
             v-show="account.length > 0"
             class="m-style-svg m-svg-def">
@@ -39,9 +39,9 @@
               maxlength="16"
               v-model="password"
               placeholder="输入6位以上登录密码">
-            <input 
+            <input
               v-else
-              id="password" 
+              id="password"
               maxlength="16"
               type="password"
               v-model="password"
@@ -74,7 +74,7 @@
           </router-link>
         </div>
       </main>
-      
+
       <!-- TODO: 其他三方登录方式 -->
       <footer class="m-box-model m-trhsignin" v-if="isWechat">
         <div class="m-box m-aln-center m-justify-aro m-trhsignin-list">

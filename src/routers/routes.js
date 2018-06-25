@@ -1,5 +1,6 @@
 import NotFound from "../page/notFound";
 import baseRoutes from "./base.js";
+import signRoutes from "./sign.js";
 import feedRoutes from "./feed.js";
 import newsRoutes from "./news.js";
 import rankRoutes from "./rank.js";
@@ -8,6 +9,7 @@ import groupRoutes from "./group.js";
 import messageRoutes from "./message.js";
 import questionRoutes from "./question.js";
 import profileRoutes from "./profile.js";
+
 /**
  * 钱包页面
  * @auth:  jsonleex <jsonleex@163.com>
@@ -39,6 +41,7 @@ const router = [
   { path: "/", redirect: "/signin" },
   ...baseRoutes,
 
+  ...signRoutes,
   ...feedRoutes,
   ...postRoutes,
   ...newsRoutes,

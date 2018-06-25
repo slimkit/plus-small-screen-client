@@ -1,10 +1,5 @@
 import about from "@/page/about.vue";
 
-import forgot from "@/page/forgot";
-import changePassword from "@/page/changePassword";
-import signup from "@/page/signup.vue";
-import signin from "@/page/signin.vue";
-
 import upgrade from "@/page/upgrade.vue";
 
 /* TODO */
@@ -34,36 +29,6 @@ import searchUser from "@/page/find/FindSearch.vue";
 import $lstore from "@/plugins/lstore";
 
 export default [
-  {
-    path: "/signin",
-    component: signin,
-    meta: {
-      title: "登录",
-      forGuest: true
-    }
-  },
-  {
-    path: "/signup",
-    component: signup,
-    meta: {
-      title: "注册",
-      forGuest: true
-    }
-  },
-  {
-    path: "/forgot",
-    component: forgot,
-    meta: {
-      title: "忘记密码"
-    }
-  },
-  {
-    path: "/changePassword",
-    component: changePassword,
-    meta: {
-      title: "修改密码"
-    }
-  },
   {
     path: "/discover",
     component: discover,
