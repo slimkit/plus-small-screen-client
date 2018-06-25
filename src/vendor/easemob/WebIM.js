@@ -14,7 +14,8 @@ WebIM.conn = new websdk.connection({
   isStropheLog: WebIM.config.isStropheLog,
   autoReconnectNumMax: WebIM.config.autoReconnectNumMax,
   isMultiLoginSessions: WebIM.config.isMultiLoginSessions,
-  autoReconnectInterval: WebIM.config.autoReconnectInterval
+  autoReconnectInterval: WebIM.config.autoReconnectInterval,
+  isDebug: WebIM.config.isDebug
 });
 
 export default WebIM;
