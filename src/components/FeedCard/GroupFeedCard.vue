@@ -94,7 +94,7 @@ export default {
       }
     },
     body() {
-      return this.feed.body || "";
+      return this.feed.summary || "";
     },
     images() {
       let images = [];
