@@ -78,9 +78,11 @@
         </div>
       </main>
       <footer>
-        <router-link to="/signup/protocol" class="register-protocol">
-          点击注册即代表同意《ThinkSNS+用户使用协议》
-        </router-link>
+        <template v-if="showProtocol">
+          <router-link to="/signup/protocol" class="register-protocol">
+            点击注册即代表同意《ThinkSNS+用户使用协议》
+          </router-link>
+        </template>
       </footer>
     </div>
   </transition>
@@ -134,6 +136,9 @@ export default {
     };
   },
   computed: {
+    showProtocol() {
+      return this.$store.state.CONFIG.registerSettings.showTerms;
+    },
     codeText() {
       return this.countdown > 0 ? `${this.countdown}s后重发` : "获取验证码";
     },
