@@ -53,7 +53,7 @@
             <img
               slot-scope="props"
               v-if="props.src"
-              :src="props.src"/>
+              :src="props.src" @click="onFileClick(img)"/>
           </async-file>
           <p class="m-text-box" v-html="formatBody(feedContent)"></p>
         </div>
@@ -580,6 +580,30 @@ export default {
       this.fetchFeed(() => {
         this.$refs.loadmore.topEnd();
       });
+    },
+    onFileClick(paid_node) {
+      if (!paid_node || paid_node.paid) return;
+
+      if (this.$lstore.hasData("H5_ACCESS_TOKEN")) {
+        bus.$emit("payfor", {
+          nodeType: "内容",
+          node: paid_node.paid_node,
+          amount: paid_node.amount,
+          onSuccess: data => {
+            this.$Message.success(data);
+            this.feed.images = null;
+            this.fetchFeed();
+          }
+        });
+      } else {
+        this.$nextTick(() => {
+          const path = this.$route.fullPath;
+          this.$router.push({
+            path: "/signin",
+            query: { redirect: path }
+          });
+        });
+      }
     }
   },
   activated() {
