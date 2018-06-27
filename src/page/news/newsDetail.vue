@@ -367,9 +367,10 @@ export default {
           .post(`/news/${this.newsID}/comments`, params, {
             validataStatus: s => s === 201
           })
-          .then(({ data }) => {
+          .then(() => {
             this.$Message.success("评论成功");
-            console.log(data);
+            this.fetchNewsComments();
+            this.commentCount += 1;
             bus.$emit("commentInput:close", true);
           })
           .catch(() => {
