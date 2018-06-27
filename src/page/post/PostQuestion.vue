@@ -21,7 +21,8 @@
     </header>
     <transition-group
       tag="main"
-      class="m-box-model m-flex-grow1 m-flex-shrink1 p-post-question-main" style="padding-top: 0.9rem;"
+      class="m-box-model m-flex-grow1 m-flex-shrink1 p-post-question-main"
+      style="padding-top: 0.9rem;"
       :enter-active-class="animated.enterClass"
       :leave-active-class="animated.leaveClass">
       <div
@@ -29,29 +30,32 @@
         v-show="step === 1"
         class="m-pos-f m-box-model m-flex-grow1 m-flex-shrink1 m-main">
         <div class="m-box m-flex-grow0 m-shrink0 m-bb1 m-lim-width question-title">
-          <input
-            type="search"
+          <content-text
+            ref="contentText"
+            class='m-reles-txt-wrap'
             placeholder="请输入问题并以问号结尾"
-            maxlength="50"
-            v-model="question.title"
-            @input="serachQuestionByKey" />
+            :rows="1"
+            :maxlength="50"
+            :warnLength="30"
+            @input="serachQuestionByKey"
+            />
         </div>
         <ul class="m-box-model m-flex-grow1 m-flex-shrink1 m-lim-width question-list">
-          <router-link 
-          tag="li"
-          v-if="q.id"
-          :key="q.id"
-          v-for="q in questions"
-          :to='`/questions/${q.id}`'
-          >{{ q.subject }}</router-link>
+          <router-link
+            tag="li"
+            v-for="q in questions"
+            v-if="q.id"
+            :key="q.id"
+            :to='`/questions/${q.id}`'>
+            {{ q.subject }}
+          </router-link>
         </ul>
       </div>
       <div
         key="step2"
         v-show="step === 2"
         class="m-pos-f m-box-model m-flex-grow1 m-flex-shrink1 m-main" @click="autoFoucs">
-        <div
-        class="m-rich-box">
+        <div class="m-rich-box">
           <span class='placeholder' v-if="showPlaceholder">详细描述你的问题，有助于受到准确的回答</span>
           <div
             ref="editor"
@@ -63,15 +67,15 @@
         </div>
       </div>
       <div
-      key="step3"
-      v-show="step === 3"
-      class="m-pos-f m-box-model m-flex-grow1 m-flex-shrink1 m-main">
+        key="step3"
+        v-show="step === 3"
+        class="m-pos-f m-box-model m-flex-grow1 m-flex-shrink1 m-main">
         <ul class="m-flex-grow0 m-flex-shrink0 m-topics ml">
-          <li 
-          class="m-box m-aln-center m-topic"
-          :key="`selected-${topic.id}`"
-          v-for="topic in selectedTops"
-          @click="selectedTopic(topic)">
+          <li
+            class="m-box m-aln-center m-topic"
+            :key="`selected-${topic.id}`"
+            v-for="topic in selectedTops"
+            @click="selectedTopic(topic)">
             <span>{{ topic.name }}</span>
             <svg class="m-style-svg m-svg-def">
               <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-clean"></use>
@@ -105,11 +109,16 @@
     </transition-group>
   </div>
 </template>
+
 <script>
 import _ from "lodash";
+import { mapGetters } from "vuex";
 import bus from "@/bus.js";
+import ContentText from "./components/ContentText.vue";
+
 export default {
   name: "post-question",
+  components: { ContentText },
   data() {
     return {
       step: 1,
@@ -132,6 +141,7 @@ export default {
     };
   },
   computed: {
+    ...mapGetters(["compose"]),
     title() {
       switch (this.step) {
         case 1:
@@ -166,6 +176,9 @@ export default {
           this.$refs.editor.innerHTML = this.question.body;
         });
       val === 3 && this.getTopics();
+    },
+    compose(val) {
+      this.question.title = val;
     }
   },
   methods: {
@@ -177,12 +190,12 @@ export default {
           ? this.$Message.error("添加话题不可以超过5个")
           : this.selectedTops.push(topic);
     },
-    serachQuestionByKey: _.debounce(function(e) {
+    serachQuestionByKey: _.debounce(function() {
       // GET /questions subject
       this.$http
         .get("/questions", {
           params: {
-            subject: e.target.value
+            subject: this.compose
           }
         })
         .then(({ data = [] }) => {
@@ -321,7 +334,7 @@ export default {
     top: 90px;
   }
   .question-title {
-    padding: 40px;
+    padding: 0 40px;
     input {
       font-size: 30px;
       line-height: 1.5;
@@ -330,12 +343,32 @@ export default {
   }
   .question-list {
     li {
-      + li {
-      }
       border-bottom: 1px solid @border-color; /*no*/
       color: @text-color2;
       font-size: 30px;
       padding: 40px;
+    }
+  }
+  .m-reles-body {
+    height: auto;
+    margin-bottom: 0;
+
+    textarea {
+      font-size: 0.32rem;
+      line-height: 1.5;
+      overflow: auto;
+      margin-top: 0.35rem;
+      padding: 0 0.3rem;
+      background-color: transparent;
+      outline: 0;
+      border: 0;
+      resize: none;
+      width: 100%;
+      max-height: 100%;
+      -webkit-box-sizing: border-box;
+      box-sizing: border-box;
+      -webkit-appearance: none !important;
+      -moz-appearance: none !important;
     }
   }
 }
