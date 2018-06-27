@@ -29,7 +29,12 @@
         v-show="step === 1"
         class="m-pos-f m-box-model m-flex-grow1 m-flex-shrink1 m-main">
         <div class="m-box m-flex-grow0 m-shrink0 m-bb1 m-lim-width question-title">
-          <input type="search" v-model="question.title" @input="serachQuestionByKey" placeholder="请输入问题并以问号结尾">
+          <input
+            type="search"
+            placeholder="请输入问题并以问号结尾"
+            maxlength="50"
+            v-model="question.title"
+            @input="serachQuestionByKey" />
         </div>
         <ul class="m-box-model m-flex-grow1 m-flex-shrink1 m-lim-width question-list">
           <router-link 
