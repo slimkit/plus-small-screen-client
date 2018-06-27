@@ -134,7 +134,7 @@ export default {
     &.gif {
       .m-pic:after {
         content: "Gif";
-        backgroud-color: #5dc8ab;
+        background-color: #5dc8ab;
         background-image: linear-gradient(135deg, #60ceb0 50%, #5dc8ab 50%);
       }
     }
