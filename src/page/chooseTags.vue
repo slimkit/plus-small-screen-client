@@ -16,16 +16,16 @@
       <main class="m-box-model m-flex-grow1 m-flex-shrink1">
         <section class="m-flex-grow0 m-flex-shrink0 m-tags-group selected m-bb1">
           <span class="m-tags-label">可选择{{ 5 }}个标签，已选择{{ chooseTags.length }}标签</span>
-          <transition-group tag="ul"
-          style="min-height: 0.9rem"
-          class="m-tags"
-          >
+          <transition-group
+            tag="ul"
+            style="min-height: 0.9rem"
+            class="m-tags">
             <li
-            v-for="tag in chooseTags"
-            v-if="tag.id"
-            :key="`tags-selected-${tag.id}`"
-            @click="switchTagStatus(tag, -1)"
-            class="m-tag">
+              v-for="tag in chooseTags"
+              v-if="tag.id"
+              :key="`tags-selected-${tag.id}`"
+              class="m-tag"
+              @click="switchTagStatus(tag, -1)">
               <svg class="m-style-svg m-svg-def">
                 <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-clean"></use>
               </svg>
@@ -35,20 +35,20 @@
         </section>
         <div class="m-flex-grow1 m-flex-shrink1" style="overflow-y: auto;">
           <section
-          :key="group.id"
-          v-for="(group, Gindex) in tags"
-          class="m-tags-group">
+            v-for="(group, Gindex) in tags"
+            :key="group.id"
+            class="m-tags-group">
             <span class="m-tags-label">{{ group.name }}</span>
-            <transition-group
-            tag="ul"
-            class="m-tags">
+            <transition-group tag="ul" class="m-tags">
               <li
-              v-for="(tag, Tindex) in group.tags"
-              v-if="tag.id"
-              :key="tag.id"
-              @click="switchTagStatus(tag, Gindex, Tindex)"
-              :class="{ selected: tag.selected }"
-              class="m-tag"><span>{{ tag.name }}</span></li>
+                v-for="(tag, Tindex) in group.tags"
+                v-if="tag.id"
+                :key="tag.id"
+                class="m-tag"
+                :class="{ selected: tag.selected }"
+                @click="switchTagStatus(tag, Gindex, Tindex)">
+                <span>{{ tag.name }}</span>
+              </li>
             </transition-group>
           </section>
         </div>
@@ -56,8 +56,56 @@
     </div>
   </transition>
 </template>
+
 <script>
 import bus from "@/bus.js";
+
+const noop = () => {};
+
+/**
+ * 打开选择标签页面 (钩子 -> "choose-tags")
+ * @author jsonleex <jsonlseex@163.com>
+ * @param {Object} options
+ * @param {Number[]} options.chooseTags 初始选择值, 只需传 [tag.id], eg: [1, 2, 3,...]
+ * @param {Function} options.nextStep 点击下一步的回调, 注入已选择的 tags
+ * @param {Function} options.onSelect 选择某个标签时执行的回调函数
+ * @param {Function} options.onRemove 取消选择某个标签时执行的回调函数
+ */
+function onChooseTags({ chooseTags = [], nextStep, onSelect, onRemove }) {
+  this.isFirst = !this.$lstore.hasData("H5_CHOOSE_TAGS_FIRST");
+  [nextStep, onSelect, onRemove].map(fn => {
+    typeof fn === "function" && (this[fn.name] = fn);
+  });
+
+  if (chooseTags && chooseTags.length > 0) {
+    this.tags.forEach((g, Gindex) => {
+      g.tags.forEach((t, Tindex) => {
+        t.Gindex = Gindex;
+        t.Tindex = Tindex;
+        if (chooseTags.indexOf(t.id) > -1) {
+          t.selected = true;
+          this.chooseTags.push(t);
+        }
+      });
+    });
+  }
+
+  this.show = true;
+  this.scrollable = false;
+
+  if (this.isFirst) {
+    this.$nextTick(() => {
+      bus.$emit("info-tips", {
+        content:
+          "标签为全局标签，选择合适的标签，系统可推荐你感兴趣的内容，方便找到相同身份或爱好的人，很重要哦！",
+        onCancel: () => {
+          this.$lstore.setData("H5_CHOOSE_TAGS_FIRST", false);
+        }
+      });
+    });
+  }
+}
+
 export default {
   name: "choose-tags",
   data() {
@@ -76,40 +124,19 @@ export default {
   },
   created() {
     this.fetchTags();
-    bus.$on("choose-tags", ({ nextStep, chooseTags = [] } = {}) => {
-      this.isFirst = !this.$lstore.hasData("H5_CHOOSE_TAGS_FIRST");
-      typeof nextStep === "function" && (this.nextStep = nextStep);
-      chooseTags &&
-        chooseTags.length > 0 &&
-        this.tags.forEach((g, Gindex) => {
-          g.tags.forEach((t, Tindex) => {
-            t.Gindex = Gindex;
-            t.Tindex = Tindex;
-            chooseTags.indexOf(t.id) > -1 &&
-              ((t.selected = true), this.chooseTags.push(t));
-          });
-        });
-      this.show = true;
-      this.scrollable = false;
-      this.isFirst &&
-        this.$nextTick(() => {
-          bus.$emit("info-tips", {
-            content:
-              "标签为全局标签，选择合适的标签，系统可推荐你感兴趣的内容，方便找到相同身份或爱好的人，很重要哦！",
-            onCancel: () => {
-              this.$lstore.setData("H5_CHOOSE_TAGS_FIRST", false);
-            }
-          });
-        });
-    });
+
+    // 注册钩子
+    bus.$on("choose-tags", onChooseTags.bind(this));
   },
   methods: {
     nextFuc() {
       // if (this.disabled) return;
-      typeof this.nextStep === "function" && this.nextStep(this.chooseTags);
+      this.nextStep(this.chooseTags);
       this.$nextTick(this.cancel);
     },
-    nextStep: () => {},
+    nextStep: noop,
+    onRemove: noop,
+    onSelect: noop,
     fetchTags() {
       this.$http.get("/tags").then(({ data }) => {
         this.tags = data;
@@ -124,19 +151,24 @@ export default {
           ? this.tags[Gindex]["tags"][Tindex]
           : this.tags[tag.Gindex]["tags"][tag.Tindex];
 
-      isSelected
-        ? (chooseTags.splice(this.chooseTags.indexOf(tag), 1),
-          (status.selected = false),
-          Object.assign(obj, status),
-          this.$http.delete(`/user/tags/${tag.id}`))
-        : ((status.selected = true),
-          (status.Gindex = Gindex),
-          (status.Tindex = Tindex),
-          chooseTags.length >= 5
-            ? this.$Message.error("标签最多可选5个")
-            : (Object.assign(obj, status),
-              chooseTags.push(obj),
-              this.$http.put(`/user/tags/${tag.id}`)));
+      if (isSelected) {
+        chooseTags.splice(this.chooseTags.indexOf(tag), 1);
+        status.selected = false;
+        Object.assign(obj, status);
+        this.onRemove(tag.id);
+      } else {
+        status.selected = true;
+        status.Gindex = Gindex;
+        status.Tindex = Tindex;
+        if (chooseTags.length >= 5) {
+          this.$Message.error("标签最多可选5个");
+        } else {
+          Object.assign(obj, status);
+          chooseTags.push(obj);
+          this.onSelect(tag.id);
+        }
+      }
+
       this.$set(this.tags, obj);
       this.chooseTags = chooseTags;
     },

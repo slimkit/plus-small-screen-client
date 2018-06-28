@@ -281,23 +281,18 @@ export default {
     },
     switchTags() {
       const chooseTags = this.tags.map(t => t.id);
-      /**
-       * 打开选择标签页面 (钩子 -> "choose-tags")
-       * @author jsonleex <jsonlseex@163.com>
-       * @param  {Object} { nextStep, chooseTags }
-       *
-       *                   nextStep     {Function}     点击下一步的回调, 注入已选择的 tags
-       *
-       *                   chooseTags   {Object}       初始选择值, 只需传 [tag.id], eg: [1, 2, 3,...]
-       */
-      bus.$emit("choose-tags", {
-        nextStep: tags => {
-          this.change =
-            tags.map(n => n.id).join(",") !== this.CURRENTUSER.tags.join(",");
-          this.tags = tags;
-        },
-        chooseTags
-      });
+      const nextStep = tags => {
+        this.change =
+          tags.map(n => n.id).join(",") !== this.CURRENTUSER.tags.join(",");
+        this.tags = tags;
+      };
+      const onSelect = tagId => {
+        this.$http.put(`/user/tags/${tagId}`);
+      };
+      const onRemove = tagId => {
+        this.$http.delete(`/user/tags/${tagId}`);
+      };
+      bus.$emit("choose-tags", { chooseTags, nextStep, onSelect, onRemove });
     },
     switchPosition(val) {
       this.showPosition = !this.showPosition;
