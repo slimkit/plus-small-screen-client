@@ -1,4 +1,4 @@
-import api, { get, limit } from "./api.js";
+import api, { limit } from "./api.js";
 import router from "@/routers";
 /**
  * 获取 首页动态列表
@@ -39,7 +39,7 @@ export function getFeedsByType(type, limit = 15, after) {
  * @type {Number}
  */
 export function getCollectedFeed({ limit = 15, offset = 0 }) {
-  return get("/feeds/collections", {
+  return api.get("/feeds/collections", {
     limit,
     offset
   });
@@ -47,15 +47,29 @@ export function getCollectedFeed({ limit = 15, offset = 0 }) {
 
 // 获取单条动态的评论
 export function getFeedComments({ feedId, after = 0 }) {
-  return get(`/feeds/${feedId}/comments`, {
+  return api.get(`/feeds/${feedId}/comments`, {
     limit,
     after
   });
 }
 
 export function getFeedCommentPinneds(after = 0) {
-  return get("/user/feed-comment-pinneds", {
+  return api.get("/user/feed-comment-pinneds", {
     limit,
     after
+  });
+}
+
+/**
+ * 删除动态评论
+ * @author mutoe <mutoe@foxmail.com>
+ * @export
+ * @param {Number} feedId
+ * @param {Number} commentId
+ * @returns {Promise}
+ */
+export function deleteFeedComment(feedId, commentId) {
+  return api.delete(`/feeds/${feedId}/comments/${commentId}`, {
+    validateStatus: s => s === 204
   });
 }

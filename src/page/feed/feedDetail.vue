@@ -131,7 +131,7 @@ import ArticleCard from "@/page/article/ArticleCard.vue";
 import CommentItem from "@/page/article/ArticleComment.vue";
 import wechatShare from "@/util/wechatShare.js";
 import { limit } from "@/api/api.js";
-import { getFeedComments } from "@/api/feeds.js";
+import { getFeedComments, deleteFeedComment } from "@/api/feeds.js";
 import { followUserByStatus, getUserInfoById } from "@/api/user.js";
 
 export default {
@@ -513,34 +513,27 @@ export default {
           ];
       bus.$emit("actionSheet", [...defaultActions, ...actions], "取消");
     },
-    replyComment(uid, uname) {
-      uid === this.CURRENTUSER.id
-        ? bus.$emit(
-            "actionSheet",
-            [
-              {
-                text: "申请评论置顶",
-                method: () => {
-                  this.$Message.info("置顶功能开发中，敬请期待");
-                }
-              },
-              {
-                text: "删除评论",
-                method: () => {
-                  this.$Message.info("评论删除功能开发中，敬请期待");
-                }
-              }
-            ],
-            "取消"
-          )
-        : bus.$emit("commentInput", {
-            placeholder: `回复： ${uname}`,
-            onOk: text => {
-              this.sendComment({ reply_user: uid, body: text });
+    replyComment(uid, uname, commentId) {
+      if (uid === this.CURRENTUSER.id) {
+        const actionSheet = [
+          {
+            text: "申请评论置顶",
+            method: () => {
+              this.$Message.info("置顶功能开发中，敬请期待");
             }
-          });
+          },
+          { text: "删除评论", method: () => this.deleteComment(commentId) }
+        ];
+        bus.$emit("actionSheet", actionSheet, "取消");
+      } else {
+        bus.$emit("commentInput", {
+          placeholder: `回复： ${uname}`,
+          onOk: text => {
+            this.sendComment({ reply_user: uid, body: text });
+          }
+        });
+      }
     },
-
     sendComment({ reply_user: replyUser, body }) {
       const params = {};
       if (body && body.length > 0) {
@@ -563,6 +556,13 @@ export default {
       } else {
         this.$Message.error("评论内容不能为空");
       }
+    },
+    deleteComment(commentId) {
+      deleteFeedComment(this.feedID, commentId).then(() => {
+        this.fetchFeedComments();
+        this.commentCount -= 1;
+        this.$Message.success("删除评论成功");
+      });
     },
     followUserByStatus(status) {
       if (!status || this.fetchFollow) return;
@@ -634,6 +634,7 @@ export default {
   }
 };
 </script>
+
 <style lang="less">
 .feed-detail-video {
   height: 100vw;
