@@ -22,7 +22,7 @@
       v-if='item.id'
       :key='item.id'
       :detail='item'
-      @on-click='showDetail(item)' />
+      @click='showDetail(item)' />
     </load-more>
     <div @touchmove.prevent>
       <transition name='toast'>

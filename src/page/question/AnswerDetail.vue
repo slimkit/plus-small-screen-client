@@ -58,8 +58,8 @@
       <ul class="m-box m-aln-center m-art-comments-tabs">
         <li>{{ commentCount | formatNum }}条评论</li>
       </ul>
-      <comment-item @on-click="replyComment" v-for="(comment) in pinnedCom" :pinned="true" :key="`pinned-comment-${comment.id}`" :comment="comment" />
-      <comment-item @on-click="replyComment" v-for="(comment) in comments" :key="comment.id" :comment="comment" />
+      <comment-item @click="replyComment" v-for="(comment) in pinnedCom" :pinned="true" :key="`pinned-comment-${comment.id}`" :comment="comment" />
+      <comment-item @click="replyComment" v-for="(comment) in comments" :key="comment.id" :comment="comment" />
       <div class="m-box m-aln-center m-justify-center load-more-box">
         <span v-if="noMoreCom" class="load-more-ph">---没有更多---</span>
         <span v-else class="load-more-btn" @click.stop="fetchAnswerComments(maxComId)">

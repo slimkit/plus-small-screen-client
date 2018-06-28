@@ -104,13 +104,13 @@
           <li>{{ commentCount | formatNum }}条评论</li>
         </ul>
         <comment-item
-          @on-click="replyComment"
+          @click="replyComment"
           v-for="(comment) in pinnedCom"
           :pinned="true"
           :key="`pinned-comment-${comment.id}`"
           :comment="comment"/>
         <comment-item
-          @on-click="replyComment"
+          @click="replyComment"
           v-for="(comment) in comments"
           :key="comment.id"
           :comment="comment"/>

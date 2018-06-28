@@ -66,7 +66,7 @@
           v-for="com in comments"
           v-if="com.id"
           :key="com.id">
-          <comment-item :comment="com" @on-click="commentAction"/>
+          <comment-item :comment="com" @click="commentAction"/>
         </li>
       </ul>
       <div class="m-router-link" v-if="commentCount > 5" @click="handleView('comment_list')">

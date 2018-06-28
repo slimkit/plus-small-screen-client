@@ -46,7 +46,7 @@ export default {
             placeholder: `回复${this.user.name}`,
             reply_user: this.user.id
           };
-      this.$emit("on-click", p);
+      this.$emit("click", p);
     }
   },
   mounted() {

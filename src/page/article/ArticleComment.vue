@@ -89,7 +89,7 @@ export default {
   methods: {
     handelClick() {
       if (!this.isShowAll) return (this.isShowAll = !this.isShowAll);
-      this.$emit("on-click", this.user.id, this.user.name, this.comment.id);
+      this.$emit("click", this.user.id, this.user.name, this.comment.id);
     }
   },
   mounted() {
