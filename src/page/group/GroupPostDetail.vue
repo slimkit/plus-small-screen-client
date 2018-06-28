@@ -1,13 +1,15 @@
 <script>
-import bus from "@/bus.js";
-
 import markdownIt from "markdown-it";
 import plusImagePlugin from "markdown-it-plus-image";
 
 import FeedDetail from "../feed/feedDetail.vue";
-import { likeGroupPost, collectGroupPost } from "@/api/group.js";
+import bus from "@/bus.js";
 import { limit } from "@/api/api.js";
-
+import {
+  likeGroupPost,
+  collectGroupPost,
+  deletePostComment
+} from "@/api/group.js";
 import wechatShare from "@/util/wechatShare.js";
 
 export default {
@@ -59,7 +61,7 @@ export default {
         return this.feed.comments_count || 0;
       },
       set(val) {
-        val > 0, (this.feed.comments_count = val);
+        val > 0 && (this.feed.comments_count = val);
       }
     },
     images() {
@@ -191,7 +193,6 @@ export default {
           this.fetchComing = false;
         });
     },
-
     fetchLikes() {
       this.$http
         .get(
@@ -208,7 +209,6 @@ export default {
           this.feed = { ...this.feed, ...{ likes: data } };
         });
     },
-
     likeFeed() {
       likeGroupPost(this.postID, this.liked)
         .then(() => {
@@ -236,7 +236,6 @@ export default {
           this.fetching = false;
         });
     },
-
     sendComment({ reply_user: replyUser, body }) {
       const params = {};
       if (body && body.length > 0) {
@@ -261,6 +260,13 @@ export default {
     },
     rewardFeed() {
       bus.$emit("reward:groupPost", this.postID);
+    },
+    deleteComment(commentId) {
+      deletePostComment(this.postID, commentId).then(() => {
+        this.fetchFeedComments();
+        this.commentCount -= 1;
+        this.$Message.success("删除评论成功");
+      });
     }
   },
   activated() {

@@ -192,3 +192,17 @@ export function getPostCommentAudits({ after = 0, post = 0 }) {
     post
   });
 }
+
+/**
+ * 删除帖子评论
+ * @author mutoe <mutoe@foxmail.com>
+ * @export
+ * @param {Number} postID
+ * @param {Number} commentID
+ * @returns {Promise}
+ */
+export function deletePostComment(postID, commentID) {
+  return api.delete(`/plus-group/group-posts/${postID}/comments/${commentID}`, {
+    validateStatus: s => s === 204
+  });
+}
