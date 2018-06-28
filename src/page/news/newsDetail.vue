@@ -86,12 +86,15 @@
     </div>
   </article-card>
 </template>
+
 <script>
 import bus from "@/bus.js";
 import md from "@/util/markdown.js";
 import wechatShare from "@/util/wechatShare.js";
 import ArticleCard from "@/page/article/ArticleCard.vue";
 import CommentItem from "@/page/article/ArticleComment.vue";
+import { deleteNewsComment } from "@/api/news";
+
 export default {
   name: "news-detail",
   components: {
@@ -171,7 +174,7 @@ export default {
         return this.news.comment_count || 0;
       },
       set(val) {
-        val > 0, (this.news.comment_count = val);
+        val > 0 && (this.news.comment_count = val);
       }
     },
     time() {
@@ -330,33 +333,24 @@ export default {
           ];
       bus.$emit("actionSheet", [...defaultActions, ...actions], "取消");
     },
-
-    replyComment(uid, uname) {
-      uid === this.uid
-        ? bus.$emit(
-            "actionSheet",
-            [
-              {
-                text: "申请评论置顶",
-                method: () => {
-                  this.$Message.info("置顶功能开发中，敬请期待");
-                }
-              },
-              {
-                text: "删除评论",
-                method: () => {
-                  this.$Message.info("评论删除功能开发中，敬请期待");
-                }
-              }
-            ],
-            "取消"
-          )
-        : bus.$emit("commentInput", {
-            placeholder: `回复： ${uname}`,
-            onOk: text => {
-              this.sendComment({ reply_user: uid, body: text });
-            }
-          });
+    replyComment(uid, uname, commentId) {
+      if (uid === this.uid) {
+        const actionSheet = [
+          {
+            text: "申请评论置顶",
+            method: () => this.$Message.info("置顶功能开发中，敬请期待")
+          },
+          { text: "删除评论", method: () => this.deleteComment(commentId) }
+        ];
+        bus.$emit("actionSheet", actionSheet, "取消");
+      } else {
+        bus.$emit("commentInput", {
+          placeholder: `回复： ${uname}`,
+          onOk: text => {
+            this.sendComment({ reply_user: uid, body: text });
+          }
+        });
+      }
     },
     sendComment({ reply_user: replyUser, body }) {
       const params = {};
@@ -380,6 +374,13 @@ export default {
       } else {
         this.$Message.error("评论内容不能为空");
       }
+    },
+    deleteComment(commentId) {
+      deleteNewsComment(this.newsID, commentId).then(() => {
+        this.fetchNewsComments();
+        this.commentCount -= 1;
+        this.this.$Message.success("删除评论成功");
+      });
     }
   },
   activated() {

@@ -1,5 +1,5 @@
-import { get, limit } from "./api.js";
-const uri = "/user/news/contributes";
+import api, { limit } from "./api.js";
+
 /**
  * 获取当前用户投稿列表
  * @Author   Wayne
@@ -9,7 +9,7 @@ const uri = "/user/news/contributes";
  * @return   [Promise]
  */
 export function getMyNews({ type = 0, limit = 15, after = 0 }) {
-  return get(uri, {
+  return api.get("/user/news/contributes", {
     type,
     limit,
     after
@@ -27,7 +27,7 @@ export function getMyNews({ type = 0, limit = 15, after = 0 }) {
 export function searchNewsByKey(key = "", limit = 15, after = 0) {
   return !key
     ? Promise.resolve([])
-    : get(`/news?key=${key}&limit=${limit}&after=${after}`).then(
+    : api.get(`/news?key=${key}&limit=${limit}&after=${after}`).then(
         ({ data = [] }) => {
           return data;
         },
@@ -39,8 +39,22 @@ export function searchNewsByKey(key = "", limit = 15, after = 0) {
 }
 
 export function getNewsCommentPinneds(after = 0) {
-  return get("/news/comments/pinneds", {
+  return api.get("/news/comments/pinneds", {
     limit,
     after
+  });
+}
+
+/**
+ * 删除评论
+ * @author mutoe <mutoe@foxmail.com>
+ * @export
+ * @param {Number} newsId 资讯 id
+ * @param {Number} commentId 评论 id
+ * @returns {Promise}
+ */
+export function deleteNewsComment(newsId, commentId) {
+  return api.delete(`/news/${newsId}/comments/${commentId}`, {
+    validateStatus: s => s === 204
   });
 }
