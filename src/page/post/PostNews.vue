@@ -129,11 +129,14 @@
     <choose-cate />
   </div>
 </template>
+
 <script>
 import bus from "@/bus.js";
 import { mapState } from "vuex";
-import sendImage from "@/util/SendImage.js";
 import chooseCate from "@/page/chooseCate.vue";
+import sendImage from "@/util/SendImage.js";
+import { postNews } from "@/api/news.js";
+
 export default {
   name: "post-news",
   components: {
@@ -296,17 +299,10 @@ export default {
       this.news.author && (param.author = this.news.author);
       this.news.subject && (param.subject = this.news.subject);
 
-      // POST /news/categories/:category/news
-      this.$http
-        .post(`/news/categories/${this.category.id}/news`, param)
-        .then(({ data }) => {
-          this.$Message.success(data);
-          this.goBack();
-        })
-        .catch(err => {
-          console.log(err);
-          this.$Message.error("发生了一些错误");
-        });
+      postNews(this.category.id, param).then(({ data }) => {
+        this.$Message.success(data);
+        this.goBack();
+      });
     },
     handleOk() {
       const { title, content } = this.news;
@@ -365,6 +361,7 @@ export default {
   }
 };
 </script>
+
 <style lang="less">
 .p-post-news {
   min-height: 100vh;

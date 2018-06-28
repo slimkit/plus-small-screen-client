@@ -17,6 +17,28 @@ export function getMyNews({ type = 0, limit = 15, after = 0 }) {
 }
 
 /**
+ * 新增投稿
+ * @author mutoe <mutoe@foxmail.com>
+ * @export
+ * @param {Number} categoryId
+ * @param {Object} params
+ * @param {String} params.title 标题
+ * @param {String} params.content 内容
+ * @param {Number|Number[]} params.tags 标签id或其数组
+ * @param {String=} params.subject 概要
+ * @param {Number=} params.image 缩略图
+ * @param {String=} params.from 资讯来源
+ * @param {String=} params.author 作者
+ * @param {String=} params.text_content 纯文本
+ * @returns {Promise}
+ */
+export function postNews(categoryId, params) {
+  return api.post(`/news/categories/${categoryId}/currency-news`, params, {
+    validateStatus: s => s === 201
+  });
+}
+
+/**
  * 搜索资讯
  * @author jsonleex <jsonlseex@163.com>
  * @param  {String} key
