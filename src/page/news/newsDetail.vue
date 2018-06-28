@@ -64,17 +64,17 @@
         <li>{{ commentCount | formatNum }}条评论</li>
       </ul>
       <comment-item
-        v-if="news.audit_status===0"
         v-for="(comment) in pinnedCom"
-        :pinned="true"
-        :key="`pinned-${comment.id}`"
-        :comment="comment"/>
-      <comment-item
         v-if="news.audit_status===0"
-        @click="replyComment"
+        :key="`pinned-${comment.id}`"
+        :comment="comment"
+        :pinned="true" />
+      <comment-item
         v-for="(comment) in comments"
+        v-if="news.audit_status===0"
         :key="`comment-${comment.id}`"
-        :comment="comment"/>
+        :comment="comment"
+        @click="replyComment" />
 
         <div v-if="news.audit_status===0" class="m-box m-aln-center m-justify-center load-more-box">
           <span v-if="noMoreCom" class="load-more-ph">---没有更多---</span>
