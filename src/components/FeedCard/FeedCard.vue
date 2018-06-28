@@ -440,7 +440,6 @@ export default {
       margin-left: 5px;
       // filter: DXImageTransform.Microsoft.Blur(pixelradius=2);
       zoom: 1;
-      pause-before: 3s;
     }
   }
   &-body {
