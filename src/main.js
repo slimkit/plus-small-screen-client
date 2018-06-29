@@ -1,4 +1,4 @@
-// 当前构建版本号
+// 当前构建版本号 每次 release tag 后将此版本推进
 const version = "v4.0.0-rc.6";
 
 import "./style/tsplus.less";
@@ -32,7 +32,7 @@ components.forEach(component => {
   Vue.component(component.name, component);
 });
 
-// Vue.config.productionTip = false;
+Vue.config.productionTip = false;
 
 Vue.prototype.$http = Ajax;
 Vue.prototype.$Modal = Modal;
@@ -52,11 +52,6 @@ if (!window.initUrl) {
   window.initUrl = window.location.href.replace(/(\/$)/, "");
 }
 
-console.log(
-  `%cWelcome to ThinkSNS Plus! Release ${version} by zhiyicx.`,
-  "color: #00A9E0;"
-);
-
 /* eslint-disable no-new */
 new Vue({
   store,
@@ -66,3 +61,11 @@ new Vue({
     WebIM.openWebIM();
   }
 }).$mount("#app");
+
+// 版本号输出
+console.log(
+  `%cWelcome to ThinkSNS Plus! Release %c${version}%c by zhiyicx.`,
+  "color: #00A9E0;",
+  "background:#ddd ; padding: 1px 5px; border-radius: 3px;  color: #444;",
+  "color: #00A9E0;background: transparent;"
+);
