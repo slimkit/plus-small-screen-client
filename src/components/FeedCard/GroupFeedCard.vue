@@ -47,8 +47,9 @@ export default {
           this.commentCount += 1;
           this.comments.unshift(data.comment);
           this.$Message.success("评论成功");
+          bus.$emit("commentInput:close", true);
         })
-        .finally(() => {
+        .catch(() => {
           bus.$emit("commentInput:close", true);
         });
     },

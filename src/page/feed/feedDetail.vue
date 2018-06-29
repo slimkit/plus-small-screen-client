@@ -328,11 +328,12 @@ export default {
                     }`
                   : ""
             });
+          if (callback && typeof callback === "function") {
+            callback();
+          }
         })
         .catch(() => {
           this.goBack();
-        })
-        .finally(() => {
           if (callback && typeof callback === "function") {
             callback();
           }

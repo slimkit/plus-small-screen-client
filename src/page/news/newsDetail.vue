@@ -256,8 +256,9 @@ export default {
           comments.length
             ? (this.maxComId = comments[comments.length - 1].id)
             : (this.noMoreCom = true);
+          this.fetchComing = false;
         })
-        .finally(() => {
+        .catch(() => {
           this.fetchComing = false;
         });
     },
