@@ -91,7 +91,11 @@ import md from "@/util/markdown.js";
 import wechatShare from "@/util/wechatShare.js";
 import ArticleCard from "@/page/article/ArticleCard.vue";
 import CommentItem from "@/page/article/ArticleComment.vue";
-import { deleteNewsComment, applyTopNewsComment } from "@/api/news.js";
+import {
+  deleteNewsComment,
+  applyTopNewsComment,
+  getNewsComments
+} from "@/api/news.js";
 
 export default {
   name: "news-detail",
@@ -241,13 +245,10 @@ export default {
       });
     },
     fetchNewsComments(after = 0) {
-      // GET /news/{news}/comments
       if (this.fetchComing) return;
       this.fetchComing = true;
-      this.$http
-        .get(`/news/${this.newsID}/comments`, {
-          params: { after }
-        })
+
+      getNewsComments(this.newsID, { after })
         .then(({ data: { pinneds = [], comments = [] } }) => {
           this.pinnedCom = after ? [...this.pinneds, ...pinneds] : pinneds;
           this.comments = after ? [...this.comments, ...comments] : comments;

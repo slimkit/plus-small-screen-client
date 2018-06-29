@@ -68,6 +68,23 @@ export function getNewsCommentPinneds(after = 0) {
 }
 
 /**
+ * 获取某资讯下的全部评论
+ * @author mutoe <mutoe@foxmail.com>
+ * @export
+ * @param {number} newsId
+ * @param {Object} params
+ * @param {number} params.after
+ * @param {number} params.limit
+ * @returns
+ */
+export function getNewsComments(newsId, params) {
+  return api.get(`/news/${newsId}/comments`, {
+    params,
+    validateStatus: s => s === 200
+  });
+}
+
+/**
  * 申请评论置顶
  * @author mutoe <mutoe@foxmail.com>
  * @export
