@@ -74,13 +74,13 @@
         :key="`comment-${comment.id}`"
         :comment="comment"
         @click="replyComment" />
-        <div v-if="news.audit_status===0" class="m-box m-aln-center m-justify-center load-more-box">
-          <span v-if="noMoreCom" class="load-more-ph">---没有更多---</span>
-          <span v-else class="load-more-btn" @click.stop="fetchNewsComments(maxComId)">
-            {{fetchComing ? "加载中..." : "点击加载更多"}}
-          </span>
-          <!-- <button v-else class="load-more-btn" @click.stop="fetchNewsComments(maxComId)"></button> -->
-        </div>
+      <div v-if="news.audit_status===0" class="m-box m-aln-center m-justify-center load-more-box">
+        <span v-if="noMoreCom" class="load-more-ph">---没有更多---</span>
+        <span v-else class="load-more-btn" @click.stop="fetchNewsComments(maxComId)">
+          {{fetchComing ? "加载中..." : "点击加载更多"}}
+        </span>
+        <!-- <button v-else class="load-more-btn" @click.stop="fetchNewsComments(maxComId)"></button> -->
+      </div>
     </div>
   </article-card>
 </template>
@@ -172,7 +172,7 @@ export default {
         return this.news.comment_count || 0;
       },
       set(val) {
-        val > 0 && (this.news.comment_count = val);
+        this.news.comment_count = val;
       }
     },
     time() {
@@ -246,23 +246,16 @@ export default {
       this.fetchComing = true;
       this.$http
         .get(`/news/${this.newsID}/comments`, {
-          params: {
-            after
-          }
+          params: { after }
         })
         .then(({ data: { pinneds = [], comments = [] } }) => {
-          pinneds &&
-            pinneds.length &&
-            (this.pinnedCom = after ? [...this.pinneds, ...pinneds] : pinneds);
-          comments && comments.length
-            ? ((this.comments = after
-                ? [...this.comments, ...comments]
-                : comments),
-              (this.maxComId = comments[comments.length - 1].id))
+          this.pinnedCom = after ? [...this.pinneds, ...pinneds] : pinneds;
+          this.comments = after ? [...this.comments, ...comments] : comments;
+          comments.length
+            ? (this.maxComId = comments[comments.length - 1].id)
             : (this.noMoreCom = true);
-          this.fetchComing = false;
         })
-        .catch(() => {
+        .finally(() => {
           this.fetchComing = false;
         });
     },
