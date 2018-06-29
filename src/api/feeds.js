@@ -86,6 +86,23 @@ export function getFeedCommentPinneds(after = 0) {
 }
 
 /**
+ * 评论申请置顶
+ * @author mutoe <mutoe@foxmail.com>
+ * @export
+ * @param {Object} payload 第一个参数
+ * @param {Number} payload.feedId
+ * @param {Number} payload.commentId
+ * @param {Object} data post入参
+ * @param {Number} data.amount 置顶总价
+ * @param {Number} data.day 置顶天数
+ * @returns Promise
+ */
+export function applyTopFeedComment({ feedId, commentId }, data) {
+  const url = `/feeds/${feedId}/comments/${commentId}/currency-pinneds`;
+  return api.post(url, data, { validateStatus: s => s === 201 });
+}
+
+/**
  * 删除动态评论
  * @author mutoe <mutoe@foxmail.com>
  * @export

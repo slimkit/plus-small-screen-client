@@ -83,7 +83,7 @@ import FeedImage from "./FeedImage.vue";
 import FeedVideo from "./FeedVideo.vue";
 import CommentItem from "./CommentItem.vue";
 import { time2txt } from "@/filters.js";
-import { deleteFeed, applyTopFeed } from "@/api/feeds.js";
+import { deleteFeed, applyTopFeed, applyTopFeedComment } from "@/api/feeds.js";
 
 export default {
   name: "feed-card",
@@ -337,13 +337,17 @@ export default {
           ];
       bus.$emit("actionSheet", [...base, ...actions], "取消");
     },
-    commentAction({ isMine = false, placeholder, reply_user }) {
+    commentAction({ isMine = false, placeholder, reply_user, comment }) {
       isMine
         ? bus.$emit("actionSheet", [
             {
               text: "申请评论置顶",
               method: () => {
-                console.log("申请评论置顶");
+                bus.$emit("applyTop", {
+                  type: "feedComment",
+                  api: applyTopFeedComment,
+                  payload: { feedId: this.feedID, commentId: comment.id }
+                });
               }
             },
             {

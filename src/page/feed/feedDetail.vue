@@ -136,6 +136,7 @@ import {
   deleteFeed,
   getFeedComments,
   deleteFeedComment,
+  applyTopFeedComment,
   applyTopFeed
 } from "@/api/feeds.js";
 
@@ -517,7 +518,11 @@ export default {
           {
             text: "申请评论置顶",
             method: () => {
-              this.$Message.info("置顶功能开发中，敬请期待");
+              bus.$emit("applyTop", {
+                type: "feedComment",
+                api: applyTopFeedComment,
+                payload: { feedId: this.feedID, commentId }
+              });
             }
           },
           { text: "删除评论", method: () => this.deleteComment(commentId) }
