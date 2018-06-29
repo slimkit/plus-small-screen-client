@@ -194,6 +194,24 @@ export function getPostCommentAudits({ after = 0, post = 0 }) {
 }
 
 /**
+ * 申请评论置顶
+ * @author mutoe <mutoe@foxmail.com>
+ * @export
+ * @param {Object} payload
+ * @param {Number} payload.postId
+ * @param {Number} payload.commentId
+ * @param {Object} data
+ * @param {Number} data.amount
+ * @param {Number} data.day
+ * @returns {Promise}
+ */
+export function applyTopPostComment({ postId, commentId }, data) {
+  const url = `/plus-group/currency-pinned/comments/${commentId}`;
+  Object.assign(data, { post_id: postId });
+  return api.post(url, data, { validateStatus: s => s === 201 });
+}
+
+/**
  * 删除帖子评论
  * @author mutoe <mutoe@foxmail.com>
  * @export

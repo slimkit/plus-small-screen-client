@@ -1,16 +1,16 @@
 <script>
+import bus from "@/bus.js";
 import markdownIt from "markdown-it";
 import plusImagePlugin from "markdown-it-plus-image";
-
 import FeedDetail from "../feed/feedDetail.vue";
-import bus from "@/bus.js";
+import wechatShare from "@/util/wechatShare.js";
 import { limit } from "@/api/api.js";
 import {
   likeGroupPost,
   collectGroupPost,
+  applyTopPostComment,
   deletePostComment
 } from "@/api/group.js";
-import wechatShare from "@/util/wechatShare.js";
 
 export default {
   name: "group-post-detail",
@@ -235,6 +235,31 @@ export default {
         .catch(() => {
           this.fetching = false;
         });
+    },
+    replyComment(uid, uname, commentId) {
+      if (uid === this.CURRENTUSER.id) {
+        const actionSheet = [
+          {
+            text: "申请评论置顶",
+            method: () => {
+              bus.$emit("applyTop", {
+                type: "postComment",
+                api: applyTopPostComment,
+                payload: { postId: Number(this.postID), commentId }
+              });
+            }
+          },
+          { text: "删除评论", method: () => this.deleteComment(commentId) }
+        ];
+        bus.$emit("actionSheet", actionSheet, "取消");
+      } else {
+        bus.$emit("commentInput", {
+          placeholder: `回复： ${uname}`,
+          onOk: text => {
+            this.sendComment({ reply_user: uid, body: text });
+          }
+        });
+      }
     },
     sendComment({ reply_user: replyUser, body }) {
       const params = {};

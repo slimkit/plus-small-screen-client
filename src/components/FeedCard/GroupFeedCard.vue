@@ -1,7 +1,7 @@
 <script>
 import bus from "@/bus.js";
 import FeedCard from "./FeedCard.vue";
-import { collectGroupPost } from "@/api/group.js";
+import { collectGroupPost, applyTopPostComment } from "@/api/group.js";
 export default {
   name: "group-feed-card",
   extends: FeedCard,
@@ -66,6 +66,31 @@ export default {
         }
       ];
       bus.$emit("actionSheet", [...base], "取消");
+    },
+    commentAction({ isMine = false, placeholder, reply_user, comment }) {
+      isMine
+        ? bus.$emit("actionSheet", [
+            {
+              text: "申请评论置顶",
+              method: () => {
+                bus.$emit("applyTop", {
+                  type: "postComment",
+                  api: applyTopPostComment,
+                  payload: { postId: this.feedID, commentId: comment.id }
+                });
+              }
+            },
+            {
+              text: "删除评论",
+              method: () => {
+                console.log("删除评论");
+              }
+            }
+          ])
+        : this.handleComment({
+            placeholder,
+            reply_user
+          });
     }
   },
   computed: {
