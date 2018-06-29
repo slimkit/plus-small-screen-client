@@ -83,7 +83,12 @@ import FeedImage from "./FeedImage.vue";
 import FeedVideo from "./FeedVideo.vue";
 import CommentItem from "./CommentItem.vue";
 import { time2txt } from "@/filters.js";
-import { deleteFeed, applyTopFeed, applyTopFeedComment } from "@/api/feeds.js";
+import {
+  applyTopFeed,
+  applyTopFeedComment,
+  deleteFeed,
+  deleteFeedComment
+} from "@/api/feeds.js";
 
 export default {
   name: "feed-card",
@@ -117,8 +122,13 @@ export default {
     feedID() {
       return this.feed.id;
     },
-    comments() {
-      return this.feed.comments.slice(0, 5);
+    comments: {
+      get() {
+        return this.feed.comments.slice(0, 5);
+      },
+      set(val) {
+        this.feed.comments = val;
+      }
     },
     liked: {
       get() {
@@ -141,7 +151,7 @@ export default {
         return this.feed.feed_comment_count || 0;
       },
       set(val) {
-        val > 0, (this.feed.feed_comment_count = val);
+        val > 0 && (this.feed.feed_comment_count = val);
       }
     },
     viewCount() {
@@ -350,12 +360,7 @@ export default {
                 });
               }
             },
-            {
-              text: "删除评论",
-              method: () => {
-                console.log("删除评论");
-              }
-            }
+            { text: "删除评论", method: () => this.deleteComment(comment.id) }
           ])
         : this.handleComment({
             placeholder,
@@ -384,6 +389,13 @@ export default {
       } else {
         this.$Message.error("评论内容不能为空");
       }
+    },
+    deleteComment(commentId) {
+      deleteFeedComment(this.feedID, commentId).then(() => {
+        this.feed.comments = this.feed.comments.filter(c => c.id !== commentId);
+        this.commentCount -= 1;
+        this.$Message.success("删除评论成功");
+      });
     }
   },
   mounted() {

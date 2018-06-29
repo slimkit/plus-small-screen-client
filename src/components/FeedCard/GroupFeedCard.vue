@@ -1,7 +1,11 @@
 <script>
 import bus from "@/bus.js";
 import FeedCard from "./FeedCard.vue";
-import { collectGroupPost, applyTopPostComment } from "@/api/group.js";
+import {
+  collectGroupPost,
+  applyTopPostComment,
+  deletePostComment
+} from "@/api/group.js";
 export default {
   name: "group-feed-card",
   extends: FeedCard,
@@ -80,17 +84,19 @@ export default {
                 });
               }
             },
-            {
-              text: "删除评论",
-              method: () => {
-                console.log("删除评论");
-              }
-            }
+            { text: "删除评论", method: () => this.deleteComment(comment.id) }
           ])
         : this.handleComment({
             placeholder,
             reply_user
           });
+    },
+    deleteComment(commentId) {
+      deletePostComment(this.feedID, commentId).then(() => {
+        this.feed.comments = this.feed.comments.filter(c => c.id !== commentId);
+        this.commentCount -= 1;
+        this.$Message.success("删除评论成功");
+      });
     }
   },
   computed: {

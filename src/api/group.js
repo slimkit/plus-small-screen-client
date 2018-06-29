@@ -217,7 +217,7 @@ export function applyTopPostComment({ postId, commentId }, data) {
  * @export
  * @param {Number} postID
  * @param {Number} commentID
- * @returns {Promise}
+ * @returns
  */
 export function deletePostComment(postID, commentID) {
   return api.delete(`/plus-group/group-posts/${postID}/comments/${commentID}`, {

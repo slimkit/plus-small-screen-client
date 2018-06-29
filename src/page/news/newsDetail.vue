@@ -383,7 +383,7 @@ export default {
       deleteNewsComment(this.newsID, commentId).then(() => {
         this.fetchNewsComments();
         this.commentCount -= 1;
-        this.this.$Message.success("删除评论成功");
+        this.$Message.success("删除评论成功");
       });
     }
   },
