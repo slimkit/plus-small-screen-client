@@ -131,7 +131,11 @@ import ArticleCard from "@/page/article/ArticleCard.vue";
 import CommentItem from "@/page/article/ArticleComment.vue";
 import wechatShare from "@/util/wechatShare.js";
 import { limit } from "@/api/api.js";
-import { getFeedComments, deleteFeedComment } from "@/api/feeds.js";
+import {
+  deleteFeed,
+  getFeedComments,
+  deleteFeedComment
+} from "@/api/feeds.js";
 import { followUserByStatus, getUserInfoById } from "@/api/user.js";
 
 export default {
@@ -472,33 +476,22 @@ export default {
               }
             },
             {
-              text: "删除",
+              text: "删除动态",
               method: () => {
-                // DELETE /feeds/:feed
                 setTimeout(() => {
-                  bus.$emit(
-                    "actionSheet",
-                    [
-                      {
-                        text: "删除",
-                        style: {
-                          color: "#f4504d"
-                        },
-                        method: () => {
-                          this.$http
-                            .delete(`/feeds/${this.feedID}`, {
-                              validataStatus: s => s === 204
-                            })
-                            .then(() => {
-                              this.$Message.success("删除动态成功");
-                              this.goBack();
-                            });
-                        }
+                  const actionSheet = [
+                    {
+                      text: "删除",
+                      style: { color: "#f4504d" },
+                      method: () => {
+                        deleteFeed(this.feedID).then(() => {
+                          this.$Message.success("删除动态成功");
+                          this.goBack();
+                        });
                       }
-                    ],
-                    "取消",
-                    "确认删除?"
-                  );
+                    }
+                  ];
+                  bus.$emit("actionSheet", actionSheet, "取消", "确认删除?");
                 }, 200);
               }
             }

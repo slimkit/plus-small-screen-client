@@ -35,6 +35,31 @@ export function getFeedsByType(type, limit = 15, after) {
 }
 
 /**
+ * 申请动态置顶
+ * @author mutoe <mutoe@foxmail.com>
+ * @export
+ * @param {Number} feedId
+ * @param {Object} params
+ * @returns {Promise}
+ */
+export function applyTopFeed(feedId, params) {
+  return api.post(`/feeds/${feedId}/currency-pinneds`, params, {
+    validateStatus: s => s === 201
+  });
+}
+
+/**
+ * 删除动态
+ * @author mutoe <mutoe@foxmail.com>
+ * @export
+ * @param {Number} feedId
+ * @returns {Promise}
+ */
+export function deleteFeed(feedId) {
+  return api.delete(`/feeds/${feedId}`, { validateStatus: s => s === 204 });
+}
+
+/**
  * 获取当前用户收藏的动态
  * @type {Number}
  */

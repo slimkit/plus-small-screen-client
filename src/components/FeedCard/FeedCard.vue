@@ -78,10 +78,12 @@
 <script>
 import bus from "@/bus.js";
 import { mapState } from "vuex";
-import { time2txt } from "@/filters.js";
 import FeedImage from "./FeedImage.vue";
 import FeedVideo from "./FeedVideo.vue";
 import CommentItem from "./CommentItem.vue";
+import { time2txt } from "@/filters.js";
+import { deleteFeed } from "@/api/feeds.js";
+
 export default {
   name: "feed-card",
   components: {
@@ -299,34 +301,23 @@ export default {
             {
               text: "删除动态",
               method: () => {
-                // DELETE /feeds/:feed
                 setTimeout(() => {
-                  bus.$emit(
-                    "actionSheet",
-                    [
-                      {
-                        text: "删除",
-                        style: {
-                          color: "#f4504d"
-                        },
-                        method: () => {
-                          this.$http
-                            .delete(`/feeds/${this.feedID}`, {
-                              validataStatus: s => s === 204
-                            })
-                            .then(() => {
-                              this.$Message.success("删除动态成功");
-                              this.$nextTick(() => {
-                                this.$el.remove();
-                                this.$emit("afterDelete");
-                              });
-                            });
-                        }
+                  const actionSheet = [
+                    {
+                      text: "删除",
+                      style: { color: "#f4504d" },
+                      method: () => {
+                        deleteFeed(this.feedID).then(() => {
+                          this.$Message.success("删除动态成功");
+                          this.$nextTick(() => {
+                            this.$el.remove();
+                            this.$emit("afterDelete");
+                          });
+                        });
                       }
-                    ],
-                    "取消",
-                    "确认删除?"
-                  );
+                    }
+                  ];
+                  bus.$emit("actionSheet", actionSheet, "取消", "确认删除?");
                 }, 200);
               }
             }
