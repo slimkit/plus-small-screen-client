@@ -1,13 +1,12 @@
 <template>
   <article-card
-  :liked="liked"
-  :loading="loading"
-  :canOprate="news.audit_status===0"
-  @on-like="likeNews"
-  @on-share="shareNews"
-  @on-more="moreAction"
-  @on-comment="commentNews"
-  >
+    :liked="liked"
+    :loading="loading"
+    :canOprate="news.audit_status===0"
+    @on-like="likeNews"
+    @on-share="shareNews"
+    @on-more="moreAction"
+    @on-comment="commentNews">
     <header slot="head" class="m-box m-justify-bet m-aln-center m-art-head" style="padding: 0">
       <div class="m-box m-flex-grow1 m-aln-center m-flex-base0">
         <svg class='m-style-svg m-svg-def' @click='goBack'>
@@ -58,7 +57,6 @@
         <button class="m-art-rew-btn">打 赏</button>
       </div>-->
     </div>
-
     <div class="m-box-model m-art-comments">
       <ul class="m-box m-aln-center m-art-comments-tabs">
         <li>{{ commentCount | formatNum }}条评论</li>
@@ -68,14 +66,14 @@
         v-if="news.audit_status===0"
         :key="`pinned-${comment.id}`"
         :comment="comment"
-        :pinned="true" />
+        :pinned="true"
+        @click="replyComment" />
       <comment-item
         v-for="(comment) in comments"
         v-if="news.audit_status===0"
         :key="`comment-${comment.id}`"
         :comment="comment"
         @click="replyComment" />
-
         <div v-if="news.audit_status===0" class="m-box m-aln-center m-justify-center load-more-box">
           <span v-if="noMoreCom" class="load-more-ph">---没有更多---</span>
           <span v-else class="load-more-btn" @click.stop="fetchNewsComments(maxComId)">
@@ -93,7 +91,7 @@ import md from "@/util/markdown.js";
 import wechatShare from "@/util/wechatShare.js";
 import ArticleCard from "@/page/article/ArticleCard.vue";
 import CommentItem from "@/page/article/ArticleComment.vue";
-import { deleteNewsComment } from "@/api/news";
+import { deleteNewsComment, applyTopNewsComment } from "@/api/news.js";
 
 export default {
   name: "news-detail",
@@ -338,7 +336,13 @@ export default {
         const actionSheet = [
           {
             text: "申请评论置顶",
-            method: () => this.$Message.info("置顶功能开发中，敬请期待")
+            method: () => {
+              bus.$emit("applyTop", {
+                type: "newsComment",
+                api: applyTopNewsComment,
+                payload: { newsId: this.newsID, commentId }
+              });
+            }
           },
           { text: "删除评论", method: () => this.deleteComment(commentId) }
         ];

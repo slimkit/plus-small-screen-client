@@ -68,6 +68,23 @@ export function getNewsCommentPinneds(after = 0) {
 }
 
 /**
+ * 申请评论置顶
+ * @author mutoe <mutoe@foxmail.com>
+ * @export
+ * @param {Object} payload
+ * @param {Number} payload.newsId
+ * @param {Number} payload.commentId
+ * @param {Object} data
+ * @param {Number} data.amount
+ * @param {Number} data.day
+ * @returns
+ */
+export function applyTopNewsComment({ newsId, commentId }, data) {
+  const url = `/news/${newsId}/comments/${commentId}/currency-pinneds`;
+  return api.post(url, data, { validateStatus: s => s === 201 });
+}
+
+/**
  * 删除评论
  * @author mutoe <mutoe@foxmail.com>
  * @export
