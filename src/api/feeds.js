@@ -86,6 +86,22 @@ export function getFeedCommentPinneds(after = 0) {
 }
 
 /**
+ * 发表动态评论
+ * @author mutoe <mutoe@foxmail.com>
+ * @export
+ * @param {Number} feedId
+ * @param {Object} data
+ * @param {String} data.body 评论内容
+ * @param {Number=} data.reply_user 回复的用户id
+ * @returns
+ */
+export function postComment(feedId, data) {
+  return api.post(`/feeds/${feedId}/comments`, data, {
+    validataStatus: s => s === 201
+  });
+}
+
+/**
  * 评论申请置顶
  * @author mutoe <mutoe@foxmail.com>
  * @export

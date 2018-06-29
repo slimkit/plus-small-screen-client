@@ -84,6 +84,7 @@ import FeedVideo from "./FeedVideo.vue";
 import CommentItem from "./CommentItem.vue";
 import { time2txt } from "@/filters.js";
 import {
+  postComment,
   applyTopFeed,
   applyTopFeedComment,
   deleteFeed,
@@ -151,7 +152,7 @@ export default {
         return this.feed.feed_comment_count || 0;
       },
       set(val) {
-        val > 0 && (this.feed.feed_comment_count = val);
+        this.feed.feed_comment_count = val;
       }
     },
     viewCount() {
@@ -368,27 +369,22 @@ export default {
           });
     },
     sendComment({ reply_user: replyUser, body }) {
-      const params = {};
-      if (body && body.length > 0) {
-        params.body = body;
-        replyUser && (params["reply_user"] = replyUser);
-        this.$http
-          .post(`/feeds/${this.feedID}/comments`, params, {
-            validataStatus: s => s === 201
-          })
-          .then(({ data = { comment: {} } }) => {
-            this.feed.feed_comment_count += 1;
-            this.feed.comments.unshift(data.comment);
-            this.$Message.success("评论成功");
-            bus.$emit("commentInput:close", true);
-          })
-          .catch(() => {
-            this.$Message.error("评论失败");
-            bus.$emit("commentInput:close", true);
-          });
-      } else {
-        this.$Message.error("评论内容不能为空");
-      }
+      if (body && body.length === 0)
+        return this.$Message.error("评论内容不能为空");
+
+      const params = {
+        body,
+        reply_user: replyUser
+      };
+      postComment(this.feedID, params)
+        .then(({ data = { comment: {} } }) => {
+          this.commentCount += 1;
+          this.comments.unshift(data.comment);
+          this.$Message.success("评论成功");
+        })
+        .finally(() => {
+          bus.$emit("commentInput:close", true);
+        });
     },
     deleteComment(commentId) {
       deleteFeedComment(this.feedID, commentId).then(() => {

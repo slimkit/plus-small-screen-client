@@ -185,12 +185,24 @@ export function getPostAudits({ after = 0, group = 0 }) {
   });
 }
 
-export function getPostCommentAudits({ after = 0, post = 0 }) {
-  return get("/plus-group/pinned/comments", {
-    after,
-    limit,
-    post
+/**
+ * 发表帖子评论
+ * @author mutoe <mutoe@foxmail.com>
+ * @export
+ * @param {Number} postId
+ * @param {Object} data
+ * @param {String} data.body 评论内容
+ * @param {Number=} data.reply_user 回复的用户id
+ * @returns
+ */
+export function postComment(postId, data) {
+  return api.post(`/plus-group/group-posts/${postId}/comments`, data, {
+    validataStatus: s => s === 201
   });
+}
+
+export function getPostCommentAudits({ after = 0, post = 0 }) {
+  return get("/plus-group/pinned/comments", { after, limit, post });
 }
 
 /**

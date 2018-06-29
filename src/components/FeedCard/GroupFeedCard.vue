@@ -3,6 +3,7 @@ import bus from "@/bus.js";
 import FeedCard from "./FeedCard.vue";
 import {
   collectGroupPost,
+  postComment,
   applyTopPostComment,
   deletePostComment
 } from "@/api/group.js";
@@ -34,25 +35,22 @@ export default {
         });
     },
     sendComment({ reply_user: replyUser, body }) {
-      const params = {};
-      if (body && body.length > 0) {
-        params.body = body;
-        replyUser && (params["reply_user"] = replyUser);
-        this.$http
-          .post(`/plus-group/group-posts/${this.feed.id}/comments`, params, {
-            validataStatus: s => s === 201
-          })
-          .then(() => {
-            this.$Message.success("评论成功");
-            bus.$emit("commentInput:close", true);
-          })
-          .catch(() => {
-            this.$Message.error("评论失败");
-            bus.$emit("commentInput:close", true);
-          });
-      } else {
-        this.$Message.error("评论内容不能为空");
-      }
+      if (body && body.length === 0)
+        return this.$Message.error("评论内容不能为空");
+
+      const params = {
+        body,
+        reply_user: replyUser
+      };
+      postComment(this.feed.id, params)
+        .then(({ data = { comment: {} } }) => {
+          this.commentCount += 1;
+          this.comments.unshift(data.comment);
+          this.$Message.success("评论成功");
+        })
+        .finally(() => {
+          bus.$emit("commentInput:close", true);
+        });
     },
     handleCollection() {
       collectGroupPost(this.feed.id, this.has_collect).then(() => {

@@ -8,7 +8,9 @@ import { limit } from "@/api/api.js";
 import {
   likeGroupPost,
   collectGroupPost,
+  applyTopPost,
   applyTopPostComment,
+  deletePost,
   deletePostComment
 } from "@/api/group.js";
 
@@ -235,6 +237,78 @@ export default {
         .catch(() => {
           this.fetching = false;
         });
+    },
+    moreAction() {
+      const defaultActions = [
+        {
+          text: this.has_collect ? "取消收藏" : "收藏",
+          method: () => {
+            // POST /feeds/:feed/collections
+            // DELETE /feeds/:feed/uncollect
+            let url;
+            let txt;
+            let method;
+            this.has_collect
+              ? ((txt = "取消收藏"),
+                (method = "delete"),
+                (url = `/feeds/${this.feedID}/uncollect`))
+              : ((txt = "已加入我的收藏"),
+                (method = "post"),
+                (url = `/feeds/${this.feedID}/collections`));
+            this.$http({
+              url,
+              method,
+              validataStatus: s => s === 204 || s === 201
+            }).then(() => {
+              this.$Message.success(txt);
+              this.has_collect = !this.has_collect;
+            });
+          }
+        }
+      ];
+
+      const actions = this.isMine
+        ? [
+            {
+              text: "申请帖子置顶",
+              method: () => {
+                bus.$emit("applyTop", {
+                  type: "post",
+                  api: applyTopPost,
+                  payload: this.postID
+                });
+              }
+            },
+            {
+              text: "删除帖子",
+              method: () => {
+                setTimeout(() => {
+                  const actionSheet = [
+                    {
+                      text: "删除",
+                      style: { color: "#f4504d" },
+                      method: () => {
+                        deletePost(this.postID).then(() => {
+                          this.$Message.success("删除帖子成功");
+                          this.goBack();
+                        });
+                      }
+                    }
+                  ];
+                  bus.$emit("actionSheet", actionSheet, "取消", "确认删除?");
+                }, 200);
+              }
+            }
+          ]
+        : [
+            {
+              text: "举报",
+              method: () => {
+                this.$Message.info("举报功能开发中，敬请期待");
+              }
+            }
+          ];
+      bus.$emit("actionSheet", [...defaultActions, ...actions], "取消");
     },
     replyComment(uid, uname, commentId) {
       if (uid === this.CURRENTUSER.id) {
