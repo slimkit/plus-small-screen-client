@@ -85,6 +85,22 @@ export function getNewsComments(newsId, params) {
 }
 
 /**
+ * 申请置顶
+ * @author mutoe <mutoe@foxmail.com>
+ * @export
+ * @param {number} newsId
+ * @param {Object} data
+ * @param {Number} data.amount
+ * @param {Number} data.day
+ * @returns
+ */
+export function applyTopNews(newsId, data) {
+  return api.post(`/news/${newsId}/currency-pinneds`, data, {
+    validateStatus: s => s === 201
+  });
+}
+
+/**
  * 申请评论置顶
  * @author mutoe <mutoe@foxmail.com>
  * @export

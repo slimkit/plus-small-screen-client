@@ -93,6 +93,7 @@ import ArticleCard from "@/page/article/ArticleCard.vue";
 import CommentItem from "@/page/article/ArticleComment.vue";
 import {
   deleteNewsComment,
+  applyTopNews,
   applyTopNewsComment,
   getNewsComments
 } from "@/api/news.js";
@@ -305,7 +306,11 @@ export default {
             {
               text: "申请文章置顶",
               method: () => {
-                this.$Message.info("置顶功能开发中，敬请期待");
+                bus.$emit("applyTop", {
+                  type: "news",
+                  api: applyTopNews,
+                  payload: this.newsID
+                });
               }
             },
             {
