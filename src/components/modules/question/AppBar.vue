@@ -1,7 +1,11 @@
 <template>
   <header class="module-question-app-bar">
     <!-- Left Buttoms -->
-    <div class="module-question-app-bar_buttom"></div>
+    <div class="module-question-app-bar_buttom">
+      <svg class="m-style-svg m-svg-def" @click="goBack">
+        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-back"></use>
+      </svg>
+    </div>
 
     <!-- Conter Tabs -->
     <div class="module-question-app-bar_tab">
