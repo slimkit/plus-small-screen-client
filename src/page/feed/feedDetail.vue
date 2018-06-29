@@ -131,12 +131,13 @@ import ArticleCard from "@/page/article/ArticleCard.vue";
 import CommentItem from "@/page/article/ArticleComment.vue";
 import wechatShare from "@/util/wechatShare.js";
 import { limit } from "@/api/api.js";
+import { followUserByStatus, getUserInfoById } from "@/api/user.js";
 import {
   deleteFeed,
   getFeedComments,
-  deleteFeedComment
+  deleteFeedComment,
+  applyTopFeed
 } from "@/api/feeds.js";
-import { followUserByStatus, getUserInfoById } from "@/api/user.js";
 
 export default {
   name: "feed-detail",
@@ -470,9 +471,13 @@ export default {
       const actions = this.isMine
         ? [
             {
-              text: "申请文章置顶",
+              text: "申请动态置顶",
               method: () => {
-                this.$Message.info("置顶功能开发中，敬请期待");
+                bus.$emit("applyTop", {
+                  type: "feed",
+                  api: applyTopFeed,
+                  payload: this.feedID
+                });
               }
             },
             {

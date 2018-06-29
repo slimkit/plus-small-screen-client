@@ -75,6 +75,7 @@
     </footer>
   </div>
 </template>
+
 <script>
 import bus from "@/bus.js";
 import { mapState } from "vuex";
@@ -82,7 +83,7 @@ import FeedImage from "./FeedImage.vue";
 import FeedVideo from "./FeedVideo.vue";
 import CommentItem from "./CommentItem.vue";
 import { time2txt } from "@/filters.js";
-import { deleteFeed } from "@/api/feeds.js";
+import { deleteFeed, applyTopFeed } from "@/api/feeds.js";
 
 export default {
   name: "feed-card",
@@ -295,7 +296,11 @@ export default {
             {
               text: "申请动态置顶",
               method: () => {
-                bus.$emit("apply-top:feed", this.feedID);
+                bus.$emit("applyTop", {
+                  type: "feed",
+                  api: applyTopFeed,
+                  payload: this.feedID
+                });
               }
             },
             {

@@ -17,7 +17,7 @@
           <div class="m-pinned-amount-btns m-main">
             <p class="m-pinned-amount-label">选择置顶天数</p>
             <div class="m-box m-aln-center ">
-                <button 
+                <button
                   :key="item"
                   v-for="item in items"
                   class="m-pinned-amount-btn"
@@ -26,7 +26,7 @@
                   @click="chooseDefaultDay(item)">{{((~~item))}} 天</button>
             </div>
           </div>
-          <div 
+          <div
             class="m-box m-aln-center m-justify-bet m-bb1 m-pinned-row plr20 m-pinned-amount-customize m-main"
             style="margin-top: .2rem">
             <span>置顶金额</span>
@@ -44,8 +44,8 @@
           <div class="m-box m-aln-center m-justify-bet m-pinned-row plr20 m-pinned-amount-customize m-main">
             <span>总金额</span>
             <div class="m-box m-aln-center">
-              <input 
-              class="m-flex-grow1 m-flex-shrink1 m-text-r" 
+              <input
+              class="m-flex-grow1 m-flex-shrink1 m-text-r"
               type="number"
               pattern="[0-9]*"
               disabled="true"
@@ -56,15 +56,15 @@
               <span>{{ currency_name }}</span>
             </div>
           </div>
-          <p 
-            class="placeholder m-flex-grow1 m-flex-shrink1" 
+          <p
+            class="placeholder m-flex-grow1 m-flex-shrink1"
             style="padding: .3rem .2rem 0; font-size: .24rem;"><!-- 最近置顶平均{{  }},  -->可用积分{{ currencySum }}</p>
         </div>
         <div class="plr20 m-lim-width" style="margin-top: 0.6rem">
           <button
-          :disabled="disabled || loading"
-          class="m-long-btn m-signin-btn"
-          @click="handleOk">
+            :disabled="disabled || loading"
+            class="m-long-btn m-signin-btn"
+            @click="handleOk">
             <svg v-if="loading" class="m-style-svg m-svg-def">
               <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-loading"></use>
             </svg>
@@ -78,17 +78,21 @@
 <script>
 import bus from "@/bus.js";
 import { refreshCurrentUserInfo } from "@/api/user.js";
+
 const noop = () => {};
+
 export default {
   name: "apply-top",
   data() {
     return {
       day: 0,
       show: false,
-      applyType: "",
       currencySum: 0,
       loading: false,
-      customAmount: null
+      customAmount: null,
+      applyType: "", // 申请置顶的类型
+      applyApi: noop, // 申请置顶的api
+      applyPayload: {} // 申请置顶的负载数据，如feedID等
     };
   },
   computed: {
@@ -109,37 +113,43 @@ export default {
     }
   },
   created() {
-    bus.$on("apply-top", () => {
+    /**
+     * 弹出申请置顶窗口 (hooks -> applyTop)
+     * @author mutoe <mutoe@foxmail.com>
+     * @param {Object} options
+     * @param {String} options.type 申请置顶类型
+     * @param {Promise} options.api 申请置顶的 api，需要返回 axios promise 对象
+     * @param {*} options.payload 申请置顶 api 的第一个参数，可以为任何类型的值，取决于 api 中的设定
+     */
+    bus.$on("applyTop", ({ type, api, payload }) => {
+      this.applyType = type;
+      this.applyApi = api;
+      this.applyPayload = payload;
       this.open();
-    });
-    bus.$on("apply-top:feed", feedID => {
-      this.applyType = "feed";
-      this.open();
-      this.applyTopFeed = () => {
-        if (this.loading) return;
-        this.loading = true;
-        // /feeds/:feed/pinneds
-        this.$http
-          .post(`/feeds/${feedID}/pinneds`, {
-            amount: ~~this.amount,
-            day: this.day
-          })
-          .then(({ data = {} }) => {
-            this.loading = false;
-            this.$Message.success(data);
-            this.$nextTick(this.cancel);
-          })
-          .catch(err => {
-            console.log(err);
-            this.loading = false;
-          });
-      };
     });
   },
   methods: {
-    applyTopFeed() {},
+    applyTop() {
+      if (this.loading || !this.applyType) return;
+      this.loading = true;
+      const params = {
+        amount: ~~this.amount,
+        day: this.day
+      };
+
+      this.applyApi(this.applyPayload, params)
+        .then(({ data = {} }) => {
+          this.loading = false;
+          this.$Message.success(data);
+          this.$nextTick(this.cancel);
+        })
+        .catch(err => {
+          console.warn(err);
+          this.loading = false;
+        });
+    },
     handleOk() {
-      this.applyType === "feed" ? this.applyTopFeed() : "";
+      this.applyTop();
     },
     chooseDefaultDay(day) {
       this.day = day;
@@ -158,11 +168,12 @@ export default {
     },
     cancel() {
       this.show = false;
-      this.applyType = "";
       this.day = null;
       this.customAmount = null;
-      this.applyTopFeed = noop;
       this.scrollable = true;
+      this.applyType = "";
+      this.applyApi = noop;
+      this.applyPayload = {};
     }
   }
 };
