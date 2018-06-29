@@ -7,7 +7,7 @@
     <router-view />
 
     <!-- Nativa Bar. -->
-    <foot-guide />
+    <!-- <foot-guide /> -->
   </div>
 </template>
 
