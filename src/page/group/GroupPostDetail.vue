@@ -8,6 +8,7 @@ import { limit } from "@/api/api.js";
 import {
   likeGroupPost,
   collectGroupPost,
+  getPostComments,
   applyTopPost,
   applyTopPostComment,
   deletePost,
@@ -188,12 +189,7 @@ export default {
     fetchFeedComments(after = 0) {
       if (this.fetchComing) return;
       this.fetchComing = true;
-      this.$http
-        .get(`/plus-group/group-posts/${this.postID}/comments`, {
-          params: {
-            after
-          }
-        })
+      getPostComments(this.postID, { after })
         .then(({ data: { pinneds = [], comments = [] } }) => {
           pinneds &&
             pinneds.length &&

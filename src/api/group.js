@@ -212,6 +212,19 @@ export function getPostAudits({ after = 0, group = 0 }) {
 }
 
 /**
+ * 获取帖子评论
+ * @author mutoe <mutoe@foxmail.com>
+ * @export
+ * @param {number} postId
+ * @param {params} params
+ * @returns
+ */
+export function getPostComments(postId, params) {
+  const url = `/plus-group/group-posts/${postId}/comments`;
+  return api.get(url, { params, validateStatus: s => s === 200 });
+}
+
+/**
  * 发表帖子评论
  * @author mutoe <mutoe@foxmail.com>
  * @export
