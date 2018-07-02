@@ -163,6 +163,32 @@ export function getGroudFeedsByType(
   );
 }
 
+/**
+ * 申请帖子置顶
+ * @author mutoe <mutoe@foxmail.com>
+ * @export
+ * @param {Number} postId
+ * @param {Object} params
+ * @returns {Promise}
+ */
+export function applyTopPost(postId, params) {
+  const url = `/plus-group/currency-pinned/posts/${postId}`;
+  return api.post(url, params, { validateStatus: s => s === 201 });
+}
+
+/**
+ * 删除帖子
+ * @author mutoe <mutoe@foxmail.com>
+ * @export
+ * @param {Number} groupId
+ * @param {Number} postId
+ * @returns {Promise}
+ */
+export function deletePost(groupId, postId) {
+  const url = `/plus-group/groups/${groupId}/posts/${postId}`;
+  return api.delete(url, { validateStatus: s => s === 204 });
+}
+
 export function likeGroupPost(postID, status) {
   const url = `/plus-group/group-posts/${postID}/likes`;
   const method = status ? "delete" : "post";

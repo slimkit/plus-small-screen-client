@@ -297,7 +297,7 @@ export default {
                       text: "删除",
                       style: { color: "#f4504d" },
                       method: () => {
-                        deletePost(this.postID).then(() => {
+                        deletePost(this.groupID, this.postID).then(() => {
                           this.$Message.success("删除帖子成功");
                           this.goBack();
                         });
