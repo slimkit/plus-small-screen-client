@@ -201,6 +201,20 @@ export function applyTopPost(postId, params) {
 }
 
 /**
+ * 打赏帖子
+ * @author mutoe <mutoe@foxmail.com>
+ * @export
+ * @param {number} postId
+ * @param {Object} data
+ * @param {number} data.amount 打赏金额
+ * @returns
+ */
+export function rewardPost(postId, data) {
+  const url = `/plus-group/group-posts/${postId}/new-rewards`;
+  return api.post(url, data, { validateStatus: s => s === 201 });
+}
+
+/**
  * 删除帖子
  * @author mutoe <mutoe@foxmail.com>
  * @export

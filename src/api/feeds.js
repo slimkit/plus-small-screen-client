@@ -38,7 +38,7 @@ export function getFeedsByType(type, limit = 15, after) {
  * 申请动态置顶
  * @author mutoe <mutoe@foxmail.com>
  * @export
- * @param {Number} feedId
+ * @param {number} feedId
  * @param {Object} params
  * @returns {Promise}
  */
@@ -46,6 +46,20 @@ export function applyTopFeed(feedId, params) {
   return api.post(`/feeds/${feedId}/currency-pinneds`, params, {
     validateStatus: s => s === 201
   });
+}
+
+/**
+ * 打赏动态
+ * @author mutoe <mutoe@foxmail.com>
+ * @export
+ * @param {number} feedId
+ * @param {Object} data
+ * @param {number} data.amount 打赏金额
+ * @returns
+ */
+export function rewardFeed(feedId, data) {
+  const url = `/feeds/${feedId}/new-rewards`;
+  return api.post(url, data, { validateStatus: s => s === 201 });
 }
 
 /**

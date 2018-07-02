@@ -93,15 +93,16 @@ export default {
   },
   activated() {
     if (this.postID) {
-      this.postID !== this.oldID
-        ? ((this.components = []),
-          (this.rewardList = []),
-          this.fetchFeed(() => {
-            this.$refs.loadmore.topEnd();
-          }))
-        : this.$nextTick(() => {
-            this.loading = false;
-          });
+      if (this.postID !== this.oldID) {
+        this.components = [];
+        this.fetchFeed(() => {
+          this.$refs.loadmore.topEnd();
+        });
+      } else {
+        setTimeout(() => {
+          this.loading = false;
+        }, 200);
+      }
     }
   },
   methods: {
@@ -372,7 +373,17 @@ export default {
       }
     },
     rewardFeed() {
-      bus.$emit("reward:groupPost", this.postID);
+      const callback = amount => {
+        this.fetchRewards();
+        this.feed.reward_number += 1;
+        this.feed.reward_amount += amount;
+      };
+      bus.$emit("reward", {
+        type: "groupPost",
+        api: api.rewardPost,
+        payload: this.postID,
+        callback
+      });
     },
     deleteComment(commentId) {
       api.deletePostComment(this.postID, commentId).then(() => {

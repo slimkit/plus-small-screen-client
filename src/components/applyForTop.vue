@@ -137,10 +137,10 @@ export default {
      * @author mutoe <mutoe@foxmail.com>
      * @param {Object} options
      * @param {string} options.type 申请置顶类型
-     * @param {Promise} options.api 申请置顶的 api，需要返回 axios promise 对象
+     * @param {AxiosPromise} options.api 申请置顶的 api，需要返回 axios promise 对象
      * @param {string|Object} options.payload 申请置顶 api 的第一个参数，取决于 api 中的设定
      * @param {boolean} [options.isOwner = false] 是否是文章的所有者
-     * @param {Function} [options.callback = noop] 申请置顶成功后执行的回调方法
+     * @param {requestCallback} [options.callback = noop] 申请置顶成功后执行的回调方法
      */
     bus.$on("applyTop", options => {
       const { type, api, payload, isOwner = false, callback = noop } = options;

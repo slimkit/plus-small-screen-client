@@ -211,3 +211,17 @@ export function uploadUserBanner(file) {
     validateStatus: s => s === 204
   });
 }
+
+/**
+ * 打赏用户
+ * @author mutoe <mutoe@foxmail.com>
+ * @export
+ * @param {number} userId
+ * @param {Object} data
+ * @param {number} data.amount 打赏金额
+ * @returns
+ */
+export function rewardUser(userId, data) {
+  const url = `/user/${userId}/new-rewards`;
+  return api.post(url, data, { validateStatus: s => s === 201 });
+}

@@ -88,7 +88,10 @@ export default {
       amount: null,
       loading: false,
       customAmount: null,
-      rewardType: ""
+      type: "",
+      api: noop,
+      callback: noop,
+      payload: {}
     };
   },
   computed: {
@@ -105,79 +108,45 @@ export default {
     }
   },
   created() {
-    bus.$on("reward:user", userID => {
-      this.rewardType = "user";
-      this.open();
-      this.rewardUser = () => {
-        if (this.loading) return;
-        this.loading = true;
-        this.$http
-          .post(`/user/${userID}/new-rewards`, {
-            amount: this.amount
-          })
-          .then(({ data = {} }) => {
-            this.loading = false;
-            this.$Message.success(data);
-            this.$nextTick(this.cancel);
-          })
-          .catch(() => {
-            this.loading = false;
-          });
-      };
-    });
-    bus.$on("reward:feed", feedID => {
-      this.rewardType = "feed";
-      this.open();
-      this.rewardFeed = () => {
-        if (this.loading) return;
-        this.loading = true;
-        this.$http
-          .post(`/feeds/${feedID}/new-rewards`, {
-            amount: this.amount
-          })
-          .then(({ data = {} }) => {
-            this.loading = false;
-            this.$Message.success(data);
-            this.$nextTick(this.cancel);
-          })
-          .catch(() => {
-            this.loading = false;
-          });
-      };
-    });
-    bus.$on("reward:groupPost", postID => {
-      this.rewardType = "feed";
-      this.open();
-      this.rewardFeed = () => {
-        if (this.loading) return;
-        this.loading = true;
-        this.$http
-          .post(`/plus-group/group-posts/${postID}/new-rewards`, {
-            amount: this.amount
-          })
-          .then(({ data = {} }) => {
-            this.loading = false;
-            this.$Message.success(data);
-            this.$nextTick(this.cancel);
-          })
-          .catch(() => {
-            this.loading = false;
-          });
-      };
-    });
-  },
-  mounted() {
     /**
-     * 默认选择 1.00
+     * 弹出打赏窗口 (hooks -> reward)
+     * @author mutoe <mutoe@foxmail.com>
+     * @param {Object} options
+     * @param {string} options.type 打赏的类型
+     * @param {AxiosPromise} options.api 打赏的 api，接受 axios promise 对象
+     * @param {string|Object} options.payload api 的第一个参数，取决于 api
+     * @param {requestCallback} [options.callback] 打赏成功后的回调方法, 接受一个参数 amount 打赏金额
      */
-    // this.resetProps();
+    bus.$on("reward", options => {
+      const { type, api, payload, callback = noop } = options;
+      this.type = type;
+      this.api = api;
+      this.payload = payload;
+      this.callback = callback;
+      this.open();
+    });
   },
   methods: {
-    rewardFeed() {},
-    rewardUser() {},
+    reward() {
+      if (this.loding || !this.type) return;
+      this.loading = true;
+      const params = {
+        amount: ~~this.amount
+      };
+      this.api(this.payload, params)
+        .then(() => {
+          this.loading = false;
+          this.$Message.success("打赏成功");
+          this.callback(params.amount);
+          this.$nextTick(this.cancel);
+        })
+        .catch(err => {
+          this.loading = false;
+          console.warn(err);
+        });
+    },
     handleOk() {
-      this.rewardType === "feed" ? this.rewardFeed() : "";
-      this.rewardType === "user" ? this.rewardUser() : "";
+      this.reward();
     },
     chooseDefaultAmount(amount) {
       this.customAmount && (this.customAmount = null);
@@ -185,7 +154,6 @@ export default {
     },
     resetProps() {
       this.customAmount = null;
-      // this.amount = this.items[0];
       this.amount = null;
     },
     open() {
@@ -194,8 +162,10 @@ export default {
     },
     cancel() {
       this.show = false;
-      this.rewardType = "";
-      this.rewardFeed = noop;
+      this.type = "";
+      this.api = noop;
+      this.callback = noop;
+      this.payload = {};
       this.scrollable = true;
     }
   }

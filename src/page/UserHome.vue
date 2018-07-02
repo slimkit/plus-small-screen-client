@@ -196,11 +196,7 @@ import wechatShare from "@/util/wechatShare.js";
 
 import { startSingleChat } from "@/vendor/easemob";
 import { checkImageType } from "@/util/imageCheck.js";
-import {
-  followUserByStatus,
-  getUserInfoById,
-  uploadUserBanner
-} from "@/api/user.js";
+import * as api from "@/api/user.js";
 
 export default {
   name: "UserHome",
@@ -454,26 +450,32 @@ export default {
       });
     },
     rewardUser() {
-      // POST /user/:user/rewards
-      bus.$emit("reward:user", this.user.id);
+      bus.$emit("reward", {
+        type: "user",
+        api: api.rewardUser,
+        payload: this.user.id,
+        callback: () => {}
+      });
     },
     followUserByStatus(status) {
       if (!status || this.fetchFollow) return;
       this.fetchFollow = true;
 
-      followUserByStatus({
-        id: this.user.id,
-        status
-      }).then(follower => {
-        this.relation = follower;
-        this.fetchFollow = false;
-      });
+      api
+        .followUserByStatus({
+          id: this.user.id,
+          status
+        })
+        .then(follower => {
+          this.relation = follower;
+          this.fetchFollow = false;
+        });
     },
     hidenFilter() {
       this.showFilter = false;
     },
     fetchUserInfo() {
-      getUserInfoById(this.userID, true).then(user => {
+      api.getUserInfoById(this.userID, true).then(user => {
         this.user = Object.assign(this.user, user);
         this.loading = false;
       });
@@ -520,7 +522,8 @@ export default {
 
       checkImageType([file])
         .then(() => {
-          uploadUserBanner(file)
+          api
+            .uploadUserBanner(file)
             .then(() => {
               this.$Message.success("更新个人背景成功！");
               this.fetchUserInfo();

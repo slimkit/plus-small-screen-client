@@ -171,13 +171,7 @@ import CommentItem from "@/page/article/ArticleComment.vue";
 import wechatShare from "@/util/wechatShare.js";
 import { limit } from "@/api/api.js";
 import { followUserByStatus, getUserInfoById } from "@/api/user.js";
-import {
-  deleteFeed,
-  getFeedComments,
-  deleteFeedComment,
-  applyTopFeedComment,
-  applyTopFeed
-} from "@/api/feeds.js";
+import * as api from "@/api/feeds.js";
 
 export default {
   name: "FeedDetail",
@@ -313,14 +307,16 @@ export default {
   },
   activated() {
     if (this.feedID) {
-      this.feedID !== this.oldID
-        ? ((this.comments = []),
-          (this.feed = {}),
-          (this.rewardList = []),
-          this.fetchFeed())
-        : setTimeout(() => {
-            this.loading = false;
-          }, 600);
+      if (this.feedID !== this.oldID) {
+        this.comments = [];
+        this.feed = {};
+        this.rewardList = [];
+        this.fetchFeed();
+      } else {
+        setTimeout(() => {
+          this.loading = false;
+        }, 600);
+      }
     }
   },
   deactivated() {
@@ -411,7 +407,8 @@ export default {
     fetchFeedComments(after = 0) {
       if (this.fetchComing) return;
       this.fetchComing = true;
-      getFeedComments({ feedId: this.feedID, after })
+      api
+        .getFeedComments({ feedId: this.feedID, after })
         .then(({ data: { pinneds = [], comments = [] } }) => {
           if (!after) {
             this.pinnedCom = pinneds;
@@ -447,7 +444,17 @@ export default {
         });
     },
     rewardFeed() {
-      bus.$emit("reward:feed", this.feedID);
+      const callback = amount => {
+        this.fetchRewards();
+        this.feed.reward_number += 1;
+        this.feed.reward_amount += amount;
+      };
+      bus.$emit("reward", {
+        type: "feed",
+        api: api.rewardFeed,
+        payload: this.feedID,
+        callback
+      });
     },
     likeFeed() {
       const method = this.liked ? "delete" : "post";
@@ -537,7 +544,7 @@ export default {
               method: () => {
                 bus.$emit("applyTop", {
                   type: "feed",
-                  api: applyTopFeed,
+                  api: api.applyTopFeed,
                   payload: this.feedID
                 });
               }
@@ -551,7 +558,7 @@ export default {
                       text: "删除",
                       style: { color: "#f4504d" },
                       method: () => {
-                        deleteFeed(this.feedID).then(() => {
+                        api.deleteFeed(this.feedID).then(() => {
                           this.$Message.success("删除动态成功");
                           this.goBack();
                         });
@@ -585,7 +592,7 @@ export default {
               bus.$emit("applyTop", {
                 isOwner,
                 type: "feedComment",
-                api: applyTopFeedComment,
+                api: api.applyTopFeedComment,
                 payload: { feedId: this.feedID, commentId },
                 callback: this.fetchFeedComments
               });
@@ -627,7 +634,7 @@ export default {
       }
     },
     deleteComment(commentId) {
-      deleteFeedComment(this.feedID, commentId).then(() => {
+      api.deleteFeedComment(this.feedID, commentId).then(() => {
         this.fetchFeedComments();
         this.commentCount -= 1;
         this.$Message.success("删除评论成功");
