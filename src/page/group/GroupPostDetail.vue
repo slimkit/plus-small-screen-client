@@ -5,15 +5,7 @@ import plusImagePlugin from "markdown-it-plus-image";
 import FeedDetail from "../feed/feedDetail.vue";
 import wechatShare from "@/util/wechatShare.js";
 import { limit } from "@/api/api.js";
-import {
-  likeGroupPost,
-  collectGroupPost,
-  getPostComments,
-  applyTopPost,
-  applyTopPostComment,
-  deletePost,
-  deletePostComment
-} from "@/api/group.js";
+import * as api from "@/api/group.js";
 
 export default {
   name: "GroupPostDetail",
@@ -121,7 +113,7 @@ export default {
      * @return   {[type]}            [description]
      */
     handleCollection() {
-      collectGroupPost(this.feed.id, this.has_collect).then(() => {
+      api.collectGroupPost(this.feed.id, this.has_collect).then(() => {
         this.$Message.success("操作成功");
         this.has_collect = !this.has_collect;
       });
@@ -189,7 +181,8 @@ export default {
     fetchFeedComments(after = 0) {
       if (this.fetchComing) return;
       this.fetchComing = true;
-      getPostComments(this.postID, { after })
+      api
+        .getPostComments(this.postID, { after })
         .then(({ data: { pinneds = [], comments = [] } }) => {
           if (!after) {
             this.pinnedCom = pinneds;
@@ -232,7 +225,8 @@ export default {
         });
     },
     likeFeed() {
-      likeGroupPost(this.postID, this.liked)
+      api
+        .likeGroupPost(this.postID, this.liked)
         .then(() => {
           !this.liked
             ? ((this.liked = true),
@@ -259,33 +253,28 @@ export default {
         });
     },
     moreAction() {
-      const defaultActions = [
-        {
-          text: this.has_collect ? "取消收藏" : "收藏",
+      const defaultActions = [];
+      if (this.has_collect) {
+        defaultActions.push({
+          text: "取消收藏",
           method: () => {
-            // POST /feeds/:feed/collections
-            // DELETE /feeds/:feed/uncollect
-            let url;
-            let txt;
-            let method;
-            this.has_collect
-              ? ((txt = "取消收藏"),
-                (method = "delete"),
-                (url = `/feeds/${this.feedID}/uncollect`))
-              : ((txt = "已加入我的收藏"),
-                (method = "post"),
-                (url = `/feeds/${this.feedID}/collections`));
-            this.$http({
-              url,
-              method,
-              validataStatus: s => s === 204 || s === 201
-            }).then(() => {
-              this.$Message.success(txt);
-              this.has_collect = !this.has_collect;
+            api.collectionPost(this.feedID).then(() => {
+              this.$Message.success("已加入我的收藏");
+              this.has_collect = false;
             });
           }
-        }
-      ];
+        });
+      } else {
+        defaultActions.push({
+          text: "收藏",
+          method: () => {
+            api.uncollectPost(this.feedID).then(() => {
+              this.$message.success("取消收藏");
+              this.has_collect = true;
+            });
+          }
+        });
+      }
 
       const actions = this.isMine
         ? [
@@ -294,7 +283,7 @@ export default {
               method: () => {
                 bus.$emit("applyTop", {
                   type: "post",
-                  api: applyTopPost,
+                  api: api.applyTopPost,
                   payload: this.postID
                 });
               }
@@ -308,7 +297,7 @@ export default {
                       text: "删除",
                       style: { color: "#f4504d" },
                       method: () => {
-                        deletePost(this.groupID, this.postID).then(() => {
+                        api.deletePost(this.groupID, this.postID).then(() => {
                           this.$Message.success("删除帖子成功");
                           this.goBack();
                         });
@@ -342,7 +331,7 @@ export default {
               bus.$emit("applyTop", {
                 isOwner,
                 type: "postComment",
-                api: applyTopPostComment,
+                api: api.applyTopPostComment,
                 payload: { postId: Number(this.postID), commentId },
                 callback: this.fetchFeedComments
               });
@@ -386,7 +375,7 @@ export default {
       bus.$emit("reward:groupPost", this.postID);
     },
     deleteComment(commentId) {
-      deletePostComment(this.postID, commentId).then(() => {
+      api.deletePostComment(this.postID, commentId).then(() => {
         this.fetchFeedComments();
         this.commentCount -= 1;
         this.$Message.success("删除评论成功");

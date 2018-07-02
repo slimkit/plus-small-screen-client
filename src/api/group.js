@@ -123,6 +123,30 @@ export function collectGroupPost(postId, status) {
 }
 
 /**
+ * 收藏帖子
+ * @author mutoe <mutoe@foxmail.com>
+ * @export
+ * @param {number} postId
+ * @returns
+ */
+export function collectionPost(postId) {
+  const url = `/plus-group/group-posts/${postId}/collections`;
+  return api.post(url, { validataStatus: s => s === 204 });
+}
+
+/**
+ * 取消收藏帖子
+ * @author mutoe <mutoe@foxmail.com>
+ * @export
+ * @param {number} postId
+ * @returns
+ */
+export function uncollectPost(postId) {
+  const url = `/plus-group/group-posts/${postId}/uncollect`;
+  return api.delete(url, { validateStatus: s => s === 204 });
+}
+
+/**
  * 获取指定圈子的圈子详情
  * @author jsonleex <jsonlseex@163.com>
  * @param  {Number} groupID
