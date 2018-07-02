@@ -94,15 +94,21 @@ export default {
     }
   },
   created() {
-    this.fetchFeed();
+    this.fetchFeed(() => {
+      this.$refs.loadmore.topEnd();
+    });
   },
   activated() {
     if (this.postID) {
       this.postID !== this.oldID
-        ? ((this.components = []), (this.rewardList = []), this.fetchFeed())
-        : setTimeout(() => {
+        ? ((this.components = []),
+          (this.rewardList = []),
+          this.fetchFeed(() => {
+            this.$refs.loadmore.topEnd();
+          }))
+        : this.$nextTick(() => {
             this.loading = false;
-          }, 600);
+          });
     }
   },
   methods: {
@@ -126,7 +132,7 @@ export default {
         .use(plusImagePlugin, `${this.$http.defaults.baseURL}/files/`)
         .render(body);
     },
-    fetchFeed() {
+    fetchFeed(callback) {
       if (this.fetching) return;
       this.fetching = true;
 
@@ -159,9 +165,15 @@ export default {
                     }`
                   : ""
             });
+          if (callback && typeof callback === "function") {
+            callback();
+          }
         })
         .catch(() => {
-          this.$router.back();
+          this.goBack();
+          if (callback && typeof callback === "function") {
+            callback();
+          }
         });
     },
     fetchRewards() {
