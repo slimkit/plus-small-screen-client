@@ -123,7 +123,7 @@ export default {
       return [1, 5, 10];
     },
     disabled() {
-      return !this.amount > 0;
+      return this.amount < 0;
     }
   },
   created() {
