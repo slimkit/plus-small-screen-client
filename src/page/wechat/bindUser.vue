@@ -1,41 +1,77 @@
 <template>
-  <transition name='router-fadeInRight' mode="in-out">
+  <transition 
+    name="router-fadeInRight" 
+    mode="in-out">
     <div>
-      <head-top :go-back='toBack' title='已有账号' :append='true'>
+      <head-top 
+        :go-back="toBack" 
+        :append="true" 
+        title="已有账号">
         <div 
-          slot='append' 
+          slot="append" 
           class="c_59b6d7"
-          @click='hide("showRegister")'
+          @click="hide(&quot;showRegister&quot;)"
         >
           新账号
         </div>
       </head-top>
-      <div class="form-group" :class="`${prefixCls}--main`">
+      <div 
+        :class="`${prefixCls}--main`" 
+        class="form-group">
         <div class="signup-form--row">
-          <label class="signup-form--row-prepend" for="username">账号</label>
-          <input id="username" v-model.trim='account' type="text" placeholder="邮箱/手机/昵称" />
+          <label 
+            class="signup-form--row-prepend" 
+            for="username">账号</label>
+          <input 
+            id="username" 
+            v-model.trim="account" 
+            type="text" 
+            placeholder="邮箱/手机/昵称" >
           <span class="signup-form--row-append">
-            <svg v-show='account.length > 0' @click='account = ""'>
-              <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-clean"></use>
+            <svg 
+              v-show="account.length > 0" 
+              @click="account = &quot;&quot;">
+              <use 
+                xmlns:xlink="http://www.w3.org/1999/xlink" 
+                xlink:href="#base-clean"/>
             </svg>
           </span>
         </div>
         <div class="signup-form--row">
-          <label class="signup-form--row-prepend" for="psw">密码</label>
-          <input id="psw" v-if='eye' type="text" v-model.trim='password' placeholder="输入6位以上登录密码">
-          <input id="psw" v-else type="password" v-model.trim='password' placeholder="输入6位以上登录密码">
+          <label 
+            class="signup-form--row-prepend" 
+            for="psw">密码</label>
+          <input 
+            v-if="eye" 
+            id="psw" 
+            v-model.trim="password" 
+            type="text" 
+            placeholder="输入6位以上登录密码">
+          <input 
+            v-else 
+            id="psw" 
+            v-model.trim="password" 
+            type="password" 
+            placeholder="输入6位以上登录密码">
           <span class="signup-form--row-append">
-            <svg @click='eye = !eye'>
-              <use xmlns:xlink="http://www.w3.org/1999/xlink" :xlink:href="`#eye-${eye ? 'open' : 'close'}`"></use>
+            <svg @click="eye = !eye">
+              <use 
+                :xlink:href="`#eye-${eye ? 'open' : 'close'}`" 
+                xmlns:xlink="http://www.w3.org/1999/xlink"/>
             </svg>
           </span>
         </div>
-        <div class="signup-form--error ellipsis"></div>
+        <div class="signup-form--error ellipsis"/>
       </div>
-      <button class="signup-form--submit-btn" :disabled='disabled' @click='bindUser'>
+      <button 
+        :disabled="disabled" 
+        class="signup-form--submit-btn" 
+        @click="bindUser">
         <span>绑定</span>
-        <svg v-if='loading'>
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-loading"></use>
+        <svg v-if="loading">
+          <use 
+            xmlns:xlink="http://www.w3.org/1999/xlink" 
+            xlink:href="#base-loading"/>
         </svg>
       </button>
     </div>
@@ -61,7 +97,7 @@ function strLength(str) {
 }
 const prefixCls = "signup";
 export default {
-  name: "bindUser",
+  name: "BindUser",
   props: {
     fn: Function,
     accessToken: String,

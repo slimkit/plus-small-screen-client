@@ -1,28 +1,37 @@
 <template>
   <div class="pay-panel">
     <div class="pay-panel-head">
-      <slot name='head'>
+      <slot name="head">
         <p class="pay-panel-title">购买支付</p>
       </slot>
     </div>
     <div class="pay-panel-body">
       <div class="pay-panel-body-price">{{ price }}</div>
-      <div class="pay-panel-body-content" v-html='content'></div>
+      <div 
+        class="pay-panel-body-content" 
+        v-html="content"/>
     </div>
     <div class="pay-panel-foot">
-      <slot name='foot'>
-        <button class="primary" @click='ok' :disabled="loading">
+      <slot name="foot">
+        <button 
+          :disabled="loading" 
+          class="primary" 
+          @click="ok">
           确定
-          <v-icon width='0.32' height='0.32' v-if='loading' type='base-loading'></v-icon>
+          <v-icon 
+            v-if="loading" 
+            width="0.32" 
+            height="0.32" 
+            type="base-loading"/>
         </button>
-        <button @click='cancel'>取消</button>
+        <button @click="cancel">取消</button>
       </slot>
     </div>
   </div>
 </template>
 <script>
 export default {
-  name: "payModal",
+  name: "PayModal",
   props: {
     content: {
       required: true

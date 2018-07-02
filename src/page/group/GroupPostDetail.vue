@@ -15,7 +15,7 @@ import {
 } from "@/api/group.js";
 
 export default {
-  name: "group-post-detail",
+  name: "GroupPostDetail",
   extends: FeedDetail,
 
   data: () => ({
@@ -95,6 +95,15 @@ export default {
   },
   created() {
     this.fetchFeed();
+  },
+  activated() {
+    if (this.postID) {
+      this.postID !== this.oldID
+        ? ((this.components = []), (this.rewardList = []), this.fetchFeed())
+        : setTimeout(() => {
+            this.loading = false;
+          }, 600);
+    }
   },
   methods: {
     /**
@@ -366,15 +375,6 @@ export default {
         this.commentCount -= 1;
         this.$Message.success("删除评论成功");
       });
-    }
-  },
-  activated() {
-    if (this.postID) {
-      this.postID !== this.oldID
-        ? ((this.components = []), (this.rewardList = []), this.fetchFeed())
-        : setTimeout(() => {
-            this.loading = false;
-          }, 600);
     }
   }
 };

@@ -1,64 +1,124 @@
 <template>
-    <div>
-        <div :class="`${prefixCls}-item-top`">
-            <avatar :user="user"/>
-            <section class="userInfo">
-                <router-link :class="`${prefixCls}-item-top-link`" :to="`/users/${comment.user_id}`">{{ comment.user.name
-                    }}
-                </router-link>
-                <span v-if="comment.reply_user"> 回复</span> <span v-else> 评论了你的动态</span>
-                <router-link :class="`${prefixCls}-item-top-link`" v-if="comment.reply_user"
-                             :to="`/users/${comment.reply_user}`">{{ comment.reply.name }}
-                </router-link>
-                <p>{{ comment.created_at | time2tips }}</p>
-            </section>
-            <section class="msgList-status">
-                <section class="gray">
-                    <span class="replay" @click.stop="showCommentInput">回复</span>
-                </section>
-            </section>
-        </div>
-        <div :class="`${prefixCls}-item-bottom`">
-      <span class="content" @click.stop="showCommentInput">
+  <div>
+    <div :class="`${prefixCls}-item-top`">
+      <avatar :user="user"/>
+      <section class="userInfo">
+        <router-link 
+          :class="`${prefixCls}-item-top-link`" 
+          :to="`/users/${comment.user_id}`">{{ comment.user.name
+          }}
+        </router-link>
+        <span v-if="comment.reply_user"> 回复</span> <span v-else> 评论了你的动态</span>
+        <router-link 
+          v-if="comment.reply_user" 
+          :class="`${prefixCls}-item-top-link`"
+          :to="`/users/${comment.reply_user}`">{{ comment.reply.name }}
+        </router-link>
+        <p>{{ comment.created_at | time2tips }}</p>
+      </section>
+      <section class="msgList-status">
+        <section class="gray">
+          <span 
+            class="replay" 
+            @click.stop="showCommentInput">回复</span>
+        </section>
+      </section>
+    </div>
+    <div :class="`${prefixCls}-item-bottom`">
+      <span 
+        class="content" 
+        @click.stop="showCommentInput">
         {{ comment.body }}
       </span>
-            <section v-if="comment.commentable !== null" @click="goToFeedDetail()">
-                <div :class="`${prefixCls}-item-bottom-noImg`" class="content" v-if="!getFirstImage && !getVideo">
-                    {{ comment.commentable.feed_content }}
-                </div>
-                <div :class="`${prefixCls}-item-bottom-img`" v-else>
-                    <div class="img">
-                        <async-file v-if="getFirstImage" :file="getFirstImage.id">
-                            <img slot-scope="props" :src="props.src" :alt="comment.user.name"/>
-                        </async-file>
-                        <async-file v-if="getVideo" :file="getVideo">
-                            <img slot-scope="props" :src="props.src" :alt="comment.user.name"/>
-                        </async-file>
-                    </div>
-                    <div class="content">
-                        {{ comment.commentable.feed_content }}
-                    </div>
-                </div>
-            </section>
-            <section v-if="comment.commentable === null">
-                <div :class="`${prefixCls}-item-bottom-noImg`" class="content">
-                    动态已被删除
-                </div>
-            </section>
+      <section 
+        v-if="comment.commentable !== null" 
+        @click="goToFeedDetail()">
+        <div 
+          v-if="!getFirstImage && !getVideo" 
+          :class="`${prefixCls}-item-bottom-noImg`" 
+          class="content">
+          {{ comment.commentable.feed_content }}
         </div>
+        <div 
+          v-else 
+          :class="`${prefixCls}-item-bottom-img`">
+          <div class="img">
+            <async-file 
+              v-if="getFirstImage" 
+              :file="getFirstImage.id">
+              <img 
+                slot-scope="props" 
+                :src="props.src" 
+                :alt="comment.user.name">
+            </async-file>
+            <async-file 
+              v-if="getVideo" 
+              :file="getVideo">
+              <img 
+                slot-scope="props" 
+                :src="props.src" 
+                :alt="comment.user.name">
+            </async-file>
+          </div>
+          <div class="content">
+            {{ comment.commentable.feed_content }}
+          </div>
+        </div>
+      </section>
+      <section v-if="comment.commentable === null">
+        <div 
+          :class="`${prefixCls}-item-bottom-noImg`" 
+          class="content">
+          动态已被删除
+        </div>
+      </section>
     </div>
+  </div>
 </template>
 <script>
 const prefixCls = "msgList";
 const url = "/feeds/";
 export default {
-  name: "feedsItem",
+  name: "FeedsItem",
   props: ["comment"],
   data: () => ({
     prefixCls,
     url,
     title: "动态"
   }),
+  computed: {
+    /**
+     * 获取图片,并计算地址
+     * @Author   Wayne
+     * @DateTime 2018-01-31
+     * @Email    qiaobin@zhiyicx.com
+     * @return   {false|Object}            [description]
+     */
+    getFirstImage() {
+      const { comment } = this;
+      const { length } = comment.commentable.images;
+      if (length > 0) {
+        const [img] = comment.commentable.images;
+
+        return img;
+      }
+
+      return false;
+    },
+    getVideo() {
+      const { comment } = this;
+      const { video } = comment.commentable;
+      if (video != null) {
+        return video.cover_id;
+      } else {
+        return false;
+      }
+    },
+    user() {
+      const { user } = this.comment || { user: {} };
+      return user;
+    }
+  },
   methods: {
     /**
      * 进入动态详情
@@ -107,39 +167,6 @@ export default {
           this.$Modal.remove();
         }
       });
-    }
-  },
-  computed: {
-    /**
-     * 获取图片,并计算地址
-     * @Author   Wayne
-     * @DateTime 2018-01-31
-     * @Email    qiaobin@zhiyicx.com
-     * @return   {false|Object}            [description]
-     */
-    getFirstImage() {
-      const { comment } = this;
-      const { length } = comment.commentable.images;
-      if (length > 0) {
-        const [img] = comment.commentable.images;
-
-        return img;
-      }
-
-      return false;
-    },
-    getVideo() {
-      const { comment } = this;
-      const { video } = comment.commentable;
-      if (video != null) {
-        return video.cover_id;
-      } else {
-        return false;
-      }
-    },
-    user() {
-      const { user } = this.comment || { user: {} };
-      return user;
     }
   }
 };

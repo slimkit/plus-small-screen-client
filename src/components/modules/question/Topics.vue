@@ -2,8 +2,16 @@
   <div class="module-questions-topics">
     <!-- navs. -->
     <nav class="module-questions-topics-nav">
-      <router-link to="/question/topics" replace exact exact-active-class="active">全部话题</router-link>
-      <router-link :to="{ path: '/question/topics', query: { type: 'follow' } }" replace exact exact-active-class="active">我关注的</router-link>
+      <router-link 
+        to="/question/topics" 
+        replace 
+        exact 
+        exact-active-class="active">全部话题</router-link>
+      <router-link 
+        :to="{ path: '/question/topics', query: { type: 'follow' } }" 
+        replace 
+        exact 
+        exact-active-class="active">我关注的</router-link>
     </nav>
 
     <!-- Main -->
@@ -12,9 +20,19 @@
       :on-refresh="handleRefresh"
       :on-load-more="handleLoadMore"
     >
-      <div class="module-questions-topics-item" v-for="topic in topics" :key="topic.id">
-        <router-link tag="img" v-show="topic.avatar" :src="topic.avatar" :to="`/question-topics/${topic.id}`" />
-        <router-link tag="a" :to="`/question-topics/${topic.id}`" class="title">
+      <div 
+        v-for="topic in topics" 
+        :key="topic.id" 
+        class="module-questions-topics-item">
+        <router-link 
+          v-show="topic.avatar" 
+          :src="topic.avatar" 
+          :to="`/question-topics/${topic.id}`" 
+          tag="img" />
+        <router-link 
+          :to="`/question-topics/${topic.id}`" 
+          tag="a" 
+          class="title">
           <span class="topic">{{ topic.name }}</span>
           <span class="label">
             <span>{{ topic.follows_count }}</span>&nbsp;关注
@@ -22,8 +40,14 @@
             <span>{{ topic.questions_count }}</span>&nbsp;问题
           </span>
         </router-link>
-        <button v-if="topic.has_follow || type === 'follow'" class="follow active" @click="handleUnfollow(topic)"><span>✓</span>已关注</button>
-        <button v-else class="follow" @click="handleFollow(topic)"><span>+</span>关注</button>
+        <button 
+          v-if="topic.has_follow || type === 'follow'" 
+          class="follow active" 
+          @click="handleUnfollow(topic)"><span>✓</span>已关注</button>
+        <button 
+          v-else 
+          class="follow" 
+          @click="handleFollow(topic)"><span>+</span>关注</button>
       </div>
     </load-more>
   </div>

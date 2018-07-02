@@ -2,8 +2,12 @@
   <div>
     <header class="m-box m-pos-f m-main m-head-top m-bb1">
       <div class="m-box m-aln-center m-flex-grow1 m-flex-base0">
-        <svg class="m-style-svg m-svg-def" @click="goBack">
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-back"></use>
+        <svg 
+          class="m-style-svg m-svg-def" 
+          @click="goBack">
+          <use 
+            xmlns:xlink="http://www.w3.org/1999/xlink" 
+            xlink:href="#base-back"/>
         </svg>
       </div>
       <div class="m-box m-aln-center m-justify-center m-flex-grow1 m-flex-base-0 m-head-top-title">
@@ -11,7 +15,9 @@
       </div>
       <div class="m-box m-aln-center m-justify-end m-flex-grow1 m-flex-base0">
         <svg class="m-style-svg m-svg-def">
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-share"></use>
+          <use 
+            xmlns:xlink="http://www.w3.org/1999/xlink" 
+            xlink:href="#base-share"/>
         </svg>
       </div>
     </header>
@@ -19,70 +25,95 @@
     <!-- Topic base -->
     <main style="padding-top: 0.9rem">
       <div :class="classNameBuilder('topic')">
-      <img src="https://images.zhibocloud.cn/question/topics/000/000/000/02.png">
-      <div class="title">
-        <h3 class="topic">{{ topic.name }}</h3>
-        <span class="label">
+        <img src="https://images.zhibocloud.cn/question/topics/000/000/000/02.png">
+        <div class="title">
+          <h3 class="topic">{{ topic.name }}</h3>
+          <span class="label">
             <span>{{ topic.follows_count }}</span>&nbsp;关注
             ·
             <span>{{ topic.questions_count }}</span>&nbsp;问题
           </span>
+        </div>
+        <button
+          v-if="topic.has_follow"
+          class="follow active"
+          @click="handleUnfollow(topic)"
+        >
+          <span>✓</span>已关注
+        </button>
+        <button 
+          v-else 
+          class="follow" 
+          @click="handleFollow(topic)">
+          <span>+</span>关注
+        </button>
       </div>
-      <button
-        v-if="topic.has_follow"
-        class="follow active"
-        @click="handleUnfollow(topic)"
+
+      <!-- Topic desc -->
+      <div :class="classNameBuilder('topic-desc')">
+        话题简介：{{ topic.description }}
+      </div>
+
+      <!-- Experts -->
+      <div :class="classNameBuilder('experts')">
+        <span>{{ topic.experts_count }}位相关专家</span>
+        <div>
+          <user-avatar
+            v-for="(user, index) in topic.experts"
+            :class="classNameBuilder('experts-user')"
+            :size="0.5"
+            :src="user.avatar"
+            :sex="user.sex"
+            :style="[{ zIndex: topic.experts.length - index }]"
+            :key="user.id"
+          />
+        </div>
+      </div>
+
+      <!-- Types nav -->
+      <nav 
+        ref="types" 
+        :class="classNameBuilder('types')">
+        <router-link 
+          :to="{ path: `/question-topics/${id}` }" 
+          replace 
+          exact 
+          exact-active-class="active">热门</router-link>
+        <router-link 
+          :to="{ path: `/question-topics/${id}`, query: { type: 'excellent' } }" 
+          replace 
+          exact 
+          exact-active-class="active">精选</router-link>
+        <router-link 
+          :to="{ path: `/question-topics/${id}`, query: { type: 'reward' } }" 
+          replace 
+          exact 
+          exact-active-class="active">悬赏</router-link>
+        <router-link 
+          :to="{ path: `/question-topics/${id}`, query: { type: 'new' } }" 
+          replace 
+          exact 
+          exact-active-class="active">最新</router-link>
+        <router-link 
+          :to="{ path: `/question-topics/${id}`, query: { type: 'all' } }" 
+          replace 
+          exact 
+          exact-active-class="active">全部</router-link>
+      </nav>
+
+      <!-- Questions -->
+      <load-more
+        ref="load"
+        :class="[classNameBuilder('questions')]"
+        :on-refresh="handleRefresh"
+        :on-load-more="handleLoadQuestions"
       >
-        <span>✓</span>已关注
-      </button>
-      <button v-else class="follow" @click="handleFollow(topic)">
-        <span>+</span>关注
-      </button>
-    </div>
-
-    <!-- Topic desc -->
-    <div :class="classNameBuilder('topic-desc')">
-      话题简介：{{ topic.description }}
-    </div>
-
-    <!-- Experts -->
-    <div :class="classNameBuilder('experts')">
-      <span>{{ topic.experts_count }}位相关专家</span>
-      <div>
-        <user-avatar
-          v-for="(user, index) in topic.experts"
-          :class="classNameBuilder('experts-user')"
-          :size="0.5"
-          :src="user.avatar"
-          :sex="user.sex"
-          :style="[{ zIndex: topic.experts.length - index }]"
-          :key="user.id"
+        <question-item
+          v-for="question in questions"
+          :key="question.id"
+          :question="question"
         />
-      </div>
-    </div>
-
-    <!-- Types nav -->
-    <nav :class="classNameBuilder('types')" ref="types">
-      <router-link :to="{ path: `/question-topics/${id}` }" replace exact exact-active-class="active">热门</router-link>
-      <router-link :to="{ path: `/question-topics/${id}`, query: { type: 'excellent' } }" replace exact exact-active-class="active">精选</router-link>
-      <router-link :to="{ path: `/question-topics/${id}`, query: { type: 'reward' } }" replace exact exact-active-class="active">悬赏</router-link>
-      <router-link :to="{ path: `/question-topics/${id}`, query: { type: 'new' } }" replace exact exact-active-class="active">最新</router-link>
-      <router-link :to="{ path: `/question-topics/${id}`, query: { type: 'all' } }" replace exact exact-active-class="active">全部</router-link>
-    </nav>
-
-    <!-- Questions -->
-    <load-more
-      ref="load"
-      :class="[classNameBuilder('questions')]"
-      :on-refresh="handleRefresh"
-      :on-load-more="handleLoadQuestions"
-    >
-      <question-item
-        v-for="question in questions"
-        :key="question.id"
-        :question="question"
-      />
-    </load-more>
+      </load-more>
     </main>
 
   </div>
@@ -132,6 +163,10 @@ export default {
         this.loadContainer.beforeRefresh();
       }
     }
+  },
+  mounted() {
+    this.typeNavOffsetTop = this.$refs.types.offsetTop;
+    document.addEventListener("scroll", this.handleScrolling);
   },
   methods: {
     classNameBuilder(className) {
@@ -222,10 +257,6 @@ export default {
           this.$Message.error(data);
         });
     }
-  },
-  mounted() {
-    this.typeNavOffsetTop = this.$refs.types.offsetTop;
-    document.addEventListener("scroll", this.handleScrolling);
   }
 };
 </script>

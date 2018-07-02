@@ -2,15 +2,19 @@
   <div class="p-chat-room m-box-model">
     <header class="m-box m-aln-center m-head-top m-main m-bb1 m-flex-grow0 m-flex-shrink0">
       <div class="m-box m-aln-center m-flex-grow1 m-flex-shrink1 m-flex-base0">
-        <svg class="m-style-svg m-svg-def" @click="goBack">
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-back"></use>
+        <svg 
+          class="m-style-svg m-svg-def" 
+          @click="goBack">
+          <use 
+            xmlns:xlink="http://www.w3.org/1999/xlink" 
+            xlink:href="#base-back"/>
         </svg>
       </div>
       <div class="m-box m-aln-center m-flex-grow2 m-flex-shrink2 m-flex-base0 m-justify-center m-head-top-title">
         <span class="m-text-cut">{{ name }}</span>
         <span>{{ count }}</span>
       </div>
-      <div class="m-box m-aln-center m-flex-grow1 m-flex-shrink1 m-flex-base0"></div>
+      <div class="m-box m-aln-center m-flex-grow1 m-flex-shrink1 m-flex-base0"/>
     </header>
     <main 
       ref="main"
@@ -19,32 +23,38 @@
         v-for="msg in messages"
         :msg="msg"
         :key="msg.id"
-        ></bubble>
+      />
     </main>
 
     <footer
-    ref='footer'
-    class="m-box m-aln-end m-main p-chat-room-foot m-flex-grow0 m-flex-shrink0 m-bt1">
+      ref="footer"
+      class="m-box m-aln-end m-main p-chat-room-foot m-flex-grow0 m-flex-shrink0 m-bt1">
       <form
         action="#"
         class="m-box-model m-aln-center m-justify-center m-flex-grow1 m-flex-shrink1 m-main p-chat-input">      
         <textarea 
-          v-model.trim='body'
-          ref='textarea'
-          @focus="onFocus"
+          ref="textarea"
+          v-model.trim="body"
+          :style="{ height: `${scrollHeight}px` }"
           placeholder="随便说说~"
-          @keydown.enter.prevent="sendMessage"
-          :style="{ height: `${scrollHeight}px` }"></textarea>
+          @focus="onFocus"
+          @keydown.enter.prevent="sendMessage"/>
         <textarea 
-          rows="1"
-          v-model.trim='shadowText' class="shadow-input" ref='shadow'></textarea>
+          ref="shadow"
+          v-model.trim="shadowText" 
+          rows="1" 
+          class="shadow-input"/>
       </form>
       <button 
-      class="m-flex-grow0 m-flex-shrink0 p-chat-button"
-      @click="sendMessage"
-      :disabled="disabled || sending">
-        <svg class="m-style-svg m-svg-def" v-if="sending">
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-loading"></use>
+        :disabled="disabled || sending"
+        class="m-flex-grow0 m-flex-shrink0 p-chat-button"
+        @click="sendMessage">
+        <svg 
+          v-if="sending" 
+          class="m-style-svg m-svg-def">
+          <use 
+            xmlns:xlink="http://www.w3.org/1999/xlink" 
+            xlink:href="#base-loading"/>
         </svg>
         <span v-else>发送</span>
       </button>
@@ -59,7 +69,7 @@ import WebIM, { sendTextMessage } from "@/vendor/easemob";
 
 import bubble from "./message-bubble.vue";
 export default {
-  name: "chat-room",
+  name: "ChatRoom",
   components: {
     bubble
   },
@@ -115,6 +125,25 @@ export default {
       });
     }
   },
+  mounted() {
+    this.init();
+    this.$nextTick(() => {
+      const room = this.$store.getters.getRoomById(this.roomId)[0];
+      if (room) {
+        this.room = room;
+        bus.$on("UpdateRoomMessages", () => {
+          room.messages().then(msgs => {
+            this.messages = msgs;
+          });
+        });
+        room.messages().then(msgs => {
+          this.messages = msgs;
+        });
+      } else {
+        $Message.error("错误的会话列表");
+      }
+    });
+  },
   methods: {
     init() {
       this.$nextTick(() => {
@@ -168,25 +197,6 @@ export default {
         window.scrollTo(0, wH2 - 70);
       }, 350);
     }
-  },
-  mounted() {
-    this.init();
-    this.$nextTick(() => {
-      const room = this.$store.getters.getRoomById(this.roomId)[0];
-      if (room) {
-        this.room = room;
-        bus.$on("UpdateRoomMessages", () => {
-          room.messages().then(msgs => {
-            this.messages = msgs;
-          });
-        });
-        room.messages().then(msgs => {
-          this.messages = msgs;
-        });
-      } else {
-        $Message.error("错误的会话列表");
-      }
-    });
   }
 };
 </script>

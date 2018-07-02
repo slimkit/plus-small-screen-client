@@ -1,8 +1,10 @@
 <template>
-  <transition enter-active-class="animated bounceInRight" leave-active-class="animated bounceOutLeft">
+  <transition 
+    enter-active-class="animated bounceInRight" 
+    leave-active-class="animated bounceOutLeft">
     <div class="p-signup">
       <header class="m-box m-aln-center m-head-top m-pos-f m-main m-bb1">
-        <div class="m-box m-aln-center m-flex-grow1 m-flex-base0"></div>
+        <div class="m-box m-aln-center m-flex-grow1 m-flex-base0"/>
         <div class="m-box m-aln-center m-justify-center m-flex-grow1 m-flex-base0 m-head-top-title">
           <span>完善资料</span>
         </div>
@@ -18,30 +20,39 @@
           <label for="nickname">用户名</label>
           <div class="m-input">
             <input
-            @focus="onFocus"
-            @blur="checkName(nickname)"
-            type="text"
-            id="nickname"
-            v-model="nickname"
-            placeholder="请输入用户名">
+              id="nickname"
+              v-model="nickname"
+              type="text"
+              placeholder="请输入用户名"
+              @focus="onFocus"
+              @blur="checkName(nickname)">
           </div>
           <svg 
-            @click="nickname = ''"
             v-show="nickname.length > 0"
-            class="m-style-svg m-svg-def">
-            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-clean"></use>
+            class="m-style-svg m-svg-def"
+            @click="nickname = ''">
+            <use 
+              xmlns:xlink="http://www.w3.org/1999/xlink" 
+              xlink:href="#base-clean"/>
           </svg>
         </div>
         <div class="m-box m-aln-center m-text-box m-form-err-box">
           <span>{{ err | plusMessageFirst }}</span>
         </div>
-        <div class="m-form-row" style="border: 0" v-if="displayBtn">
+        <div 
+          v-if="displayBtn" 
+          class="m-form-row" 
+          style="border: 0">
           <button
-          :disabled="err||loading"
-          class="m-long-btn m-signin-btn"
-          @click="signupByWechat">
-            <svg v-if="loading" class="m-style-svg m-svg-def">
-              <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-loading"></use>
+            :disabled="err||loading"
+            class="m-long-btn m-signin-btn"
+            @click="signupByWechat">
+            <svg 
+              v-if="loading" 
+              class="m-style-svg m-svg-def">
+              <use 
+                xmlns:xlink="http://www.w3.org/1999/xlink" 
+                xlink:href="#base-loading"/>
             </svg>
             <span v-else>提交</span>
           </button>
@@ -54,7 +65,7 @@
 const UNAME_REG = /^[a-zA-Z_\u4E00-\u9FA5\uF900-\uFA2D][a-zA-Z0-9_\u4E00-\u9FA5\uF900-\uFA2D]*$/;
 
 export default {
-  name: "signin",
+  name: "Signin",
   data() {
     return {
       loading: false,
@@ -64,6 +75,11 @@ export default {
       accessToken: "",
       displayBtn: false
     };
+  },
+  created() {
+    this.nickname = this.$lstore.getData("H5_WECHAT_NICKNAME") || "";
+    this.accessToken = this.$lstore.getData("H5_WECHAT_MP_ASTOKEN") || "";
+    this.checkName(this.nickname);
   },
 
   methods: {
@@ -154,11 +170,6 @@ export default {
           }
         );
     }
-  },
-  created() {
-    this.nickname = this.$lstore.getData("H5_WECHAT_NICKNAME") || "";
-    this.accessToken = this.$lstore.getData("H5_WECHAT_MP_ASTOKEN") || "";
-    this.checkName(this.nickname);
   }
 };
 </script>

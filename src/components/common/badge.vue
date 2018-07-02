@@ -1,17 +1,28 @@
 <template>
-    <span v-if="dot" :class="classes" ref="badge">
-        <slot></slot>
-        <sup :class="dotClasses" v-show="badge"></sup>
-    </span>
-    <span v-else :class="classes" ref="badge">
-        <slot></slot>
-        <sup v-if="count" :class="countClasses" v-show="badge">{{ finalCount }}</sup>
-    </span>
+  <span 
+    v-if="dot" 
+    ref="badge" 
+    :class="classes">
+    <slot/>
+    <sup 
+      v-show="badge" 
+      :class="dotClasses"/>
+  </span>
+  <span 
+    v-else 
+    ref="badge" 
+    :class="classes">
+    <slot/>
+    <sup 
+      v-if="count" 
+      v-show="badge" 
+      :class="countClasses">{{ finalCount }}</sup>
+  </span>
 </template>
 <script>
 const prefixCls = "v-badge";
 export default {
-  name: "vBadge",
+  name: "VBadge",
   props: {
     count: [Number, String],
     dot: {

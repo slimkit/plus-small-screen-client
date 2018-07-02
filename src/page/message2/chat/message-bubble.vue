@@ -1,10 +1,15 @@
 <template>
   <div class="message-item">
-    <div class="room-tips" v-if="user.id === 0">
+    <div 
+      v-if="user.id === 0" 
+      class="room-tips">
       <span>{{ body }}</span>
     </div>
-    <div v-else class="m-box m-aln-st msg-bubble" :class="{selef: bySelef}">
-      <avatar :user="user"></avatar>
+    <div 
+      v-else 
+      :class="{selef: bySelef}" 
+      class="m-box m-aln-st msg-bubble">
+      <avatar :user="user"/>
       <section class="m-box-model m-aln-st msg-bubble-main">
         <h2 class="msg-bubble-user-name m-text-cut">{{ user.name }}</h2>
         <p class="msg-bubble-body">{{ body }}</p>
@@ -15,7 +20,7 @@
 <script>
 import { mapState } from "vuex";
 export default {
-  name: "bubble",
+  name: "Bubble",
   props: {
     msg: [Object, String]
   },

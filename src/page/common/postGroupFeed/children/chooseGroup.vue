@@ -1,13 +1,20 @@
 <template>
-  <transition name='router-fadeInRight' mode="out-in">
+  <transition 
+    name="router-fadeInRight" 
+    mode="out-in">
     <div class="choose-group">
-      <head-top :go-back='close' :title='`选择圈子`'></head-top>
-      <div></div>
+      <head-top 
+        :go-back="close" 
+        :title="`选择圈子`"/>
+      <div/>
       <div class="choose-group-list">
-        <div class="choose-group-item ellipsis" v-for='group in groups' :key="group.id"
-        :class='{active: selected.id === group.id}'
-        @click='selectGroup(group)'
-        v-if='group.id'>{{ group.name }}</div>
+        <div 
+          v-for="group in groups" 
+          v-if="group.id" 
+          :key="group.id"
+          :class="{active: selected.id === group.id}"
+          class="choose-group-item ellipsis"
+          @click="selectGroup(group)">{{ group.name }}</div>
       </div>
     </div>
   </transition>
@@ -15,18 +22,22 @@
 <script>
 import HeadTop from "@/components/HeadTop";
 export default {
-  name: "chooseGroup",
-  props: {
-    value: {}
-  },
+  name: "ChooseGroup",
   components: {
     HeadTop
+  },
+  props: {
+    value: {}
   },
   data() {
     return {
       groups: [],
       selected: 0
     };
+  },
+  mounted() {
+    this.selected = this.value;
+    this.getAllGroups();
   },
   methods: {
     close() {
@@ -43,10 +54,6 @@ export default {
       );
       this.groups = data ? [...data] : [];
     }
-  },
-  mounted() {
-    this.selected = this.value;
-    this.getAllGroups();
   }
 };
 </script>

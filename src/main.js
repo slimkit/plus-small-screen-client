@@ -56,10 +56,10 @@ if (!window.initUrl) {
 new Vue({
   store,
   router,
-  render: h => h(App),
   created() {
     WebIM.openWebIM();
-  }
+  },
+  render: h => h(App)
 }).$mount("#app");
 
 // 版本号输出

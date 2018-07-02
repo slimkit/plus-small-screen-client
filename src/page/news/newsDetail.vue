@@ -2,15 +2,22 @@
   <article-card
     :liked="liked"
     :loading="loading"
-    :canOprate="news.audit_status===0"
+    :can-oprate="news.audit_status===0"
     @on-like="likeNews"
     @on-share="shareNews"
     @on-more="moreAction"
     @on-comment="commentNews">
-    <header slot="head" class="m-box m-justify-bet m-aln-center m-art-head" style="padding: 0">
+    <header 
+      slot="head" 
+      class="m-box m-justify-bet m-aln-center m-art-head" 
+      style="padding: 0">
       <div class="m-box m-flex-grow1 m-aln-center m-flex-base0">
-        <svg class='m-style-svg m-svg-def' @click='goBack'>
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-back"></use>
+        <svg 
+          class="m-style-svg m-svg-def" 
+          @click="goBack">
+          <use 
+            xmlns:xlink="http://www.w3.org/1999/xlink" 
+            xlink:href="#base-back"/>
         </svg>
       </div>
       <div class="m-box m-flex-grow1 m-aln-center m-flex-base0 m-head-top-title m-text-cut">
@@ -24,23 +31,27 @@
     </header>
     <div class="m-flex-shrink1 m-flex-grow1 m-art m-main">
       <section class="m-art-head">
-         <h1>{{ news.title }}</h1>
-         <p>
+        <h1>{{ news.title }}</h1>
+        <p>
           <i class="m-art-cate">{{ cate }}</i>
           <span>来自 {{ news.from || '原创' }}</span>
         </p>
       </section>
-      <p class="m-art-subject" v-if="news.subject">{{ news.subject }}</p>
-      <div class="m-art-body" v-html='body'></div>
+      <p 
+        v-if="news.subject" 
+        class="m-art-subject">{{ news.subject }}</p>
+      <div 
+        class="m-art-body" 
+        v-html="body"/>
       <div class="m-box m-aln-center m-justify-bet m-art-foot">
         <div class="m-flex-grow1 m-flex-shrink1 m-box m-aln-center m-art-like-list">
-          <template v-if='likeCount > 0 && news.audit_status===0'>
+          <template v-if="likeCount > 0 && news.audit_status===0">
             <ul class="m-box m-flex-grow0 m-flex-shrink0">
               <li
-              :key="id"
-              :style="{ zIndex: 5-index }"
-              v-for="({user, id}, index) in likes.slice(0, 5)"
-              class="m-avatar-box tiny">
+                v-for="({user, id}, index) in likes.slice(0, 5)"
+                :key="id"
+                :style="{ zIndex: 5-index }"
+                class="m-avatar-box tiny">
                 <img :src="user.avatar">
               </li>
             </ul>
@@ -74,10 +85,17 @@
         :key="`comment-${comment.id}`"
         :comment="comment"
         @click="replyComment" />
-      <div v-if="news.audit_status===0" class="m-box m-aln-center m-justify-center load-more-box">
-        <span v-if="noMoreCom" class="load-more-ph">---没有更多---</span>
-        <span v-else class="load-more-btn" @click.stop="fetchNewsComments(maxComId)">
-          {{fetchComing ? "加载中..." : "点击加载更多"}}
+      <div 
+        v-if="news.audit_status===0" 
+        class="m-box m-aln-center m-justify-center load-more-box">
+        <span 
+          v-if="noMoreCom" 
+          class="load-more-ph">---没有更多---</span>
+        <span 
+          v-else 
+          class="load-more-btn" 
+          @click.stop="fetchNewsComments(maxComId)">
+          {{ fetchComing ? "加载中..." : "点击加载更多" }}
         </span>
         <!-- <button v-else class="load-more-btn" @click.stop="fetchNewsComments(maxComId)"></button> -->
       </div>
@@ -99,7 +117,7 @@ import {
 } from "@/api/news.js";
 
 export default {
-  name: "news-detail",
+  name: "NewsDetail",
   components: {
     ArticleCard,
     CommentItem
@@ -193,6 +211,18 @@ export default {
     isWechat() {
       return this.$store.state.BROWSER.isWechat;
     }
+  },
+  activated() {
+    if (this.newsID) {
+      this.newsID !== this.oldID
+        ? this.fetchNews()
+        : setTimeout(() => {
+            this.loading = false;
+          }, 600);
+    }
+  },
+  deactivated() {
+    this.loading = true;
   },
   methods: {
     shareSuccess() {
@@ -386,18 +416,6 @@ export default {
         this.$Message.success("删除评论成功");
       });
     }
-  },
-  activated() {
-    if (this.newsID) {
-      this.newsID !== this.oldID
-        ? this.fetchNews()
-        : setTimeout(() => {
-            this.loading = false;
-          }, 600);
-    }
-  },
-  deactivated() {
-    this.loading = true;
   }
 };
 </script>

@@ -1,13 +1,14 @@
 <template>
-      <div class="m-pos-f m-box p-group-menu m-justify-end" :style="menuStyle"  @click.self="showMenu">
-      <div class="m-box-model p-group-menu-wrap">
-        
-      </div>
-    </div>
+  <div 
+    :style="menuStyle" 
+    class="m-pos-f m-box p-group-menu m-justify-end" 
+    @click.self="showMenu">
+    <div class="m-box-model p-group-menu-wrap"/>
+  </div>
 </template>
 <script>
 export default {
-  name: "group-menu",
+  name: "GroupMenu",
   props: {
     value: {
       type: Boolean,

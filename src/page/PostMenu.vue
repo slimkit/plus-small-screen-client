@@ -1,57 +1,63 @@
 <template>
   <div @touchmove.prevent>
-    <transition name='toast'>
-      <div v-if='show' class="m-pop-box" style="background-color: rgba(255, 255, 255, .95)" @click='cancel'></div>
+    <transition name="toast">
+      <div 
+        v-if="show" 
+        class="m-pop-box" 
+        style="background-color: rgba(255, 255, 255, .95)" 
+        @click="cancel"/>
     </transition>
     <transition @after-enter="transitionComplete">
-      <div class="m-box-model m-post-menu-con" v-if="show">
+      <div 
+        v-if="show" 
+        class="m-box-model m-post-menu-con">
         <transition-group
-        tag="div"
-        enter-active-class="animated bounceIn"
-        class="m-box m-aln-center m-post-menu-list">
+          tag="div"
+          enter-active-class="animated bounceIn"
+          class="m-box m-aln-center m-post-menu-list">
           <!-- @click="to('/post/feed?type=1')" -->
           <div
-          v-if="open"
-          key="ico_word"
-          @click="to('/post/text')"
-          class="m-box-model m-aln-center m-post-menu-item">
+            v-if="open"
+            key="ico_word"
+            class="m-box-model m-aln-center m-post-menu-item"
+            @click="to('/post/text')">
             <img src="../images/ico_word@3x.png">
             <span>文字</span>
           </div>
           <!-- @click="to('/post/feed?type=2')" -->
           <div
-          v-if="open"
-          key="ico_potoablum"
-          @click="to('/post/pic')"
-          class="m-box-model m-aln-center m-post-menu-item">
+            v-if="open"
+            key="ico_potoablum"
+            class="m-box-model m-aln-center m-post-menu-item"
+            @click="to('/post/pic')">
             <img src="../images/ico_potoablum@3x.png">
             <span>图片</span>
           </div>
           <div
-          v-if="open"
-          key="ico_contribute"
-          @click="canPostNews ? to('/post/release') : message()"
-          class="m-box-model m-aln-center m-post-menu-item">
+            v-if="open"
+            key="ico_contribute"
+            class="m-box-model m-aln-center m-post-menu-item"
+            @click="canPostNews ? to('/post/release') : message()">
             <img src="../images/ico_contribute@3x.png">
             <span>投稿</span>
           </div>
           <div
-          v-if="open && checkin"
-          key="ico_attendance"
-          @click="showCheckIn"
-          class="m-box-model m-aln-center m-post-menu-item">
+            v-if="open && checkin"
+            key="ico_attendance"
+            class="m-box-model m-aln-center m-post-menu-item"
+            @click="showCheckIn">
             <img src="../images/ico_attendance@3x.png">
             <span>签到</span>
           </div>
           <div
-          v-if="open"
-          key="ico_question"
-          @click="to('/post/question')"
-          class="m-box-model m-aln-center m-post-menu-item">
+            v-if="open"
+            key="ico_question"
+            class="m-box-model m-aln-center m-post-menu-item"
+            @click="to('/post/question')">
             <img src="../images/ico_question@3x.png">
             <span>提问</span>
           </div>
-<!--           <div
+          <!--           <div
           v-if="open"
           key="ico_fatie"
           @click="to('/post/fatie')"
@@ -62,11 +68,11 @@
         </transition-group>
         <transition name="pop">
           <button
-          @click="cancel"
-          class="m-post-menu-btn"
-          :class="{open}">
-            <span></span>
-            <span></span>
+            :class="{open}"
+            class="m-post-menu-btn"
+            @click="cancel">
+            <span/>
+            <span/>
           </button>
         </transition>
       </div>
@@ -77,7 +83,7 @@
 import bus from "@/bus.js";
 import { mapState } from "vuex";
 export default {
-  name: "post-menu",
+  name: "PostMenu",
   data() {
     return {
       show: false,

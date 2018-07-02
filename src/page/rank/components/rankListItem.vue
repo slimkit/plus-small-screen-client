@@ -1,17 +1,27 @@
 <template>
   <div :class="`${prefixCls}-list-item`">
-    <span :class="{ top: index < 3 }" class="rank">{{ index + 1 }}</span>
-    <div :class="`${prefixCls}-info`" @click="to(`/users/${user.id}`)">
-      <avatar :class="`${prefixCls}-user-avatar`" :user="user"></avatar>
+    <span 
+      :class="{ top: index < 3 }" 
+      class="rank">{{ index + 1 }}</span>
+    <div 
+      :class="`${prefixCls}-info`" 
+      @click="to(`/users/${user.id}`)">
+      <avatar 
+        :class="`${prefixCls}-user-avatar`" 
+        :user="user"/>
       <div :class="`${prefixCls}-title`">
         <h6>{{ user.name }}</h6>
         <!-- 用于显示各排行榜数据的插槽 -->
-        <slot></slot>
+        <slot/>
       </div>
     </div>
     <template v-if="!isMine(user)">
-      <svg class="m-style-svg m-svg-big" @click.stop="followUser(user, isFollow(user))">
-        <use xmlns:xlink="http://www.w3.org/1999/xlink" :xlink:href="`#base-${isFollow(user)}`"></use>
+      <svg 
+        class="m-style-svg m-svg-big" 
+        @click.stop="followUser(user, isFollow(user))">
+        <use 
+          :xlink:href="`#base-${isFollow(user)}`" 
+          xmlns:xlink="http://www.w3.org/1999/xlink"/>
       </svg>
     </template>
   </div>
@@ -21,7 +31,7 @@
 import { followUserByStatus } from "@/api/user.js";
 
 export default {
-  name: "rankListItem",
+  name: "RankListItem",
   props: {
     prefixCls: String,
     user: Object,

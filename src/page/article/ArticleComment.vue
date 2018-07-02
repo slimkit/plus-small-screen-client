@@ -1,26 +1,31 @@
 <template>
   <div class="m-lim-width m-art-comment">
     <div class="m-box m-art-comment-wrap">
-      <avatar :user="user"></avatar>
+      <avatar :user="user"/>
       <section class="m-box-model m-flex-grow1 m-flex-shrink1 m-art-comment-body">
         <header class="m-box m-aln-center m-justify-bet m-art-comment-usr">
           <h4 class="m-flex-grow1 m-flex-shrink1">{{ user.name }}</h4>
           <div class="m-box m-aln-center">
-            <span v-if="pinned" class="m-art-comment-icon-top">置顶</span>
+            <span 
+              v-if="pinned" 
+              class="m-art-comment-icon-top">置顶</span>
             <span>{{ time | time2tips }}</span>
           </div>
         </header>
         <article
-        class="m-text-box m-art-comment-con"
-        :class="{maxh: !isShowAll}"
-        @click="handelClick">
+          :class="{maxh: !isShowAll}"
+          class="m-text-box m-art-comment-con"
+          @click="handelClick">
           <template v-if="replyUser">
             <span class="m-art-comment-rep">
-              回复<router-link :to='`/users/${replyUser.id}`'>{{ replyUser.name }}</router-link>：
+              回复<router-link :to="`/users/${replyUser.id}`">{{ replyUser.name }}</router-link>：
             </span>
           </template>
           {{ body }}
-          <span @click.stop="isShowAll = !isShowAll" v-show="bodyLength > 60 && !isShowAll" class="m-text-more"> >>更多</span>
+          <span 
+            v-show="bodyLength > 60 && !isShowAll" 
+            class="m-text-more" 
+            @click.stop="isShowAll = !isShowAll"> >>更多</span>
         </article>
       </section>
     </div>
@@ -49,7 +54,7 @@ function strLength(str) {
   return totalLength;
 }
 export default {
-  name: "comment-item",
+  name: "CommentItem",
   props: {
     comment: null,
     pinned: Boolean
@@ -86,14 +91,14 @@ export default {
       return this.comment.created_at || "";
     }
   },
+  mounted() {
+    this.$store.commit("SAVE_USER", this.user);
+  },
   methods: {
     handelClick() {
       if (!this.isShowAll) return (this.isShowAll = !this.isShowAll);
       this.$emit("click", this.user.id, this.user.name, this.comment.id);
     }
-  },
-  mounted() {
-    this.$store.commit("SAVE_USER", this.user);
   }
 };
 </script>

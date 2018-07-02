@@ -2,15 +2,19 @@
   <div class="p-groups">
     <header class="m-box m-aln-center m-justify-bet m-head-top m-pos-f m-main m-bb1">
       <div class="m-box m-aln-center m-flex-grow1 m-flex-shrink1">
-        <svg class="m-style-svg m-svg-def" @click="goBack">
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-back"></use>
+        <svg 
+          class="m-style-svg m-svg-def" 
+          @click="goBack">
+          <use 
+            xmlns:xlink="http://www.w3.org/1999/xlink" 
+            xlink:href="#base-back"/>
         </svg>
       </div>
       <div class="m-box m-aln-center m-flex-grow1 m-flex-shrink1 m-justify-center m-head-top">
         <span>全部圈子</span>
       </div>
       <div class="m-box m-aln-center m-flex-grow1 m-flex-shrink1">
-<!--         <svg class="m-style-svg m-svg-def">
+        <!--         <svg class="m-style-svg m-svg-def">
           <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-search"></use>
         </svg>
         <svg class="m-style-svg m-svg-def">
@@ -21,38 +25,43 @@
     <main style="padding-top: 0.9rem">
       <nav class="m-box m-aln-center m-pos-f m-main m-bb1 p-groups-nav">
         <router-link 
-          class="m-text-box p-groups-nav-item"
+          :to="{name: 'groups', query: { type: 'recommend' }}"
 
+          class="m-text-box p-groups-nav-item"
           exact
           replace
           tag="div"
-          active-class="active"
-          :to="{name: 'groups', query: { type: 'recommend' }}">
+          active-class="active">
           <span>推荐</span>
         </router-link>
         <router-link 
-          class="m-text-box p-groups-nav-item"
+          v-for="cate in GROUP_CATES"
 
+          :to="{ name: 'groups', query: { category: cate.id } }"
+          :key="cate.id"
+          class="m-text-box p-groups-nav-item"
           exact
           replace
-          tag="div"
-          active-class="active"
-          :to="{ name: 'groups', query: { category: cate.id } }"
           
-          v-for="cate in GROUP_CATES"
-          :key="cate.id">
+          tag="div"
+          active-class="active">
           <span class="m-text-cut">{{ cate.name }}</span>
         </router-link>
       </nav>
 
       <load-more
-      ref="loadmore"
-      style="padding-top: 0.9rem"
-      :on-refresh="onRefresh"
-      :on-load-more="onLoadMore">
-      <div class="m-bb1" :key="group.id" v-for="group in groups">
-        <group-item  :group="group" :show-action="true" />
-      </div>
+        ref="loadmore"
+        :on-refresh="onRefresh"
+        :on-load-more="onLoadMore"
+        style="padding-top: 0.9rem">
+        <div 
+          v-for="group in groups" 
+          :key="group.id" 
+          class="m-bb1">
+          <group-item 
+            :group="group" 
+            :show-action="true" />
+        </div>
       </load-more>
       
     </main>
@@ -63,7 +72,7 @@ import { mapState } from "vuex";
 import GroupItem from "./GroupItem.vue";
 import { getGroupsByCate } from "@/api/group.js";
 export default {
-  name: "groups",
+  name: "Groups",
   components: {
     GroupItem
   },

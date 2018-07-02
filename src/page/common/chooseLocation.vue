@@ -1,37 +1,66 @@
 <template>
-    <div class="page-location">
-        <head-top :append='true' title='选择定位'>
-            <div slot='append' class="head-top-cancel" @click='$router.go(-1)'>取消</div>
-            <div slot='title' class="head-top-search">
-                <v-icon type='base-search' class='head-top-search-icon'></v-icon>
-                <input class="head-top-search-input" type="text" v-model='keyword' placeholder="搜索" @input="search">
-            </div>
-        </head-top>
-        <!-- 保留此空 div -->
-        <div></div>
-        <template v-if='isShowHot'>
-            <div class="location-current">
-                <span>当前定位</span>
-                <span class="location-current-txt" :class='{c999: !cur_txt }'>{{cur_txt || "未定位"}}</span>
-                <v-icon :type='cur_icon' class="location-current-append" @click.native.stop='updateLocation'></v-icon>
-            </div>
-            <div class="location-hot">
-                <label>热门城市</label>
-                <div class="location-hot-list">
-                    <div class="location-hot-item" v-for='hotCity in hot_citys' v-if='hotCity.length > 0' @click='chooseHotCity(hotCity)' :key="hotCity">
-                        {{ hotCity.slice(hotCity.lastIndexOf(' ')) }}
-                    </div>
-                </div>
-            </div>
-        </template>
-        <template v-if='dataList.length > 0'>
-            <ul class="location-search-list">
-                <li class="location-search-list-item" v-for='item in dataList' v-if='item' @click='chooseHotCity(item)' :key="item">
-                    {{ item }}
-                </li>
-            </ul>
-        </template>
-    </div>
+  <div class="page-location">
+    <head-top 
+      :append="true" 
+      title="选择定位">
+      <div 
+        slot="append" 
+        class="head-top-cancel" 
+        @click="$router.go(-1)">取消</div>
+      <div 
+        slot="title" 
+        class="head-top-search">
+        <v-icon 
+          type="base-search" 
+          class="head-top-search-icon"/>
+        <input 
+          v-model="keyword" 
+          class="head-top-search-input" 
+          type="text" 
+          placeholder="搜索" 
+          @input="search">
+      </div>
+    </head-top>
+    <!-- 保留此空 div -->
+    <div/>
+    <template v-if="isShowHot">
+      <div class="location-current">
+        <span>当前定位</span>
+        <span 
+          :class="{c999: !cur_txt }" 
+          class="location-current-txt">{{ cur_txt || "未定位" }}</span>
+        <v-icon 
+          :type="cur_icon" 
+          class="location-current-append" 
+          @click.native.stop="updateLocation"/>
+      </div>
+      <div class="location-hot">
+        <label>热门城市</label>
+        <div class="location-hot-list">
+          <div 
+            v-for="hotCity in hot_citys" 
+            v-if="hotCity.length > 0" 
+            :key="hotCity" 
+            class="location-hot-item" 
+            @click="chooseHotCity(hotCity)">
+            {{ hotCity.slice(hotCity.lastIndexOf(' ')) }}
+          </div>
+        </div>
+      </div>
+    </template>
+    <template v-if="dataList.length > 0">
+      <ul class="location-search-list">
+        <li 
+          v-for="item in dataList" 
+          v-if="item" 
+          :key="item" 
+          class="location-search-list-item" 
+          @click="chooseHotCity(item)">
+          {{ item }}
+        </li>
+      </ul>
+    </template>
+  </div>
 </template>
 <script>
 import _ from "lodash";
@@ -40,7 +69,7 @@ import HeadTop from "@/components/HeadTop";
 let sources = [];
 
 export default {
-  name: "chooseLocation",
+  name: "ChooseLocation",
   components: {
     HeadTop
   },

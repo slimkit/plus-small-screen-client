@@ -1,19 +1,26 @@
 <template>
   <transition name="el-message-fade">
     <div
-      @transitionend="transitionend"
+      v-show="visible"
       :class="[
         'v-message',
         `v-message-${type}`]"
-      v-show="visible"
       role="alert"
+      @transitionend="transitionend"
     >
       <svg class="m-style-svg m-svg-def">
-        <use xmlns:xlink="http://www.w3.org/1999/xlink" :xlink:href="`#message-${type}`"></use>
+        <use 
+          :xlink:href="`#message-${type}`" 
+          xmlns:xlink="http://www.w3.org/1999/xlink"/>
       </svg>
       <slot>
-        <p v-if="!dangerouslyUseHTMLString" class="v-message-content">{{ message }}</p>
-        <p v-else v-html="message" class="v-message-content"></p>
+        <p 
+          v-if="!dangerouslyUseHTMLString" 
+          class="v-message-content">{{ message }}</p>
+        <p 
+          v-else 
+          class="v-message-content" 
+          v-html="message"/>
       </slot>
     </div>
   </transition>
@@ -39,6 +46,10 @@ export default {
       }
     }
   },
+  mounted() {
+    this.startTimer();
+  },
+  beforeDestroy() {},
   methods: {
     transitionend() {
       this.destroyElement();
@@ -66,11 +77,7 @@ export default {
         }, this.duration);
       }
     }
-  },
-  mounted() {
-    this.startTimer();
-  },
-  beforeDestroy() {}
+  }
 };
 </script>
 

@@ -1,25 +1,47 @@
 <template>
-  <div :class='prefixCls'>
-    <head-top :go-back='true' title='发帖' :append='true'>
-      <button slot='prepend' :class="`${prefixCls}-btn`" @click='goBack'>取消</button>
-      <button slot='append' :class="`${prefixCls}-btn`" :disabled="disabled" @click='postFeed'>发布</button>
+  <div :class="prefixCls">
+    <head-top 
+      :go-back="true" 
+      :append="true" 
+      title="发帖">
+      <button 
+        slot="prepend" 
+        :class="`${prefixCls}-btn`" 
+        @click="goBack">取消</button>
+      <button 
+        slot="append" 
+        :class="`${prefixCls}-btn`" 
+        :disabled="disabled" 
+        @click="postFeed">发布</button>
     </head-top>
-    <div></div>
+    <div/>
     <div :class="`${prefixCls}-content`">
-      <template v-if='!groupID || selectGroup.id'>
-        <div :class="`${prefixCls}-select`" @click.stop='showChoosePage'>
+      <template v-if="!groupID || selectGroup.id">
+        <div 
+          :class="`${prefixCls}-select`" 
+          @click.stop="showChoosePage">
           <div :class="`${prefixCls}-select-label`">{{ chooseTips }}</div>
-          <v-icon type='base-arrow-r' />
+          <v-icon type="base-arrow-r" />
         </div>
       </template>
       <div :class="`${prefixCls}-title`">
-        <input type="text" v-model='title' placeholder='输入标题, 20字以内' maxlength="20">
+        <input 
+          v-model="title" 
+          type="text" 
+          placeholder="输入标题, 20字以内" 
+          maxlength="20">
       </div>
       <div :class="`${prefixCls}-body`">
-        <textarea v-txtautosize v-model='body' placeholder="输入要说的话, 图文结合更精彩哦" />
+        <textarea 
+          v-txtautosize 
+          v-model="body" 
+          placeholder="输入要说的话, 图文结合更精彩哦" />
       </div>
     </div>
-    <ChooseGroup @on-close='closeChoosePage' v-model='selectGroup' v-show='showChoose' />
+    <ChooseGroup 
+      v-show="showChoose" 
+      v-model="selectGroup" 
+      @on-close="closeChoosePage" />
   </div>
 </template>
 <script>
@@ -27,7 +49,7 @@ import HeadTop from "@/components/HeadTop";
 import ChooseGroup from "./children/chooseGroup";
 const prefixCls = "post--group-feed";
 export default {
-  name: "postGroupFeed",
+  name: "PostGroupFeed",
   components: {
     HeadTop,
     ChooseGroup

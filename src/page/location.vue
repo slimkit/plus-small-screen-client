@@ -1,23 +1,27 @@
 <template>
   <transition
-  enter-active-class="animated slideInRight"
-  leave-active-class="animated slideOutLeft"
-  v-if="show">
+    v-if="show"
+    enter-active-class="animated slideInRight"
+    leave-active-class="animated slideOutLeft">
     <div class="m-box-model m-pos-f p-location">
       <header class="m-pos-f m-box m-aln-center m-justify-bet m-main m-bb1">
         <div class="m-flex-grow1 m-flex-shrink1 m-flex-base0">
           <div class="m-search-box">
             <svg class="m-style-svg m-svg-def">
-              <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-search"></use>
+              <use 
+                xmlns:xlink="http://www.w3.org/1999/xlink" 
+                xlink:href="#base-search"/>
             </svg>
-            <form action="#" onsubmit="return false">
+            <form 
+              action="#" 
+              onsubmit="return false">
               <input 
+                v-model="keyword"
+                type="search"
+                placeholder="搜索"
                 @focus="onFocus"
                 @blur="onBlur"
-                v-model="keyword"
-                @input="searchCityByName"
-                type="search"
-                placeholder="搜索">
+                @input="searchCityByName">
             </form>
           </div>
         </div>
@@ -29,30 +33,39 @@
         <div v-if="showHot">
           <div class="m-box m-aln-center m-justify-bet m-main current-location">
             <span>当前定位</span>
-            <p class="m-flex-grow1 m-flex-shrink1 m-flex-base0 m-text-cut" 
-            :class='{placeholder: currentTxt.length === 0}' @click="goBack">{{ currentTxt || placeholder }}</p>
-            <svg class="m-style-svg m-svg-def" @click="getCurrentPosition">
-              <use xmlns:xlink="http://www.w3.org/1999/xlink" :xlink:href="iconType"></use>
+            <p 
+              :class="{placeholder: currentTxt.length === 0}" 
+              class="m-flex-grow1 m-flex-shrink1 m-flex-base0 m-text-cut" 
+              @click="goBack">{{ currentTxt || placeholder }}</p>
+            <svg 
+              class="m-style-svg m-svg-def" 
+              @click="getCurrentPosition">
+              <use 
+                :xlink:href="iconType" 
+                xmlns:xlink="http://www.w3.org/1999/xlink"/>
             </svg>
           </div>
           <div class="m-box-model">
             <span class="label">热门城市</span>
             <ul class="hot-list m-main">
               <li 
-              :key="`${city}&${index}`"
-              class="m-text-cut m-text-c"
-              v-for="(city, index) in hotCities"
-              @click="selectedHot(city)">
+                v-for="(city, index) in hotCities"
+                :key="`${city}&${index}`"
+                class="m-text-cut m-text-c"
+                @click="selectedHot(city)">
                 <span>{{ city.slice(city.lastIndexOf(' ')) }}</span>
               </li>
             </ul>
           </div>
         </div>
-        <div v-else class="m-box-model">
-          <div class="m-box m-aln-center m-bb1 m-main city-item" 
-          v-for="city in cities"
-          :key="city"
-          @click="selectedHot(city.slice(city.lastIndexOf(`，`)))">
+        <div 
+          v-else 
+          class="m-box-model">
+          <div 
+            v-for="city in cities" 
+            :key="city"
+            class="m-box m-aln-center m-bb1 m-main city-item"
+            @click="selectedHot(city.slice(city.lastIndexOf(`，`)))">
             <span class="m-text-cut">{{ city }}</span>
           </div>
         </div>
@@ -70,7 +83,7 @@ import {
 } from "@/api/bootstrappers.js";
 import _ from "lodash";
 export default {
-  name: "location",
+  name: "Location",
   props: {
     show: {
       type: Boolean,

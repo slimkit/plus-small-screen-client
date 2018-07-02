@@ -1,8 +1,8 @@
 <template>
-    <div class="full-spin">
-        <span></span>
-        <span></span>
-    </div>
+  <div class="full-spin">
+    <span/>
+    <span/>
+  </div>
 </template>
 <script>
 export default {

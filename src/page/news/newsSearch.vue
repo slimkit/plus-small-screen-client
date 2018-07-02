@@ -2,33 +2,43 @@
   <div class="p-news-search">
     <header class="m-box m-aln-center m-pos-f m-main m-bb1 m-head-top">
       <div class="m-box m-flex-grow0 m-flex-shrink0 m-aln-center">
-        <svg class="m-style-svg m-svg-def" @click="goBack">
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-back"></use>
+        <svg 
+          class="m-style-svg m-svg-def" 
+          @click="goBack">
+          <use 
+            xmlns:xlink="http://www.w3.org/1999/xlink" 
+            xlink:href="#base-back"/>
         </svg>
       </div>
       <div class="m-box m-flex-grow2 m-flex-shrink2 m-aln-center m-head-top-title">
         <div class="m-search-box">
-          <form action="#" onsubmit="return false">
-            <input type="search" v-model='keyword' placeholder="搜索" @input="searchNewsByKey">
+          <form 
+            action="#" 
+            onsubmit="return false">
+            <input 
+              v-model="keyword" 
+              type="search" 
+              placeholder="搜索" 
+              @input="searchNewsByKey">
           </form>
         </div>
       </div>
       <div class="m-box m-flex-grow0 m-flex-shrink0 m-aln-center m-justify-end">
-          <a @click.prevent.stop='goBack'>取消</a>
+        <a @click.prevent.stop="goBack">取消</a>
       </div>
     </header>
     <jo-load-more
-    ref='loadmore'
-    @onRefresh='onRefresh'
-    @onLoadMore='onLoadMore'
-    :auto-load="false"
-    :showBottom="list.length > 0"
-    style="padding-top: 0.9rem">
+      ref="loadmore"
+      :auto-load="false"
+      :show-bottom="list.length > 0"
+      style="padding-top: 0.9rem"
+      @onRefresh="onRefresh"
+      @onLoadMore="onLoadMore">
       <news-item
-      v-for='news in list'
-      v-if='news.id'
-      :key='news.id'
-      :news='news'
+        v-for="news in list"
+        v-if="news.id"
+        :key="news.id"
+        :news="news"
       />
     </jo-load-more>
   </div>
@@ -38,7 +48,7 @@ import _ from "lodash";
 import { searchNewsByKey } from "@/api/news.js";
 import newsItem from "./components/newsItem.vue";
 export default {
-  name: "news-search",
+  name: "NewsSearch",
   components: {
     newsItem
   },

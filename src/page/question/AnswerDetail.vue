@@ -1,15 +1,29 @@
 <template>
-  <article-card :liked="liked" :loading="loading" @on-like="likeAnswer" @on-share="shareAnswer" @on-more="moreAction" @on-comment="commentAnswer" v-if="answer.id">
-    <header slot="head" class="m-box m-justify-bet m-aln-center m-art-head m-main" style="padding: 0">
+  <article-card
+    v-if="answer.id"
+    :liked="liked"
+    :loading="loading"
+    @on-like="likeAnswer"
+    @on-share="shareAnswer"
+    @on-more="moreAction"
+    @on-comment="commentAnswer">
+    <header
+      slot="head"
+      class="m-box m-justify-bet m-aln-center m-art-head m-main"
+      style="padding: 0">
       <div class="m-box m-flex-grow1 m-aln-center m-flex-base0">
-        <svg class='m-style-svg m-svg-def' @click='goBack'>
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-back"></use>
+        <svg
+          class="m-style-svg m-svg-def"
+          @click="goBack">
+          <use
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            xlink:href="#base-back"/>
         </svg>
       </div>
       <div class="m-box m-flex-grow2 m-flex-shrink2 m-aln-center m-flex-base0 m-head-top-title m-justify-center">
         <span class="m-text-cut">{{ answer.question.subject }}</span>
       </div>
-      <div class="m-box m-flex-grow1 m-aln-center m-flex-base0 m-justify-end"></div>
+      <div class="m-box m-flex-grow1 m-aln-center m-flex-base0 m-justify-end"/>
     </header>
     <main class="m-flex-shrink1 m-flex-grow1 m-art m-main">
       <!-- 回答者信息 -->
@@ -22,13 +36,20 @@
         <button></button>
       </div> -->
       <div class="m-art-body">
-        <p class="m-text-box" v-html="formatBody(content)"></p>
+        <p
+          class="m-text-box"
+          v-html="formatBody(content)"/>
       </div>
       <div class="m-box m-aln-center m-justify-bet m-art-foot">
         <div class="m-flex-grow1 m-flex-shrink1 m-box m-aln-center m-art-like-list">
-          <template v-if='likeCount > 0'>
+          <template v-if="likeCount > 0">
             <ul class="m-box m-flex-grow0 m-flex-shrink0">
-              <li :key="id" :style="{ zIndex: 5-index }" v-for="({user = {}, id}, index) in likes.slice(0, 5)" class="m-avatar-box tiny" :class="`m-avatar-box-${user.sex}`">
+              <li
+                v-for="({user = {}, id}, index) in likes.slice(0, 5)"
+                :key="id"
+                :style="{ zIndex: 5-index }"
+                :class="`m-avatar-box-${user.sex}`"
+                class="m-avatar-box tiny">
                 <img :src="user.avatar">
               </li>
             </ul>
@@ -54,21 +75,38 @@
       </div> -->
     </main>
     <!-- 评论列表 -->
-    <div class="m-box-model m-art-comments" id="comment_list">
+    <div
+      id="comment_list"
+      class="m-box-model m-art-comments">
       <ul class="m-box m-aln-center m-art-comments-tabs">
         <li>{{ commentCount | formatNum }}条评论</li>
       </ul>
-      <comment-item @click="replyComment" v-for="(comment) in pinnedCom" :pinned="true" :key="`pinned-comment-${comment.id}`" :comment="comment" />
-      <comment-item @click="replyComment" v-for="(comment) in comments" :key="comment.id" :comment="comment" />
+      <comment-item
+        v-for="(comment) in pinnedCom"
+        :pinned="true"
+        :key="`pinned-comment-${comment.id}`"
+        :comment="comment"
+        @click="replyComment" />
+      <comment-item
+        v-for="(comment) in comments"
+        :key="comment.id"
+        :comment="comment"
+        @click="replyComment" />
       <div class="m-box m-aln-center m-justify-center load-more-box">
-        <span v-if="noMoreCom" class="load-more-ph">---没有更多---</span>
-        <span v-else class="load-more-btn" @click.stop="fetchAnswerComments(maxComId)">
-          {{fetchComing ? "加载中..." : "点击加载更多"}}
+        <span
+          v-if="noMoreCom"
+          class="load-more-ph">---没有更多---</span>
+        <span
+          v-else
+          class="load-more-btn"
+          @click.stop="fetchAnswerComments(maxComId)">
+          {{ fetchComing ? "加载中..." : "点击加载更多" }}
         </span>
       </div>
     </div>
   </article-card>
 </template>
+
 <script>
 import bus from "@/bus.js";
 import { mapState } from "vuex";
@@ -80,7 +118,7 @@ import CommentItem from "@/page/article/ArticleComment.vue";
 
 import { likeAnswersByStatus } from "@/api/question/answer.js";
 export default {
-  name: "answer-detailt",
+  name: "AnswerDetailt",
   components: {
     ArticleCard,
     CommentItem
@@ -148,6 +186,9 @@ export default {
       const { body = "" } = this.answer;
       return body;
     }
+  },
+  created() {
+    this.fetchAnswer();
   },
   methods: {
     formatBody(body) {
@@ -290,9 +331,6 @@ export default {
         this.$Message.error("评论内容不能为空");
       }
     }
-  },
-  created() {
-    this.fetchAnswer();
   }
 };
 </script>

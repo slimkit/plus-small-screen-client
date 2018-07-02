@@ -1,21 +1,27 @@
 <template>
-    <div class="profile-group">
-        <head-top :go-back='cancel'>
-            <div class="head-top-tabs-nav" slot='nav'>
-                <router-link class='head-top-tabs-nav-item' v-for='({label, path}, index) in types' :key='`profile-group-tab-${index}`' :to='path'>
-                    {{ label }}
-                </router-link>
-            </div>
-        </head-top>
-        <keep-alive>
-            <router-view class="profile-group-content"></router-view>
-        </keep-alive>
-    </div>
+  <div class="profile-group">
+    <head-top :go-back="cancel">
+      <div 
+        slot="nav" 
+        class="head-top-tabs-nav">
+        <router-link 
+          v-for="({label, path}, index) in types" 
+          :key="`profile-group-tab-${index}`" 
+          :to="path" 
+          class="head-top-tabs-nav-item">
+          {{ label }}
+        </router-link>
+      </div>
+    </head-top>
+    <keep-alive>
+      <router-view class="profile-group-content"/>
+    </keep-alive>
+  </div>
 </template>
 <script>
 import HeadTop from "@/components/HeadTop";
 export default {
-  name: "profileGroup",
+  name: "ProfileGroup",
   components: {
     HeadTop
   },

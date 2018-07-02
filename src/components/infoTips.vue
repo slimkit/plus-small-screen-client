@@ -1,27 +1,36 @@
 <template>
-<div @touchmove.prevent>
-    <transition name='toast'>
-      <div v-if='show' class="m-pop-box" @click='handelCancel'></div>
+  <div @touchmove.prevent>
+    <transition name="toast">
+      <div 
+        v-if="show" 
+        class="m-pop-box" 
+        @click="handelCancel"/>
     </transition>
-    <transition name='toast'>
-      <div v-if='show' class="m-box-model m-justify-bet m-info-tips-box">
+    <transition name="toast">
+      <div 
+        v-if="show" 
+        class="m-box-model m-justify-bet m-info-tips-box">
         <h2 class="m-info-tips-head">
           <slot name="title">
             <span>{{ title }}</span>
           </slot>
         </h2>
-        <div class="m-info-tips-body" v-html="content"></div>
+        <div 
+          class="m-info-tips-body" 
+          v-html="content"/>
         <div class="m-info-tips-foot">
-          <button class="m-info-tips-btn" @click="handelCancel">{{ cancelTxt }}</button>
+          <button 
+            class="m-info-tips-btn" 
+            @click="handelCancel">{{ cancelTxt }}</button>
         </div>
       </div>
     </transition>
-  </div></template>
+</div></template>
 <script>
 import bus from "@/bus.js";
 const noop = () => {};
 export default {
-  name: "info-tips",
+  name: "InfoTips",
   data() {
     return {
       show: false,

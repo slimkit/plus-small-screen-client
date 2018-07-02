@@ -2,27 +2,33 @@
   <div :class="['head-top', { transparent }]">
     <slot>
       <div class="head-top-goback">
-        <slot name='prepend'>
-          <section v-if="goBack" @click="goBackFn">
-            <template v-if='typeof goBack === "string"'>
+        <slot name="prepend">
+          <section 
+            v-if="goBack" 
+            @click="goBackFn">
+            <template v-if="typeof goBack === &quot;string&quot;">
               {{ goBack }}
             </template>
             <template v-else>
-              <v-icon type='base-back' />
+              <v-icon type="base-back" />
             </template>
           </section>
         </slot>
       </div>
-      <div class="head-top-title" v-if='title'>
-        <slot name='title'>
+      <div 
+        v-if="title" 
+        class="head-top-title">
+        <slot name="title">
           <span class="ellipsis">
             {{ title || $route.meta.title }}
           </span>
         </slot>
       </div>
-      <slot name='nav'></slot>
-      <div class="head-top-append" v-if="append">
-        <slot name='append'>
+      <slot name="nav"/>
+      <div 
+        v-if="append" 
+        class="head-top-append">
+        <slot name="append">
           <section @click="to('/signup')">注册</section>
         </slot>
       </div>

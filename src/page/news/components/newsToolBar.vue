@@ -1,26 +1,34 @@
 <template>
-  <footer class='news-ctrl-box'>
-    <div class="news-ctrl-btn" @click='handleLike'>
+  <footer class="news-ctrl-box">
+    <div 
+      class="news-ctrl-btn" 
+      @click="handleLike">
       <svg>
-        <use :xlink:href="liked ? '#feed-like' :'#feed-unlike'"></use>
+        <use :xlink:href="liked ? '#feed-like' :'#feed-unlike'"/>
       </svg>
       <span>喜欢</span>
     </div>
-    <div class="news-ctrl-btn" @click='handleComment'>
+    <div 
+      class="news-ctrl-btn" 
+      @click="handleComment">
       <svg>
-        <use xlink:href="#feed-comment"></use>
+        <use xlink:href="#feed-comment"/>
       </svg>
       <span>评论</span>
     </div>
-    <div class="news-ctrl-btn" @click='handleShare'>
+    <div 
+      class="news-ctrl-btn" 
+      @click="handleShare">
       <svg>
-        <use xlink:href="#base-share"></use>
+        <use xlink:href="#base-share"/>
       </svg>
       <span>分享</span>
     </div>
-    <div class="news-ctrl-btn" @click='handleMore'>
+    <div 
+      class="news-ctrl-btn" 
+      @click="handleMore">
       <svg>
-        <use xlink:href="#feed-more"></use>
+        <use xlink:href="#feed-more"/>
       </svg>
       <span>更多</span>
     </div>
@@ -28,7 +36,7 @@
 </template>
 <script>
 export default {
-  name: "news-tool-bar",
+  name: "NewsToolBar",
   props: {
     liked: {
       type: Boolean,

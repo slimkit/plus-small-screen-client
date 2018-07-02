@@ -1,5 +1,8 @@
 <template>
-  <router-link tag='div' :to='`/news/${news.id}`' class="news-item">
+  <router-link 
+    :to="`/news/${news.id}`" 
+    tag="div" 
+    class="news-item">
     <section class="news-item--body">
       <h2>{{ title }}</h2>
       <p>
@@ -7,14 +10,16 @@
         <span>作者 {{ author }}</span><span>・{{ hits }}浏览</span><span>・{{ time | time2tips }}</span>
       </p>
     </section>
-    <div class="news-item--poster" v-if='image'>
+    <div 
+      v-if="image" 
+      class="news-item--poster">
       <img :src="image">
     </div>
   </router-link>
 </template>
 <script>
 export default {
-  name: "news-item",
+  name: "NewsItem",
   props: ["news"],
   data() {
     return {
@@ -25,6 +30,9 @@ export default {
       author: null,
       time: ""
     };
+  },
+  mounted() {
+    this.formatData();
   },
   methods: {
     formatData() {
@@ -43,9 +51,6 @@ export default {
       this.cate = category.name;
       this.image = image ? `/api/v2/files/${image.id}` : null;
     }
-  },
-  mounted() {
-    this.formatData();
   }
 };
 </script>

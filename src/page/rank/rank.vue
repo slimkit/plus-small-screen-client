@@ -1,29 +1,45 @@
 <template>
   <div>
-    <header slot="head" class="m-box m-justify-bet m-aln-center m-head-top m-pos-f m-main m-bb1">
+    <header 
+      slot="head" 
+      class="m-box m-justify-bet m-aln-center m-head-top m-pos-f m-main m-bb1">
       <div class="m-box m-flex-grow1 m-aln-center m-flex-base0">
-        <svg class='m-style-svg m-svg-def' @click='cancel'>
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-back"></use>
+        <svg 
+          class="m-style-svg m-svg-def" 
+          @click="cancel">
+          <use 
+            xmlns:xlink="http://www.w3.org/1999/xlink" 
+            xlink:href="#base-back"/>
         </svg>
       </div>
       <div class="m-box-model m-flex-grow1 m-aln-center m-flex-base0 m-head-top-title">
         <span>排行榜</span>
       </div>
-      <div class="m-box m-flex-grow1 m-aln-center m-flex-base0 m-justify-end">
-
-      </div>
+      <div class="m-box m-flex-grow1 m-aln-center m-flex-base0 m-justify-end"/>
     </header>
     <div class="rank-nav">
-      <router-link tag='div' class='rank-nav-item' to='/rank/users'>用户</router-link>
-      <router-link tag='div' class='rank-nav-item' to='/rank/questions'>问答</router-link>
-      <router-link tag='div' class='rank-nav-item' to='/rank/feeds'>动态</router-link>
-      <router-link tag='div' class='rank-nav-item' to='/rank/news'>资讯</router-link>
+      <router-link 
+        tag="div" 
+        class="rank-nav-item" 
+        to="/rank/users">用户</router-link>
+      <router-link 
+        tag="div" 
+        class="rank-nav-item" 
+        to="/rank/questions">问答</router-link>
+      <router-link 
+        tag="div" 
+        class="rank-nav-item" 
+        to="/rank/feeds">动态</router-link>
+      <router-link 
+        tag="div" 
+        class="rank-nav-item" 
+        to="/rank/news">资讯</router-link>
     </div>
     <div class="rank-content">
       <keep-alive>
-        <router-view v-if="$route.meta.keepAlive"></router-view>
+        <router-view v-if="$route.meta.keepAlive"/>
       </keep-alive>
-      <router-view v-if="!$route.meta.keepAlive"></router-view>
+      <router-view v-if="!$route.meta.keepAlive"/>
     </div>
   </div>
 </template>
@@ -31,7 +47,7 @@
 <script>
 import HeadTop from "../../components/HeadTop";
 export default {
-  name: "rankIndex",
+  name: "RankIndex",
   components: {
     HeadTop
   },

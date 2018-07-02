@@ -1,7 +1,11 @@
 <template>
-    <div id="cropperImg" :class='{ round }'>
-        <img ref='cropperImg' :src="url">
-    </div>
+  <div 
+    id="cropperImg" 
+    :class="{ round }">
+    <img 
+      ref="cropperImg" 
+      :src="url">
+  </div>
 </template>
 <script>
 import Cropper from "cropperjs";
@@ -31,11 +35,6 @@ export default {
       }
     }
   },
-  methods: {
-    crop() {
-      console.log(this.cropper);
-    }
-  },
   created() {},
   mounted() {
     this.imgVNode = this.$refs.cropperImg;
@@ -52,6 +51,11 @@ export default {
       cropBoxResizable: true,
       toggleDragModeOnDblclick: false
     });
+  },
+  methods: {
+    crop() {
+      console.log(this.cropper);
+    }
   }
 };
 </script>

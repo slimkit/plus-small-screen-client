@@ -42,6 +42,45 @@ ImgCropper.newInstance = properties => {
       round: true,
       visible: false
     }),
+    computed: {
+      disabled() {
+        return true;
+      }
+    },
+    created() {},
+    methods: {
+      close() {
+        this.url = "";
+        this.visible = false;
+        this.onCancel();
+        this.remove();
+      },
+      ok() {
+        let data = this.$children[0].cropper.getCroppedCanvas({
+          width: 500,
+          height: 500
+        });
+
+        if (this.round) {
+          data = getRoundedCanvas(data);
+        }
+        this.onOk(data);
+        this.remove();
+      },
+      remove() {
+        setTimeout(() => {
+          this.destroy();
+        }, 300);
+      },
+      destroy() {
+        document.body.removeChild(this.$el);
+        this.onRemove();
+        this.$destroy();
+      },
+      onOk() {},
+      onCancel() {},
+      onRemove() {}
+    },
     render(h) {
       let headerVNodes = [];
 
@@ -130,46 +169,7 @@ ImgCropper.newInstance = properties => {
         },
         [headerVNodes, bodyVNodes]
       );
-    },
-    computed: {
-      disabled() {
-        return true;
-      }
-    },
-    methods: {
-      close() {
-        this.url = "";
-        this.visible = false;
-        this.onCancel();
-        this.remove();
-      },
-      ok() {
-        let data = this.$children[0].cropper.getCroppedCanvas({
-          width: 500,
-          height: 500
-        });
-
-        if (this.round) {
-          data = getRoundedCanvas(data);
-        }
-        this.onOk(data);
-        this.remove();
-      },
-      remove() {
-        setTimeout(() => {
-          this.destroy();
-        }, 300);
-      },
-      destroy() {
-        document.body.removeChild(this.$el);
-        this.onRemove();
-        this.$destroy();
-      },
-      onOk() {},
-      onCancel() {},
-      onRemove() {}
-    },
-    created() {}
+    }
   });
 
   const component = Instance.$mount();

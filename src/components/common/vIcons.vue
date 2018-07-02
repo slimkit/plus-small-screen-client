@@ -1,13 +1,20 @@
 <template>
-    <i class="v-icon" :style='wrapStyles'>
-        <svg width='100%' height='100%' :color='color'>
-            <use xmlns:xlink="http://www.w3.org/1999/xlink" :xlink:href="`#${type}`"></use>
-        </svg>
-    </i>
+  <i 
+    :style="wrapStyles" 
+    class="v-icon">
+    <svg 
+      :color="color" 
+      width="100%" 
+      height="100%">
+      <use 
+        :xlink:href="`#${type}`" 
+        xmlns:xlink="http://www.w3.org/1999/xlink"/>
+    </svg>
+  </i>
 </template>
 <script>
 export default {
-  name: "vIcon",
+  name: "VIcon",
   props: {
     type: {
       type: [String],

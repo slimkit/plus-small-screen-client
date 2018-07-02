@@ -3,12 +3,14 @@
     <div :class="`${prefixCls}-item-top`">
       <avatar :user="user" />
       <section class="userInfo">
-        <router-link :class="`${prefixCls}-item-top-link`" :to="`/users/${comment.user_id}`">{{ comment.user.name }}</router-link>
+        <router-link 
+          :class="`${prefixCls}-item-top-link`" 
+          :to="`/users/${comment.user_id}`">{{ comment.user.name }}</router-link>
         <span v-if="comment.reply_user"> 回复</span>
         <span v-else> 评论了你的帖子</span>
         <router-link
-          :class="`${prefixCls}-item-top-link`"
           v-if="comment.reply_user"
+          :class="`${prefixCls}-item-top-link`"
           :to="`/users/${comment.reply_user}`"
         >
           {{ comment.reply.name }}
@@ -17,16 +19,24 @@
       </section>
       <section class="msgList-status">
         <section class="gray">
-          <span class="replay" @click.stop="showCommentInput">回复</span>
+          <span 
+            class="replay" 
+            @click.stop="showCommentInput">回复</span>
         </section>
       </section>
     </div>
     <div :class="`${prefixCls}-item-bottom`">
-      <span class="content" @click.stop="showCommentInput">
+      <span 
+        class="content" 
+        @click.stop="showCommentInput">
         {{ comment.body }}
       </span>
-      <section v-if="comment.commentable !== null" @click="goToFeedDetail()">
-        <div :class="`${prefixCls}-item-bottom-noImg`" class="content" >
+      <section 
+        v-if="comment.commentable !== null" 
+        @click="goToFeedDetail()">
+        <div 
+          :class="`${prefixCls}-item-bottom-noImg`" 
+          class="content" >
           {{ comment.commentable.title }}
         </div>
         <!-- <div :class="`${prefixCls}-item-bottom-img`" v-else>
@@ -37,7 +47,9 @@
         </div> -->
       </section>
       <section v-if="comment.commentable === null">
-        <div :class="`${prefixCls}-item-bottom-noImg`" class="content">
+        <div 
+          :class="`${prefixCls}-item-bottom-noImg`" 
+          class="content">
           帖子已被删除
         </div>
       </section>
@@ -57,11 +69,20 @@
 <script>
 const prefixCls = "msgList";
 export default {
-  name: "groupPostItem",
+  name: "GroupPostItem",
   props: ["comment"],
   data: () => ({
     prefixCls
   }),
+  computed: {
+    user() {
+      const { user } = this.comment || { user: {} };
+      return user;
+    }
+  },
+  created() {
+    // console.log(this.comment)
+  },
   methods: {
     /**
      * 进入详情
@@ -110,15 +131,6 @@ export default {
         }
       });
     }
-  },
-  computed: {
-    user() {
-      const { user } = this.comment || { user: {} };
-      return user;
-    }
-  },
-  created() {
-    // console.log(this.comment)
   }
 };
 </script>

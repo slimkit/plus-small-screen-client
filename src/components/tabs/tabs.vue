@@ -1,18 +1,26 @@
 <template>
   <div class="v-tabs">
-    <slot></slot>
-    <span class="v-tab-link-highlight init" ref="highlight"></span>
+    <slot/>
+    <span 
+      ref="highlight" 
+      class="v-tab-link-highlight init"/>
   </div>
 </template>
 <script>
 export default {
-  name: "v-tabs",
+  name: "VTabs",
   props: ["value"],
   data() {
     return {};
   },
   updated() {
     this.setTabLightStyle();
+  },
+  mounted() {
+    this.setTabLightStyle();
+    setTimeout(() => {
+      this.$refs.highlight.classList.remove("init");
+    }, 300);
   },
   methods: {
     handleTabClick(value) {
@@ -41,12 +49,6 @@ export default {
       el.style.width = w > 0 ? w + 10 + "px" : "100%";
       el.style.transform = `translate3d(${x - 5}px, 0, 0)`;
     }
-  },
-  mounted() {
-    this.setTabLightStyle();
-    setTimeout(() => {
-      this.$refs.highlight.classList.remove("init");
-    }, 300);
   }
 };
 </script>

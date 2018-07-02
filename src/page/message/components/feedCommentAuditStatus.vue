@@ -1,18 +1,25 @@
 <template>
-    <div :class="`${prefixCls}-status`">
-        <section v-if="audit.comment != null">
-            <section class="gray" v-if="audit.expires_at != null">
-                <span class="amount-show">{{audit.amount}}积分 / {{audit.day}}天</span>已审核
-            </section>
-            <section class="green" v-else @click="showOperations(audit)">
-                <span class="audit-show">{{audit.amount}}积分 / {{audit.day}}天</span>
-                <span class="audit-operation">审核</span>
-            </section>
-        </section>
-        <section class="red" v-if="audit.comment == null">
-            该评论已被删除
-        </section>
-    </div>
+  <div :class="`${prefixCls}-status`">
+    <section v-if="audit.comment != null">
+      <section 
+        v-if="audit.expires_at != null" 
+        class="gray">
+        <span class="amount-show">{{ audit.amount }}积分 / {{ audit.day }}天</span>已审核
+      </section>
+      <section 
+        v-else 
+        class="green" 
+        @click="showOperations(audit)">
+        <span class="audit-show">{{ audit.amount }}积分 / {{ audit.day }}天</span>
+        <span class="audit-operation">审核</span>
+      </section>
+    </section>
+    <section 
+      v-if="audit.comment == null" 
+      class="red">
+      该评论已被删除
+    </section>
+  </div>
 </template>
 <script>
 /**
@@ -21,7 +28,7 @@
 
 const prefixCls = "msgList";
 export default {
-  name: "feedCommentAuditStatus",
+  name: "FeedCommentAuditStatus",
   props: ["audit"],
   data: () => ({
     prefixCls

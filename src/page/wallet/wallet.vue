@@ -1,39 +1,58 @@
 <template lang="html">
   <div class="p-wallet wallet">
     <header class="m-box m-head-top">
-        <div class="m-box m-flex-grow1 m-flex-base0 m-aln-center">
-          <svg class="m-style-svg m-svg-def" @click="goBack">
-            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-back"></use>
-          </svg>
-        </div>
-        <div class="m-box m-flex-grow1 m-flex-base0 m-aln-center m-justify-center">
-          <h2>钱包</h2>
-        </div>
-        <div class="m-box m-flex-grow1 m-flex-base0 m-aln-center m-justify-end">
-          <router-link :to="{ path: 'detail' }" append slot='append'>明细</router-link>
-        </div>
+      <div class="m-box m-flex-grow1 m-flex-base0 m-aln-center">
+        <svg 
+          class="m-style-svg m-svg-def" 
+          @click="goBack">
+          <use 
+            xmlns:xlink="http://www.w3.org/1999/xlink" 
+            xlink:href="#base-back"/>
+        </svg>
+      </div>
+      <div class="m-box m-flex-grow1 m-flex-base0 m-aln-center m-justify-center">
+        <h2>钱包</h2>
+      </div>
+      <div class="m-box m-flex-grow1 m-flex-base0 m-aln-center m-justify-end">
+        <router-link 
+          slot="append" 
+          :to="{ path: 'detail' }" 
+          append>明细</router-link>
+      </div>
     </header>
     <section class="m-wallet-panel">
       <h3>账户余额(元)</h3>
       <p>{{ balance }}</p>
     </section>
     <ul class="m-box-model m-entry-group padding">
-      <router-link :to='{path: "recharge"}' append tag="li" class="m-entry">
-        <svg class='m-style-svg m-svg-def m-entry-prepend'>
-          <use xlink:href="#wallet-recharge"></use>
+      <router-link 
+        :to="{path: &quot;recharge&quot;}" 
+        append 
+        tag="li" 
+        class="m-entry">
+        <svg class="m-style-svg m-svg-def m-entry-prepend">
+          <use xlink:href="#wallet-recharge"/>
         </svg>
         <span class="m-text-box m-flex-grow1">充值</span>
         <svg class="m-style-svg m-svg-def m-entry-append">
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-arrow-r"></use>
+          <use 
+            xmlns:xlink="http://www.w3.org/1999/xlink" 
+            xlink:href="#base-arrow-r"/>
         </svg>
       </router-link>
-      <router-link :to='{path: "withdraw"}' append tag="li" class="m-entry">
-        <svg class='m-style-svg m-svg-def m-entry-prepend'>
-          <use xlink:href="#wallet-withdraw"></use>
+      <router-link 
+        :to="{path: &quot;withdraw&quot;}" 
+        append 
+        tag="li" 
+        class="m-entry">
+        <svg class="m-style-svg m-svg-def m-entry-prepend">
+          <use xlink:href="#wallet-withdraw"/>
         </svg>
         <span class="m-text-box m-flex-grow1">提现</span>
         <svg class="m-style-svg m-svg-def m-entry-append">
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-arrow-r"></use>
+          <use 
+            xmlns:xlink="http://www.w3.org/1999/xlink" 
+            xlink:href="#base-arrow-r"/>
         </svg>
       </router-link>
     </ul>
@@ -42,7 +61,7 @@
 
 <script>
 export default {
-  name: "wallet",
+  name: "Wallet",
   data() {
     return {};
   },

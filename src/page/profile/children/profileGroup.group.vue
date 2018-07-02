@@ -1,17 +1,27 @@
 <template>
-    <div>
-        <div class="profile-group-nav">
-            <div class='profile-group-nav-item' :class='{active: curType === type}' v-for='({ label, type },index) in navs' :key='`profile-group-nav-${index}`' @click='curType = type'>{{ label }}</div>
-        </div>
-        <div>
-            <groupItem :role='true' v-for='group in dataList' v-if='group.id' :key='`profile-group-${group.id}`' :group='group'></groupItem>
-        </div>
+  <div>
+    <div class="profile-group-nav">
+      <div 
+        v-for="({ label, type },index) in navs" 
+        :class="{active: curType === type}" 
+        :key="`profile-group-nav-${index}`" 
+        class="profile-group-nav-item" 
+        @click="curType = type">{{ label }}</div>
     </div>
+    <div>
+      <groupItem 
+        v-for="group in dataList" 
+        v-if="group.id" 
+        :role="true" 
+        :key="`profile-group-${group.id}`" 
+        :group="group"/>
+    </div>
+  </div>
 </template>
 <script>
 import groupItem from "@/page/group/components/groupListItem";
 export default {
-  name: "profileGroup_groups",
+  name: "ProfileGroupGroups",
   components: {
     groupItem
   },
@@ -37,6 +47,9 @@ export default {
       this.getData();
     }
   },
+  created() {
+    this.getData();
+  },
 
   methods: {
     getData() {
@@ -46,9 +59,6 @@ export default {
           this.dataList = data;
         });
     }
-  },
-  created() {
-    this.getData();
   }
 };
 </script>

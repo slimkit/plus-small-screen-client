@@ -1,10 +1,19 @@
 <template lang="html">
-  <div class="diy-select" :class="{open}" @click='open = !open'>
+  <div 
+    :class="{open}" 
+    class="diy-select" 
+    @click="open = !open">
     <div class="diy-select--label">{{ curSelectValue }}</div>
-    <div class="diy-select--options" v-show='open'>
-      <div class="diy-select--option" v-for='option in options' @click='setCurVal(option)' :key="option.label">
-        <template v-if='option.hasMsg'>
-          <v-badge :dot='option.hasMsg'>{{ option.label }}</v-badge>
+    <div 
+      v-show="open" 
+      class="diy-select--options">
+      <div 
+        v-for="option in options" 
+        :key="option.label" 
+        class="diy-select--option" 
+        @click="setCurVal(option)">
+        <template v-if="option.hasMsg">
+          <v-badge :dot="option.hasMsg">{{ option.label }}</v-badge>
         </template>
         <span v-else>{{ option.label }}</span>
       </div>
@@ -31,11 +40,6 @@ export default {
       open: false
     };
   },
-  watch: {
-    value(val) {
-      this.curSelectValue = val;
-    }
-  },
   computed: {
     curSelectValue: {
       set(val) {
@@ -59,14 +63,19 @@ export default {
       }
     }
   },
+  watch: {
+    value(val) {
+      this.curSelectValue = val;
+    }
+  },
+  mounted() {
+    this.curSelectValue = "0";
+  },
   methods: {
     setCurVal(val) {
       this.curVal = val;
       this.$emit("input", val.value);
     }
-  },
-  mounted() {
-    this.curSelectValue = "0";
   }
 };
 </script>

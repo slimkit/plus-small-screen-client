@@ -1,14 +1,14 @@
 <template>
   <div class="chat-list">
     <jo-load-more
-    :auto-load="false"
-    :showBottom="false"
-    style="height: 100%"
-    @onRefresh="onRefresh">
+      :auto-load="false"
+      :show-bottom="false"
+      style="height: 100%"
+      @onRefresh="onRefresh">
       <chat-item 
-      :item="room" 
-      v-for="(room, index) in chatRooms" 
-      :key="`${index}-${room.id}`" />
+        v-for="(room, index) in chatRooms" 
+        :item="room" 
+        :key="`${index}-${room.id}`" />
     </jo-load-more>
 
   </div>
@@ -18,7 +18,7 @@ import chatItem from "./chat-item.vue";
 import { mapState, mapActions } from "vuex";
 import { startSingleChat } from "@/vendor/easemob/";
 export default {
-  name: "chat-list",
+  name: "ChatList",
   components: {
     chatItem
   },

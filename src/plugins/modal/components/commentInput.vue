@@ -1,20 +1,22 @@
 <template>
   <div class="comment-input">
     <textarea
-    :maxlength="maxlength"
-    autofocus="true"
-    :placeholder="placeholder"
-    ref='input'
-    :value="currentValue"
-    @keyup.ctrl.enter="handleEnter"
-    @input="handleInput" />
+      ref="input"
+      :maxlength="maxlength"
+      :placeholder="placeholder"
+      :value="currentValue"
+      autofocus="true"
+      @keyup.ctrl.enter="handleEnter"
+      @input="handleInput" />
     <div class="comment-input-append">
-      <template v-if='len > 200'>
-        <p>{{ len }}/{{maxlength}}</p>
+      <template v-if="len > 200">
+        <p>{{ len }}/{{ maxlength }}</p>
       </template>
-      <button :disabled="disabled" @click='handleDone'>
-        <svg v-if='loading'>
-          <use xlink:href="#base-loading"></use>
+      <button 
+        :disabled="disabled" 
+        @click="handleDone">
+        <svg v-if="loading">
+          <use xlink:href="#base-loading"/>
         </svg>
         <template v-else>发送</template>
       </button>
@@ -23,7 +25,7 @@
 </template>
 <script>
 export default {
-  name: "commentInput",
+  name: "CommentInput",
   props: {
     focus: Boolean,
     placeholder: {
@@ -52,6 +54,9 @@ export default {
     len() {
       return this.currentValue.length;
     }
+  },
+  mounted() {
+    this.$refs.input.focus();
   },
   methods: {
     handleDone() {
@@ -84,9 +89,6 @@ export default {
       }
       el.style.height = endHeight + "px";
     }
-  },
-  mounted() {
-    this.$refs.input.focus();
   }
 };
 </script>

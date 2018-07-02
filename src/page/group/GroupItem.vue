@@ -1,13 +1,19 @@
 <template>
-  <section class="m-box m-aln-center m-justify-bet m-main group-item" @click="beforeViewDetail">
+  <section 
+    class="m-box m-aln-center m-justify-bet m-main group-item" 
+    @click="beforeViewDetail">
     <div class="m-flex-grow0 m-flex-shrink0 group-item-avatar">
       <img :src="avatar">
     </div>
     <div class="m-flex-grow1 m-flex-shrink1 group-item-info">
       <div class="m-box m-aln-center m-text-cut">
         <h2>{{ name }}</h2>
-        <svg class="m-style-svg m-svg-def" v-if="mode === 'paid'">
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#id"></use>
+        <svg 
+          v-if="mode === 'paid'" 
+          class="m-style-svg m-svg-def">
+          <use 
+            xmlns:xlink="http://www.w3.org/1999/xlink" 
+            xlink:href="#id"/>
         </svg>
       </div>
       <p>
@@ -15,20 +21,26 @@
         <span>成员<em>{{ memberCount | formatNum }}</em></span>
       </p>
     </div>
-    <div class="m-box m-aln-center m-flex-grow0 m-flex-shink0 group-item-role" v-if="showRole && role">
+    <div 
+      v-if="showRole && role" 
+      class="m-box m-aln-center m-flex-grow0 m-flex-shink0 group-item-role">
       <span>{{ role }}</span>
     </div>
-    <div class="m-box m-aln-center m-flex-grow0 m-flex-shink0 group-item-action" v-if="showAction">
+    <div 
+      v-if="showAction" 
+      class="m-box m-aln-center m-flex-grow0 m-flex-shink0 group-item-action">
       <button 
-        class="m-text-cut"
         v-if="!joined || joined.audit === 0"
         :disabled="loading || joined.audit === 0"
+        class="m-text-cut"
         @click.stop="beforeJoined">
         <svg 
-        v-if="!(joined.audit ===0)"
-        class="m-style-svg m-svg-def"
-        :style="loading ? {} : {width: '0.2rem', height:'0.2rem'}">
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" :xlink:href="`#${loading?'base-loading':'foot-plus'}`"></use>
+          v-if="!(joined.audit ===0)"
+          :style="loading ? {} : {width: '0.2rem', height:'0.2rem'}"
+          class="m-style-svg m-svg-def">
+          <use 
+            :xlink:href="`#${loading?'base-loading':'foot-plus'}`" 
+            xmlns:xlink="http://www.w3.org/1999/xlink"/>
         </svg>
         <span>{{ joined.audit === 0 ? "审核中" : "加入" }}</span>
       </button>
@@ -40,7 +52,7 @@
 import bus from "@/bus.js";
 import { joinGroup } from "@/api/group.js";
 export default {
-  name: "group-item",
+  name: "GroupItem",
   props: {
     group: {
       type: Object,

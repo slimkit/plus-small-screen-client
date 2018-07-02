@@ -8,8 +8,57 @@ import {
   deletePostComment
 } from "@/api/group.js";
 export default {
-  name: "group-feed-card",
+  name: "GroupFeedCard",
   extends: FeedCard,
+  computed: {
+    liked: {
+      get() {
+        return !!this.feed.liked;
+      },
+      set(val) {
+        this.feed.liked = val;
+      }
+    },
+    commentCount: {
+      get() {
+        return this.feed.comments_count || 0;
+      },
+      set(val) {
+        this.feed.comments_count = ~~val;
+      }
+    },
+    likeCount: {
+      get() {
+        return this.feed.likes_count || 0;
+      },
+      set(val) {
+        this.feed.likes_count = ~~val;
+      }
+    },
+    body() {
+      return this.feed.summary || "";
+    },
+    images() {
+      let images = [];
+      this.feed.images.map(image => {
+        image.file = image.id;
+        images = [...images, image];
+      });
+
+      return images || [];
+    },
+    has_collect: {
+      get() {
+        return this.feed.collected || 0;
+      },
+      set(val) {
+        this.feed.collected = val;
+      }
+    },
+    viewCount() {
+      return this.feed.views_count || 0;
+    }
+  },
   methods: {
     handleView() {
       this.$router.push(`/groups/${this.feed.group.id}/posts/${this.feed.id}`);
@@ -96,55 +145,6 @@ export default {
         this.commentCount -= 1;
         this.$Message.success("删除评论成功");
       });
-    }
-  },
-  computed: {
-    liked: {
-      get() {
-        return !!this.feed.liked;
-      },
-      set(val) {
-        this.feed.liked = val;
-      }
-    },
-    commentCount: {
-      get() {
-        return this.feed.comments_count || 0;
-      },
-      set(val) {
-        this.feed.comments_count = ~~val;
-      }
-    },
-    likeCount: {
-      get() {
-        return this.feed.likes_count || 0;
-      },
-      set(val) {
-        this.feed.likes_count = ~~val;
-      }
-    },
-    body() {
-      return this.feed.summary || "";
-    },
-    images() {
-      let images = [];
-      this.feed.images.map(image => {
-        image.file = image.id;
-        images = [...images, image];
-      });
-
-      return images || [];
-    },
-    has_collect: {
-      get() {
-        return this.feed.collected || 0;
-      },
-      set(val) {
-        this.feed.collected = val;
-      }
-    },
-    viewCount() {
-      return this.feed.views_count || 0;
     }
   }
 };

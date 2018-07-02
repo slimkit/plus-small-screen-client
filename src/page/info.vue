@@ -2,38 +2,53 @@
   <div class="m-box-model p-info">
     <header class="m-box m-aln-center m-head-top m-pos-f m-main m-bb1">
       <div class="m-box m-aln-center m-flex-grow1 m-flex-shrink1 m-flex-base0">
-        <svg class="m-style-svg m-svg-def" @click="goBack">
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-back"></use>
+        <svg 
+          class="m-style-svg m-svg-def" 
+          @click="goBack">
+          <use 
+            xmlns:xlink="http://www.w3.org/1999/xlink" 
+            xlink:href="#base-back"/>
         </svg>
       </div>
       <div class="m-box m-aln-center m-flex-grow1 m-flex-shrink1 m-flex-base0 m-justify-center m-head-top-title">
         <span>个人资料</span>
       </div>
       <div class="m-box m-aln-center m-justify-end m-flex-grow1 m-flex-shrink1 m-flex-base0">
-        <svg v-if="loading" class="m-style-svg m-svg-def">
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-loading"></use>
+        <svg 
+          v-if="loading" 
+          class="m-style-svg m-svg-def">
+          <use 
+            xmlns:xlink="http://www.w3.org/1999/xlink" 
+            xlink:href="#base-loading"/>
         </svg>
         <a
           v-else
-          class="m-send-btn"
           :class="{ disabled }"
+          class="m-send-btn"
           @click.prevent="handleOk">完成</a>
       </div>
     </header>
     <main style="padding-top: 0.9rem; background-color: #fff">
-      <section style="margin-left: 0; padding-left: .3rem" class="m-box m-aln-center m-justify-bet m-main m-bb1 p-info-row" @click="beforeSelectFile">
+      <section 
+        style="margin-left: 0; padding-left: .3rem" 
+        class="m-box m-aln-center m-justify-bet m-main m-bb1 p-info-row" 
+        @click="beforeSelectFile">
         <div
-        class="m-flex-shrink0 m-flex-grow0 m-avatar-box"
-        :class="avatarStyles">
-          <img :src="avatar" class="m-avatar-img">
+          :class="avatarStyles"
+          class="m-flex-shrink0 m-flex-grow0 m-avatar-box">
+          <img 
+            :src="avatar" 
+            class="m-avatar-img">
         </div>
         <span class="m-flex-grow1 m-flex-shrink1">更换头像</span>
         <svg class="m-style-svg m-svg-def m-entry-append">
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-arrow-r"></use>
+          <use 
+            xmlns:xlink="http://www.w3.org/1999/xlink" 
+            xlink:href="#base-arrow-r"/>
         </svg>
         <input
-          type="file"
           ref="imagefile"
+          type="file"
           class="m-rfile"
           accept="image/jpeg,image/webp,image/jpg,image/png,image/bmp"
           @change="selectPhoto">
@@ -44,72 +59,101 @@
         <div class="m-box m-aln-center m-justify-bet m-flex-grow1 m-flex-shrink1 input">
           <input
             id="name"
-            type="text"
             v-model="name"
+            type="text"
             placeholder="请输入用户名"
+            class="m-flex-grow1 m-flex-shrink1"
             @focus="showCleanName = true"
-            @blur="showCleanName = false"
-            class="m-flex-grow1 m-flex-shrink1">
-          <svg v-show="showCleanName && name.length > 0" @click="name=''" class="m-style-svg m-svg-def m-entry-append">
-            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-clean"></use>
+            @blur="showCleanName = false">
+          <svg 
+            v-show="showCleanName && name.length > 0" 
+            class="m-style-svg m-svg-def m-entry-append" 
+            @click="name=''">
+            <use 
+              xmlns:xlink="http://www.w3.org/1999/xlink" 
+              xlink:href="#base-clean"/>
           </svg>
         </div>
       </section>
       <section class="m-box m-aln-stre m-justify-bet p-info-row m-bb1">
         <label>性别</label>
-        <div class="m-box m-aln-center m-justify-bet m-flex-grow1 m-flex-shrink1 input" @click="switchSex">
+        <div 
+          class="m-box m-aln-center m-justify-bet m-flex-grow1 m-flex-shrink1 input" 
+          @click="switchSex">
           <span :class="{ placeholder: !(sex >= 0) }">{{ sexTxt }}</span>
           <svg class="m-style-svg m-svg-def m-entry-append">
-            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-arrow-r"></use>
+            <use 
+              xmlns:xlink="http://www.w3.org/1999/xlink" 
+              xlink:href="#base-arrow-r"/>
           </svg>
         </div>
       </section>
       <section class="m-box m-aln-stre m-justify-bet p-info-row m-bb1">
         <label>城市</label>
-        <div class="m-box m-aln-center m-justify-bet m-flex-grow1 m-flex-shrink1 input" @click="switchPosition">
+        <div 
+          class="m-box m-aln-center m-justify-bet m-flex-grow1 m-flex-shrink1 input" 
+          @click="switchPosition">
           <span :class="{placeholder: !location}">{{ location || "选择居住地" }}</span>
           <svg class="m-style-svg m-svg-def m-entry-append">
-            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-arrow-r"></use>
+            <use 
+              xmlns:xlink="http://www.w3.org/1999/xlink" 
+              xlink:href="#base-arrow-r"/>
           </svg>
         </div>
       </section>
-      <section class="m-box m-aln-stre m-justify-bet p-info-row m-bb1" @click="switchTags">
+      <section 
+        class="m-box m-aln-stre m-justify-bet p-info-row m-bb1" 
+        @click="switchTags">
         <label>标签</label>
         <div class="m-box m-aln-center m-justify-bet m-flex-grow1 m-flex-shrink1 input">
-          <span v-if="tags.length === 0" class="placeholder">选择标签</span>
-          <div v-else class="m-tag-list m-tags">
-            <span class="m-tag" :key="tag.id" v-for="tag in tags">{{ tag.name }}</span>
+          <span 
+            v-if="tags.length === 0" 
+            class="placeholder">选择标签</span>
+          <div 
+            v-else 
+            class="m-tag-list m-tags">
+            <span 
+              v-for="tag in tags" 
+              :key="tag.id" 
+              class="m-tag">{{ tag.name }}</span>
           </div>
           <svg class="m-style-svg m-svg-def m-entry-append">
-            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-arrow-r"></use>
+            <use 
+              xmlns:xlink="http://www.w3.org/1999/xlink" 
+              xlink:href="#base-arrow-r"/>
           </svg>
         </div>
       </section>
       <section class="m-box m-aln-stre m-justify-bet p-info-row">
-        <label for="bio" class="m-flex-grow0 m-flex-shrink0">简介</label>
+        <label 
+          for="bio" 
+          class="m-flex-grow0 m-flex-shrink0">简介</label>
         <div class="m-box m-aln-center m-justify-bet m-flex-grow1 m-flex-shrink1 input">
           <span
             v-if="bio.length === 0 && !bioIsFoucs"
             class="placeholder m-flex-grow1"
-             @click="editBio">编辑简介</span>
+            @click="editBio">编辑简介</span>
           <div
             v-show="bio.length > 0 || bioIsFoucs"
             class="m-box-model m-fd-row m-flex-grow1 m-flex-shrink1 m-aln-end m-justify-end m-wz-def">
             <div
               ref="bioEditor"
               contenteditable="true"
+              class="m-flex-grow1 m-shrink-1 m-flex-base0 m-textarea"
               @input="bioInput"
               @foucs="bioFoucs"
-              @blur="bioBlur"
-              class="m-flex-grow1 m-shrink-1 m-flex-base0 m-textarea"></div>
-              <i style="font-size: 10px; margin-right: 0.2rem">
-                <b :style="{color: bio.length > 50 ? `#f4504d`: `inherit`}">{{ bio.length }}</b>/50
-              </i>
-            </div>
+              @blur="bioBlur"/>
+            <i style="font-size: 10px; margin-right: 0.2rem">
+              <b :style="{color: bio.length > 50 ? `#f4504d`: `inherit`}">{{ bio.length }}</b>/50
+            </i>
+          </div>
         </div>
       </section>
     </main>
-    <location :show="showPosition" @close="switchPosition" :isComponent="true" />
+    <location 
+      :show="showPosition" 
+      :is-component="true" 
+      @close="switchPosition" />
   </div>
 </template>
 <script>
@@ -140,7 +184,7 @@ if (!HTMLCanvasElement.prototype.toBlob) {
 }
 
 export default {
-  name: "info",
+  name: "Info",
   components: {
     location
   },
@@ -188,6 +232,32 @@ export default {
     bioIsFoucs(val) {
       val && this.$refs.bioEditor.click() && this.$refs.bioEditor.focus();
     }
+  },
+  mounted() {
+    this.$refs.bioEditor.textContent = this.bio;
+  },
+  created() {
+    const {
+      sex = 0,
+      bio = "",
+      location = "",
+      avatar = "",
+      tags = [],
+      name = ""
+    } = this.CURRENTUSER;
+    this.name = name;
+    this.sex = sex;
+    this.bio = bio || "";
+    this.tags = tags || [];
+    this.avatar = avatar;
+    this.location = location;
+    this.$http
+      .get(`users/${this.CURRENTUSER.id}/tags`)
+      .then(({ data = [] }) => {
+        this.tags = data;
+        this.CURRENTUSER.tags = data;
+        this.$store.commit("SAVE_CURRENTUSER", this.CURRENTUSER);
+      });
   },
   methods: {
     editBio() {
@@ -321,32 +391,6 @@ export default {
       ];
       bus.$emit("actionSheet", options, "取消");
     }
-  },
-  mounted() {
-    this.$refs.bioEditor.textContent = this.bio;
-  },
-  created() {
-    const {
-      sex = 0,
-      bio = "",
-      location = "",
-      avatar = "",
-      tags = [],
-      name = ""
-    } = this.CURRENTUSER;
-    this.name = name;
-    this.sex = sex;
-    this.bio = bio || "";
-    this.tags = tags || [];
-    this.avatar = avatar;
-    this.location = location;
-    this.$http
-      .get(`users/${this.CURRENTUSER.id}/tags`)
-      .then(({ data = [] }) => {
-        this.tags = data;
-        this.CURRENTUSER.tags = data;
-        this.$store.commit("SAVE_CURRENTUSER", this.CURRENTUSER);
-      });
   }
 };
 </script>

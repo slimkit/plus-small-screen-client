@@ -2,24 +2,32 @@
   <div class="m-box-model m-card">
     <div class="m-box">
       <div 
-      v-if="timeLine" 
-      v-html="timeLineText"
-      class="m-box-model m-aln-center m-flex-grow0 m-flex-shrink0 m-card-time-line" 
-      ></div>
-      <avatar v-else :user='user' />
+        v-if="timeLine" 
+        class="m-box-model m-aln-center m-flex-grow0 m-flex-shrink0 m-card-time-line"
+        v-html="timeLineText" 
+      />
+      <avatar 
+        v-else 
+        :user="user" />
       <section class="m-box-model m-flex-grow1 m-flex-shrink1 m-card-main">
-        <header class="m-box m-aln-center m-justify-bet m-card-usr" v-if="!timeLine">
+        <header 
+          v-if="!timeLine" 
+          class="m-box m-aln-center m-justify-bet m-card-usr">
           <h4 class="m-flex-grow1 m-flex-shrink1">{{ user.name }}</h4>
           <div class="m-box m-aln-center">
             <span>{{ time | time2tips }}</span>
           </div>
         </header>
-        <article class="m-card-body" @click="handleView">
+        <article 
+          class="m-card-body" 
+          @click="handleView">
           <h2 v-if="title">{{ title }}</h2>
-          <div class="m-card-con" v-if="body.length > 0">
+          <div 
+            v-if="body.length > 0" 
+            class="m-card-con">
             <p
-            class="m-text-box m-text-cut-3"
-            v-html="replaceURI(body)"></p>
+              class="m-text-box m-text-cut-3"
+              v-html="replaceURI(body)"/>
           </div>
           <feed-image
             v-if="images.length > 0"
@@ -30,11 +38,10 @@
             :id="feedID"
             :video="video"
           />
-       </article>
-     </section>
-   </div>
-   <footer class="m-box-model m-card-foot m-bt1">
-   </footer>
+        </article>
+      </section>
+    </div>
+    <footer class="m-box-model m-card-foot m-bt1"/>
   </div>
 </template>
 <script>
@@ -42,7 +49,7 @@ import { time2txt } from "@/filters.js";
 import FeedImage from "@/components/FeedCard/FeedImage.vue";
 import FeedVideo from "@/components/FeedCard/FeedVideo.vue";
 export default {
-  name: "profile-collection-feeds-item",
+  name: "ProfileCollectionFeedsItem",
   components: {
     FeedImage,
     FeedVideo

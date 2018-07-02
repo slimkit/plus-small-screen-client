@@ -2,23 +2,30 @@
   <div class="p-user-groups">
     <header class="m-box m-aln-center m-pos-f m-head-top m-main m-bb1">
       <div class="m-box m-aln-center m-flex-grow1 m-flex-shrink1 m-flex-base0">
-        <svg class="m-style-svg m-svg-def" @click="goBack">
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-back"></use>
+        <svg 
+          class="m-style-svg m-svg-def" 
+          @click="goBack">
+          <use 
+            xmlns:xlink="http://www.w3.org/1999/xlink" 
+            xlink:href="#base-back"/>
         </svg>
       </div>
       <div class="m-box m-aln-center m-justify-center m-flex-grow1 m-flex-shrink1 m-head-title">
         <span>{{ title }}</span>
       </div>
-      <div class="m-box m-aln-center m-flex-grow1 m-flex-shrink1 m-flex-base0"></div>
+      <div class="m-box m-aln-center m-flex-grow1 m-flex-shrink1 m-flex-base0"/>
     </header>
     <main style="padding-top: 0.9rem">
       <load-more
-      ref="loadmore"
-      :on-refresh="onRefresh"
-      :on-load-more="onLoadMore">
+        ref="loadmore"
+        :on-refresh="onRefresh"
+        :on-load-more="onLoadMore">
         <ul>
-          <li class="m-bb1" v-for="group in groups" :key="group.id">
-            <group-item :group="group"></group-item>
+          <li 
+            v-for="group in groups" 
+            :key="group.id" 
+            class="m-bb1">
+            <group-item :group="group"/>
           </li>
         </ul>
       </load-more>
@@ -30,7 +37,7 @@ import { mapState } from "vuex";
 import GroupItem from "./GroupItem.vue";
 import { getGroupsByUser } from "@/api/group.js";
 export default {
-  name: "user-groups",
+  name: "UserGroups",
   components: {
     GroupItem
   },
@@ -54,6 +61,14 @@ export default {
       return this.groupsChangeTracker && Array.from(this.GROUPS.values());
     }
   },
+  activated() {
+    this.preUID === this.userID
+      ? this.$refs.loadmore.beforeRefresh()
+      : (this.GROUPS.clear(),
+        (this.groupsChangeTracker = 1),
+        (this.preUID = this.userID),
+        this.$refs.loadmore.beforeRefresh());
+  },
   methods: {
     formateGroups(groups) {
       groups.forEach(group => {
@@ -75,14 +90,6 @@ export default {
         }
       );
     }
-  },
-  activated() {
-    this.preUID === this.userID
-      ? this.$refs.loadmore.beforeRefresh()
-      : (this.GROUPS.clear(),
-        (this.groupsChangeTracker = 1),
-        (this.preUID = this.userID),
-        this.$refs.loadmore.beforeRefresh());
   }
 };
 </script>

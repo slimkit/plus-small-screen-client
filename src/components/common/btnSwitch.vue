@@ -1,25 +1,43 @@
 <template>
-    <div :class='[`${prefixCls}-wrap`]'>
-        <span :class='[`${prefixCls}-text`]' @click='onClick'>
-            <slot></slot>
-        </span>
-        <div :class="[`${prefixCls}-append`]">
-            <slot name='append'></slot>
-        </div>
-        <div :class='[`${prefixCls}`]'>
-            <label :for="id" ref='label' :class='[`${prefixCls}-label`]'>
-                <input v-if='type==="radio"' :id="id" v-model='cur_value' :value='dataValue' :class="[`${prefixCls}-input`]" type="radio" @change='setValue'>
-                <input v-else :id="id" v-model="cur_value" :class="[`${prefixCls}-input`]" :type="type" @change='setValue'>
-                <div :class="[`${prefixCls}-box`]"></div>
-            </label>
-        </div>
+  <div :class="[`${prefixCls}-wrap`]">
+    <span 
+      :class="[`${prefixCls}-text`]" 
+      @click="onClick">
+      <slot/>
+    </span>
+    <div :class="[`${prefixCls}-append`]">
+      <slot name="append"/>
     </div>
+    <div :class="[`${prefixCls}`]">
+      <label 
+        ref="label" 
+        :for="id" 
+        :class="[`${prefixCls}-label`]">
+        <input 
+          v-if="type===&quot;radio&quot;" 
+          :id="id" 
+          v-model="cur_value" 
+          :value="dataValue" 
+          :class="[`${prefixCls}-input`]" 
+          type="radio" 
+          @change="setValue">
+        <input 
+          v-else 
+          :id="id" 
+          v-model="cur_value" 
+          :class="[`${prefixCls}-input`]" 
+          :type="type" 
+          @change="setValue">
+        <div :class="[`${prefixCls}-box`]"/>
+      </label>
+    </div>
+  </div>
 </template>
 <script>
 import { oneOf } from "../../util/";
 const prefixCls = "v-switch";
 export default {
-  name: "vSwitch",
+  name: "VSwitch",
   props: {
     type: {
       requried: true,

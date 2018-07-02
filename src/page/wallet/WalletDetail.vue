@@ -2,34 +2,48 @@
   <div class="wallet-detail p-wallet-detail">
     <header class="m-box m-head-top m-pos-f m-main m-bb1">
       <div class="m-box m-aln-center m-flex-grow1 m-flex-base0">
-        <svg class="m-style-svg m-svg-def" @click="goBack">
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-back"></use>
+        <svg 
+          class="m-style-svg m-svg-def" 
+          @click="goBack">
+          <use 
+            xmlns:xlink="http://www.w3.org/1999/xlink" 
+            xlink:href="#base-back"/>
         </svg>
       </div>
       <div class="m-box m-aln-center m-flex-grow1 m-flex-base0 m-justify-center">
-        <diy-select v-model='currAction' :options='options' placeholder='明细'></diy-select>
+        <diy-select 
+          v-model="currAction" 
+          :options="options" 
+          placeholder="明细"/>
       </div>
-      <div class="m-box m-aln-center m-flex-grow1 m-flex-base0 m-justify-end"></div>
+      <div class="m-box m-aln-center m-flex-grow1 m-flex-base0 m-justify-end"/>
     </header>
     <load-more
-    ref='loadmore'
-    :onRefresh='onRefresh'
-    :onLoadMore='onLoadMore'
-    class="m-wallet-list"
+      ref="loadmore"
+      :on-refresh="onRefresh"
+      :on-load-more="onLoadMore"
+      class="m-wallet-list"
     >
       <wallet-detail-item 
-      v-for='item in list' 
-      v-if='item.id'
-      :key='item.id'
-      :detail='item'
-      @click='showDetail(item)' />
+        v-for="item in list" 
+        v-if="item.id"
+        :key="item.id"
+        :detail="item"
+        @click="showDetail(item)" />
     </load-more>
     <div @touchmove.prevent>
-      <transition name='toast'>
-        <div v-if='show' class="m-pop-box" @click='show = false'></div>
+      <transition name="toast">
+        <div 
+          v-if="show" 
+          class="m-pop-box" 
+          @click="show = false"/>
       </transition>
-      <transition name="fade" v-if='show'>
-          <walletInfo :detail='currInfo' v-if='currInfo && currInfo.id'/>
+      <transition 
+        v-if="show" 
+        name="fade">
+        <walletInfo 
+          v-if="currInfo && currInfo.id" 
+          :detail="currInfo"/>
       </transition>      
     </div>
   </div>
@@ -57,6 +71,12 @@ export default {
       show: false
     };
   },
+  computed: {
+    after() {
+      const len = this.list.length;
+      return len ? this.list[len - 1].id : 0;
+    }
+  },
   watch: {
     currAction() {
       this.list = [];
@@ -72,12 +92,6 @@ export default {
         document.body.classList.remove("m-pop-open");
         document.scrollingElement.scrollTop = this.scrollTop;
       }
-    }
-  },
-  computed: {
-    after() {
-      const len = this.list.length;
-      return len ? this.list[len - 1].id : 0;
     }
   },
   methods: {

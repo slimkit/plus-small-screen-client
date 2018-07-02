@@ -1,15 +1,24 @@
 <template id="alert-template">
-    <div :class="alertClasses" v-show="show">
-        <slot>
-            <strong>Default!</strong> Hello World~
-        </slot>
-        <span class="Alert__close" @click="show = false">x</span>
-    </div>
+  <div 
+    v-show="show" 
+    :class="alertClasses">
+    <slot>
+      <strong>Default!</strong> Hello World~
+    </slot>
+    <span 
+      class="Alert__close" 
+      @click="show = false">x</span>
+  </div>
 </template>
 <script>
 export default {
-  name: "message",
+  name: "Message",
   props: ["type"],
+  data() {
+    return {
+      show: true
+    };
+  },
   computed: {
     alertClasses() {
       return {
@@ -18,11 +27,6 @@ export default {
         "Alert--Error": this.type === "error"
       };
     }
-  },
-  data() {
-    return {
-      show: true
-    };
   }
 };
 </script>

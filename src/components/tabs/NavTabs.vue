@@ -1,18 +1,22 @@
 <template>
   <div 
-  :id="id"
+    :id="id"
   >
-    <v-tabs :class='{fixed}' :value='curTab' @change="handleTabChange" v-if='navs.length > 0'>
+    <v-tabs 
+      v-if="navs.length > 0" 
+      :class="{fixed}" 
+      :value="curTab" 
+      @change="handleTabChange">
       <v-tab
-      v-for='({ path, title }, index) in navs'
-      v-if='path'
-      :key='index'
-      :title='title' 
-      :value='path'/>
+        v-for="({ path, title }, index) in navs"
+        v-if="path"
+        :key="index"
+        :title="title" 
+        :value="path"/>
     </v-tabs>
     <transition :name="transitionName">
       <keep-alive>
-        <router-view></router-view>
+        <router-view/>
       </keep-alive>
     </transition>
   </div>
@@ -21,7 +25,11 @@
 import vTab from "./tab.vue";
 import vTabs from "./tabs.vue";
 export default {
-  name: "nav-tabs",
+  name: "NavTabs",
+  components: {
+    vTab,
+    vTabs
+  },
   props: {
     fixed: null,
     id: {
@@ -32,10 +40,6 @@ export default {
       required: true
     },
     value: {}
-  },
-  components: {
-    vTab,
-    vTabs
   },
   data() {
     return {

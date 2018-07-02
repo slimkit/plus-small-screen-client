@@ -2,31 +2,43 @@
   <div class="p-user-fans">
     <nav class="m-box m-head-top m-lim-width m-pos-f m-main m-bb1">
       <div class="m-box m-aln-center m-flex-shrink0 ">
-        <svg class="m-style-svg m-svg-def" @click="goBack">
-          <use xlink:href="#base-back"></use>
+        <svg 
+          class="m-style-svg m-svg-def" 
+          @click="goBack">
+          <use xlink:href="#base-back"/>
         </svg>
       </div>
       <ul class="m-box m-flex-grow1 m-aln-center m-justify-center m-flex-base0 m-head-nav">
-        <router-link tag="li" :to="`/users/${userID}/followers`" active-class="active" exact replace>
+        <router-link 
+          :to="`/users/${userID}/followers`" 
+          tag="li" 
+          active-class="active" 
+          exact 
+          replace>
           <a>粉丝</a>
         </router-link>
-        <router-link tag="li" :to="`/users/${userID}/followings`" active-class="active" exact replace>
+        <router-link 
+          :to="`/users/${userID}/followings`" 
+          tag="li" 
+          active-class="active" 
+          exact 
+          replace>
           <a>关注</a>
         </router-link>
       </ul>
-      <div class="m-box m-justify-end"></div>
+      <div class="m-box m-justify-end"/>
     </nav>
     <main style="padding-top: 0.9rem">
       <jo-load-more
-      ref='loadmore'
-      @onRefresh='onRefresh'
-      @onLoadMore='onLoadMore'>
+        ref="loadmore"
+        @onRefresh="onRefresh"
+        @onLoadMore="onLoadMore">
         <user-item
-        v-for='user in users'
-        v-if='user.id'
-        :user='user'
-        :key='`user-item-${user.id}`'
-        ></user-item>
+          v-for="user in users"
+          v-if="user.id"
+          :user="user"
+          :key="`user-item-${user.id}`"
+        />
       </jo-load-more>
     </main>
   </div>

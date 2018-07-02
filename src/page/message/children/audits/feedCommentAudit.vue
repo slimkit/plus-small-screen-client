@@ -1,28 +1,33 @@
 <template>
-    <div :class="`${prefixCls}`">
-        <div :class="`${prefixCls}-container`">
-            <load-more
-                    :onRefresh='onRefresh'
-                    :onLoadMore='onLoadMore'
-                    ref='loadmore'
-                    :class="`${prefixCls}-loadmore`"
-            >
-                <div v-for="audit in audits" :class="`${prefixCls}-item`" :key="`feed-comment-${audit.id}`">
-                    <div :class="`${prefixCls}-item-top`">
-                        <avatar :user="audit.user" />
-                        <section class="userInfo">
-                            <router-link :class="`${prefixCls}-item-top-link`" :to="`/users/${audit.user_id}`">{{
-                                audit.user.name }}
-                            </router-link>
-                            <p>{{ audit.created_at | time2tips }}</p>
-                        </section>
-                        <feed-comment-audit-status :audit="audit"/>
-                    </div>
-                    <audit-content :audit="getAuditContent(audit)"/>
-                </div>
-            </load-more>
+  <div :class="`${prefixCls}`">
+    <div :class="`${prefixCls}-container`">
+      <load-more
+        ref="loadmore"
+        :on-refresh="onRefresh"
+        :on-load-more="onLoadMore"
+        :class="`${prefixCls}-loadmore`"
+      >
+        <div 
+          v-for="audit in audits" 
+          :class="`${prefixCls}-item`" 
+          :key="`feed-comment-${audit.id}`">
+          <div :class="`${prefixCls}-item-top`">
+            <avatar :user="audit.user" />
+            <section class="userInfo">
+              <router-link 
+                :class="`${prefixCls}-item-top-link`" 
+                :to="`/users/${audit.user_id}`">{{
+                audit.user.name }}
+              </router-link>
+              <p>{{ audit.created_at | time2tips }}</p>
+            </section>
+            <feed-comment-audit-status :audit="audit"/>
+          </div>
+          <audit-content :audit="getAuditContent(audit)"/>
         </div>
+      </load-more>
     </div>
+  </div>
 </template>
 
 <script>
@@ -35,11 +40,11 @@ import AuditContent from "../../components/auditContent";
 
 const prefixCls = "msgList";
 export default {
+  name: "FeedCommentAudit",
   components: {
     feedCommentAuditStatus,
     AuditContent
   },
-  name: "feedCommentAudit",
   data: () => ({
     prefixCls,
     currentItem: {}

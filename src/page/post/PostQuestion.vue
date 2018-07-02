@@ -2,9 +2,16 @@
   <div class="p-post-question">
     <header class="m-pos-f m-box m-aln-center m-justify-bet m-head-top m-main m-bb1">
       <div class="m-flex-grow1 m-flex-shrink1 m-flex-base0">
-        <a v-if="step === 1" @click.prevent="cancel">取消</a>
-        <svg v-else class="m-style-svg m-svg-def" @click="preStep">
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-back"></use>
+        <a 
+          v-if="step === 1" 
+          @click.prevent="cancel">取消</a>
+        <svg 
+          v-else 
+          class="m-style-svg m-svg-def" 
+          @click="preStep">
+          <use 
+            xmlns:xlink="http://www.w3.org/1999/xlink" 
+            xlink:href="#base-back"/>
         </svg>
       </div>
       <div class="m-box m-flex-grow1 m-flex-shrink0 m-flex-base0 m-justify-center m-head-top-title">
@@ -12,93 +19,117 @@
       </div>
       <div class="m-flex-grow1 m-flex-shrink1 m-flex-base0 m-text-r">
         <a
-        v-if="step !== 3"
-        class="m-send-btn"
-        @click.prevent="nextStep"
-        :class="{ disabled }">下一步</a>
-        <a v-if="step === 3 && selectedTops.length > 0" class="m-send-btn" @click="beforePost">发布</a>
+          v-if="step !== 3"
+          :class="{ disabled }"
+          class="m-send-btn"
+          @click.prevent="nextStep">下一步</a>
+        <a 
+          v-if="step === 3 && selectedTops.length > 0" 
+          class="m-send-btn" 
+          @click="beforePost">发布</a>
       </div>
     </header>
     <transition-group
+      :enter-active-class="animated.enterClass"
+      :leave-active-class="animated.leaveClass"
       tag="main"
       class="m-box-model m-flex-grow1 m-flex-shrink1 p-post-question-main"
-      style="padding-top: 0.9rem;"
-      :enter-active-class="animated.enterClass"
-      :leave-active-class="animated.leaveClass">
+      style="padding-top: 0.9rem;">
       <div
-        key="step1"
         v-show="step === 1"
+        key="step1"
         class="m-pos-f m-box-model m-flex-grow1 m-flex-shrink1 m-main">
         <div class="m-box m-flex-grow0 m-shrink0 m-bb1 m-lim-width question-title">
           <content-text
             ref="contentText"
-            class='m-reles-txt-wrap'
-            placeholder="请输入问题并以问号结尾"
             :rows="1"
             :maxlength="50"
-            :warnLength="30"
+            :warn-length="30"
+            class="m-reles-txt-wrap"
+            placeholder="请输入问题并以问号结尾"
             @input="serachQuestionByKey"
-            />
+          />
         </div>
         <ul class="m-box-model m-flex-grow1 m-flex-shrink1 m-lim-width question-list">
           <router-link
-            tag="li"
             v-for="q in questions"
             v-if="q.id"
             :key="q.id"
-            :to='`/questions/${q.id}`'>
+            :to="`/questions/${q.id}`"
+            tag="li">
             {{ q.subject }}
           </router-link>
         </ul>
       </div>
       <div
-        key="step2"
         v-show="step === 2"
-        class="m-pos-f m-box-model m-flex-grow1 m-flex-shrink1 m-main" @click="autoFoucs">
+        key="step2"
+        class="m-pos-f m-box-model m-flex-grow1 m-flex-shrink1 m-main" 
+        @click="autoFoucs">
         <div class="m-rich-box">
-          <span class='placeholder' v-if="showPlaceholder">详细描述你的问题，有助于受到准确的回答</span>
+          <span 
+            v-if="showPlaceholder" 
+            class="placeholder">详细描述你的问题，有助于受到准确的回答</span>
           <div
             ref="editor"
             tabindex="0"
             class="m-editor"
+            contenteditable="true"
             @blur="onBlur"
-            @input="setContent"
-            contenteditable="true"></div>
+            @input="setContent"/>
         </div>
       </div>
       <div
-        key="step3"
         v-show="step === 3"
+        key="step3"
         class="m-pos-f m-box-model m-flex-grow1 m-flex-shrink1 m-main">
         <ul class="m-flex-grow0 m-flex-shrink0 m-topics ml">
           <li
-            class="m-box m-aln-center m-topic"
-            :key="`selected-${topic.id}`"
             v-for="topic in selectedTops"
+            :key="`selected-${topic.id}`"
+            class="m-box m-aln-center m-topic"
             @click="selectedTopic(topic)">
             <span>{{ topic.name }}</span>
             <svg class="m-style-svg m-svg-def">
-              <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-clean"></use>
+              <use 
+                xmlns:xlink="http://www.w3.org/1999/xlink" 
+                xlink:href="#base-clean"/>
             </svg>
           </li>
         </ul>
         <div class="m-box m-aln-center m-flex-grow0 m-shrink0 m-bb1 m-lim-width question-title">
-          <svg class="m-style-svg m-svg-def" style="fill: #ccc; margin-right: 0.3rem">
-            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-search"></use>
+          <svg 
+            class="m-style-svg m-svg-def" 
+            style="fill: #ccc; margin-right: 0.3rem">
+            <use 
+              xmlns:xlink="http://www.w3.org/1999/xlink" 
+              xlink:href="#base-search"/>
           </svg>
-          <input type="search" v-model="topicKeyWord" @input="inputTopicKeyWord" placeholder="搜索话题">
-          <svg v-show="topicKeyWord.length > 0" @click="topicKeyWord = ''" class="m-style-svg m-svg-def" style="fill: #ccc; margin-right: 0.3rem">
-            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-clean"></use>
+          <input 
+            v-model="topicKeyWord" 
+            type="search" 
+            placeholder="搜索话题" 
+            @input="inputTopicKeyWord">
+          <svg 
+            v-show="topicKeyWord.length > 0" 
+            class="m-style-svg m-svg-def" 
+            style="fill: #ccc; margin-right: 0.3rem" 
+            @click="topicKeyWord = ''">
+            <use 
+              xmlns:xlink="http://www.w3.org/1999/xlink" 
+              xlink:href="#base-clean"/>
           </svg>
         </div>
         <div class="m-flex-grow1 m-flex-shrink1 m-topics">
           <div
-          :key="topic.id"
-          v-for="topic in topics"
-          @click="selectedTopic(topic)"
-          class="m-box m-aln-center m-topic m-bb1"
+            v-for="topic in topics"
+            :key="topic.id"
+            class="m-box m-aln-center m-topic m-bb1"
+            @click="selectedTopic(topic)"
           >
-            <img class="m-flex-grow0 m-flex-shrink0 m-topic-avatar" :src="topic.avatar">
+            <img 
+              :src="topic.avatar" 
+              class="m-flex-grow0 m-flex-shrink0 m-topic-avatar">
             <section class="m-flex-grow1 m-flex-shrink1 m-box-model m-ovxh">
               <h3>{{ topic.name }}</h3>
               <p>{{ topic.description }}</p>
@@ -117,7 +148,7 @@ import bus from "@/bus.js";
 import ContentText from "./components/ContentText.vue";
 
 export default {
-  name: "post-question",
+  name: "PostQuestion",
   components: { ContentText },
   data() {
     return {

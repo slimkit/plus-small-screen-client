@@ -2,8 +2,12 @@
   <div class="p-group">
     <header class="m-box m-aln-center m-justify-bet m-head-top m-pos-f m-main m-bb1">
       <div class="m-box m-aln-center m-flex-grow1 m-flex-shrink1">
-        <svg class="m-style-svg m-svg-def" @click="goBack">
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-back"></use>
+        <svg 
+          class="m-style-svg m-svg-def" 
+          @click="goBack">
+          <use 
+            xmlns:xlink="http://www.w3.org/1999/xlink" 
+            xlink:href="#base-back"/>
         </svg>
       </div>
       <div class="m-box m-aln-center m-flex-grow1 m-flex-shrink1 m-justify-center m-head-top">
@@ -20,46 +24,64 @@
     </header>
 
     <main style="padding-top: 0.9rem">
-      <router-link :to="{ name: 'groups', query: { type: 'recommend' } }" class="m-box m-aln-center m-justify-bet m-main mt10 group-label m-bb1">
+      <router-link 
+        :to="{ name: 'groups', query: { type: 'recommend' } }" 
+        class="m-box m-aln-center m-justify-bet m-main mt10 group-label m-bb1">
         <h2><strong>{{ groupTotalNumber }}</strong>个兴趣小组，等待你的加入！</h2>
         <svg class="m-style-svg m-svg-def m-entry-append">
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-arrow-r"></use>
+          <use 
+            xmlns:xlink="http://www.w3.org/1999/xlink" 
+            xlink:href="#base-arrow-r"/>
         </svg>
       </router-link>
       <!-- 我加入的 -->
       <div class="m-box-model">
         <router-link
-          tag="div"
           :to="`/users/${currentUserID}/group`"
+          tag="div"
           class="m-box m-aln-center m-justify-bet m-main mt10 group-label m-bb1 m-bt1 m-pos-stick">
           <span>我加入的</span>
           <div class="m-box m-aln-center m-justify-end">
             <span>查看全部</span>
             <svg class="m-style-svg m-svg-def m-entry-append">
-              <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-arrow-r"></use>
+              <use 
+                xmlns:xlink="http://www.w3.org/1999/xlink" 
+                xlink:href="#base-arrow-r"/>
             </svg>
           </div>
         </router-link>
         <ul class="group-list">
-          <li v-for="group in groups" :key="`mygroup-${group.id}`">
+          <li 
+            v-for="group in groups" 
+            :key="`mygroup-${group.id}`">
             <group-item :group="group" />
           </li>
         </ul>
       </div>
 
       <!-- 推荐圈子 -->
-      <div class="m-box-model" v-if="recGroups.length > 0">
+      <div 
+        v-if="recGroups.length > 0" 
+        class="m-box-model">
         <div class="m-box m-aln-center m-justify-bet m-main mt10 group-label m-bb1 m-bt1 m-pos-stick">
           <span>热门推荐</span>
-          <div class="m-box m-aln-center m-justify-end" @click="fetchRecGroups">
-            <svg class="m-style-svg m-svg-small" :style='{ transform: `rotate(${clickCount}turn)` }'>
-              <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-refresh"></use>
+          <div 
+            class="m-box m-aln-center m-justify-end" 
+            @click="fetchRecGroups">
+            <svg 
+              :style="{ transform: `rotate(${clickCount}turn)` }" 
+              class="m-style-svg m-svg-small">
+              <use 
+                xmlns:xlink="http://www.w3.org/1999/xlink" 
+                xlink:href="#base-refresh"/>
             </svg>
             <span style="margin-left: 0.05rem">换一批</span>
           </div>
         </div>
         <ul class="group-list">
-          <li v-for="group in recGroups" :key="`recgroup-${group.id}`">
+          <li 
+            v-for="group in recGroups" 
+            :key="`recgroup-${group.id}`">
             <group-item :group="group" />
           </li>
         </ul>
@@ -71,7 +93,7 @@
 import GroupItem from "./GroupItem.vue";
 import { getGroupTotalNumber, getMyGroups, getRecGroups } from "@/api/group.js";
 export default {
-  name: "group",
+  name: "Group",
   components: {
     GroupItem
   },
@@ -100,6 +122,11 @@ export default {
       this.groupTotalNumber = count;
     });
   },
+  created() {
+    this.fetchMyGroups();
+    this.fetchRecGroups();
+  },
+  activated() {},
   methods: {
     formateGroups(groups) {
       groups.forEach(group => {
@@ -121,12 +148,7 @@ export default {
         this.fetchRecing = false;
       });
     }
-  },
-  created() {
-    this.fetchMyGroups();
-    this.fetchRecGroups();
-  },
-  activated() {}
+  }
 };
 </script>
 

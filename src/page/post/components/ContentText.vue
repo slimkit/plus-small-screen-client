@@ -2,24 +2,24 @@
   <div class="m-box-model m-pos-r">
     <div class="m-box-model m-reles-body">
       <textarea
-        ref='textarea'
-        v-model.trim='contentText'
+        ref="textarea"
+        v-model.trim="contentText"
         :placeholder="placeholder"
         :maxlength="maxlength"
 
-        @focus='focusArea'
-        @blur='moveCurPos'
-        @input='onInput'
-        @keyup.delete='deleteHandler'
-        :style="{ height: `${scrollHeight}px`}"/>
+        :style="{ height: `${scrollHeight}px`}"
+        @focus="focusArea"
+        @blur="moveCurPos"
+        @input="onInput"
+        @keyup.delete="deleteHandler"/>
       <textarea
-      ref='shadow'
-      :rows="rows"
-      v-model='shadowText'
-      style="position: absolute; z-index: -9999; visibility: hidden;" />
+        ref="shadow"
+        :rows="rows"
+        v-model="shadowText"
+        style="position: absolute; z-index: -9999; visibility: hidden;" />
       <span
-        class="m-textarea-count"
-        v-show="count > warnLength">
+        v-show="count > warnLength"
+        class="m-textarea-count">
         <b style="color: #f4504d">{{ count }}</b>/{{ maxlength }}
       </span>
     </div>
@@ -32,7 +32,7 @@
  */
 import { mapActions } from "vuex";
 export default {
-  name: "content-text",
+  name: "ContentText",
   props: {
     type: Number,
     warnLength: { type: Number, default: 200 },

@@ -1,23 +1,36 @@
 <template>
   <div :class="`${prefixCls}`">
-    <header slot="head" class="m-box m-justify-bet m-aln-center m-head-top m-pos-f m-main m-bb1">
-        <div class="m-box m-flex-grow1 m-aln-center m-flex-base0">
-            <svg class='m-style-svg m-svg-def' @click='goBack'>
-                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-back"></use>
-            </svg>
-        </div>
-        <div class="m-box-model m-flex-grow1 m-aln-center m-flex-base0 m-head-top-title">
-            <span>收到的评论</span>
-        </div>
-        <div class="m-box m-flex-grow1 m-aln-center m-flex-base0 m-justify-end"></div>
+    <header 
+      slot="head" 
+      class="m-box m-justify-bet m-aln-center m-head-top m-pos-f m-main m-bb1">
+      <div class="m-box m-flex-grow1 m-aln-center m-flex-base0">
+        <svg 
+          class="m-style-svg m-svg-def" 
+          @click="goBack">
+          <use 
+            xmlns:xlink="http://www.w3.org/1999/xlink" 
+            xlink:href="#base-back"/>
+        </svg>
+      </div>
+      <div class="m-box-model m-flex-grow1 m-aln-center m-flex-base0 m-head-top-title">
+        <span>收到的评论</span>
+      </div>
+      <div class="m-box m-flex-grow1 m-aln-center m-flex-base0 m-justify-end"/>
     </header>
-    <div :class="`${prefixCls}-container`" style="padding-top: 0.9rem">
+    <div 
+      :class="`${prefixCls}-container`" 
+      style="padding-top: 0.9rem">
       <load-more
-        :onRefresh='onRefresh'
-        :onLoadMore='onLoadMore'
-        ref='loadmore'
+        ref="loadmore"
+        :on-refresh="onRefresh"
+        :on-load-more="onLoadMore"
         :class="`${prefixCls}-loadmore`">
-        <div :class="`${prefixCls}-item`" v-for="comment in comments" :key="`comment-key-${comment.id}`"><component :is="items[comment.commentable_type]" :comment="comment"></component></div>
+        <div 
+          v-for="comment in comments" 
+          :class="`${prefixCls}-item`" 
+          :key="`comment-key-${comment.id}`"><component 
+            :is="items[comment.commentable_type]" 
+            :comment="comment"/></div>
       </load-more>
     </div>
   </div>
@@ -64,7 +77,7 @@ const commentType = {
   }
 };
 export default {
-  name: "myComments",
+  name: "MyComments",
   data: () => ({
     prefixCls,
     commentType,
@@ -85,6 +98,9 @@ export default {
         });
       }
     }
+  },
+  created() {
+    resetUserCount("commented");
   },
   methods: {
     // 刷新服务
@@ -123,9 +139,6 @@ export default {
           });
         });
     }
-  },
-  created() {
-    resetUserCount("commented");
   }
 };
 </script>

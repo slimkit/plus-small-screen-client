@@ -1,16 +1,16 @@
 <template>
   <div class="v-msg-list">
     <message
-    v-for="msg in msgs"
-    :key="msg.name"
-    :type="msg.type"
-    :icon="msg.icon"
-    :content="msg.content"
-    :duration="msg.duration"
-    :closable="msg.closable"
-    :name="msg.name"
-    :transition-name="msg.transitionName"
-    :on-close="msg.onClose"></message>
+      v-for="msg in msgs"
+      :key="msg.name"
+      :type="msg.type"
+      :icon="msg.icon"
+      :content="msg.content"
+      :duration="msg.duration"
+      :closable="msg.closable"
+      :name="msg.name"
+      :transition-name="msg.transitionName"
+      :on-close="msg.onClose"/>
   </div>
 </template>
 <script>
@@ -21,7 +21,7 @@ const getUuid = () => {
   return "v_msg_" + Date.now() + "_" + seed++;
 };
 export default {
-  name: "messageList",
+  name: "MessageList",
   components: {
     message
   },

@@ -1,10 +1,15 @@
 <template>
   <div @touchmove.prevent>
-    <transition name='toast'>
-      <div v-if='isShow' class="m-pop-box" @click='cancel'></div>
+    <transition name="toast">
+      <div 
+        v-if="isShow" 
+        class="m-pop-box" 
+        @click="cancel"/>
     </transition>
-    <transition name='fade'>
-      <div class="m-box-model m-image-paid-option-box" v-if="isShow">
+    <transition name="fade">
+      <div 
+        v-if="isShow" 
+        class="m-box-model m-image-paid-option-box">
         <h2 class="m-image-paid-option-head">
           <slot name="title">
             <span>{{ title }}</span>
@@ -14,21 +19,25 @@
           <p class="m-image-paid-option-label">选择图片收费金额</p>
           <div class="m-box m-aln-center m-justify-bet m-image-paid-option-btns">
             <button 
-              :key="item"
               v-for="item in items"
-              class="m-box m-aln-center m-justify-center m-flex-grow1 m-flex-shrink1 m-pinned-amount-btn"
+              :key="item"
               :style="{ width: `${1 / items.length * 100}%` }"
               :class="{ active: ~~amount === ~~item }"
+              class="m-box m-aln-center m-justify-center m-flex-grow1 m-flex-shrink1 m-pinned-amount-btn"
               @click="chooseDefaultAmount(item)">{{ (~~item) }}</button>
           </div>
         </div>
-        <div class="m-image-paid-option-row m-bt1 m-box" style="overflow: hidden;">
-          <p class="m-image-paid-option-label m-flex-grow0 m-flex-shrink0" style="margin-bottom: 0">自定义金额</p>
+        <div 
+          class="m-image-paid-option-row m-bt1 m-box" 
+          style="overflow: hidden;">
+          <p 
+            class="m-image-paid-option-label m-flex-grow0 m-flex-shrink0" 
+            style="margin-bottom: 0">自定义金额</p>
           <div class="m-box m-aln-center m-flex-grow1 m-flex-shrink1 m-justify-end m-lim-width m-pinned-amount-customize">
             <input  
+              v-model="customAmount"
               type="number"
               pattern="[0-9]*"
-              v-model="customAmount"
               placeholder="输入自定义金额"
               oninput="value=value.slice(0, 8)" 
               class="m-text-r m-flex-grow1 m-flex-shrink1">
@@ -36,7 +45,9 @@
           </div>
         </div>
         <div class="m-image-paid-option-row m-bt1">
-          <button class="m-long-btn" @click="handleOk">确定</button>
+          <button 
+            class="m-long-btn" 
+            @click="handleOk">确定</button>
         </div>
       </div>
     </transition>
@@ -44,7 +55,7 @@
 </template>
 <script>
 export default {
-  name: "image-paid-option",
+  name: "ImagePaidOption",
   data() {
     return {
       isShow: false,

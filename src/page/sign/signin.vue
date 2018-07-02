@@ -4,7 +4,7 @@
     leave-active-class="animated bounceOutLeft">
     <div class="m-box-model m-pos-f p-signin">
       <header class="m-box m-pos-f m-aln-center m-main m-head-top m-bb1">
-        <div class="m-flex-grow1 m-flex-base0"></div>
+        <div class="m-flex-grow1 m-flex-base0"/>
         <div class="m-box m-flex-grow1 m-flex-base0 m-aln-center m-justify-center m-head-top-title">
           <span>登录</span>
         </div>
@@ -12,21 +12,25 @@
           <router-link to="/signup">注册</router-link>
         </div>
       </header>
-      <main class="m-box-model m-flex-grow1" style="padding-top: 0.9rem">
+      <main 
+        class="m-box-model m-flex-grow1" 
+        style="padding-top: 0.9rem">
         <div class="m-form-row m-main">
           <label for="account">账户</label>
           <div class="m-input">
             <input
-              type="text"
               id="account"
               v-model="account"
+              type="text"
               placeholder="用户名/手机号/邮箱">
           </div>
           <svg
-            @click="account = ''"
             v-show="account.length > 0"
-            class="m-style-svg m-svg-def">
-            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-clean"></use>
+            class="m-style-svg m-svg-def"
+            @click="account = ''">
+            <use 
+              xmlns:xlink="http://www.w3.org/1999/xlink" 
+              xlink:href="#base-clean"/>
           </svg>
         </div>
         <div class="m-form-row m-main">
@@ -34,49 +38,63 @@
           <div class="m-input">
             <input
               v-if="eye"
-              type="text"
               id="password"
-              maxlength="16"
               v-model="password"
+              type="text"
+              maxlength="16"
               placeholder="输入6位以上登录密码">
             <input
               v-else
               id="password"
+              v-model="password"
               maxlength="16"
               type="password"
-              v-model="password"
               placeholder="输入6位以上登录密码">
           </div>
-          <svg class="m-style-svg m-svg-def" @click="eye=!eye">
-            <use :xlink:href='`#eye-${eye?"open":"close"}`'></use>
+          <svg 
+            class="m-style-svg m-svg-def" 
+            @click="eye=!eye">
+            <use :xlink:href="`#eye-${eye?&quot;open&quot;:&quot;close&quot;}`"/>
           </svg>
         </div>
         <div class="m-box m-aln-center m-text-box m-form-err-box">
           <span>{{ err | plusMessageFirst }}</span>
         </div>
-        <div class="m-form-row" style="border: 0">
+        <div 
+          class="m-form-row" 
+          style="border: 0">
           <button
-          :disabled="disabled"
-          class="m-long-btn m-signin-btn"
-          @click="signinByAccount">
-            <svg v-if="loading" class="m-style-svg m-svg-def">
-              <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-loading"></use>
+            :disabled="disabled"
+            class="m-long-btn m-signin-btn"
+            @click="signinByAccount">
+            <svg 
+              v-if="loading" 
+              class="m-style-svg m-svg-def">
+              <use 
+                xmlns:xlink="http://www.w3.org/1999/xlink" 
+                xlink:href="#base-loading"/>
             </svg>
             <span v-else>登录</span>
           </button>
         </div>
         <div class="m-box m-aln-center m-justify-bet other-link">
-          <router-link tag="span" to="/feeds?type=hot">
+          <router-link 
+            tag="span" 
+            to="/feeds?type=hot">
             <a>不登录，先随便逛逛</a>
           </router-link>
-          <router-link tag="span" to="/forgot">
+          <router-link 
+            tag="span" 
+            to="/forgot">
             <a>忘记密码</a>
           </router-link>
         </div>
       </main>
 
       <!-- TODO: 其他三方登录方式 -->
-      <footer class="m-box-model m-trhsignin" v-if="isWechat">
+      <footer 
+        v-if="isWechat" 
+        class="m-box-model m-trhsignin">
         <div class="m-box m-aln-center m-justify-aro m-trhsignin-list">
           <!-- <div class="m-box m-fd-col m-aln-center m-tr-item">
             <div class="m-tr-item-icon">
@@ -86,10 +104,14 @@
             </div>
             <span>QQ</span>
           </div> -->
-          <div class="m-box m-fd-col m-aln-center m-tr-item" @click="signinByWechat">
+          <div 
+            class="m-box m-fd-col m-aln-center m-tr-item" 
+            @click="signinByWechat">
             <div class="m-tr-item-icon">
               <svg class="m-style-svg m-svg-def">
-                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#tr-wechat"></use>
+                <use 
+                  xmlns:xlink="http://www.w3.org/1999/xlink" 
+                  xlink:href="#tr-wechat"/>
               </svg>
             </div>
             <span>微信</span>
@@ -104,7 +126,7 @@ import { signinByAccount } from "@/api/user.js";
 import { signinByWechat } from "@/util/wechat.js";
 
 export default {
-  name: "signin",
+  name: "Signin",
   data() {
     return {
       err: "",

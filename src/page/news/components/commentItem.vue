@@ -6,14 +6,18 @@
           <avatar :user="user" />
           <div class="m-box-dir m-box-col card-txt-body">
             <div class="m-box m-box-c">
-              <router-link tag='h4' :to='`/users/${user.id}`'>{{ user.name }}</router-link>
+              <router-link 
+                :to="`/users/${user.id}`" 
+                tag="h4">{{ user.name }}</router-link>
               <div class="m-box m-box-c">
-                <i class="pinned-icon" v-if='pinned'></i>
+                <i 
+                  v-if="pinned" 
+                  class="pinned-icon"/>
                 <span class="time">{{ time | time2tips }}</span>
               </div>
             </div>
             <div class="m-text-box">
-              <span v-if='reply'>回复<router-link :to='`/users/${reply.id}`'>{{ reply.name }}</router-link>:</span>
+              <span v-if="reply">回复<router-link :to="`/users/${reply.id}`">{{ reply.name }}</router-link>:</span>
               {{ body }}
             </div>
           </div>
@@ -24,7 +28,7 @@
 </template>
 <script>
 export default {
-  name: "comment-card",
+  name: "CommentCard",
   props: {
     comment: {},
     pinned: {

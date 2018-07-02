@@ -2,24 +2,29 @@
   <div :class="`${prefixCls}`">
     <div :class="`${prefixCls}-container`">
       <load-more
-        :onRefresh='onRefresh'
-        :onLoadMore='onLoadMore'
-        ref='loadmore'
+        ref="loadmore"
+        :on-refresh="onRefresh"
+        :on-load-more="onLoadMore"
         :class="`${prefixCls}-loadmore`"
       >
-        <div v-for="audit in audits" :class="`${prefixCls}-item`" :key="`group-comment-${audit.id}`">
+        <div 
+          v-for="audit in audits" 
+          :class="`${prefixCls}-item`" 
+          :key="`group-comment-${audit.id}`">
           <div :class="`${prefixCls}-item-top`">
             <avatar :user="audit.user" />
             <section class="userInfo">
-              <router-link :class="`${prefixCls}-item-top-link`" :to="`/users/${audit.user_id}`">{{ audit.user.name }}</router-link>
+              <router-link 
+                :class="`${prefixCls}-item-top-link`" 
+                :to="`/users/${audit.user_id}`">{{ audit.user.name }}</router-link>
               <p>{{ audit.created_at | time2tips }}</p>
             </section>
             <group-post-comment-audit-status :audit="audit" />
           </div>
           <!--<div :class="`${prefixCls}-item-bottom`" v-if="audit.news !== null">-->
-            <!--<div class="content" @click="goToDetail(audit.news.id)">-->
-              <!--对你的帖子进行了“<span>{{ audit.comment.body }}</span>”评论并申请置顶,请及时审核-->
-            <!--</div>-->
+          <!--<div class="content" @click="goToDetail(audit.news.id)">-->
+          <!--对你的帖子进行了“<span>{{ audit.comment.body }}</span>”评论并申请置顶,请及时审核-->
+          <!--</div>-->
           <!--</div>-->
           <audit-content :audit="getAuditContent(audit)" />
         </div>
@@ -38,11 +43,11 @@ import AuditContent from "../../components/auditContent";
 
 const prefixCls = "msgList";
 export default {
+  name: "PostCommentAudit",
   components: {
     AuditContent,
     groupPostCommentAuditStatus
   },
-  name: "postCommentAudit",
   data: () => ({
     prefixCls
   }),

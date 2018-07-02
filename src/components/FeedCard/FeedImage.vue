@@ -1,17 +1,19 @@
 <template>
   <div
-  :id='`m-pics${id}`'
-  :class="['m-pics',`m-pics-${pics.length}`]">
+    :id="`m-pics${id}`"
+    :class="['m-pics',`m-pics-${pics.length}`]">
     <ul class="m-pics-list">
-      <li v-for='(img, index) in pics.slice(0, 9)' :key="`pics-${id}-${index}`">
+      <li 
+        v-for="(img, index) in pics.slice(0, 9)" 
+        :key="`pics-${id}-${index}`">
         <div
-        :class="['m-pics-box',{ 'long': isLongImg(img) }, { 'gif': (img.mime || '').indexOf('gif') > -1 }]"
-        :style='pics.length === 1 ? longStyle(img.w, img.h) : ""'>
+          :class="['m-pics-box',{ 'long': isLongImg(img) }, { 'gif': (img.mime || '').indexOf('gif') > -1 }]"
+          :style="pics.length === 1 ? longStyle(img.w, img.h) : &quot;&quot;">
           <div
-            class="m-pic"
+            v-async-image="img"
             :data-src="img.file"
-            @click.stop='handleClick($event, index)'
-            v-async-image="img"/>
+            class="m-pic"
+            @click.stop="handleClick($event, index)"/>
         </div>
       </li>
     </ul>
@@ -20,7 +22,7 @@
 <script>
 import bus from "@/bus.js";
 export default {
-  name: "feed-image",
+  name: "FeedImage",
   props: {
     id: {
       type: Number,

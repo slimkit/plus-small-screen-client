@@ -1,11 +1,18 @@
 <template>
-  <div class="module-question-list-answer-card" v-if="answer">
+  <div 
+    v-if="answer" 
+    class="module-question-list-answer-card">
     <!-- User avatar. -->
-    <module-user-avatar :anonymity="anonymity" :src="user.avatar" :sex="user.sex" />
+    <module-user-avatar 
+      :anonymity="anonymity" 
+      :src="user.avatar" 
+      :sex="user.sex" />
     <!-- Body -->
     {{ showUsername }}：{{ body }}
   </div>
-  <div v-else class="module-question-list-answer-card-empty" />
+  <div 
+    v-else 
+    class="module-question-list-answer-card-empty" />
 </template>
 
 <script>

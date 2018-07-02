@@ -2,30 +2,40 @@
   <div :class="`${prefixCls}`">
     <div :class="`${prefixCls}-container`">
       <load-more
-          :onRefresh='onRefresh'
-          :onLoadMore='onLoadMore'
-          ref='loadmore'
-          :class="`${prefixCls}-loadmore`"
-        >
-          <div v-for="audit in audits" :class="`${prefixCls}-item`" :key="`group-post-${audit.id}`">
-            <div :class="`${prefixCls}-item-top`">
-              <avatar :user="audit.user" />
-              <section class="userInfo">
-                <router-link :class="`${prefixCls}-item-top-link`" :to="`/users/${audit.user_id}`">{{ audit.user.name }}</router-link>
-                <p>{{ audit.created_at | time2tips }}</p>
-              </section>
-              <group-post-audit-status :audit="audit" />
+        ref="loadmore"
+        :on-refresh="onRefresh"
+        :on-load-more="onLoadMore"
+        :class="`${prefixCls}-loadmore`"
+      >
+        <div 
+          v-for="audit in audits" 
+          :class="`${prefixCls}-item`" 
+          :key="`group-post-${audit.id}`">
+          <div :class="`${prefixCls}-item-top`">
+            <avatar :user="audit.user" />
+            <section class="userInfo">
+              <router-link 
+                :class="`${prefixCls}-item-top-link`" 
+                :to="`/users/${audit.user_id}`">{{ audit.user.name }}</router-link>
+              <p>{{ audit.created_at | time2tips }}</p>
+            </section>
+            <group-post-audit-status :audit="audit" />
+          </div>
+          <div :class="`${prefixCls}-item-bottom`">
+            <div 
+              v-if="audit.post !== null" 
+              class="content" 
+              @click="goToDetail(audit.news.id)">
+              对帖子“<span>{{ audit.post.title }}</span>”申请置顶,请及时审核
             </div>
-            <div :class="`${prefixCls}-item-bottom`">
-              <div  v-if="audit.post !== null" class="content" @click="goToDetail(audit.news.id)">
-                对帖子“<span>{{ audit.post.title }}</span>”申请置顶,请及时审核
-              </div>
-              <div  v-else class="content red">
-                帖子已被删除
-              </div>
+            <div 
+              v-else 
+              class="content red">
+              帖子已被删除
             </div>
           </div>
-        </load-more>
+        </div>
+      </load-more>
     </div>
   </div>  
 </template>
@@ -38,10 +48,10 @@ import { getPostAudits } from "@/api/group.js";
 import groupPostAuditStatus from "../../components/groupPostAuditStatus";
 const prefixCls = "msgList";
 export default {
+  name: "GroupPostAudit",
   components: {
     groupPostAuditStatus
   },
-  name: "groupPostAudit",
   data: () => ({
     prefixCls
   }),

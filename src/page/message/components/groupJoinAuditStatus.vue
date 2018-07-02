@@ -1,16 +1,23 @@
 <template>
   <div :class="`${prefixCls}-status`">
-      <section v-if="audit.audit_at">
-        <section class="gray"  v-if="audit.status === 1">
-          同意加入
-        </section>
-        <section class="gray" v-else>
-          拒绝加入
-        </section>
+    <section v-if="audit.audit_at">
+      <section 
+        v-if="audit.status === 1" 
+        class="gray">
+        同意加入
       </section>
-      <section @click="showOperations(audit)" class="green" v-else>
-        <span class="audit-operation">审核</span>
+      <section 
+        v-else 
+        class="gray">
+        拒绝加入
       </section>
+    </section>
+    <section 
+      v-else 
+      class="green" 
+      @click="showOperations(audit)">
+      <span class="audit-operation">审核</span>
+    </section>
   </div>
 </template>
 <script>
@@ -20,7 +27,7 @@
 
 const prefixCls = "msgList";
 export default {
-  name: "groupPostCommentAuditStatus",
+  name: "GroupPostCommentAuditStatus",
   props: ["audit"],
   data: () => ({
     prefixCls

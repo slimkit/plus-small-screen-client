@@ -1,25 +1,33 @@
 <template>
   <div class="module-question-list-item">
     <!-- The question title. -->
-    <router-link tag="h3" class="module-question-list-item_title" :to="`/questions/${question.id}`">
+    <router-link 
+      :to="`/questions/${question.id}`" 
+      tag="h3" 
+      class="module-question-list-item_title">
       {{ question.subject }}
-      <span v-show="question.excellent" class="module-question-list-item-shang-i">精</span>
+      <span 
+        v-show="question.excellent" 
+        class="module-question-list-item-shang-i">精</span>
     </router-link>
 
     <!-- The question first image. -->
     <router-link
       v-if="firstImageStyle"
       :style="firstImageStyle"
+      :to="`/questions/${question.id}`"
       tag="div"
       class="module-question-list-item_image"
-      :to="`/questions/${question.id}`"
     />
 
     <!-- Answer. -->
     <module-question-list-answer-card :answer="answer" />
 
     <!-- Bottom -->
-    <router-link :to="`/questions/${question.id}`" class="module-question-list-item_button" tag="div">
+    <router-link 
+      :to="`/questions/${question.id}`" 
+      class="module-question-list-item_button" 
+      tag="div">
       <span>
         <span class="module-question-list-item_button-style1">{{ question.watchers_count }}</span>&nbsp;关注
       </span>
@@ -53,7 +61,7 @@ export default {
    *
    * @type {String}
    */
-  name: "module-question-list-item",
+  name: "ModuleQuestionListItem",
 
   /**
    * The component using components.

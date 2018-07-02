@@ -13,6 +13,17 @@ Modal.newInstance = properties => {
       },
       _props
     ),
+    methods: {
+      remove() {
+        this.$nextTick(this.destroy);
+      },
+      destroy() {
+        this.$destroy();
+        document.body.removeChild(this.$el);
+        this.onRemove();
+      },
+      onRemove() {}
+    },
     render(h) {
       const bodyVNodes = [];
       if (this.render) {
@@ -34,17 +45,6 @@ Modal.newInstance = properties => {
         },
         bodyVNodes
       );
-    },
-    methods: {
-      remove() {
-        this.$nextTick(this.destroy);
-      },
-      destroy() {
-        this.$destroy();
-        document.body.removeChild(this.$el);
-        this.onRemove();
-      },
-      onRemove() {}
     }
   });
 

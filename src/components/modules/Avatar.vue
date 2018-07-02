@@ -1,6 +1,10 @@
 <template>
-  <div v-bind="$props" :class="rootClassName" :style="rootStyles" @click="handleClick">
-    <slot></slot>
+  <div 
+    v-bind="$props" 
+    :class="rootClassName" 
+    :style="rootStyles" 
+    @click="handleClick">
+    <slot/>
   </div>
 </template>
 
@@ -11,7 +15,7 @@ export default {
    *
    * @type {String}
    */
-  name: "module-avatar",
+  name: "ModuleAvatar",
 
   /**
    * The component props.
@@ -22,35 +26,6 @@ export default {
     classes: { type: [Array, String] },
     size: { type: [String, Number], default: 0.4 },
     sizeUnit: { type: String, default: "rem" }
-  },
-
-  /**
-   * The component methods.
-   *
-   * @type {Object}
-   */
-  methods: {
-    /**
-     * Class name builder.
-     *
-     * @param {string} className
-     * @return {string}
-     * @author Seven Du <shiweidu@outlook.com>
-     */
-    classNameBuilder(className) {
-      return `module-avatar-${className}`;
-    },
-
-    /**
-     * The click handle.
-     *
-     * @param {Object} event
-     * @return {void}
-     * @author Seven Du <shiweidu@outlook.com>
-     */
-    handleClick(event) {
-      this.$emit("click", event);
-    }
   },
 
   /**
@@ -90,6 +65,35 @@ export default {
         width: size,
         height: size
       };
+    }
+  },
+
+  /**
+   * The component methods.
+   *
+   * @type {Object}
+   */
+  methods: {
+    /**
+     * Class name builder.
+     *
+     * @param {string} className
+     * @return {string}
+     * @author Seven Du <shiweidu@outlook.com>
+     */
+    classNameBuilder(className) {
+      return `module-avatar-${className}`;
+    },
+
+    /**
+     * The click handle.
+     *
+     * @param {Object} event
+     * @return {void}
+     * @author Seven Du <shiweidu@outlook.com>
+     */
+    handleClick(event) {
+      this.$emit("click", event);
     }
   }
 };

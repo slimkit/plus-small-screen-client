@@ -1,6 +1,10 @@
 <template>
-  <div class="m-box m-bb1 m-aln-center m-justify-bet m-main m-wallet-detail" @click.stop="showDetail">
-    <div class="m-wallet-detail-time" v-html='created_at'></div>
+  <div 
+    class="m-box m-bb1 m-aln-center m-justify-bet m-main m-wallet-detail" 
+    @click.stop="showDetail">
+    <div 
+      class="m-wallet-detail-time" 
+      v-html="created_at"/>
     <div class="m-wallet-detail-title" >{{ detail.subject }}</div>
     <div class="m-wallet-detail-amount">
       {{ detail.action ? '+' : '-' }}{{ detail.amount.toFixed(2) }}

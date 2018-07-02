@@ -1,9 +1,11 @@
 <template>
-  <div id="app" class="wap-wrap">
+  <div 
+    id="app" 
+    class="wap-wrap">
     <keep-alive>
-      <router-view v-if="$route.meta.keepAlive"></router-view>
+      <router-view v-if="$route.meta.keepAlive"/>
     </keep-alive>
-    <router-view v-if="!$route.meta.keepAlive"></router-view>
+    <router-view v-if="!$route.meta.keepAlive"/>
     <div>
       <svg-icon />
       <pswp />
@@ -50,12 +52,7 @@ import { mapActions, mapState } from "vuex";
 // import WebIM from "@/vendor/easemob";
 
 export default {
-  name: "app",
-  data() {
-    return {
-      title: "TS+"
-    };
-  },
+  name: "App",
   components: {
     pswp,
     payfor,
@@ -69,6 +66,11 @@ export default {
     PostMenu,
     chooseTags,
     chooseGroupCate
+  },
+  data() {
+    return {
+      title: "TS+"
+    };
   },
   watch: {
     $route(val) {

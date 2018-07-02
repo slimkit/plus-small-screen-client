@@ -1,26 +1,38 @@
 <template>
-  <div class="m-box-model m-card" @click="handleView('')">
+  <div 
+    class="m-box-model m-card" 
+    @click="handleView('')">
     <div class="m-box">
       <div
         v-if="timeLine"
-        v-html="timeLineText"
-        class="m-box-model m-aln-center m-flex-grow0 m-flex-shrink0 m-card-time-line"></div>
-      <avatar v-else :user='user' />
+        class="m-box-model m-aln-center m-flex-grow0 m-flex-shrink0 m-card-time-line"
+        v-html="timeLineText"/>
+      <avatar 
+        v-else 
+        :user="user" />
       <section class="m-box-model m-flex-grow1 m-flex-shrink1 m-card-main">
-        <header class="m-box m-aln-center m-justify-bet m-card-usr" v-if="!timeLine">
+        <header 
+          v-if="!timeLine" 
+          class="m-box m-aln-center m-justify-bet m-card-usr">
           <h4 class="m-flex-grow1 m-flex-shrink1">{{ user.name }}</h4>
           <div class="m-box m-aln-center">
-            <span v-if="pinned" class="m-art-comment-icon-top">置顶</span>
+            <span 
+              v-if="pinned" 
+              class="m-art-comment-icon-top">置顶</span>
             <span>{{ time | time2tips }}</span>
           </div>
         </header>
-        <article class="m-card-body" @click="handleView('')">
+        <article 
+          class="m-card-body" 
+          @click="handleView('')">
           <h2 v-if="title">{{ title }}</h2>
-          <div class="m-card-con" v-if="body.length > 0">
+          <div 
+            v-if="body.length > 0" 
+            class="m-card-con">
             <p
-              class="m-text-box m-text-cut-3"
               :class="{needPay}"
-              v-html="replaceURI(body)"></p>
+              class="m-text-box m-text-cut-3"
+              v-html="replaceURI(body)"/>
           </div>
           <feed-image
             v-if="images.length > 0"
@@ -33,43 +45,61 @@
         </article>
       </section>
     </div>
-    <footer v-if="showFooter" class="m-box-model m-card-foot m-bt1" @click.stop>
+    <footer 
+      v-if="showFooter" 
+      class="m-box-model m-card-foot m-bt1" 
+      @click.stop>
       <div class="m-box m-aln-center m-card-tools m-lim-width">
-        <a class="m-box m-aln-center" @click.prevent="handleLike">
-          <svg class='m-style-svg m-svg-def'>
-            <use :xlink:href="liked ? '#feed-like' :'#feed-unlike'"></use>
+        <a 
+          class="m-box m-aln-center" 
+          @click.prevent="handleLike">
+          <svg class="m-style-svg m-svg-def">
+            <use :xlink:href="liked ? '#feed-like' :'#feed-unlike'"/>
           </svg>
           <span>{{ likeCount | formatNum }}</span>
         </a>
-        <a class="m-box m-aln-center"  @click.prevent="handleComment">
-          <svg class='m-style-svg m-svg-def'>
-            <use xlink:href="#feed-comment"></use>
+        <a 
+          class="m-box m-aln-center" 
+          @click.prevent="handleComment">
+          <svg class="m-style-svg m-svg-def">
+            <use xlink:href="#feed-comment"/>
           </svg>
           <span>{{ commentCount | formatNum }}</span>
         </a>
-        <a class="m-box m-aln-center" @click.prevent="handleView('')">
-          <svg class='m-style-svg m-svg-def'>
-            <use xlink:href="#feed-eye"></use>
+        <a 
+          class="m-box m-aln-center" 
+          @click.prevent="handleView('')">
+          <svg class="m-style-svg m-svg-def">
+            <use xlink:href="#feed-eye"/>
           </svg>
           <span>{{ viewCount | formatNum }}</span>
         </a>
         <div class="m-box m-justify-end m-flex-grow1 m-flex-shrink1">
-          <a class="m-box m-aln-center" @click.prevent="handleMore">
-            <svg class='m-style-svg m-svg-def'>
-              <use xlink:href="#feed-more"></use>
+          <a 
+            class="m-box m-aln-center" 
+            @click.prevent="handleMore">
+            <svg class="m-style-svg m-svg-def">
+              <use xlink:href="#feed-more"/>
             </svg>
           </a>
         </div>
       </div>
-      <ul v-if="commentCount > 0" class="m-card-comments">
+      <ul 
+        v-if="commentCount > 0" 
+        class="m-card-comments">
         <li
           v-for="com in comments"
           v-if="com.id"
           :key="com.id">
-          <comment-item :comment="com" @click="commentAction"/>
+          <comment-item 
+            :comment="com" 
+            @click="commentAction"/>
         </li>
       </ul>
-      <div class="m-router-link" v-if="commentCount > 5" @click="handleView('comment_list')">
+      <div 
+        v-if="commentCount > 5" 
+        class="m-router-link" 
+        @click="handleView('comment_list')">
         <a>查看全部评论</a>
       </div>
     </footer>
@@ -92,7 +122,7 @@ import {
 } from "@/api/feeds.js";
 
 export default {
-  name: "feed-card",
+  name: "FeedCard",
   components: {
     FeedImage,
     CommentItem,
@@ -199,6 +229,9 @@ export default {
     title() {
       return this.feed.title || "";
     }
+  },
+  mounted() {
+    this.user && this.$store.commit("SAVE_USER", this.user);
   },
   methods: {
     replaceURI(str) {
@@ -394,9 +427,6 @@ export default {
         this.$Message.success("删除评论成功");
       });
     }
-  },
-  mounted() {
-    this.user && this.$store.commit("SAVE_USER", this.user);
   }
 };
 </script>

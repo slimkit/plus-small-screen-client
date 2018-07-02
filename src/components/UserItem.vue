@@ -1,20 +1,27 @@
 <template>
-  <div class="m-box m-aln-center m-main user-item" @click='toUserHome'>
+  <div 
+    class="m-box m-aln-center m-main user-item" 
+    @click="toUserHome">
     <avatar :user="user" />
     <section
       class="m-box-model m-flex-grow1 m-flex-shrink1 m-flex-base0 m-text-cut user-item-body">
       <h2 class="m-text-box m-text-cut">{{ user.name }}</h2>
       <p class="m-text-box m-text-cut">{{ user.bio || "这家伙很懒，什么也没留下" }}</p>
     </section>
-    <svg class="m-style-svg m-svg-def" @click.stop="followUser" v-if="!isMine">
-      <use xmlns:xlink="http://www.w3.org/1999/xlink" :xlink:href="`#base-${isFollow}`"></use>
+    <svg 
+      v-if="!isMine" 
+      class="m-style-svg m-svg-def" 
+      @click.stop="followUser">
+      <use 
+        :xlink:href="`#base-${isFollow}`" 
+        xmlns:xlink="http://www.w3.org/1999/xlink"/>
     </svg>
   </div>
 </template>
 <script>
 import { followUserByStatus } from "@/api/user.js";
 export default {
-  name: "user-item",
+  name: "UserItem",
   props: {
     user: null,
     link: {
@@ -53,6 +60,9 @@ export default {
       return this.$store.state.CURRENTUSER.id === this.user.id;
     }
   },
+  created() {
+    this.$store.commit("SAVE_USER", this.user);
+  },
   methods: {
     toUserHome() {
       this.link && this.$router.push(`/users/${this.user.id}`);
@@ -68,9 +78,6 @@ export default {
         this.loading = false;
       });
     }
-  },
-  created() {
-    this.$store.commit("SAVE_USER", this.user);
   }
 };
 </script>

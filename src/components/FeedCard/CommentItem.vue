@@ -1,18 +1,29 @@
 <template>
   <p class="m-text-box">
-    <router-link tag="span" :to="`/users/${user.id}`" exact class='m-comment-usr'>
+    <router-link 
+      :to="`/users/${user.id}`" 
+      tag="span" 
+      exact 
+      class="m-comment-usr">
       <a>{{ user.name }}</a>
     </router-link>
-    <span class="m-comment-usr" v-if="replyUser">
-      回复<router-link :to='`/users/${replyUser.id}`'>{{ replyUser.name }}</router-link>
+    <span 
+      v-if="replyUser" 
+      class="m-comment-usr">
+      回复<router-link :to="`/users/${replyUser.id}`">{{ replyUser.name }}</router-link>
     </span>
-    <span class="m-comment-body" @click="handelClick">{{ body }}</span>
-    <span v-if="pinned" class="m-art-comment-icon-top" style="margin-left: 5px; height: auto">置顶</span>
+    <span 
+      class="m-comment-body" 
+      @click="handelClick">{{ body }}</span>
+    <span 
+      v-if="pinned" 
+      class="m-art-comment-icon-top" 
+      style="margin-left: 5px; height: auto">置顶</span>
   </p>
 </template>
 <script>
 export default {
-  name: "comment-item",
+  name: "CommentItem",
   props: {
     comment: { type: Object, required: true }
   },
@@ -34,6 +45,10 @@ export default {
       return this.comment.body || "";
     }
   },
+  mounted() {
+    this.user && this.$store.commit("SAVE_USER", this.user);
+    this.replyUser && this.$store.commit("SAVE_USER", this.replyUser);
+  },
   methods: {
     handelClick() {
       const p = this.isMine
@@ -47,10 +62,6 @@ export default {
           };
       this.$emit("click", Object.assign({ comment: this.comment }, p));
     }
-  },
-  mounted() {
-    this.user && this.$store.commit("SAVE_USER", this.user);
-    this.replyUser && this.$store.commit("SAVE_USER", this.replyUser);
   }
 };
 </script>

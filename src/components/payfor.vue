@@ -1,10 +1,15 @@
 <template>
-<div @touchmove.prevent>
-    <transition name='toast'>
-      <div v-if='show' class="m-pop-box" @click='cancel'></div>
+  <div @touchmove.prevent>
+    <transition name="toast">
+      <div 
+        v-if="show" 
+        class="m-pop-box" 
+        @click="cancel"/>
     </transition>
-    <transition name='popr'>
-      <div v-if='show' class="m-box-model m-justify-bet m-payfor-box">
+    <transition name="popr">
+      <div 
+        v-if="show" 
+        class="m-box-model m-justify-bet m-payfor-box">
         <h2 class="m-payfor-head">
           <slot name="title">
             <span>{{ title || "购买支付" }}</span>
@@ -14,11 +19,15 @@
           <!-- amount.toFixed(2) -->
           <h3 class="m-payfor-amount">{{ amount }}</h3>
           <!-- 你只需要支付*积分就可查看此内容/图片/视频 -->
-          <p>{{ content ||  `你只需要支付${ amount }${ currency_name }就可查看此${ nodeType }` }}</p>
+          <p>{{ content || `你只需要支付${ amount }${ currency_name }就可查看此${ nodeType }` }}</p>
         </div>
         <div class="m-payfor-foot">
-          <button class="m-payfor-btn primary" @click="handelOk">{{ confirmText || "购买" }}</button>
-          <button class="m-payfor-btn" @click="handelCancel">{{ cancelText || "返回" }}</button>
+          <button 
+            class="m-payfor-btn primary" 
+            @click="handelOk">{{ confirmText || "购买" }}</button>
+          <button 
+            class="m-payfor-btn" 
+            @click="handelCancel">{{ cancelText || "返回" }}</button>
         </div>
       </div>
     </transition>
@@ -28,7 +37,7 @@
 import bus from "@/bus.js";
 const noop = () => {};
 export default {
-  name: "pay-for",
+  name: "PayFor",
   data() {
     return {
       node: 0,

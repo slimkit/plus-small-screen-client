@@ -1,35 +1,29 @@
 <template>
   <div
-    @click.stop
     class="feed-video"
+    @click.stop
   >
     <video
+      v-if="videoFile"
+      :poster="coverFile"
+      :ref="`video_${id}`" 
       controls
       x-webkit-airplay="true"
-      webkit-playsinline="true" 
-      playsinline="true"
+      webkit-playsinline="true"
+      playsinline="true" 
       preload="none"
-      v-if="videoFile"
-      :poster="coverFile" 
-      :ref="`video_${id}`"
     >
-       <source 
+      <source 
         :src="videoFile" 
         type="video/mp4"
       >
-       Your browser does not support the video tag.
+      Your browser does not support the video tag.
     </video> 
   </div>
 </template>
 <script>
 export default {
-  name: "feedVideo",
-  data: () => ({
-    videoFile: "",
-    coverFile: "",
-    play: false,
-    ratio: 1
-  }),
+  name: "FeedVideo",
   props: {
     video: {
       type: Object,
@@ -40,6 +34,12 @@ export default {
       required: true
     }
   },
+  data: () => ({
+    videoFile: "",
+    coverFile: "",
+    play: false,
+    ratio: 1
+  }),
   computed: {
     height() {
       return this.video.width < this.video.height
@@ -52,6 +52,11 @@ export default {
     // cover_file() {
     //   return `/api/v2/files/${this.video.cover_id}`;
     // }
+  },
+  created() {
+    this.ratio = 518 / this.video.width;
+    this.getVideoUrl();
+    this.getCoverUrl();
   },
   methods: {
     getVideoUrl() {
@@ -72,11 +77,6 @@ export default {
           this.coverFile = url;
         });
     }
-  },
-  created() {
-    this.ratio = 518 / this.video.width;
-    this.getVideoUrl();
-    this.getCoverUrl();
   }
 };
 </script>

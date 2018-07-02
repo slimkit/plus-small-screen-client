@@ -2,35 +2,55 @@
   <div class="p-profile-news">
     <header class="m-box m-pos-f m-main m-bb1 m-head-top">
       <div class="m-box m-aln-center m-flex-grow1 m-flex-base0">
-        <svg class="m-style-svg m-svg-def" @click="goBack">
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-back"></use>
+        <svg 
+          class="m-style-svg m-svg-def" 
+          @click="goBack">
+          <use 
+            xmlns:xlink="http://www.w3.org/1999/xlink" 
+            xlink:href="#base-back"/>
         </svg>
       </div>
       <div class="m-box m-aln-center m-flex-grow1 m-flex-base0 m-justify-center m-head-top-title">
         <span>我的投稿</span>
       </div>
-      <div class="m-box m-aln-center m-flex-grow1 m-flex-base0 m-justify-end">
-        
-      </div>
+      <div class="m-box m-aln-center m-flex-grow1 m-flex-base0 m-justify-end"/>
     </header>
 
     <main style="padding-top: .9rem">
       <div class="m-pos-f m-box m-aln-center m-justify-bet m-sub-nav m-bb1 m-main">
-        <router-link replace exact tag="div" exact-active-class="active" to="/profile/news/released" class="m-sub-nav-item">
+        <router-link 
+          replace 
+          exact 
+          tag="div" 
+          exact-active-class="active" 
+          to="/profile/news/released" 
+          class="m-sub-nav-item">
           <a>已发布</a>
         </router-link>
-        <router-link replace exact tag="div" exact-active-class="active" to="/profile/news/auditing" class="m-sub-nav-item">
+        <router-link 
+          replace 
+          exact 
+          tag="div" 
+          exact-active-class="active" 
+          to="/profile/news/auditing" 
+          class="m-sub-nav-item">
           <a>投稿中</a>
         </router-link>
-        <router-link replace exact tag="div" exact-active-class="active" to="/profile/news/rejected" class="m-sub-nav-item">
+        <router-link 
+          replace 
+          exact 
+          tag="div" 
+          exact-active-class="active" 
+          to="/profile/news/rejected" 
+          class="m-sub-nav-item">
           <a>被驳回</a>
         </router-link>
       </div>
       <load-more
-      style="padding-top: .9rem"
-      ref='loadmore'
-      :onRefresh='onRefresh'
-      :onLoadMore='onLoadMore'>
+        ref="loadmore"
+        :on-refresh="onRefresh"
+        :on-load-more="onLoadMore"
+        style="padding-top: .9rem">
         <news-item
           v-for="news in newsList"
           :news="news"
@@ -59,26 +79,6 @@ export default {
       rejected,
       ChangeTracker: 1
     };
-  },
-  methods: {
-    formatNews(newsList) {
-      newsList.forEach(news => {
-        this.$data[this.type].set(news.id, news);
-        this.ChangeTracker += 1;
-      });
-    },
-    onRefresh() {
-      getMyNews({ ...this.params }).then(({ data }) => {
-        this.formatNews(data);
-        this.$refs.loadmore.topEnd(!(data.length < this.params.limit));
-      });
-    },
-    onLoadMore() {
-      getMyNews({ ...this.params }).then(({ data = [] }) => {
-        this.formatNews(data);
-        this.$refs.loadmore.bottomEnd(data.length < this.params.limit);
-      });
-    }
   },
   computed: {
     newsList() {
@@ -123,6 +123,26 @@ export default {
   },
   deactivated() {
     this.isCurrentView = false;
+  },
+  methods: {
+    formatNews(newsList) {
+      newsList.forEach(news => {
+        this.$data[this.type].set(news.id, news);
+        this.ChangeTracker += 1;
+      });
+    },
+    onRefresh() {
+      getMyNews({ ...this.params }).then(({ data }) => {
+        this.formatNews(data);
+        this.$refs.loadmore.topEnd(!(data.length < this.params.limit));
+      });
+    },
+    onLoadMore() {
+      getMyNews({ ...this.params }).then(({ data = [] }) => {
+        this.formatNews(data);
+        this.$refs.loadmore.bottomEnd(data.length < this.params.limit);
+      });
+    }
   }
 };
 </script>

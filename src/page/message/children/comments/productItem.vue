@@ -3,23 +3,39 @@
     <div :class="`${prefixCls}-item-top`">
       <avatar :user="user" />
       <section class="userInfo">
-        <router-link :class="`${prefixCls}-item-top-link`" :to="`/users/${comment.user_id}`">{{ comment.user.name }}</router-link>
+        <router-link 
+          :class="`${prefixCls}-item-top-link`" 
+          :to="`/users/${comment.user_id}`">{{ comment.user.name }}</router-link>
         <span v-if="comment.reply_user">回复</span><span v-else>评论了你的头条</span>
-        <router-link :class="`${prefixCls}-item-top-link`" v-if="comment.reply_user" :to="`/users/${comment.reply_user}`">{{ comment.reply.name }} </router-link>:
+        <router-link 
+          v-if="comment.reply_user" 
+          :class="`${prefixCls}-item-top-link`" 
+          :to="`/users/${comment.reply_user}`">{{ comment.reply.name }} </router-link>:
         <p>{{ comment.created_at | time2tips }}</p>
       </section>
     </div>
     <div :class="`${prefixCls}-item-bottom`">
-      <span class="content" @click.stop="showCommentInput">
+      <span 
+        class="content" 
+        @click.stop="showCommentInput">
         {{ comment.body }}
       </span>
-      <section v-if="comment.commentable !== null" @click="goToFeedDetail()">
-        <div :class="`${prefixCls}-item-bottom-noImg`" class="content" v-if="!getImage">
+      <section 
+        v-if="comment.commentable !== null" 
+        @click="goToFeedDetail()">
+        <div 
+          v-if="!getImage" 
+          :class="`${prefixCls}-item-bottom-noImg`" 
+          class="content">
           {{ comment.commentable.subject }}
         </div>
-        <div :class="`${prefixCls}-item-bottom-img`" v-else>
+        <div 
+          v-else 
+          :class="`${prefixCls}-item-bottom-img`">
           <div class="img">
-            <img :src="getImage" :alt="comment.user.name">
+            <img 
+              :src="getImage" 
+              :alt="comment.user.name">
           </div>
           <div class="content">
             {{ comment.commentable.subject }}
@@ -27,7 +43,9 @@
         </div>
       </section>
       <section v-if="comment.commentable === null">
-        <div :class="`${prefixCls}-item-bottom-noImg`" class="content">
+        <div 
+          :class="`${prefixCls}-item-bottom-noImg`" 
+          class="content">
           产品已被删除
         </div>
       </section>
@@ -38,12 +56,37 @@
 const prefixCls = "msgList";
 const url = "/questions/";
 export default {
-  name: "productItem",
+  name: "ProductItem",
   props: ["comment"],
   data: () => ({
     prefixCls,
     url
   }),
+  computed: {
+    /**
+     * 获取图片,并计算地址
+     * @Author   Wayne
+     * @DateTime 2018-01-31
+     * @Email    qiaobin@zhiyicx.com
+     * @return   {[type]}            [description]
+     */
+    getImage() {
+      const { comment } = this;
+      const { id = 0 } = comment.commentable.image || {};
+      if (id > 0) {
+        return `/api/v2/files/${id}`;
+      }
+
+      return false;
+    },
+    user() {
+      const { user } = this.comment || { user: {} };
+      return user;
+    }
+  },
+  created() {
+    // console.log(this.comment)
+  },
   methods: {
     /**
      * 进入详情
@@ -93,31 +136,6 @@ export default {
         }
       });
     }
-  },
-  computed: {
-    /**
-     * 获取图片,并计算地址
-     * @Author   Wayne
-     * @DateTime 2018-01-31
-     * @Email    qiaobin@zhiyicx.com
-     * @return   {[type]}            [description]
-     */
-    getImage() {
-      const { comment } = this;
-      const { id = 0 } = comment.commentable.image || {};
-      if (id > 0) {
-        return `/api/v2/files/${id}`;
-      }
-
-      return false;
-    },
-    user() {
-      const { user } = this.comment || { user: {} };
-      return user;
-    }
-  },
-  created() {
-    // console.log(this.comment)
   }
 };
 </script>

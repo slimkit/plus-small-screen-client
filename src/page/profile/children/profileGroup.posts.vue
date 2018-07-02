@@ -1,13 +1,18 @@
 <template>
-    <div>
-        <div class="profile-group-nav">
-            <div class='profile-group-nav-item' :class='{active: curType === type}' v-for='({ label, type },index) in navs' :key='`profile-group-nav-${index}`' @click='curType = type'>{{ label }}</div>
-        </div>
+  <div>
+    <div class="profile-group-nav">
+      <div 
+        v-for="({ label, type },index) in navs" 
+        :class="{active: curType === type}" 
+        :key="`profile-group-nav-${index}`" 
+        class="profile-group-nav-item" 
+        @click="curType = type">{{ label }}</div>
     </div>
+  </div>
 </template>
 <script>
 export default {
-  name: "profileGroup_posts",
+  name: "ProfileGroupPosts",
   data() {
     return {
       curType: 1,
@@ -33,6 +38,9 @@ export default {
       this.getData();
     }
   },
+  created() {
+    this.getData();
+  },
 
   methods: {
     getData() {
@@ -42,9 +50,6 @@ export default {
           this.dataList = data;
         });
     }
-  },
-  created() {
-    this.getData();
   }
 };
 </script>

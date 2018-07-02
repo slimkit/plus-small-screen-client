@@ -2,38 +2,49 @@
   <div class="m-pos-f m-box-model m-main">
     <header class="m-box-model m-fd-row m-head-top m-justify-bet m-aln-center m-lim-width m-bb1">
       <div class="m-box m-flex-grow1 m-aln-center m-flex-base0">
-        <a class="m-send-btn" href="javascript:;" @click='beforeGoBack'>取消</a>
+        <a 
+          class="m-send-btn" 
+          href="javascript:;" 
+          @click="beforeGoBack">取消</a>
       </div>
       <div class="m-box-model m-flex-grow1 m-aln-center m-flex-base0 m-head-top-title">发布动态</div>
       <div class="m-box m-flex-grow1 m-aln-center m-flex-base0 m-justify-end">
-        <svg v-if="loading" class="m-style-svg m-svg-def">
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-loading"></use>
+        <svg 
+          v-if="loading" 
+          class="m-style-svg m-svg-def">
+          <use 
+            xmlns:xlink="http://www.w3.org/1999/xlink" 
+            xlink:href="#base-loading"/>
         </svg>
         <a
           v-else
-          class="m-send-btn"
           :class="{ disabled }"
+          class="m-send-btn"
           @click.prevent.stop="sendmessage">发布</a>
       </div>
     </header>
     <main
-       class="m-reles-con m-lim-width m-box-model m-flex-shrink1"
-       @click.self='areaFocus'>
-       <content-text
-       :rows='8'
-       ref="contentText"
-       :maxlength="255"
-       class='m-reles-txt-wrap'
-       :placeholder="`输入要说的话，图文结合更精彩哦`" />
-      <image-list style="padding: 0 .3rem .3rem" :edit="pinned"/>
+      class="m-reles-con m-lim-width m-box-model m-flex-shrink1"
+      @click.self="areaFocus">
+      <content-text
+        ref="contentText"
+        :rows="8"
+        :maxlength="255"
+        :placeholder="`输入要说的话，图文结合更精彩哦`"
+        class="m-reles-txt-wrap" />
+      <image-list 
+        :edit="pinned" 
+        style="padding: 0 .3rem .3rem"/>
     </main>
-    <footer class="m-box-model m-flex-shrink1 m-aln-center" style="z-index: 10">
+    <footer 
+      class="m-box-model m-flex-shrink1 m-aln-center" 
+      style="z-index: 10">
       <v-switch
-       class="m-box m-bt1 m-bb1 m-lim-width m-pinned-row"
-       type="checkbox"
-       v-model="pinned">
-         <slot>是否收费</slot>
-       </v-switch>
+        v-model="pinned"
+        class="m-box m-bt1 m-bb1 m-lim-width m-pinned-row"
+        type="checkbox">
+        <slot>是否收费</slot>
+      </v-switch>
     </footer>
   </div>
 </template>
@@ -43,7 +54,7 @@ import { mapGetters } from "vuex";
 import ImageList from "./components/ImageList.vue";
 import ContentText from "./components/ContentText.vue";
 export default {
-  name: "post-image",
+  name: "PostImage",
   components: {
     ImageList,
     ContentText
@@ -67,6 +78,7 @@ export default {
       return !(imageAllCompleted && this.composePhoto.length > 0);
     }
   },
+  mounted() {},
   methods: {
     beforeGoBack() {
       this.contentText.length > 0
@@ -149,7 +161,6 @@ export default {
           });
       }
     }
-  },
-  mounted() {}
+  }
 };
 </script>

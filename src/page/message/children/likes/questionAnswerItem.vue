@@ -3,15 +3,24 @@
     <div :class="`${prefixCls}-item-top`">
       <avatar :user="user" />
       <section class="userInfo">
-        <span v-if="!user.id" :class="`${prefixCls}-item-top-link`">未知用户 </span>
-        <router-link v-else :class="`${prefixCls}-item-top-link`" :to="`/users/${user._id}`">{{ user.name || "未知用户" }} </router-link>
+        <span 
+          v-if="!user.id" 
+          :class="`${prefixCls}-item-top-link`">未知用户 </span>
+        <router-link 
+          v-else 
+          :class="`${prefixCls}-item-top-link`" 
+          :to="`/users/${user._id}`">{{ user.name || "未知用户" }} </router-link>
         <span>赞了你的回答</span>
         <p>{{ like.created_at | time2tips }}</p>
       </section>
     </div>
     <div :class="`${prefixCls}-item-bottom`">
-      <section v-if="like.likeable !== null" @click="goToFeedDetail()">
-        <div :class="`${prefixCls}-item-bottom-noImg`" class="content">
+      <section 
+        v-if="like.likeable !== null" 
+        @click="goToFeedDetail()">
+        <div 
+          :class="`${prefixCls}-item-bottom-noImg`" 
+          class="content">
           {{ like.likeable.body }}
         </div>
         <!-- <div :class="`${prefixCls}-item-bottom-img`" v-else>
@@ -24,7 +33,9 @@
         </div> -->
       </section>
       <section v-if="like.likeable === null">
-        <div :class="`${prefixCls}-item-bottom-noImg`" class="content">
+        <div 
+          :class="`${prefixCls}-item-bottom-noImg`" 
+          class="content">
           回答已被删除
         </div>
       </section>
@@ -34,26 +45,11 @@
 <script>
 const prefixCls = "msgList";
 export default {
-  name: "questionAnswerItem",
+  name: "QuestionAnswerItem",
   props: ["like"],
   data: () => ({
     prefixCls
   }),
-  methods: {
-    /**
-     * 进入详情
-     * @Author   Wayne
-     * @DateTime 2018-01-31
-     * @Email    qiaobin@zhiyicx.com
-     * @return   {[type]}            [description]
-     */
-    goToFeedDetail() {
-      const {
-        likeable: { id = 0 }
-      } = this.like;
-      this.$router.push(`/questions/${id}`);
-    }
-  },
   computed: {
     /**
      * 获取图片,并计算地址
@@ -78,6 +74,21 @@ export default {
   },
   created() {
     // console.log(this.comment)
+  },
+  methods: {
+    /**
+     * 进入详情
+     * @Author   Wayne
+     * @DateTime 2018-01-31
+     * @Email    qiaobin@zhiyicx.com
+     * @return   {[type]}            [description]
+     */
+    goToFeedDetail() {
+      const {
+        likeable: { id = 0 }
+      } = this.like;
+      this.$router.push(`/questions/${id}`);
+    }
   }
 };
 </script>

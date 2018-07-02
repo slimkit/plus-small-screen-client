@@ -1,22 +1,29 @@
 <template>
   <div @touchmove.prevent>
-    <transition name='toast'>
-      <div v-if='show' class="m-pop-box" @click='cancel'></div>
+    <transition name="toast">
+      <div 
+        v-if="show" 
+        class="m-pop-box" 
+        @click="cancel"/>
     </transition>
     <transition>
-    <!-- 屏蔽出场动画 -->
-    <!-- enter-active-class="animated jello" -->
-      <div v-if='show' class="m-box-model m-main m-check-in-box">
+      <!-- 屏蔽出场动画 -->
+      <!-- enter-active-class="animated jello" -->
+      <div 
+        v-if="show" 
+        class="m-box-model m-main m-check-in-box">
         <header class="m-box-model m-aln-center m-justify-center m-check-in-head">
           <h2>每日签到</h2>
           <p>累计签到{{ last_checkin_count }}天</p>
-          <a class="m-check-in-close" @click="cancel">
+          <a 
+            class="m-check-in-close" 
+            @click="cancel">
             <svg 
               viewBox="0 0 1024 1024"
               class="m-style-svg m-svg-def"
               style="fill:#fff;overflow:hidden;padding:3px;border-radius:100%;background:rgba(255, 255, 255, .2);box-shadow: 1px 1px 2px 1px rgba(0, 0, 0,.1);">
-              <path d="M176.662 817.173c-8.19 8.471-7.96 21.977 0.51 30.165 8.472 8.19 21.978 7.96 30.166-0.51l618.667-640c8.189-8.472 7.96-21.978-0.511-30.166-8.471-8.19-21.977-7.96-30.166 0.51l-618.666 640z"></path>
-              <path d="M795.328 846.827c8.19 8.471 21.695 8.7 30.166 0.511 8.471-8.188 8.7-21.694 0.511-30.165l-618.667-640c-8.188-8.471-21.694-8.7-30.165-0.511-8.471 8.188-8.7 21.694-0.511 30.165l618.666 640z"></path>
+              <path d="M176.662 817.173c-8.19 8.471-7.96 21.977 0.51 30.165 8.472 8.19 21.978 7.96 30.166-0.51l618.667-640c8.189-8.472 7.96-21.978-0.511-30.166-8.471-8.19-21.977-7.96-30.166 0.51l-618.666 640z"/>
+              <path d="M795.328 846.827c8.19 8.471 21.695 8.7 30.166 0.511 8.471-8.188 8.7-21.694 0.511-30.165l-618.667-640c-8.188-8.471-21.694-8.7-30.165-0.511-8.471 8.188-8.7 21.694-0.511 30.165l618.666 640z"/>
             </svg>
           </a>
         </header>
@@ -26,21 +33,26 @@
             <p>每日签到得{{ currency_name }}</p>
           </section>
           <button 
-            class="m-check-in-btn"
             :disabled="checked_in"
-            @click="fetchCheckIn">{{checked_in ? "已签到" : "签到"}}</button>
+            class="m-check-in-btn"
+            @click="fetchCheckIn">{{ checked_in ? "已签到" : "签到" }}</button>
           <div class="m-lim-width">
             <ul class="m-box m-lan-center m-justify-center m-check-in-user-list">
               <li 
-              v-if="user.id"
-              :key="user.id"
-              v-for="(user, index) in rank_users"
-              class="m-box-model m-aln-center" @click="cancel">
-                  <router-link :to="`/users/${user.id}`"
-                    :class="[`m-avatar-box-tiny`, `m-avatar-box-${user.sex}`]"
-                    class="m-flex-shrink0 m-flex-grow0 m-avatar-box">
-                    <img v-if="user.avatar" :src="user.avatar" class="m-avatar-img">
-                  </router-link>
+                v-for="(user, index) in rank_users"
+                v-if="user.id"
+                :key="user.id"
+                class="m-box-model m-aln-center" 
+                @click="cancel">
+                <router-link 
+                  :to="`/users/${user.id}`"
+                  :class="[`m-avatar-box-tiny`, `m-avatar-box-${user.sex}`]"
+                  class="m-flex-shrink0 m-flex-grow0 m-avatar-box">
+                  <img 
+                    v-if="user.avatar" 
+                    :src="user.avatar" 
+                    class="m-avatar-img">
+                </router-link>
                 <span>{{ index + 1 }}</span>
               </li>
             </ul>
@@ -53,7 +65,7 @@
 <script>
 import bus from "@/bus.js";
 export default {
-  name: "check-in",
+  name: "CheckIn",
   data() {
     return {
       show: false,

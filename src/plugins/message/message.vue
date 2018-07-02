@@ -1,8 +1,13 @@
 <template>
-  <transition :name="transitionName" @enter="handleEnter" @leave="handleLeave">
+  <transition 
+    :name="transitionName" 
+    @enter="handleEnter" 
+    @leave="handleLeave">
     <div :class="classes">
-      <svg :class='[`${prefixCls}-icon`]'>
-        <use xmlns:xlink="http://www.w3.org/1999/xlink" :xlink:href="`#${icon}`"></use>
+      <svg :class="[`${prefixCls}-icon`]">
+        <use 
+          :xlink:href="`#${icon}`" 
+          xmlns:xlink="http://www.w3.org/1999/xlink"/>
       </svg>
       <span class="ellipsis">{{ content | plusMessageAnalyze(defaultMessage) }}</span>
     </div>
@@ -64,6 +69,17 @@ export default {
       return "发生错误了，请刷新重试！";
     }
   },
+  mounted() {
+    this.clearCloseTimer();
+    if (this.duration !== 0) {
+      this.closeTimer = setTimeout(() => {
+        this.close();
+      }, this.duration * 1000);
+    }
+  },
+  beforeDestroy() {
+    this.clearCloseTimer();
+  },
   methods: {
     clearCloseTimer() {
       if (this.closeTimer) {
@@ -78,17 +94,6 @@ export default {
     },
     handleEnter() {},
     handleLeave() {}
-  },
-  mounted() {
-    this.clearCloseTimer();
-    if (this.duration !== 0) {
-      this.closeTimer = setTimeout(() => {
-        this.close();
-      }, this.duration * 1000);
-    }
-  },
-  beforeDestroy() {
-    this.clearCloseTimer();
   }
 };
 </script>

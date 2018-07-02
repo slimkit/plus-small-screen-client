@@ -8,7 +8,9 @@
     <div class="wallet-info--detail--content">
       <div class="wallet-info--detail--content-row">
         <span class="wallet-info--detail--content-row--label">{{ detail.action ? '收' : '付' }}款人</span>
-        <div><avatar :user="user" size='small'></avatar> {{ user.name }}</div>
+        <div><avatar 
+          :user="user" 
+          size="small"/> {{ user.name }}</div>
       </div>
       <div class="wallet-info--detail--content-row">
         <span class="wallet-info--detail--content-row--label m-flex-shrink0">交易说明</span>

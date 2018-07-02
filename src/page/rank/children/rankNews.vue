@@ -1,6 +1,12 @@
 <template>
   <div>
-    <rank-users-component v-for="rank in ranks" :title="rank.title" :api="rank.api" :name="rank.name" :key="rank.name" :listUrl="rank.listUrl" />
+    <rank-users-component 
+      v-for="rank in ranks" 
+      :title="rank.title" 
+      :api="rank.api" 
+      :name="rank.name" 
+      :key="rank.name" 
+      :list-url="rank.listUrl" />
   </div>
 </template>
 
@@ -27,7 +33,7 @@ const ranks = [
   }
 ];
 export default {
-  name: "rankNews",
+  name: "RankNews",
   components: {
     RankUsersComponent
   },

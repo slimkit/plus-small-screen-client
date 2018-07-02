@@ -1,18 +1,20 @@
 <template>
   <div
-  :id='`m-pics${id}`'
-  :class="['m-pics',`m-pics-${pics.length}`]">
+    :id="`m-pics${id}`"
+    :class="['m-pics',`m-pics-${pics.length}`]">
     <ul class="m-pics-list">
-      <li v-for='(img, index) in pics' :key="`pics-${id}-${index}`">
+      <li 
+        v-for="(img, index) in pics" 
+        :key="`pics-${id}-${index}`">
         <div
-        :class="['m-pics-box',{ 'long': isLongImg(img) }]"
-        :style='pics.length === 1 ? longStyle(img.w, img.h) : ""'>
+          :class="['m-pics-box',{ 'long': isLongImg(img) }]"
+          :style="pics.length === 1 ? longStyle(img.w, img.h) : &quot;&quot;">
           <async-file :file="img.file" >
             <div
-              class="m-pic" 
-              slot-scope="props"
-              @click.stop='handleClick($event, index)'
+              slot-scope="props" 
               :style="{ backgroundImage: `url(${props.src})` }"
+              class="m-pic"
+              @click.stop="handleClick($event, index)"
             />
           </async-file>
         </div>
@@ -23,7 +25,7 @@
 <script>
 import bus from "@/bus.js";
 export default {
-  name: "m-pics",
+  name: "MPics",
   props: {
     id: {
       type: Number,

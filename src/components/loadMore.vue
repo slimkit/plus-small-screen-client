@@ -1,54 +1,60 @@
 <template lang="html">
   <div
-  :style="{ transform: translate, transitionDuration: transition }"
-  @mousedown='startDrag'
-  @touchstart='startDrag'
-  @mousemove.stop='onDrag'
-  @touchmove.stop='onDrag'
-  @mouseup='stopDrag'
-  @touchend='stopDrag'
-  @mouseleave='stopDrag'
+    :style="{ transform: translate, transitionDuration: transition }"
+    @mousedown="startDrag"
+    @touchstart="startDrag"
+    @mousemove.stop="onDrag"
+    @touchmove.stop="onDrag"
+    @mouseup="stopDrag"
+    @touchend="stopDrag"
+    @mouseleave="stopDrag"
   >
     <div class="load-more-tips">
-      <slot name='head'>
-        <div v-if='requesting' class="load-more-loading">
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
+      <slot name="head">
+        <div 
+          v-if="requesting" 
+          class="load-more-loading">
+          <span/>
+          <span/>
+          <span/>
+          <span/>
+          <span/>
+          <span/>
+          <span/>
+          <span/>
+          <span/>
+          <span/>
+          <span/>
+          <span/>
         </div>
-        <i v-else :class="{up: (dragging && dY > topDistance)}">↓</i>
-        <span v-if='showText'>{{ status }}</span>
+        <i 
+          v-else 
+          :class="{up: (dragging && dY > topDistance)}">↓</i>
+        <span v-if="showText">{{ status }}</span>
       </slot>
     </div>
-    <slot></slot>
-    <div class="load-more-tips" v-if='onLoadMore'>
-      <template v-if='loading'>
+    <slot/>
+    <div 
+      v-if="onLoadMore" 
+      class="load-more-tips">
+      <template v-if="loading">
         <div class="load-more-loading">
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
+          <span/>
+          <span/>
+          <span/>
+          <span/>
+          <span/>
+          <span/>
+          <span/>
+          <span/>
+          <span/>
+          <span/>
+          <span/>
+          <span/>
         </div>
         <span>加载中...</span>
       </template>
-      <template v-if='noMore && !loading'>
+      <template v-if="noMore && !loading">
         <span>没有更多数据了</span>
       </template>
     </div>
@@ -73,7 +79,7 @@ const getScrollTarget = el => {
 };
 import _ from "lodash";
 export default {
-  name: "load-more",
+  name: "LoadMore",
   props: {
     noTranslateAnimation: {
       type: Boolean,

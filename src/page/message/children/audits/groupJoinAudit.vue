@@ -2,23 +2,29 @@
   <div :class="`${prefixCls}`">
     <div :class="`${prefixCls}-container`">
       <load-more
-          :onRefresh='onRefresh'
-          :onLoadMore='onLoadMore'
-          ref='loadmore'
-          :class="`${prefixCls}-loadmore`"
-        >
-          <div v-if="audit.comment !== null" v-for="audit in audits" :class="`${prefixCls}-item`" :key="`group-join-${audit.id}`">
-            <div :class="`${prefixCls}-item-top`">
-              <avatar :user="audit.user" />
-              <section class="userInfo">
-                <router-link :class="`${prefixCls}-item-top-link`" :to="`/users/${audit.user_id}`">{{ audit.user.name }}</router-link>
-                <p>{{ audit.created_at | time2tips }}</p>
-              </section>
-              <group-join-audit-status :audit="audit" />
-            </div>
-            <audit-content :audit="getAuditContent(audit)" />
+        ref="loadmore"
+        :on-refresh="onRefresh"
+        :on-load-more="onLoadMore"
+        :class="`${prefixCls}-loadmore`"
+      >
+        <div 
+          v-for="audit in audits" 
+          v-if="audit.comment !== null" 
+          :class="`${prefixCls}-item`" 
+          :key="`group-join-${audit.id}`">
+          <div :class="`${prefixCls}-item-top`">
+            <avatar :user="audit.user" />
+            <section class="userInfo">
+              <router-link 
+                :class="`${prefixCls}-item-top-link`" 
+                :to="`/users/${audit.user_id}`">{{ audit.user.name }}</router-link>
+              <p>{{ audit.created_at | time2tips }}</p>
+            </section>
+            <group-join-audit-status :audit="audit" />
           </div>
-        </load-more>
+          <audit-content :audit="getAuditContent(audit)" />
+        </div>
+      </load-more>
     </div>
   </div>  
 </template>
@@ -31,11 +37,11 @@ import AuditContent from "../../components/auditContent";
 
 const prefixCls = "msgList";
 export default {
+  name: "GroupJoinAudit",
   components: {
     AuditContent,
     groupJoinAuditStatus
   },
-  name: "groupJoinAudit",
   data: () => ({
     prefixCls
   }),

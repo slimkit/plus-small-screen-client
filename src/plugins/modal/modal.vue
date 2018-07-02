@@ -1,10 +1,19 @@
 <template>
-  <div :class="prefixCls" @click="handleWrapClick" :style="styles" v-show='visible'>
-    <div :class="`${prefixCls}-close`" v-if='closable' @click.stop='close'>
-      <span></span>
-      <span></span>
+  <div 
+    v-show="visible" 
+    :class="prefixCls" 
+    :style="styles" 
+    @click="handleWrapClick">
+    <div 
+      v-if="closable" 
+      :class="`${prefixCls}-close`" 
+      @click.stop="close">
+      <span/>
+      <span/>
     </div>
-    <div :class="`${prefixCls}-body`" @click.stop='handleBodyClick'>
+    <div 
+      :class="`${prefixCls}-body`" 
+      @click.stop="handleBodyClick">
       <slot>
         <div :class="`${prefixCls}-wrap`">
           <div :class="`${prefixCls}-content`">这是一个弹层</div>
@@ -17,7 +26,7 @@
 const prefixCls = "v-modal";
 let scrollTop;
 export default {
-  name: "v-modal",
+  name: "VModal",
   props: {
     value: {
       type: Boolean,
@@ -62,6 +71,7 @@ export default {
       }
     }
   },
+  mounted() {},
   methods: {
     close() {
       this.visible = false;
@@ -74,8 +84,7 @@ export default {
       }
     },
     handleBodyClick() {}
-  },
-  mounted() {}
+  }
 };
 </script>
 <style lang='less'>

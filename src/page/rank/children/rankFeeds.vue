@@ -1,6 +1,9 @@
 <template>
   <div>
-    <rank-users-component v-for="rank in ranks" v-bind="rank" :key="rank.api" />
+    <rank-users-component 
+      v-for="rank in ranks" 
+      v-bind="rank" 
+      :key="rank.api" />
   </div>
 </template>
 <script>
@@ -27,7 +30,7 @@ const ranks = [
 ];
 
 export default {
-  name: "rankFeeds",
+  name: "RankFeeds",
   components: {
     RankUsersComponent
   },

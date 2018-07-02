@@ -1,23 +1,42 @@
 <template>
-    <div class="not_found" @click='$router.go(-1)'>
-        <svg viewBox="0 0 600 300">
-            <!-- Symbol -->
-            <symbol id="s-text">
-                <text text-anchor="middle" x="50%" y="50%" dy=".35em"> 404 </text>
-            </symbol>
-            <!-- Duplicate symbols -->
-            <use xlink:href="#s-text" class="text"></use>
-            <use xlink:href="#s-text" class="text"></use>
-            <use xlink:href="#s-text" class="text"></use>
-            <use xlink:href="#s-text" class="text"></use>
-            <use xlink:href="#s-text" class="text"></use>
-            <text x="50%" y="290" class='tips_text'>页面走丢了, 点击返回上一页</text>
-        </svg>
-    </div>
+  <div 
+    class="not_found" 
+    @click="$router.go(-1)">
+    <svg viewBox="0 0 600 300">
+      <!-- Symbol -->
+      <symbol id="s-text">
+        <text 
+          text-anchor="middle" 
+          x="50%" 
+          y="50%" 
+          dy=".35em"> 404 </text>
+      </symbol>
+      <!-- Duplicate symbols -->
+      <use 
+        xlink:href="#s-text" 
+        class="text"/>
+      <use 
+        xlink:href="#s-text" 
+        class="text"/>
+      <use 
+        xlink:href="#s-text" 
+        class="text"/>
+      <use 
+        xlink:href="#s-text" 
+        class="text"/>
+      <use 
+        xlink:href="#s-text" 
+        class="text"/>
+      <text 
+        x="50%" 
+        y="290" 
+        class="tips_text">页面走丢了, 点击返回上一页</text>
+    </svg>
+  </div>
 </template>
 <script>
 export default {
-  name: "notFound"
+  name: "NotFound"
 };
 </script>
 <style lang='less' scoped>

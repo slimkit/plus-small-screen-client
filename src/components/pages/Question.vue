@@ -2,14 +2,18 @@
   <div>
     <header class="m-box m-pos-f m-main m-bb1 m-head-top">
       <div class="m-box m-aln-center m-flex-grow1 m-flex-base0">
-        <svg class="m-style-svg m-svg-def" @click="goBack">
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-back"></use>
+        <svg 
+          class="m-style-svg m-svg-def" 
+          @click="goBack">
+          <use 
+            xmlns:xlink="http://www.w3.org/1999/xlink" 
+            xlink:href="#base-back"/>
         </svg>
       </div>
       <div class="m-box m-aln-center m-flex-grow1 m-flex-base0 m-justify-center m-head-top-title">
         <span>问题详情</span>
       </div>
-      <div class="m-box m-aln-center m-flex-grow1 m-flex-base0"></div>
+      <div class="m-box m-aln-center m-flex-grow1 m-flex-base0"/>
     </header>
     <div :class="classNameBuilder('container')">
       <load-more
@@ -36,7 +40,9 @@
           <h3 :class="classNameBuilder('main-title')">{{ question.subject }}</h3>
 
           <!-- Body -->
-          <div :class="['markdown-body', classNameBuilder('main-body')]" v-html="htmlBody"></div>
+          <div 
+            :class="['markdown-body', classNameBuilder('main-body')]" 
+            v-html="htmlBody"/>
 
           <!-- watch -->
           <div :class="classNameBuilder('main-watch')">
@@ -71,14 +77,18 @@
           <!-- Button -->
           <div :class="classNameBuilder('main-button')">
             <div class="button">
-              <svg fill="#666" :class="classNameBuilder('main-button-icon')">
+              <svg 
+                :class="classNameBuilder('main-button-icon')" 
+                fill="#666">
                 <use xlink:href="#base-reward" />
               </svg>
               {{ question.amount ? '已' : '未' }}设置悬赏
             </div>
-            <span></span>
+            <span/>
             <div class="button">
-              <svg fill="#666" :class="classNameBuilder('main-button-icon')">
+              <svg 
+                :class="classNameBuilder('main-button-icon')" 
+                fill="#666">
                 <use xlink:href="#base-edit" />
               </svg>
               添加回答
@@ -91,7 +101,9 @@
           <div>{{ question.answers_count }}个回答</div>
           <button @click="handleTargetAnswersOrder">
             {{ answersTimeOrder ? '时间排序' : '默认排序' }}
-            <svg fill="#999" class="icon">
+            <svg 
+              fill="#999" 
+              class="icon">
               <use xlink:href="#base-filter-list" />
             </svg>
           </button>
@@ -106,26 +118,43 @@
       </load-more>
     </div>
     <div :class="classNameBuilder('tabbar')">
-      <a href="#" :class="classNameBuilder('tabbar-item')">
-        <svg fill="#999" :class="classNameBuilder('tabbar-icon')">
+      <a 
+        :class="classNameBuilder('tabbar-item')" 
+        href="#">
+        <svg 
+          :class="classNameBuilder('tabbar-icon')" 
+          fill="#999">
           <use xlink:href="#message-comments" />
         </svg>
         评论
       </a>
-      <a href="#" :class="classNameBuilder('tabbar-item')">
-        <svg fill="#999" :class="classNameBuilder('tabbar-icon')">
+      <a 
+        :class="classNameBuilder('tabbar-item')" 
+        href="#">
+        <svg 
+          :class="classNameBuilder('tabbar-icon')" 
+          fill="#999">
           <use xlink:href="#base-share" />
         </svg>
         分享
       </a>
-      <a v-show="editer" href="#" :class="classNameBuilder('tabbar-item')">
-        <svg fill="#999" :class="classNameBuilder('tabbar-icon')">
+      <a 
+        v-show="editer" 
+        :class="classNameBuilder('tabbar-item')" 
+        href="#">
+        <svg 
+          :class="classNameBuilder('tabbar-icon')" 
+          fill="#999">
           <use xlink:href="#edit" />
         </svg>
         编辑
       </a>
-      <a href="#" :class="classNameBuilder('tabbar-item')">
-        <svg fill="#999" :class="classNameBuilder('tabbar-icon')">
+      <a 
+        :class="classNameBuilder('tabbar-item')" 
+        href="#">
+        <svg 
+          :class="classNameBuilder('tabbar-icon')" 
+          fill="#999">
           <use xlink:href="#base-more" />
         </svg>
         更多
@@ -234,6 +263,9 @@ export default {
       }
     }
   },
+  mounted() {
+    this.loadContainer.beforeRefresh();
+  },
   /**
    * Methods.
    *
@@ -317,9 +349,6 @@ export default {
           this.$Message.error(data);
         });
     }
-  },
-  mounted() {
-    this.loadContainer.beforeRefresh();
   }
 };
 </script>

@@ -1,15 +1,15 @@
 <template>
   <div class="p-profile-collection-feeds">
     <load-more
-      style="padding-top: .9rem"
-      ref='loadmore'
-      :onRefresh='onRefresh'
-      :onLoadMore='onLoadMore'>
+      ref="loadmore"
+      :on-refresh="onRefresh"
+      :on-load-more="onLoadMore"
+      style="padding-top: .9rem">
       <ul>
         <li
-          class="p-profile-collection-feeds-item"
           v-for="feed in feeds"
-          :key="`clet-${feed.id}`">
+          :key="`clet-${feed.id}`"
+          class="p-profile-collection-feeds-item">
           <feed-card
             :feed="feed"
             :show-footer="false"/>
@@ -23,7 +23,7 @@
 import FeedCard from "@/components/FeedCard/FeedCard.vue";
 import { getCollectedFeed } from "@/api/feeds.js";
 export default {
-  name: "profile-collection-feeds",
+  name: "ProfileCollectionFeeds",
   components: {
     FeedCard
   },
@@ -32,6 +32,20 @@ export default {
     ChangeTracker: 1,
     isCurrentView: false
   }),
+  computed: {
+    offset() {
+      return this.feeds.length;
+    },
+    feeds() {
+      return this.ChangeTracker && Array.from(this.feedList.values());
+    },
+    params() {
+      return {
+        offset: this.offset,
+        limit: 15
+      };
+    }
+  },
   methods: {
     formatFeeds(feedList) {
       feedList.forEach(feed => {
@@ -55,20 +69,6 @@ export default {
         this.formatFeeds(data);
         this.$refs.loadmore.bottomEnd(data.length < this.params.limit);
       });
-    }
-  },
-  computed: {
-    offset() {
-      return this.feeds.length;
-    },
-    feeds() {
-      return this.ChangeTracker && Array.from(this.feedList.values());
-    },
-    params() {
-      return {
-        offset: this.offset,
-        limit: 15
-      };
     }
   }
 };

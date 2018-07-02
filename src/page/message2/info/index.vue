@@ -1,35 +1,42 @@
 <template>
-    <ul class="m-box-model m-entry-group">
-      <router-link v-for="item in system" tag='li' class="m-entry" :key="item.url" :to='item.url'>
-        <svg class="m-style-svg m-svg-big m-entry-prepend m-flex-grow0 m-flex-shrink0">
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" :xlink:href="`#${item.icon}`"></use>
-        </svg>
-        <div class="m-box-model m-justify-bet m-flex-grow1 m-flex-shrink1 m-flex-base0 m-entry-main">
-          <h2 class="m-text-cut">{{ item.title }}</h2>
-          <p class="m-text-cut">{{ computedGetter(item.placeholder) }}</p>
+  <ul class="m-box-model m-entry-group">
+    <router-link 
+      v-for="item in system" 
+      :key="item.url" 
+      :to="item.url" 
+      tag="li" 
+      class="m-entry">
+      <svg class="m-style-svg m-svg-big m-entry-prepend m-flex-grow0 m-flex-shrink0">
+        <use 
+          :xlink:href="`#${item.icon}`" 
+          xmlns:xlink="http://www.w3.org/1999/xlink"/>
+      </svg>
+      <div class="m-box-model m-justify-bet m-flex-grow1 m-flex-shrink1 m-flex-base0 m-entry-main">
+        <h2 class="m-text-cut">{{ item.title }}</h2>
+        <p class="m-text-cut">{{ computedGetter(item.placeholder) }}</p>
+      </div>
+      <div class="m-box-model m-flex-grow0 m-flex-shrink0 m-entry-end m-justify-bet">
+        <h5 v-if="computedGetter(item.time) !== '' && item.time">
+          {{ +new Date((computedGetter(item.time))) + 10 || '' | time2tips }}
+        </h5>
+        <h5 v-else/>
+        <div class="m-box m-aln-center m-justify-end">
+          <span 
+            v-if="computedGetter(item.count) !== 0" 
+            :class="`${prefixCls}-time-count`">
+            <i>{{ computedGetter(item.count) }}</i>
+          </span>
         </div>
-        <div class="m-box-model m-flex-grow0 m-flex-shrink0 m-entry-end m-justify-bet">
-          <h5 v-if="computedGetter(item.time) !== '' && item.time">
-            {{ +new Date((computedGetter(item.time))) + 10 || '' | time2tips }}
-          </h5>
-          <h5 v-else></h5>
-          <div class="m-box m-aln-center m-justify-end">
-            <span 
-              :class="`${prefixCls}-time-count`" 
-              v-if="computedGetter(item.count) !== 0">
-              <i>{{ computedGetter(item.count) }}</i>
-            </span>
-          </div>
-        </div>
-      </router-link>
-    </ul>
+      </div>
+    </router-link>
+  </ul>
 </template>
 <script>
 import { mapState } from "vuex";
 const prefixCls = "msg";
 
 export default {
-  name: "msg",
+  name: "Msg",
   data() {
     return {
       prefixCls,

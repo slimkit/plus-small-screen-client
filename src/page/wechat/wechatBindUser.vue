@@ -1,8 +1,10 @@
 <template>
-  <transition enter-active-class="animated bounceInRight" leave-active-class="animated bounceOutLeft">
+  <transition 
+    enter-active-class="animated bounceInRight" 
+    leave-active-class="animated bounceOutLeft">
     <div class="p-signin m-pos-f">
       <header class="m-box m-aln-center m-head-top m-pos-f m-main m-bb1">
-        <div class="m-box m-aln-center m-flex-grow1 m-flex-base0"></div>
+        <div class="m-box m-aln-center m-flex-grow1 m-flex-base0"/>
         <div class="m-box m-aln-center m-justify-center m-flex-grow1 m-flex-base0 m-head-top-title">
           <span>已有账号</span>
         </div>
@@ -17,44 +19,46 @@
           <label for="account">账户</label>
           <div class="m-input">
             <input
-            @focus="onFocus"
-            type="text"
-            id="account"
-            v-model="account"
-            placeholder="用户名/手机号/邮箱">
+              id="account"
+              v-model="account"
+              type="text"
+              placeholder="用户名/手机号/邮箱"
+              @focus="onFocus">
           </div>
           <svg 
-            @click="account = ''"
             v-show="account.length > 0"
-            class="m-style-svg m-svg-def">
-            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-clean"></use>
+            class="m-style-svg m-svg-def"
+            @click="account = ''">
+            <use 
+              xmlns:xlink="http://www.w3.org/1999/xlink" 
+              xlink:href="#base-clean"/>
           </svg>
         </div>
         <div class="m-form-row m-main">
           <label for="password">密码</label>
           <div class="m-input">
             <input
-            @focus="onFocus"
-            id="password"
-            type="text"
-            v-model="password"
-            v-if="eye"
-            placeholder="输入6位以上登录密码">
+              v-if="eye"
+              id="password"
+              v-model="password"
+              type="text"
+              placeholder="输入6位以上登录密码"
+              @focus="onFocus">
             <input 
-            @focus="onFocus"
-            id="password" 
-            type="password"
-            v-model="password"
-            v-else
-            placeholder="输入6位以上登录密码" 
+              v-else
+              id="password" 
+              v-model="password"
+              type="password"
+              placeholder="输入6位以上登录密码"
+              @focus="onFocus" 
             >
           </div>
           <svg
-          class="m-style-svg m-svg-def"
-          @click="eye=!eye">
+            class="m-style-svg m-svg-def"
+            @click="eye=!eye">
             <use 
-            xmlns:xlink="http://www.w3.org/1999/xlink"
-            :xlink:href='`#eye-${eye?"open":"close"}`'></use>
+              :xlink:href="`#eye-${eye?&quot;open&quot;:&quot;close&quot;}`"
+              xmlns:xlink="http://www.w3.org/1999/xlink"/>
           </svg>
         </div>
         <div class="m-box m-aln-center m-text-box m-form-err-box">
@@ -63,13 +67,19 @@
             <span v-if="err">{{ (err | plusMessageFirst) }}</span>
           </transition>
         </div>
-        <div class="m-form-row" style="border: 0">
+        <div 
+          class="m-form-row" 
+          style="border: 0">
           <button
-          :disabled="disabled"
-          class="m-long-btn m-signin-btn"
-          @click="bindUser">
-            <svg v-if="loading" class="m-style-svg m-svg-def">
-              <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-loading"></use>
+            :disabled="disabled"
+            class="m-long-btn m-signin-btn"
+            @click="bindUser">
+            <svg 
+              v-if="loading" 
+              class="m-style-svg m-svg-def">
+              <use 
+                xmlns:xlink="http://www.w3.org/1999/xlink" 
+                xlink:href="#base-loading"/>
             </svg>
             <span v-else>绑定账号</span>
           </button>
@@ -97,7 +107,7 @@ function strLength(str) {
   return totalLength;
 }
 export default {
-  name: "wechat-bind-user",
+  name: "WechatBindUser",
   data: () => ({
     err: "",
     eye: false,

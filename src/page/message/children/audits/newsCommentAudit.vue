@@ -1,43 +1,48 @@
 <template>
-    <div :class="`${prefixCls}`">
-        <div :class="`${prefixCls}-container`">
-            <load-more
-                    :onRefresh='onRefresh'
-                    :onLoadMore='onLoadMore'
-                    ref='loadmore'
-                    :class="`${prefixCls}-loadmore`"
-            >
-                <div v-for="audit in audits" :class="`${prefixCls}-item`" v-bind:key="`news-comment-${audit.id}`">
-                    <div :class="`${prefixCls}-item-top`">
-                        <avatar :user="audit.user"/>
-                        <section class="userInfo">
-                            <router-link :class="`${prefixCls}-item-top-link`" :to="`/users/${audit.user_id}`">{{
-                                audit.user.name }}
-                            </router-link>
-                            <p>{{ audit.created_at | time2tips }}</p>
-                        </section>
-                        <news-comment-audit-status :audit="audit"/>
-                    </div>
-                    <!--<div :class="`${prefixCls}-item-bottom`" v-if="audit.news">-->
-                    <!--&lt;!&ndash; <div class="content" @click="goToDetail(audit.news.id)" v-if="audit.comment"> &ndash;&gt;-->
-                    <!--<div class="content" v-if="audit.comment">-->
-                    <!--对你的文章进行了“<span>{{ audit.comment.body }}</span>”评论并申请置顶,请及时审核-->
-                    <!--</div>-->
-                    <!--&lt;!&ndash; <div class="content" @click="goToDetail(audit.news.id)" v-else> &ndash;&gt;-->
-                    <!--<div class="content" v-else>-->
-                    <!--对你的文章进行了评论并申请置顶,请及时审核-->
-                    <!--</div>-->
-                    <!--</div>-->
-                    <!--<div :class="`${prefixCls}-item-bottom`" v-else>-->
-                    <!--<div class="content red" @click="goToDetail(audit.news.id)">-->
-                    <!--该文章已被删除-->
-                    <!--</div>-->
-                    <!--</div>-->
-                    <audit-content :audit="getAuditContent(audit)"/>
-                </div>
-            </load-more>
+  <div :class="`${prefixCls}`">
+    <div :class="`${prefixCls}-container`">
+      <load-more
+        ref="loadmore"
+        :on-refresh="onRefresh"
+        :on-load-more="onLoadMore"
+        :class="`${prefixCls}-loadmore`"
+      >
+        <div 
+          v-for="audit in audits" 
+          :class="`${prefixCls}-item`" 
+          :key="`news-comment-${audit.id}`">
+          <div :class="`${prefixCls}-item-top`">
+            <avatar :user="audit.user"/>
+            <section class="userInfo">
+              <router-link 
+                :class="`${prefixCls}-item-top-link`" 
+                :to="`/users/${audit.user_id}`">{{
+                audit.user.name }}
+              </router-link>
+              <p>{{ audit.created_at | time2tips }}</p>
+            </section>
+            <news-comment-audit-status :audit="audit"/>
+          </div>
+          <!--<div :class="`${prefixCls}-item-bottom`" v-if="audit.news">-->
+          <!--&lt;!&ndash; <div class="content" @click="goToDetail(audit.news.id)" v-if="audit.comment"> &ndash;&gt;-->
+          <!--<div class="content" v-if="audit.comment">-->
+          <!--对你的文章进行了“<span>{{ audit.comment.body }}</span>”评论并申请置顶,请及时审核-->
+          <!--</div>-->
+          <!--&lt;!&ndash; <div class="content" @click="goToDetail(audit.news.id)" v-else> &ndash;&gt;-->
+          <!--<div class="content" v-else>-->
+          <!--对你的文章进行了评论并申请置顶,请及时审核-->
+          <!--</div>-->
+          <!--</div>-->
+          <!--<div :class="`${prefixCls}-item-bottom`" v-else>-->
+          <!--<div class="content red" @click="goToDetail(audit.news.id)">-->
+          <!--该文章已被删除-->
+          <!--</div>-->
+          <!--</div>-->
+          <audit-content :audit="getAuditContent(audit)"/>
         </div>
+      </load-more>
     </div>
+  </div>
 </template>
 
 <script>
@@ -50,11 +55,11 @@ import AuditContent from "../../components/auditContent";
 
 const prefixCls = "msgList";
 export default {
+  name: "NewsCommentAudit",
   components: {
     AuditContent,
     newsCommentAuditStatus
   },
-  name: "newsCommentAudit",
   data: () => ({
     prefixCls
   }),

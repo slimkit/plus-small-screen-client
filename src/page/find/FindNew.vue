@@ -1,17 +1,20 @@
 <template>
   <jo-load-more
-  key="find-new"
-  ref="loadmore"
-  @onRefresh="onRefresh"
-  @onLoadMore="onLoadMore">
-    <user-item v-for="user in users" :user="user" :key="user.id"></user-item>
+    key="find-new"
+    ref="loadmore"
+    @onRefresh="onRefresh"
+    @onLoadMore="onLoadMore">
+    <user-item 
+      v-for="user in users" 
+      :user="user" 
+      :key="user.id"/>
   </jo-load-more>
 </template>
 <script>
 import UserItem from "@/components/UserItem.vue";
 import { findUserByType } from "@/api/user.js";
 export default {
-  name: "find-pop",
+  name: "FindPop",
   components: {
     UserItem
   },

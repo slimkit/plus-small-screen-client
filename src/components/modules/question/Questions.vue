@@ -3,16 +3,38 @@
 
     <!-- Question navs. -->
     <nav class="module-questions-nav">
-      <router-link to="/question" replace exact exact-active-class="active">热门</router-link>
-      <router-link :to="navRouterLinkBuilder('excellent')" replace exact exact-active-class="active">精选</router-link>
-      <router-link :to="navRouterLinkBuilder('reward')" replace exact exact-active-class="active">悬赏</router-link>
-      <router-link :to="navRouterLinkBuilder('new')" replace exact exact-active-class="active">最新</router-link>
-      <router-link :to="navRouterLinkBuilder('all')" replace exact exact-active-class="active">全部</router-link>
+      <router-link 
+        to="/question" 
+        replace 
+        exact 
+        exact-active-class="active">热门</router-link>
+      <router-link 
+        :to="navRouterLinkBuilder('excellent')" 
+        replace 
+        exact 
+        exact-active-class="active">精选</router-link>
+      <router-link 
+        :to="navRouterLinkBuilder('reward')" 
+        replace 
+        exact 
+        exact-active-class="active">悬赏</router-link>
+      <router-link 
+        :to="navRouterLinkBuilder('new')" 
+        replace 
+        exact 
+        exact-active-class="active">最新</router-link>
+      <router-link 
+        :to="navRouterLinkBuilder('all')" 
+        replace 
+        exact 
+        exact-active-class="active">全部</router-link>
     </nav>
 
     <!-- Question main. -->
     <main class="module-questions-main">
-      <div :class="classNamebuilder('main-loading')" v-if="loading">
+      <div 
+        v-if="loading" 
+        :class="classNamebuilder('main-loading')">
         <icon-loading :class="classNamebuilder('main-loading_icon')" />
       </div>
       <module-question-list-item
@@ -20,12 +42,18 @@
         :key="question.id"
         :question="question"
       />
-      <div :class="classNamebuilder('main-loadmore')" v-if="questions.length && !loadmore">
-        <button :class="classNamebuilder('main-loadmore_button')" @click="fetchQuestionsMore">
+      <div 
+        v-if="questions.length && !loadmore" 
+        :class="classNamebuilder('main-loadmore')">
+        <button 
+          :class="classNamebuilder('main-loadmore_button')" 
+          @click="fetchQuestionsMore">
           加载更多
         </button>
       </div>
-      <div :class="[classNamebuilder('main-loadmore')]" v-else-if="loadmore">
+      <div 
+        v-else-if="loadmore" 
+        :class="[classNamebuilder('main-loadmore')]">
         <button :class="[classNamebuilder('main-loadmore_button'), 'active']">
           <icon-loading :class="classNamebuilder('main-loading_icon')" />
         </button>
@@ -49,7 +77,7 @@ export default {
    *
    * @type {string}
    */
-  name: "module-questions",
+  name: "ModuleQuestions",
 
   /**
    * The components.
@@ -109,6 +137,32 @@ export default {
 
       return type;
     }
+  },
+
+  /**
+   * Watch methods.
+   *
+   * @type {Object}
+   */
+  watch: {
+    /**
+     * Watch $route.
+     *
+     * @return {void}
+     * @author Seven Du <shiweidu@outlook.com>
+     */
+    $route(newRoute, oldRoute) {
+      if (
+        newRoute.path === oldRoute.path &&
+        newRoute.query.type !== oldRoute.query.type
+      ) {
+        this.fetchQuestions();
+      }
+    }
+  },
+
+  mounted() {
+    this.fetchQuestions();
   },
 
   /**
@@ -179,32 +233,6 @@ export default {
     classNamebuilder(className) {
       return `module-questions-${className}`;
     }
-  },
-
-  /**
-   * Watch methods.
-   *
-   * @type {Object}
-   */
-  watch: {
-    /**
-     * Watch $route.
-     *
-     * @return {void}
-     * @author Seven Du <shiweidu@outlook.com>
-     */
-    $route(newRoute, oldRoute) {
-      if (
-        newRoute.path === oldRoute.path &&
-        newRoute.query.type !== oldRoute.query.type
-      ) {
-        this.fetchQuestions();
-      }
-    }
-  },
-
-  mounted() {
-    this.fetchQuestions();
   }
 };
 </script>

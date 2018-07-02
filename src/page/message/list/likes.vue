@@ -1,28 +1,40 @@
 <template>
   <div :class="`${prefixCls}`">
-    <header slot="head" class="m-box m-justify-bet m-aln-center m-head-top m-pos-f m-main m-bb1">
-        <div class="m-box m-flex-grow1 m-aln-center m-flex-base0">
-            <svg class='m-style-svg m-svg-def' @click='goBack'>
-                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-back"></use>
-            </svg>
-        </div>
-        <div class="m-box-model m-flex-grow1 m-aln-center m-flex-base0 m-head-top-title">
-            <span>收到的赞</span>
-        </div>
-        <div class="m-box m-flex-grow1 m-aln-center m-flex-base0 m-justify-end">
-
-        </div>
+    <header 
+      slot="head" 
+      class="m-box m-justify-bet m-aln-center m-head-top m-pos-f m-main m-bb1">
+      <div class="m-box m-flex-grow1 m-aln-center m-flex-base0">
+        <svg 
+          class="m-style-svg m-svg-def" 
+          @click="goBack">
+          <use 
+            xmlns:xlink="http://www.w3.org/1999/xlink" 
+            xlink:href="#base-back"/>
+        </svg>
+      </div>
+      <div class="m-box-model m-flex-grow1 m-aln-center m-flex-base0 m-head-top-title">
+        <span>收到的赞</span>
+      </div>
+      <div class="m-box m-flex-grow1 m-aln-center m-flex-base0 m-justify-end"/>
     </header>
 
-    <div :class="`${prefixCls}-container`" style="padding-top: 0.9rem">
+    <div 
+      :class="`${prefixCls}-container`" 
+      style="padding-top: 0.9rem">
       <load-more
-        :onRefresh='onRefresh'
-        :onLoadMore='onLoadMore'
-        ref='loadmore'
+        ref="loadmore"
+        :on-refresh="onRefresh"
+        :on-load-more="onLoadMore"
         :class="`${prefixCls}-loadmore`"
       >
-        <div :class="`${prefixCls}-item`" v-if="like.id" v-for="like in likes" :key="like.id">
-          <component :is="items[like.likeable_type]" :like="like"></component>
+        <div 
+          v-for="like in likes" 
+          v-if="like.id" 
+          :class="`${prefixCls}-item`" 
+          :key="like.id">
+          <component 
+            :is="items[like.likeable_type]" 
+            :like="like"/>
         </div>
       </load-more>
     </div>
@@ -47,7 +59,7 @@ const items = {
   "question-answers": questionAnswerItem
 };
 export default {
-  name: "myLikes",
+  name: "MyLikes",
   data: () => ({
     prefixCls,
     refreshData: [],

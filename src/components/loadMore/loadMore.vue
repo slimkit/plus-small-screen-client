@@ -1,14 +1,18 @@
 <template>
-  <div :class='`${prefixCls}`'>
-    <section :class='[`${prefixCls}-wrap`, { "dropped": topDropped || bottomDropped}]' :style="{ 'transform': transform }">
-      <div :class='`${prefixCls}-head`' ref='head'>
-        <slot name='head'>
+  <div :class="`${prefixCls}`">
+    <section 
+      :class="[`${prefixCls}-wrap`, { &quot;dropped&quot;: topDropped || bottomDropped}]" 
+      :style="{ 'transform': transform }">
+      <div 
+        ref="head" 
+        :class="`${prefixCls}-head`">
+        <slot name="head">
           <span>{{ topText }}</span>
         </slot>
       </div>
-      <slot></slot>
-      <div :class='`${prefixCls}-foot`'>
-        <slot name='foot'>
+      <slot/>
+      <div :class="`${prefixCls}-foot`">
+        <slot name="foot">
           <span>{{ bottomText }}</span>
         </slot>
       </div>
@@ -18,7 +22,7 @@
 <script>
 const prefixCls = "v-loadmore";
 export default {
-  name: "vLoadmore",
+  name: "VLoadmore",
   props: {
     onRefresh: {
       type: Function,
@@ -120,6 +124,9 @@ export default {
       }
       this.bottomText = this.noMore ? "没有更多" : this.bottomText;
     }
+  },
+  mounted() {
+    this.init();
   },
 
   methods: {
@@ -310,9 +317,6 @@ export default {
         this.translate = 0;
       });
     }
-  },
-  mounted() {
-    this.init();
   }
 };
 </script>

@@ -1,34 +1,47 @@
 <template>
-  <div class="p-group-detail"
-    @mousedown='startDrag'
-    @touchstart='startDrag'
-    @mousemove.stop='onDrag'
-    @touchmove.stop='onDrag'
-    @mouseup='stopDrag'
-    @touchend='stopDrag'
-    @mouseleave='stopDrag'>
+  <div 
+    class="p-group-detail"
+    @mousedown="startDrag"
+    @touchstart="startDrag"
+    @mousemove.stop="onDrag"
+    @touchmove.stop="onDrag"
+    @mouseup="stopDrag"
+    @touchend="stopDrag"
+    @mouseleave="stopDrag">
     <header
       ref="head"
-      class="m-box m-lim-width m-pos-f m-head-top bg-transp"
-      :class="{ 'show-title': scrollTop > 1 / 2 * bannerHeight }">
+      :class="{ 'show-title': scrollTop > 1 / 2 * bannerHeight }"
+      class="m-box m-lim-width m-pos-f m-head-top bg-transp">
       <div class="m-box m-flex-grow1 m-aln-center m-flex-base0">
-        <svg class='m-style-svg m-svg-def' @click='goBack'>
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-back"></use>
+        <svg 
+          class="m-style-svg m-svg-def" 
+          @click="goBack">
+          <use 
+            xmlns:xlink="http://www.w3.org/1999/xlink" 
+            xlink:href="#base-back"/>
         </svg>
-        <svg v-show="updating" class="m-style-svg m-svg-def">
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-loading"></use>
+        <svg 
+          v-show="updating" 
+          class="m-style-svg m-svg-def">
+          <use 
+            xmlns:xlink="http://www.w3.org/1999/xlink" 
+            xlink:href="#base-loading"/>
         </svg>
       </div>
-      <div class="m-box m-flex-grow1 m-aln-center m-flex-base0 m-justify-center"></div>
-      <div class="m-box m-flex-grow1 m-aln-center m-flex-base0 m-justify-end"></div>
+      <div class="m-box m-flex-grow1 m-aln-center m-flex-base0 m-justify-center"/>
+      <div class="m-box m-flex-grow1 m-aln-center m-flex-base0 m-justify-end"/>
     </header>
-    <div v-if="loading" class="m-pos-f m-spinner">
-      <div></div>
-      <div></div>
+    <div 
+      v-if="loading" 
+      class="m-pos-f m-spinner">
+      <div/>
+      <div/>
     </div>
     <main style="overflow-x: hidden; overflow-y:auto; min-height: 100vh">
-      <div ref="banner" class="p-group-detail-banner"
-      :style="[groupBackGround,paddingTop, {transitionDuration: dragging ? '0s' : '300ms'}]">
+      <div 
+        ref="banner" 
+        :style="[groupBackGround,paddingTop, {transitionDuration: dragging ? '0s' : '300ms'}]"
+        class="p-group-detail-banner">
         <div class="m-box m-aln-end m-justify-st m-pos-f p-group-detail-bg-mask">
           <div class="p-group-detail-avatar">
             <img :src="groupAvatar">
@@ -36,16 +49,30 @@
           <div class="m-box-model m-flex-grow1 m-flex-shrink1 m-flex-base0">
             <h3>{{ group.name }}</h3>
             <p>
-              <span append to="member" tag="span">成员:<i>{{ groupUserCount }}</i></span>
+              <span 
+                append 
+                to="member" 
+                tag="span">成员:<i>{{ groupUserCount }}</i></span>
             </p>
             <p>
-              <span append to="followings" tag="span">地址:<i>位置</i></span>
+              <span 
+                append 
+                to="followings" 
+                tag="span">地址:<i>位置</i></span>
             </p>
           </div>
           <div class="m-box m-aln-center m-flex-grow0 m-flex-shink0 group-item-action c_fff">
-            <button class="m-text-cut" v-if="!joined" :disabled="loading" @click="beforeJoined">
-              <svg class="m-style-svg m-svg-def" :style="loading ? {} : {width: '0.2rem', height:'0.2rem'}">
-                <use xmlns:xlink="http://www.w3.org/1999/xlink" :xlink:href="`#${loading?'base-loading':'foot-plus'}`"></use>
+            <button 
+              v-if="!joined" 
+              :disabled="loading" 
+              class="m-text-cut" 
+              @click="beforeJoined">
+              <svg 
+                :style="loading ? {} : {width: '0.2rem', height:'0.2rem'}" 
+                class="m-style-svg m-svg-def">
+                <use 
+                  :xlink:href="`#${loading?'base-loading':'foot-plus'}`" 
+                  xmlns:xlink="http://www.w3.org/1999/xlink"/>
               </svg>
               <span>加入</span>
             </button>
@@ -58,24 +85,30 @@
       </div>
       <div
         v-clickoutside="hidenFilter"
-        @click="showFilter = !showFilter"
-        class="m-box m-aln-center m-justify-bet p-group-detail-filter-box">
+        class="m-box m-aln-center m-justify-bet p-group-detail-filter-box"
+        @click="showFilter = !showFilter">
         <span>帖子数量<em>{{ groupPostsCount }}</em></span>
         <div class="m-box m-aln-center p-group-detail-filter">
           <span>{{ feedTypes[screen] }}</span>
           <svg class="m-style-svg m-svg-def">
-            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-filter-list"></use>
+            <use 
+              xmlns:xlink="http://www.w3.org/1999/xlink" 
+              xlink:href="#base-filter-list"/>
           </svg>
           <transition v-if="showFilter">
             <ul class="p-group-detail-filter-options">
               <li
-                :key="key"
-                @click="screen = key"
                 v-for="(val, key) of feedTypes"
-                class="m-box m-aln-center m-justify-bet">
+                :key="key"
+                class="m-box m-aln-center m-justify-bet"
+                @click="screen = key">
                 <span>{{ val }}</span>
-                <svg class="m-style-svg m-svg-def" v-if="screen === key">
-                  <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-checked"></use>
+                <svg 
+                  v-if="screen === key" 
+                  class="m-style-svg m-svg-def">
+                  <use 
+                    xmlns:xlink="http://www.w3.org/1999/xlink" 
+                    xlink:href="#base-checked"/>
                 </svg>
               </li>
             </ul>
@@ -85,19 +118,26 @@
       <ul class="p-group-detail-feeds">
         <li
           v-for="feed in pinneds"
-          :key='`gdf-${groupID}-pinned-feed-${feed.id}`'>
-          <group-feed-card :pinned="true" :feed="feed" />
+          :key="`gdf-${groupID}-pinned-feed-${feed.id}`">
+          <group-feed-card 
+            :pinned="true" 
+            :feed="feed" />
         </li>
         <li
           v-for="feed in posts"
-          :key='`gdf-${groupID}-feed-${feed.id}`'>
+          :key="`gdf-${groupID}-feed-${feed.id}`">
           <group-feed-card :feed="feed" />
         </li>
       </ul>
       <div class="m-box m-aln-center m-justify-center load-more-box">
-        <span v-if="noMoreData" class="load-more-ph">---没有更多---</span>
-        <span v-else class="load-more-btn" @click.stop="getFeeds(true)">
-          {{fetchFeeding ? "加载中..." : "点击加载更多"}}
+        <span 
+          v-if="noMoreData" 
+          class="load-more-ph">---没有更多---</span>
+        <span 
+          v-else 
+          class="load-more-btn" 
+          @click.stop="getFeeds(true)">
+          {{ fetchFeeding ? "加载中..." : "点击加载更多" }}
         </span>
       </div>
     </main>
@@ -111,7 +151,7 @@ import GroupFeedCard from "@/components/FeedCard/GroupFeedCard.vue";
 import { joinGroup } from "@/api/group.js";
 import { getGroupInfoById, getGroudFeedsByType } from "@/api/group.js";
 export default {
-  name: "group-detail",
+  name: "GroupDetail",
   directives: {
     clickoutside: {
       bind(el, binding) {

@@ -1,5 +1,7 @@
 <template>
-  <div class="module-question-answers-item" @click="viewDetail">
+  <div 
+    class="module-question-answers-item" 
+    @click="viewDetail">
     <div :class="classNameBuilder('avatar')">
       <module-user-avatar
         :size="0.56"
@@ -17,7 +19,7 @@
       <div :class="classNameBuilder('main-button')">
         <button @click.stop="handleLikeTarget">
           <svg :class="[classNameBuilder('icon')]">
-            <use  :xlink:href="answer.liked ? '#feed-like' : '#feed-unlike'" />
+            <use :xlink:href="answer.liked ? '#feed-like' : '#feed-unlike'" />
           </svg>
           {{ answer.likes_count | formatNum }}
         </button>
@@ -38,11 +40,11 @@ import { like, unlike } from "../../../api/question/answer";
 const name = "module-question-answers-item";
 export default {
   name,
-  props: {
-    answer: { type: Object, required: true }
-  },
   components: {
     [UserAvatar.name]: UserAvatar
+  },
+  props: {
+    answer: { type: Object, required: true }
   },
   data: () => ({
     likeTargetHanding: false
@@ -58,6 +60,9 @@ export default {
 
       return user;
     }
+  },
+  created() {
+    // this.answer.question_id = 1;
   },
   methods: {
     classNameBuilder(className) {
@@ -105,9 +110,6 @@ export default {
         `/questions/${this.answer.question_id}/answers/${this.answer.id}`
       );
     }
-  },
-  created() {
-    // this.answer.question_id = 1;
   }
 };
 </script>

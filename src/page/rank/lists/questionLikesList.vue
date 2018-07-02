@@ -1,25 +1,31 @@
 <template>
   <div :class="prefixCls">
-    <header slot="head" class="m-box m-justify-bet m-aln-center m-head-top m-pos-f m-main m-bb1">
+    <header 
+      slot="head" 
+      class="m-box m-justify-bet m-aln-center m-head-top m-pos-f m-main m-bb1">
       <div class="m-box m-flex-grow1 m-aln-center m-flex-base0">
-        <svg class='m-style-svg m-svg-def' @click='cancel'>
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-back"></use>
+        <svg 
+          class="m-style-svg m-svg-def" 
+          @click="cancel">
+          <use 
+            xmlns:xlink="http://www.w3.org/1999/xlink" 
+            xlink:href="#base-back"/>
         </svg>
       </div>
       <div class="m-box-model m-flex-grow1 m-aln-center m-flex-base0 m-head-top-title">
         <span>问答达人排行榜</span>
       </div>
-      <div class="m-box m-flex-grow1 m-aln-center m-flex-base0 m-justify-end"></div>
+      <div class="m-box m-flex-grow1 m-aln-center m-flex-base0 m-justify-end"/>
     </header>
     <load-more
-      style="padding-top: .9rem"
       ref="loadmore"
-      :onRefresh="onRefresh"
-      :onLoadMore="onLoadMore">
+      :on-refresh="onRefresh"
+      :on-load-more="onLoadMore"
+      style="padding-top: .9rem">
       <div :class="`${prefixCls}-list`">
         <rank-list-item
           v-for="(user, index) in users"
-          :prefixCls="prefixCls"
+          :prefix-cls="prefixCls"
           :key="user.id"
           :user="user"
           :index="index">
@@ -40,7 +46,7 @@ const api = "/question-ranks/likes";
 const prefixCls = "rankItem";
 
 export default {
-  name: "questionLikesList",
+  name: "QuestionLikesList",
   components: {
     HeadTop,
     rankListItem

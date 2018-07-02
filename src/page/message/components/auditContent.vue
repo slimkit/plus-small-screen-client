@@ -1,31 +1,50 @@
 <template>
-    <div :class="`${prefixCls}-item-bottom`">
-        <span class="content" v-if="commentBody">
-            {{ commentBody }}
-        </span>
-        <section v-if="!commentableDel" @click="goToDetail()">
-            <div :class="`${prefixCls}-item-bottom-noImg`" class="content" v-if="!image && !video">
-                {{ content }}
-            </div>
-            <div :class="`${prefixCls}-item-bottom-img`" v-else>
-                <div class="img">
-                    <async-file v-if="image && type !== 'group'" :file="image.file">
-                        <img slot-scope="props" :src="props.src"/>
-                    </async-file>
-                    <img v-if="type === 'group'" :src="image">
-                    <img v-if="video" :src="video">
-                </div>
-                <div class="content">
-                    {{ content }}
-                </div>
-            </div>
-        </section>
-        <section v-if="commentableDel">
-            <div :class="`${prefixCls}-item-bottom-noImg`" class="content">
-                内容已被删除
-            </div>
-        </section>
-    </div>
+  <div :class="`${prefixCls}-item-bottom`">
+    <span 
+      v-if="commentBody" 
+      class="content">
+      {{ commentBody }}
+    </span>
+    <section 
+      v-if="!commentableDel" 
+      @click="goToDetail()">
+      <div 
+        v-if="!image && !video" 
+        :class="`${prefixCls}-item-bottom-noImg`" 
+        class="content">
+        {{ content }}
+      </div>
+      <div 
+        v-else 
+        :class="`${prefixCls}-item-bottom-img`">
+        <div class="img">
+          <async-file 
+            v-if="image && type !== 'group'" 
+            :file="image.file">
+            <img 
+              slot-scope="props" 
+              :src="props.src">
+          </async-file>
+          <img 
+            v-if="type === 'group'" 
+            :src="image">
+          <img 
+            v-if="video" 
+            :src="video">
+        </div>
+        <div class="content">
+          {{ content }}
+        </div>
+      </div>
+    </section>
+    <section v-if="commentableDel">
+      <div 
+        :class="`${prefixCls}-item-bottom-noImg`" 
+        class="content">
+        内容已被删除
+      </div>
+    </section>
+  </div>
 </template>
 
 <script>
@@ -36,13 +55,13 @@ const detailUrl = {
   news: "/news/"
 };
 export default {
+  name: "AuditContent",
   props: {
     audit: {
       type: Object,
       required: true
     }
   },
-  name: "auditContent",
   data: () => ({
     prefixCls
   }),

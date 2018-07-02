@@ -1,16 +1,23 @@
 <template>
   <router-link
-  :to="path"
-  @click.native.stop
-  :class="styles"
-  class="m-flex-shrink0 m-flex-grow0 m-avatar-box">
-    <img v-if="avatar" :src="avatar" @error="handelError" class="m-avatar-img">
-    <i v-if="icon" :style='icon' class="m-avatar-icon"></i>
+    :to="path"
+    :class="styles"
+    class="m-flex-shrink0 m-flex-grow0 m-avatar-box"
+    @click.native.stop>
+    <img 
+      v-if="avatar" 
+      :src="avatar" 
+      class="m-avatar-img" 
+      @error="handelError">
+    <i 
+      v-if="icon" 
+      :style="icon" 
+      class="m-avatar-icon"/>
   </router-link>
 </template>
 <script>
 export default {
-  name: "avatar",
+  name: "Avatar",
   props: {
     size: {
       type: String,

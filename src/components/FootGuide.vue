@@ -1,34 +1,58 @@
 <template>
   <footer id="foot_guide">
-    <section @click="to('/feeds?type=hot')" class="guide_item" :class="{active: isCurPath('/feed')}">
+    <section 
+      :class="{active: isCurPath('/feed')}" 
+      class="guide_item" 
+      @click="to('/feeds?type=hot')">
       <svg class="m-style-svg m-svg-def foot_guide_icon">
-        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#foot-home"></use>
+        <use 
+          xmlns:xlink="http://www.w3.org/1999/xlink" 
+          xlink:href="#foot-home"/>
       </svg>
       <span>动态</span>
     </section>
-    <section @click="to('/discover')" class="guide_item" :class="{active: isCurPath('/discover')}">
+    <section 
+      :class="{active: isCurPath('/discover')}" 
+      class="guide_item" 
+      @click="to('/discover')">
       <svg class="m-style-svg m-svg-def foot_guide_icon">
-        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#foot-discover"></use>
+        <use 
+          xmlns:xlink="http://www.w3.org/1999/xlink" 
+          xlink:href="#foot-discover"/>
       </svg>
       <span>发现</span>
     </section>
-    <section @click="showPostMenu" class="guide_item plus">
+    <section 
+      class="guide_item plus" 
+      @click="showPostMenu">
       <svg class="m-style-svg m-svg-def foot_guide_icon plus">
-        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#foot-plus"></use>
+        <use 
+          xmlns:xlink="http://www.w3.org/1999/xlink" 
+          xlink:href="#foot-plus"/>
       </svg>
     </section>
-    <section @click="to('/message/info')" class="guide_item" :class="{active: isCurPath('/message')}">
-      <v-badge :dot='hasMsg'>
+    <section 
+      :class="{active: isCurPath('/message')}" 
+      class="guide_item" 
+      @click="to('/message/info')">
+      <v-badge :dot="hasMsg">
         <svg class="m-style-svg m-svg-def foot_guide_icon">
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#foot-message"></use>
+          <use 
+            xmlns:xlink="http://www.w3.org/1999/xlink" 
+            xlink:href="#foot-message"/>
         </svg>
       </v-badge>
       <span>消息</span>
     </section>
-    <section @click="to('/profile')" class="guide_item" :class="{active: isCurPath('profile')}">
-      <v-badge :dot='profile'>
+    <section 
+      :class="{active: isCurPath('profile')}" 
+      class="guide_item" 
+      @click="to('/profile')">
+      <v-badge :dot="profile">
         <svg class="m-style-svg m-svg-def foot_guide_icon">
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#foot-profile"></use>
+          <use 
+            xmlns:xlink="http://www.w3.org/1999/xlink" 
+            xlink:href="#foot-profile"/>
         </svg>
       </v-badge>
       <span>我</span>
@@ -67,6 +91,9 @@ export default {
       return this.has_msg || this.hasUnreadChat > 0;
     }
   },
+  mounted() {
+    this.$el.parentNode.style.paddingBottom = "1rem";
+  },
   methods: {
     to(path) {
       this.$router.push({ path });
@@ -77,9 +104,6 @@ export default {
     showPostMenu() {
       bus.$emit("post-menu");
     }
-  },
-  mounted() {
-    this.$el.parentNode.style.paddingBottom = "1rem";
   }
 };
 </script>

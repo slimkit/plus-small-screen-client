@@ -1,33 +1,42 @@
 <template>
   <div class="p-profile">
     <header class="m-box m-aln-center m-justify-center m-main m-pos-f m-bb1 m-head-top">我</header>
-    <main class="m-box-model" style="padding-top: .9rem">
+    <main 
+      class="m-box-model" 
+      style="padding-top: .9rem">
       <div class="m-box-model m-main m-pr-info">
-        <router-link tag="section" class="m-box m-aln-center" to="/info">
-          <avatar :user="user" size="big" />
+        <router-link 
+          tag="section" 
+          class="m-box m-aln-center" 
+          to="/info">
+          <avatar 
+            :user="user" 
+            size="big" />
           <div class="m-text-box m-flex-grow1 m-flex-shrink1 m-flex-base0 m-pr-user-info">
             <h4 class="m-pr-username">{{ user.name }}</h4>
             <p class="m-pr-bio m-text-cut-2">{{ user.bio || "这家伙很懒,什么也没有留下" }}</p>
           </div>
           <svg class="m-style-svg m-svg-def m-entry-append">
-            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-arrow-r"></use>
+            <use 
+              xmlns:xlink="http://www.w3.org/1999/xlink" 
+              xlink:href="#base-arrow-r"/>
           </svg>
         </router-link>
         <div class="m-box m-aln-center m-justify-aro m-bt1 m-pr-extra-box">
           <router-link
-          tag="div"
-          :to="`/users/${user.id}/followers`"
-          class="m-box-model m-aln-center m-justify-center m-flex-grow1 m-pr-extra">
-            <v-badge :count='new_followers'>
+            :to="`/users/${user.id}/followers`"
+            tag="div"
+            class="m-box-model m-aln-center m-justify-center m-flex-grow1 m-pr-extra">
+            <v-badge :count="new_followers">
               <a>{{ ~~(extra.followers_count) | formatNum }}</a>
             </v-badge>
             <p>粉丝</p>
           </router-link>
           <router-link
-          tag="div"
-          :to="`/users/${user.id}/followings`"
-          class="m-box-model m-aln-center m-justify-center m-flex-grow1 m-pr-extra">
-            <v-badge count='0'>
+            :to="`/users/${user.id}/followings`"
+            tag="div"
+            class="m-box-model m-aln-center m-justify-center m-flex-grow1 m-pr-extra">
+            <v-badge count="0">
               <a>{{ ~~(extra.followings_count) | formatNum }}</a>
             </v-badge>
             <p>关注</p>
@@ -36,25 +45,35 @@
       </div>
       <div class="m-box-model m-pr-entrys">
         <ul class="m-box-model m-entry-group">
-          <router-link :to="`/users/${user.id}`" tag="li" class="m-entry">
-            <svg class='m-style-svg m-svg-def m-entry-prepend'>
-              <use xlink:href="#profile-home"></use>
+          <router-link 
+            :to="`/users/${user.id}`" 
+            tag="li" 
+            class="m-entry">
+            <svg class="m-style-svg m-svg-def m-entry-prepend">
+              <use xlink:href="#profile-home"/>
             </svg>
             <span class="m-text-box m-flex-grow1">个人主页</span>
             <svg class="m-style-svg m-svg-def m-entry-append">
-              <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-arrow-r"></use>
+              <use 
+                xmlns:xlink="http://www.w3.org/1999/xlink" 
+                xlink:href="#base-arrow-r"/>
             </svg>
           </router-link>
-          <router-link to="/profile/news/released" tag="li" class="m-entry">
-            <svg class='m-style-svg m-svg-def m-entry-prepend'>
-              <use xlink:href="#profile-plane"></use>
+          <router-link 
+            to="/profile/news/released" 
+            tag="li" 
+            class="m-entry">
+            <svg class="m-style-svg m-svg-def m-entry-prepend">
+              <use xlink:href="#profile-plane"/>
             </svg>
             <span class="m-text-box m-flex-grow1">我的投稿</span>
             <svg class="m-style-svg m-svg-def m-entry-append">
-              <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-arrow-r"></use>
+              <use 
+                xmlns:xlink="http://www.w3.org/1999/xlink" 
+                xlink:href="#base-arrow-r"/>
             </svg>
           </router-link>
-<!--           <router-link to="/upgrade" tag="li" class="m-entry">
+          <!--           <router-link to="/upgrade" tag="li" class="m-entry">
             <svg class='m-style-svg m-svg-def m-entry-prepend'>
               <use xlink:href="#profile-question"></use>
             </svg>
@@ -63,7 +82,7 @@
               <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-arrow-r"></use>
             </svg>
           </router-link> -->
-<!--           <router-link to="/own/groups" tag="li" class="m-entry">
+          <!--           <router-link to="/own/groups" tag="li" class="m-entry">
             <svg class='m-style-svg m-svg-def m-entry-prepend'>
               <use xlink:href="#profile-group"></use>
             </svg>
@@ -76,53 +95,63 @@
         <ul class="m-box-model m-entry-group">
           <!-- to="/wallet" tag="li" -->
           <li class="m-entry">
-            <svg class='m-style-svg m-svg-def m-entry-prepend'>
-              <use xlink:href="#profile-wallet"></use>
+            <svg class="m-style-svg m-svg-def m-entry-prepend">
+              <use xlink:href="#profile-wallet"/>
             </svg>
             <span class="m-text-box m-flex-grow1">钱包</span>
             <span class="m-entry-extra">{{ new_balance }}</span>
-<!--             <svg class="m-style-svg m-svg-def m-entry-append">
+            <!--             <svg class="m-style-svg m-svg-def m-entry-append">
               <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-arrow-r"></use>
             </svg> -->
           </li>
           <!-- to="/upgrade" tag="li" -->
           <li class="m-entry">
-            <svg class='m-style-svg m-svg-def m-entry-prepend'>
-              <use xlink:href="#profile-integral"></use>
+            <svg class="m-style-svg m-svg-def m-entry-prepend">
+              <use xlink:href="#profile-integral"/>
             </svg>
             <span class="m-text-box m-flex-grow1">{{ currency_name }}</span>
             <span class="m-entry-extra">{{ sum }}</span>
-<!--             <svg class="m-style-svg m-svg-def m-entry-append">
+            <!--             <svg class="m-style-svg m-svg-def m-entry-append">
               <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-arrow-r"></use>
             </svg> -->
           </li>
-          <router-link to="/profile/collection/feeds" tag="li" class="m-entry">
-            <svg class='m-style-svg m-svg-def m-entry-prepend'>
-              <use xlink:href="#profile-collect"></use>
+          <router-link 
+            to="/profile/collection/feeds" 
+            tag="li" 
+            class="m-entry">
+            <svg class="m-style-svg m-svg-def m-entry-prepend">
+              <use xlink:href="#profile-collect"/>
             </svg>
             <span class="m-text-box m-flex-grow1">收藏</span>
             <svg class="m-style-svg m-svg-def m-entry-append">
-              <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-arrow-r"></use>
+              <use 
+                xmlns:xlink="http://www.w3.org/1999/xlink" 
+                xlink:href="#base-arrow-r"/>
             </svg>
           </router-link>
         </ul>
         <ul class="m-box-model m-entry-group">
           <!-- to="/upgrade" tag="li" -->
           <li class="m-entry">
-            <svg class='m-style-svg m-svg-def m-entry-prepend'>
-              <use xlink:href="#profile-approve"></use>
+            <svg class="m-style-svg m-svg-def m-entry-prepend">
+              <use xlink:href="#profile-approve"/>
             </svg>
             <span class="m-text-box m-flex-grow1">认证</span>
             <span class="m-entry-extra">{{ verified ? '已认证' : '未认证' }}</span>
             <!-- <i class="m-style-svg m-svg-def m-entry-append"></i> -->
           </li>
-          <router-link to="/setting" tag="li" class="m-entry">
-            <svg class='m-style-svg m-svg-def m-entry-prepend'>
-              <use xlink:href="#profile-setting"></use>
+          <router-link 
+            to="/setting" 
+            tag="li" 
+            class="m-entry">
+            <svg class="m-style-svg m-svg-def m-entry-prepend">
+              <use xlink:href="#profile-setting"/>
             </svg>
             <span class="m-text-box m-flex-grow1">设置</span>
             <svg class="m-style-svg m-svg-def m-entry-append">
-              <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-arrow-r"></use>
+              <use 
+                xmlns:xlink="http://www.w3.org/1999/xlink" 
+                xlink:href="#base-arrow-r"/>
             </svg>
           </router-link>
         </ul>
@@ -136,7 +165,7 @@ import { mapState } from "vuex";
 import { resetUserCount } from "@/api/message.js";
 import { refreshCurrentUserInfo } from "@/api/user.js";
 export default {
-  name: "profile",
+  name: "Profile",
   data() {
     return {};
   },

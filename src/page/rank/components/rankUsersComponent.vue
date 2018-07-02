@@ -1,10 +1,14 @@
 <template>
-  <div v-if="show" :class="prefixCls">
+  <div 
+    v-if="show" 
+    :class="prefixCls">
     <div :class="`${prefixCls}-label`">
       <h6>{{ title }}</h6>
-      <div :class="`${prefixCls}-more`" @click="to(listUrl)">
+      <div 
+        :class="`${prefixCls}-more`" 
+        @click="to(listUrl)">
         <span>全部</span>
-        <v-icon type='base-arrow-r'></v-icon>
+        <v-icon type="base-arrow-r"/>
       </div>
     </div>
     <div :class="`${prefixCls}-label`">
@@ -13,7 +17,9 @@
         :key="user.id"
         :class="`${prefixCls}-user m-aln-st`"
         @click="to(`/users/${user.id}`)">
-        <avatar :class="`${prefixCls}-user-avatar`" :user="user" />
+        <avatar 
+          :class="`${prefixCls}-user-avatar`" 
+          :user="user" />
         <p
           class="m-flex-grow1 m-flex-shrink1 m-text-cut">{{ user.name }}</p>
       </div>
@@ -24,7 +30,7 @@
 <script>
 const prefixCls = "rank-list-item";
 export default {
-  name: "rankUsersComponent",
+  name: "RankUsersComponent",
   props: {
     api: {
       required: true
@@ -69,6 +75,9 @@ export default {
       return this.users.slice(0, 5);
     }
   },
+  activated() {
+    this.getUsers();
+  },
 
   methods: {
     to(path) {
@@ -88,9 +97,6 @@ export default {
           this.$store.commit("SAVE_USER", data);
         });
     }
-  },
-  activated() {
-    this.getUsers();
   }
 };
 </script>

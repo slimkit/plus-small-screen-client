@@ -1,35 +1,56 @@
 <template>
-    <transition name="router-slid" mode='out-in'>
-        <div class="full-page">
-            <head-top :go-back='true' append='true' :title='$route.meta.title'>
-                <div slot='append' @click='ok'>{{selected.length>0 ? '下一步': '取消'}}</div>
-            </head-top>
-            <div class="user--tags">
-                <label class="user--tags-label">可选5个标签, 已选择{{selected.length}}个标签</label>
-                <div class="user--tags-list">
-                    <div @click='selectTag(tag)' class="user--tags-list-item ellipsis selected" v-for='tag in selected' v-if='tag.id' :key='`group--tag-selected-${tag.id}`'>
-                        <v-icon type='base-clean'></v-icon>
-                        {{ tag.name }}
-                    </div>
-                </div>
-            </div>
-            <div class="user--tags" v-for='group in tags' :key="group.name">
-                <label class="user--tags-label">{{group["name"]}}</label>
-                <div class="user--tags-list">
-                    <div @click='selectTag(tag)' class="user--tags-list-item ellipsis" :class='{active: selected.indexOf(tag) > -1 }' v-for='tag in group["tags"]' v-if='tag.id' :key='`group--tag-${tag.id}`'>
-                        {{ tag.name }}
-                    </div>
-                </div>
-            </div>
+  <transition 
+    name="router-slid" 
+    mode="out-in">
+    <div class="full-page">
+      <head-top 
+        :go-back="true" 
+        :title="$route.meta.title" 
+        append="true">
+        <div 
+          slot="append" 
+          @click="ok">{{ selected.length>0 ? '下一步': '取消' }}</div>
+      </head-top>
+      <div class="user--tags">
+        <label class="user--tags-label">可选5个标签, 已选择{{ selected.length }}个标签</label>
+        <div class="user--tags-list">
+          <div 
+            v-for="tag in selected" 
+            v-if="tag.id" 
+            :key="`group--tag-selected-${tag.id}`" 
+            class="user--tags-list-item ellipsis selected" 
+            @click="selectTag(tag)">
+            <v-icon type="base-clean"/>
+            {{ tag.name }}
+          </div>
         </div>
-    </transition>
+      </div>
+      <div 
+        v-for="group in tags" 
+        :key="group.name" 
+        class="user--tags">
+        <label class="user--tags-label">{{ group["name"] }}</label>
+        <div class="user--tags-list">
+          <div 
+            v-for="tag in group[&quot;tags&quot;]" 
+            v-if="tag.id" 
+            :class="{active: selected.indexOf(tag) > -1 }" 
+            :key="`group--tag-${tag.id}`" 
+            class="user--tags-list-item ellipsis" 
+            @click="selectTag(tag)">
+            {{ tag.name }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </transition>
 </template>
 <script>
 import { mapState } from "vuex";
 import HeadTop from "@/components/HeadTop";
 
 export default {
-  name: "chooseTags",
+  name: "ChooseTags",
   components: {
     HeadTop
   },
@@ -43,6 +64,10 @@ export default {
       tags: s => s.USERTAGS,
       cur_selected: s => s.CUR_SELECTED_TAGS
     })
+  },
+  created() {
+    this.$store.dispatch("GET_USER_TAGS");
+    this.selected = this.cur_selected;
   },
   methods: {
     ok() {
@@ -63,10 +88,6 @@ export default {
         }
       }
     }
-  },
-  created() {
-    this.$store.dispatch("GET_USER_TAGS");
-    this.selected = this.cur_selected;
   }
 };
 </script>

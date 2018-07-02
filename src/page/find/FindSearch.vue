@@ -7,16 +7,20 @@
         <div class="m-flex-grow1 m-flex-shrink1 m-flex-base0">
           <div class="m-search-box">
             <svg class="m-style-svg m-svg-def">
-              <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-search"></use>
+              <use 
+                xmlns:xlink="http://www.w3.org/1999/xlink" 
+                xlink:href="#base-search"/>
             </svg>
             <!-- input[type=search] 使用 form 标签包裹起来，呼出键盘的enter才会有搜索按钮 -->
-            <form action="#" onsubmit="return false">
+            <form 
+              action="#" 
+              onsubmit="return false">
               <input
+                v-model="keyword"
                 type="search"
+                placeholder="搜索"
                 @blur="onBlur"
                 @focus="onFocus"
-                v-model="keyword"
-                placeholder="搜索"
                 @input="searchUserByKey"
                 @keyup.enter="searchUserByKey" >
             </form>
@@ -27,23 +31,33 @@
         </div>
       </header>
 
-      <main class="m-flex-grow1 m-flex-shrink1 p-search-user-body" style="padding-top: 0.95rem">
+      <main 
+        class="m-flex-grow1 m-flex-shrink1 p-search-user-body" 
+        style="padding-top: 0.95rem">
         <jo-load-more 
-        v-show="showRec"
-        ref="loadmoreRecs"
-        :showBottom="false"
-        :noAnimation="true"
-        @onRefresh="fetchRecs">
-          <user-item :user="user" :key="user.id" v-for="user in recs" />          
+          v-show="showRec"
+          ref="loadmoreRecs"
+          :show-bottom="false"
+          :no-animation="true"
+          @onRefresh="fetchRecs">
+          <user-item 
+            v-for="user in recs" 
+            :user="user" 
+            :key="user.id" />          
         </jo-load-more>
         <jo-load-more
-        ref="loadmore"
-        v-show="users.length > 0"
-        @onRefresh="onRefresh"
-        @onLoadMore="onLoadMore">
-          <user-item :user="user" :key="user.id" v-for="user in users" />          
+          v-show="users.length > 0"
+          ref="loadmore"
+          @onRefresh="onRefresh"
+          @onLoadMore="onLoadMore">
+          <user-item 
+            v-for="user in users" 
+            :user="user" 
+            :key="user.id" />          
         </jo-load-more>
-        <div v-if="noData" class="placeholder m-no-find"></div>
+        <div 
+          v-if="noData" 
+          class="placeholder m-no-find"/>
       </main>
     </div>
   </transition>
@@ -53,7 +67,7 @@ import _ from "lodash";
 import UserItem from "@/components/UserItem.vue";
 import { findUserByType, searchUserByKey } from "@/api/user.js";
 export default {
-  name: "search-user",
+  name: "SearchUser",
   components: {
     UserItem
   },

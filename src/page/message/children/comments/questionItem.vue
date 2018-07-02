@@ -3,18 +3,29 @@
     <div :class="`${prefixCls}-item-top`">
       <avatar :user="user" />
       <section class="userInfo">
-        <router-link :class="`${prefixCls}-item-top-link`" :to="`/users/${comment.user_id}`">{{ comment.user.name }}</router-link>
+        <router-link 
+          :class="`${prefixCls}-item-top-link`" 
+          :to="`/users/${comment.user_id}`">{{ comment.user.name }}</router-link>
         <span v-if="comment.reply_user">回复</span><span v-else>评论了你的问题</span>
-        <router-link :class="`${prefixCls}-item-top-link`" v-if="comment.reply_user" :to="`/users/${comment.reply_user}`">{{ comment.reply.name }} </router-link>:
+        <router-link 
+          v-if="comment.reply_user" 
+          :class="`${prefixCls}-item-top-link`" 
+          :to="`/users/${comment.reply_user}`">{{ comment.reply.name }} </router-link>:
         <p>{{ comment.created_at | time2tips }}</p>
       </section>
     </div>
     <div :class="`${prefixCls}-item-bottom`">
-      <span class="content" @click.stop="showCommentInput">
+      <span 
+        class="content" 
+        @click.stop="showCommentInput">
         {{ comment.body }}
       </span>
-      <section v-if="comment.commentable !== null" @click="goToFeedDetail()">
-        <div :class="`${prefixCls}-item-bottom-noImg`" class="content">
+      <section 
+        v-if="comment.commentable !== null" 
+        @click="goToFeedDetail()">
+        <div 
+          :class="`${prefixCls}-item-bottom-noImg`" 
+          class="content">
           {{ comment.commentable.subject }}
         </div>
         <!-- <div :class="`${prefixCls}-item-bottom-img`" v-else>
@@ -25,7 +36,9 @@
         </div> -->
       </section>
       <section v-if="comment.commentable === null">
-        <div :class="`${prefixCls}-item-bottom-noImg`" class="content">
+        <div 
+          :class="`${prefixCls}-item-bottom-noImg`" 
+          class="content">
           问题已被删除
         </div>
       </section>
@@ -36,12 +49,33 @@
 const prefixCls = "msgList";
 const url = "/questions/";
 export default {
-  name: "questionItem",
+  name: "QuestionItem",
   props: ["comment"],
   data: () => ({
     prefixCls,
     url
   }),
+  computed: {
+    /**
+     * 获取图片,并计算地址
+     * @Author   Wayne
+     * @DateTime 2018-01-31
+     * @Email    qiaobin@zhiyicx.com
+     * @return   {[type]}            [description]
+     */
+    getImage() {
+      const { comment } = this;
+      const { id = 0 } = comment.commentable.image || {};
+      if (id > 0) {
+        return `/api/v2/files/${id}`;
+      }
+
+      return false;
+    }
+  },
+  created() {
+    // console.log(this.comment)
+  },
   methods: {
     /**
      * 进入动态详情
@@ -94,27 +128,6 @@ export default {
         }
       });
     }
-  },
-  computed: {
-    /**
-     * 获取图片,并计算地址
-     * @Author   Wayne
-     * @DateTime 2018-01-31
-     * @Email    qiaobin@zhiyicx.com
-     * @return   {[type]}            [description]
-     */
-    getImage() {
-      const { comment } = this;
-      const { id = 0 } = comment.commentable.image || {};
-      if (id > 0) {
-        return `/api/v2/files/${id}`;
-      }
-
-      return false;
-    }
-  },
-  created() {
-    // console.log(this.comment)
   }
 };
 </script>

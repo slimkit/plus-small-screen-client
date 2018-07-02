@@ -2,17 +2,27 @@
   <div class="p-forgot forgot signup">
     <header class="m-pos-f m-box m-justify-bet m-aln-center m-main m-bb1 m-head-top">
       <div class="m-box m-flex-grow1 m-aln-center m-flex-base0">
-        <svg class='m-style-svg m-svg-def' @click='goBack'>
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-back"></use>
+        <svg 
+          class="m-style-svg m-svg-def" 
+          @click="goBack">
+          <use 
+            xmlns:xlink="http://www.w3.org/1999/xlink" 
+            xlink:href="#base-back"/>
         </svg>
       </div>
       <div class="m-box-model m-flex-grow1 m-aln-center m-flex-base0 m-head-top-title">
         <span>修改密码</span>
       </div>
       <div class="m-box m-flex-grow1 m-aln-center m-flex-base0 m-justify-end">
-        <a :disabled="loading || disabled" @click="handleOk">
-          <svg v-if="loading" class="m-style-svg m-svg-def">
-            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-loading"></use>
+        <a 
+          :disabled="loading || disabled" 
+          @click="handleOk">
+          <svg 
+            v-if="loading" 
+            class="m-style-svg m-svg-def">
+            <use 
+              xmlns:xlink="http://www.w3.org/1999/xlink" 
+              xlink:href="#base-loading"/>
           </svg>
           <span v-else>更改</span>
         </a>
@@ -24,11 +34,11 @@
         <div class="m-input">
           <input
             id="old-password"
-            type="password"
             v-model="oldPassword"
-            maxlength='16'
+            type="password"
+            maxlength="16"
             autocomplete="off"
-            placeholder="输入6位以上的原始密码"/>
+            placeholder="输入6位以上的原始密码">
         </div>
       </div>
       <div class="m-form-row m-main">
@@ -36,11 +46,11 @@
         <div class="m-input">
           <input
             id="new-password"
-            type="password"
             v-model="newPassword"
-            maxlength='16'
+            type="password"
+            maxlength="16"
             autocomplete="off"
-            placeholder="输入6位以上新密码"/>
+            placeholder="输入6位以上新密码">
         </div>
       </div>
       <div class="m-form-row m-main">
@@ -48,11 +58,11 @@
         <div class="m-input">
           <input
             id="re-password"
-            type="password"
             v-model="rePassword"
-            maxlength='16'
+            type="password"
+            maxlength="16"
             autocomplete="off"
-            placeholder="请确认新密码"/>
+            placeholder="请确认新密码">
         </div>
       </div>
 
@@ -64,7 +74,7 @@
 </template>
 <script>
 export default {
-  name: "forgot",
+  name: "Forgot",
   data() {
     return {
       oldPassword: "",

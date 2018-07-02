@@ -1,22 +1,31 @@
 <template>
-  <div class="p-user-home"
-    @mousedown='startDrag'
-    @touchstart='startDrag'
-    @mousemove.stop='onDrag'
-    @touchmove.stop='onDrag'
-    @mouseup='stopDrag'
-    @touchend='stopDrag'
-    @mouseleave='stopDrag'>
+  <div 
+    class="p-user-home"
+    @mousedown="startDrag"
+    @touchstart="startDrag"
+    @mousemove.stop="onDrag"
+    @touchmove.stop="onDrag"
+    @mouseup="stopDrag"
+    @touchend="stopDrag"
+    @mouseleave="stopDrag">
     <header
       ref="head"
-      class="m-box m-lim-width m-pos-f m-head-top bg-transp"
-      :class="{ 'show-title': scrollTop > 1 / 2 * bannerHeight }">
+      :class="{ 'show-title': scrollTop > 1 / 2 * bannerHeight }"
+      class="m-box m-lim-width m-pos-f m-head-top bg-transp">
       <div class="m-box m-flex-grow1 m-aln-center m-flex-base0">
-        <svg class='m-style-svg m-svg-def' @click='goBack'>
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-back"></use>
+        <svg 
+          class="m-style-svg m-svg-def" 
+          @click="goBack">
+          <use 
+            xmlns:xlink="http://www.w3.org/1999/xlink" 
+            xlink:href="#base-back"/>
         </svg>
-        <svg v-show="updating" class="m-style-svg m-svg-def">
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-loading"></use>
+        <svg 
+          v-show="updating" 
+          class="m-style-svg m-svg-def">
+          <use 
+            xmlns:xlink="http://www.w3.org/1999/xlink" 
+            xlink:href="#base-loading"/>
         </svg>
       </div>
       <div class="m-box m-flex-grow1 m-aln-center m-flex-base0 m-justify-center m-trans-y">
@@ -28,67 +37,87 @@
         </svg> -->
       </div>
     </header>
-    <div v-if="loading" class="m-pos-f m-spinner">
-      <div></div>
-      <div></div>
+    <div 
+      v-if="loading" 
+      class="m-pos-f m-spinner">
+      <div/>
+      <div/>
     </div>
     <!-- style="overflow-x: hidden; overflow-y:auto; min-height: 100vh" -->
     <main>
       <div
         ref="banner"
-        class="m-urh-banner"
-        :style="bannerStyle">
+        :style="bannerStyle"
+        class="m-urh-banner">
         <div class="m-box-model m-aln-center m-justify-end m-pos-f m-urh-bg-mask">
           <label class="banner-click-area">
             <input
-              type="file"
               ref="imagefile"
-              class="m-rfile"
               :accept="accept"
-              @change="onBannerChange" />
+              type="file"
+              class="m-rfile"
+              @change="onBannerChange" >
           </label>
-          <avatar :user="user" size="big" />
+          <avatar 
+            :user="user" 
+            size="big" />
           <h3>{{ user.name }}</h3>
           <p>
-            <router-link append to="followers" tag="span">粉丝<i>{{ followersCount | formatNum }}</i></router-link>
-            <router-link append to="followings" tag="span">关注<i>{{ followingsCount | formatNum }}</i></router-link>
+            <router-link 
+              append 
+              to="followers" 
+              tag="span">粉丝<i>{{ followersCount | formatNum }}</i></router-link>
+            <router-link 
+              append 
+              to="followings" 
+              tag="span">关注<i>{{ followingsCount | formatNum }}</i></router-link>
           </p>
         </div>
       </div>
       <div class="m-text-box m-urh-info">
-        <p class="m-cf94" v-if="verified">认证：<span>{{ verified.description }}</span></p>
+        <p 
+          v-if="verified" 
+          class="m-cf94">认证：<span>{{ verified.description }}</span></p>
         <p v-if="user.location">地址：<span>{{ user.location }}</span></p>
         <p>简介：<span>{{ bio }}</span></p>
         <p style="margin-top: 0; margin-left: -0.1rem">
           <i
-            v-if="tag.id"
-            class="m-urh-tag"
             v-for="tag in tags"
-            :key="`tag-${tag.id}`">
+            v-if="tag.id"
+            :key="`tag-${tag.id}`"
+            class="m-urh-tag">
             {{ tag.name }}
           </i>
         </p>
       </div>
       <div
         v-clickoutside="hidenFilter"
-        @click="showFilter = !showFilter"
-        class="m-box m-aln-center m-justify-bet m-urh-filter-box">
+        class="m-box m-aln-center m-justify-bet m-urh-filter-box"
+        @click="showFilter = !showFilter">
         <span>{{ feedsCount }}条动态</span>
-        <div class="m-box m-aln-center m-urh-filter" v-if="isMine">
+        <div 
+          v-if="isMine" 
+          class="m-box m-aln-center m-urh-filter">
           <span>{{ feedTypes[screen] }}</span>
           <svg class="m-style-svg m-svg-def">
-            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-filter-list"></use>
+            <use 
+              xmlns:xlink="http://www.w3.org/1999/xlink" 
+              xlink:href="#base-filter-list"/>
           </svg>
           <transition v-if="showFilter">
             <ul class="m-urh-filter-options">
               <li
-                :key="key"
-                @click="screen = key"
                 v-for="(val, key) of feedTypes"
-                class="m-box m-aln-center m-justify-bet">
+                :key="key"
+                class="m-box m-aln-center m-justify-bet"
+                @click="screen = key">
                 <span>{{ val }}</span>
-                <svg class="m-style-svg m-svg-def" v-if="screen === key">
-                  <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-checked"></use>
+                <svg 
+                  v-if="screen === key" 
+                  class="m-style-svg m-svg-def">
+                  <use 
+                    xmlns:xlink="http://www.w3.org/1999/xlink" 
+                    xlink:href="#base-checked"/>
                 </svg>
               </li>
             </ul>
@@ -97,42 +126,60 @@
       </div>
       <ul class="m-urh-feeds">
         <li
-          v-if="feed.id"
           v-for="feed in feeds"
-          :key='`ush-${userID}-feed${feed.id}`'>
+          v-if="feed.id"
+          :key="`ush-${userID}-feed${feed.id}`">
           <feed-card
             :feed="feed"
-            :timeLine="true"
+            :time-line="true"
             @afterDelete="fetchUserInfo()" />
         </li>
       </ul>
       <div class="m-box m-aln-center m-justify-center load-more-box">
-        <span v-if="noMoreData" class="load-more-ph">---没有更多---</span>
-        <span v-else class="load-more-btn" @click.stop="fetchUserFeed(true)">
-          {{fetchFeeding ? "加载中..." : "点击加载更多"}}
+        <span 
+          v-if="noMoreData" 
+          class="load-more-ph">---没有更多---</span>
+        <span 
+          v-else 
+          class="load-more-btn" 
+          @click.stop="fetchUserFeed(true)">
+          {{ fetchFeeding ? "加载中..." : "点击加载更多" }}
         </span>
       </div>
     </main>
-    <footer v-if="!isMine" ref='foot' class="m-box m-pos-f m-main m-bt1 m-user-home-foot">
-      <div class="m-flex-grow0 m-flex-shrink0 m-box m-aln-center m-justify-center" @click="rewardUser">
+    <footer 
+      v-if="!isMine" 
+      ref="foot" 
+      class="m-box m-pos-f m-main m-bt1 m-user-home-foot">
+      <div 
+        class="m-flex-grow0 m-flex-shrink0 m-box m-aln-center m-justify-center" 
+        @click="rewardUser">
         <svg class="m-style-svg m-svg-def">
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#profile-integral"></use>
+          <use 
+            xmlns:xlink="http://www.w3.org/1999/xlink" 
+            xlink:href="#profile-integral"/>
         </svg>
         <span>打赏</span>
       </div>
       <div
-        class="m-flex-grow0 m-flex-shrink0 m-box m-aln-center m-justify-center"
         :class="{ c_59b6d7: relation.status !== 'unFollow' }"
+        class="m-flex-grow0 m-flex-shrink0 m-box m-aln-center m-justify-center"
         @click="followUserByStatus(relation.status)">
         <svg class="m-style-svg m-svg-def">
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" :xlink:href="relation.icon"></use>
+          <use 
+            :xlink:href="relation.icon" 
+            xmlns:xlink="http://www.w3.org/1999/xlink"/>
         </svg>
         <span>{{ relation.text }}</span>
       </div>
       <!-- `/chats/${user.id}` -->
-      <div @click="startSingleChat" class="m-flex-grow0 m-flex-shrink0 m-box m-aln-center m-justify-center">
+      <div 
+        class="m-flex-grow0 m-flex-shrink0 m-box m-aln-center m-justify-center" 
+        @click="startSingleChat">
         <svg class="m-style-svg m-svg-def">
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#message-comments"></use>
+          <use 
+            xmlns:xlink="http://www.w3.org/1999/xlink" 
+            xlink:href="#message-comments"/>
         </svg>
         <span>聊天</span>
       </div>
@@ -156,7 +203,7 @@ import {
 } from "@/api/user.js";
 
 export default {
-  name: "user-home",
+  name: "UserHome",
   directives: {
     clickoutside: {
       bind(el, binding) {

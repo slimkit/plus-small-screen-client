@@ -1,15 +1,25 @@
 <template>
-  <module-avatar v-bind="$props" @click.native="handleClick">
+  <module-avatar 
+    v-bind="$props" 
+    @click.native="handleClick">
     <!-- If anonymity user. -->
     <template v-if="anonymity">匿</template>
 
     <!-- Not avatar resource show icons. -->
-    <svg width='100%' height='100%' v-else-if="!src" class='avatar_icon'>
-      <use xmlns:xlink="http://www.w3.org/1999/xlink" :xlink:href="defaultAvatar"></use>
+    <svg 
+      v-else-if="!src" 
+      width="100%" 
+      height="100%" 
+      class="avatar_icon">
+      <use 
+        :xlink:href="defaultAvatar" 
+        xmlns:xlink="http://www.w3.org/1999/xlink"/>
     </svg>
 
     <!-- Show user avatar image. -->
-    <img v-else :src="src">
+    <img 
+      v-else 
+      :src="src">
   </module-avatar>
 </template>
 
@@ -25,7 +35,16 @@ export default {
    *
    * @type {String}
    */
-  name: "module-user-avatar",
+  name: "ModuleUserAvatar",
+
+  /**
+   * The component using components.
+   *
+   * @type {Object}
+   */
+  components: {
+    [Avatar.name]: Avatar
+  },
 
   /**
    * The component props.
@@ -39,15 +58,6 @@ export default {
     classes: { type: [Array, String] },
     size: { type: [String, Number], default: 0.4 },
     sizeUnit: { type: String, default: "rem" }
-  },
-
-  /**
-   * The component using components.
-   *
-   * @type {Object}
-   */
-  components: {
-    [Avatar.name]: Avatar
   },
 
   /**

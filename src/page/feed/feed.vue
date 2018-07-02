@@ -2,33 +2,56 @@
   <div class="p-feed">
     <nav class="m-box m-head-top m-lim-width m-pos-f m-main m-bb1">
       <ul class="m-box m-flex-grow1 m-aln-center m-justify-center m-flex-base0 m-head-nav">
-        <router-link tag="li" :to="{ name:'feeds', query: { type: 'new' } }" active-class="active" exact replace>
+        <router-link 
+          :to="{ name:'feeds', query: { type: 'new' } }" 
+          tag="li" 
+          active-class="active" 
+          exact 
+          replace>
           <a>最新</a>
         </router-link>
-        <router-link tag="li" :to="{ name:'feeds', query: { type: 'hot' } }" active-class="active" exact replace>
+        <router-link 
+          :to="{ name:'feeds', query: { type: 'hot' } }" 
+          tag="li" 
+          active-class="active" 
+          exact 
+          replace>
           <a>热门</a>
         </router-link>
-        <router-link tag="li" :to="{ name:'feeds', query: { type: 'follow' } }" active-class="active" exact replace>
+        <router-link 
+          :to="{ name:'feeds', query: { type: 'follow' } }" 
+          tag="li" 
+          active-class="active" 
+          exact 
+          replace>
           <a>关注</a>
         </router-link>
       </ul>
     </nav>
     <jo-load-more
+      ref="loadmore"
       class="p-feed-main"
-      @onRefresh='onRefresh'
-      @onLoadMore='onLoadMore'
-      ref='loadmore'
-      >
-        <ul class="p-feed-list">
-          <li v-if="feed.id" v-for="(feed, index) in pinned" :key="`pinned-feed-${feedType}-${feed.id}-${index}`">
-            <feed-card :feed="feed" :pinned="true" />
-          </li>
-          <li v-if="feed.id" v-for="(feed, index) in feeds" :key="`feed-${feedType}-${feed.id}-${index}`">
-            <feed-card :feed="feed" />
-          </li>
-        </ul>
-      </jo-load-more>
-    <foot-guide></foot-guide>
+      @onRefresh="onRefresh"
+      @onLoadMore="onLoadMore"
+    >
+      <ul class="p-feed-list">
+        <li 
+          v-for="(feed, index) in pinned" 
+          v-if="feed.id" 
+          :key="`pinned-feed-${feedType}-${feed.id}-${index}`">
+          <feed-card 
+            :feed="feed" 
+            :pinned="true" />
+        </li>
+        <li 
+          v-for="(feed, index) in feeds" 
+          v-if="feed.id" 
+          :key="`feed-${feedType}-${feed.id}-${index}`">
+          <feed-card :feed="feed" />
+        </li>
+      </ul>
+    </jo-load-more>
+    <foot-guide/>
   </div>
 </template>
 <script>
@@ -36,7 +59,7 @@ import { getFeedsByType } from "@/api/feeds.js";
 import FeedCard from "@/components/FeedCard/FeedCard.vue";
 const feedTypesMap = ["new", "hot", "follow"];
 export default {
-  name: "feedIndex",
+  name: "FeedIndex",
   components: {
     FeedCard
   },

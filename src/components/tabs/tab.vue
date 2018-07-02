@@ -1,11 +1,12 @@
 <template>
-  <div class="v-tab"
-  :class='{ active }'
-  @click='tabClick'><slot>{{ title }}</slot></div>
+  <div 
+    :class="{ active }"
+    class="v-tab"
+    @click="tabClick"><slot>{{ title }}</slot></div>
 </template>
 <script>
 export default {
-  name: "v-tab",
+  name: "VTab",
   props: {
     title: [String],
     value: {}

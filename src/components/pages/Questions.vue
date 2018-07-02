@@ -23,7 +23,7 @@ export default {
    *
    * @type {string}
    */
-  name: "page-questions",
+  name: "PageQuestions",
 
   /**
    * The Page components.

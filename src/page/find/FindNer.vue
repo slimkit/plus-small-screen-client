@@ -1,10 +1,13 @@
 <template>
   <jo-load-more
-  key="find-ner"
-  ref="loadmore"
-  @onRefresh="onRefresh"
-  @onLoadMore="onLoadMore">
-    <user-item v-for="user in users" :user="user" :key="user.id"></user-item>
+    key="find-ner"
+    ref="loadmore"
+    @onRefresh="onRefresh"
+    @onLoadMore="onLoadMore">
+    <user-item 
+      v-for="user in users" 
+      :user="user" 
+      :key="user.id"/>
   </jo-load-more>
 </template>
 
@@ -13,7 +16,7 @@ import { mapState } from "vuex";
 import UserItem from "@/components/UserItem.vue";
 import { findNearbyUser, getUserInfoById } from "@/api/user.js";
 export default {
-  name: "find-ner",
+  name: "FindNer",
   components: {
     UserItem
   },
@@ -32,6 +35,9 @@ export default {
       page: 1,
       isActive: false
     };
+  },
+  activated() {
+    this.$refs.loadmore.beforeRefresh();
   },
   methods: {
     formateUsers(users) {
@@ -65,9 +71,6 @@ export default {
         }
       );
     }
-  },
-  activated() {
-    this.$refs.loadmore.beforeRefresh();
   }
 };
 </script>

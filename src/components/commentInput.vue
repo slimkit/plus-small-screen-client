@@ -1,32 +1,46 @@
 <template>
   <div @touchmove.prevent>
-      <transition name='toast'>
-      <div v-if='show' class="m-pop-box" @click='cancel'></div>
+    <transition name="toast">
+      <div 
+        v-if="show" 
+        class="m-pop-box" 
+        @click="cancel"/>
     </transition>
-    <transition name='pop'>
-      <div v-if='show' class="m-box-model m-justify-end m-comment-input" @touch.prevent>
+    <transition name="pop">
+      <div 
+        v-if="show" 
+        class="m-box-model m-justify-end m-comment-input" 
+        @touch.prevent>
         <div class="m-box m-aln-end m-comment-input-wrap">
           <span class="m-box-model m-flex-grow1 m-flex-shrink1 m-justify-end m-wz-def">
             <textarea 
-              v-model='contentText'
+              ref="textarea"
+              v-model="contentText"
               :placeholder="placeholder"
               :style="{ height: `${scrollHeight}px` }"
-              ref='textarea'
               maxlength="255" 
               @focus="onFocus"
-              @blur='moveCurPos'
+              @blur="moveCurPos"
               @keydown.enter.prevent="sendText"
-              @input='moveCurPos'></textarea>
+              @input="moveCurPos"/>
             <textarea 
-              rows="1"
-              v-model='shadowText'
-              maxlength="255" 
-              style="position: absolute; z-index: -9999; visibility: hidden;"
-              ref='shadow'></textarea>
+              ref="shadow"
+              v-model="shadowText"
+              rows="1" 
+              maxlength="255"
+              style="position: absolute; z-index: -9999; visibility: hidden;"/>
           </span>
-          <div class="m-box-model m-box-justify-end" style="width: 1rem; margin: 0 0 0 15px;">
-            <span class="m-wz-def" style="font-size: 10px; margin-bottom: 10px" v-if="contentText.length >= 210">{{ contentText.length }}/255</span>
-            <button class="m-comment-submit" :disabled="!contentText.length" @click='sendText'>发送</button>
+          <div 
+            class="m-box-model m-box-justify-end" 
+            style="width: 1rem; margin: 0 0 0 15px;">
+            <span 
+              v-if="contentText.length >= 210" 
+              class="m-wz-def" 
+              style="font-size: 10px; margin-bottom: 10px">{{ contentText.length }}/255</span>
+            <button 
+              :disabled="!contentText.length" 
+              class="m-comment-submit" 
+              @click="sendText">发送</button>
           </div>
         </div>
       </div>
@@ -36,7 +50,7 @@
 <script>
 import bus from "@/bus";
 export default {
-  name: "comment-input",
+  name: "CommentInput",
   data() {
     return {
       curpos: 0,
@@ -86,6 +100,29 @@ export default {
       }
     }
   },
+  created() {
+    bus.$on("commentInput:close", status => {
+      status && this.clean();
+      this.cancel();
+    });
+    bus.$on("commentInput", ({ placeholder, onOk }) => {
+      typeof placeholder === "string" && (this.placeholder = placeholder);
+      typeof onOk === "function" && (this.onOk = onOk);
+      this.show = true;
+      this.$nextTick(() => {
+        this.$refs.shadow &&
+          (this.scrollHeight = this.$refs.shadow.scrollHeight);
+      });
+    });
+  },
+  mounted() {
+    this.$nextTick(() => {
+      this.$refs.shadow && (this.scrollHeight = this.$refs.shadow.scrollHeight);
+    });
+  },
+  destroyed() {
+    this.clean();
+  },
   methods: {
     moveCurPos() {
       this.$refs.textarea && (this.curpos = this.$refs.textarea.selectionStart);
@@ -116,29 +153,6 @@ export default {
         window.scrollTo(0, wH2 - 70);
       }, 300);
     }
-  },
-  created() {
-    bus.$on("commentInput:close", status => {
-      status && this.clean();
-      this.cancel();
-    });
-    bus.$on("commentInput", ({ placeholder, onOk }) => {
-      typeof placeholder === "string" && (this.placeholder = placeholder);
-      typeof onOk === "function" && (this.onOk = onOk);
-      this.show = true;
-      this.$nextTick(() => {
-        this.$refs.shadow &&
-          (this.scrollHeight = this.$refs.shadow.scrollHeight);
-      });
-    });
-  },
-  mounted() {
-    this.$nextTick(() => {
-      this.$refs.shadow && (this.scrollHeight = this.$refs.shadow.scrollHeight);
-    });
-  },
-  destroyed() {
-    this.clean();
   }
 };
 </script>

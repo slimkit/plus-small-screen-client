@@ -6,7 +6,7 @@
 
 <script>
 export default {
-  name: "async-file",
+  name: "AsyncFile",
   props: {
     file: { required: true, type: Number },
     w: { type: Number, default: 0 },
@@ -16,6 +16,9 @@ export default {
   data: () => ({
     src: null
   }),
+  created() {
+    this.fetch();
+  },
   methods: {
     fetch() {
       let params = {
@@ -47,9 +50,6 @@ export default {
           }
         );
     }
-  },
-  created() {
-    this.fetch();
   }
 };
 </script>

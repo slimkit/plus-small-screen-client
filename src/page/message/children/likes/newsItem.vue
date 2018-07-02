@@ -3,8 +3,12 @@
     <div :class="`${prefixCls}-item-top`">
       <avatar :user="user" />
       <section class="userInfo">
-        <span v-if="!user.id" :class="`${prefixCls}-item-top-link`">未知用户 </span>
-        <router-link :class="`${prefixCls}-item-top-link`" :to="`/users/${user._id}`">{{ user.name }}</router-link>
+        <span 
+          v-if="!user.id" 
+          :class="`${prefixCls}-item-top-link`">未知用户 </span>
+        <router-link 
+          :class="`${prefixCls}-item-top-link`" 
+          :to="`/users/${user._id}`">{{ user.name }}</router-link>
         <span>赞了你的资讯</span>
         <p>{{ like.created_at | time2tips }}</p>
       </section>
@@ -12,12 +16,19 @@
     <div :class="`${prefixCls}-item-bottom`">
       <!-- <section v-if="like.likeable !== null" @click="goToFeedDetail()"> -->
       <section v-if="like.likeable !== null">
-        <div :class="`${prefixCls}-item-bottom-noImg`" class="content" v-if="!getImage">
+        <div 
+          v-if="!getImage" 
+          :class="`${prefixCls}-item-bottom-noImg`" 
+          class="content">
           {{ like.likeable.title }}
         </div>
-        <div :class="`${prefixCls}-item-bottom-img`" v-else>
+        <div 
+          v-else 
+          :class="`${prefixCls}-item-bottom-img`">
           <div class="img">
-            <img :src="getImage" :alt="user.name">
+            <img 
+              :src="getImage" 
+              :alt="user.name">
           </div>
           <div class="content">
             {{ like.likeable.title }}
@@ -25,7 +36,9 @@
         </div>
       </section>
       <section v-if="like.likeable === null">
-        <div :class="`${prefixCls}-item-bottom-noImg`" class="content">
+        <div 
+          :class="`${prefixCls}-item-bottom-noImg`" 
+          class="content">
           资讯已被删除
         </div>
       </section>
@@ -35,26 +48,11 @@
 <script>
 const prefixCls = "msgList";
 export default {
-  name: "newsItem",
+  name: "NewsItem",
   props: ["like"],
   data: () => ({
     prefixCls
   }),
-  methods: {
-    /**
-     * 进入详情
-     * @Author   Wayne
-     * @DateTime 2018-01-31
-     * @Email    qiaobin@zhiyicx.com
-     * @return   {[type]}            [description]
-     */
-    goToFeedDetail() {
-      const {
-        likeable: { id = 0 }
-      } = this.like;
-      this.$router.push(`/news/${id}`);
-    }
-  },
   computed: {
     /**
      * 获取图片,并计算地址
@@ -78,6 +76,21 @@ export default {
   },
   created() {
     // console.log(this.comment)
+  },
+  methods: {
+    /**
+     * 进入详情
+     * @Author   Wayne
+     * @DateTime 2018-01-31
+     * @Email    qiaobin@zhiyicx.com
+     * @return   {[type]}            [description]
+     */
+    goToFeedDetail() {
+      const {
+        likeable: { id = 0 }
+      } = this.like;
+      this.$router.push(`/news/${id}`);
+    }
   }
 };
 </script>

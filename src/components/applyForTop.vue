@@ -1,29 +1,37 @@
 <template>
-  <transition name='toast'>
-    <div @touchmove.prevent v-if='show' class="m-box-model m-pos-f" style="background-color: #f4f5f6; z-index: 101">
+  <transition name="toast">
+    <div 
+      v-if="show" 
+      class="m-box-model m-pos-f" 
+      style="background-color: #f4f5f6; z-index: 101" 
+      @touchmove.prevent>
       <header class="m-box m-aln-center m-head-top m-main m-bb1">
         <div class="m-flex-grow1">
-          <svg class="m-style-svg m-svg-def" @click="cancel">
-            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-back"></use>
+          <svg 
+            class="m-style-svg m-svg-def" 
+            @click="cancel">
+            <use 
+              xmlns:xlink="http://www.w3.org/1999/xlink" 
+              xlink:href="#base-back"/>
           </svg>
         </div>
         <div class="m-flex-grow1 m-text-c m-head-top-title">
           <span>申请置顶</span>
         </div>
-        <div class="m-flex-grow1 m-text-r"></div>
+        <div class="m-flex-grow1 m-text-r"/>
       </header>
       <main class="m-box-model m-aln-center m-justify-center">
         <div class="m-box-model m-lim-width">
           <div class="m-pinned-amount-btns m-main">
             <p class="m-pinned-amount-label">选择置顶天数</p>
             <div class="m-box m-aln-center ">
-                <button
-                  :key="item"
-                  v-for="item in items"
-                  class="m-pinned-amount-btn"
-                  :class="{ active: ~~day === ~~item }"
-                  :style="{ width: `${1 / items.length * 100}%` }"
-                  @click="chooseDefaultDay(item)">{{((~~item))}} 天</button>
+              <button
+                v-for="item in items"
+                :key="item"
+                :class="{ active: ~~day === ~~item }"
+                :style="{ width: `${1 / items.length * 100}%` }"
+                class="m-pinned-amount-btn"
+                @click="chooseDefaultDay(item)">{{ ((~~item)) }} 天</button>
             </div>
           </div>
           <div
@@ -32,9 +40,9 @@
             <span>置顶金额</span>
             <div class="m-box m-aln-center">
               <input
+                v-model="customAmount"
                 type="number"
                 pattern="[0-9]*"
-                v-model="customAmount"
                 placeholder="输入金额"
                 oninput="value=value.slice(0,8)"
                 class="m-flex-grow1 m-flex-shrink1 m-text-r">
@@ -45,14 +53,14 @@
             <span>总金额</span>
             <div class="m-box m-aln-center">
               <input
-              class="m-flex-grow1 m-flex-shrink1 m-text-r"
-              type="number"
-              pattern="[0-9]*"
-              disabled="true"
-              readonly="true"
-              placeholder="总金额"
-              v-model="amount"
-              style="background-color: transparent">
+                v-model="amount"
+                class="m-flex-grow1 m-flex-shrink1 m-text-r"
+                type="number"
+                pattern="[0-9]*"
+                disabled="true"
+                readonly="true"
+                placeholder="总金额"
+                style="background-color: transparent">
               <span>{{ currency_name }}</span>
             </div>
           </div>
@@ -60,13 +68,19 @@
             class="placeholder m-flex-grow1 m-flex-shrink1"
             style="padding: .3rem .2rem 0; font-size: .24rem;"><!-- 最近置顶平均{{  }},  -->可用积分{{ currencySum }}</p>
         </div>
-        <div class="plr20 m-lim-width" style="margin-top: 0.6rem">
+        <div 
+          class="plr20 m-lim-width" 
+          style="margin-top: 0.6rem">
           <button
             :disabled="disabled || loading"
             class="m-long-btn m-signin-btn"
             @click="handleOk">
-            <svg v-if="loading" class="m-style-svg m-svg-def">
-              <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-loading"></use>
+            <svg 
+              v-if="loading" 
+              class="m-style-svg m-svg-def">
+              <use 
+                xmlns:xlink="http://www.w3.org/1999/xlink" 
+                xlink:href="#base-loading"/>
             </svg>
             <span v-else>申请置顶</span>
           </button>
@@ -82,7 +96,7 @@ import { refreshCurrentUserInfo } from "@/api/user.js";
 const noop = () => {};
 
 export default {
-  name: "apply-top",
+  name: "ApplyTop",
   data() {
     return {
       day: 0,

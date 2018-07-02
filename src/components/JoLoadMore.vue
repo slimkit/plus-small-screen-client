@@ -1,71 +1,73 @@
 <template>
   <div 
-  :class="`${prefix}`"
+    :class="`${prefix}`"
 
-  @mousedown='startDrag'
-  @touchstart='startDrag'
+    style="transform:translate(0,0)"
+    @mousedown="startDrag"
 
-  @mousemove.stop='onDrag'
-  @touchmove.stop='onDrag'
+    @touchstart="startDrag"
+    @mousemove.stop="onDrag"
 
-  @mouseup='stopDrag'
-  @touchend='stopDrag'
-  @mouseleave='stopDrag'
-  style="transform:translate(0,0)" 
+    @touchmove.stop="onDrag"
+    @mouseup="stopDrag"
+    @touchend="stopDrag"
+    @mouseleave="stopDrag" 
   >
     <!-- 顶部 -->
     <div 
-    ref="head"
-    :class="`${prefix}-head ${prefix}-head-box`"
-    :style="{transform: `translateY(${ tY - topBarHeight }px)`, transitionDuration}">    
+      ref="head"
+      :class="`${prefix}-head ${prefix}-head-box`"
+      :style="{transform: `translateY(${ tY - topBarHeight }px)`, transitionDuration}">    
       <slot name="head">
-        <div v-if="refreshing" :class="`${prefix}-loading ${prefix}-icon`">
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
+        <div 
+          v-if="refreshing" 
+          :class="`${prefix}-loading ${prefix}-icon`">
+          <span/>
+          <span/>
+          <span/>
+          <span/>
+          <span/>
+          <span/>
+          <span/>
+          <span/>
+          <span/>
+          <span/>
+          <span/>
+          <span/>
         </div>
         <i 
-        v-else 
-        :class="`${prefix}-icon`" 
-        :style="{ transform: `rotate(${topStatus ? '180deg' : '0'})` }">↓</i>
+          v-else 
+          :class="`${prefix}-icon`" 
+          :style="{ transform: `rotate(${topStatus ? '180deg' : '0'})` }">↓</i>
         <span>{{ topTxt }}</span>
       </slot>
     </div>
     <!-- 内容 -->
     <div 
-    :class="`${prefix}-main`"
-    :style="{transform: `translateY(${tY}px)`, transitionDuration }">
-      <slot></slot>
+      :class="`${prefix}-main`"
+      :style="{transform: `translateY(${tY}px)`, transitionDuration }">
+      <slot/>
       <!-- 底部 -->
       <div
-      :class="`${prefix}-foot status-${bottomStatus}`"
-      v-if="bottomStatus > 0 && showBottom"
-      @click="beforeLoadMore">
+        v-if="bottomStatus > 0 && showBottom"
+        :class="`${prefix}-foot status-${bottomStatus}`"
+        @click="beforeLoadMore">
         <slot name="foot">
           <div 
-          :class="`${prefix}-loading ${prefix}-icon`"
-          v-if="bottomStatus === 1">
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
+            v-if="bottomStatus === 1"
+            :class="`${prefix}-loading ${prefix}-icon`">
+            <span/>
+            <span/>
+            <span/>
+            <span/>
+            <span/>
+            <span/>
+            <span/>
+            <span/>
+            <span/>
+            <span/>
+            <span/>
+            <span/>
           </div>
           <span>{{ bottomTxt }}</span>
         </slot>
@@ -98,7 +100,7 @@ function getScrollTarget(el) {
   return document.documentElement;
 }
 export default {
-  name: "jo-load-more",
+  name: "JoLoadMore",
   props: {
     topDistance: {
       type: Number
@@ -161,6 +163,13 @@ export default {
     },
     bottomStatus(val) {
       this.bottomTxt = ["", "加载中...", "--没有更多--", "点击加载更多"][val];
+    }
+  },
+  mounted() {
+    this.scrollTarget = getScrollTarget(this.$el);
+    this.topBarHeight = this.$refs.head.clientHeight;
+    if (this.autoLoad && !this.isFulled()) {
+      this.beforeRefresh();
     }
   },
   methods: {
@@ -250,13 +259,6 @@ export default {
         this.$el.getBoundingClientRect().bottom >=
         this.scrollTarget.clientHeight
       );
-    }
-  },
-  mounted() {
-    this.scrollTarget = getScrollTarget(this.$el);
-    this.topBarHeight = this.$refs.head.clientHeight;
-    if (this.autoLoad && !this.isFulled()) {
-      this.beforeRefresh();
     }
   }
 };
