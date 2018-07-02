@@ -108,6 +108,7 @@ import md from "@/util/markdown.js";
 import wechatShare from "@/util/wechatShare.js";
 import ArticleCard from "@/page/article/ArticleCard.vue";
 import CommentItem from "@/page/article/ArticleComment.vue";
+import { limit } from "@/api/api.js";
 import {
   deleteNewsComment,
   applyTopNews,
@@ -281,11 +282,20 @@ export default {
 
       getNewsComments(this.newsID, { after })
         .then(({ data: { pinneds = [], comments = [] } }) => {
-          this.pinnedCom = after ? [...this.pinneds, ...pinneds] : pinneds;
-          this.comments = after ? [...this.comments, ...comments] : comments;
-          comments.length
-            ? (this.maxComId = comments[comments.length - 1].id)
-            : (this.noMoreCom = true);
+          if (!after) {
+            this.pinnedCom = pinneds;
+            // 过滤第一页中的置顶评论
+            const pinnedIds = pinneds.map(p => p.id);
+            this.comments = comments.filter(c => pinnedIds.indexOf(c.id) < 0);
+          } else {
+            this.comments = [...this.comments, ...comments];
+          }
+
+          if (comments.length) {
+            this.maxComId = comments[comments.length - 1].id;
+          }
+
+          this.noMoreCom = comments.lenght !== limit;
           this.fetchComing = false;
         })
         .catch(() => {

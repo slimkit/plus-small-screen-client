@@ -191,20 +191,23 @@ export default {
       this.fetchComing = true;
       getPostComments(this.postID, { after })
         .then(({ data: { pinneds = [], comments = [] } }) => {
-          pinneds &&
-            pinneds.length &&
-            (this.pinnedCom = after ? [...this.pinneds, ...pinneds] : pinneds);
+          if (!after) {
+            this.pinnedCom = pinneds;
+            // 过滤第一页中的置顶评论
+            const pinnedIds = pinneds.map(p => p.id);
+            this.comments = comments.filter(c => pinnedIds.indexOf(c.id) < 0);
+          } else {
+            this.comments = [...this.comments, ...comments];
+          }
 
           if (comments.length) {
-            this.comments = after ? [...this.comments, ...comments] : comments;
             this.maxComId = comments[comments.length - 1].id;
           }
-          comments.length === limit
-            ? (this.noMoreCom = false)
-            : (this.noMoreCom = true);
+
+          this.noMoreCom = comments.length !== limit;
           this.$nextTick(() => {
-            this.fetchComing = false;
             this.loading = false;
+            this.fetchComing = false;
           });
         })
         .catch(() => {
