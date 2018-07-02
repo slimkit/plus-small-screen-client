@@ -7,16 +7,16 @@
     @on-share="shareNews"
     @on-more="moreAction"
     @on-comment="commentNews">
-    <header 
-      slot="head" 
-      class="m-box m-justify-bet m-aln-center m-art-head" 
+    <header
+      slot="head"
+      class="m-box m-justify-bet m-aln-center m-art-head"
       style="padding: 0">
       <div class="m-box m-flex-grow1 m-aln-center m-flex-base0">
-        <svg 
-          class="m-style-svg m-svg-def" 
+        <svg
+          class="m-style-svg m-svg-def"
           @click="goBack">
-          <use 
-            xmlns:xlink="http://www.w3.org/1999/xlink" 
+          <use
+            xmlns:xlink="http://www.w3.org/1999/xlink"
             xlink:href="#base-back"/>
         </svg>
       </div>
@@ -37,11 +37,11 @@
           <span>来自 {{ news.from || '原创' }}</span>
         </p>
       </section>
-      <p 
-        v-if="news.subject" 
+      <p
+        v-if="news.subject"
         class="m-art-subject">{{ news.subject }}</p>
-      <div 
-        class="m-art-body" 
+      <div
+        class="m-art-body"
         v-html="body"/>
       <div class="m-box m-aln-center m-justify-bet m-art-foot">
         <div class="m-flex-grow1 m-flex-shrink1 m-box m-aln-center m-art-like-list">
@@ -85,15 +85,15 @@
         :key="`comment-${comment.id}`"
         :comment="comment"
         @click="replyComment" />
-      <div 
-        v-if="news.audit_status===0" 
+      <div
+        v-if="news.audit_status===0"
         class="m-box m-aln-center m-justify-center load-more-box">
-        <span 
-          v-if="noMoreCom" 
+        <span
+          v-if="noMoreCom"
           class="load-more-ph">---没有更多---</span>
-        <span 
-          v-else 
-          class="load-more-btn" 
+        <span
+          v-else
+          class="load-more-btn"
           @click.stop="fetchNewsComments(maxComId)">
           {{ fetchComing ? "加载中..." : "点击加载更多" }}
         </span>
@@ -105,6 +105,7 @@
 
 <script>
 import bus from "@/bus.js";
+import { mapState } from "vuex";
 import md from "@/util/markdown.js";
 import wechatShare from "@/util/wechatShare.js";
 import ArticleCard from "@/page/article/ArticleCard.vue";
@@ -156,6 +157,7 @@ export default {
     };
   },
   computed: {
+    ...mapState(["CURRENTUSER"]),
     firstImage() {
       let images = this.news.image;
       if (!Object.keys(images).length) {
@@ -168,11 +170,11 @@ export default {
     newsID() {
       return this.$route.params.newsID;
     },
-    uid() {
-      return this.$store.state.CURRENTUSER.id;
+    userID() {
+      return this.news.user_id || 0;
     },
     isMine() {
-      return this.news.user_id === this.uid;
+      return this.news.user_id === this.CURRENTUSER.id;
     },
     liked: {
       get() {
@@ -362,15 +364,20 @@ export default {
       bus.$emit("actionSheet", [...defaultActions, ...actions], "取消");
     },
     replyComment(uid, uname, commentId) {
-      if (uid === this.uid) {
+      // 是否是自己的评论
+      if (uid === this.CURRENTUSER.id) {
+        // 是否是自己文章的评论
+        const isOwner = uid === this.userID;
         const actionSheet = [
           {
-            text: "申请评论置顶",
+            text: isOwner ? "评论置顶" : "申请评论置顶",
             method: () => {
               bus.$emit("applyTop", {
+                isOwner,
                 type: "newsComment",
                 api: applyTopNewsComment,
-                payload: { newsId: this.newsID, commentId }
+                payload: { newsId: this.newsID, commentId },
+                callback: this.fetchNewsComments
               });
             }
           },

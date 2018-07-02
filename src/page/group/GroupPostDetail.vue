@@ -332,15 +332,20 @@ export default {
       bus.$emit("actionSheet", [...defaultActions, ...actions], "取消");
     },
     replyComment(uid, uname, commentId) {
+      // 是否是自己的评论
       if (uid === this.CURRENTUSER.id) {
+        // 是否是自己文章的评论
+        const isOwner = uid === this.user.id;
         const actionSheet = [
           {
-            text: "申请评论置顶",
+            text: isOwner ? "评论置顶" : "申请评论置顶",
             method: () => {
               bus.$emit("applyTop", {
+                isOwner,
                 type: "postComment",
                 api: applyTopPostComment,
-                payload: { postId: Number(this.postID), commentId }
+                payload: { postId: Number(this.postID), commentId },
+                callback: this.fetchFeedComments
               });
             }
           },

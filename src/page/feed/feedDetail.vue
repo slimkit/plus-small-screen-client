@@ -6,16 +6,16 @@
     @on-share="shareFeed"
     @on-more="moreAction"
     @on-comment="commentFeed">
-    <header 
-      slot="head" 
-      class="m-box m-justify-bet m-aln-center m-art-head" 
+    <header
+      slot="head"
+      class="m-box m-justify-bet m-aln-center m-art-head"
       style="padding: 0">
       <div class="m-box m-flex-grow1 m-aln-center m-flex-base0">
-        <svg 
-          class="m-style-svg m-svg-def" 
+        <svg
+          class="m-style-svg m-svg-def"
           @click="goBack">
-          <use 
-            xmlns:xlink="http://www.w3.org/1999/xlink" 
+          <use
+            xmlns:xlink="http://www.w3.org/1999/xlink"
             xlink:href="#base-back"/>
         </svg>
       </div>
@@ -33,8 +33,8 @@
         class="m-box m-flex-grow1 m-aln-center m-flex-base0 m-justify-end"
         @click="followUserByStatus(relation.status)">
         <svg class="m-style-svg m-svg-def">
-          <use 
-            :xlink:href="relation.icon" 
+          <use
+            :xlink:href="relation.icon"
             xmlns:xlink="http://www.w3.org/1999/xlink"/>
         </svg>
       </div>
@@ -52,8 +52,8 @@
             class="feed-detail-video"
             controls
             autoplay>
-            <source 
-              :src="video_file" 
+            <source
+              :src="video_file"
               type="video/mp4" >
           </video>
           <async-file
@@ -64,20 +64,20 @@
             <img
               v-if="props.src"
               slot-scope="props"
-              :src="props.src" 
+              :src="props.src"
               @click="onFileClick(img)">
           </async-file>
-          <p 
-            class="m-text-box" 
+          <p
+            class="m-text-box"
             v-html="formatBody(feedContent)"/>
         </div>
         <div class="m-box m-aln-center m-justify-bet m-art-foot">
           <div class="m-flex-grow1 m-flex-shrink1 m-art-like-list">
-            <router-link 
-              v-if="likeCount > 0" 
-              tag="div" 
-              class="m-box m-aln-center" 
-              to="likers" 
+            <router-link
+              v-if="likeCount > 0"
+              tag="div"
+              class="m-box m-aln-center"
+              to="likers"
               append>
               <ul class="m-box m-flex-grow0 m-flex-shrink0">
                 <li
@@ -99,14 +99,14 @@
         </div>
         <!-- todo 打赏功能 -->
         <div class="m-box-model m-box-center m-box-center-a m-art-reward">
-          <button 
-            class="m-art-rew-btn" 
+          <button
+            class="m-art-rew-btn"
             @click="rewardFeed">打 赏</button>
           <p class="m-art-rew-label"><a href="javascript:;">{{ reward.count | formatNum }}</a>人打赏，共<a href="javascript:;">{{ ~~reward.amount }}</a>积分</p>
-          <router-link 
-            tag="ul" 
-            to="rewarders" 
-            append 
+          <router-link
+            tag="ul"
+            to="rewarders"
+            append
             class="m-box m-aln-center m-art-rew-list">
             <li
               v-for="rew in rewardList"
@@ -115,14 +115,14 @@
               class="m-flex-grow0 m-flex-shrink0 m-art-rew m-avatar-box tiny">
               <img :src="rew.user.avatar">
             </li>
-            <li 
-              v-if="rewardList.length > 0" 
+            <li
+              v-if="rewardList.length > 0"
               class="m-box m-aln-center">
-              <svg 
-                class="m-style-svg m-svg-def" 
+              <svg
+                class="m-style-svg m-svg-def"
                 style="fill:#bfbfbf">
-                <use 
-                  xmlns:xlink="http://www.w3.org/1999/xlink" 
+                <use
+                  xmlns:xlink="http://www.w3.org/1999/xlink"
                   xlink:href="#base-arrow-r"/>
               </svg>
             </li>
@@ -130,8 +130,8 @@
         </div>
       </main>
       <!-- 评论列表 -->
-      <div 
-        id="comment_list" 
+      <div
+        id="comment_list"
         class="m-box-model m-art-comments">
         <ul class="m-box m-aln-center m-art-comments-tabs">
           <li>{{ commentCount | formatNum }}条评论</li>
@@ -148,12 +148,12 @@
           :comment="comment"
           @click="replyComment"/>
         <div class="m-box m-aln-center m-justify-center load-more-box">
-          <span 
-            v-if="noMoreCom" 
+          <span
+            v-if="noMoreCom"
             class="load-more-ph">---没有更多---</span>
-          <span 
-            v-else 
-            class="load-more-btn" 
+          <span
+            v-else
+            class="load-more-btn"
             @click.stop="fetchFeedComments(maxComId)">
             {{ fetchComing ? "加载中..." : "点击加载更多" }}
           </span>
@@ -165,6 +165,7 @@
 
 <script>
 import bus from "@/bus.js";
+import { mapState } from "vuex";
 import ArticleCard from "@/page/article/ArticleCard.vue";
 import CommentItem from "@/page/article/ArticleComment.vue";
 import wechatShare from "@/util/wechatShare.js";
@@ -202,6 +203,7 @@ export default {
     };
   },
   computed: {
+    ...mapState(["CURRENTUSER"]),
     feedID() {
       return this.$route.params.feedID;
     },
@@ -216,9 +218,6 @@ export default {
     },
     cover_file() {
       return this.video ? `/api/v2/files/${this.video.video_id}` : false;
-    },
-    CURRENTUSER() {
-      return this.$store.state.CURRENTUSER;
     },
     isMine() {
       return this.feed.user_id === this.CURRENTUSER.id;
@@ -412,11 +411,6 @@ export default {
     fetchFeedComments(after = 0) {
       if (this.fetchComing) return;
       this.fetchComing = true;
-      // this.$http.get(`/feeds/${this.feedID}/comments`, {
-      //   params: {
-      //     after
-      //   }
-      // });
       getFeedComments({ feedId: this.feedID, after })
         .then(({ data: { pinneds = [], comments = [] } }) => {
           !after && (this.pinnedCom = pinneds);
@@ -578,15 +572,20 @@ export default {
       bus.$emit("actionSheet", [...defaultActions, ...actions], "取消");
     },
     replyComment(uid, uname, commentId) {
+      // 是否是自己的评论
       if (uid === this.CURRENTUSER.id) {
+        // 是否是自己文章的评论
+        const isOwner = uid === this.user.id;
         const actionSheet = [
           {
-            text: "申请评论置顶",
+            text: isOwner ? "评论置顶" : "申请评论置顶",
             method: () => {
               bus.$emit("applyTop", {
+                isOwner,
                 type: "feedComment",
                 api: applyTopFeedComment,
-                payload: { feedId: this.feedID, commentId }
+                payload: { feedId: this.feedID, commentId },
+                callback: this.fetchFeedComments
               });
             }
           },

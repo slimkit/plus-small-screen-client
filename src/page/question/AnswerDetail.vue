@@ -285,12 +285,6 @@ export default {
             "actionSheet",
             [
               {
-                text: "申请评论置顶",
-                method: () => {
-                  this.$Message.info("置顶功能开发中，敬请期待");
-                }
-              },
-              {
                 text: "删除评论",
                 method: () => {
                   this.$Message.info("评论删除功能开发中，敬请期待");

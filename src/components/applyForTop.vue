@@ -1,17 +1,17 @@
 <template>
   <transition name="toast">
-    <div 
-      v-if="show" 
-      class="m-box-model m-pos-f" 
-      style="background-color: #f4f5f6; z-index: 101" 
+    <div
+      v-if="show"
+      class="m-box-model m-pos-f"
+      style="background-color: #f4f5f6; z-index: 101"
       @touchmove.prevent>
       <header class="m-box m-aln-center m-head-top m-main m-bb1">
         <div class="m-flex-grow1">
-          <svg 
-            class="m-style-svg m-svg-def" 
+          <svg
+            class="m-style-svg m-svg-def"
             @click="cancel">
-            <use 
-              xmlns:xlink="http://www.w3.org/1999/xlink" 
+            <use
+              xmlns:xlink="http://www.w3.org/1999/xlink"
               xlink:href="#base-back"/>
           </svg>
         </div>
@@ -66,23 +66,26 @@
           </div>
           <p
             class="placeholder m-flex-grow1 m-flex-shrink1"
-            style="padding: .3rem .2rem 0; font-size: .24rem;"><!-- 最近置顶平均{{  }},  -->可用积分{{ currencySum }}</p>
+            style="padding: .3rem .2rem 0; font-size: .24rem;">
+            <!-- 最近置顶平均{{  }},  -->
+            可用积分{{ currencySum }}
+          </p>
         </div>
-        <div 
-          class="plr20 m-lim-width" 
+        <div
+          class="plr20 m-lim-width"
           style="margin-top: 0.6rem">
           <button
             :disabled="disabled || loading"
             class="m-long-btn m-signin-btn"
             @click="handleOk">
-            <svg 
-              v-if="loading" 
+            <svg
+              v-if="loading"
               class="m-style-svg m-svg-def">
-              <use 
-                xmlns:xlink="http://www.w3.org/1999/xlink" 
+              <use
+                xmlns:xlink="http://www.w3.org/1999/xlink"
                 xlink:href="#base-loading"/>
             </svg>
-            <span v-else>申请置顶</span>
+            <span v-else>{{ isOwner ? '确认置顶' : '申请置顶' }}</span>
           </button>
         </div>
       </main>
@@ -104,9 +107,11 @@ export default {
       currencySum: 0,
       loading: false,
       customAmount: null,
+      isOwner: false,
       applyType: "", // 申请置顶的类型
-      applyApi: noop, // 申请置顶的api
-      applyPayload: {} // 申请置顶的负载数据，如feedID等
+      applyApi: noop, // 申请置顶的api 类型是一个 Promise 对象
+      applyPayload: {}, // 申请置顶的负载数据，如feedID等
+      applyCallback: noop
     };
   },
   computed: {
@@ -131,14 +136,19 @@ export default {
      * 弹出申请置顶窗口 (hooks -> applyTop)
      * @author mutoe <mutoe@foxmail.com>
      * @param {Object} options
-     * @param {String} options.type 申请置顶类型
+     * @param {string} options.type 申请置顶类型
      * @param {Promise} options.api 申请置顶的 api，需要返回 axios promise 对象
-     * @param {*} options.payload 申请置顶 api 的第一个参数，可以为任何类型的值，取决于 api 中的设定
+     * @param {string|Object} options.payload 申请置顶 api 的第一个参数，取决于 api 中的设定
+     * @param {boolean} [options.isOwner = false] 是否是文章的所有者
+     * @param {Function} [options.callback = noop] 申请置顶成功后执行的回调方法
      */
-    bus.$on("applyTop", ({ type, api, payload }) => {
+    bus.$on("applyTop", options => {
+      const { type, api, payload, isOwner = false, callback = noop } = options;
       this.applyType = type;
       this.applyApi = api;
       this.applyPayload = payload;
+      this.isOwner = isOwner;
+      this.applyCallback = callback || noop;
       this.open();
     });
   },
@@ -155,6 +165,7 @@ export default {
         .then(({ data = {} }) => {
           this.loading = false;
           this.$Message.success(data);
+          this.applyCallback();
           this.$nextTick(this.cancel);
         })
         .catch(err => {
@@ -185,9 +196,11 @@ export default {
       this.day = null;
       this.customAmount = null;
       this.scrollable = true;
+      this.isOwner = false;
       this.applyType = "";
       this.applyApi = noop;
       this.applyPayload = {};
+      this.applyCallback = noop;
     }
   }
 };

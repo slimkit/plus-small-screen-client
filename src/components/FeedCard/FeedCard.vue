@@ -1,33 +1,33 @@
 <template>
-  <div 
-    class="m-box-model m-card" 
+  <div
+    class="m-box-model m-card"
     @click="handleView('')">
     <div class="m-box">
       <div
         v-if="timeLine"
         class="m-box-model m-aln-center m-flex-grow0 m-flex-shrink0 m-card-time-line"
         v-html="timeLineText"/>
-      <avatar 
-        v-else 
+      <avatar
+        v-else
         :user="user" />
       <section class="m-box-model m-flex-grow1 m-flex-shrink1 m-card-main">
-        <header 
-          v-if="!timeLine" 
+        <header
+          v-if="!timeLine"
           class="m-box m-aln-center m-justify-bet m-card-usr">
           <h4 class="m-flex-grow1 m-flex-shrink1">{{ user.name }}</h4>
           <div class="m-box m-aln-center">
-            <span 
-              v-if="pinned" 
+            <span
+              v-if="pinned"
               class="m-art-comment-icon-top">置顶</span>
             <span>{{ time | time2tips }}</span>
           </div>
         </header>
-        <article 
-          class="m-card-body" 
+        <article
+          class="m-card-body"
           @click="handleView('')">
           <h2 v-if="title">{{ title }}</h2>
-          <div 
-            v-if="body.length > 0" 
+          <div
+            v-if="body.length > 0"
             class="m-card-con">
             <p
               :class="{needPay}"
@@ -45,29 +45,29 @@
         </article>
       </section>
     </div>
-    <footer 
-      v-if="showFooter" 
-      class="m-box-model m-card-foot m-bt1" 
+    <footer
+      v-if="showFooter"
+      class="m-box-model m-card-foot m-bt1"
       @click.stop>
       <div class="m-box m-aln-center m-card-tools m-lim-width">
-        <a 
-          class="m-box m-aln-center" 
+        <a
+          class="m-box m-aln-center"
           @click.prevent="handleLike">
           <svg class="m-style-svg m-svg-def">
             <use :xlink:href="liked ? '#feed-like' :'#feed-unlike'"/>
           </svg>
           <span>{{ likeCount | formatNum }}</span>
         </a>
-        <a 
-          class="m-box m-aln-center" 
+        <a
+          class="m-box m-aln-center"
           @click.prevent="handleComment">
           <svg class="m-style-svg m-svg-def">
             <use xlink:href="#feed-comment"/>
           </svg>
           <span>{{ commentCount | formatNum }}</span>
         </a>
-        <a 
-          class="m-box m-aln-center" 
+        <a
+          class="m-box m-aln-center"
           @click.prevent="handleView('')">
           <svg class="m-style-svg m-svg-def">
             <use xlink:href="#feed-eye"/>
@@ -75,8 +75,8 @@
           <span>{{ viewCount | formatNum }}</span>
         </a>
         <div class="m-box m-justify-end m-flex-grow1 m-flex-shrink1">
-          <a 
-            class="m-box m-aln-center" 
+          <a
+            class="m-box m-aln-center"
             @click.prevent="handleMore">
             <svg class="m-style-svg m-svg-def">
               <use xlink:href="#feed-more"/>
@@ -84,21 +84,21 @@
           </a>
         </div>
       </div>
-      <ul 
-        v-if="commentCount > 0" 
+      <ul
+        v-if="commentCount > 0"
         class="m-card-comments">
         <li
           v-for="com in comments"
           v-if="com.id"
           :key="com.id">
-          <comment-item 
-            :comment="com" 
+          <comment-item
+            :comment="com"
             @click="commentAction"/>
         </li>
       </ul>
-      <div 
-        v-if="commentCount > 5" 
-        class="m-router-link" 
+      <div
+        v-if="commentCount > 5"
+        class="m-router-link"
         @click="handleView('comment_list')">
         <a>查看全部评论</a>
       </div>
@@ -138,6 +138,7 @@ export default {
       default: false
     },
     feed: {
+      type: Object,
       required: true
     },
     showFooter: {
@@ -308,7 +309,7 @@ export default {
       });
     },
     handleMore() {
-      const base = [
+      const actions = [
         {
           text: this.has_collect ? "取消收藏" : "收藏",
           method: () => {
@@ -335,71 +336,76 @@ export default {
           }
         }
       ];
-      const actions = this.isMine
-        ? [
-            {
-              text: "申请动态置顶",
-              method: () => {
-                bus.$emit("applyTop", {
-                  type: "feed",
-                  api: applyTopFeed,
-                  payload: this.feedID
-                });
-              }
-            },
-            {
-              text: "删除动态",
-              method: () => {
-                setTimeout(() => {
-                  const actionSheet = [
-                    {
-                      text: "删除",
-                      style: { color: "#f4504d" },
-                      method: () => {
-                        deleteFeed(this.feedID).then(() => {
-                          this.$Message.success("删除动态成功");
-                          this.$nextTick(() => {
-                            this.$el.remove();
-                            this.$emit("afterDelete");
-                          });
-                        });
-                      }
-                    }
-                  ];
-                  bus.$emit("actionSheet", actionSheet, "取消", "确认删除?");
-                }, 200);
-              }
-            }
-          ]
-        : [
-            {
-              text: "举报",
-              method: () => {
-                console.log("举报");
-              }
-            }
-          ];
-      bus.$emit("actionSheet", [...base, ...actions], "取消");
+      if (this.isMine) {
+        // 是否是自己文章的评论
+        actions.push({
+          text: "申请动态置顶",
+          method: () => {
+            bus.$emit("applyTop", {
+              type: "feed",
+              api: applyTopFeed,
+              payload: this.feedID
+            });
+          }
+        });
+        actions.push({
+          text: "删除动态",
+          method: () => {
+            setTimeout(() => {
+              const actionSheet = [
+                {
+                  text: "删除",
+                  style: { color: "#f4504d" },
+                  method: () => {
+                    deleteFeed(this.feedID).then(() => {
+                      this.$Message.success("删除动态成功");
+                      this.$nextTick(() => {
+                        this.$el.remove();
+                        this.$emit("afterDelete");
+                      });
+                    });
+                  }
+                }
+              ];
+              bus.$emit("actionSheet", actionSheet, "取消", "确认删除?");
+            }, 200);
+          }
+        });
+      } else {
+        actions.push({
+          text: "举报",
+          method: () => {
+            console.log("举报");
+          }
+        });
+      }
+
+      bus.$emit("actionSheet", actions, "取消");
     },
     commentAction({ isMine = false, placeholder, reply_user, comment }) {
-      isMine
-        ? bus.$emit("actionSheet", [
-            {
-              text: "申请评论置顶",
-              method: () => {
-                bus.$emit("applyTop", {
-                  type: "feedComment",
-                  api: applyTopFeedComment,
-                  payload: { feedId: this.feedID, commentId: comment.id }
-                });
-              }
-            },
-            { text: "删除评论", method: () => this.deleteComment(comment.id) }
-          ])
-        : this.handleComment({
-            placeholder,
-            reply_user
-          });
+      if (isMine) {
+        const isOwner = this.feed.user.id === this.CURRENTUSER.id;
+        const actionSheet = [
+          {
+            text: isOwner ? "评论置顶" : "申请评论置顶",
+            method: () => {
+              bus.$emit("applyTop", {
+                isOwner,
+                type: "feedComment",
+                api: applyTopFeedComment,
+                payload: { feedId: this.feedID, commentId: comment.id }
+              });
+            }
+          },
+          { text: "删除评论", method: () => this.deleteComment(comment.id) }
+        ];
+        bus.$emit("actionSheet", actionSheet);
+      } else {
+        this.handleComment({
+          placeholder,
+          reply_user
+        });
+      }
     },
     sendComment({ reply_user: replyUser, body }) {
       if (body && body.length === 0)
