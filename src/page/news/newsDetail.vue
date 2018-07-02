@@ -72,33 +72,31 @@
       <ul class="m-box m-aln-center m-art-comments-tabs">
         <li>{{ commentCount | formatNum }}条评论</li>
       </ul>
-      <comment-item
-        v-for="(comment) in pinnedCom"
-        v-if="news.audit_status===0"
-        :key="`pinned-${comment.id}`"
-        :comment="comment"
-        :pinned="true"
-        @click="replyComment" />
-      <comment-item
-        v-for="(comment) in comments"
-        v-if="news.audit_status===0"
-        :key="`comment-${comment.id}`"
-        :comment="comment"
-        @click="replyComment" />
-      <div
-        v-if="news.audit_status===0"
-        class="m-box m-aln-center m-justify-center load-more-box">
-        <span
-          v-if="noMoreCom"
-          class="load-more-ph">---没有更多---</span>
-        <span
-          v-else
-          class="load-more-btn"
-          @click.stop="fetchNewsComments(maxComId)">
-          {{ fetchComing ? "加载中..." : "点击加载更多" }}
-        </span>
-        <!-- <button v-else class="load-more-btn" @click.stop="fetchNewsComments(maxComId)"></button> -->
-      </div>
+      <template v-if="news.audit_status === 0">
+        <comment-item
+          v-for="(comment) in pinnedCom"
+          :key="`pinned-${comment.id}`"
+          :comment="comment"
+          :pinned="true"
+          @click="replyComment" />
+        <comment-item
+          v-for="(comment) in comments"
+          :key="`comment-${comment.id}`"
+          :comment="comment"
+          @click="replyComment" />
+        <div class="m-box m-aln-center m-justify-center load-more-box">
+          <span
+            v-if="noMoreCom"
+            class="load-more-ph">---没有更多---</span>
+          <span
+            v-else
+            class="load-more-btn"
+            @click.stop="fetchNewsComments(maxComId)">
+            {{ fetchComing ? "加载中..." : "点击加载更多" }}
+          </span>
+          <!-- <button v-else class="load-more-btn" @click.stop="fetchNewsComments(maxComId)"></button> -->
+        </div>
+      </template>
     </div>
   </article-card>
 </template>
