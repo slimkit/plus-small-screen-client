@@ -1,17 +1,17 @@
 <template>
   <transition name="pop">
-    <div 
-      v-if="show" 
-      class="m-box-model m-pos-f" 
-      style="background-color: #f4f5f6" 
+    <div
+      v-if="show"
+      class="m-box-model m-pos-f"
+      style="background-color: #f4f5f6"
       @touchmove.prevent>
       <header class="m-box m-aln-center m-head-top m-main m-bb1">
         <div class="m-flex-grow1">
-          <svg 
-            class="m-style-svg m-svg-def" 
+          <svg
+            class="m-style-svg m-svg-def"
             @click="cancel">
-            <use 
-              xmlns:xlink="http://www.w3.org/1999/xlink" 
+            <use
+              xmlns:xlink="http://www.w3.org/1999/xlink"
               xlink:href="#base-back"/>
           </svg>
         </div>
@@ -19,9 +19,9 @@
           <span>打赏</span>
         </div>
         <div class="m-box m-aln-center m-justify-end m-flex-grow1 m-text-r">
-          <button 
-            :disabled="!(amount > 0)" 
-            class="m-btn" 
+          <button
+            :disabled="!(amount > 0)"
+            class="m-btn"
             @click.stop.prevent="resetProps">重置</button>
         </div>
       </header>
@@ -53,18 +53,18 @@
             </div>
           </div>
         </div>
-        <div 
-          class="plr20 m-lim-width" 
+        <div
+          class="plr20 m-lim-width"
           style="margin-top: 0.6rem">
           <button
             :disabled="disabled || loading"
             class="m-long-btn m-signin-btn"
             @click="handleOk">
-            <svg 
-              v-if="loading" 
+            <svg
+              v-if="loading"
               class="m-style-svg m-svg-def">
-              <use 
-                xmlns:xlink="http://www.w3.org/1999/xlink" 
+              <use
+                xmlns:xlink="http://www.w3.org/1999/xlink"
                 xlink:href="#base-loading"/>
             </svg>
             <span v-else>确定</span>
@@ -74,9 +74,12 @@
     </div>
   </transition>
 </template>
+
 <script>
 import bus from "@/bus.js";
+
 const noop = () => {};
+
 export default {
   name: "Reward",
   data() {
