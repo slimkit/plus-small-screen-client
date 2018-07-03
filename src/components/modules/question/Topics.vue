@@ -24,10 +24,10 @@
         :key="topic.id"
         class="module-questions-topics-item">
         <router-link
-          v-show="topic.avatar"
           :src="topic.avatar"
           :to="`/question-topics/${topic.id}`"
-          tag="img" />
+          tag="img"
+          class="topic-image" />
         <router-link
           :to="`/question-topics/${topic.id}`"
           tag="a"
@@ -226,13 +226,15 @@ export default {
     align-items: center;
     width: 100%;
     height: 175px;
-    padding: 28px 43px;
+    padding: 28px;
     background-color: #fff;
     border-bottom: solid 1px #d7d8d8;
-    > img {
+    .topic-image {
       width: 120px;
       height: 120px;
-      margin-right: 18px;
+      margin-right: 28px;
+      border: none;
+      background-color: #d7d8d8;
     }
     .title {
       flex-grow: 1;
