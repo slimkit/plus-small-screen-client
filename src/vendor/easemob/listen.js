@@ -12,7 +12,6 @@ WebIM.conn.listen({
    * @author jsonleex <jsonlseex@163.com>
    */
   onOpened(/* msg */) {
-    console.log("聊天服务连接成功" /*, msg*/);
     try {
       /************** 连接成功后 **************/
       /**
@@ -22,7 +21,7 @@ WebIM.conn.listen({
 
       WebIM.conn.setPresence();
     } catch (e) {
-      console.log(e);
+      console.warn(e);
     }
   },
   onClosed: msg => {
@@ -40,7 +39,6 @@ WebIM.conn.listen({
    * @author jsonleex <jsonlseex@163.com>
    */
   onTextMessage: message => {
-    console.log("onTextMessage:", message);
     generateMessage(message).then(({ msg, room }) => {
       /**
        * 存 $_MESSAGES
@@ -54,14 +52,15 @@ WebIM.conn.listen({
     });
   },
   onPictureMessage: message => {
-    console.log("onPictureMessage", message);
+    process.env.NODE_ENV !== "production" &&
+      console.info("onPictureMessage", message);
   },
 
   onReceivedMessage: message => {
-    console.log(message);
+    process.env.NODE_ENV !== "production" && console.info(message);
   },
 
   onPresence: msg => {
-    console.log(msg);
+    process.env.NODE_ENV !== "production" && console.info(msg);
   }
 });

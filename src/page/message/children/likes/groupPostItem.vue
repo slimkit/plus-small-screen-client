@@ -3,22 +3,22 @@
     <div :class="`${prefixCls}-item-top`">
       <avatar :user="user" />
       <section class="userInfo">
-        <span 
-          v-if="!user.id" 
+        <span
+          v-if="!user.id"
           :class="`${prefixCls}-item-top-link`">未知用户 </span>
-        <router-link 
-          :class="`${prefixCls}-item-top-link`" 
+        <router-link
+          :class="`${prefixCls}-item-top-link`"
           :to="`/users/${user._id}`">{{ user.name }}</router-link>
         <span>赞了你的帖子</span>
         <p>{{ like.created_at | time2tips }}</p>
       </section>
     </div>
     <div :class="`${prefixCls}-item-bottom`">
-      <section 
-        v-if="like.likeable !== null" 
+      <section
+        v-if="like.likeable !== null"
         @click="goToFeedDetail()">
-        <div 
-          :class="`${prefixCls}-item-bottom-noImg`" 
+        <div
+          :class="`${prefixCls}-item-bottom-noImg`"
           class="content">
           {{ like.likeable.title }}
         </div>
@@ -32,8 +32,8 @@
         </div> -->
       </section>
       <section v-if="like.likeable === null">
-        <div 
-          :class="`${prefixCls}-item-bottom-noImg`" 
+        <div
+          :class="`${prefixCls}-item-bottom-noImg`"
           class="content">
           帖子已被删除
         </div>
@@ -69,9 +69,6 @@ export default {
     user() {
       return this.like.user || {};
     }
-  },
-  created() {
-    // console.log(this.comment)
   },
   methods: {
     /**

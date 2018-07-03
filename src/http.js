@@ -54,9 +54,9 @@ axios.interceptors.response.use(
           break;
       }
     } else if (error.request) {
-      console.log(error.request);
+      console.warn(error.request);
     } else {
-      console.log("Error", error.message);
+      console.warn("Error", error.message);
     }
 
     return Promise.reject(error);

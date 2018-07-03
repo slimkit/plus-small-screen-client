@@ -2,11 +2,11 @@
   <div class="p-forgot forgot signup">
     <header class="m-pos-f m-box m-justify-bet m-aln-center m-main m-bb1 m-head-top">
       <div class="m-box m-flex-grow1 m-aln-center m-flex-base0">
-        <svg 
-          class="m-style-svg m-svg-def" 
+        <svg
+          class="m-style-svg m-svg-def"
           @click="goBack">
-          <use 
-            xmlns:xlink="http://www.w3.org/1999/xlink" 
+          <use
+            xmlns:xlink="http://www.w3.org/1999/xlink"
             xlink:href="#base-back"/>
         </svg>
       </div>
@@ -14,14 +14,14 @@
         <span>修改密码</span>
       </div>
       <div class="m-box m-flex-grow1 m-aln-center m-flex-base0 m-justify-end">
-        <a 
-          :disabled="loading || disabled" 
+        <a
+          :disabled="loading || disabled"
           @click="handleOk">
-          <svg 
-            v-if="loading" 
+          <svg
+            v-if="loading"
             class="m-style-svg m-svg-def">
-            <use 
-              xmlns:xlink="http://www.w3.org/1999/xlink" 
+            <use
+              xmlns:xlink="http://www.w3.org/1999/xlink"
               xlink:href="#base-loading"/>
           </svg>
           <span v-else>更改</span>
@@ -135,7 +135,7 @@ export default {
           this.loading = false;
         })
         .catch(e => {
-          console.log(e);
+          console.warn(e);
           this.loading = false;
           this.disabled = true;
         });

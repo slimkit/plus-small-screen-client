@@ -2,11 +2,11 @@
   <div>
     <header class="m-box m-pos-f m-main m-head-top m-bb1">
       <div class="m-box m-aln-center m-flex-grow1 m-flex-base0">
-        <svg 
-          class="m-style-svg m-svg-def" 
+        <svg
+          class="m-style-svg m-svg-def"
           @click="goBack">
-          <use 
-            xmlns:xlink="http://www.w3.org/1999/xlink" 
+          <use
+            xmlns:xlink="http://www.w3.org/1999/xlink"
             xlink:href="#base-back"/>
         </svg>
       </div>
@@ -15,8 +15,8 @@
       </div>
       <div class="m-box m-aln-center m-justify-end m-flex-grow1 m-flex-base0">
         <svg class="m-style-svg m-svg-def">
-          <use 
-            xmlns:xlink="http://www.w3.org/1999/xlink" 
+          <use
+            xmlns:xlink="http://www.w3.org/1999/xlink"
             xlink:href="#base-share"/>
         </svg>
       </div>
@@ -41,9 +41,9 @@
         >
           <span>✓</span>已关注
         </button>
-        <button 
-          v-else 
-          class="follow" 
+        <button
+          v-else
+          class="follow"
           @click="handleFollow(topic)">
           <span>+</span>关注
         </button>
@@ -71,33 +71,33 @@
       </div>
 
       <!-- Types nav -->
-      <nav 
-        ref="types" 
+      <nav
+        ref="types"
         :class="classNameBuilder('types')">
-        <router-link 
-          :to="{ path: `/question-topics/${id}` }" 
-          replace 
-          exact 
+        <router-link
+          :to="{ path: `/question-topics/${id}` }"
+          replace
+          exact
           exact-active-class="active">热门</router-link>
-        <router-link 
-          :to="{ path: `/question-topics/${id}`, query: { type: 'excellent' } }" 
-          replace 
-          exact 
+        <router-link
+          :to="{ path: `/question-topics/${id}`, query: { type: 'excellent' } }"
+          replace
+          exact
           exact-active-class="active">精选</router-link>
-        <router-link 
-          :to="{ path: `/question-topics/${id}`, query: { type: 'reward' } }" 
-          replace 
-          exact 
+        <router-link
+          :to="{ path: `/question-topics/${id}`, query: { type: 'reward' } }"
+          replace
+          exact
           exact-active-class="active">悬赏</router-link>
-        <router-link 
-          :to="{ path: `/question-topics/${id}`, query: { type: 'new' } }" 
-          replace 
-          exact 
+        <router-link
+          :to="{ path: `/question-topics/${id}`, query: { type: 'new' } }"
+          replace
+          exact
           exact-active-class="active">最新</router-link>
-        <router-link 
-          :to="{ path: `/question-topics/${id}`, query: { type: 'all' } }" 
-          replace 
-          exact 
+        <router-link
+          :to="{ path: `/question-topics/${id}`, query: { type: 'all' } }"
+          replace
+          exact
           exact-active-class="active">全部</router-link>
       </nav>
 
@@ -151,10 +151,6 @@ export default {
   },
   watch: {
     $route(newRoute, oldRoute) {
-      console.log(
-        newRoute.path === oldRoute.path &&
-          newRoute.query.type !== oldRoute.query.type
-      );
       if (
         newRoute.path === oldRoute.path &&
         newRoute.query.type !== oldRoute.query.type

@@ -21,7 +21,6 @@ export default {
    * @param    {[type]}            options.commit [description]
    */
   GET_UNREAD_COUNT({ rootState, commit }) {
-    // console.log(rootState);
     if (!rootState.CURRENTUSER || !lstore.hasData("H5_ACCESS_TOKEN")) return;
     let options = {};
     let cPlaceholder = "还没有人评论过你";

@@ -12,7 +12,7 @@ export function getGroupTotalNumber() {
       return count;
     },
     err => {
-      console.log(err);
+      console.warn(err);
       return 0;
     }
   );
@@ -29,7 +29,7 @@ export function getGroupCates() {
       vuex.commit("SAVE_GROUP_CATES", data);
     })
     .catch(err => {
-      console.log(err);
+      console.warn(err);
       vuex.commit("SAVE_GROUP_CATES", []);
     });
 }
@@ -103,7 +103,7 @@ export function getGroupsByCate(cate = -1, limit = 15, offset = 0) {
       return data;
     })
     .catch(err => {
-      console.log(err);
+      console.warn(err);
       return [];
     });
 }
@@ -181,7 +181,7 @@ export function getGroudFeedsByType(
       return data;
     },
     err => {
-      console.log(err);
+      console.warn(err);
       return { pinneds: [], posts: [] };
     }
   );

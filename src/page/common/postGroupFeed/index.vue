@@ -1,46 +1,46 @@
 <template>
   <div :class="prefixCls">
-    <head-top 
-      :go-back="true" 
-      :append="true" 
+    <head-top
+      :go-back="true"
+      :append="true"
       title="发帖">
-      <button 
-        slot="prepend" 
-        :class="`${prefixCls}-btn`" 
+      <button
+        slot="prepend"
+        :class="`${prefixCls}-btn`"
         @click="goBack">取消</button>
-      <button 
-        slot="append" 
-        :class="`${prefixCls}-btn`" 
-        :disabled="disabled" 
+      <button
+        slot="append"
+        :class="`${prefixCls}-btn`"
+        :disabled="disabled"
         @click="postFeed">发布</button>
     </head-top>
     <div/>
     <div :class="`${prefixCls}-content`">
       <template v-if="!groupID || selectGroup.id">
-        <div 
-          :class="`${prefixCls}-select`" 
+        <div
+          :class="`${prefixCls}-select`"
           @click.stop="showChoosePage">
           <div :class="`${prefixCls}-select-label`">{{ chooseTips }}</div>
           <v-icon type="base-arrow-r" />
         </div>
       </template>
       <div :class="`${prefixCls}-title`">
-        <input 
-          v-model="title" 
-          type="text" 
-          placeholder="输入标题, 20字以内" 
+        <input
+          v-model="title"
+          type="text"
+          placeholder="输入标题, 20字以内"
           maxlength="20">
       </div>
       <div :class="`${prefixCls}-body`">
-        <textarea 
-          v-txtautosize 
-          v-model="body" 
+        <textarea
+          v-txtautosize
+          v-model="body"
           placeholder="输入要说的话, 图文结合更精彩哦" />
       </div>
     </div>
-    <ChooseGroup 
-      v-show="showChoose" 
-      v-model="selectGroup" 
+    <ChooseGroup
+      v-show="showChoose"
+      v-model="selectGroup"
       @on-close="closeChoosePage" />
   </div>
 </template>
@@ -99,7 +99,6 @@ export default {
           })
           .then(({ data: { post } }) => {
             if (post.id) {
-              console.log("发布成功");
               this.$router.push(`/group/${this.groupID}/feed/${post.id}`);
             }
           });

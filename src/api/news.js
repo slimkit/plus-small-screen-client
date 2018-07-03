@@ -54,7 +54,7 @@ export function searchNewsByKey(key = "", limit = 15, after = 0) {
           return data;
         },
         err => {
-          console.log(err);
+          console.warn(err);
           return [];
         }
       );

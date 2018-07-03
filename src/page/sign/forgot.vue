@@ -2,11 +2,11 @@
   <div class="p-forgot forgot signup">
     <header class="m-pos-f m-box m-justify-bet m-aln-center m-main m-bb1 m-head-top">
       <div class="m-box m-flex-grow1 m-aln-center m-flex-base0">
-        <svg 
-          class="m-style-svg m-svg-def" 
+        <svg
+          class="m-style-svg m-svg-def"
           @click="goBack">
-          <use 
-            xmlns:xlink="http://www.w3.org/1999/xlink" 
+          <use
+            xmlns:xlink="http://www.w3.org/1999/xlink"
             xlink:href="#base-back"/>
         </svg>
       </div>
@@ -14,14 +14,14 @@
         <span>找回密码</span>
       </div>
       <div class="m-box m-flex-grow1 m-aln-center m-flex-base0 m-justify-end">
-        <a 
-          v-show="countdown === 0" 
+        <a
+          v-show="countdown === 0"
           @click.prevent="changeType">{{ _$type.label2 }}找回</a>
       </div>
     </header>
     <main style="padding-top: 0.9rem">
-      <div 
-        v-if="verifiable_type === &quot;sms&quot;" 
+      <div
+        v-if="verifiable_type === &quot;sms&quot;"
         class="m-form-row m-main">
         <label for="phone">手机号</label>
         <div class="m-input">
@@ -34,14 +34,14 @@
             oninput="value=value.slice(0, 11)"
             placeholder="输入11位手机号">
         </div>
-        <span 
-          :class="{ disabled: phone.length < 11 || countdown > 0 }" 
+        <span
+          :class="{ disabled: phone.length < 11 || countdown > 0 }"
           class="m-flex-grow0 m-flex-shrink0 signup-form--row-append c_59b6d7"
           @click="getCode"
         >{{ codeText }}</span>
       </div>
-      <div 
-        v-if="verifiable_type === &quot;mail&quot;" 
+      <div
+        v-if="verifiable_type === &quot;mail&quot;"
         class="m-form-row m-main">
         <label for="mail">邮箱</label>
         <div class="m-input">
@@ -52,8 +52,8 @@
             autocomplete="off"
             placeholder="输入邮箱地址">
         </div>
-        <span 
-          :class="{ disabled: email.length < 11 || countdown > 0 }" 
+        <span
+          :class="{ disabled: email.length < 11 || countdown > 0 }"
           class="signup-form--row-append c_59b6d7"
           @click="getCode"
         >{{ codeText }}</span>
@@ -70,12 +70,12 @@
             placeholder="输入4-6位验证码"
           >
         </div>
-        <svg 
+        <svg
           v-show="verifiable_code.length > 0"
           class="m-style-svg m-svg-def"
           @click="verifiable_code = ''">
-          <use 
-            xmlns:xlink="http://www.w3.org/1999/xlink" 
+          <use
+            xmlns:xlink="http://www.w3.org/1999/xlink"
             xlink:href="#base-clean"/>
         </svg>
       </div>
@@ -90,19 +90,19 @@
             type="text"
             maxlength="16"
             placeholder="输入6位以上登录密码">
-          <input 
-            v-else 
+          <input
+            v-else
             id="password"
             v-model="password"
             type="password"
             maxlength="16"
-            placeholder="输入6位以上登录密码" 
+            placeholder="输入6位以上登录密码"
           >
         </div>
         <svg
           class="m-style-svg m-svg-def"
           @click="eye=!eye">
-          <use 
+          <use
             :xlink:href="`#eye-${eye?&quot;open&quot;:&quot;close&quot;}`"
             xmlns:xlink="http://www.w3.org/1999/xlink"/>
         </svg>
@@ -111,18 +111,18 @@
         <span>{{ error | plusMessageFirst }}</span>
       </div>
 
-      <div 
-        class="m-form-row" 
+      <div
+        class="m-form-row"
         style="border: 0">
         <button
           :disabled="loading||disabled"
           class="m-long-btn m-signin-btn"
           @click="handleOk">
-          <svg 
-            v-if="loading" 
+          <svg
+            v-if="loading"
             class="m-style-svg m-svg-def">
-            <use 
-              xmlns:xlink="http://www.w3.org/1999/xlink" 
+            <use
+              xmlns:xlink="http://www.w3.org/1999/xlink"
               xlink:href="#base-loading"/>
           </svg>
           <span v-else>修改</span>
@@ -259,7 +259,7 @@ export default {
           this.loading = false;
         })
         .catch(e => {
-          console.log(e);
+          console.warn(e);
           this.loading = false;
           this.disabled = true;
         });

@@ -97,7 +97,6 @@
             <span>{{ feed.feed_view_count || 0 | formatNum }}浏览</span>
           </div>
         </div>
-        <!-- todo 打赏功能 -->
         <div class="m-box-model m-box-center m-box-center-a m-art-reward">
           <button
             class="m-art-rew-btn"

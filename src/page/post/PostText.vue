@@ -2,36 +2,36 @@
   <div class="p-post-text m-box-model">
     <header class="m-box m-flex-shrink0 m-flex-grow0 m-justify-bet m-aln-center m-main m-bb1 m-head-top m-pos-f">
       <div class="m-box m-flex-grow1 m-aln-center m-flex-base0">
-        <a 
-          href="javascript:;" 
+        <a
+          href="javascript:;"
           @click="beforeGoBack">取消</a>
       </div>
       <div class="m-box-model m-flex-grow1 m-aln-center m-flex-base0 m-head-top-title">
         <span>发布动态</span>
       </div>
       <div class="m-box m-flex-grow1 m-aln-center m-flex-base0 m-justify-end">
-        <svg 
-          v-if="loading" 
+        <svg
+          v-if="loading"
           class="m-style-svg m-svg-def">
-          <use 
-            xmlns:xlink="http://www.w3.org/1999/xlink" 
+          <use
+            xmlns:xlink="http://www.w3.org/1999/xlink"
             xlink:href="#base-loading"/>
         </svg>
-        <a 
-          v-else 
-          :class="{ disabled }" 
-          class="m-send-btn" 
+        <a
+          v-else
+          :class="{ disabled }"
+          class="m-send-btn"
           @click.prevent.stop="beforePost">发布</a>
       </div>
     </header>
-    <main 
-      class="m-flex-grow1 m-flex-shrink1 m-reles-con" 
-      style="padding-top: 0.9rem" 
+    <main
+      class="m-flex-grow1 m-flex-shrink1 m-reles-con"
+      style="padding-top: 0.9rem"
       @click.self="areaFocus">
-      <content-text 
-        ref="contentText" 
-        :rows="8" 
-        :maxlength="255" 
+      <content-text
+        ref="contentText"
+        :rows="8"
+        :maxlength="255"
         class="m-reles-txt-wrap" />
     </main>
     <footer
@@ -51,8 +51,8 @@
       >
         <div class="m-pinned-amount-btns">
           <p class="m-pinned-amount-label">设置文字收费金额</p>
-          <div 
-            v-if="items.length > 0" 
+          <div
+            v-if="items.length > 0"
             class="m-box m-aln-center">
             <button
               v-for="item in items"
@@ -164,7 +164,6 @@ export default {
       this.$refs.contentText.areaFocus();
     },
     chooseDefaultAmount(amount) {
-      console.log(amount);
       this.customAmount = null;
       this.amount = amount;
     },
@@ -208,7 +207,7 @@ export default {
         })
         .catch(error => {
           this.$Message.error("发送失败，请稍后重试");
-          console.log(error);
+          console.warn(error);
           this.loading = false;
         });
     }

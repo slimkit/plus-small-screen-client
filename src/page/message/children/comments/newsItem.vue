@@ -1,49 +1,49 @@
 <template>
   <section>
     <div :class="`${prefixCls}-item-top`">
-      <avatar 
-        :sex="comment.user.sex" 
+      <avatar
+        :sex="comment.user.sex"
         :src="comment.user.avatar" />
       <section class="userInfo">
-        <router-link 
-          :class="`${prefixCls}-item-top-link`" 
+        <router-link
+          :class="`${prefixCls}-item-top-link`"
           :to="`/users/${comment.user_id}`">{{ comment.user.name }}</router-link>
         <span v-if="comment.reply_user"> 回复 </span>
         <span v-else> 评论了你的资讯</span>
-        <router-link 
-          v-if="comment.reply_user" 
-          :class="`${prefixCls}-item-top-link`" 
+        <router-link
+          v-if="comment.reply_user"
+          :class="`${prefixCls}-item-top-link`"
           :to="`/users/${comment.reply_user}`">{{ comment.reply.name }} </router-link>
         <p>{{ comment.created_at | time2tips }}</p>
       </section>
       <section class="msgList-status">
         <section class="gray">
-          <span 
-            class="replay-show" 
+          <span
+            class="replay-show"
             @click.stop="showCommentInput">回复</span>
         </section>
       </section>
     </div>
     <div :class="`${prefixCls}-item-bottom`">
-      <span 
-        class="content" 
+      <span
+        class="content"
         @click.stop="showCommentInput">
         {{ comment.body }}
       </span>
       <!-- <section v-if="comment.commentable !== null" @click="goToFeedDetail()"> -->
       <section v-if="comment.commentable !== null">
-        <div 
-          v-if="!getImage" 
-          :class="`${prefixCls}-item-bottom-noImg`" 
+        <div
+          v-if="!getImage"
+          :class="`${prefixCls}-item-bottom-noImg`"
           class="content">
           {{ comment.commentable.title }}
         </div>
-        <div 
-          v-else 
+        <div
+          v-else
           :class="`${prefixCls}-item-bottom-img`">
           <div class="img">
-            <img 
-              :src="getImage" 
+            <img
+              :src="getImage"
               :alt="comment.user.name">
           </div>
           <div class="content">
@@ -52,8 +52,8 @@
         </div>
       </section>
       <section v-if="comment.commentable === null">
-        <div 
-          :class="`${prefixCls}-item-bottom-noImg`" 
+        <div
+          :class="`${prefixCls}-item-bottom-noImg`"
           class="content">
           文章已被删除
         </div>
@@ -93,9 +93,6 @@ export default {
       return user;
     }
   },
-  created() {
-    // console.log(this.comment)
-  },
   methods: {
     /**
      * 进入动态详情
@@ -124,8 +121,7 @@ export default {
             validateStatus: s => s === 201
           }
         )
-        .then(data => {
-          console.log(data);
+        .then(() => {
           this.$Message.success("回复成功");
         });
     },

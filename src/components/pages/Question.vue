@@ -2,11 +2,11 @@
   <div>
     <header class="m-box m-pos-f m-main m-bb1 m-head-top">
       <div class="m-box m-aln-center m-flex-grow1 m-flex-base0">
-        <svg 
-          class="m-style-svg m-svg-def" 
+        <svg
+          class="m-style-svg m-svg-def"
           @click="goBack">
-          <use 
-            xmlns:xlink="http://www.w3.org/1999/xlink" 
+          <use
+            xmlns:xlink="http://www.w3.org/1999/xlink"
             xlink:href="#base-back"/>
         </svg>
       </div>
@@ -40,8 +40,8 @@
           <h3 :class="classNameBuilder('main-title')">{{ question.subject }}</h3>
 
           <!-- Body -->
-          <div 
-            :class="['markdown-body', classNameBuilder('main-body')]" 
+          <div
+            :class="['markdown-body', classNameBuilder('main-body')]"
             v-html="htmlBody"/>
 
           <!-- watch -->
@@ -77,8 +77,8 @@
           <!-- Button -->
           <div :class="classNameBuilder('main-button')">
             <div class="button">
-              <svg 
-                :class="classNameBuilder('main-button-icon')" 
+              <svg
+                :class="classNameBuilder('main-button-icon')"
                 fill="#666">
                 <use xlink:href="#base-reward" />
               </svg>
@@ -86,8 +86,8 @@
             </div>
             <span/>
             <div class="button">
-              <svg 
-                :class="classNameBuilder('main-button-icon')" 
+              <svg
+                :class="classNameBuilder('main-button-icon')"
                 fill="#666">
                 <use xlink:href="#base-edit" />
               </svg>
@@ -101,8 +101,8 @@
           <div>{{ question.answers_count }}个回答</div>
           <button @click="handleTargetAnswersOrder">
             {{ answersTimeOrder ? '时间排序' : '默认排序' }}
-            <svg 
-              fill="#999" 
+            <svg
+              fill="#999"
               class="icon">
               <use xlink:href="#base-filter-list" />
             </svg>
@@ -118,42 +118,42 @@
       </load-more>
     </div>
     <div :class="classNameBuilder('tabbar')">
-      <a 
-        :class="classNameBuilder('tabbar-item')" 
+      <a
+        :class="classNameBuilder('tabbar-item')"
         href="#">
-        <svg 
-          :class="classNameBuilder('tabbar-icon')" 
+        <svg
+          :class="classNameBuilder('tabbar-icon')"
           fill="#999">
           <use xlink:href="#message-comments" />
         </svg>
         评论
       </a>
-      <a 
-        :class="classNameBuilder('tabbar-item')" 
+      <a
+        :class="classNameBuilder('tabbar-item')"
         href="#">
-        <svg 
-          :class="classNameBuilder('tabbar-icon')" 
+        <svg
+          :class="classNameBuilder('tabbar-icon')"
           fill="#999">
           <use xlink:href="#base-share" />
         </svg>
         分享
       </a>
-      <a 
-        v-show="editer" 
-        :class="classNameBuilder('tabbar-item')" 
+      <a
+        v-show="editer"
+        :class="classNameBuilder('tabbar-item')"
         href="#">
-        <svg 
-          :class="classNameBuilder('tabbar-icon')" 
+        <svg
+          :class="classNameBuilder('tabbar-icon')"
           fill="#999">
           <use xlink:href="#edit" />
         </svg>
         编辑
       </a>
-      <a 
-        :class="classNameBuilder('tabbar-item')" 
+      <a
+        :class="classNameBuilder('tabbar-item')"
         href="#">
-        <svg 
-          :class="classNameBuilder('tabbar-icon')" 
+        <svg
+          :class="classNameBuilder('tabbar-icon')"
           fill="#999">
           <use xlink:href="#base-more" />
         </svg>
@@ -256,7 +256,6 @@ export default {
   },
   watch: {
     answersTimeOrder(newRoute, oldRoute) {
-      console.log(newRoute, oldRoute);
       if (newRoute.path === oldRoute.path) {
         this.answers = [];
         this.loadContainer.beforeRefresh();

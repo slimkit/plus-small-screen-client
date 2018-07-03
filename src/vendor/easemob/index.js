@@ -21,6 +21,8 @@ isLogged &&
   currentUser.id &&
   AppDB.init(currentUser.id) &&
   vuex.dispatch("initChatRooms") &&
+  process.env.NODE_ENV === "development" &&
+  // eslint-disable-next-line
   console.log("初始化 indexedDB");
 
 export function openWebIM() {
@@ -118,7 +120,7 @@ export function getGroupInfo(gid) {
         resolve(group);
       })
       .catch(err => {
-        console.log("获取群组信息失败", err);
+        console.warn("获取群组信息失败", err);
         resolve({});
       });
   });
@@ -169,7 +171,7 @@ export function sendTextMessage({ to, from, body, type }) {
         });
       },
       fail(e) {
-        console.log("Send private text error", e);
+        console.warn("Send private text error", e);
         reject(e);
       }
     });

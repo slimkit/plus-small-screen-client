@@ -2,18 +2,18 @@
   <div class="m-pos-f m-box-model m-main">
     <header class="m-box-model m-fd-row m-head-top m-justify-bet m-aln-center m-lim-width m-bb1">
       <div class="m-box m-flex-grow1 m-aln-center m-flex-base0">
-        <a 
-          class="m-send-btn" 
-          href="javascript:;" 
+        <a
+          class="m-send-btn"
+          href="javascript:;"
           @click="beforeGoBack">取消</a>
       </div>
       <div class="m-box-model m-flex-grow1 m-aln-center m-flex-base0 m-head-top-title">发布动态</div>
       <div class="m-box m-flex-grow1 m-aln-center m-flex-base0 m-justify-end">
-        <svg 
-          v-if="loading" 
+        <svg
+          v-if="loading"
           class="m-style-svg m-svg-def">
-          <use 
-            xmlns:xlink="http://www.w3.org/1999/xlink" 
+          <use
+            xmlns:xlink="http://www.w3.org/1999/xlink"
             xlink:href="#base-loading"/>
         </svg>
         <a
@@ -32,12 +32,12 @@
         :maxlength="255"
         :placeholder="`输入要说的话，图文结合更精彩哦`"
         class="m-reles-txt-wrap" />
-      <image-list 
-        :edit="pinned" 
+      <image-list
+        :edit="pinned"
         style="padding: 0 .3rem .3rem"/>
     </main>
-    <footer 
-      class="m-box-model m-flex-shrink1 m-aln-center" 
+    <footer
+      class="m-box-model m-flex-shrink1 m-aln-center"
       style="z-index: 10">
       <v-switch
         v-model="pinned"
@@ -156,7 +156,7 @@ export default {
           })
           .catch(e => {
             this.$Message.error("发送失败，请稍后再试");
-            console.log(e);
+            console.warn(e);
             this.loading = false;
           });
       }

@@ -16,7 +16,7 @@ export default {
         true
       );
     } catch (err) {
-      console.log("你的浏览器不支持本地存储");
+      console.warn("你的浏览器不支持本地存储");
       return false;
     }
   })(),

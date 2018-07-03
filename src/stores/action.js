@@ -17,7 +17,7 @@ export default {
       Api.post(`/auth/logout`);
       commit("SIGN_OUT");
     } catch (e) {
-      console.log(e);
+      console.warn(e);
     }
   },
   async refreshCurUserData({ state, commit }) {

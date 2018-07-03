@@ -2,11 +2,11 @@
   <div class="m-box-model p-info">
     <header class="m-box m-aln-center m-head-top m-pos-f m-main m-bb1">
       <div class="m-box m-aln-center m-flex-grow1 m-flex-shrink1 m-flex-base0">
-        <svg 
-          class="m-style-svg m-svg-def" 
+        <svg
+          class="m-style-svg m-svg-def"
           @click="goBack">
-          <use 
-            xmlns:xlink="http://www.w3.org/1999/xlink" 
+          <use
+            xmlns:xlink="http://www.w3.org/1999/xlink"
             xlink:href="#base-back"/>
         </svg>
       </div>
@@ -14,11 +14,11 @@
         <span>个人资料</span>
       </div>
       <div class="m-box m-aln-center m-justify-end m-flex-grow1 m-flex-shrink1 m-flex-base0">
-        <svg 
-          v-if="loading" 
+        <svg
+          v-if="loading"
           class="m-style-svg m-svg-def">
-          <use 
-            xmlns:xlink="http://www.w3.org/1999/xlink" 
+          <use
+            xmlns:xlink="http://www.w3.org/1999/xlink"
             xlink:href="#base-loading"/>
         </svg>
         <a
@@ -29,21 +29,21 @@
       </div>
     </header>
     <main style="padding-top: 0.9rem; background-color: #fff">
-      <section 
-        style="margin-left: 0; padding-left: .3rem" 
-        class="m-box m-aln-center m-justify-bet m-main m-bb1 p-info-row" 
+      <section
+        style="margin-left: 0; padding-left: .3rem"
+        class="m-box m-aln-center m-justify-bet m-main m-bb1 p-info-row"
         @click="beforeSelectFile">
         <div
           :class="avatarStyles"
           class="m-flex-shrink0 m-flex-grow0 m-avatar-box">
-          <img 
-            :src="avatar" 
+          <img
+            :src="avatar"
             class="m-avatar-img">
         </div>
         <span class="m-flex-grow1 m-flex-shrink1">更换头像</span>
         <svg class="m-style-svg m-svg-def m-entry-append">
-          <use 
-            xmlns:xlink="http://www.w3.org/1999/xlink" 
+          <use
+            xmlns:xlink="http://www.w3.org/1999/xlink"
             xlink:href="#base-arrow-r"/>
         </svg>
         <input
@@ -65,68 +65,68 @@
             class="m-flex-grow1 m-flex-shrink1"
             @focus="showCleanName = true"
             @blur="showCleanName = false">
-          <svg 
-            v-show="showCleanName && name.length > 0" 
-            class="m-style-svg m-svg-def m-entry-append" 
+          <svg
+            v-show="showCleanName && name.length > 0"
+            class="m-style-svg m-svg-def m-entry-append"
             @click="name=''">
-            <use 
-              xmlns:xlink="http://www.w3.org/1999/xlink" 
+            <use
+              xmlns:xlink="http://www.w3.org/1999/xlink"
               xlink:href="#base-clean"/>
           </svg>
         </div>
       </section>
       <section class="m-box m-aln-stre m-justify-bet p-info-row m-bb1">
         <label>性别</label>
-        <div 
-          class="m-box m-aln-center m-justify-bet m-flex-grow1 m-flex-shrink1 input" 
+        <div
+          class="m-box m-aln-center m-justify-bet m-flex-grow1 m-flex-shrink1 input"
           @click="switchSex">
           <span :class="{ placeholder: !(sex >= 0) }">{{ sexTxt }}</span>
           <svg class="m-style-svg m-svg-def m-entry-append">
-            <use 
-              xmlns:xlink="http://www.w3.org/1999/xlink" 
+            <use
+              xmlns:xlink="http://www.w3.org/1999/xlink"
               xlink:href="#base-arrow-r"/>
           </svg>
         </div>
       </section>
       <section class="m-box m-aln-stre m-justify-bet p-info-row m-bb1">
         <label>城市</label>
-        <div 
-          class="m-box m-aln-center m-justify-bet m-flex-grow1 m-flex-shrink1 input" 
+        <div
+          class="m-box m-aln-center m-justify-bet m-flex-grow1 m-flex-shrink1 input"
           @click="switchPosition">
           <span :class="{placeholder: !location}">{{ location || "选择居住地" }}</span>
           <svg class="m-style-svg m-svg-def m-entry-append">
-            <use 
-              xmlns:xlink="http://www.w3.org/1999/xlink" 
+            <use
+              xmlns:xlink="http://www.w3.org/1999/xlink"
               xlink:href="#base-arrow-r"/>
           </svg>
         </div>
       </section>
-      <section 
-        class="m-box m-aln-stre m-justify-bet p-info-row m-bb1" 
+      <section
+        class="m-box m-aln-stre m-justify-bet p-info-row m-bb1"
         @click="switchTags">
         <label>标签</label>
         <div class="m-box m-aln-center m-justify-bet m-flex-grow1 m-flex-shrink1 input">
-          <span 
-            v-if="tags.length === 0" 
+          <span
+            v-if="tags.length === 0"
             class="placeholder">选择标签</span>
-          <div 
-            v-else 
+          <div
+            v-else
             class="m-tag-list m-tags">
-            <span 
-              v-for="tag in tags" 
-              :key="tag.id" 
+            <span
+              v-for="tag in tags"
+              :key="tag.id"
               class="m-tag">{{ tag.name }}</span>
           </div>
           <svg class="m-style-svg m-svg-def m-entry-append">
-            <use 
-              xmlns:xlink="http://www.w3.org/1999/xlink" 
+            <use
+              xmlns:xlink="http://www.w3.org/1999/xlink"
               xlink:href="#base-arrow-r"/>
           </svg>
         </div>
       </section>
       <section class="m-box m-aln-stre m-justify-bet p-info-row">
-        <label 
-          for="bio" 
+        <label
+          for="bio"
           class="m-flex-grow0 m-flex-shrink0">简介</label>
         <div class="m-box m-aln-center m-justify-bet m-flex-grow1 m-flex-shrink1 input">
           <span
@@ -150,9 +150,9 @@
         </div>
       </section>
     </main>
-    <location 
-      :show="showPosition" 
-      :is-component="true" 
+    <location
+      :show="showPosition"
+      :is-component="true"
       @close="switchPosition" />
   </div>
 </template>
@@ -299,7 +299,7 @@ export default {
                 this.avatar = screenCanvas.toDataURL();
               })
               .catch((err = {}) => {
-                console.log(err);
+                console.warn(err);
                 const {
                   response: { data = { message: "更新头像失败" } }
                 } = err;

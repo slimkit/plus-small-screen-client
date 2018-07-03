@@ -17,7 +17,7 @@ export function getHotCities() {
           return res;
         },
         err => {
-          console.log(err);
+          console.warn(err);
           return [];
         }
       );
@@ -42,7 +42,7 @@ export function getCurrentPosition() {
       return res;
     },
     err => {
-      console.log(err);
+      console.warn(err);
       throw err;
     }
   );
@@ -64,7 +64,7 @@ export function getGeo(address) {
       return Object.assign(res, { lng, lat, label });
     },
     err => {
-      console.log(err);
+      console.warn(err);
       return res;
     }
   );

@@ -63,9 +63,11 @@ new Vue({
 }).$mount("#app");
 
 // 版本号输出
-console.log(
-  `%cWelcome to ThinkSNS Plus! Release %c${version}%c by zhiyicx.`,
+// eslint-disable-next-line
+console.info(
+  `%cWelcome to ThinkSNS Plus! Release %c plus-components-h5 %c ${version} %c by zhiyicx.`,
   "color: #00A9E0;",
-  "background:#ddd ; padding: 1px 5px; border-radius: 3px;  color: #444;",
+  "background:#35495e ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff",
+  "background:#41b883 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff;",
   "color: #00A9E0;background: transparent;"
 );

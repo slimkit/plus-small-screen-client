@@ -3,29 +3,29 @@
     <div :class="`${prefixCls}-item-top`">
       <avatar :user="user" />
       <section class="userInfo">
-        <router-link 
-          :class="`${prefixCls}-item-top-link`" 
+        <router-link
+          :class="`${prefixCls}-item-top-link`"
           :to="`/users/${like.user_id}`">{{ like.user.name }}</router-link>
         <span>赞了你的产品</span>
         <p>{{ like.created_at | time2tips }}</p>
       </section>
     </div>
     <div :class="`${prefixCls}-item-bottom`">
-      <section 
-        v-if="like.likeable !== null" 
+      <section
+        v-if="like.likeable !== null"
         @click="goToFeedDetail()">
-        <div 
-          v-if="!getImage" 
-          :class="`${prefixCls}-item-bottom-noImg`" 
+        <div
+          v-if="!getImage"
+          :class="`${prefixCls}-item-bottom-noImg`"
           class="content">
           {{ like.likeable.feed_content }}
         </div>
-        <div 
-          v-else 
+        <div
+          v-else
           :class="`${prefixCls}-item-bottom-img`">
           <div class="img">
-            <img 
-              :src="getImage" 
+            <img
+              :src="getImage"
               :alt="like.user.name">
           </div>
           <div class="content">
@@ -34,8 +34,8 @@
         </div>
       </section>
       <section v-if="like.likeable === null">
-        <div 
-          :class="`${prefixCls}-item-bottom-noImg`" 
+        <div
+          :class="`${prefixCls}-item-bottom-noImg`"
           class="content">
           产品已被删除
         </div>
@@ -73,9 +73,6 @@ export default {
 
       return false;
     }
-  },
-  created() {
-    // console.log(this.comment)
   },
   methods: {
     /**

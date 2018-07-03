@@ -76,7 +76,7 @@ export default {
       lstore.clearData();
       state.loginStatus = false;
     } catch (e) {
-      console.log(e);
+      console.warn(e);
     }
   }
 };

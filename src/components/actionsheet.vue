@@ -1,31 +1,31 @@
 <template>
   <div @touchmove.prevent>
     <transition name="toast">
-      <div 
-        v-if="show" 
-        class="m-pop-box" 
+      <div
+        v-if="show"
+        class="m-pop-box"
         @click="cancel"/>
     </transition>
     <transition name="pop">
-      <div 
-        v-if="show" 
+      <div
+        v-if="show"
         class="m-acbtn-box">
-        <h2 
-          v-if="tips" 
+        <h2
+          v-if="tips"
           class="m-box m-text-box m-aln-center m-justify-center m-main m-acbtn-tips m-bb1">{{ tips }}</h2>
         <ul class="m-acbtn-list">
-          <li 
+          <li
             v-for="(btn, index) in lists"
             v-if="btn.text"
             :key="btn.text"
             :style="btn.style"
             class="m-acbtn"
-            @click="btn.methods(btn, index)" 
+            @click="btn.methods(btn, index)"
           ><a href="javascript:;">{{ btn.text }}</a></li>
         </ul>
         <ul class="m-acbtn-list">
-          <li 
-            class="m-acbtn" 
+          <li
+            class="m-acbtn"
             @click="cancel"><a href="javascript:;">{{ cancelBtn }}</a></li>
         </ul>
       </div>
@@ -49,7 +49,7 @@ export default {
     /**
      * Call actionSheet
      * @author jsonleex <jsonlseex@163.com>
-     * @param  {Array}   btnLists   [{ text: "确定", method: () =>{ console.log("确定") } }, ...]
+     * @param  {Array}   btnLists   [{ text: "确定", method: () => {} }, ...]
      * @param  {String}  cancelTxt  "取消"
      */
     bus.$on("actionSheet", (btnLists, cancelTxt, tips = null) => {

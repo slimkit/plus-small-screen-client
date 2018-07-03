@@ -1,23 +1,23 @@
 <template>
   <div class="page-location">
-    <head-top 
-      :append="true" 
+    <head-top
+      :append="true"
       title="选择定位">
-      <div 
-        slot="append" 
-        class="head-top-cancel" 
+      <div
+        slot="append"
+        class="head-top-cancel"
         @click="$router.go(-1)">取消</div>
-      <div 
-        slot="title" 
+      <div
+        slot="title"
         class="head-top-search">
-        <v-icon 
-          type="base-search" 
+        <v-icon
+          type="base-search"
           class="head-top-search-icon"/>
-        <input 
-          v-model="keyword" 
-          class="head-top-search-input" 
-          type="text" 
-          placeholder="搜索" 
+        <input
+          v-model="keyword"
+          class="head-top-search-input"
+          type="text"
+          placeholder="搜索"
           @input="search">
       </div>
     </head-top>
@@ -26,22 +26,22 @@
     <template v-if="isShowHot">
       <div class="location-current">
         <span>当前定位</span>
-        <span 
-          :class="{c999: !cur_txt }" 
+        <span
+          :class="{c999: !cur_txt }"
           class="location-current-txt">{{ cur_txt || "未定位" }}</span>
-        <v-icon 
-          :type="cur_icon" 
-          class="location-current-append" 
+        <v-icon
+          :type="cur_icon"
+          class="location-current-append"
           @click.native.stop="updateLocation"/>
       </div>
       <div class="location-hot">
         <label>热门城市</label>
         <div class="location-hot-list">
-          <div 
-            v-for="hotCity in hot_citys" 
-            v-if="hotCity.length > 0" 
-            :key="hotCity" 
-            class="location-hot-item" 
+          <div
+            v-for="hotCity in hot_citys"
+            v-if="hotCity.length > 0"
+            :key="hotCity"
+            class="location-hot-item"
             @click="chooseHotCity(hotCity)">
             {{ hotCity.slice(hotCity.lastIndexOf(' ')) }}
           </div>
@@ -50,11 +50,11 @@
     </template>
     <template v-if="dataList.length > 0">
       <ul class="location-search-list">
-        <li 
-          v-for="item in dataList" 
-          v-if="item" 
-          :key="item" 
-          class="location-search-list-item" 
+        <li
+          v-for="item in dataList"
+          v-if="item"
+          :key="item"
+          class="location-search-list-item"
           @click="chooseHotCity(item)">
           {{ item }}
         </li>
@@ -152,7 +152,7 @@ export default {
           }
         })
         .catch(err => {
-          console.log(err);
+          console.warn(err);
         });
     },
 

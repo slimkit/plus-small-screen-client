@@ -2,15 +2,15 @@
   <div class="p-post-question">
     <header class="m-pos-f m-box m-aln-center m-justify-bet m-head-top m-main m-bb1">
       <div class="m-flex-grow1 m-flex-shrink1 m-flex-base0">
-        <a 
-          v-if="step === 1" 
+        <a
+          v-if="step === 1"
           @click.prevent="cancel">取消</a>
-        <svg 
-          v-else 
-          class="m-style-svg m-svg-def" 
+        <svg
+          v-else
+          class="m-style-svg m-svg-def"
           @click="preStep">
-          <use 
-            xmlns:xlink="http://www.w3.org/1999/xlink" 
+          <use
+            xmlns:xlink="http://www.w3.org/1999/xlink"
             xlink:href="#base-back"/>
         </svg>
       </div>
@@ -23,9 +23,9 @@
           :class="{ disabled }"
           class="m-send-btn"
           @click.prevent="nextStep">下一步</a>
-        <a 
-          v-if="step === 3 && selectedTops.length > 0" 
-          class="m-send-btn" 
+        <a
+          v-if="step === 3 && selectedTops.length > 0"
+          class="m-send-btn"
           @click="beforePost">发布</a>
       </div>
     </header>
@@ -64,11 +64,11 @@
       <div
         v-show="step === 2"
         key="step2"
-        class="m-pos-f m-box-model m-flex-grow1 m-flex-shrink1 m-main" 
+        class="m-pos-f m-box-model m-flex-grow1 m-flex-shrink1 m-main"
         @click="autoFoucs">
         <div class="m-rich-box">
-          <span 
-            v-if="showPlaceholder" 
+          <span
+            v-if="showPlaceholder"
             class="placeholder">详细描述你的问题，有助于受到准确的回答</span>
           <div
             ref="editor"
@@ -91,32 +91,32 @@
             @click="selectedTopic(topic)">
             <span>{{ topic.name }}</span>
             <svg class="m-style-svg m-svg-def">
-              <use 
-                xmlns:xlink="http://www.w3.org/1999/xlink" 
+              <use
+                xmlns:xlink="http://www.w3.org/1999/xlink"
                 xlink:href="#base-clean"/>
             </svg>
           </li>
         </ul>
         <div class="m-box m-aln-center m-flex-grow0 m-shrink0 m-bb1 m-lim-width question-title">
-          <svg 
-            class="m-style-svg m-svg-def" 
+          <svg
+            class="m-style-svg m-svg-def"
             style="fill: #ccc; margin-right: 0.3rem">
-            <use 
-              xmlns:xlink="http://www.w3.org/1999/xlink" 
+            <use
+              xmlns:xlink="http://www.w3.org/1999/xlink"
               xlink:href="#base-search"/>
           </svg>
-          <input 
-            v-model="topicKeyWord" 
-            type="search" 
-            placeholder="搜索话题" 
+          <input
+            v-model="topicKeyWord"
+            type="search"
+            placeholder="搜索话题"
             @input="inputTopicKeyWord">
-          <svg 
-            v-show="topicKeyWord.length > 0" 
-            class="m-style-svg m-svg-def" 
-            style="fill: #ccc; margin-right: 0.3rem" 
+          <svg
+            v-show="topicKeyWord.length > 0"
+            class="m-style-svg m-svg-def"
+            style="fill: #ccc; margin-right: 0.3rem"
             @click="topicKeyWord = ''">
-            <use 
-              xmlns:xlink="http://www.w3.org/1999/xlink" 
+            <use
+              xmlns:xlink="http://www.w3.org/1999/xlink"
               xlink:href="#base-clean"/>
           </svg>
         </div>
@@ -127,8 +127,8 @@
             class="m-box m-aln-center m-topic m-bb1"
             @click="selectedTopic(topic)"
           >
-            <img 
-              :src="topic.avatar" 
+            <img
+              :src="topic.avatar"
               class="m-flex-grow0 m-flex-shrink0 m-topic-avatar">
             <section class="m-flex-grow1 m-flex-shrink1 m-box-model m-ovxh">
               <h3>{{ topic.name }}</h3>
@@ -212,6 +212,13 @@ export default {
       this.question.title = val;
     }
   },
+  created() {
+    const question = this.$lstore.getData("H5_POST_QUESTION_DRAFT");
+
+    question &&
+      (question.title || question.body) &&
+      Object.assign(this.question, question);
+  },
   methods: {
     selectedTopic(topic) {
       const index = this.selectedTops.indexOf(topic);
@@ -250,10 +257,7 @@ export default {
       this.showPlaceholder = this.question.body.length === 0;
       // this.moveCurPos();
     },
-    moveCurPos() {
-      // console.log(this.$refs);
-      // this.$refs.editor && (this.curpos = this.$refs.editor.selectionStart);
-    },
+    moveCurPos() {},
     autoFoucs() {
       this.$refs.editor.focus();
       this.showPlaceholder = false;
@@ -345,13 +349,6 @@ export default {
           )
         : this.goBack();
     }
-  },
-  created() {
-    const question = this.$lstore.getData("H5_POST_QUESTION_DRAFT");
-
-    question &&
-      (question.title || question.body) &&
-      Object.assign(this.question, question);
   }
 };
 </script>

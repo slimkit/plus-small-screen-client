@@ -266,7 +266,7 @@ export default {
           }
         })
         .catch(err => {
-          console.log(err);
+          console.warn(err);
           this.$router.back();
         });
     },
@@ -329,16 +329,12 @@ export default {
         }
       });
     },
-    shareNews() {
-      console.log("分享");
-    },
+    shareNews() {},
     moreAction() {
       const defaultActions = [
         {
           text: "收藏",
-          method() {
-            console.log("收藏");
-          }
+          method() {}
         }
       ];
 

@@ -3,28 +3,28 @@
     <div :class="`${prefixCls}-item-top`">
       <avatar :user="user" />
       <section class="userInfo">
-        <router-link 
-          :class="`${prefixCls}-item-top-link`" 
+        <router-link
+          :class="`${prefixCls}-item-top-link`"
           :to="`/users/${comment.user_id}`">{{ comment.user.name }}</router-link>
         <span v-if="comment.reply_user">回复</span><span v-else>评论了你的问题</span>
-        <router-link 
-          v-if="comment.reply_user" 
-          :class="`${prefixCls}-item-top-link`" 
+        <router-link
+          v-if="comment.reply_user"
+          :class="`${prefixCls}-item-top-link`"
           :to="`/users/${comment.reply_user}`">{{ comment.reply.name }} </router-link>:
         <p>{{ comment.created_at | time2tips }}</p>
       </section>
     </div>
     <div :class="`${prefixCls}-item-bottom`">
-      <span 
-        class="content" 
+      <span
+        class="content"
         @click.stop="showCommentInput">
         {{ comment.body }}
       </span>
-      <section 
-        v-if="comment.commentable !== null" 
+      <section
+        v-if="comment.commentable !== null"
         @click="goToFeedDetail()">
-        <div 
-          :class="`${prefixCls}-item-bottom-noImg`" 
+        <div
+          :class="`${prefixCls}-item-bottom-noImg`"
           class="content">
           {{ comment.commentable.subject }}
         </div>
@@ -36,8 +36,8 @@
         </div> -->
       </section>
       <section v-if="comment.commentable === null">
-        <div 
-          :class="`${prefixCls}-item-bottom-noImg`" 
+        <div
+          :class="`${prefixCls}-item-bottom-noImg`"
           class="content">
           问题已被删除
         </div>
@@ -73,9 +73,6 @@ export default {
       return false;
     }
   },
-  created() {
-    // console.log(this.comment)
-  },
   methods: {
     /**
      * 进入动态详情
@@ -107,8 +104,7 @@ export default {
             validateStatus: s => s === 201
           }
         )
-        .then(data => {
-          console.log(data);
+        .then(() => {
           this.$Message.success("回复成功");
         });
     },

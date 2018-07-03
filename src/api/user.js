@@ -140,7 +140,7 @@ export function getUserFansByType({ uid, type, limit = 15, offset = 0 }) {
       return data;
     },
     err => {
-      console.log(err);
+      console.warn(err);
       return [];
     }
   );
@@ -172,7 +172,7 @@ export function signinByAccount(params) {
         }
       },
       err => {
-        console.log(err);
+        console.warn(err);
         return false;
       }
     );
@@ -193,7 +193,7 @@ export function refreshCurrentUserInfo() {
       return data;
     },
     err => {
-      console.log(err);
+      console.warn(err);
     }
   );
 }

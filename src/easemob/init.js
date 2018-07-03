@@ -24,10 +24,14 @@ export const connect = token => {
   // 添加成功的回调
   conn.listen({
     onOpened: message => {
-      console.log("连接打开=>", message);
+      process.env.NODE_ENV !== "production" &&
+        // eslint-disable-next-line
+        console.log("连接打开=>", message);
     },
     onClosed: message => {
-      console.log(message);
+      process.env.NODE_ENV !== "production" &&
+        // eslint-disable-next-line
+        console.log(message);
     },
     // 收到文本消息
     onTextMessage: message => {
@@ -43,14 +47,20 @@ export const connect = token => {
       vuex.dispatch("PUSH_NEW_MESSAGE", singleChatMsg);
     },
     onEmojiMessage: message => {
-      console.log("Emoji");
+      process.env.NODE_ENV !== "production" &&
+        // eslint-disable-next-line
+        console.log("Emoji");
       var data = message.data;
       for (var i = 0, l = data.length; i < l; i++) {
-        console.log(data[i]);
+        process.env.NODE_ENV !== "production" &&
+          // eslint-disable-next-line
+          console.log(data[i]);
       }
     },
     onPictureMessage: message => {
-      console.log("Location of Picture is ", message.url);
+      process.env.NODE_ENV !== "production" &&
+        // eslint-disable-next-line
+        console.log("Location of Picture is ", message.url);
     },
     onReceivedMessage: message => {
       //收到消息送达服务器回执
@@ -69,13 +79,19 @@ export const connect = token => {
     },
     onDeliveredMessage: message => {
       //收到消息送达客户端回执
-      console.log("Delivered", message);
+      process.env.NODE_ENV !== "production" &&
+        // eslint-disable-next-line
+        console.log("Delivered", message);
     },
     onInviteMessage: message => {
-      console.log("onInviteMessage", message);
+      process.env.NODE_ENV !== "production" &&
+        // eslint-disable-next-line
+        console.log("onInviteMessage", message);
     },
     onLocationMessage: message => {
-      console.log("onLocationMessage", message);
+      process.env.NODE_ENV !== "production" &&
+        // eslint-disable-next-line
+        console.log("onLocationMessage", message);
     }
   });
   // let localToken = WebIM.utils.getCookie("webim_" + uid);

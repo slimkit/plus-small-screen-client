@@ -227,9 +227,7 @@ export default {
           this.fetching = false;
         });
     },
-    shareAnswer() {
-      console.log("shareAnswer");
-    },
+    shareAnswer() {},
     commentAnswer() {
       bus.$emit("commentInput", {
         onOk: text => {
@@ -274,7 +272,7 @@ export default {
           });
         })
         .catch(e => {
-          console.log(e);
+          console.warn(e);
           this.loading = false;
           this.fetchComing = false;
         });

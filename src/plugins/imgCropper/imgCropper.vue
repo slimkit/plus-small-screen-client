@@ -1,9 +1,9 @@
 <template>
-  <div 
-    id="cropperImg" 
+  <div
+    id="cropperImg"
     :class="{ round }">
-    <img 
-      ref="cropperImg" 
+    <img
+      ref="cropperImg"
       :src="url">
   </div>
 </template>
@@ -53,9 +53,7 @@ export default {
     });
   },
   methods: {
-    crop() {
-      console.log(this.cropper);
-    }
+    crop() {}
   }
 };
 </script>

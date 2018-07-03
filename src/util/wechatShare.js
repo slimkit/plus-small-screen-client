@@ -15,7 +15,6 @@ const __JsApiList = [
 ];
 
 export default (url, options) => {
-  console.log(options);
   if (!url) throw new Error("微信分享: 参数URL不能为空");
   post(`socialite/wxconfig`, { url }).then(
     ({ data: { timestamp, signature, appid, noncestr } }) => {
@@ -39,7 +38,6 @@ export default (url, options) => {
          * @author jsonleex <jsonlseex@163.com>
          */
         success: () => {
-          console.log("success");
           Message.success("分享成功");
         },
         /**
@@ -47,7 +45,6 @@ export default (url, options) => {
          * @author jsonleex <jsonlseex@163.com>
          */
         cancel: () => {
-          console.log("cancel");
           Message.info("取消分享");
         }
       };
@@ -62,11 +59,11 @@ export default (url, options) => {
         wx.onMenuShareAppMessage(options);
       });
       wx.error(res => {
-        console.log(res);
+        console.warn(res);
       });
     },
     err => {
-      console.log(err);
+      console.warn(err);
       throw new Error("微信分享: 获取微信配置信息失败");
     }
   );

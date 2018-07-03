@@ -110,7 +110,6 @@ const mutations = {
   },
   initChats(state, list) {
     state.chatList = list;
-    console.log("commit: initChats", list);
   },
   setCurrentChatRoom(state, chatRoom = null) {
     state.currentChatRoom = chatRoom;

@@ -374,9 +374,7 @@ export default {
       } else {
         actions.push({
           text: "举报",
-          method: () => {
-            console.log("举报");
-          }
+          method: () => {}
         });
       }
 
