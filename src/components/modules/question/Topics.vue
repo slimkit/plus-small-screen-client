@@ -213,6 +213,9 @@ export default {
     letter-spacing: 0;
     border-bottom: solid 1px #d7d8d8;
     z-index: 100;
+    > a {
+      color: #d7d8d8;
+    }
     .active {
       color: #333;
     }

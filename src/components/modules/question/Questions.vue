@@ -262,6 +262,9 @@ export default {
     @media screen and (min-width: 769px) {
       width: 768px;
     }
+    > a {
+      color: #d7d8d8;
+    }
     .active {
       color: #333;
     }
