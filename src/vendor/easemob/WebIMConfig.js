@@ -56,7 +56,7 @@ const config = {
    * 为 true 时可在console中查看log
    * @type {Boolean}
    */
-  isDebug: process.env.VUE_APP_EASEMOB_ISDEBUG,
+  isDebug: process.env.VUE_APP_EASEMOB_ISDEBUG !== "false",
 
   /**
    * 本地存储
