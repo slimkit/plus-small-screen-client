@@ -145,6 +145,9 @@ export default {
       this.loadContainer.beforeRefresh();
     }
   },
+  mounted() {
+    this.loadContainer.beforeRefresh();
+  },
 
   /**
    * The module methods.
