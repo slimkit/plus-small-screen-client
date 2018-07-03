@@ -104,10 +104,10 @@ export const time2tips = date => {
   }
   if (offset < 3600 * 24 * 2) return `昨天 ${timeStr}`;
   if (offset < 3600 * 24 * 9) return `${~~(offset / 3600 / 24)}天前 ${timeStr}`;
-  // 根据 time 获取到 "2018/6/19 16:57:39" 然后正则转化为 6-19 16:57
-  return new Date(time)
-    .toLocaleString("zh-CN", { hour12: false })
-    .replace(/^\d+\/(\d+)\/(\d+) (\d+:\d+):\d+$/, "$1-$2 $3");
+  // 根据 time 获取到 "2018-06-16T23:12:32.000Z" 然后正则转化为 6-19 16:57
+  return new Date(time - timeOffset)
+    .toISOString()
+    .replace(/^\d+-(\d+)-(\d+)T(\d+:\d+):\d+\.000Z$/, "$1-$2 $3");
 };
 
 /**
