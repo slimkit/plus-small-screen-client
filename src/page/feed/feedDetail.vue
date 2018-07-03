@@ -434,13 +434,9 @@ export default {
         });
     },
     fetchRewards() {
-      this.$http
-        .get(`/feeds/${this.feedID}/rewards`, {
-          params: { limit: 10 }
-        })
-        .then(({ data = [] }) => {
-          this.rewardList = data;
-        });
+      api.getRewards(this.feedID, { limit: 10 }).then(({ data = [] }) => {
+        this.rewardList = data;
+      });
     },
     rewardFeed() {
       const callback = amount => {

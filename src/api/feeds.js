@@ -49,6 +49,23 @@ export function applyTopFeed(feedId, params) {
 }
 
 /**
+ * @description
+ * @author mutoe <mutoe@foxmail.com>
+ * @export
+ * @param {number} feedId
+ * @param {Object} params
+ * @param {number} [params.limit] limit
+ * @param {number} [params.offset] offset
+ * @param {string} [params.order] asc 正序 desc 倒序
+ * @param {string} [params.oforder_type] date 按时间 amount 按金额
+ * @returns
+ */
+export function getRewards(feedId, params) {
+  const url = `/feeds/${feedId}/rewards`;
+  return api.get(url, { params, validateStatus: s => s === 200 });
+}
+
+/**
  * 打赏动态
  * @author mutoe <mutoe@foxmail.com>
  * @export
