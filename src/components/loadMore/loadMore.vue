@@ -1,10 +1,10 @@
 <template>
   <div :class="`${prefixCls}`">
-    <section 
-      :class="[`${prefixCls}-wrap`, { &quot;dropped&quot;: topDropped || bottomDropped}]" 
+    <section
+      :class="[`${prefixCls}-wrap`, { &quot;dropped&quot;: topDropped || bottomDropped}]"
       :style="{ 'transform': transform }">
-      <div 
-        ref="head" 
+      <div
+        ref="head"
         :class="`${prefixCls}-head`">
         <slot name="head">
           <span>{{ topText }}</span>
@@ -29,7 +29,8 @@ export default {
       default: undefined
     },
     bottomMethod: {
-      type: Function
+      type: Function,
+      default: undefined
     },
     topPullText: {
       type: String,

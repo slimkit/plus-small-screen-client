@@ -2,15 +2,15 @@
   <div class="module-questions-topics">
     <!-- navs. -->
     <nav class="module-questions-topics-nav">
-      <router-link 
-        to="/question/topics" 
-        replace 
-        exact 
+      <router-link
+        to="/question/topics"
+        replace
+        exact
         exact-active-class="active">全部话题</router-link>
-      <router-link 
-        :to="{ path: '/question/topics', query: { type: 'follow' } }" 
-        replace 
-        exact 
+      <router-link
+        :to="{ path: '/question/topics', query: { type: 'follow' } }"
+        replace
+        exact
         exact-active-class="active">我关注的</router-link>
     </nav>
 
@@ -18,20 +18,19 @@
     <load-more
       ref="LoadQuestionTopicsContainer"
       :on-refresh="handleRefresh"
-      :on-load-more="handleLoadMore"
-    >
-      <div 
-        v-for="topic in topics" 
-        :key="topic.id" 
+      :on-load-more="handleLoadMore" >
+      <div
+        v-for="topic in topics"
+        :key="topic.id"
         class="module-questions-topics-item">
-        <router-link 
-          v-show="topic.avatar" 
-          :src="topic.avatar" 
-          :to="`/question-topics/${topic.id}`" 
+        <router-link
+          v-show="topic.avatar"
+          :src="topic.avatar"
+          :to="`/question-topics/${topic.id}`"
           tag="img" />
-        <router-link 
-          :to="`/question-topics/${topic.id}`" 
-          tag="a" 
+        <router-link
+          :to="`/question-topics/${topic.id}`"
+          tag="a"
           class="title">
           <span class="topic">{{ topic.name }}</span>
           <span class="label">
@@ -40,13 +39,13 @@
             <span>{{ topic.questions_count }}</span>&nbsp;问题
           </span>
         </router-link>
-        <button 
-          v-if="topic.has_follow || type === 'follow'" 
-          class="follow active" 
+        <button
+          v-if="topic.has_follow || type === 'follow'"
+          class="follow active"
           @click="handleUnfollow(topic)"><span>✓</span>已关注</button>
-        <button 
-          v-else 
-          class="follow" 
+        <button
+          v-else
+          class="follow"
           @click="handleFollow(topic)"><span>+</span>关注</button>
       </div>
     </load-more>
@@ -54,92 +53,27 @@
 </template>
 
 <script>
-// import { Cell, Button } from 'mint-ui';
-import {
-  all,
-  followTopics,
-  follow,
-  unfollow
-} from "../../../api/question/topics";
+import { all, followTopics, follow, unfollow } from "@/api/question/topics.js";
 
-/**
- * The component name.
- *
- * @type {String}
- */
-const name = "module-questions-topics";
-
-/**
- * Topics.
- */
 export default {
-  /**
-   * The module name.
-   */
-  name,
-
-  /**
-   * The module using components.
-   *
-   * @type {Object}
-   */
-  components: {
-    // 'mt-cell': Cell,
-    // 'mt-button': Button
-  },
-
-  /**
-   * The module data.
-   *
-   * @return {Object}
-   * @author Seven Du <shiweidu@outlook.com>
-   */
+  name: "QuestionsTopics",
   data: () => ({
     topics: []
   }),
-
-  /**
-   * The module computed data.
-   *
-   * @type {Object}
-   */
   computed: {
-    /**
-     * The route query type value.
-     *
-     * @return {string}
-     * @author Seven Du <shiweidu@outlook.com>
-     */
     type() {
-      const {
-        query: { type = "hot" }
-      } = this.$route;
-
+      const { type = "hot" } = this.$route.query;
       return type;
     },
-
     loadContainer() {
       return this.$refs.LoadQuestionTopicsContainer;
     },
     user() {
       const { CURRENTUSER: user } = this.$store.state;
-
       return user;
     }
   },
-
-  /**
-   * The module watcher.
-   *
-   * @type {Object}
-   */
   watch: {
-    /**
-     * Type state watcher.
-     *
-     * @return {void}
-     * @author Seven Du <shiweidu@outlook.com>
-     */
     type() {
       this.topics = [];
       this.loadContainer.beforeRefresh();
@@ -148,19 +82,7 @@ export default {
   mounted() {
     this.loadContainer.beforeRefresh();
   },
-
-  /**
-   * The module methods.
-   *
-   * @type {Object}
-   */
   methods: {
-    /**
-     * The module refresh handle.
-     *
-     * @return {[type]} [description]
-     * @author Seven Du <shiweidu@outlook.com>
-     */
     handleRefresh() {
       if (this.type === "follow") {
         this.handleRefreshByFollow();
@@ -170,13 +92,6 @@ export default {
 
       this.handleRefreshByAll();
     },
-
-    /**
-     * The all topics refresh handle.
-     *
-     * @return {void}
-     * @author Seven Du <shiweidu@outlook.com>
-     */
     handleRefreshByAll() {
       const offset = 0;
       const limit = 15;
@@ -192,13 +107,6 @@ export default {
           this.loadContainer.bottomEnd(true);
         });
     },
-
-    /**
-     * The follow topics refresh handle.
-     *
-     * @return {void}
-     * @author Seven Du <shiweidu@outlook.com>
-     */
     handleRefreshByFollow() {
       const after = 0;
       const limit = 15;
@@ -376,9 +284,6 @@ export default {
       &.active {
         color: #ccc;
         border: solid 2px #ccc;
-        > span {
-          // display: none;
-        }
       }
     }
   }

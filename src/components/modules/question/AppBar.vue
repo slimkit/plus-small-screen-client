@@ -2,11 +2,11 @@
   <header class="module-question-app-bar">
     <!-- Left Buttoms -->
     <div class="module-question-app-bar_buttom">
-      <svg 
-        class="m-style-svg m-svg-def" 
+      <svg
+        class="m-style-svg m-svg-def"
         @click="goBack">
-        <use 
-          xmlns:xlink="http://www.w3.org/1999/xlink" 
+        <use
+          xmlns:xlink="http://www.w3.org/1999/xlink"
           xlink:href="#base-back"/>
       </svg>
     </div>
@@ -18,8 +18,7 @@
         :class="questionRouteClassName"
         :replace="true"
         :exact="true"
-        to="/question"
-      >
+        to="/question" >
         问答
       </router-link>
 
@@ -28,20 +27,17 @@
         :class="topicsRouteClassName"
         :replace="true"
         :exact="true"
-        to="/question/topics"
-      >
+        to="/question/topics" >
         话题
       </router-link>
     </div>
 
     <!-- Right Buttoms -->
     <div class="module-question-app-bar_buttom module-question-app-bar_buttom-right">
-      <router-link
-        to="/question/search"
-      >
+      <router-link to="/question/search" >
         <svg class="module-question-app-bar_buttom-icon">
-          <use 
-            xmlns:xlink="http://www.w3.org/1999/xlink" 
+          <use
+            xmlns:xlink="http://www.w3.org/1999/xlink"
             xlink:href="#base-search" />
         </svg>
       </router-link>
@@ -50,22 +46,8 @@
 </template>
 
 <script>
-/**
- * Question Page App Bar.
- */
 export default {
-  /**
-   * The module name.
-   *
-   * @type {string}
-   */
   name: "ModuleQuestionAppBar",
-
-  /**
-   * The component computed data.
-   *
-   * @type {Object}
-   */
   computed: {
     /**
      * Route path.
@@ -75,7 +57,6 @@ export default {
      */
     routePath() {
       const { path } = this.$route;
-
       return path;
     },
 

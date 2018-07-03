@@ -1,8 +1,8 @@
 <template>
-  <div 
-    v-bind="$props" 
-    :class="rootClassName" 
-    :style="rootStyles" 
+  <div
+    v-bind="$props"
+    :class="rootClassName"
+    :style="rootStyles"
     @click="handleClick">
     <slot/>
   </div>
@@ -10,20 +10,9 @@
 
 <script>
 export default {
-  /**
-   * The component name.
-   *
-   * @type {String}
-   */
   name: "ModuleAvatar",
-
-  /**
-   * The component props.
-   *
-   * @type {Object}
-   */
   props: {
-    classes: { type: [Array, String] },
+    classes: { type: [Array, String], default: "" },
     size: { type: [String, Number], default: 0.4 },
     sizeUnit: { type: String, default: "rem" }
   },

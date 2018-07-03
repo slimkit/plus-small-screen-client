@@ -1,5 +1,5 @@
 <template>
-  <div 
+  <div
     :class="`${prefix}`"
 
     style="transform:translate(0,0)"
@@ -11,16 +11,15 @@
     @touchmove.stop="onDrag"
     @mouseup="stopDrag"
     @touchend="stopDrag"
-    @mouseleave="stopDrag" 
-  >
+    @mouseleave="stopDrag" >
     <!-- 顶部 -->
-    <div 
+    <div
       ref="head"
       :class="`${prefix}-head ${prefix}-head-box`"
-      :style="{transform: `translateY(${ tY - topBarHeight }px)`, transitionDuration}">    
+      :style="{transform: `translateY(${ tY - topBarHeight }px)`, transitionDuration}">
       <slot name="head">
-        <div 
-          v-if="refreshing" 
+        <div
+          v-if="refreshing"
           :class="`${prefix}-loading ${prefix}-icon`">
           <span/>
           <span/>
@@ -35,15 +34,15 @@
           <span/>
           <span/>
         </div>
-        <i 
-          v-else 
-          :class="`${prefix}-icon`" 
+        <i
+          v-else
+          :class="`${prefix}-icon`"
           :style="{ transform: `rotate(${topStatus ? '180deg' : '0'})` }">↓</i>
         <span>{{ topTxt }}</span>
       </slot>
     </div>
     <!-- 内容 -->
-    <div 
+    <div
       :class="`${prefix}-main`"
       :style="{transform: `translateY(${tY}px)`, transitionDuration }">
       <slot/>
@@ -53,7 +52,7 @@
         :class="`${prefix}-foot status-${bottomStatus}`"
         @click="beforeLoadMore">
         <slot name="foot">
-          <div 
+          <div
             v-if="bottomStatus === 1"
             :class="`${prefix}-loading ${prefix}-icon`">
             <span/>
@@ -103,7 +102,8 @@ export default {
   name: "JoLoadMore",
   props: {
     topDistance: {
-      type: Number
+      type: Number,
+      default: 0
     },
     noAnimation: {
       type: Boolean,
@@ -298,12 +298,8 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
-    &.status-1 {
-    }
     &.status-2 {
       color: #ccc;
-    }
-    &.status-3 {
     }
   }
   &-main {

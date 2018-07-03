@@ -419,6 +419,7 @@ export default {
   overflow-y: auto;
   _overflow-y: visible;
   -webkit-user-modify: read-write-plaintext-only; // 只是编辑text文本，只能解决webkit内核里面问题，手机端适用
+  user-select: text;
   -webkit-user-select: text; // 解决IOS部分手机不支持contenteditable=true属性问题
 }
 

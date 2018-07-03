@@ -1,17 +1,17 @@
 <template>
-  <div 
-    v-if="answer" 
+  <div
+    v-if="answer"
     class="module-question-list-answer-card">
     <!-- User avatar. -->
-    <module-user-avatar 
-      :anonymity="anonymity" 
-      :src="user.avatar" 
+    <module-user-avatar
+      :anonymity="anonymity"
+      :src="user.avatar"
       :sex="user.sex" />
     <!-- Body -->
     {{ showUsername }}：{{ body }}
   </div>
-  <div 
-    v-else 
+  <div
+    v-else
     class="module-question-list-answer-card-empty" />
 </template>
 
@@ -19,46 +19,19 @@
 import UserAvatar from "../UserAvatar";
 import { syntaxTextAndImage } from "../../../util/markdown";
 
-/**
- * The module name.
- *
- * @type {string}
- */
-const name = "module-question-list-answer-card";
-
-/**
- * Question list item answer card.
- */
 export default {
-  /**
-   * The component name.
-   *
-   * @type {string}
-   */
-  name,
+  name: "ModuleQuestionListAnswerCard",
 
-  /**
-   * The module using components.
-   *
-   * @type {Object}
-   */
   components: {
     [UserAvatar.name]: UserAvatar
   },
 
-  /**
-   * The module props.
-   *
-   * @type {Object}
-   */
   props: {
     answer: {
+      type: Object,
       required: true,
       validator: function(value) {
-        if (!value || value instanceof Object) {
-          return true;
-        }
-
+        if (!value || value instanceof Object) return true;
         return false;
       }
     }
@@ -72,7 +45,6 @@ export default {
      */
     anonymity() {
       const { anonymity } = this.answer;
-
       return !!anonymity;
     },
 
@@ -84,7 +56,6 @@ export default {
      */
     user() {
       const { user } = this.answer;
-
       return user || {};
     },
 
@@ -95,16 +66,11 @@ export default {
      * @author Seven Du <shiweidu@outlook.com>
      */
     showUsername() {
-      if (this.anonymity) {
-        return "匿名用户";
-      }
-
+      if (this.anonymity) return "匿名用户";
       return this.user.name;
     },
-
     body() {
       const { body } = this.answer;
-
       return syntaxTextAndImage(body || "").text;
     }
   }
@@ -113,6 +79,7 @@ export default {
 
 <style lang="less">
 @root: module-question-list-answer-card;
+
 .@{root} {
   font-size: 30px;
   font-weight: normal;
@@ -128,6 +95,7 @@ export default {
   margin-bottom: 46px;
   line-height: 1.4;
 }
+
 .@{root}-empty {
   display: none;
 }

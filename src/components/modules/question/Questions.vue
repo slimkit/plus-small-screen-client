@@ -3,37 +3,37 @@
 
     <!-- Question navs. -->
     <nav class="module-questions-nav">
-      <router-link 
-        to="/question" 
-        replace 
-        exact 
+      <router-link
+        to="/question"
+        replace
+        exact
         exact-active-class="active">热门</router-link>
-      <router-link 
-        :to="navRouterLinkBuilder('excellent')" 
-        replace 
-        exact 
+      <router-link
+        :to="navRouterLinkBuilder('excellent')"
+        replace
+        exact
         exact-active-class="active">精选</router-link>
-      <router-link 
-        :to="navRouterLinkBuilder('reward')" 
-        replace 
-        exact 
+      <router-link
+        :to="navRouterLinkBuilder('reward')"
+        replace
+        exact
         exact-active-class="active">悬赏</router-link>
-      <router-link 
-        :to="navRouterLinkBuilder('new')" 
-        replace 
-        exact 
+      <router-link
+        :to="navRouterLinkBuilder('new')"
+        replace
+        exact
         exact-active-class="active">最新</router-link>
-      <router-link 
-        :to="navRouterLinkBuilder('all')" 
-        replace 
-        exact 
+      <router-link
+        :to="navRouterLinkBuilder('all')"
+        replace
+        exact
         exact-active-class="active">全部</router-link>
     </nav>
 
     <!-- Question main. -->
     <main class="module-questions-main">
-      <div 
-        v-if="loading" 
+      <div
+        v-if="loading"
         :class="classNamebuilder('main-loading')">
         <icon-loading :class="classNamebuilder('main-loading_icon')" />
       </div>
@@ -42,17 +42,17 @@
         :key="question.id"
         :question="question"
       />
-      <div 
-        v-if="questions.length && !loadmore" 
+      <div
+        v-if="questions.length && !loadmore"
         :class="classNamebuilder('main-loadmore')">
-        <button 
-          :class="classNamebuilder('main-loadmore_button')" 
+        <button
+          :class="classNamebuilder('main-loadmore_button')"
           @click="fetchQuestionsMore">
           加载更多
         </button>
       </div>
-      <div 
-        v-else-if="loadmore" 
+      <div
+        v-else-if="loadmore"
         :class="[classNamebuilder('main-loadmore')]">
         <button :class="[classNamebuilder('main-loadmore_button'), 'active']">
           <icon-loading :class="classNamebuilder('main-loading_icon')" />
@@ -258,6 +258,7 @@ export default {
     line-height: 0;
     letter-spacing: 0;
     border-bottom: solid 0.01rem #d7d8d8;
+
     @media screen and (min-width: 769px) {
       width: 768px;
     }

@@ -2,23 +2,23 @@
   <div class="p-news-search">
     <header class="m-box m-aln-center m-pos-f m-main m-bb1 m-head-top">
       <div class="m-box m-flex-grow0 m-flex-shrink0 m-aln-center">
-        <svg 
-          class="m-style-svg m-svg-def" 
+        <svg
+          class="m-style-svg m-svg-def"
           @click="goBack">
-          <use 
-            xmlns:xlink="http://www.w3.org/1999/xlink" 
+          <use
+            xmlns:xlink="http://www.w3.org/1999/xlink"
             xlink:href="#base-back"/>
         </svg>
       </div>
       <div class="m-box m-flex-grow2 m-flex-shrink2 m-aln-center m-head-top-title">
         <div class="m-search-box">
-          <form 
-            action="#" 
+          <form
+            action="#"
             onsubmit="return false">
-            <input 
-              v-model="keyword" 
-              type="search" 
-              placeholder="搜索" 
+            <input
+              v-model="keyword"
+              type="search"
+              placeholder="搜索"
               @input="searchNewsByKey">
           </form>
         </div>
@@ -47,6 +47,7 @@
 import _ from "lodash";
 import { searchNewsByKey } from "@/api/news.js";
 import newsItem from "./components/newsItem.vue";
+
 export default {
   name: "NewsSearch",
   components: {

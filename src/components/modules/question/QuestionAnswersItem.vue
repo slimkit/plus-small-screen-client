@@ -38,9 +38,9 @@
 <script>
 import UserAvatar from "../UserAvatar";
 import { like, unlike } from "../../../api/question/answer";
-const name = "module-question-answers-item";
+
 export default {
-  name,
+  name: "ModuleQuestionAnswersItem",
   components: {
     [UserAvatar.name]: UserAvatar
   },
@@ -61,9 +61,6 @@ export default {
 
       return user;
     }
-  },
-  created() {
-    // this.answer.question_id = 1;
   },
   methods: {
     classNameBuilder(className) {
@@ -121,6 +118,7 @@ export default {
 
 <style lang="less">
 @root: module-question-answers-item;
+
 .@{root} {
   width: 100%;
   background-color: #fff;

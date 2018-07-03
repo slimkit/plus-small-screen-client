@@ -1,13 +1,13 @@
 <template>
   <div class="module-question-list-item">
     <!-- The question title. -->
-    <router-link 
-      :to="`/questions/${question.id}`" 
-      tag="h3" 
+    <router-link
+      :to="`/questions/${question.id}`"
+      tag="h3"
       class="module-question-list-item_title">
       {{ question.subject }}
-      <span 
-        v-show="question.excellent" 
+      <span
+        v-show="question.excellent"
         class="module-question-list-item-shang-i">精</span>
     </router-link>
 
@@ -24,9 +24,9 @@
     <module-question-list-answer-card :answer="answer" />
 
     <!-- Bottom -->
-    <router-link 
-      :to="`/questions/${question.id}`" 
-      class="module-question-list-item_button" 
+    <router-link
+      :to="`/questions/${question.id}`"
+      class="module-question-list-item_button"
       tag="div">
       <span>
         <span class="module-question-list-item_button-style1">{{ question.watchers_count }}</span>&nbsp;关注
@@ -50,43 +50,17 @@
 <script>
 import UserAvatar from "../UserAvatar";
 import QuestionListAnswerCard from "./QuestionListAnswerCard";
-import { syntaxTextAndImage } from "../../../util/markdown";
+import { syntaxTextAndImage } from "@/util/markdown";
 
-/**
- * Question list item.
- */
 export default {
-  /**
-   * The component name.
-   *
-   * @type {String}
-   */
   name: "ModuleQuestionListItem",
-
-  /**
-   * The component using components.
-   *
-   * @type {Object}
-   */
   components: {
     [UserAvatar.name]: UserAvatar,
     [QuestionListAnswerCard.name]: QuestionListAnswerCard
   },
-
-  /**
-   * The component props.
-   *
-   * @type {Object}
-   */
   props: {
     question: { type: Object, required: true }
   },
-
-  /**
-   * The component compoted data.
-   *
-   * @type {Object}
-   */
   computed: {
     /**
      * Answer data.
@@ -96,7 +70,6 @@ export default {
      */
     answer() {
       const { answer } = this.question;
-
       return answer;
     },
 
