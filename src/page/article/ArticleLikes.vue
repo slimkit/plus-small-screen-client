@@ -1,15 +1,15 @@
 <template>
   <div class="m-art-likes">
-    <header 
-      class="m-pos-r" 
+    <header
+      class="m-pos-r"
       style="padding-top: 0.9rem">
       <div class="m-pos-f m-box m-justify-bet m-aln-center m-head-top m-bb1 m-main">
         <div class="m-box m-flex-grow1 m-aln-center m-flex-base0">
-          <svg 
-            class="m-style-svg m-svg-def" 
+          <svg
+            class="m-style-svg m-svg-def"
             @click="goBack">
-            <use 
-              xmlns:xlink="http://www.w3.org/1999/xlink" 
+            <use
+              xmlns:xlink="http://www.w3.org/1999/xlink"
               xlink:href="#base-back"/>
           </svg>
         </div>
@@ -23,9 +23,9 @@
         :auto-load="false"
         @onRefresh="onRefresh"
         @onLoadMore="onLoadMore">
-        <user-item 
-          v-for="({ user, id }, index) in likes" 
-          :key="`likes-${id}-${user.id}-${index}`" 
+        <user-item
+          v-for="({ user, id }, index) in likes"
+          :key="`likes-${id}-${user.id}-${index}`"
           :user="user" />
       </jo-load-more>
     </main>
@@ -63,6 +63,8 @@ export default {
           return `/news/${this.article}/likes`;
         case "post":
           return `/plus-group/group-posts/${this.article}/likes`;
+        case "answer":
+          return `/question-answers/${this.article}/likes`;
       }
     }
   },

@@ -61,18 +61,39 @@
           <span>{{ viewsCount | formatNum }}浏览</span>
         </div>
       </div>
-      <!-- todo 打赏功能 -->
-      <!--<div class="m-box-model m-box-center m-box-center-a m-art-reward">
-        <button class="m-art-rew-btn" @click="rewardFeed">打 赏</button>
+      <div class="m-box-model m-box-center m-box-center-a m-art-reward">
+        <button
+          class="m-art-rew-btn"
+          @click="rewardAnswer">打 赏</button>
         <p class="m-art-rew-label">
           <a href="javascript:;">{{ reward.count | formatNum }}</a>人打赏，共
-          <a href="javascript:;">{{ (~~(reward.amount)/100) }}</a>积分</p>
-        <ul class="m-box m-aln-center m-art-rew-list">
-          <li :key="rew.id" v-for="rew in rewardList" :class="`m-avatar-box-${rew.user.sex}`" class="m-flex-grow0 m-flex-shrink0 m-art-rew m-avatar-box tiny">
+          <a href="javascript:;">{{ ~~reward.amount }}</a>积分
+        </p>
+        <router-link
+          tag="ul"
+          to="rewarders"
+          append
+          class="m-box m-aln-center m-art-rew-list">
+          <li
+            v-for="rew in rewardList"
+            :key="rew.id"
+            :class="`m-avatar-box-${rew.user.sex}`"
+            class="m-flex-grow0 m-flex-shrink0 m-art-rew m-avatar-box tiny">
             <img :src="rew.user.avatar">
           </li>
-        </ul>
-      </div> -->
+          <li
+            v-if="rewardList.length > 0"
+            class="m-box m-aln-center">
+            <svg
+              class="m-style-svg m-svg-def"
+              style="fill:#bfbfbf">
+              <use
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+                xlink:href="#base-arrow-r"/>
+            </svg>
+          </li>
+        </router-link>
+      </div>
     </main>
     <!-- 评论列表 -->
     <div
@@ -131,6 +152,11 @@ export default {
 
       comments: [],
       pinnedCom: [],
+      rewardList: [],
+      reward: {
+        count: 0,
+        amount: 0
+      },
 
       fetchComing: false,
       noMoreCom: false,
@@ -235,13 +261,34 @@ export default {
         }
       });
     },
+    rewardAnswer() {
+      const callback = amount => {
+        this.fetchRewards();
+        this.reward.count += 1;
+        this.reward.amount += amount;
+      };
+      bus.$emit("reward", {
+        type: "answer",
+        api: api.rewardAnswer,
+        payload: this.answerId,
+        callback
+      });
+    },
     moreAction() {},
+    fetchRewards() {
+      api.getRewards(this.answerId, { limit: 10 }).then(({ data }) => {
+        this.rewardList = data;
+      });
+    },
     fetchAnswer() {
       if (this.loading) return;
       this.loading = true;
 
       api.getAnswer(this.answerId).then(({ data }) => {
         this.answer = data;
+        this.reward.count = data.rewarder_count;
+        this.reward.amount = data.rewards_amount;
+        this.rewardList = data.rewarders;
         this.fetchAnswerComments();
         this.loading = false;
       });

@@ -81,3 +81,33 @@ export function getAnswer(answerId) {
   const url = `/question-answers/${answerId}`;
   return api.get(url, { validateStatus: s => s === 200 });
 }
+
+/**
+ * 打赏回答
+ * @author mutoe <mutoe@foxmail.com>
+ * @export
+ * @param {number} answerId
+ * @param {Object} payload
+ * @param {number} payload.amount 打赏金额
+ * @returns
+ */
+export function rewardAnswer(answerId, payload) {
+  const url = `/question-answers/${answerId}/new-rewards`;
+  return api.post(url, payload, { validateStatus: s => s === 200 });
+}
+
+/**
+ * 获取打赏列表
+ * @author mutoe <mutoe@foxmail.com>
+ * @export
+ * @param {number} answerId
+ * @param {Object} params
+ * @param {string} [params.type = 'time'] time 按时间倒序 amount 按金额倒序
+ * @param {number} [params.limit = 20] limit
+ * @param {number} [params.offset = 0] offset
+ * @returns
+ */
+export function getRewards(answerId, params) {
+  const url = `/question-answers/${answerId}/rewarders`;
+  return api.get(url, { params, validateStatus: s => s === 200 });
+}

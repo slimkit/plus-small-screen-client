@@ -51,7 +51,8 @@ export default {
       typeMap: {
         feed: "动态",
         news: "资讯",
-        post: "帖子"
+        post: "帖子",
+        answer: "回答"
       }
     };
   },
@@ -74,6 +75,8 @@ export default {
           return `/news/${this.article}/rewards`;
         case "post":
           return `/plus-group/group-posts/${this.article}/rewards`;
+        case "answer":
+          return `/question-answers/${this.article}/rewarders`;
       }
     }
   },

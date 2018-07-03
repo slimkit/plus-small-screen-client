@@ -46,6 +46,9 @@ const Topic = () =>
 const AnswerDetail = () =>
   import(/* webpackChunkName: 'question' */ "@/page/question/AnswerDetail.vue");
 
+import likes from "@/page/article/ArticleLikes.vue";
+import rewards from "@/page/article/ArticleRewards.vue";
+
 export default [
   /**
    * Questions page entry.
@@ -88,6 +91,32 @@ export default [
     component: AnswerDetail,
     meta: {
       title: "问题详情"
+    }
+  },
+  /**
+   * 点赞列表 && 打赏列表 路由格式固定
+   *
+   * 帖子/资讯/问答 相关路由 统一使用 article 代替 id
+   *
+   * 通过传递 不同的 meta[type] 实现组件复用
+   *
+   * copy by @/routers/feed.js
+   *
+   */
+  {
+    path: "/questions/:questionId/answers/:article/likers",
+    component: likes,
+    meta: {
+      title: "点赞列表",
+      type: "answer"
+    }
+  },
+  {
+    path: "/questions/:questionId/answers/:article/rewarders",
+    component: rewards,
+    meta: {
+      title: "打赏列表",
+      type: "answer"
     }
   }
 ];
