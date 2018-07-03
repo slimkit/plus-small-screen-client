@@ -4,14 +4,14 @@
     :class="styles"
     class="m-flex-shrink0 m-flex-grow0 m-avatar-box"
     @click.native.stop>
-    <img 
-      v-if="avatar" 
-      :src="avatar" 
-      class="m-avatar-img" 
+    <img
+      v-if="avatar"
+      :src="avatar"
+      class="m-avatar-img"
       @error="handelError">
-    <i 
-      v-if="icon" 
-      :style="icon" 
+    <i
+      v-if="icon"
+      :style="icon"
       class="m-avatar-icon"/>
   </router-link>
 </template>
@@ -24,6 +24,8 @@ export default {
       default: "def"
     },
     user: {
+      type: Object,
+      default: () => {},
       required: true
     }
   },

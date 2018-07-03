@@ -1,18 +1,19 @@
 <template>
-  <div 
-    class="module-question-answers-item" 
+  <div
+    class="module-question-answers-item"
     @click="viewDetail">
-    <div :class="classNameBuilder('avatar')">
+    <div
+      :class="classNameBuilder('avatar')"
+      @click.stop="viewUser">
       <module-user-avatar
         :size="0.56"
         :anonymity="anonymity"
         :src="user.avatar"
-        :sex="user.sex"
-      />
+        :sex="user.sex" />
     </div>
     <div :class="classNameBuilder('main')">
       <h3 :class="classNameBuilder('main-header')">
-        {{ anonymity ? '匿名用户' : user.name }}
+        <template @click.stop="viewUser">{{ anonymity ? '匿名用户' : user.name }}</template>
         <span>{{ answer.created_at | time2tips }}</span>
       </h3>
       <div :class="classNameBuilder('main-body')">{{ answer.body | markdownText }}</div>
@@ -109,6 +110,10 @@ export default {
       this.$router.push(
         `/questions/${this.answer.question_id}/answers/${this.answer.id}`
       );
+    },
+    viewUser() {
+      if (!this.user.id) return;
+      this.$router.push(`/users/${this.user.id}`);
     }
   }
 };
