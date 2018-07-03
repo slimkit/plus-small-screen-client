@@ -37,8 +37,7 @@
         <button
           v-if="topic.has_follow"
           class="follow active"
-          @click="handleUnfollow(topic)"
-        >
+          @click="handleUnfollow(topic)" >
           <span>✓</span>已关注
         </button>
         <button
@@ -65,8 +64,7 @@
             :src="user.avatar"
             :sex="user.sex"
             :style="[{ zIndex: topic.experts.length - index }]"
-            :key="user.id"
-          />
+            :key="user.id" />
         </div>
       </div>
 
@@ -106,13 +104,11 @@
         ref="load"
         :class="[classNameBuilder('questions')]"
         :on-refresh="handleRefresh"
-        :on-load-more="handleLoadQuestions"
-      >
-        <question-item
+        :on-load-more="handleLoadQuestions" >
+        <question-list-item
           v-for="question in questions"
           :key="question.id"
-          :question="question"
-        />
+          :question="question" />
       </load-more>
     </main>
 
@@ -120,15 +116,15 @@
 </template>
 
 <script>
-import UserAvatar from "../modules/UserAvatar";
-import QuestionsItem from "../modules/question/QuestionsItem";
-import { show, questions, follow, unfollow } from "../../api/question/topics";
-const name = "page-question-topic";
+import UserAvatar from "./components/UserAvatar.vue";
+import QuestionListItem from "./QuestionListItem.vue";
+import { show, questions, follow, unfollow } from "@/api/question/topics";
+
 export default {
-  name,
+  name: "TopicDetail",
   components: {
-    "user-avatar": UserAvatar,
-    "question-item": QuestionsItem
+    UserAvatar,
+    QuestionListItem
   },
   data: () => ({
     topic: {},
@@ -166,7 +162,7 @@ export default {
   },
   methods: {
     classNameBuilder(className) {
-      return `${name}-${className}`;
+      return `page-question-topic-${className}`;
     },
     handleRefresh() {
       show(this.id)
@@ -257,9 +253,8 @@ export default {
 };
 </script>
 
-<style lang="less">
-@root: page-question-topic;
-.@{root} {
+<style lang="less" scoped>
+.page-question-topic {
   width: 100%;
   height: auto;
   &-share {

@@ -17,11 +17,10 @@
       :style="firstImageStyle"
       :to="`/questions/${question.id}`"
       tag="div"
-      class="module-question-list-item_image"
-    />
+      class="module-question-list-item_image" />
 
     <!-- Answer. -->
-    <module-question-list-answer-card :answer="answer" />
+    <question-list-answer-card :answer="answer" />
 
     <!-- Bottom -->
     <router-link
@@ -48,15 +47,13 @@
 </template>
 
 <script>
-import UserAvatar from "../UserAvatar";
 import QuestionListAnswerCard from "./QuestionListAnswerCard";
 import { syntaxTextAndImage } from "@/util/markdown";
 
 export default {
-  name: "ModuleQuestionListItem",
+  name: "QuestionListItem",
   components: {
-    [UserAvatar.name]: UserAvatar,
-    [QuestionListAnswerCard.name]: QuestionListAnswerCard
+    QuestionListAnswerCard
   },
   props: {
     question: { type: Object, required: true }
@@ -108,8 +105,6 @@ export default {
   background: #fff;
   padding: 31px;
   margin-bottom: 10px;
-  // position: relative;
-  // z-index: -1;
   .module-question-list-item_title {
     margin: 0;
     margin-bottom: 46px;

@@ -53,10 +53,10 @@
 </template>
 
 <script>
-import { all, followTopics, follow, unfollow } from "@/api/question/topics.js";
+import { all, followTopics, follow, unfollow } from "@/api/question/topics";
 
 export default {
-  name: "QuestionsTopics",
+  name: "TopicList",
   data: () => ({
     topics: []
   }),

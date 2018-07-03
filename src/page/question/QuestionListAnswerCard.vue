@@ -3,7 +3,7 @@
     v-if="answer"
     class="module-question-list-answer-card">
     <!-- User avatar. -->
-    <module-user-avatar
+    <user-avatar
       :anonymity="anonymity"
       :src="user.avatar"
       :sex="user.sex" />
@@ -16,22 +16,20 @@
 </template>
 
 <script>
-import UserAvatar from "../UserAvatar";
-import { syntaxTextAndImage } from "../../../util/markdown";
+import UserAvatar from "./components/UserAvatar.vue";
+import { syntaxTextAndImage } from "@/util/markdown";
 
 export default {
-  name: "ModuleQuestionListAnswerCard",
-
+  name: "QuestionListAnswerCard",
   components: {
-    [UserAvatar.name]: UserAvatar
+    UserAvatar
   },
-
   props: {
     answer: {
-      type: Object,
-      required: true,
+      type: [Object],
+      default: null,
       validator: function(value) {
-        if (!value || value instanceof Object) return true;
+        if (!value || typeof value === "object") return true;
         return false;
       }
     }

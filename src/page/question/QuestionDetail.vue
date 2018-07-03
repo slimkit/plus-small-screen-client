@@ -19,8 +19,7 @@
       <load-more
         ref="questionLoadContainer"
         :on-refresh="handleRefreshAnswers"
-        :on-load-more="handleLoadMoreAnswers"
-      >
+        :on-load-more="handleLoadMoreAnswers" >
         <!-- Main -->
         <div :class="classNameBuilder('main')">
 
@@ -30,8 +29,7 @@
               v-for="topic in topics"
               :to="`/question-topics/${topic.id}`"
               :key="topic.id"
-              class="label"
-            >
+              class="label" >
               {{ topic.name }}
             </router-link>
           </div>
@@ -61,15 +59,13 @@
             <button
               v-if="question.watched"
               :class="[classNameBuilder('main-watch-follow'), 'active']"
-              @click="handleUnwatch"
-            >
+              @click="handleUnwatch" >
               <span>✓</span>已关注
             </button>
             <button
               v-else
               :class="classNameBuilder('main-watch-follow')"
-              @click="handleWatch"
-            >
+              @click="handleWatch" >
               <span>+</span>关注
             </button>
           </div>
@@ -110,11 +106,10 @@
         </div>
 
         <!-- Answer list -->
-        <module-question-answers-item
+        <question-answer-item
           v-for="answer in answers"
           :key="answer.id"
-          :answer="answer"
-        />
+          :answer="answer" />
       </load-more>
     </div>
     <div :class="classNameBuilder('tabbar')">
@@ -164,43 +159,21 @@
 </template>
 
 <script>
-import { show, watch, unwatch } from "../../api/question/questions";
-import { listByDefault, listByTime } from "../../api/question/answer";
-import { render } from "../../util/markdown";
-import QuestionAnswersItem from "../modules/question/QuestionAnswersItem";
-/**
- * The page name.
- *
- * @type {String}
- */
-const name = "page-question";
+import { render } from "@/util/markdown";
+import { show, watch, unwatch } from "@/api/question/questions";
+import { listByDefault, listByTime } from "@/api/question/answer";
+import QuestionAnswerItem from "./QuestionAnswerItem";
 
 export default {
-  /**
-   * The page component name.
-   *
-   * @type {String}
-   */
-  name,
+  name: "QuestionDetail",
   components: {
-    [QuestionAnswersItem.name]: QuestionAnswersItem
+    QuestionAnswerItem
   },
-  /**
-   * The page data.
-   *
-   * @return {Object}
-   * @author Seven Du <shiweidu@outlook.com>
-   */
   data: () => ({
     question: {},
     answersTimeOrder: false,
     answers: []
   }),
-  /**
-   * The page computed data.
-   *
-   * @type {Object}
-   */
   computed: {
     /**
      * The loged user.
@@ -210,7 +183,6 @@ export default {
      */
     logedUser() {
       const { CURRENTUSER: user } = this.$store.state;
-
       return user;
     },
 
@@ -265,11 +237,6 @@ export default {
   mounted() {
     this.loadContainer.beforeRefresh();
   },
-  /**
-   * Methods.
-   *
-   * @type {Object}
-   */
   methods: {
     /**
      * Class name builder.
@@ -279,7 +246,7 @@ export default {
      * @author Seven Du <shiweidu@outlook.com>
      */
     classNameBuilder(className) {
-      return `${name}-${className}`;
+      return `page-question-${className}`;
     },
     fetch(cb = null) {
       show(this.$route.params.id)
@@ -352,9 +319,8 @@ export default {
 };
 </script>
 
-<style lang="less">
-@root: page-question;
-.@{root} {
+<style lang="less" scoped>
+.page-question {
   &-container {
     padding-top: 90px;
   }

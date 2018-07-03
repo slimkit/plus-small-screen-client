@@ -10,18 +10,12 @@
 
 <script>
 export default {
-  name: "ModuleAvatar",
+  name: "Avatar",
   props: {
     classes: { type: [Array, String], default: "" },
     size: { type: [String, Number], default: 0.4 },
     sizeUnit: { type: String, default: "rem" }
   },
-
-  /**
-   * The component computed data.
-   *
-   * @type {Object}
-   */
   computed: {
     /**
      * Root element class name.
@@ -56,12 +50,6 @@ export default {
       };
     }
   },
-
-  /**
-   * The component methods.
-   *
-   * @type {Object}
-   */
   methods: {
     /**
      * Class name builder.
@@ -89,8 +77,7 @@ export default {
 </script>
 
 <style lang="less">
-@root: module-avatar;
-.@{root} {
+.module-avatar {
   background-color: #999;
   color: #fff;
   border-radius: 100%;

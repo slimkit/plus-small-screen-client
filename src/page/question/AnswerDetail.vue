@@ -135,10 +135,10 @@ import markdownIt from "markdown-it";
 import plusImagePlugin from "markdown-it-plus-image";
 import ArticleCard from "@/page/article/ArticleCard.vue";
 import CommentItem from "@/page/article/ArticleComment.vue";
-import * as api from "@/api/question/answer.js";
+import * as api from "@/api/question/answer";
 
 export default {
-  name: "AnswerDetailt",
+  name: "AnswerDetail",
   components: {
     ArticleCard,
     CommentItem

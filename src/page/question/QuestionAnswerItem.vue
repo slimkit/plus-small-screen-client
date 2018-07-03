@@ -1,11 +1,11 @@
 <template>
   <div
-    class="module-question-answers-item"
+    class="question-answer-item"
     @click="viewDetail">
     <div
       :class="classNameBuilder('avatar')"
       @click.stop="viewUser">
-      <module-user-avatar
+      <user-avatar
         :size="0.56"
         :anonymity="anonymity"
         :src="user.avatar"
@@ -36,13 +36,13 @@
 </template>
 
 <script>
-import UserAvatar from "../UserAvatar";
-import { like, unlike } from "../../../api/question/answer";
+import UserAvatar from "./components/UserAvatar.vue";
+import { like, unlike } from "@/api/question/answer";
 
 export default {
-  name: "ModuleQuestionAnswersItem",
+  name: "QuestionAnswerItem",
   components: {
-    [UserAvatar.name]: UserAvatar
+    UserAvatar
   },
   props: {
     answer: { type: Object, required: true }
@@ -53,18 +53,16 @@ export default {
   computed: {
     anonymity() {
       const { anonymity } = this.answer;
-
       return !!anonymity;
     },
     user() {
       const { user = {} } = this.answer;
-
       return user;
     }
   },
   methods: {
     classNameBuilder(className) {
-      return `${name}-${className}`;
+      return `question-answer-item-${className}`;
     },
     handleLike() {
       like(this.answer.id)
@@ -93,14 +91,11 @@ export default {
     handleLikeTarget() {
       if (this.likeTargetHanding) {
         this.$Message.warning("正在执行，请勿重复点击!");
-
         return;
       } else if (this.answer.liked) {
         this.handleUnlike();
-
         return;
       }
-
       this.handleLike();
     },
     viewDetail() {
@@ -116,10 +111,8 @@ export default {
 };
 </script>
 
-<style lang="less">
-@root: module-question-answers-item;
-
-.@{root} {
+<style lang="less" scoped>
+.question-answer-item {
   width: 100%;
   background-color: #fff;
   margin-bottom: 9px;
@@ -181,7 +174,7 @@ export default {
         font-weight: normal;
         font-stretch: normal;
         color: #b3b3b3;
-        .@{root}-icon {
+        .question-answer-item-icon {
           margin-right: 4px;
           &.active {
             fill: red;

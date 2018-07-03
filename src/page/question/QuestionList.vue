@@ -37,11 +37,10 @@
         :class="classNamebuilder('main-loading')">
         <icon-loading :class="classNamebuilder('main-loading_icon')" />
       </div>
-      <module-question-list-item
+      <question-list-item
         v-for="question in questions"
         :key="question.id"
-        :question="question"
-      />
+        :question="question" />
       <div
         v-if="questions.length && !loadmore"
         :class="classNamebuilder('main-loadmore')">
@@ -63,66 +62,37 @@
 </template>
 
 <script>
-import { list } from "../../../api/question/questions";
 import message from "plus-message-bundle";
-import QuestionsItem from "./QuestionsItem";
-import Loading from "../../../icons/Loading";
+import Loading from "@/icons/Loading.vue";
+import QuestionListItem from "./QuestionListItem.vue";
+import { list } from "@/api/question/questions";
 
-/**
- * Questions page module.
- */
 export default {
-  /**
-   * The module name.
-   *
-   * @type {string}
-   */
-  name: "ModuleQuestions",
-
-  /**
-   * The components.
-   *
-   * @type {Object}
-   */
+  name: "QuestionList",
   components: {
-    [QuestionsItem.name]: QuestionsItem,
-    [Loading.name]: Loading
+    QuestionListItem,
+    IconLoading: Loading
   },
 
-  /**
-   * Data.
-   *
-   * @return {Object}
-   * @author Seven Du <shiweidu@outlook.com>
-   */
   data: () => ({
     /**
      * Questions.
-     *
      * @type {Array}
      */
     questions: [],
 
     /**
      * Questions loading status.
-     *
      * @type {Boolean}
      */
     loading: false,
 
     /**
      * Load more question.
-     *
      * @type {Boolean}
      */
     loadmore: false
   }),
-
-  /**
-   * The module computed data.
-   *
-   * @type {Object}
-   */
   computed: {
     /**
      * The route query type value.
@@ -131,26 +101,11 @@ export default {
      * @author Seven Du <shiweidu@outlook.com>
      */
     type() {
-      const {
-        query: { type = "hot" }
-      } = this.$route;
-
+      const { type = "hot" } = this.$route.query;
       return type;
     }
   },
-
-  /**
-   * Watch methods.
-   *
-   * @type {Object}
-   */
   watch: {
-    /**
-     * Watch $route.
-     *
-     * @return {void}
-     * @author Seven Du <shiweidu@outlook.com>
-     */
     $route(newRoute, oldRoute) {
       if (
         newRoute.path === oldRoute.path &&
@@ -160,16 +115,9 @@ export default {
       }
     }
   },
-
   mounted() {
     this.fetchQuestions();
   },
-
-  /**
-   * The module methods.
-   *
-   * @type {Object}
-   */
   methods: {
     /**
      * Nav router link builder.

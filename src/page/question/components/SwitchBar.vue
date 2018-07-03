@@ -47,7 +47,7 @@
 
 <script>
 export default {
-  name: "ModuleQuestionAppBar",
+  name: "QuestionSwitchBar",
   computed: {
     /**
      * Route path.
@@ -109,7 +109,7 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 // Root box class name.
 .module-question-app-bar {
   width: 100%;

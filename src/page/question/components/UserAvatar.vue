@@ -1,70 +1,44 @@
 <template>
-  <module-avatar 
-    v-bind="$props" 
+  <avatar
+    v-bind="$props"
     @click.native="handleClick">
     <!-- If anonymity user. -->
     <template v-if="anonymity">匿</template>
 
     <!-- Not avatar resource show icons. -->
-    <svg 
-      v-else-if="!src" 
-      width="100%" 
-      height="100%" 
+    <svg
+      v-else-if="!src"
+      width="100%"
+      height="100%"
       class="avatar_icon">
-      <use 
-        :xlink:href="defaultAvatar" 
+      <use
+        :xlink:href="defaultAvatar"
         xmlns:xlink="http://www.w3.org/1999/xlink"/>
     </svg>
 
     <!-- Show user avatar image. -->
-    <img 
-      v-else 
+    <img
+      v-else
       :src="src">
-  </module-avatar>
+  </avatar>
 </template>
 
 <script>
 import Avatar from "./Avatar";
 
-/**
- * UserAvatar component.
- */
 export default {
-  /**
-   * The component name.
-   *
-   * @type {String}
-   */
-  name: "ModuleUserAvatar",
-
-  /**
-   * The component using components.
-   *
-   * @type {Object}
-   */
+  name: "UserAvatar",
   components: {
-    [Avatar.name]: Avatar
+    Avatar
   },
-
-  /**
-   * The component props.
-   *
-   * @type {Object}
-   */
   props: {
-    src: String,
+    src: { type: String, default: "" },
     sex: { type: Number, default: 0 },
     anonymity: { type: Boolean, default: false },
-    classes: { type: [Array, String] },
+    classes: { type: [Array, String], default: "" },
     size: { type: [String, Number], default: 0.4 },
     sizeUnit: { type: String, default: "rem" }
   },
-
-  /**
-   * the component computed data.
-   *
-   * @type {Object}
-   */
   computed: {
     /**
      * Not image resource default avatar icon class type.
@@ -84,12 +58,6 @@ export default {
       }
     }
   },
-
-  /**
-   * The component methods.
-   *
-   * @type {Object}
-   */
   methods: {
     /**
      * The component click handle.
