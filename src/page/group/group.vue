@@ -2,11 +2,11 @@
   <div class="p-group">
     <header class="m-box m-aln-center m-justify-bet m-head-top m-pos-f m-main m-bb1">
       <div class="m-box m-aln-center m-flex-grow1 m-flex-shrink1">
-        <svg 
-          class="m-style-svg m-svg-def" 
+        <svg
+          class="m-style-svg m-svg-def"
           @click="goBack">
-          <use 
-            xmlns:xlink="http://www.w3.org/1999/xlink" 
+          <use
+            xmlns:xlink="http://www.w3.org/1999/xlink"
             xlink:href="#base-back"/>
         </svg>
       </div>
@@ -24,13 +24,13 @@
     </header>
 
     <main style="padding-top: 0.9rem">
-      <router-link 
-        :to="{ name: 'groups', query: { type: 'recommend' } }" 
+      <router-link
+        :to="{ name: 'groups', query: { type: 'recommend' } }"
         class="m-box m-aln-center m-justify-bet m-main mt10 group-label m-bb1">
         <h2><strong>{{ groupTotalNumber }}</strong>个兴趣小组，等待你的加入！</h2>
         <svg class="m-style-svg m-svg-def m-entry-append">
-          <use 
-            xmlns:xlink="http://www.w3.org/1999/xlink" 
+          <use
+            xmlns:xlink="http://www.w3.org/1999/xlink"
             xlink:href="#base-arrow-r"/>
         </svg>
       </router-link>
@@ -44,15 +44,15 @@
           <div class="m-box m-aln-center m-justify-end">
             <span>查看全部</span>
             <svg class="m-style-svg m-svg-def m-entry-append">
-              <use 
-                xmlns:xlink="http://www.w3.org/1999/xlink" 
+              <use
+                xmlns:xlink="http://www.w3.org/1999/xlink"
                 xlink:href="#base-arrow-r"/>
             </svg>
           </div>
         </router-link>
         <ul class="group-list">
-          <li 
-            v-for="group in groups" 
+          <li
+            v-for="group in groups"
             :key="`mygroup-${group.id}`">
             <group-item :group="group" />
           </li>
@@ -60,27 +60,27 @@
       </div>
 
       <!-- 推荐圈子 -->
-      <div 
-        v-if="recGroups.length > 0" 
+      <div
+        v-if="recGroups.length > 0"
         class="m-box-model">
         <div class="m-box m-aln-center m-justify-bet m-main mt10 group-label m-bb1 m-bt1 m-pos-stick">
           <span>热门推荐</span>
-          <div 
-            class="m-box m-aln-center m-justify-end" 
+          <div
+            class="m-box m-aln-center m-justify-end"
             @click="fetchRecGroups">
-            <svg 
-              :style="{ transform: `rotate(${clickCount}turn)` }" 
+            <svg
+              :style="{ transform: `rotate(${clickCount}turn)` }"
               class="m-style-svg m-svg-small">
-              <use 
-                xmlns:xlink="http://www.w3.org/1999/xlink" 
+              <use
+                xmlns:xlink="http://www.w3.org/1999/xlink"
                 xlink:href="#base-refresh"/>
             </svg>
             <span style="margin-left: 0.05rem">换一批</span>
           </div>
         </div>
         <ul class="group-list">
-          <li 
-            v-for="group in recGroups" 
+          <li
+            v-for="group in recGroups"
             :key="`recgroup-${group.id}`">
             <group-item :group="group" />
           </li>
@@ -92,6 +92,7 @@
 <script>
 import GroupItem from "./GroupItem.vue";
 import { getGroupTotalNumber, getMyGroups, getRecGroups } from "@/api/group.js";
+
 export default {
   name: "Group",
   components: {

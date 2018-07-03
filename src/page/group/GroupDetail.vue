@@ -1,5 +1,5 @@
 <template>
-  <div 
+  <div
     class="p-group-detail"
     @mousedown="startDrag"
     @touchstart="startDrag"
@@ -13,33 +13,33 @@
       :class="{ 'show-title': scrollTop > 1 / 2 * bannerHeight }"
       class="m-box m-lim-width m-pos-f m-head-top bg-transp">
       <div class="m-box m-flex-grow1 m-aln-center m-flex-base0">
-        <svg 
-          class="m-style-svg m-svg-def" 
+        <svg
+          class="m-style-svg m-svg-def"
           @click="goBack">
-          <use 
-            xmlns:xlink="http://www.w3.org/1999/xlink" 
+          <use
+            xmlns:xlink="http://www.w3.org/1999/xlink"
             xlink:href="#base-back"/>
         </svg>
-        <svg 
-          v-show="updating" 
+        <svg
+          v-show="updating"
           class="m-style-svg m-svg-def">
-          <use 
-            xmlns:xlink="http://www.w3.org/1999/xlink" 
+          <use
+            xmlns:xlink="http://www.w3.org/1999/xlink"
             xlink:href="#base-loading"/>
         </svg>
       </div>
       <div class="m-box m-flex-grow1 m-aln-center m-flex-base0 m-justify-center"/>
       <div class="m-box m-flex-grow1 m-aln-center m-flex-base0 m-justify-end"/>
     </header>
-    <div 
-      v-if="loading" 
+    <div
+      v-if="loading"
       class="m-pos-f m-spinner">
       <div/>
       <div/>
     </div>
     <main style="overflow-x: hidden; overflow-y:auto; min-height: 100vh">
-      <div 
-        ref="banner" 
+      <div
+        ref="banner"
         :style="[groupBackGround,paddingTop, {transitionDuration: dragging ? '0s' : '300ms'}]"
         class="p-group-detail-banner">
         <div class="m-box m-aln-end m-justify-st m-pos-f p-group-detail-bg-mask">
@@ -49,29 +49,29 @@
           <div class="m-box-model m-flex-grow1 m-flex-shrink1 m-flex-base0">
             <h3>{{ group.name }}</h3>
             <p>
-              <span 
-                append 
-                to="member" 
+              <span
+                append
+                to="member"
                 tag="span">成员:<i>{{ groupUserCount }}</i></span>
             </p>
             <p>
-              <span 
-                append 
-                to="followings" 
+              <span
+                append
+                to="followings"
                 tag="span">地址:<i>位置</i></span>
             </p>
           </div>
           <div class="m-box m-aln-center m-flex-grow0 m-flex-shink0 group-item-action c_fff">
-            <button 
-              v-if="!joined" 
-              :disabled="loading" 
-              class="m-text-cut" 
+            <button
+              v-if="!joined"
+              :disabled="loading"
+              class="m-text-cut"
               @click="beforeJoined">
-              <svg 
-                :style="loading ? {} : {width: '0.2rem', height:'0.2rem'}" 
+              <svg
+                :style="loading ? {} : {width: '0.2rem', height:'0.2rem'}"
                 class="m-style-svg m-svg-def">
-                <use 
-                  :xlink:href="`#${loading?'base-loading':'foot-plus'}`" 
+                <use
+                  :xlink:href="`#${loading?'base-loading':'foot-plus'}`"
                   xmlns:xlink="http://www.w3.org/1999/xlink"/>
               </svg>
               <span>加入</span>
@@ -91,8 +91,8 @@
         <div class="m-box m-aln-center p-group-detail-filter">
           <span>{{ feedTypes[screen] }}</span>
           <svg class="m-style-svg m-svg-def">
-            <use 
-              xmlns:xlink="http://www.w3.org/1999/xlink" 
+            <use
+              xmlns:xlink="http://www.w3.org/1999/xlink"
               xlink:href="#base-filter-list"/>
           </svg>
           <transition v-if="showFilter">
@@ -103,11 +103,11 @@
                 class="m-box m-aln-center m-justify-bet"
                 @click="screen = key">
                 <span>{{ val }}</span>
-                <svg 
-                  v-if="screen === key" 
+                <svg
+                  v-if="screen === key"
                   class="m-style-svg m-svg-def">
-                  <use 
-                    xmlns:xlink="http://www.w3.org/1999/xlink" 
+                  <use
+                    xmlns:xlink="http://www.w3.org/1999/xlink"
                     xlink:href="#base-checked"/>
                 </svg>
               </li>
@@ -119,8 +119,8 @@
         <li
           v-for="feed in pinneds"
           :key="`gdf-${groupID}-pinned-feed-${feed.id}`">
-          <group-feed-card 
-            :pinned="true" 
+          <group-feed-card
+            :pinned="true"
             :feed="feed" />
         </li>
         <li
@@ -130,12 +130,12 @@
         </li>
       </ul>
       <div class="m-box m-aln-center m-justify-center load-more-box">
-        <span 
-          v-if="noMoreData" 
+        <span
+          v-if="noMoreData"
           class="load-more-ph">---没有更多---</span>
-        <span 
-          v-else 
-          class="load-more-btn" 
+        <span
+          v-else
+          class="load-more-btn"
           @click.stop="getFeeds(true)">
           {{ fetchFeeding ? "加载中..." : "点击加载更多" }}
         </span>
@@ -249,6 +249,34 @@ export default {
       return this.group.joined || false;
     }
   },
+  created() {
+    this.updateData();
+  },
+  mounted() {
+    this.typeFilter = this.$refs.typeFilter;
+    this.bannerHeight = this.$refs.banner.getBoundingClientRect().height;
+  },
+
+  activated() {
+    this.preGID !== this.groupID
+      ? ((this.loading = true), (this.feeds = []), this.updateData())
+      : setTimeout(() => {
+          this.loading = false;
+        }, 300);
+
+    window.addEventListener("scroll", this.onScroll);
+
+    this.preGID = this.groupID;
+  },
+
+  deactivated() {
+    this.loading = true;
+    this.showFilter = false;
+    window.removeEventListener("scroll", this.onScroll);
+  },
+  destroyed() {
+    window.removeEventListener("scroll", this.onScroll);
+  },
 
   methods: {
     beforeJoined() {
@@ -338,34 +366,6 @@ export default {
       this.dragging = false;
       this.dY > 300 && this.scrollTop <= 0 ? this.updateData() : (this.dY = 0);
     }
-  },
-  created() {
-    this.updateData();
-  },
-  mounted() {
-    this.typeFilter = this.$refs.typeFilter;
-    this.bannerHeight = this.$refs.banner.getBoundingClientRect().height;
-  },
-
-  activated() {
-    this.preGID !== this.groupID
-      ? ((this.loading = true), (this.feeds = []), this.updateData())
-      : setTimeout(() => {
-          this.loading = false;
-        }, 300);
-
-    window.addEventListener("scroll", this.onScroll);
-
-    this.preGID = this.groupID;
-  },
-
-  deactivated() {
-    this.loading = true;
-    this.showFilter = false;
-    window.removeEventListener("scroll", this.onScroll);
-  },
-  destroyed() {
-    window.removeEventListener("scroll", this.onScroll);
   }
 };
 </script>

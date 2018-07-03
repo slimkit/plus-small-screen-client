@@ -1,8 +1,8 @@
 /**
  * 圈子路由模块
  */
-import group from "@/page/group/group.vue";
-import Groups from "@/page/group/Groups.vue";
+import Group from "@/page/group/Group.vue";
+import GroupList from "@/page/group/GroupList.vue";
 import GroupsForUser from "@/page/group/GroupsForUser.vue";
 import GroupDetail from "@/page/group/GroupDetail.vue";
 import GroupsPostDetail from "@/page/group/GroupPostDetail.vue";
@@ -12,7 +12,7 @@ import rewards from "@/page/article/ArticleRewards.vue";
 export default [
   {
     path: "/group",
-    component: group,
+    component: Group,
     meta: {
       title: "圈子首页",
       // keepAlive: true,
@@ -22,7 +22,7 @@ export default [
   {
     name: "groups",
     path: "/groups",
-    component: Groups,
+    component: GroupList,
     meta: {
       title: "全部圈子",
       // keepAlive: true,

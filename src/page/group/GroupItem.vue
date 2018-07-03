@@ -1,6 +1,6 @@
 <template>
-  <section 
-    class="m-box m-aln-center m-justify-bet m-main group-item" 
+  <section
+    class="m-box m-aln-center m-justify-bet m-main group-item"
     @click="beforeViewDetail">
     <div class="m-flex-grow0 m-flex-shrink0 group-item-avatar">
       <img :src="avatar">
@@ -8,11 +8,11 @@
     <div class="m-flex-grow1 m-flex-shrink1 group-item-info">
       <div class="m-box m-aln-center m-text-cut">
         <h2>{{ name }}</h2>
-        <svg 
-          v-if="mode === 'paid'" 
+        <svg
+          v-if="mode === 'paid'"
           class="m-style-svg m-svg-def">
-          <use 
-            xmlns:xlink="http://www.w3.org/1999/xlink" 
+          <use
+            xmlns:xlink="http://www.w3.org/1999/xlink"
             xlink:href="#id"/>
         </svg>
       </div>
@@ -21,25 +21,25 @@
         <span>成员<em>{{ memberCount | formatNum }}</em></span>
       </p>
     </div>
-    <div 
-      v-if="showRole && role" 
+    <div
+      v-if="showRole && role"
       class="m-box m-aln-center m-flex-grow0 m-flex-shink0 group-item-role">
       <span>{{ role }}</span>
     </div>
-    <div 
-      v-if="showAction" 
+    <div
+      v-if="showAction"
       class="m-box m-aln-center m-flex-grow0 m-flex-shink0 group-item-action">
-      <button 
+      <button
         v-if="!joined || joined.audit === 0"
         :disabled="loading || joined.audit === 0"
         class="m-text-cut"
         @click.stop="beforeJoined">
-        <svg 
+        <svg
           v-if="!(joined.audit ===0)"
           :style="loading ? {} : {width: '0.2rem', height:'0.2rem'}"
           class="m-style-svg m-svg-def">
-          <use 
-            :xlink:href="`#${loading?'base-loading':'foot-plus'}`" 
+          <use
+            :xlink:href="`#${loading?'base-loading':'foot-plus'}`"
             xmlns:xlink="http://www.w3.org/1999/xlink"/>
         </svg>
         <span>{{ joined.audit === 0 ? "审核中" : "加入" }}</span>
@@ -56,7 +56,8 @@ export default {
   props: {
     group: {
       type: Object,
-      requirted: true
+      requirted: true,
+      default: () => {}
     },
     showAction: {
       type: Boolean,

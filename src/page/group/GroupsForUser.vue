@@ -2,11 +2,11 @@
   <div class="p-user-groups">
     <header class="m-box m-aln-center m-pos-f m-head-top m-main m-bb1">
       <div class="m-box m-aln-center m-flex-grow1 m-flex-shrink1 m-flex-base0">
-        <svg 
-          class="m-style-svg m-svg-def" 
+        <svg
+          class="m-style-svg m-svg-def"
           @click="goBack">
-          <use 
-            xmlns:xlink="http://www.w3.org/1999/xlink" 
+          <use
+            xmlns:xlink="http://www.w3.org/1999/xlink"
             xlink:href="#base-back"/>
         </svg>
       </div>
@@ -21,9 +21,9 @@
         :on-refresh="onRefresh"
         :on-load-more="onLoadMore">
         <ul>
-          <li 
-            v-for="group in groups" 
-            :key="group.id" 
+          <li
+            v-for="group in groups"
+            :key="group.id"
             class="m-bb1">
             <group-item :group="group"/>
           </li>
