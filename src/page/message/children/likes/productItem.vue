@@ -47,7 +47,9 @@
 const prefixCls = "msgList";
 export default {
   name: "ProductItem",
-  props: ["like"],
+  props: {
+    like: { type: Object, default: () => {} }
+  },
   data: () => ({
     prefixCls
   }),

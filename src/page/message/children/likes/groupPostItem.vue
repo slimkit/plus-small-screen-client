@@ -45,7 +45,9 @@
 const prefixCls = "msgList";
 export default {
   name: "GroupPostItem",
-  props: ["like"],
+  props: {
+    like: { type: Object, default: () => {} }
+  },
   data: () => ({
     prefixCls
   }),

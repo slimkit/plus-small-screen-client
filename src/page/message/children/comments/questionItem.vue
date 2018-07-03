@@ -50,7 +50,9 @@ const prefixCls = "msgList";
 const url = "/questions/";
 export default {
   name: "QuestionItem",
-  props: ["comment"],
+  props: {
+    comment: { type: Object, default: () => {} }
+  },
   data: () => ({
     prefixCls,
     url

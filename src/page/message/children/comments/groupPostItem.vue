@@ -70,7 +70,9 @@
 const prefixCls = "msgList";
 export default {
   name: "GroupPostItem",
-  props: ["comment"],
+  props: {
+    comment: { type: Object, default: () => {} }
+  },
   data: () => ({
     prefixCls
   }),
