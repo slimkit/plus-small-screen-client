@@ -1,4 +1,4 @@
-import request from "../../http";
+import api from "../api.js";
 
 /**
  * List answers by default
@@ -10,7 +10,7 @@ import request from "../../http";
  * @author Seven Du <shiweidu@outlook.com>
  */
 export function listByDefault(question, offset = 0, limit = 15) {
-  return request.get(`/questions/${question}/answers`, {
+  return api.get(`/questions/${question}/answers`, {
     params: { offset, limit, order_type: "default" },
     validateStatus: status => status === 200
   });
@@ -26,7 +26,7 @@ export function listByDefault(question, offset = 0, limit = 15) {
  * @author Seven Du <shiweidu@outlook.com>
  */
 export function listByTime(question, offset = 0, limit = 15) {
-  return request.get(`/questions/${question}/answers`, {
+  return api.get(`/questions/${question}/answers`, {
     params: { offset, limit, order_type: "time" },
     validateStatus: status => status === 200
   });
@@ -40,7 +40,7 @@ export function listByTime(question, offset = 0, limit = 15) {
  * @author Seven Du <shiweidu@outlook.com>
  */
 export function like(answer) {
-  return request.post(
+  return api.post(
     `/question-answers/${answer}/likes`,
     {},
     {
@@ -57,7 +57,7 @@ export function like(answer) {
  * @author Seven Du <shiweidu@outlook.com>
  */
 export function unlike(answer) {
-  return request.delete(`/question-answers/${answer}/likes`, {
+  return api.delete(`/question-answers/${answer}/likes`, {
     validateStatus: status => status === 204
   });
 }
@@ -68,4 +68,16 @@ export function unlike(answer) {
  */
 export function likeAnswersByStatus(answer, status) {
   return status ? unlike(answer) : like(answer);
+}
+
+/**
+ * 获取回答
+ * @author mutoe <mutoe@foxmail.com>
+ * @export
+ * @param {number} answerId
+ * @returns
+ */
+export function getAnswer(answerId) {
+  const url = `/question-answers/${answerId}`;
+  return api.get(url, { validateStatus: s => s === 200 });
 }

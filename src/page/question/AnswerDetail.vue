@@ -112,11 +112,10 @@ import bus from "@/bus.js";
 import { mapState } from "vuex";
 import markdownIt from "markdown-it";
 import plusImagePlugin from "markdown-it-plus-image";
-
 import ArticleCard from "@/page/article/ArticleCard.vue";
 import CommentItem from "@/page/article/ArticleComment.vue";
+import * as api from "@/api/question/answer.js";
 
-import { likeAnswersByStatus } from "@/api/question/answer.js";
 export default {
   name: "AnswerDetailt",
   components: {
@@ -201,7 +200,8 @@ export default {
     likeAnswer() {
       if (this.fetching) return;
       this.fetching = true;
-      likeAnswersByStatus(this.answerId, this.liked)
+      api
+        .likeAnswersByStatus(this.answerId, this.liked)
         .then(() => {
           !this.liked
             ? ((this.liked = true),
@@ -236,12 +236,11 @@ export default {
       });
     },
     moreAction() {},
-
     fetchAnswer() {
       if (this.loading) return;
       this.loading = true;
 
-      this.$http.get(`/question-answers/${this.answerId}`).then(({ data }) => {
+      api.getAnswer(this.answerId).then(({ data }) => {
         this.answer = data;
         this.fetchAnswerComments();
         this.loading = false;
