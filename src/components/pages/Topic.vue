@@ -387,6 +387,9 @@ export default {
     border-bottom: solid 0.01rem #d7d8d8;
     z-index: 100;
     position: relative;
+    > a {
+      color: #999;
+    }
     .active {
       color: #333;
     }
