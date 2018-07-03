@@ -239,12 +239,12 @@ export default {
 
 <style lang="less">
 .module-questions {
-  padding-top: 206px;
+  padding-top: 182px;
   padding-bottom: 100px;
   min-height: 100vh;
   .module-questions-nav {
     position: fixed;
-    top: 116px;
+    top: 90px;
     display: flex;
     width: 100%;
     height: 90px;

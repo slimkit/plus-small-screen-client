@@ -193,12 +193,12 @@ export default {
 <style lang="less">
 @root: module-questions-topics;
 .@{root} {
-  padding-top: 206px;
+  padding-top: 182px;
   padding-bottom: 100px;
   min-height: 100vh;
   &-nav {
     position: fixed;
-    top: 116px;
+    top: 90px;
     display: flex;
     width: 100%;
     height: 90px;

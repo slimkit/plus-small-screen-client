@@ -113,7 +113,7 @@ export default {
 // Root box class name.
 .module-question-app-bar {
   width: 100%;
-  height: 116px;
+  height: 0.9rem;
   background: #fff;
   border-bottom: solid 1px #dedede;
   display: flex;
