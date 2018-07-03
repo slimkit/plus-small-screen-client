@@ -130,3 +130,46 @@ export function deleteNewsComment(newsId, commentId) {
     validateStatus: s => s === 204
   });
 }
+
+/**
+ * 获取资讯打赏列表
+ * @author mutoe <mutoe@foxmail.com>
+ * @export
+ * @param {number} newsId
+ * @param {Object} params
+ * @param {number} [params.limit]
+ * @param {number} [params.offset]
+ * @param {string} [params.order] asc 正序 desc 倒序
+ * @param {string} [params.order_type] date 按时间 amount 按金额
+ * @returns
+ */
+export function getNewsRewards(newsId, params) {
+  const url = `/news/${newsId}/rewards`;
+  return api.get(url, { params, validateStatus: s => s === 200 });
+}
+
+/**
+ * 打赏资讯
+ * @author mutoe <mutoe@foxmail.com>
+ * @export
+ * @param {number} newsId
+ * @param {Object} payload
+ * @param {number} payload.amount 打赏金额
+ * @returns
+ */
+export function rewardNews(newsId, payload) {
+  const url = `/news/${newsId}/new-rewards`;
+  return api.post(url, payload, { validateStatus: s => s === 201 });
+}
+
+/**
+ * 获得资讯统计
+ * @author mutoe <mutoe@foxmail.com>
+ * @export
+ * @param {number} newsId
+ * @returns
+ */
+export function getRewardInfo(newsId) {
+  const url = `/news/${newsId}/rewards/sum`;
+  return api.get(url, { validateStatus: s => s === 200 });
+}

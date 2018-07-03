@@ -63,10 +63,39 @@
           <span>{{ news.hits || 0 | formatNum }}浏览</span>
         </div>
       </div>
-      <!-- todo 打赏功能 -->
-      <!--<div class="m-box-model m-box-center m-box-center-a m-art-reward">
-        <button class="m-art-rew-btn">打 赏</button>
-      </div>-->
+      <div class="m-box-model m-box-center m-box-center-a m-art-reward">
+        <button
+          class="m-art-rew-btn"
+          @click="rewardNews">打 赏</button>
+        <p class="m-art-rew-label">
+          <a href="javascript:;">{{ reward.count | formatNum }}</a>人打赏，共
+          <a href="javascript:;">{{ ~~reward.amount | formatNum }}</a>积分
+        </p>
+        <router-link
+          tag="ul"
+          to="rewarders"
+          append
+          class="m-box m-aln-center m-art-rew-list">
+          <li
+            v-for="rew in rewardList"
+            :key="rew.id"
+            :class="`m-avatar-box-${rew.user.sex}`"
+            class="m-flex-grow0 m-flex-shrink0 m-art-rew m-avatar-box tiny">
+            <img :src="rew.user.avatar">
+          </li>
+          <li
+            v-if="rewardList.length > 0"
+            class="m-box m-aln-center">
+            <svg
+              class="m-style-svg m-svg-def"
+              style="fill:#bfbfbf">
+              <use
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+                xlink:href="#base-arrow-r"/>
+            </svg>
+          </li>
+        </router-link>
+      </div>
     </div>
     <div class="m-box-model m-art-comments">
       <ul class="m-box m-aln-center m-art-comments-tabs">
@@ -109,12 +138,7 @@ import wechatShare from "@/util/wechatShare.js";
 import ArticleCard from "@/page/article/ArticleCard.vue";
 import CommentItem from "@/page/article/ArticleComment.vue";
 import { limit } from "@/api/api.js";
-import {
-  deleteNewsComment,
-  applyTopNews,
-  applyTopNewsComment,
-  getNewsComments
-} from "@/api/news.js";
+import * as api from "@/api/news.js";
 
 export default {
   name: "NewsDetail",
@@ -131,6 +155,11 @@ export default {
 
       likes: [],
       comments: [],
+      rewardList: [],
+      reward: {
+        count: 0,
+        amount: 0
+      },
       pinnedCom: [],
 
       fetchComing: false,
@@ -215,11 +244,13 @@ export default {
   },
   activated() {
     if (this.newsID) {
-      this.newsID !== this.oldID
-        ? this.fetchNews()
-        : setTimeout(() => {
-            this.loading = false;
-          }, 600);
+      if (this.newsID !== this.oldID) {
+        this.fetchNews();
+      } else {
+        setTimeout(() => {
+          this.loading = false;
+        }, 600);
+      }
     }
   },
   deactivated() {
@@ -247,7 +278,9 @@ export default {
             this.fetching = false;
             this.fetchNewsComments();
             this.fetchNewsLikes();
-          }, 800);
+            this.fetchRewardInfo();
+            this.fetchRewards();
+          }, 400);
           if (this.isWechat) {
             const shareUrl =
               window.location.origin +
@@ -280,7 +313,8 @@ export default {
       if (this.fetchComing) return;
       this.fetchComing = true;
 
-      getNewsComments(this.newsID, { after })
+      api
+        .getNewsComments(this.newsID, { after })
         .then(({ data: { pinneds = [], comments = [] } }) => {
           if (!after) {
             this.pinnedCom = pinneds;
@@ -301,6 +335,32 @@ export default {
         .catch(() => {
           this.fetchComing = false;
         });
+    },
+    fetchRewards() {
+      api.getNewsRewards(this.newsID, { limit: 10 }).then(({ data = {} }) => {
+        this.rewardList = data;
+      });
+    },
+    fetchRewardInfo() {
+      api.getRewardInfo(this.newsID).then(({ data = {} }) => {
+        this.reward = {
+          count: ~~data.count || 0,
+          amount: ~~data.amount || 0
+        };
+      });
+    },
+    rewardNews() {
+      const callback = amount => {
+        this.fetchRewards();
+        this.reward.count += 1;
+        this.reward.amount += amount;
+      };
+      bus.$emit("reward", {
+        type: "news",
+        api: api.rewardNews,
+        payload: this.newsID,
+        callback
+      });
     },
     likeNews() {
       // DELETE /news/{news}/likes
@@ -345,7 +405,7 @@ export default {
               method: () => {
                 bus.$emit("applyTop", {
                   type: "news",
-                  api: applyTopNews,
+                  api: api.applyTopNews,
                   payload: this.newsID
                 });
               }
@@ -379,7 +439,7 @@ export default {
               bus.$emit("applyTop", {
                 isOwner,
                 type: "newsComment",
-                api: applyTopNewsComment,
+                api: api.applyTopNewsComment,
                 payload: { newsId: this.newsID, commentId },
                 callback: this.fetchNewsComments
               });
@@ -421,7 +481,7 @@ export default {
       }
     },
     deleteComment(commentId) {
-      deleteNewsComment(this.newsID, commentId).then(() => {
+      api.deleteNewsComment(this.newsID, commentId).then(() => {
         this.fetchNewsComments();
         this.commentCount -= 1;
         this.$Message.success("删除评论成功");
