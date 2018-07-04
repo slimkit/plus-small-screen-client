@@ -1,15 +1,6 @@
 <template>
   <div class="p-news-search">
     <header class="m-box m-aln-center m-pos-f m-main m-bb1 m-head-top">
-      <div class="m-box m-flex-grow0 m-flex-shrink0 m-aln-center">
-        <svg
-          class="m-style-svg m-svg-def"
-          @click="goBack">
-          <use
-            xmlns:xlink="http://www.w3.org/1999/xlink"
-            xlink:href="#base-back"/>
-        </svg>
-      </div>
       <div class="m-box m-flex-grow2 m-flex-shrink2 m-aln-center m-head-top-title">
         <div class="m-search-box">
           <form
@@ -90,7 +81,7 @@ export default {
 <style lang="less">
 .p-news-search {
   .m-head-top-title {
-    padding: 0 20px;
+    padding: 0 20px 0 0;
     .m-search-box {
       width: 100%;
     }
