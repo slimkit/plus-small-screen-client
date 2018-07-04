@@ -3,7 +3,7 @@
     :to="`/news/${news.id}`"
     tag="div"
     class="news-item">
-    <section class="news-item--body">
+    <section class="body">
       <h2>{{ title }}</h2>
       <p>
         <i class="news-cate">{{ cate }}</i>
@@ -14,7 +14,7 @@
     </section>
     <div
       v-if="image"
-      class="news-item--poster">
+      class="poster">
       <img :src="image">
     </div>
   </router-link>
@@ -63,17 +63,21 @@ export default {
 <style lang="less" scoped>
 .news-item {
   display: flex;
+  flex-wrap: nowrap;
   align-items: center;
   padding: 30px 20px;
   height: 195px;
   background-color: #fff;
   border-bottom: 1px solid #ededed; /*no*/
-  &--body {
-    flex: 1 1 100%;
-    height: 100%;
+
+  .body {
     display: flex;
+    flex: auto;
+    min-width: 0; // 不要删除此行，与 flex 弹性宽度有关
+    height: 100%;
     flex-direction: column;
     justify-content: space-between;
+
     h2 {
       flex: 0 0 auto;
       margin: 0;
@@ -100,6 +104,7 @@ export default {
       text-overflow: ellipsis;
       white-space: nowrap;
       vertical-align: middle;
+
       i.news-cate {
         padding: 4px;
         font-style: normal;
@@ -115,7 +120,8 @@ export default {
       }
     }
   }
-  &--poster {
+
+  .poster {
     margin-left: 40px;
     order: 1;
     overflow-y: hidden;
@@ -123,6 +129,7 @@ export default {
     width: 190px;
     height: 135px;
     position: relative;
+
     img {
       position: absolute;
       top: 50%;
