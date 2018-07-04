@@ -6,8 +6,10 @@
     <section class="body">
       <h2>{{ title }}</h2>
       <p>
-        <i class="news-cate">{{ cate }}</i>
-        <span>作者 {{ author }}</span>
+        <i
+          v-show="!currentCate"
+          class="news-cate">{{ cate }}</i>
+        <span>{{ author }}</span>
         <span>・{{ hits }}浏览</span>
         <span>・{{ time | time2tips }}</span>
       </p>
@@ -24,6 +26,7 @@
 export default {
   name: "NewsItem",
   props: {
+    currentCate: { type: Number, default: 0 },
     news: { type: Object, default: () => {} }
   },
   data() {

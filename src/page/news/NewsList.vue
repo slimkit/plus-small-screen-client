@@ -37,8 +37,8 @@
         v-for="news in list"
         v-if="news.id"
         :key="news.id"
-        :news="news"
-      />
+        :current-cate="currentCate"
+        :news="news" />
     </load-more>
   </div>
 </template>
