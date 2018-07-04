@@ -249,10 +249,10 @@ export default {
 }
 
 .m-pr-entrys {
-  margin-top: 20px;
-  margin-bottom: 20px;
+  margin-top: 30px;
+  margin-bottom: 30px;
   .m-entry-group {
-    padding: 0 20px;
+    padding: 0 30px;
   }
 
   .m-entry-extra {

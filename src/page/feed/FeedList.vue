@@ -129,7 +129,7 @@ export default {
     }
   }
   .p-feed-list > li + li {
-    margin-top: 10px;
+    margin-top: 20px;
   }
 }
 </style>
