@@ -12,7 +12,7 @@
 import SwitchBar from "./components/SwitchBar.vue";
 
 export default {
-  name: "PageQuestions",
+  name: "Questions",
   components: {
     SwitchBar
   }

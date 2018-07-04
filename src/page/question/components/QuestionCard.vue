@@ -47,11 +47,11 @@
 </template>
 
 <script>
-import QuestionListAnswerCard from "./QuestionListAnswerCard";
+import QuestionListAnswerCard from "../QuestionListAnswerCard";
 import { syntaxTextAndImage } from "@/util/markdown";
 
 export default {
-  name: "QuestionListItem",
+  name: "QuestionCard",
   components: {
     QuestionListAnswerCard
   },

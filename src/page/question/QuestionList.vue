@@ -37,7 +37,7 @@
         :class="classNamebuilder('main-loading')">
         <icon-loading :class="classNamebuilder('main-loading_icon')" />
       </div>
-      <question-list-item
+      <question-card
         v-for="question in questions"
         :key="question.id"
         :question="question" />
@@ -64,13 +64,13 @@
 <script>
 import message from "plus-message-bundle";
 import Loading from "@/icons/Loading.vue";
-import QuestionListItem from "./QuestionListItem.vue";
+import QuestionCard from "./components/QuestionCard.vue";
 import { list } from "@/api/question/questions";
 
 export default {
   name: "QuestionList",
   components: {
-    QuestionListItem,
+    QuestionCard,
     IconLoading: Loading
   },
 

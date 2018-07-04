@@ -105,7 +105,7 @@
         :class="[classNameBuilder('questions')]"
         :on-refresh="handleRefresh"
         :on-load-more="handleLoadQuestions" >
-        <question-list-item
+        <question-card
           v-for="question in questions"
           :key="question.id"
           :question="question" />
@@ -117,14 +117,14 @@
 
 <script>
 import UserAvatar from "./components/UserAvatar.vue";
-import QuestionListItem from "./QuestionListItem.vue";
+import QuestionCard from "./components/QuestionCard.vue";
 import { show, questions, follow, unfollow } from "@/api/question/topics";
 
 export default {
   name: "TopicDetail",
   components: {
     UserAvatar,
-    QuestionListItem
+    QuestionCard
   },
   data: () => ({
     topic: {},
