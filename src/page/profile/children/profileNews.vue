@@ -2,11 +2,11 @@
   <div class="p-profile-news">
     <header class="m-box m-pos-f m-main m-bb1 m-head-top">
       <div class="m-box m-aln-center m-flex-grow1 m-flex-base0">
-        <svg 
-          class="m-style-svg m-svg-def" 
+        <svg
+          class="m-style-svg m-svg-def"
           @click="goBack">
-          <use 
-            xmlns:xlink="http://www.w3.org/1999/xlink" 
+          <use
+            xmlns:xlink="http://www.w3.org/1999/xlink"
             xlink:href="#base-back"/>
         </svg>
       </div>
@@ -18,30 +18,30 @@
 
     <main style="padding-top: .9rem">
       <div class="m-pos-f m-box m-aln-center m-justify-bet m-sub-nav m-bb1 m-main">
-        <router-link 
-          replace 
-          exact 
-          tag="div" 
-          exact-active-class="active" 
-          to="/profile/news/released" 
+        <router-link
+          replace
+          exact
+          tag="div"
+          exact-active-class="active"
+          to="/profile/news/released"
           class="m-sub-nav-item">
           <a>已发布</a>
         </router-link>
-        <router-link 
-          replace 
-          exact 
-          tag="div" 
-          exact-active-class="active" 
-          to="/profile/news/auditing" 
+        <router-link
+          replace
+          exact
+          tag="div"
+          exact-active-class="active"
+          to="/profile/news/auditing"
           class="m-sub-nav-item">
           <a>投稿中</a>
         </router-link>
-        <router-link 
-          replace 
-          exact 
-          tag="div" 
-          exact-active-class="active" 
-          to="/profile/news/rejected" 
+        <router-link
+          replace
+          exact
+          tag="div"
+          exact-active-class="active"
+          to="/profile/news/rejected"
           class="m-sub-nav-item">
           <a>被驳回</a>
         </router-link>
@@ -63,11 +63,11 @@
 <script>
 import _ from "lodash";
 import { getMyNews } from "@/api/news.js";
-import newsItem from "@/page/news/components/newsItem.vue";
+import NewsItem from "@/page/news/components/NewsItem.vue";
 
 export default {
   components: {
-    newsItem
+    NewsItem
   },
   data() {
     const released = new Map();

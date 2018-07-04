@@ -34,15 +34,16 @@
     </jo-load-more>
   </div>
 </template>
+
 <script>
 import _ from "lodash";
+import NewsItem from "./components/NewsItem.vue";
 import { searchNewsByKey } from "@/api/news.js";
-import newsItem from "./components/newsItem.vue";
 
 export default {
   name: "NewsSearch",
   components: {
-    newsItem
+    NewsItem
   },
   data() {
     return {
@@ -83,7 +84,8 @@ export default {
   }
 };
 </script>
-<style lang="less">
+
+<style lang="less" scoped>
 .p-news-search {
   .m-head-top-title {
     padding: 0 20px 0 0;

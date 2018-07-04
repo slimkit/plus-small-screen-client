@@ -2,11 +2,11 @@
   <div class="p-news">
     <header class="m-box m-pos-f m-main m-bb1 m-head-top">
       <div class="m-box m-aln-center m-flex-grow1 m-flex-base0">
-        <svg 
-          class="m-style-svg m-svg-def" 
+        <svg
+          class="m-style-svg m-svg-def"
           @click="goBack">
-          <use 
-            xmlns:xlink="http://www.w3.org/1999/xlink" 
+          <use
+            xmlns:xlink="http://www.w3.org/1999/xlink"
             xlink:href="#base-back"/>
         </svg>
       </div>
@@ -14,24 +14,25 @@
         <span>资讯</span>
       </div>
       <div class="m-box m-aln-center m-flex-grow1 m-flex-base0 m-justify-end">
-        <router-link 
+        <router-link
           append
           tag="svg"
           to="search"
           class="m-style-svg m-svg-def">
-          <use 
-            xmlns:xlink="http://www.w3.org/1999/xlink" 
+          <use
+            xmlns:xlink="http://www.w3.org/1999/xlink"
             xlink:href="#base-search"/>
         </router-link>
       </div>
     </header>
+
     <news-filter @change="onCateChange"/>
-    <load-more 
+
+    <load-more
       ref="loadmore"
       :on-refresh="onRefresh"
       :on-load-more="onLoadMore"
-      class="p-news--body"
-    >
+      class="p-news--body" >
       <news-item
         v-for="news in list"
         v-if="news.id"
@@ -41,14 +42,16 @@
     </load-more>
   </div>
 </template>
+
 <script>
-import newsItem from "./components/newsItem.vue";
-import newsFilter from "./components/newsFilter";
+import NewsItem from "./components/NewsItem.vue";
+import NewsFilter from "./components/NewsFilter.vue";
+
 export default {
-  name: "NewsIndex",
+  name: "NewsList",
   components: {
-    newsItem,
-    newsFilter
+    NewsItem,
+    NewsFilter
   },
   data() {
     return {
@@ -101,5 +104,22 @@ export default {
   }
 };
 </script>
-<style lang="less" src='./style/news.less'>
+
+<style lang="less" scoped>
+.p-news {
+  &--nav {
+    display: flex;
+    position: fixed;
+    top: 90px;
+    padding-top: 0 !important;
+    width: 100%;
+    height: 85px;
+    border-bottom: 1px solid #ededed; /*no*/
+    background-color: #fff;
+  }
+
+  &--body {
+    padding-top: 90+85px;
+  }
+}
 </style>
