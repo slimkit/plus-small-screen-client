@@ -21,9 +21,7 @@
       </div>
       <div class="m-box m-flex-grow1 m-aln-center m-flex-base0 m-head-top-title m-text-cut">
         <avatar :user="user" />
-        <span
-          class="m-text-cut m-flex-grow1 m-flex-shrink1"
-          style="font-size: 0.32rem; margin-left: 0.1rem">
+        <span class="m-text-cut m-flex-grow1 m-flex-shrink1 username">
           {{ user.name }}
         </span>
       </div>
@@ -697,5 +695,10 @@ export default {
     width: 52px;
     height: 52px;
   }
+}
+.username {
+  font-size: 0.32rem;
+  margin-left: 0.1rem;
+  text-align: center;
 }
 </style>
