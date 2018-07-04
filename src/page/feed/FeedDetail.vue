@@ -406,7 +406,7 @@ export default {
       if (this.fetchComing) return;
       this.fetchComing = true;
       api
-        .getFeedComments({ feedId: this.feedID, after })
+        .getFeedComments(this.feedID, { after })
         .then(({ data: { pinneds = [], comments = [] } }) => {
           if (!after) {
             this.pinnedCom = pinneds;

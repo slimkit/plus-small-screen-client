@@ -54,8 +54,8 @@
   </div>
 </template>
 <script>
-import { getFeedsByType } from "@/api/feeds.js";
 import FeedCard from "@/components/FeedCard/FeedCard.vue";
+import * as api from "@/api/feeds.js";
 
 const feedTypesMap = ["new", "hot", "follow"];
 
@@ -98,7 +98,8 @@ export default {
   },
   methods: {
     onRefresh(callback) {
-      getFeedsByType(this.feedType, 15).then(({ ad, pinned, feeds }) => {
+      api.getFeedsByType(this.feedType, 15).then(({ data }) => {
+        const { ad = [], pinned = [], feeds = [] } = data;
         this.ad = ad;
         this.feeds = feeds;
         this.pinned = pinned;
@@ -107,9 +108,9 @@ export default {
     },
     onLoadMore(callback) {
       // 热门动态 修改为 offset
-
       const after = this.feedType === "hot" ? this.hotFeeds.length : this.maxId;
-      getFeedsByType(this.feedType, 15, after).then(({ ad, pinned, feeds }) => {
+      api.getFeedsByType(this.feedType, 15, after).then(({ data }) => {
+        const { ad = [], pinned = [], feeds = [] } = data;
         this.ad = ad;
         this.pinned = pinned;
         this.feeds = [...this.feeds, ...feeds];

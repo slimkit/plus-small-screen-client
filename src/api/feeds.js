@@ -1,16 +1,14 @@
 import api, { limit } from "./api.js";
-import router from "@/routers";
+
 /**
  * 获取 首页动态列表
  * @author jsonleex <jsonlseex@163.com>
- * @param  {String} type
- * @param  {Number} limit
- * @param  {Number} after
- * @return {Promise -> Array}
+ * @param  {string} type
+ * @param  {number} limit
+ * @param  {number} after
+ * @returns {Promise<Array>}
  */
-
 export function getFeedsByType(type, limit = 15, after) {
-  const res = { ad: [], feeds: [], pinned: [] };
   const baseUrl = `/feeds?type=${type}&limit=${limit}`;
   const url =
     after > 0
@@ -18,20 +16,7 @@ export function getFeedsByType(type, limit = 15, after) {
         ? baseUrl + `&offset=${after}`
         : baseUrl + `&after=${after}`
       : baseUrl;
-  return api.get(url).then(
-    ({ data = res }) => {
-      return data;
-    },
-    err => {
-      if (err.response.status === 401) {
-        router.push({
-          path: "/signin",
-          query: { redirect: router.currentRoute.fullPath }
-        });
-      }
-      return res;
-    }
-  );
+  return api.get(url);
 }
 
 /**
@@ -83,7 +68,7 @@ export function rewardFeed(feedId, data) {
  * 删除动态
  * @author mutoe <mutoe@foxmail.com>
  * @export
- * @param {Number} feedId
+ * @param {number} feedId
  * @returns {Promise}
  */
 export function deleteFeed(feedId) {
@@ -92,7 +77,7 @@ export function deleteFeed(feedId) {
 
 /**
  * 获取当前用户收藏的动态
- * @type {Number}
+ * @type {number}
  */
 export function getCollectedFeed({ limit = 15, offset = 0 }) {
   return api.get("/feeds/collections", {
@@ -101,14 +86,30 @@ export function getCollectedFeed({ limit = 15, offset = 0 }) {
   });
 }
 
-// 获取单条动态的评论
-export function getFeedComments({ feedId, after = 0 }) {
+/**
+ * 获取单条动态的评论
+ * @author mutoe <mutoe@foxmail.com>
+ * @export
+ * @param {number} feedId
+ * @param {Object} params
+ * @param {number} params.limit
+ * @param {number} params.after
+ * @returns
+ */
+export function getFeedComments(feedId, params) {
+  const { limit, after = 0 } = params;
   return api.get(`/feeds/${feedId}/comments`, {
-    limit,
-    after
+    params: { limit, after },
+    validateStatus: s => s === 200
   });
 }
 
+/**
+ * 获取置顶评论
+ * @export
+ * @param {number} [after=0]
+ * @returns
+ */
 export function getFeedCommentPinneds(after = 0) {
   return api.get("/user/feed-comment-pinneds", {
     limit,
@@ -120,10 +121,10 @@ export function getFeedCommentPinneds(after = 0) {
  * 发表动态评论
  * @author mutoe <mutoe@foxmail.com>
  * @export
- * @param {Number} feedId
+ * @param {number} feedId
  * @param {Object} data
- * @param {String} data.body 评论内容
- * @param {Number=} data.reply_user 回复的用户id
+ * @param {string} data.body 评论内容
+ * @param {Number} [data.reply_user] 回复的用户id
  * @returns
  */
 export function postComment(feedId, data) {
@@ -137,12 +138,12 @@ export function postComment(feedId, data) {
  * @author mutoe <mutoe@foxmail.com>
  * @export
  * @param {Object} payload 第一个参数
- * @param {Number} payload.feedId
- * @param {Number} payload.commentId
+ * @param {number} payload.feedId
+ * @param {number} payload.commentId
  * @param {Object} data post入参
- * @param {Number} data.amount 置顶总价
- * @param {Number} data.day 置顶天数
- * @returns Promise
+ * @param {number} data.amount 置顶总价
+ * @param {number} data.day 置顶天数
+ * @returns
  */
 export function applyTopFeedComment({ feedId, commentId }, data) {
   const url = `/feeds/${feedId}/comments/${commentId}/currency-pinneds`;
@@ -153,9 +154,9 @@ export function applyTopFeedComment({ feedId, commentId }, data) {
  * 删除动态评论
  * @author mutoe <mutoe@foxmail.com>
  * @export
- * @param {Number} feedId
- * @param {Number} commentId
- * @returns {Promise}
+ * @param {number} feedId
+ * @param {number} commentId
+ * @returns
  */
 export function deleteFeedComment(feedId, commentId) {
   return api.delete(`/feeds/${feedId}/comments/${commentId}`, {
