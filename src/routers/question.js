@@ -13,6 +13,8 @@ const TopicDetail = () =>
   import(/*webpackChunkName:'question' */ "@/page/question/TopicDetail.vue");
 const AnswerDetail = () =>
   import(/*webpackChunkName:'question' */ "@/page/question/AnswerDetail.vue");
+const QuestionSearch = () =>
+  import(/*webpackChunkName:'question' */ "@/page/question/QuestionSearch.vue");
 const ArticleLikes = () =>
   import(/*webpackChunkName:'question' */ "@/page/article/ArticleLikes.vue");
 const ArticleRewards = () =>
@@ -54,6 +56,14 @@ export default [
     component: AnswerDetail,
     meta: {
       title: "问题详情"
+    }
+  },
+  {
+    path: "/question/search",
+    component: QuestionSearch,
+    meta: {
+      title: "搜索",
+      keepAlive: true
     }
   },
   /**

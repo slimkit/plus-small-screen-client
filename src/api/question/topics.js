@@ -2,14 +2,18 @@ import request from "../../http";
 
 /**
  * The topics API query function.
- *
- * @param {Object} query
- * @return {Promise}
  * @author Seven Du <shiweidu@outlook.com>
+ * @export
+ * @param {Object} params
+ * @param {number} params.limit
+ * @param {number} params.offset
+ * @param {*} params.follow
+ * @param {string} params.name search keyword
+ * @returns
  */
-export function query(query = {}) {
+export function query(params = {}) {
   return request.get("/question-topics", {
-    params: query,
+    params,
     validateStatus: status => status === 200
   });
 }

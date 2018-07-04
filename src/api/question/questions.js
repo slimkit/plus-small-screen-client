@@ -1,15 +1,19 @@
-import request from "../../http";
+import api from "../api";
 
 /**
  * Query questions list.
- *
- * @param {Object} query
- * @return {Promise}
  * @author Seven Du <shiweidu@outlook.com>
+ * @export
+ * @param {Object} params
+ * @param {string} params.type default: 'new', options: 'all', 'new', 'hot', 'reward', 'excellent'
+ * @param {number} params.limit
+ * @param {number} params.offset
+ * @param {string} params.subject search keyword
+ * @returns
  */
-function queryList(query = {}) {
-  return request.get("/questions", {
-    params: query,
+export function queryList(params = {}) {
+  return api.get("/questions", {
+    params,
     validateStatus: status => status === 200
   });
 }
@@ -35,7 +39,7 @@ export function list(type, offset = 0, limit = 15) {
  * @author Seven Du <shiweidu@outlook.com>
  */
 export function show(id) {
-  return request.get(`/questions/${id}`, {
+  return api.get(`/questions/${id}`, {
     validateStatus: status => status === 200
   });
 }
@@ -48,7 +52,7 @@ export function show(id) {
  * @author Seven Du <shiweidu@outlook.com>
  */
 export function watch(id) {
-  return request.put(
+  return api.put(
     `/user/question-watches/${id}`,
     {},
     {
@@ -65,7 +69,7 @@ export function watch(id) {
  * @author Seven Du <shiweidu@outlook.com>
  */
 export function unwatch(id) {
-  return request.delete(`/user/question-watches/${id}`, {
+  return api.delete(`/user/question-watches/${id}`, {
     validateStatus: status => status === 204
   });
 }
