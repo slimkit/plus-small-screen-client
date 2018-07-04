@@ -57,12 +57,17 @@ export default {
     }
   },
   methods: {
-    searchNewsByKey: _.throttle(function() {
-      this.keyword &&
-        searchNewsByKey(this.keyword).then((list = []) => {
-          this.list = list;
-        });
-    }, 1e3),
+    /**
+     * 使用 lodash.debounce 节流，每输入 600ms 后执行
+     * 不要使用箭头函数，会导致 this 作用域丢失
+     * @author mutoe <mutoe@foxmail.com>
+     */
+    searchNewsByKey: _.debounce(function() {
+      if (!this.keyword) return;
+      searchNewsByKey(this.keyword).then((list = []) => {
+        this.list = list;
+      });
+    }, 600),
     onRefresh(callback) {
       searchNewsByKey(this.keyword, 15).then(list => {
         this.list = list;
