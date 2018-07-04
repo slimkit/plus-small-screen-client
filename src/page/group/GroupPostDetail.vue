@@ -2,7 +2,7 @@
 import bus from "@/bus.js";
 import markdownIt from "markdown-it";
 import plusImagePlugin from "markdown-it-plus-image";
-import FeedDetail from "../feed/feedDetail.vue";
+import FeedDetail from "../feed/FeedDetail.vue";
 import wechatShare from "@/util/wechatShare.js";
 import { limit } from "@/api/api.js";
 import * as api from "@/api/group.js";

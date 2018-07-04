@@ -1,15 +1,17 @@
-const feed = () => import(/* webpackChunkName: 'feed' */ "../page/feed/feed");
-const feedDetail = () =>
-  import(/* webpackChunkName: 'feed' */ "../page/feed/feedDetail");
-const likes = () =>
+const FeedList = () =>
+  import(/* webpackChunkName: 'feed' */ "../page/feed/FeedList.vue");
+const FeedDetail = () =>
+  import(/* webpackChunkName: 'feed' */ "../page/feed/FeedDetail");
+const ArticleLikes = () =>
   import(/* webpackChunkName: 'feed' */ "@/page/article/ArticleLikes.vue");
-const rewards = () =>
+const ArticleRewards = () =>
   import(/* webpackChunkName: 'feed' */ "@/page/article/ArticleRewards.vue");
+
 export default [
   {
     name: "feeds",
     path: "/feeds",
-    component: feed,
+    component: FeedList,
     meta: {
       title: "动态",
       keepAlive: true
@@ -26,23 +28,18 @@ export default [
   },
   {
     path: "/feeds/:feedID(\\d+)",
-    component: feedDetail,
+    component: FeedDetail,
     meta: { title: "动态详情", keepAlive: true }
   },
 
   /**
    * 点赞列表 && 打赏列表 路由格式固定
-   *
    * 帖子/资讯/问答 相关路由 统一使用 article 代替 id
-   *
    * 通过传递 不同的 meta[type] 实现组件复用
-   *
-   * rewarders ???
-   *
    */
   {
     path: "/feeds/:article(\\d+)/likers",
-    component: likes,
+    component: ArticleLikes,
     meta: {
       title: "点赞列表",
       type: "feed"
@@ -50,7 +47,7 @@ export default [
   },
   {
     path: "/feeds/:article(\\d+)/rewarders",
-    component: rewards,
+    component: ArticleRewards,
     meta: {
       title: "打赏列表",
       type: "feed"

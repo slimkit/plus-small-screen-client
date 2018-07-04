@@ -69,7 +69,7 @@
           </async-file>
           <p
             class="m-text-box"
-            v-html="formatBody(feedContent)"/>
+            v-html="formatBody(feedContent)" />
         </div>
         <div class="m-box m-aln-center m-justify-bet m-art-foot">
           <div class="m-flex-grow1 m-flex-shrink1 m-art-like-list">

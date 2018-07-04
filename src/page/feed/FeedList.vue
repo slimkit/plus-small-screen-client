@@ -2,27 +2,27 @@
   <div class="p-feed">
     <nav class="m-box m-head-top m-lim-width m-pos-f m-main m-bb1">
       <ul class="m-box m-flex-grow1 m-aln-center m-justify-center m-flex-base0 m-head-nav">
-        <router-link 
-          :to="{ name:'feeds', query: { type: 'new' } }" 
-          tag="li" 
-          active-class="active" 
-          exact 
+        <router-link
+          :to="{ name:'feeds', query: { type: 'new' } }"
+          tag="li"
+          active-class="active"
+          exact
           replace>
           <a>最新</a>
         </router-link>
-        <router-link 
-          :to="{ name:'feeds', query: { type: 'hot' } }" 
-          tag="li" 
-          active-class="active" 
-          exact 
+        <router-link
+          :to="{ name:'feeds', query: { type: 'hot' } }"
+          tag="li"
+          active-class="active"
+          exact
           replace>
           <a>热门</a>
         </router-link>
-        <router-link 
-          :to="{ name:'feeds', query: { type: 'follow' } }" 
-          tag="li" 
-          active-class="active" 
-          exact 
+        <router-link
+          :to="{ name:'feeds', query: { type: 'follow' } }"
+          tag="li"
+          active-class="active"
+          exact
           replace>
           <a>关注</a>
         </router-link>
@@ -32,20 +32,19 @@
       ref="loadmore"
       class="p-feed-main"
       @onRefresh="onRefresh"
-      @onLoadMore="onLoadMore"
-    >
+      @onLoadMore="onLoadMore" >
       <ul class="p-feed-list">
-        <li 
-          v-for="(feed, index) in pinned" 
-          v-if="feed.id" 
+        <li
+          v-for="(feed, index) in pinned"
+          v-if="feed.id"
           :key="`pinned-feed-${feedType}-${feed.id}-${index}`">
-          <feed-card 
-            :feed="feed" 
+          <feed-card
+            :feed="feed"
             :pinned="true" />
         </li>
-        <li 
-          v-for="(feed, index) in feeds" 
-          v-if="feed.id" 
+        <li
+          v-for="(feed, index) in feeds"
+          v-if="feed.id"
           :key="`feed-${feedType}-${feed.id}-${index}`">
           <feed-card :feed="feed" />
         </li>
@@ -57,9 +56,11 @@
 <script>
 import { getFeedsByType } from "@/api/feeds.js";
 import FeedCard from "@/components/FeedCard/FeedCard.vue";
+
 const feedTypesMap = ["new", "hot", "follow"];
+
 export default {
-  name: "FeedIndex",
+  name: "FeedList",
   components: {
     FeedCard
   },
