@@ -92,10 +92,16 @@ export default {
     }
   },
   watch: {
-    feedType(val) {
-      feedTypesMap.includes(val) && this.$refs.loadmore.beforeRefresh();
+    feedType(val, oldVal) {
+      feedTypesMap.includes(val) &&
+        oldVal &&
+        this.$refs.loadmore.beforeRefresh();
     }
   },
+  created() {
+    this.onRefresh(() => {});
+  },
+
   methods: {
     onRefresh(callback) {
       api.getFeedsByType(this.feedType, 15).then(({ data }) => {

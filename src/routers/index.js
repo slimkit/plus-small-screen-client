@@ -17,7 +17,10 @@ const router = new VueRouter({
       };
     }
     if (savedPosition) {
-      return savedPosition;
+      // hack 滚动到保存的位置， 原生方法失效的问题
+      setTimeout(() => {
+        window.scrollTo(savedPosition.x, savedPosition.y);
+      }, 100);
     } else {
       const {
         meta: { keepAlive = false, toTop = false }
@@ -26,7 +29,9 @@ const router = new VueRouter({
         from.meta.savedPosition =
           document.body.scrollTop || document.documentElement.scrollTop;
       }
-      return { x: 0, y: to.meta.savedPosition || 0 };
+      setTimeout(() => {
+        window.scrollTo(0, to.meta.savedPosition);
+      }, 100);
     }
   }
 });
