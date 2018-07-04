@@ -13,7 +13,7 @@ import userFans from "@/page/UserFans.vue";
 
 import discover from "@/page/discover.vue";
 
-import findIndex from "@/page/find/find.vue";
+import findIndex from "@/page/find/Find.vue";
 import findPop from "@/page/find/FindPop.vue";
 import findRec from "@/page/find/FindRec.vue";
 import findNew from "@/page/find/FindNew.vue";
