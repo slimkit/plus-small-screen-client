@@ -25,16 +25,17 @@
           {{ user.name }}
         </span>
       </div>
-      <div
-        v-if="!isMine"
-        :class="{ c_59b6d7: relation.status !== 'unFollow' }"
-        class="m-box m-flex-grow1 m-aln-center m-flex-base0 m-justify-end"
-        @click="followUserByStatus(relation.status)">
-        <svg class="m-style-svg m-svg-def">
-          <use
-            :xlink:href="relation.icon"
-            xmlns:xlink="http://www.w3.org/1999/xlink"/>
-        </svg>
+      <div class="m-box m-flex-grow1 m-aln-center m-flex-base0 m-justify-end">
+        <template
+          v-if="!isMine"
+          :class="{ c_59b6d7: relation.status !== 'unFollow' }"
+          @click="followUserByStatus(relation.status)">
+          <svg class="m-style-svg m-svg-def">
+            <use
+              :xlink:href="relation.icon"
+              xmlns:xlink="http://www.w3.org/1999/xlink"/>
+          </svg>
+        </template>
       </div>
     </header>
     <!-- 内容 -->
@@ -678,7 +679,7 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .feed-detail-video {
   height: 100vw;
   width: 100vw;
