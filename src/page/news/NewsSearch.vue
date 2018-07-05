@@ -7,7 +7,7 @@
             action="#"
             onsubmit="return false">
             <input
-              v-model="keyword"
+              v-model="keywordOrigin"
               type="search"
               placeholder="搜索"
               @input="searchNewsByKey">
@@ -23,15 +23,19 @@
       :auto-load="false"
       :show-bottom="list.length > 0"
       style="padding-top: 0.9rem"
-      @onRefresh="onRefresh"
       @onLoadMore="onLoadMore">
       <news-item
         v-for="news in list"
         v-if="news.id"
         :key="news.id"
-        :news="news"
-      />
+        :news="news" />
     </jo-load-more>
+    <p
+      v-show="loading"
+      class="load-more-ph m-text-c mt10">正在搜索...</p>
+    <div
+      v-show="noResult && !loading && keyword && !list.length"
+      class="placeholder m-no-find"/>
   </div>
 </template>
 
@@ -39,6 +43,7 @@
 import _ from "lodash";
 import NewsItem from "./components/NewsItem.vue";
 import { searchNewsByKey } from "@/api/news.js";
+import { limit } from "@/api/api";
 
 export default {
   name: "NewsSearch",
@@ -47,14 +52,19 @@ export default {
   },
   data() {
     return {
-      keyword: "",
-      list: []
+      keywordOrigin: "",
+      list: [],
+      loading: false,
+      noResult: false
     };
   },
   computed: {
     after() {
       const len = this.list.length;
       return len > 0 ? this.list[len - 1].id : 0;
+    },
+    keyword() {
+      return this.keywordOrigin.trim();
     }
   },
   methods: {
@@ -65,21 +75,21 @@ export default {
      */
     searchNewsByKey: _.debounce(function() {
       if (!this.keyword) return;
+      this.loading = true;
       searchNewsByKey(this.keyword).then(({ data: list }) => {
+        this.loading = false;
         this.list = list;
+        this.$refs.loadmore.afterRefresh(list.length < limit);
+        if (!list.length) this.noResult = true;
       });
     }, 600),
-    onRefresh(callback) {
-      searchNewsByKey(this.keyword, 15).then(({ data: list }) => {
-        this.list = list;
-        callback(list.length < 15);
-      });
-    },
-    onLoadMore(callback) {
-      searchNewsByKey(this.keyword, 15, this.after).then(({ data: list }) => {
-        this.list = [...this.list, ...list];
-        callback(list.length < 15);
-      });
+    onLoadMore() {
+      searchNewsByKey(this.keyword, limit, this.after).then(
+        ({ data: list }) => {
+          this.list = [...this.list, ...list];
+          this.$refs.loadmore.afterLoadmore(list.length < limit);
+        }
+      );
     }
   }
 };
@@ -87,6 +97,8 @@ export default {
 
 <style lang="less" scoped>
 .p-news-search {
+  height: ~"calc(100% - 90px)";
+
   .m-head-top-title {
     padding: 0 20px 0 0;
     .m-search-box {
@@ -97,5 +109,16 @@ export default {
   .jo-loadmore-head {
     top: 90px;
   }
+
+  .placeholder {
+    width: 100%;
+    height: 100%;
+  }
+}
+</style>
+
+<style lang="less">
+.jo-loadmore-head {
+  top: 90px;
 }
 </style>
