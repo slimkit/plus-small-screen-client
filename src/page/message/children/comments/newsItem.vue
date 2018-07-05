@@ -1,9 +1,7 @@
 <template>
   <section>
     <div :class="`${prefixCls}-item-top`">
-      <avatar
-        :sex="comment.user.sex"
-        :src="comment.user.avatar" />
+      <avatar :user="comment.user" />
       <section class="userInfo">
         <router-link
           :class="`${prefixCls}-item-top-link`"
