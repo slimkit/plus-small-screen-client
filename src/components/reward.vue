@@ -140,9 +140,9 @@ export default {
           this.callback(params.amount);
           this.$nextTick(this.cancel);
         })
-        .catch(err => {
+        .catch(({ response: { data: message } }) => {
+          message && this.$Message.error(message);
           this.loading = false;
-          console.warn(err);
         });
     },
     handleOk() {
