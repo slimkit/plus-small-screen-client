@@ -129,7 +129,7 @@ export function getFeedCommentPinneds(after = 0) {
  */
 export function postComment(feedId, data) {
   return api.post(`/feeds/${feedId}/comments`, data, {
-    validataStatus: s => s === 201
+    validateStatus: s => s === 201
   });
 }
 

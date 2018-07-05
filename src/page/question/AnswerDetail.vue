@@ -353,7 +353,7 @@ export default {
         replyUser && (params["reply_user"] = replyUser);
         this.$http
           .post(`/question-answers/${this.answerId}/comments`, params, {
-            validataStatus: s => s === 201
+            validateStatus: s => s === 201
           })
           .then(({ data: { comment } = { comment: {} } }) => {
             this.$Message.success("评论成功");

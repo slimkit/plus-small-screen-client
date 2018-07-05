@@ -274,7 +274,7 @@ export function getPostComments(postId, params) {
  */
 export function postComment(postId, data) {
   return api.post(`/plus-group/group-posts/${postId}/comments`, data, {
-    validataStatus: s => s === 201
+    validateStatus: s => s === 201
   });
 }
 

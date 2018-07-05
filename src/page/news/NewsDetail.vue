@@ -376,7 +376,7 @@ export default {
       this.$http({
         method,
         url: `/news/${this.newsID}/likes`,
-        validataStatus: s => s === 201 || s === 204
+        validateStatus: s => s === 201 || s === 204
       })
         .then(() => {
           method === "post"
@@ -470,7 +470,7 @@ export default {
         replyUser && (params["reply_user"] = replyUser);
         this.$http
           .post(`/news/${this.newsID}/comments`, params, {
-            validataStatus: s => s === 201
+            validateStatus: s => s === 201
           })
           .then(() => {
             this.$Message.success("评论成功");

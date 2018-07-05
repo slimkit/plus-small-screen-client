@@ -460,7 +460,7 @@ export default {
       this.$http({
         method,
         url,
-        validataStatus: s => s === 201 || s === 204
+        validateStatus: s => s === 201 || s === 204
       })
         .then(() => {
           method === "post"
@@ -522,7 +522,7 @@ export default {
             this.$http({
               url,
               method,
-              validataStatus: s => s === 204 || s === 201
+              validateStatus: s => s === 204 || s === 201
             }).then(() => {
               this.$Message.success(txt);
               this.has_collect = !this.has_collect;
@@ -611,7 +611,7 @@ export default {
         replyUser && (params["reply_user"] = replyUser);
         this.$http
           .post(`/feeds/${this.feedID}/comments`, params, {
-            validataStatus: s => s === 201
+            validateStatus: s => s === 201
           })
           .then(({ data: { comment } = { comment: {} } }) => {
             this.$Message.success("评论成功");

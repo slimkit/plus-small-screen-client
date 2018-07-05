@@ -72,7 +72,7 @@ export default {
       this.$http({
         method,
         url,
-        validataStatus: s => s === 201 || s === 204
+        validateStatus: s => s === 201 || s === 204
       })
         .then(() => {
           method === "post"

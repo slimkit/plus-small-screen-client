@@ -31,7 +31,7 @@ export default {
     let sTime = "";
     http
       .get("/user/unread-count", {
-        validataStatus: status => status === 200
+        validateStatus: status => status === 200
       })
       .then(({ data }) => {
         // 点赞和评论未读数
