@@ -440,11 +440,7 @@ export default {
   padding: 30px 20px 0;
   box-sizing: border-box;
   background-color: #fff;
-  border-top: 1px solid @border-color;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /*no*/
-  &:first-child {
-    margin-top: -1px; /*no*/
-  }
+
   &-time-line {
     width: 60px;
     font-size: 24px;
