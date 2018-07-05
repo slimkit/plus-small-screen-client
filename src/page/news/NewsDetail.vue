@@ -29,104 +29,109 @@
         </svg> -->
       </div>
     </header>
-    <div class="m-flex-shrink1 m-flex-grow1 m-art m-main">
-      <section class="m-art-head">
-        <h1>{{ news.title }}</h1>
-        <p>
-          <i class="m-art-cate">{{ cate }}</i>
-          <span>来自 {{ news.from || '原创' }}</span>
-        </p>
-      </section>
-      <p
-        v-if="news.subject"
-        class="m-art-subject">{{ news.subject }}</p>
-      <div
-        class="m-art-body"
-        v-html="body"/>
-      <div class="m-box m-aln-center m-justify-bet m-art-foot">
-        <div class="m-flex-grow1 m-flex-shrink1 m-box m-aln-center m-art-like-list">
-          <template v-if="likeCount > 0 && news.audit_status===0">
-            <ul class="m-box m-flex-grow0 m-flex-shrink0">
-              <li
-                v-for="({user, id}, index) in likes.slice(0, 5)"
-                :key="id"
-                :style="{ zIndex: 5-index }"
-                class="m-avatar-box tiny">
-                <img :src="user.avatar">
-              </li>
-            </ul>
-            <span>{{ likeCount | formatNum }}人点赞</span>
-          </template>
+    <jo-load-more
+      ref="loadmore"
+      :auto-load="false"
+      @onRefresh="onRefresh">
+      <div class="m-flex-shrink1 m-flex-grow1 m-art m-main">
+        <section class="m-art-head">
+          <h1>{{ news.title }}</h1>
+          <p>
+            <i class="m-art-cate">{{ cate }}</i>
+            <span>来自 {{ news.from || '原创' }}</span>
+          </p>
+        </section>
+        <p
+          v-if="news.subject"
+          class="m-art-subject">{{ news.subject }}</p>
+        <div
+          class="m-art-body"
+          v-html="body"/>
+        <div class="m-box m-aln-center m-justify-bet m-art-foot">
+          <div class="m-flex-grow1 m-flex-shrink1 m-box m-aln-center m-art-like-list">
+            <template v-if="likeCount > 0 && news.audit_status===0">
+              <ul class="m-box m-flex-grow0 m-flex-shrink0">
+                <li
+                  v-for="({user, id}, index) in likes.slice(0, 5)"
+                  :key="id"
+                  :style="{ zIndex: 5-index }"
+                  class="m-avatar-box tiny">
+                  <img :src="user.avatar">
+                </li>
+              </ul>
+              <span>{{ likeCount | formatNum }}人点赞</span>
+            </template>
+          </div>
+          <div class="m-box-model m-aln-end m-art-info">
+            <span>发布于{{ time | time2tips }}</span>
+            <span>{{ news.hits || 0 | formatNum }}浏览</span>
+          </div>
         </div>
-        <div class="m-box-model m-aln-end m-art-info">
-          <span>发布于{{ time | time2tips }}</span>
-          <span>{{ news.hits || 0 | formatNum }}浏览</span>
+        <div class="m-box-model m-box-center m-box-center-a m-art-reward">
+          <button
+            class="m-art-rew-btn"
+            @click="rewardNews">打 赏</button>
+          <p class="m-art-rew-label">
+            <a href="javascript:;">{{ reward.count | formatNum }}</a>人打赏，共
+            <a href="javascript:;">{{ ~~reward.amount | formatNum }}</a>积分
+          </p>
+          <router-link
+            tag="ul"
+            to="rewarders"
+            append
+            class="m-box m-aln-center m-art-rew-list">
+            <li
+              v-for="rew in rewardList"
+              :key="rew.id"
+              :class="`m-avatar-box-${rew.user.sex}`"
+              class="m-flex-grow0 m-flex-shrink0 m-art-rew m-avatar-box tiny">
+              <img :src="rew.user.avatar">
+            </li>
+            <li
+              v-if="rewardList.length > 0"
+              class="m-box m-aln-center">
+              <svg
+                class="m-style-svg m-svg-def"
+                style="fill:#bfbfbf">
+                <use
+                  xmlns:xlink="http://www.w3.org/1999/xlink"
+                  xlink:href="#base-arrow-r"/>
+              </svg>
+            </li>
+          </router-link>
         </div>
       </div>
-      <div class="m-box-model m-box-center m-box-center-a m-art-reward">
-        <button
-          class="m-art-rew-btn"
-          @click="rewardNews">打 赏</button>
-        <p class="m-art-rew-label">
-          <a href="javascript:;">{{ reward.count | formatNum }}</a>人打赏，共
-          <a href="javascript:;">{{ ~~reward.amount | formatNum }}</a>积分
-        </p>
-        <router-link
-          tag="ul"
-          to="rewarders"
-          append
-          class="m-box m-aln-center m-art-rew-list">
-          <li
-            v-for="rew in rewardList"
-            :key="rew.id"
-            :class="`m-avatar-box-${rew.user.sex}`"
-            class="m-flex-grow0 m-flex-shrink0 m-art-rew m-avatar-box tiny">
-            <img :src="rew.user.avatar">
-          </li>
-          <li
-            v-if="rewardList.length > 0"
-            class="m-box m-aln-center">
-            <svg
-              class="m-style-svg m-svg-def"
-              style="fill:#bfbfbf">
-              <use
-                xmlns:xlink="http://www.w3.org/1999/xlink"
-                xlink:href="#base-arrow-r"/>
-            </svg>
-          </li>
-        </router-link>
-      </div>
-    </div>
-    <div class="m-box-model m-art-comments">
-      <ul class="m-box m-aln-center m-art-comments-tabs">
-        <li>{{ commentCount | formatNum }}条评论</li>
-      </ul>
-      <template v-if="news.audit_status === 0">
-        <comment-item
-          v-for="(comment) in pinnedCom"
-          :key="`pinned-${comment.id}`"
-          :comment="comment"
-          :pinned="true"
-          @click="replyComment" />
-        <comment-item
-          v-for="(comment) in comments"
-          :key="`comment-${comment.id}`"
-          :comment="comment"
-          @click="replyComment" />
-        <div class="m-box m-aln-center m-justify-center load-more-box">
-          <span
-            v-if="noMoreCom"
-            class="load-more-ph">---没有更多---</span>
-          <span
-            v-else
-            class="load-more-btn"
-            @click.stop="fetchNewsComments(maxComId)">
-            {{ fetchComing ? "加载中..." : "点击加载更多" }}
-          </span>
+      <div class="m-box-model m-art-comments">
+        <ul class="m-box m-aln-center m-art-comments-tabs">
+          <li>{{ commentCount | formatNum }}条评论</li>
+        </ul>
+        <template v-if="news.audit_status === 0">
+          <comment-item
+            v-for="(comment) in pinnedCom"
+            :key="`pinned-${comment.id}`"
+            :comment="comment"
+            :pinned="true"
+            @click="replyComment" />
+          <comment-item
+            v-for="(comment) in comments"
+            :key="`comment-${comment.id}`"
+            :comment="comment"
+            @click="replyComment" />
+          <div class="m-box m-aln-center m-justify-center load-more-box">
+            <span
+              v-if="noMoreCom"
+              class="load-more-ph">---没有更多---</span>
+            <span
+              v-else
+              class="load-more-btn"
+              @click.stop="fetchNewsComments(maxComId)">
+              {{ fetchComing ? "加载中..." : "点击加载更多" }}
+            </span>
           <!-- <button v-else class="load-more-btn" @click.stop="fetchNewsComments(maxComId)"></button> -->
-        </div>
-      </template>
-    </div>
+          </div>
+        </template>
+      </div>
+    </jo-load-more>
   </article-card>
 </template>
 
@@ -139,6 +144,8 @@ import wechatShare from "@/util/wechatShare.js";
 import md from "@/util/markdown.js";
 import { limit } from "@/api/api.js";
 import * as api from "@/api/news.js";
+
+const noop = () => {};
 
 export default {
   name: "NewsDetail",
@@ -263,24 +270,23 @@ export default {
     shareCancel() {
       this.$Message.success("取消分享");
     },
-    fetchNews() {
+    fetchNews(callback = noop) {
       if (this.fetching) return;
       this.fetching = true;
       api
         .getNewsById(this.newsID)
         .then(({ data = {} }) => {
+          this.loading = false;
+          this.fetching = false;
           this.news = data;
           this.oldID = this.newsID;
           this.share.title = data.title;
           this.share.desc = data.subject;
-          setTimeout(() => {
-            this.loading = false;
-            this.fetching = false;
-            this.fetchNewsComments();
-            this.fetchNewsLikes();
-            this.fetchRewardInfo();
-            this.fetchRewards();
-          }, 400);
+          this.fetchNewsComments();
+          this.fetchNewsLikes();
+          this.fetchRewardInfo();
+          this.fetchRewards();
+          callback();
           if (this.isWechat) {
             const shareUrl =
               window.location.origin +
@@ -486,7 +492,26 @@ export default {
         this.commentCount -= 1;
         this.$Message.success("删除评论成功");
       });
+    },
+    onRefresh() {
+      this.fetchNews(() => {
+        this.$refs.loadmore.afterRefresh(true);
+      });
     }
   }
 };
 </script>
+
+<style lang="less" scoped>
+.m-art-head {
+  padding-top: 36px;
+
+  > h1 {
+    margin-top: 0;
+  }
+}
+
+.m-main {
+  padding-bottom: 36px;
+}
+</style>
