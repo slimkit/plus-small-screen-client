@@ -65,18 +65,18 @@ export default {
      */
     searchNewsByKey: _.debounce(function() {
       if (!this.keyword) return;
-      searchNewsByKey(this.keyword).then((list = []) => {
+      searchNewsByKey(this.keyword).then(({ data: list }) => {
         this.list = list;
       });
     }, 600),
     onRefresh(callback) {
-      searchNewsByKey(this.keyword, 15).then(list => {
+      searchNewsByKey(this.keyword, 15).then(({ data: list }) => {
         this.list = list;
         callback(list.length < 15);
       });
     },
     onLoadMore(callback) {
-      searchNewsByKey(this.keyword, 15, this.after).then(list => {
+      searchNewsByKey(this.keyword, 15, this.after).then(({ data: list }) => {
         this.list = [...this.list, ...list];
         callback(list.length < 15);
       });

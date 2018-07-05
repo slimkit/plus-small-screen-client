@@ -266,8 +266,8 @@ export default {
     fetchNews() {
       if (this.fetching) return;
       this.fetching = true;
-      this.$http
-        .get(`/news/${this.newsID}`)
+      api
+        .getNewsById(this.newsID)
         .then(({ data = {} }) => {
           this.news = data;
           this.oldID = this.newsID;

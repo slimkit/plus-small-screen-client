@@ -5,59 +5,61 @@ import api, { limit } from "./api.js";
  * @Author   Wayne
  * @DateTime 2018-04-28
  * @Email    qiaobin@zhiyicx.com
- * @param    {Number}   type [类型: 0: 已发布, 1: 待审核, 2: 已驳回]
- * @return   [Promise]
+ * @param    {number}   type [类型: 0: 已发布, 1: 待审核, 2: 已驳回]
+ * @returns
  */
 export function getMyNews({ type = 0, limit = 15, after = 0 }) {
+  const params = { type, limit, after };
   return api.get("/user/news/contributes", {
-    type,
-    limit,
-    after
+    params,
+    validateStatus: s => s === 200
   });
+}
+
+/**
+ * 根据 ID 获取资讯
+ * @author mutoe <mutoe@foxmail.com>
+ * @export
+ * @param {number} newsId
+ * @returns
+ */
+export function getNewsById(newsId) {
+  return api.get(`/news/${newsId}`, { validateStatus: s => s === 200 });
 }
 
 /**
  * 新增投稿
  * @author mutoe <mutoe@foxmail.com>
  * @export
- * @param {Number} categoryId
+ * @param {number} categoryId
  * @param {Object} params
- * @param {String} params.title 标题
- * @param {String} params.content 内容
- * @param {Number|Number[]} params.tags 标签id或其数组
- * @param {String=} params.subject 概要
- * @param {Number=} params.image 缩略图
- * @param {String=} params.from 资讯来源
- * @param {String=} params.author 作者
- * @param {String=} params.text_content 纯文本
+ * @param {string} params.title 标题
+ * @param {string} params.content 内容
+ * @param {number|number[]} params.tags 标签id或其数组
+ * @param {string=} params.subject 概要
+ * @param {number=} params.image 缩略图
+ * @param {string=} params.from 资讯来源
+ * @param {string=} params.author 作者
+ * @param {string=} params.text_content 纯文本
  * @returns {Promise}
  */
 export function postNews(categoryId, params) {
-  return api.post(`/news/categories/${categoryId}/currency-news`, params, {
-    validateStatus: s => s === 201
-  });
+  const url = `/news/categories/${categoryId}/currency-news`;
+  return api.post(url, params, { validateStatus: s => s === 201 });
 }
 
 /**
  * 搜索资讯
  * @author jsonleex <jsonlseex@163.com>
- * @param  {String} key
- * @param  {Number} limit
- * @param  {Number} after
- * @return {Promise -> Array}
+ * @param  {string} key
+ * @param  {number} limit
+ * @param  {number} after
+ * @returns
  */
 export function searchNewsByKey(key = "", limit = 15, after = 0) {
-  return !key
-    ? Promise.resolve([])
-    : api.get(`/news?key=${key}&limit=${limit}&after=${after}`).then(
-        ({ data = [] }) => {
-          return data;
-        },
-        err => {
-          console.warn(err);
-          return [];
-        }
-      );
+  if (!key) return Promise.resolve({ data: [] });
+  const params = { key, limit, after };
+  return api.get("/news", { params, validateStatus: s => s === 200 });
 }
 
 export function getNewsCommentPinneds(after = 0) {
@@ -90,8 +92,8 @@ export function getNewsComments(newsId, params) {
  * @export
  * @param {number} newsId
  * @param {Object} data
- * @param {Number} data.amount
- * @param {Number} data.day
+ * @param {number} data.amount
+ * @param {number} data.day
  * @returns
  */
 export function applyTopNews(newsId, data) {
@@ -105,11 +107,11 @@ export function applyTopNews(newsId, data) {
  * @author mutoe <mutoe@foxmail.com>
  * @export
  * @param {Object} payload
- * @param {Number} payload.newsId
- * @param {Number} payload.commentId
+ * @param {number} payload.newsId
+ * @param {number} payload.commentId
  * @param {Object} data
- * @param {Number} data.amount
- * @param {Number} data.day
+ * @param {number} data.amount
+ * @param {number} data.day
  * @returns
  */
 export function applyTopNewsComment({ newsId, commentId }, data) {
@@ -121,8 +123,8 @@ export function applyTopNewsComment({ newsId, commentId }, data) {
  * 删除评论
  * @author mutoe <mutoe@foxmail.com>
  * @export
- * @param {Number} newsId 资讯 id
- * @param {Number} commentId 评论 id
+ * @param {number} newsId 资讯 id
+ * @param {number} commentId 评论 id
  * @returns {Promise}
  */
 export function deleteNewsComment(newsId, commentId) {
