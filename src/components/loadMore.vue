@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div
     :style="{ transform: translate, transitionDuration: transition }"
     @mousedown="startDrag"
@@ -7,12 +7,11 @@
     @touchmove.stop="onDrag"
     @mouseup="stopDrag"
     @touchend="stopDrag"
-    @mouseleave="stopDrag"
-  >
+    @mouseleave="stopDrag" >
     <div class="load-more-tips">
       <slot name="head">
-        <div 
-          v-if="requesting" 
+        <div
+          v-if="requesting"
           class="load-more-loading">
           <span/>
           <span/>
@@ -27,15 +26,15 @@
           <span/>
           <span/>
         </div>
-        <i 
-          v-else 
+        <i
+          v-else
           :class="{up: (dragging && dY > topDistance)}">↓</i>
         <span v-if="showText">{{ status }}</span>
       </slot>
     </div>
     <slot/>
-    <div 
-      v-if="onLoadMore" 
+    <div
+      v-if="onLoadMore"
       class="load-more-tips">
       <template v-if="loading">
         <div class="load-more-loading">
@@ -62,6 +61,8 @@
 </template>
 
 <script>
+import _ from "lodash";
+
 const getScrollTarget = el => {
   while (
     el &&
@@ -77,7 +78,7 @@ const getScrollTarget = el => {
   }
   return document.documentElement;
 };
-import _ from "lodash";
+
 export default {
   name: "LoadMore",
   props: {
@@ -177,6 +178,22 @@ export default {
       val || (this.dY = 0);
     }
   },
+  mounted() {
+    this.scrollTarget = getScrollTarget(this.$el);
+    this.topBarHeight = this.$el.children[0].clientHeight;
+    this.bindEvent();
+
+    this.autoLoad();
+  },
+  activated() {
+    this.$nextTick(this.bindEvent);
+  },
+  deactivated() {
+    this.scEl.removeEventListener("scroll", this.handleScrolling);
+  },
+  destroyed() {
+    this.scEl.removeEventListener("scroll", this.handleScrolling);
+  },
   methods: {
     /**
      * Handle scroll.
@@ -209,6 +226,9 @@ export default {
         this.onLoadMore();
       }
     },
+    /**
+     * @param {boolean} [next = true]
+     */
     topEnd(next = true) {
       this.requesting = false;
       this.noMore = false;
@@ -287,23 +307,6 @@ export default {
         this.beforeRefresh();
       }
     }
-  },
-
-  mounted() {
-    this.scrollTarget = getScrollTarget(this.$el);
-    this.topBarHeight = this.$el.children[0].clientHeight;
-    this.bindEvent();
-
-    this.autoLoad();
-  },
-  activated() {
-    this.$nextTick(this.bindEvent);
-  },
-  deactivated() {
-    this.scEl.removeEventListener("scroll", this.handleScrolling);
-  },
-  destroyed() {
-    this.scEl.removeEventListener("scroll", this.handleScrolling);
   }
 };
 </script>

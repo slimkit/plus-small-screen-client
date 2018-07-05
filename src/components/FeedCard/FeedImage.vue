@@ -3,8 +3,8 @@
     :id="`m-pics${id}`"
     :class="['m-pics',`m-pics-${pics.length}`]">
     <ul class="m-pics-list">
-      <li 
-        v-for="(img, index) in pics.slice(0, 9)" 
+      <li
+        v-for="(img, index) in pics.slice(0, 9)"
         :key="`pics-${id}-${index}`">
         <div
           :class="['m-pics-box',{ 'long': isLongImg(img) }, { 'gif': (img.mime || '').indexOf('gif') > -1 }]"
@@ -29,7 +29,8 @@ export default {
       required: true
     },
     pics: {
-      type: Array
+      type: Array,
+      default: () => []
     }
   },
   methods: {
