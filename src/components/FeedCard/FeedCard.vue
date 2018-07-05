@@ -515,15 +515,7 @@ export default {
     font-size: 26px;
   }
 }
-.m-comment-usr a {
-  margin: 0 5px;
-  color: @text-color1;
-}
-.m-comment-body:before {
-  margin-left: -5px;
-  content: "：";
-  color: @text-color3;
-}
+
 .m-router-link {
   a {
     color: inherit;

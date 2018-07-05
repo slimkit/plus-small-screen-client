@@ -1,23 +1,23 @@
 <template>
   <p class="m-text-box">
-    <router-link 
-      :to="`/users/${user.id}`" 
-      tag="span" 
-      exact 
+    <router-link
+      :to="`/users/${user.id}`"
+      tag="span"
+      exact
       class="m-comment-usr">
       <a>{{ user.name }}</a>
     </router-link>
-    <span 
-      v-if="replyUser" 
+    <span
+      v-if="replyUser"
       class="m-comment-usr">
       回复<router-link :to="`/users/${replyUser.id}`">{{ replyUser.name }}</router-link>
     </span>
-    <span 
-      class="m-comment-body" 
+    <span
+      class="m-comment-body"
       @click="handelClick">{{ body }}</span>
-    <span 
-      v-if="pinned" 
-      class="m-art-comment-icon-top" 
+    <span
+      v-if="pinned"
+      class="m-art-comment-icon-top"
       style="margin-left: 5px; height: auto">置顶</span>
   </p>
 </template>
@@ -65,3 +65,15 @@ export default {
   }
 };
 </script>
+
+<style lang="less" scoped>
+.m-comment-usr a {
+  margin: 0 5px;
+  color: @text-color1;
+}
+.m-comment-body:before {
+  margin-left: -5px;
+  content: "：";
+  color: @text-color3;
+}
+</style>
