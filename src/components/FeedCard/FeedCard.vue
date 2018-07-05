@@ -435,7 +435,7 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .m-card {
   padding: 30px 20px 0;
   box-sizing: border-box;
