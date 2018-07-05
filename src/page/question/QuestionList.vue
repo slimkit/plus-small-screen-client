@@ -106,13 +106,12 @@ export default {
     }
   },
   watch: {
-    $route(newRoute, oldRoute) {
+    $route(to, from) {
       if (
-        newRoute.path === oldRoute.path &&
-        newRoute.query.type !== oldRoute.query.type
-      ) {
+        (to.path === from.path && to.query.type !== from.query.type) ||
+        !from.query.type // 后退再进入时重新拉取数据
+      )
         this.fetchQuestions();
-      }
     }
   },
   mounted() {
