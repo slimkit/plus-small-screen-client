@@ -84,6 +84,14 @@ export default {
           count: this.feed.reward_number
         } || {}
       );
+    },
+    has_collect: {
+      get() {
+        return this.feed.collected;
+      },
+      set(val) {
+        this.feed.collected = val;
+      }
     }
   },
   created() {
@@ -259,8 +267,8 @@ export default {
         defaultActions.push({
           text: "取消收藏",
           method: () => {
-            api.collectionPost(this.feedID).then(() => {
-              this.$Message.success("已加入我的收藏");
+            api.uncollectPost(this.feedID).then(() => {
+              this.$Message.success("取消收藏");
               this.has_collect = false;
             });
           }
@@ -269,8 +277,8 @@ export default {
         defaultActions.push({
           text: "收藏",
           method: () => {
-            api.uncollectPost(this.feedID).then(() => {
-              this.$message.success("取消收藏");
+            api.collectionPost(this.feedID).then(() => {
+              this.$Message.success("已加入我的收藏");
               this.has_collect = true;
             });
           }

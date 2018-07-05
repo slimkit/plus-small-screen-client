@@ -131,7 +131,7 @@ export function collectGroupPost(postId, status) {
  */
 export function collectionPost(postId) {
   const url = `/plus-group/group-posts/${postId}/collections`;
-  return api.post(url, { validataStatus: s => s === 204 });
+  return api.post(url, { validateStatus: s => s === 201 });
 }
 
 /**
