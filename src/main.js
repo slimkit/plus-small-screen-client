@@ -27,6 +27,8 @@ import App from "./App.vue";
 import * as WebIM from "@/vendor/easemob";
 
 Vue.mixin(mixin);
+// 注入版本号
+Vue.mixin({ data: () => ({ version }) });
 
 components.forEach(component => {
   Vue.component(component.name, component);

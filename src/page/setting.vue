@@ -58,11 +58,6 @@
 import bus from "@/bus.js";
 export default {
   name: "Setting",
-  computed: {
-    version() {
-      return "V3.5.3";
-    }
-  },
   methods: {
     signOut() {
       const actions = [
