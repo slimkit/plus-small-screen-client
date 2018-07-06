@@ -2,11 +2,11 @@
   <div class="p-setting">
     <header class="m-pos-f m-box m-aln-center m-head-top m-main m-bb1">
       <div class="m-box m-aln-center m-flex-grow1 m-flex-base0">
-        <svg 
-          class="m-style-svg m-svg-def" 
+        <svg
+          class="m-style-svg m-svg-def"
           @click="goBack">
-          <use 
-            xmlns:xlink="http://www.w3.org/1999/xlink" 
+          <use
+            xmlns:xlink="http://www.w3.org/1999/xlink"
             xlink:href="#base-back"/>
         </svg>
       </div>
@@ -17,36 +17,36 @@
     </header>
     <main style="padding-top: 0.9rem">
       <ul class="m-box-model m-entry-group padding">
-        <router-link 
-          to="/changePassword" 
-          tag="li" 
+        <router-link
+          to="/changePassword"
+          tag="li"
           class="m-entry">
           <span>修改密码</span>
           <svg class="m-style-svg m-svg-def m-entry-append">
-            <use 
-              xmlns:xlink="http://www.w3.org/1999/xlink" 
+            <use
+              xmlns:xlink="http://www.w3.org/1999/xlink"
               xlink:href="#base-arrow-r"/>
           </svg>
         </router-link>
-        <router-link 
-          to="/about" 
-          tag="li" 
+        <router-link
+          to="/about"
+          tag="li"
           class="m-entry">
           <span class="m-box m-text-box m-flex-grow1">关于我们</span>
           <span class="m-box m-text-box m-flex-grow1 m-justify-end m-entry-extra">{{ version }}</span>
           <svg class="m-style-svg m-svg-def m-entry-append">
-            <use 
-              xmlns:xlink="http://www.w3.org/1999/xlink" 
+            <use
+              xmlns:xlink="http://www.w3.org/1999/xlink"
               xlink:href="#base-arrow-r"/>
           </svg>
         </router-link>
-        <li 
-          class="m-entry" 
+        <li
+          class="m-entry"
           @click="signOut">
           <a>退出登录</a>
           <svg class="m-style-svg m-svg-def m-entry-append">
-            <use 
-              xmlns:xlink="http://www.w3.org/1999/xlink" 
+            <use
+              xmlns:xlink="http://www.w3.org/1999/xlink"
               xlink:href="#base-arrow-r"/>
           </svg>
         </li>
@@ -54,8 +54,10 @@
     </main>
   </div>
 </template>
+
 <script>
 import bus from "@/bus.js";
+
 export default {
   name: "Setting",
   methods: {
