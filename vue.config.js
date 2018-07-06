@@ -12,7 +12,7 @@ module.exports = {
   },
   configureWebpack: {
     output: {
-      chunkFilename: "js/[name].js"
+      chunkFilename: "js/[name]-[chunkhash].js"
     }
   },
   chainWebpack: config => {
