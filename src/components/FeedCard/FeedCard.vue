@@ -363,7 +363,9 @@ export default {
       } else {
         actions.push({
           text: "举报",
-          method: () => {}
+          method: () => {
+            this.$Message.info("举报功能开发中，敬请期待");
+          }
         });
       }
 

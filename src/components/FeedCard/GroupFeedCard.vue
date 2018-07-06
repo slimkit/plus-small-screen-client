@@ -92,7 +92,7 @@ export default {
         this.comments.unshift(comment);
         this.$Message.success("评论成功");
         bus.$emit("commentInput:close", true);
-      })
+      });
     },
     handleCollection() {
       api.collectGroupPost(this.feed.id, this.has_collect).then(() => {
@@ -101,15 +101,75 @@ export default {
       });
     },
     handleMore() {
-      const base = [
-        {
-          text: this.has_collect ? "取消收藏" : "收藏",
+      const actions = [];
+      if (this.has_collect) {
+        actions.push({
+          text: "取消收藏",
           method: () => {
-            this.handleCollection();
+            api.uncollectPost(this.feed.id).then(() => {
+              this.$Message.success("取消收藏");
+              this.has_collect = false;
+            });
           }
-        }
-      ];
-      bus.$emit("actionSheet", [...base], "取消");
+        });
+      } else {
+        actions.push({
+          text: "收藏",
+          method: () => {
+            api.collectionPost(this.feed.id).then(() => {
+              this.$Message.success("已加入我的收藏");
+              this.has_collect = true;
+            });
+          }
+        });
+      }
+      if (this.isMine) {
+        // 是否是自己文章
+        actions.push({
+          text: "申请文章置顶",
+          method: () => {
+            bus.$emit("applyTop", {
+              type: "post",
+              api: api.applyTopPost,
+              payload: this.feed.id
+            });
+          }
+        });
+        actions.push({
+          text: "删除帖子",
+          method: () => {
+            setTimeout(() => {
+              const actionSheet = [
+                {
+                  text: "删除",
+                  style: { color: "#f4504d" },
+                  method: () => {
+                    api
+                      .deletePost(this.feed.group.id, this.feed.id)
+                      .then(() => {
+                        this.$Message.success("删除帖子成功");
+                        this.$nextTick(() => {
+                          this.$el.remove();
+                          this.$emit("afterDelete");
+                        });
+                      });
+                  }
+                }
+              ];
+              bus.$emit("actionSheet", actionSheet, "取消", "确认删除?");
+            }, 200);
+          }
+        });
+      } else {
+        actions.push({
+          text: "举报",
+          method: () => {
+            this.$Message.info("举报功能开发中，敬请期待");
+          }
+        });
+      }
+
+      bus.$emit("actionSheet", actions, "取消");
     },
     commentAction({ isMine = false, placeholder, reply_user, comment }) {
       if (isMine) {
