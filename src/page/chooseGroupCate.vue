@@ -48,6 +48,7 @@ export default {
   },
   created() {
     getGroupCates().then(data => {
+      this.$store.commit("SAVE_GROUP_CATES", data);
       this.cates = data;
     });
     bus.$on("choose-group-cate", onSelected => {

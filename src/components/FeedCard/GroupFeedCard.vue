@@ -1,12 +1,7 @@
 <script>
 import bus from "@/bus.js";
 import FeedCard from "./FeedCard.vue";
-import {
-  collectGroupPost,
-  postComment,
-  applyTopPostComment,
-  deletePostComment
-} from "@/api/group.js";
+import * as api from "@/api/group.js";
 
 export default {
   name: "GroupFeedCard",
@@ -92,19 +87,15 @@ export default {
         body,
         reply_user: replyUser
       };
-      postComment(this.feed.id, params)
-        .then(({ data = { comment: {} } }) => {
-          this.commentCount += 1;
-          this.comments.unshift(data.comment);
-          this.$Message.success("评论成功");
-          bus.$emit("commentInput:close", true);
-        })
-        .catch(() => {
-          bus.$emit("commentInput:close", true);
-        });
+      api.postComment(this.feed.id, params).then(comment => {
+        this.commentCount += 1;
+        this.comments.unshift(comment);
+        this.$Message.success("评论成功");
+        bus.$emit("commentInput:close", true);
+      })
     },
     handleCollection() {
-      collectGroupPost(this.feed.id, this.has_collect).then(() => {
+      api.collectGroupPost(this.feed.id, this.has_collect).then(() => {
         this.$Message.success("操作成功");
         this.has_collect = !this.has_collect;
       });
@@ -130,7 +121,7 @@ export default {
               bus.$emit("applyTop", {
                 isOwner,
                 type: "postComment",
-                api: applyTopPostComment,
+                api: api.applyTopPostComment,
                 payload: { postId: this.feedID, commentId: comment.id }
               });
             }
@@ -145,7 +136,7 @@ export default {
       }
     },
     deleteComment(commentId) {
-      deletePostComment(this.feedID, commentId).then(() => {
+      api.deletePostComment(this.feedID, commentId).then(() => {
         this.feed.comments = this.feed.comments.filter(c => c.id !== commentId);
         this.commentCount -= 1;
         this.$Message.success("删除评论成功");

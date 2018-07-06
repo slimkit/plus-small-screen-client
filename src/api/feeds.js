@@ -87,6 +87,30 @@ export function getCollectedFeed({ limit = 15, offset = 0 }) {
 }
 
 /**
+ * 收藏动态
+ * @author mutoe <mutoe@foxmail.com>
+ * @export
+ * @param {number} feedId
+ * @returns
+ */
+export function collectionFeed(feedId) {
+  const url = `/feeds/${feedId}/collections`;
+  return api.post(url, { validateStatus: s => s === 201 });
+}
+
+/**
+ * 取消收藏动态
+ * @author mutoe <mutoe@foxmail.com>
+ * @export
+ * @param {number} feedId
+ * @returns
+ */
+export function uncollectFeed(feedId) {
+  const url = `/feeds/${feedId}/uncollect`;
+  return api.delete(url, { validateStatus: s => s === 204 });
+}
+
+/**
  * 获取单条动态的评论
  * @author mutoe <mutoe@foxmail.com>
  * @export
@@ -122,15 +146,16 @@ export function getFeedCommentPinneds(after = 0) {
  * @author mutoe <mutoe@foxmail.com>
  * @export
  * @param {number} feedId
- * @param {Object} data
- * @param {string} data.body 评论内容
- * @param {Number} [data.reply_user] 回复的用户id
- * @returns
+ * @param {Object} payload
+ * @param {string} payload.body 评论内容
+ * @param {number} [payload.reply_user] 回复的用户id
+ * @returns {Promise<{comment}>}
  */
-export function postComment(feedId, data) {
-  return api.post(`/feeds/${feedId}/comments`, data, {
-    validateStatus: s => s === 201
-  });
+export function postComment(feedId, payload) {
+  const url = `/feeds/${feedId}/comments`;
+  return api
+    .post(url, payload, { validateStatus: s => s === 201 })
+    .then(({ data = { comment: {} } }) => data.comment);
 }
 
 /**

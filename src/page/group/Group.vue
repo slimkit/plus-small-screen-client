@@ -91,7 +91,7 @@
 </template>
 <script>
 import GroupItem from "./GroupItem.vue";
-import { getGroupTotalNumber, getMyGroups, getRecGroups } from "@/api/group.js";
+import * as api from "@/api/group.js";
 
 export default {
   name: "Group",
@@ -119,7 +119,7 @@ export default {
     }
   },
   mounted() {
-    getGroupTotalNumber().then(count => {
+    api.getGroupTotalNumber().then(count => {
       this.groupTotalNumber = count;
     });
   },
@@ -136,14 +136,14 @@ export default {
       });
     },
     fetchMyGroups() {
-      getMyGroups().then(groups => {
+      api.getMyGroups().then(groups => {
         this.formateGroups(groups);
       });
     },
     fetchRecGroups() {
       if (this.fetchRecing) return;
       this.fetchRecing = true;
-      getRecGroups().then(groups => {
+      api.getRecGroups().then(groups => {
         this.recGroups = groups;
         this.clickCount += 1;
         this.fetchRecing = false;

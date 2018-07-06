@@ -113,13 +113,7 @@ import FeedImage from "./FeedImage.vue";
 import FeedVideo from "./FeedVideo.vue";
 import CommentItem from "./CommentItem.vue";
 import { time2txt } from "@/filters.js";
-import {
-  postComment,
-  applyTopFeed,
-  applyTopFeedComment,
-  deleteFeed,
-  deleteFeedComment
-} from "@/api/feeds.js";
+import * as api from "@/api/feeds.js";
 
 export default {
   name: "FeedCard",
@@ -309,33 +303,28 @@ export default {
       });
     },
     handleMore() {
-      const actions = [
-        {
-          text: this.has_collect ? "取消收藏" : "收藏",
+      const actions = [];
+      if (this.has_collect) {
+        actions.push({
+          text: "取消收藏",
           method: () => {
-            // POST /feeds/:feed/collections
-            // DELETE /feeds/:feed/uncollect
-            let url;
-            let txt;
-            let method;
-            this.has_collect
-              ? ((txt = "取消收藏"),
-                (method = "delete"),
-                (url = `/feeds/${this.feedID}/uncollect`))
-              : ((txt = "收藏成功"),
-                (method = "post"),
-                (url = `/feeds/${this.feedID}/collections`));
-            this.$http({
-              url,
-              method,
-              validateStatus: s => s === 204 || s === 201
-            }).then(() => {
-              this.$Message.success(txt);
-              this.has_collect = !this.has_collect;
+            api.uncollectFeed(this.feedID).then(() => {
+              this.$Message.success("取消收藏");
+              this.has_collect = false;
             });
           }
-        }
-      ];
+        });
+      } else {
+        actions.push({
+          text: "收藏",
+          method: () => {
+            api.collectionFeed(this.feedID).then(() => {
+              this.$Message.success("收藏成功");
+              this.has_collect = true;
+            });
+          }
+        });
+      }
       if (this.isMine) {
         // 是否是自己文章的评论
         actions.push({
@@ -343,7 +332,7 @@ export default {
           method: () => {
             bus.$emit("applyTop", {
               type: "feed",
-              api: applyTopFeed,
+              api: api.applyTopFeed,
               payload: this.feedID
             });
           }
@@ -357,7 +346,7 @@ export default {
                   text: "删除",
                   style: { color: "#f4504d" },
                   method: () => {
-                    deleteFeed(this.feedID).then(() => {
+                    api.deleteFeed(this.feedID).then(() => {
                       this.$Message.success("删除动态成功");
                       this.$nextTick(() => {
                         this.$el.remove();
@@ -390,7 +379,7 @@ export default {
               bus.$emit("applyTop", {
                 isOwner,
                 type: "feedComment",
-                api: applyTopFeedComment,
+                api: api.applyTopFeedComment,
                 payload: { feedId: this.feedID, commentId: comment.id }
               });
             }
@@ -413,7 +402,8 @@ export default {
         body,
         reply_user: replyUser
       };
-      postComment(this.feedID, params)
+      api
+        .postComment(this.feedID, params)
         .then(({ data = { comment: {} } }) => {
           this.commentCount += 1;
           this.comments.unshift(data.comment);
@@ -425,7 +415,7 @@ export default {
         });
     },
     deleteComment(commentId) {
-      deleteFeedComment(this.feedID, commentId).then(() => {
+      api.deleteFeedComment(this.feedID, commentId).then(() => {
         this.feed.comments = this.feed.comments.filter(c => c.id !== commentId);
         this.commentCount -= 1;
         this.$Message.success("删除评论成功");

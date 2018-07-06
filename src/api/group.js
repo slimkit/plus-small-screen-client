@@ -1,70 +1,69 @@
-import api, { get, limit } from "./api.js";
-import vuex from "@/stores/index.js";
+import api, { limit } from "./api.js";
 
 /**
  * 获取圈子总数
  * @author jsonleex <jsonlseex@163.com>
- * @return {Promise -> Number}
+ * @returns {Promise<number>}
  */
 export function getGroupTotalNumber() {
-  return get("/plus-group/groups/count").then(
-    ({ data: { count = 0 } }) => {
-      return count;
-    },
-    err => {
+  return api
+    .get("/plus-group/groups/count")
+    .then(({ data: { count = 0 } }) => count)
+    .catch(err => {
       console.warn(err);
       return 0;
-    }
-  );
+    });
 }
 
 /**
  * 获取圈子全部分类
  * @author jsonleex <jsonlseex@163.com>
- * @return {Promise -> Array}
+ * @returns {Promise<Array>}
  */
 export function getGroupCates() {
-  return get(`/plus-group/categories`)
-    .then(({ data = [] }) => {
-      vuex.commit("SAVE_GROUP_CATES", data);
-    })
+  return api
+    .get("/plus-group/categories")
+    .then(({ data = [] }) => data)
     .catch(err => {
       console.warn(err);
-      vuex.commit("SAVE_GROUP_CATES", []);
+      return [];
     });
 }
 
 /**
  * 获取我加入的圈子
  * @author jsonleex <jsonlseex@163.com>
- * @return {Promise -> Array}
+ * @returns {Promise<Array>}
  */
 export function getMyGroups() {
-  return get("/plus-group/user-groups").then(
-    ({ data = [] }) => data,
-    err => (err, [])
-  );
+  return api
+    .get("/plus-group/user-groups")
+    .then(({ data = [] }) => data)
+    .catch(err => (err, []));
 }
 
 /**
  * 获取推荐圈子
  * @author jsonleex <jsonlseex@163.com>
- * @return {Promise -> Array}
+ * @returns {Promise<Array>}
  */
 export function getRecGroups() {
-  return get("/plus-group/recommend/groups?type=random").then(
-    ({ data = [] }) => {
+  return api
+    .get("/plus-group/recommend/groups", {
+      params: { type: "random" },
+      validateStatus: s => s === 200
+    })
+    .then(({ data = [] }) => {
       return Array.isArray(data) ? data : [];
-    },
-    err => (err, [])
-  );
+    })
+    .catch(err => (err, []));
 }
 
 /**
  * 加入圈子
  * @author jsonleex <jsonlseex@163.com>
- * @param  {Number} GID
- * @return {[type]}
+ * @param  {number} GID
+ * @returns
  */
 export function joinGroup(GID) {
   return api.put(`/plus-group/groups/${GID}`, {
@@ -75,43 +74,40 @@ export function joinGroup(GID) {
 /**
  * 获取指定用户已加入的圈子列表
  * @author jsonleex <jsonlseex@163.com>
- * @param  {Number} UID
- * @return {Promise -> Array}
+ * @param  {number} UID
+ * @returns
  */
 export function getGroupsByUser(UID, limit = 15, offset = 0) {
-  // plus-group/groups/users
-  return get(
-    `/plus-group/groups/users?user_id=${UID}&limit=${limit}&offset=${offset}`
-  );
+  return api.get("/plus-group/groups/users", {
+    params: { user_id: UID, limit, offset },
+    validateStatus: s => s === 200
+  });
 }
 
 /**
  * 获取指定分类下的圈子列表
  * @author jsonleex <jsonlseex@163.com>
- * @param  {Number} cate    分类id (cate === -1  && 获取推荐圈子)
- * @param  {Number} limit
- * @param  {Number} offset
- * @return {Promise -> Array}
+ * @param  {number} cate    分类id (cate === -1  && 获取推荐圈子)
+ * @param  {number} limit
+ * @param  {number} offset
+ * @returns {Promise -> Array}
  */
 export function getGroupsByCate(cate = -1, limit = 15, offset = 0) {
   const url =
     cate > -1
       ? `/plus-group/groups?category_id=${cate}`
       : "/plus-group/recommend/groups";
-  return get(url, { limit, offset })
-    .then(({ data = [] }) => {
-      return data;
-    })
-    .catch(err => {
-      console.warn(err);
-      return [];
-    });
+  const params = { limit, offset };
+  return api
+    .get(url, { params })
+    .then(({ data = [] }) => data)
+    .catch(err => (err, []));
 }
 
 /**
  * 收藏圈子帖子
  * @author jsonleex <jsonlseex@163.com>
- * @param  {Number} postId
+ * @param  {number} postId
  * @param  {Boolean} status
  */
 export function collectGroupPost(postId, status) {
@@ -149,11 +145,11 @@ export function uncollectPost(postId) {
 /**
  * 获取指定圈子的圈子详情
  * @author jsonleex <jsonlseex@163.com>
- * @param  {Number} groupID
+ * @param  {number} groupId
  * @return {Promise -> Object}
  */
-export function getGroupInfoById(groupID) {
-  return get(`/plus-group/groups/${groupID}`).then(
+export function getGroupInfoById(groupId) {
+  return api.get(`/plus-group/groups/${groupId}`).then(
     ({ data = {} }) => {
       // TODO 错误处理
       if (data.message === "未加入该圈子") {
@@ -167,31 +163,32 @@ export function getGroupInfoById(groupID) {
   );
 }
 
+/**
+ * @export
+ * @param {number} groupId
+ * @param {string} [type="latest_post"]
+ * @param {number} [limit=15]
+ * @param {number} [offset=0]
+ * @returns {Promise<{pinneds: Array, posts: Array}>}
+ */
 export function getGroudFeedsByType(
-  groupID,
+  groupId,
   type = "latest_post",
   limit = 15,
   offset = 0
 ) {
-  // /groups/:group/posts
-  return get(
-    `/plus-group/groups/${groupID}/posts?type=${type}&offset=${offset}&limit=${limit}`
-  ).then(
-    ({ data }) => {
-      return data;
-    },
-    err => {
-      console.warn(err);
-      return { pinneds: [], posts: [] };
-    }
-  );
+  const params = { type, offset, limit };
+  return api
+    .get(`/plus-group/groups/${groupId}/posts`, { params })
+    .then(({ data }) => data)
+    .catch(err => (err, { pinneds: [], posts: [] }));
 }
 
 /**
  * 申请帖子置顶
  * @author mutoe <mutoe@foxmail.com>
  * @export
- * @param {Number} postId
+ * @param {number} postId
  * @param {Object} params
  * @returns {Promise}
  */
@@ -218,8 +215,8 @@ export function rewardPost(postId, data) {
  * 删除帖子
  * @author mutoe <mutoe@foxmail.com>
  * @export
- * @param {Number} groupId
- * @param {Number} postId
+ * @param {number} groupId
+ * @param {number} postId
  * @returns {Promise}
  */
 export function deletePost(groupId, postId) {
@@ -227,8 +224,8 @@ export function deletePost(groupId, postId) {
   return api.delete(url, { validateStatus: s => s === 204 });
 }
 
-export function likeGroupPost(postID, status) {
-  const url = `/plus-group/group-posts/${postID}/likes`;
+export function likeGroupPost(postId, status) {
+  const url = `/plus-group/group-posts/${postId}/likes`;
   const method = status ? "delete" : "post";
   return api({ method, url, validateStatus: s => s === 201 || s === 204 });
 }
@@ -238,15 +235,12 @@ export function likeGroupPost(postID, status) {
  * @Author   Wayne
  * @DateTime 2018-05-04
  * @Email    qiaobin@zhiyicx.com
- * @param    {Number}            after [description]
- * @return   {[type]}                  [description]
+ * @param    {number}            after [description]
+ * @returns
  */
 export function getPostAudits({ after = 0, group = 0 }) {
-  return get("/plus-group/pinned/posts", {
-    after,
-    limit,
-    group
-  });
+  const params = { after, limit, group };
+  return api.get("/plus-group/pinned/posts", { params });
 }
 
 /**
@@ -266,50 +260,51 @@ export function getPostComments(postId, params) {
  * 发表帖子评论
  * @author mutoe <mutoe@foxmail.com>
  * @export
- * @param {Number} postId
- * @param {Object} data
- * @param {String} data.body 评论内容
- * @param {Number=} data.reply_user 回复的用户id
- * @returns
+ * @param {number} postId
+ * @param {Object} payload
+ * @param {string} payload.body 评论内容
+ * @param {number} [payload.reply_user] 回复的用户id
+ * @returns {Promise<{comment}>}
  */
-export function postComment(postId, data) {
-  return api.post(`/plus-group/group-posts/${postId}/comments`, data, {
-    validateStatus: s => s === 201
-  });
+export function postComment(postId, payload) {
+  const url = `/plus-group/group-posts/${postId}/comments`;
+  return api
+    .post(url, payload, { validateStatus: s => s === 201 })
+    .then(({ data = { comment: {} } }) => data.comment);
 }
 
 export function getPostCommentAudits({ after = 0, post = 0 }) {
-  return get("/plus-group/pinned/comments", { after, limit, post });
+  const params = { after, limit, post };
+  return api.get("/plus-group/pinned/comments", { params });
 }
 
 /**
  * 申请评论置顶
  * @author mutoe <mutoe@foxmail.com>
  * @export
+ * @param {Object} params
+ * @param {number} params.postId
+ * @param {number} params.commentId
  * @param {Object} payload
- * @param {Number} payload.postId
- * @param {Number} payload.commentId
- * @param {Object} data
- * @param {Number} data.amount
- * @param {Number} data.day
- * @returns {Promise}
+ * @param {number} payload.amount
+ * @param {number} payload.day
+ * @returns
  */
-export function applyTopPostComment({ postId, commentId }, data) {
+export function applyTopPostComment({ postId, commentId }, payload) {
   const url = `/plus-group/currency-pinned/comments/${commentId}`;
-  Object.assign(data, { post_id: postId });
-  return api.post(url, data, { validateStatus: s => s === 201 });
+  Object.assign(payload, { post_id: postId });
+  return api.post(url, payload, { validateStatus: s => s === 201 });
 }
 
 /**
  * 删除帖子评论
  * @author mutoe <mutoe@foxmail.com>
  * @export
- * @param {Number} postID
- * @param {Number} commentID
+ * @param {number} postId
+ * @param {number} commentId
  * @returns
  */
-export function deletePostComment(postID, commentID) {
-  return api.delete(`/plus-group/group-posts/${postID}/comments/${commentID}`, {
-    validateStatus: s => s === 204
-  });
+export function deletePostComment(postId, commentId) {
+  const url = `/plus-group/group-posts/${postId}/comments/${commentId}`;
+  return api.delete(url, { validateStatus: s => s === 204 });
 }
