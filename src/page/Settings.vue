@@ -57,9 +57,15 @@
 
 <script>
 import bus from "@/bus.js";
+import { version } from "@/main";
 
 export default {
   name: "Settings",
+  data() {
+    return {
+      version
+    };
+  },
   methods: {
     signOut() {
       const actions = [

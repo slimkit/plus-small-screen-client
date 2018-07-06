@@ -1,5 +1,5 @@
 // 当前构建版本号 每次 release tag 后将此版本推进
-const version = "v4.0.0-rc.7";
+export const version = "v4.0.0-rc.7";
 
 import "./style/tsplus.less";
 import "github-markdown-css";
@@ -27,8 +27,6 @@ import App from "./App.vue";
 import * as WebIM from "@/vendor/easemob";
 
 Vue.mixin(mixin);
-// 注入版本号
-Vue.mixin({ data: () => ({ version }) });
 
 components.forEach(component => {
   Vue.component(component.name, component);
