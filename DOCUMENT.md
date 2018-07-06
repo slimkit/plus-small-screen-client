@@ -1,5 +1,28 @@
 # 开发者手册
 
+## 版本发布
+
+### 版本迭代
+
+每次有更新需要推送到客户时，在根目录下执行 `npm version [patch|minor|major|prerelease]` 等（ version 更迭不支持 yarn 命令），有关 npm version，[参考这里](https://docs.npmjs.com/cli/version)
+
+例如，即将从 `v4.0.0-rc.6` 更新到 `v4.0.0-rc.7`，这是一个 prerelease 版本迭代，则执行 `npm version prerelease` 后 push 到远端即可，该命令会自动 release tag 并推进客户端版本号。
+
+本项目与 npm 版本号迭代规则略有不同，基本遵循以下特点
+
+- 有问题修复，UI变更，功能优化，文案变更等内容，则发布 patch 版本
+- 有新功能点、接口变更等，则发布 minor 版本
+- 全面迭代，则发布 major 版本
+- major 版本迭代后宣布稳定前，则发布 prerelease 版本
+
+### commit message 规范
+
+为了高效率生成 CHANGELOG (版本更新内容一览)，则 commit message 需要根据一定规范进行编写。
+
+本项目使用 angular 规范 (可以参考阮一峰的 [Commit message 和 Change log 编写指南](http://www.ruanyifeng.com/blog/2016/01/commit_message_change_log.html))
+
+每次执行 `npm version **` 时会自动生成截至上一版发布期间的所有 feature、fix、break change 内容。
+
 ## 全局钩子
 
 全局钩子挂载于 `./src/bus.js` 下的事件总线上。
