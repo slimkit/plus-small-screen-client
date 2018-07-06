@@ -32,7 +32,7 @@
 
 <script>
 import TopicCard from "./components/TopicCard.vue";
-import { all, followTopics, follow, unfollow } from "@/api/question/topics";
+import * as api from "@/api/question/topics.js";
 
 export default {
   name: "TopicList",
@@ -77,7 +77,8 @@ export default {
     handleRefreshByAll() {
       const offset = 0;
       const limit = 15;
-      all(offset, limit)
+      api
+        .all(offset, limit)
         .then(({ data }) => {
           this.topics = data;
           this.loadContainer.topEnd(false);
@@ -92,7 +93,8 @@ export default {
     handleRefreshByFollow() {
       const after = 0;
       const limit = 15;
-      followTopics(after, limit)
+      api
+        .getFollowTopics(after, limit)
         .then(({ data }) => {
           this.topics = data;
           this.loadContainer.topEnd(false);
@@ -116,7 +118,8 @@ export default {
     handleLoadMoreByAll() {
       const offset = this.topics.length;
       const limit = 15;
-      all(offset, limit)
+      api
+        .all(offset, limit)
         .then(({ data }) => {
           this.topics = [...this.topics, ...data];
           this.loadContainer.bottomEnd(data.length < limit);
@@ -129,7 +132,8 @@ export default {
     handleLoadMoreByFollow() {
       const { id: after } = this.topisc[this.topics.length];
       const limit = 15;
-      followTopics(after, limit)
+      api
+        .getFollowTopics(after, limit)
         .then(({ data }) => {
           this.topics = [...this.topics, ...data];
           this.loadContainer.bottomEnd(data.length < limit);
@@ -140,17 +144,14 @@ export default {
         });
     },
     handleFollow(topic) {
-      follow(topic.id)
-        .then(() => {
-          topic.has_follow = true;
-          this.follows_count += 1;
-        })
-        .catch(({ response: { data } = {} }) => {
-          this.$Message.error(data);
-        });
+      api.followTopic(topic.id).then(() => {
+        topic.has_follow = true;
+        this.follows_count += 1;
+      });
     },
     handleUnfollow(topic) {
-      unfollow(topic.id)
+      api
+        .unfollowTopic(topic.id)
         .then(() => {
           topic.has_follow = false;
           topic.follows_count -= 1;

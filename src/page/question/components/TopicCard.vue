@@ -35,10 +35,10 @@ export default {
   },
   methods: {
     handleUnfollow(topic) {
-      this.$emit("unfollow", { topic });
+      this.$emit("unfollow", topic);
     },
     handleFollow(topic) {
-      this.$emit("follow", { topic });
+      this.$emit("follow", topic);
     }
   }
 };

@@ -1,4 +1,4 @@
-import request from "../../http";
+import api from "../api.js";
 
 /**
  * The topics API query function.
@@ -12,7 +12,7 @@ import request from "../../http";
  * @returns
  */
 export function query(params = {}) {
-  return request.get("/question-topics", {
+  return api.get("/question-topics", {
     params,
     validateStatus: status => status === 200
   });
@@ -45,32 +45,26 @@ export function search(name = null, offset = 0, limit = 15, follow = true) {
   return query({ name, offset, limit, follow });
 }
 
-export function userQuery(query = {}) {
-  return request.get("/user/question-topics", {
-    params: query,
-    validateStatus: status => status === 200
+export function userQuery(params = {}) {
+  return api.get("/user/question-topics", {
+    params,
+    validateStatus: s => s === 200
   });
 }
 
-export function followTopics(after = 0, limit = 15) {
+export function getFollowTopics(after = 0, limit = 15) {
   return userQuery({ after, limit, type: "follow" });
 }
 
 /**
  * Follow a topic.
- *
- * @param {number} id
- * @return {Promise}
  * @author Seven Du <shiweidu@outlook.com>
+ * @param {number} topicId
+ * @returns
  */
-export function follow(id) {
-  return request.put(
-    `/user/question-topics/${id}`,
-    {},
-    {
-      validateStatus: status => status === 201
-    }
-  );
+export function followTopic(topicId) {
+  const url = `/user/question-topics/${topicId}`;
+  return api.put(url, {}, { validateStatus: s => s === 201 });
 }
 
 /**
@@ -80,8 +74,8 @@ export function follow(id) {
  * @return {Promise}
  * @author Seven Du <shiweidu@outlook.com>
  */
-export function unfollow(id) {
-  return request.delete(`/user/question-topics/${id}`, {
+export function unfollowTopic(id) {
+  return api.delete(`/user/question-topics/${id}`, {
     validateStatus: status => status === 204
   });
 }
@@ -94,7 +88,7 @@ export function unfollow(id) {
  * @author Seven Du <shiweidu@outlook.com>
  */
 export function show(topic) {
-  return request.get(`/question-topics/${topic}`, {
+  return api.get(`/question-topics/${topic}`, {
     validateStatus: status => status === 200
   });
 }
@@ -110,7 +104,7 @@ export function show(topic) {
  * @author Seven Du <shiweidu@outlook.com>
  */
 export function questions(topic, type, offset = 0, limit = 15) {
-  return request.get(`/question-topics/${topic}/questions`, {
+  return api.get(`/question-topics/${topic}/questions`, {
     params: { type, offset, limit },
     validateStatus: status => status === 200
   });
