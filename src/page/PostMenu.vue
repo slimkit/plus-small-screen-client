@@ -1,15 +1,15 @@
 <template>
   <div @touchmove.prevent>
     <transition name="toast">
-      <div 
-        v-if="show" 
-        class="m-pop-box" 
-        style="background-color: rgba(255, 255, 255, .95)" 
+      <div
+        v-if="show"
+        class="m-pop-box"
+        style="background-color: rgba(255, 255, 255, .95)"
         @click="cancel"/>
     </transition>
     <transition @after-enter="transitionComplete">
-      <div 
-        v-if="show" 
+      <div
+        v-if="show"
         class="m-box-model m-post-menu-con">
         <transition-group
           tag="div"
@@ -79,6 +79,7 @@
     </transition>
   </div>
 </template>
+
 <script>
 import bus from "@/bus.js";
 import { mapState } from "vuex";
@@ -89,12 +90,6 @@ export default {
       show: false,
       open: false
     };
-  },
-  created() {
-    bus.$on("post-menu", () => {
-      this.show = true;
-      this.scrollable = false;
-    });
   },
   computed: {
     ...mapState({
@@ -115,6 +110,12 @@ export default {
     checkin() {
       return this.$store.state.CONFIG.checkin || true;
     }
+  },
+  created() {
+    bus.$on("post-menu", () => {
+      this.show = true;
+      this.scrollable = false;
+    });
   },
   methods: {
     message() {
@@ -146,7 +147,7 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .m-post-menu-con {
   position: fixed;
   left: 0;

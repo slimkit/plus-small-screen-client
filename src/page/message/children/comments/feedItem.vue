@@ -80,9 +80,12 @@
 <script>
 const prefixCls = "msgList";
 const url = "/feeds/";
+
 export default {
   name: "FeedsItem",
-  props: ["comment"],
+  props: {
+    comment: { type: Object, default: () => {} }
+  },
   data: () => ({
     prefixCls,
     url,
