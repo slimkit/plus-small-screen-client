@@ -1,6 +1,6 @@
 <template>
-  <transition 
-    enter-active-class="animated bounceInRight" 
+  <transition
+    enter-active-class="animated bounceInRight"
     leave-active-class="animated bounceOutLeft">
     <div class="p-signup">
       <header class="m-box m-aln-center m-head-top m-pos-f m-main m-bb1">
@@ -27,31 +27,31 @@
               @focus="onFocus"
               @blur="checkName(nickname)">
           </div>
-          <svg 
+          <svg
             v-show="nickname.length > 0"
             class="m-style-svg m-svg-def"
             @click="nickname = ''">
-            <use 
-              xmlns:xlink="http://www.w3.org/1999/xlink" 
+            <use
+              xmlns:xlink="http://www.w3.org/1999/xlink"
               xlink:href="#base-clean"/>
           </svg>
         </div>
         <div class="m-box m-aln-center m-text-box m-form-err-box">
           <span>{{ err | plusMessageFirst }}</span>
         </div>
-        <div 
-          v-if="displayBtn" 
-          class="m-form-row" 
+        <div
+          v-if="displayBtn"
+          class="m-form-row"
           style="border: 0">
           <button
             :disabled="err||loading"
             class="m-long-btn m-signin-btn"
             @click="signupByWechat">
-            <svg 
-              v-if="loading" 
+            <svg
+              v-if="loading"
               class="m-style-svg m-svg-def">
-              <use 
-                xmlns:xlink="http://www.w3.org/1999/xlink" 
+              <use
+                xmlns:xlink="http://www.w3.org/1999/xlink"
                 xlink:href="#base-loading"/>
             </svg>
             <span v-else>提交</span>
@@ -61,11 +61,12 @@
     </div>
   </transition>
 </template>
+
 <script>
 const UNAME_REG = /^[a-zA-Z_\u4E00-\u9FA5\uF900-\uFA2D][a-zA-Z0-9_\u4E00-\u9FA5\uF900-\uFA2D]*$/;
 
 export default {
-  name: "Signin",
+  name: "WechatSignup",
   data() {
     return {
       loading: false,

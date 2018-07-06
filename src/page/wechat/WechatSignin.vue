@@ -1,13 +1,13 @@
 <template>
   <div class="p-wechat-signin">
     <header class="m-box m-aln-center m-head-top m-pos-f m-main m-bb1">
-      <router-link 
-        tag="div" 
-        to="/" 
+      <router-link
+        tag="div"
+        to="/"
         class="m-box m-aln-center m-flex-grow1 m-flex-base0">
         <svg class="m-style-svg m-svg-def">
-          <use 
-            xmlns:xlink="http://www.w3.org/1999/xlink" 
+          <use
+            xmlns:xlink="http://www.w3.org/1999/xlink"
             xlink:href="#base-back"/>
         </svg>
       </router-link>
@@ -17,8 +17,8 @@
       <div class="m-box m-aln-center m-justify-end m-flex-grow1 m-flex-base0"/>
     </header>
     <!-- loading -->
-    <div 
-      v-if="loading" 
+    <div
+      v-if="loading"
       class="m-spinner pos-f">
       <div/>
       <div/>
@@ -30,13 +30,13 @@
       </transition>
       <transition name="pop">
         <div class="m-lim-width m-pos-f m-wechat-box">
-          <router-link 
-            tag="button" 
+          <router-link
+            tag="button"
             to="/wechat/signup">
             <a>注册新用户</a>
           </router-link>
-          <router-link 
-            tag="button" 
+          <router-link
+            tag="button"
             to="/wechat/bind">
             <a>绑定已有用户</a>
           </router-link>
@@ -45,6 +45,7 @@
     </div>
   </div>
 </template>
+
 <script>
 export default {
   name: "WechatSignin",
@@ -151,6 +152,7 @@ export default {
   }
 };
 </script>
+
 <style lang="less">
 .m-wechat-box {
   overflow: hidden;

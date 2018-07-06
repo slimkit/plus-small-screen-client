@@ -1,37 +1,38 @@
-import about from "@/page/about.vue";
+import AboutUs from "@/page/AboutUs.vue";
 
-import upgrade from "@/page/upgrade.vue";
+import SiteUpgrade from "@/page/SiteUpgrade.vue";
 
 /* TODO */
-import setting from "@/page/setting.vue";
+import Settings from "@/page/Settings.vue";
 
-import info from "@/page/info.vue";
-import profile from "@/page/profile.vue";
-import userHome from "@/page/UserHome.vue";
-import userFans from "@/page/UserFans.vue";
+import Profile from "@/page/Profile.vue";
+import UserInfo from "@/page/UserInfo.vue";
+import UserHome from "@/page/UserHome.vue";
+import UserFans from "@/page/UserFans.vue";
 /* TODO END */
 
-import discover from "@/page/discover.vue";
+import Discover from "@/page/Discover.vue";
 
-import findIndex from "@/page/find/Find.vue";
-import findPop from "@/page/find/FindPop.vue";
-import findRec from "@/page/find/FindRec.vue";
-import findNew from "@/page/find/FindNew.vue";
-import findNer from "@/page/find/FindNer.vue";
+import Find from "@/page/find/Find.vue";
+import FindPop from "@/page/find/FindPop.vue";
+import FindRec from "@/page/find/FindRec.vue";
+import FindNew from "@/page/find/FindNew.vue";
+import FindNer from "@/page/find/FindNer.vue";
 
-import wechatSignin from "@/page/wechat/wechat";
-import wechatSignup from "@/page/wechat/wechatSignup.vue";
-import wechatBindUser from "@/page/wechat/wechatBindUser.vue";
+import SearchUser from "@/page/find/SearchUser.vue";
 
-import location from "@/page/location.vue";
-import searchUser from "@/page/find/FindSearch.vue";
+import WechatSignin from "@/page/wechat/WechatSignin";
+import WechatSignup from "@/page/wechat/WechatSignup.vue";
+import WechatBindUser from "@/page/wechat/WechatBindUser.vue";
+
+import Location from "@/page/Location.vue";
 
 import $lstore from "@/plugins/lstore";
 
 export default [
   {
     path: "/discover",
-    component: discover,
+    component: Discover,
     meta: {
       title: "发现"
     }
@@ -40,7 +41,7 @@ export default [
     name: "find",
     path: "/find",
     redirect: "/find/pop",
-    component: findIndex,
+    component: Find,
     meta: {
       title: "找人",
       requiresAuth: true
@@ -48,28 +49,28 @@ export default [
     children: [
       {
         path: "pop",
-        component: findPop,
+        component: FindPop,
         meta: {
           keepAlive: true
         }
       },
       {
         path: "new",
-        component: findNew,
+        component: FindNew,
         meta: {
           keepAlive: true
         }
       },
       {
         path: "rec",
-        component: findRec,
+        component: FindRec,
         meta: {
           keepAlive: true
         }
       },
       {
         path: "ner",
-        component: findNer,
+        component: FindNer,
         meta: {
           keepAlive: true
         },
@@ -83,7 +84,7 @@ export default [
   },
   {
     path: "/search/user",
-    component: searchUser,
+    component: SearchUser,
     meta: {
       title: "找人",
       keepAlive: true
@@ -91,11 +92,11 @@ export default [
   },
   {
     path: "/location",
-    component: location
+    component: Location
   },
   {
     path: "/profile",
-    component: profile,
+    component: Profile,
     meta: {
       title: "我",
       requiresAuth: true
@@ -103,7 +104,7 @@ export default [
   },
   {
     path: "/users/:userID(\\d+)",
-    component: userHome,
+    component: UserHome,
     meta: {
       title: "个人主页",
       keepAlive: true
@@ -111,7 +112,7 @@ export default [
   },
   {
     name: "userfans",
-    component: userFans,
+    component: UserFans,
     path: "/users/:userID(\\d+)/:type(followers|followings)",
     meta: {
       title: "粉丝",
@@ -121,7 +122,7 @@ export default [
   },
   {
     path: "/info",
-    component: info,
+    component: UserInfo,
     meta: {
       title: "个人资料",
       requiresAuth: true
@@ -129,7 +130,7 @@ export default [
   },
   {
     path: "/setting",
-    component: setting,
+    component: Settings,
     meta: {
       title: "设置",
       requiresAuth: true
@@ -137,14 +138,14 @@ export default [
   },
   {
     path: "/about",
-    component: about,
+    component: AboutUs,
     meta: {
       title: "关于我们"
     }
   },
   {
     path: "/wechat",
-    component: wechatSignin,
+    component: WechatSignin,
     meta: {
       title: "登录中...",
       forGuest: true
@@ -159,7 +160,7 @@ export default [
   },
   {
     path: "/wechat/signup",
-    component: wechatSignup,
+    component: WechatSignup,
     meta: {
       title: "完善资料",
       forGuest: true
@@ -172,7 +173,7 @@ export default [
   },
   {
     path: "/wechat/bind",
-    component: wechatBindUser,
+    component: WechatBindUser,
     meta: {
       title: "绑定已有账号",
       forGuest: true
@@ -184,7 +185,7 @@ export default [
   },
   {
     path: "/upgrade",
-    component: upgrade,
+    component: SiteUpgrade,
     meta: {
       title: "功能开发中..."
     }

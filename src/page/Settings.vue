@@ -59,7 +59,7 @@
 import bus from "@/bus.js";
 
 export default {
-  name: "Setting",
+  name: "Settings",
   methods: {
     signOut() {
       const actions = [

@@ -1,6 +1,6 @@
 <template>
-  <transition 
-    enter-active-class="animated bounceInRight" 
+  <transition
+    enter-active-class="animated bounceInRight"
     leave-active-class="animated bounceOutLeft">
     <div class="p-signin m-pos-f">
       <header class="m-box m-aln-center m-head-top m-pos-f m-main m-bb1">
@@ -25,12 +25,12 @@
               placeholder="用户名/手机号/邮箱"
               @focus="onFocus">
           </div>
-          <svg 
+          <svg
             v-show="account.length > 0"
             class="m-style-svg m-svg-def"
             @click="account = ''">
-            <use 
-              xmlns:xlink="http://www.w3.org/1999/xlink" 
+            <use
+              xmlns:xlink="http://www.w3.org/1999/xlink"
               xlink:href="#base-clean"/>
           </svg>
         </div>
@@ -44,19 +44,19 @@
               type="text"
               placeholder="输入6位以上登录密码"
               @focus="onFocus">
-            <input 
+            <input
               v-else
-              id="password" 
+              id="password"
               v-model="password"
               type="password"
               placeholder="输入6位以上登录密码"
-              @focus="onFocus" 
+              @focus="onFocus"
             >
           </div>
           <svg
             class="m-style-svg m-svg-def"
             @click="eye=!eye">
-            <use 
+            <use
               :xlink:href="`#eye-${eye?&quot;open&quot;:&quot;close&quot;}`"
               xmlns:xlink="http://www.w3.org/1999/xlink"/>
           </svg>
@@ -67,18 +67,18 @@
             <span v-if="err">{{ (err | plusMessageFirst) }}</span>
           </transition>
         </div>
-        <div 
-          class="m-form-row" 
+        <div
+          class="m-form-row"
           style="border: 0">
           <button
             :disabled="disabled"
             class="m-long-btn m-signin-btn"
             @click="bindUser">
-            <svg 
-              v-if="loading" 
+            <svg
+              v-if="loading"
               class="m-style-svg m-svg-def">
-              <use 
-                xmlns:xlink="http://www.w3.org/1999/xlink" 
+              <use
+                xmlns:xlink="http://www.w3.org/1999/xlink"
                 xlink:href="#base-loading"/>
             </svg>
             <span v-else>绑定账号</span>
@@ -106,6 +106,7 @@ function strLength(str) {
   }
   return totalLength;
 }
+
 export default {
   name: "WechatBindUser",
   data: () => ({

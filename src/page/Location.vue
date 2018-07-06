@@ -8,14 +8,14 @@
         <div class="m-flex-grow1 m-flex-shrink1 m-flex-base0">
           <div class="m-search-box">
             <svg class="m-style-svg m-svg-def">
-              <use 
-                xmlns:xlink="http://www.w3.org/1999/xlink" 
+              <use
+                xmlns:xlink="http://www.w3.org/1999/xlink"
                 xlink:href="#base-search"/>
             </svg>
-            <form 
-              action="#" 
+            <form
+              action="#"
               onsubmit="return false">
-              <input 
+              <input
                 v-model="keyword"
                 type="search"
                 placeholder="搜索"
@@ -33,22 +33,22 @@
         <div v-if="showHot">
           <div class="m-box m-aln-center m-justify-bet m-main current-location">
             <span>当前定位</span>
-            <p 
-              :class="{placeholder: currentTxt.length === 0}" 
-              class="m-flex-grow1 m-flex-shrink1 m-flex-base0 m-text-cut" 
+            <p
+              :class="{placeholder: currentTxt.length === 0}"
+              class="m-flex-grow1 m-flex-shrink1 m-flex-base0 m-text-cut"
               @click="goBack">{{ currentTxt || placeholder }}</p>
-            <svg 
-              class="m-style-svg m-svg-def" 
+            <svg
+              class="m-style-svg m-svg-def"
               @click="getCurrentPosition">
-              <use 
-                :xlink:href="iconType" 
+              <use
+                :xlink:href="iconType"
                 xmlns:xlink="http://www.w3.org/1999/xlink"/>
             </svg>
           </div>
           <div class="m-box-model">
             <span class="label">热门城市</span>
             <ul class="hot-list m-main">
-              <li 
+              <li
                 v-for="(city, index) in hotCities"
                 :key="`${city}&${index}`"
                 class="m-text-cut m-text-c"
@@ -58,11 +58,11 @@
             </ul>
           </div>
         </div>
-        <div 
-          v-else 
+        <div
+          v-else
           class="m-box-model">
-          <div 
-            v-for="city in cities" 
+          <div
+            v-for="city in cities"
             :key="city"
             class="m-box m-aln-center m-bb1 m-main city-item"
             @click="selectedHot(city.slice(city.lastIndexOf(`，`)))">
@@ -75,13 +75,14 @@
 </template>
 
 <script>
+import _ from "lodash";
 import {
   getGeo,
   getHotCities,
   searchCityByName,
   getCurrentPosition
 } from "@/api/bootstrappers.js";
-import _ from "lodash";
+
 export default {
   name: "Location",
   props: {
@@ -129,6 +130,27 @@ export default {
         this.$store.commit("SAVE_H5_POSITION", val);
       }
     }
+  },
+  mounted() {
+    this.$lstore.hasData("H5_CURRENT_POSITION")
+      ? (this.currentPos = this.$lstore.getData("H5_CURRENT_POSITION"))
+      : this.getCurrentPosition();
+  },
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      const { fullPath } = from;
+      vm.goBack =
+        fullPath.indexOf("find") > -1
+          ? () => {
+              !vm.loading && vm.$router.push("/find/ner");
+            }
+          : vm.goBack;
+    });
+  },
+  created() {
+    getHotCities().then(hotCities => {
+      this.hotCities = hotCities;
+    });
   },
   methods: {
     goBack() {
@@ -187,27 +209,6 @@ export default {
         this.$nextTick(this.goBack);
       });
     }
-  },
-  mounted() {
-    this.$lstore.hasData("H5_CURRENT_POSITION")
-      ? (this.currentPos = this.$lstore.getData("H5_CURRENT_POSITION"))
-      : this.getCurrentPosition();
-  },
-  beforeRouteEnter(to, from, next) {
-    next(vm => {
-      const { fullPath } = from;
-      vm.goBack =
-        fullPath.indexOf("find") > -1
-          ? () => {
-              !vm.loading && vm.$router.push("/find/ner");
-            }
-          : vm.goBack;
-    });
-  },
-  created() {
-    getHotCities().then(hotCities => {
-      this.hotCities = hotCities;
-    });
   }
 };
 </script>

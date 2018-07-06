@@ -1,24 +1,24 @@
 <template>
   <div class="p-profile">
     <header class="m-box m-aln-center m-justify-center m-main m-pos-f m-bb1 m-head-top">我</header>
-    <main 
-      class="m-box-model" 
+    <main
+      class="m-box-model"
       style="padding-top: .9rem">
       <div class="m-box-model m-main m-pr-info">
-        <router-link 
-          tag="section" 
-          class="m-box m-aln-center" 
+        <router-link
+          tag="section"
+          class="m-box m-aln-center"
           to="/info">
-          <avatar 
-            :user="user" 
+          <avatar
+            :user="user"
             size="big" />
           <div class="m-text-box m-flex-grow1 m-flex-shrink1 m-flex-base0 m-pr-user-info">
             <h4 class="m-pr-username">{{ user.name }}</h4>
             <p class="m-pr-bio m-text-cut-2">{{ user.bio || "这家伙很懒,什么也没有留下" }}</p>
           </div>
           <svg class="m-style-svg m-svg-def m-entry-append">
-            <use 
-              xmlns:xlink="http://www.w3.org/1999/xlink" 
+            <use
+              xmlns:xlink="http://www.w3.org/1999/xlink"
               xlink:href="#base-arrow-r"/>
           </svg>
         </router-link>
@@ -45,31 +45,31 @@
       </div>
       <div class="m-box-model m-pr-entrys">
         <ul class="m-box-model m-entry-group">
-          <router-link 
-            :to="`/users/${user.id}`" 
-            tag="li" 
+          <router-link
+            :to="`/users/${user.id}`"
+            tag="li"
             class="m-entry">
             <svg class="m-style-svg m-svg-def m-entry-prepend">
               <use xlink:href="#profile-home"/>
             </svg>
             <span class="m-text-box m-flex-grow1">个人主页</span>
             <svg class="m-style-svg m-svg-def m-entry-append">
-              <use 
-                xmlns:xlink="http://www.w3.org/1999/xlink" 
+              <use
+                xmlns:xlink="http://www.w3.org/1999/xlink"
                 xlink:href="#base-arrow-r"/>
             </svg>
           </router-link>
-          <router-link 
-            to="/profile/news/released" 
-            tag="li" 
+          <router-link
+            to="/profile/news/released"
+            tag="li"
             class="m-entry">
             <svg class="m-style-svg m-svg-def m-entry-prepend">
               <use xlink:href="#profile-plane"/>
             </svg>
             <span class="m-text-box m-flex-grow1">我的投稿</span>
             <svg class="m-style-svg m-svg-def m-entry-append">
-              <use 
-                xmlns:xlink="http://www.w3.org/1999/xlink" 
+              <use
+                xmlns:xlink="http://www.w3.org/1999/xlink"
                 xlink:href="#base-arrow-r"/>
             </svg>
           </router-link>
@@ -115,17 +115,17 @@
               <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#base-arrow-r"></use>
             </svg> -->
           </li>
-          <router-link 
-            to="/profile/collection/feeds" 
-            tag="li" 
+          <router-link
+            to="/profile/collection/feeds"
+            tag="li"
             class="m-entry">
             <svg class="m-style-svg m-svg-def m-entry-prepend">
               <use xlink:href="#profile-collect"/>
             </svg>
             <span class="m-text-box m-flex-grow1">收藏</span>
             <svg class="m-style-svg m-svg-def m-entry-append">
-              <use 
-                xmlns:xlink="http://www.w3.org/1999/xlink" 
+              <use
+                xmlns:xlink="http://www.w3.org/1999/xlink"
                 xlink:href="#base-arrow-r"/>
             </svg>
           </router-link>
@@ -140,17 +140,17 @@
             <span class="m-entry-extra">{{ verified ? '已认证' : '未认证' }}</span>
             <!-- <i class="m-style-svg m-svg-def m-entry-append"></i> -->
           </li>
-          <router-link 
-            to="/setting" 
-            tag="li" 
+          <router-link
+            to="/setting"
+            tag="li"
             class="m-entry">
             <svg class="m-style-svg m-svg-def m-entry-prepend">
               <use xlink:href="#profile-setting"/>
             </svg>
             <span class="m-text-box m-flex-grow1">设置</span>
             <svg class="m-style-svg m-svg-def m-entry-append">
-              <use 
-                xmlns:xlink="http://www.w3.org/1999/xlink" 
+              <use
+                xmlns:xlink="http://www.w3.org/1999/xlink"
                 xlink:href="#base-arrow-r"/>
             </svg>
           </router-link>

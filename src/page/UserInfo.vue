@@ -156,10 +156,11 @@
       @close="switchPosition" />
   </div>
 </template>
+
 <script>
 import bus from "@/bus.js";
 import { mapState } from "vuex";
-import location from "@/page/location.vue";
+import Location from "@/page/Location.vue";
 
 // import { getFileUrl } from "@/util/";
 import getFirstFrameOfGif from "@/util/getFirstFrameOfGif.js";
@@ -184,9 +185,9 @@ if (!HTMLCanvasElement.prototype.toBlob) {
 }
 
 export default {
-  name: "Info",
+  name: "UserInfo",
   components: {
-    location
+    Location
   },
   data() {
     return {
@@ -395,7 +396,7 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .p-info input[type="text"] {
   height: 100%;
   font-size: 28px;
