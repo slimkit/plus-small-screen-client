@@ -5,10 +5,11 @@
       <section class="userInfo">
         <router-link
           :class="`${prefixCls}-item-top-link`"
-          :to="`/users/${comment.user_id}`">{{ comment.user.name
-          }}
+          :to="`/users/${comment.user_id}`">
+          {{ comment.user.name }}
         </router-link>
-        <span v-if="comment.reply_user"> 回复</span> <span v-else> 评论了你的动态</span>
+        <span v-if="comment.reply_user"> 回复</span>
+        <span v-else> 评论了你的动态</span>
         <router-link
           v-if="comment.reply_user"
           :class="`${prefixCls}-item-top-link`"
@@ -75,6 +76,7 @@
     </div>
   </div>
 </template>
+
 <script>
 const prefixCls = "msgList";
 const url = "/feeds/";

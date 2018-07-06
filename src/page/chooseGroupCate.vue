@@ -1,15 +1,15 @@
 <template>
   <transition name="fade">
-    <div 
-      v-if="show" 
+    <div
+      v-if="show"
       class="m-box-model m-pos-f p-choose-category m-main">
       <header class="m-box m-aln-center m-justify-bet m-flex-grow0 m-flex-shrink0 m-head-top m-main m-bb1">
         <div class="m-flex-grow1 m-flex-shrink1">
-          <svg 
-            class="m-style-svg m-svg-def" 
+          <svg
+            class="m-style-svg m-svg-def"
             @click="cancel">
-            <use 
-              xmlns:xlink="http://www.w3.org/1999/xlink" 
+            <use
+              xmlns:xlink="http://www.w3.org/1999/xlink"
               xlink:href="#base-back"/>
           </svg>
         </div>
