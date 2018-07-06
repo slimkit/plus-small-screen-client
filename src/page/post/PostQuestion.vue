@@ -39,7 +39,7 @@
         v-show="step === 1"
         key="step1"
         class="m-pos-f m-box-model m-flex-grow1 m-flex-shrink1 m-main">
-        <div class="m-box m-flex-grow0 m-shrink0 m-bb1 m-lim-width question-title">
+        <div class="m-box m-flex-none m-bb1 m-lim-width question-title">
           <content-text
             ref="contentText"
             :rows="1"
@@ -50,7 +50,7 @@
             @input="serachQuestionByKey"
           />
         </div>
-        <ul class="m-box-model m-flex-grow1 m-flex-shrink1 m-lim-width question-list">
+        <ul class="m-box-model m-flex-auto m-lim-width question-list">
           <router-link
             v-for="q in questions"
             v-if="q.id"
@@ -125,8 +125,7 @@
             v-for="topic in topics"
             :key="topic.id"
             class="m-box m-aln-center m-topic m-bb1"
-            @click="selectedTopic(topic)"
-          >
+            @click="selectedTopic(topic)" >
             <img
               :src="topic.avatar"
               class="m-flex-grow0 m-flex-shrink0 m-topic-avatar">
@@ -362,7 +361,9 @@ export default {
     top: 90px;
   }
   .question-title {
-    padding: 0 40px;
+    flex: none;
+    padding: 35px 40px;
+
     input {
       font-size: 30px;
       line-height: 1.5;
@@ -370,6 +371,8 @@ export default {
     }
   }
   .question-list {
+    overflow: auto;
+
     li {
       border-bottom: 1px solid @border-color; /*no*/
       color: @text-color2;
@@ -380,12 +383,12 @@ export default {
   .m-reles-body {
     height: auto;
     margin-bottom: 0;
+    padding-bottom: 0;
 
     textarea {
       font-size: 0.32rem;
       line-height: 1.5;
       overflow: auto;
-      margin-top: 0.35rem;
       padding: 0 0.3rem;
       background-color: transparent;
       outline: 0;
