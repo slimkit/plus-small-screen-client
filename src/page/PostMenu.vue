@@ -4,8 +4,9 @@
       <div
         v-if="show"
         class="m-pop-box"
-        style="background-color: rgba(255, 255, 255, .95)"
-        @click="cancel"/>
+        @click="cancel">
+        <div class="logo"/>
+      </div>
     </transition>
     <transition @after-enter="transitionComplete">
       <div
@@ -148,6 +149,19 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.m-pop-box {
+  background: rgba(255, 255, 255, 0.95);
+
+  .logo {
+    position: absolute;
+    top: 0;
+    left: 20%;
+    width: 60%;
+    height: 40%;
+    background: url("~@/images/logo_thinksns+@2x.png") no-repeat center;
+    background-size: cover;
+  }
+}
 .m-post-menu-con {
   position: fixed;
   left: 0;
