@@ -1,5 +1,5 @@
 // 当前构建版本号 每次 release tag 后将此版本推进
-const version = "v4.0.0-rc.6";
+const version = "v4.0.0-rc.7";
 
 import "./style/tsplus.less";
 import "github-markdown-css";
