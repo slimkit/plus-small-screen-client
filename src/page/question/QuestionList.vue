@@ -34,8 +34,8 @@
     <main class="module-questions-main">
       <div
         v-if="loading"
-        :class="classNamebuilder('main-loading')">
-        <icon-loading :class="classNamebuilder('main-loading_icon')" />
+        class="main-loading">
+        <icon-loading class="main-loading_icon" />
       </div>
       <question-card
         v-for="question in questions"
@@ -43,18 +43,18 @@
         :question="question" />
       <div
         v-if="questions.length && !loadmore"
-        :class="classNamebuilder('main-loadmore')">
+        class="main-loadmore">
         <button
-          :class="classNamebuilder('main-loadmore_button')"
+          class="main-loadmore_button"
           @click="fetchQuestionsMore">
           加载更多
         </button>
       </div>
       <div
         v-else-if="loadmore"
-        :class="[classNamebuilder('main-loadmore')]">
-        <button :class="[classNamebuilder('main-loadmore_button'), 'active']">
-          <icon-loading :class="classNamebuilder('main-loading_icon')" />
+        class="main-loadmore">
+        <button class="main-loadmore_button active">
+          <icon-loading class="main-loading_icon" />
         </button>
       </div>
     </main>
@@ -168,27 +168,17 @@ export default {
           this.loadmore = false;
           this.$Message.error(message(data, "加载失败，请刷新重试！"));
         });
-    },
-
-    /**
-     * Class name builder.
-     *
-     * @param {string} className
-     * @return {string}
-     * @author Seven Du <shiweidu@outlook.com>
-     */
-    classNamebuilder(className) {
-      return `module-questions-${className}`;
     }
   }
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .module-questions {
   padding-top: 182px;
   padding-bottom: 100px;
   min-height: 100vh;
+
   .module-questions-nav {
     position: fixed;
     top: 90px;
@@ -209,28 +199,33 @@ export default {
     @media screen and (min-width: 769px) {
       width: 768px;
     }
+
     > a {
       color: #d7d8d8;
     }
+
     .active {
       color: #333;
     }
   }
+
   .module-questions-main {
-    &-loading {
+    .main-loading {
       display: flex;
       justify-content: center;
       align-items: center;
       padding: 24px;
+
       &_icon {
         width: 120px;
         height: 30px;
         fill: #58b6d7;
       }
     }
-    &-loadmore {
+    .main-loadmore {
       margin: 24px auto;
       text-align: center;
+
       &_button {
         padding: 12px 24px;
         color: #58b6d7;
@@ -241,6 +236,7 @@ export default {
         display: inline-flex;
         justify-content: center;
         align-items: center;
+
         &.active {
           color: #aaa;
           border: none;

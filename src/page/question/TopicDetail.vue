@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="p-topic-detail">
     <header class="m-box m-pos-f m-main m-head-top m-bb1">
       <div class="m-box m-aln-center m-flex-grow1 m-flex-base0">
         <svg
@@ -24,10 +24,10 @@
 
     <!-- Topic base -->
     <main style="padding-top: 0.9rem">
-      <div :class="classNameBuilder('topic')">
+      <div class="topic">
         <img src="https://images.zhibocloud.cn/question/topics/000/000/000/02.png">
         <div class="title">
-          <h3 class="topic">{{ topic.name }}</h3>
+          <h3 class="topic-name">{{ topic.name }}</h3>
           <span class="label">
             <span>{{ topic.follows_count }}</span>&nbsp;关注
             ·
@@ -49,29 +49,29 @@
       </div>
 
       <!-- Topic desc -->
-      <div :class="classNameBuilder('topic-desc')">
+      <div class="topic-desc">
         话题简介：{{ topic.description }}
       </div>
 
       <!-- Experts -->
-      <div :class="classNameBuilder('experts')">
+      <div class="experts">
         <span>{{ topic.experts_count }}位相关专家</span>
         <div>
           <user-avatar
             v-for="(user, index) in topic.experts"
-            :class="classNameBuilder('experts-user')"
             :size="0.5"
             :src="user.avatar"
             :sex="user.sex"
             :style="[{ zIndex: topic.experts.length - index }]"
-            :key="user.id" />
+            :key="user.id"
+            class="experts-user" />
         </div>
       </div>
 
       <!-- Types nav -->
       <nav
         ref="types"
-        :class="classNameBuilder('types')">
+        class="types">
         <router-link
           :to="{ path: `/question-topics/${id}` }"
           replace
@@ -102,9 +102,9 @@
       <!-- Questions -->
       <load-more
         ref="load"
-        :class="[classNameBuilder('questions')]"
         :on-refresh="handleRefresh"
-        :on-load-more="handleLoadQuestions" >
+        :on-load-more="handleLoadQuestions"
+        class="questions" >
         <question-card
           v-for="question in questions"
           :key="question.id"
@@ -161,9 +161,6 @@ export default {
     document.addEventListener("scroll", this.handleScrolling);
   },
   methods: {
-    classNameBuilder(className) {
-      return `page-question-topic-${className}`;
-    },
     handleRefresh() {
       api
         .show(this.id)
@@ -259,20 +256,25 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.page-question-topic {
-  width: 100%;
-  height: auto;
-  &-share {
+.p-topic-detail {
+  main {
+    width: 100%;
+    height: auto;
+  }
+
+  .share {
     width: 40px;
     height: 90px;
     background-color: transparent;
     margin-top: 20px;
+
     > .icon {
       width: 40px;
       height: 40px;
     }
   }
-  &-topic {
+
+  .topic {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -281,11 +283,13 @@ export default {
     padding: 28px 43px;
     background-color: #fff;
     border-bottom: solid 1px #d7d8d8;
+
     > img {
       width: 120px;
       height: 120px;
       margin-right: 18px;
     }
+
     .title {
       flex-grow: 1;
       display: inline-flex;
@@ -293,7 +297,8 @@ export default {
       flex-direction: column;
       height: 120px;
       justify-content: center;
-      .topic {
+
+      .topic-name {
         margin-top: 17px;
         font-size: 32px;
         font-weight: normal;
@@ -303,6 +308,7 @@ export default {
         letter-spacing: 0px;
         color: #333;
       }
+
       .label {
         margin-top: 19px;
         height: 26px;
@@ -312,11 +318,13 @@ export default {
         line-height: 0px;
         letter-spacing: 0px;
         color: #666;
+
         > span {
           color: #59b6d7;
         }
       }
     }
+
     .follow {
       height: 50px;
       background-color: #fff;
@@ -329,26 +337,30 @@ export default {
       line-height: 5px;
       letter-spacing: 0px;
       outline: none;
+
       > span {
         width: 20px;
         height: 20px;
         font-size: 36px;
         margin-right: 2px;
       }
+
       &.active {
         color: #ccc;
         border: solid 2px #ccc;
       }
     }
   }
-  &-topic-desc {
+
+  .topic-desc {
     width: 100%;
     font-size: 28px;
     color: #666;
     padding: 29px 30px;
     background-color: #fff;
   }
-  &-experts {
+
+  .experts {
     width: 100%;
     padding: 30px;
     display: flex;
@@ -356,20 +368,24 @@ export default {
     border-top: solid 1px #d7d8d8;
     justify-content: space-between;
     align-items: center;
+
     > span {
       font-size: 28px;
       color: #999;
     }
-    &-user {
+
+    .user {
       position: relative;
       border: solid 1px #fff;
       margin-left: -20px;
+
       &:first-child {
         margin-left: 0;
       }
     }
   }
-  &-types {
+
+  .types {
     margin-top: -100px;
     top: 116px;
     display: flex;
@@ -387,14 +403,17 @@ export default {
     border-bottom: solid 0.01rem #d7d8d8;
     z-index: 100;
     position: relative;
+
     > a {
       color: #999;
     }
+
     .active {
       color: #333;
     }
   }
-  &-questions {
+
+  .questions {
     padding-top: 116px;
   }
 }

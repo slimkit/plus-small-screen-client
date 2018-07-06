@@ -3,7 +3,7 @@
     class="question-answer-item"
     @click="viewDetail">
     <div
-      :class="classNameBuilder('avatar')"
+      class="avatar"
       @click.stop="viewUser">
       <user-avatar
         :size="0.56"
@@ -11,21 +11,21 @@
         :src="user.avatar"
         :sex="user.sex" />
     </div>
-    <div :class="classNameBuilder('main')">
-      <h3 :class="classNameBuilder('main-header')">
+    <div class="main">
+      <h3 class="main-header">
         <template @click.stop="viewUser">{{ anonymity ? '匿名用户' : user.name }}</template>
         <span>{{ answer.created_at | time2tips }}</span>
       </h3>
-      <div :class="classNameBuilder('main-body')">{{ answer.body | markdownText }}</div>
-      <div :class="classNameBuilder('main-button')">
+      <div class="main-body">{{ answer.body | markdownText }}</div>
+      <div class="main-button">
         <button @click.stop="handleLikeTarget">
-          <svg :class="[classNameBuilder('icon')]">
+          <svg class="icon">
             <use :xlink:href="answer.liked ? '#feed-like' : '#feed-unlike'" />
           </svg>
           {{ answer.likes_count | formatNum }}
         </button>
         <span>
-          <svg :class="classNameBuilder('icon')">
+          <svg class="icon">
             <use xlink:href="#message-comments" />
           </svg>
           {{ answer.comments_count | formatNum }}
@@ -61,9 +61,6 @@ export default {
     }
   },
   methods: {
-    classNameBuilder(className) {
-      return `question-answer-item-${className}`;
-    },
     handleLike() {
       like(this.answer.id)
         .then(() => {
@@ -122,17 +119,20 @@ export default {
   justify-content: flex-start;
   align-items: flex-start;
   flex-direction: row;
-  &-avatar {
+
+  .avatar {
     width: 112px;
     min-width: 112px;
     max-width: 112px;
     flex-grow: 1;
     text-align: center;
   }
-  &-main {
+
+  .main {
     flex-grow: 1;
     width: 100%;
-    &-header {
+
+    .main-header {
       width: 100%;
       font-size: 26px;
       font-weight: normal;
@@ -140,6 +140,7 @@ export default {
       color: #333;
       margin-top: 0;
       margin-bottom: 29px;
+
       > span {
         float: right;
         font-size: 24px;
@@ -148,7 +149,8 @@ export default {
         color: #ccc;
       }
     }
-    &-body {
+
+    .main-body {
       text-align: initial;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -163,35 +165,38 @@ export default {
       margin-bottom: 28px;
       line-height: 1.4;
     }
-    &-button {
+
+    .main-button {
       display: flex;
       flex-direction: row;
       border-top: solid 1px #d7d8d8;
       padding: 22px 0;
+
       > * {
         margin-right: 90px;
         font-size: 24px;
         font-weight: normal;
         font-stretch: normal;
         color: #b3b3b3;
-        .question-answer-item-icon {
+
+        .icon {
           margin-right: 4px;
+          width: 30px;
+          height: 30px;
+          margin-bottom: -6px;
+          fill: #999;
+
           &.active {
             fill: red;
           }
         }
       }
+
       button {
         background-color: transparent;
         outline: none;
       }
     }
-  }
-  &-icon {
-    width: 30px;
-    height: 30px;
-    margin-bottom: -6px;
-    fill: #999;
   }
 }
 </style>

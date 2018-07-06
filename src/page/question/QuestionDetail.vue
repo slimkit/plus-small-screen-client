@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="p-question-detail">
     <header class="m-box m-pos-f m-main m-bb1 m-head-top">
       <div class="m-box m-aln-center m-flex-grow1 m-flex-base0">
         <svg
@@ -15,16 +15,16 @@
       </div>
       <div class="m-box m-aln-center m-flex-grow1 m-flex-base0"/>
     </header>
-    <div :class="classNameBuilder('container')">
+    <div class="container">
       <load-more
         ref="questionLoadContainer"
         :on-refresh="handleRefreshAnswers"
         :on-load-more="handleLoadMoreAnswers" >
         <!-- Main -->
-        <div :class="classNameBuilder('main')">
+        <div class="main">
 
           <!-- Topics -->
-          <div :class="classNameBuilder('main-topics')">
+          <div class="main-topics">
             <router-link
               v-for="topic in topics"
               :to="`/question-topics/${topic.id}`"
@@ -35,16 +35,16 @@
           </div>
 
           <!-- Title -->
-          <h3 :class="classNameBuilder('main-title')">{{ question.subject }}</h3>
+          <h3 class="main-title">{{ question.subject }}</h3>
 
           <!-- Body -->
           <div
-            :class="['markdown-body', classNameBuilder('main-body')]"
+            class="markdown-body main-body"
             v-html="htmlBody"/>
 
           <!-- watch -->
-          <div :class="classNameBuilder('main-watch')">
-            <div :class="classNameBuilder('main-watch-count')">
+          <div class="main-watch">
+            <div class="main-watch-count">
               <span class="follow-count">{{ question.watchers_count }}&nbsp;关注</span>
               <span v-show="question.amount">
                 <span>·</span>
@@ -58,23 +58,23 @@
             <!-- Watch question button -->
             <button
               v-if="question.watched"
-              :class="[classNameBuilder('main-watch-follow'), 'active']"
+              class="main-watch-follow active"
               @click="handleUnwatch" >
               <span>✓</span>已关注
             </button>
             <button
               v-else
-              :class="classNameBuilder('main-watch-follow')"
+              class="main-watch-follow"
               @click="handleWatch" >
               <span>+</span>关注
             </button>
           </div>
 
           <!-- Button -->
-          <div :class="classNameBuilder('main-button')">
+          <div class="main-button">
             <div class="button">
               <svg
-                :class="classNameBuilder('main-button-icon')"
+                class="main-button-icon"
                 fill="#666">
                 <use xlink:href="#base-reward" />
               </svg>
@@ -83,7 +83,7 @@
             <span/>
             <div class="button">
               <svg
-                :class="classNameBuilder('main-button-icon')"
+                class="main-button-icon"
                 fill="#666">
                 <use xlink:href="#base-edit" />
               </svg>
@@ -93,7 +93,7 @@
         </div>
 
         <!-- Amswers -->
-        <div :class="classNameBuilder('answers-tool')">
+        <div class="answers-tool">
           <div>{{ question.answers_count }}个回答</div>
           <button @click="handleTargetAnswersOrder">
             {{ answersTimeOrder ? '时间排序' : '默认排序' }}
@@ -112,22 +112,22 @@
           :answer="answer" />
       </load-more>
     </div>
-    <div :class="classNameBuilder('tabbar')">
+    <div class="tabbar">
       <a
-        :class="classNameBuilder('tabbar-item')"
+        class="tabbar-item"
         href="#">
         <svg
-          :class="classNameBuilder('tabbar-icon')"
+          class="tabbar-icon"
           fill="#999">
           <use xlink:href="#message-comments" />
         </svg>
         评论
       </a>
       <a
-        :class="classNameBuilder('tabbar-item')"
+        class="tabbar-item"
         href="#">
         <svg
-          :class="classNameBuilder('tabbar-icon')"
+          class="tabbar-icon"
           fill="#999">
           <use xlink:href="#base-share" />
         </svg>
@@ -135,20 +135,20 @@
       </a>
       <a
         v-show="editer"
-        :class="classNameBuilder('tabbar-item')"
+        class="tabbar-item"
         href="#">
         <svg
-          :class="classNameBuilder('tabbar-icon')"
+          class="tabbar-icon"
           fill="#999">
           <use xlink:href="#edit" />
         </svg>
         编辑
       </a>
       <a
-        :class="classNameBuilder('tabbar-item')"
+        class="tabbar-item"
         href="#">
         <svg
-          :class="classNameBuilder('tabbar-icon')"
+          class="tabbar-icon"
           fill="#999">
           <use xlink:href="#base-more" />
         </svg>
@@ -238,16 +238,6 @@ export default {
     this.loadContainer.beforeRefresh();
   },
   methods: {
-    /**
-     * Class name builder.
-     *
-     * @param {string} className
-     * @return {string}
-     * @author Seven Du <shiweidu@outlook.com>
-     */
-    classNameBuilder(className) {
-      return `page-question-${className}`;
-    },
     fetch(cb = null) {
       show(this.$route.params.id)
         .then(({ data }) => {
@@ -320,11 +310,12 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.page-question {
-  &-container {
+.p-question-detail {
+  .container {
     padding-top: 90px;
   }
-  &-tabbar {
+
+  .tabbar {
     position: fixed;
     z-index: 1;
     display: flex;
@@ -335,10 +326,12 @@ export default {
     background-color: #fff;
     bottom: 0;
     border-top: solid 1px #d7d8d8;
+
     @media screen and (min-width: 769px) {
       width: 768px;
     }
-    &-item {
+
+    .tabbar-item {
       flex-grow: 1;
       display: inline-flex;
       justify-content: center;
@@ -347,23 +340,27 @@ export default {
       color: #999;
       font-size: 12px;
     }
-    &-icon {
+
+    .tabbar-icon {
       width: 32px;
       height: 32px;
       margin-bottom: 6px;
     }
   }
-  &-main {
+
+  .main {
     background-color: #fff;
     padding: 30px 30px 0;
     width: 100%;
     max-width: 100%;
     height: auto;
-    &-topics {
+
+    .main-topics {
       width: 100%;
       height: auto;
       padding: 0 0 17px 0;
       border-bottom: solid 1px #d7d8d8;
+
       > .label {
         display: inline-block;
         height: 41px;
@@ -378,18 +375,21 @@ export default {
         margin-bottom: 10px;
       }
     }
-    &-title {
+
+    .main-title {
       font-size: 35px;
       color: #333333;
       font-weight: normal;
       line-height: 1.4;
       margin-top: 24px;
     }
-    &-body {
+
+    .main-body {
       font-size: 28px;
       margin-top: 20px;
     }
-    &-watch {
+
+    .main-watch {
       width: 100%;
       font-size: 26px;
       color: #999;
@@ -398,7 +398,8 @@ export default {
       flex-direction: row;
       justify-content: space-between;
       align-items: center;
-      &-follow {
+
+      .main-watch-follow {
         height: 50px;
         background-color: #fff;
         border-radius: 8px;
@@ -410,24 +411,29 @@ export default {
         line-height: 5px;
         letter-spacing: 0px;
         outline: none;
+
         > span {
           width: 20px;
           height: 20px;
           font-size: 36px;
           margin-right: 2px;
         }
+
         &.active {
           color: #ccc;
           border: solid 2px #ccc;
         }
       }
-      &-count {
+
+      .main-watch-count {
         .follow-count {
           margin-right: 12px;
         }
+
         .shang {
           margin-left: 12px;
           color: #fca308;
+
           > span {
             color: #fca308;
             width: 20px;
@@ -443,7 +449,8 @@ export default {
         }
       }
     }
-    &-button {
+
+    .main-button {
       display: flex;
       justify-content: space-around;
       align-items: center;
@@ -452,6 +459,7 @@ export default {
       height: 90px;
       border-top: solid 1px #d7d8d8;
       font-size: 28px;
+
       > .button {
         flex-grow: 1;
         width: 100%;
@@ -463,12 +471,14 @@ export default {
         align-items: center;
         color: #666;
       }
+
       > span {
         height: 40px;
         width: 2px;
         background-color: #d7d8d8;
       }
-      &-icon {
+
+      .main-button-icon {
         width: 30px;
         height: 30px;
         margin-top: -2px;
@@ -476,7 +486,8 @@ export default {
       }
     }
   }
-  &-answers-tool {
+
+  .answers-tool {
     position: sticky;
     top: 90+25px;
     background: @gray-bg;
@@ -488,10 +499,12 @@ export default {
     font-stretch: normal;
     color: #999;
     padding: 25px 27px;
+
     > button {
       background-color: transparent;
       outline: none;
       color: #999;
+
       > .icon {
         width: 30px;
         height: 30px;

@@ -52,17 +52,6 @@ export default {
   },
   methods: {
     /**
-     * Class name builder.
-     *
-     * @param {string} className
-     * @return {string}
-     * @author Seven Du <shiweidu@outlook.com>
-     */
-    classNameBuilder(className) {
-      return `module-avatar-${className}`;
-    },
-
-    /**
      * The click handle.
      *
      * @param {Object} event
