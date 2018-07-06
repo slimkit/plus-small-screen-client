@@ -1,7 +1,7 @@
 <template>
   <div class="p-topic-detail">
     <header class="m-box m-pos-f m-main m-head-top m-bb1">
-      <div class="m-box m-aln-center m-flex-grow1 m-flex-base0">
+      <div class="m-box m-aln-center m-flex-none">
         <svg
           class="m-style-svg m-svg-def"
           @click="goBack">
@@ -10,10 +10,10 @@
             xlink:href="#base-back"/>
         </svg>
       </div>
-      <div class="m-box m-aln-center m-justify-center m-flex-grow1 m-flex-base-0 m-head-top-title">
-        <span>{{ topic.name || "话题详情" }}</span>
+      <div class="m-box m-aln-center m-justify-center m-flex-auto m-head-top-title">
+        <span class="m-text-cut">{{ topic.name || "话题详情" }}</span>
       </div>
-      <div class="m-box m-aln-center m-justify-end m-flex-grow1 m-flex-base0">
+      <div class="m-box m-aln-center m-justify-end m-flex-none">
         <svg class="m-style-svg m-svg-def">
           <use
             xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -27,12 +27,12 @@
       <div class="topic">
         <img src="https://images.zhibocloud.cn/question/topics/000/000/000/02.png">
         <div class="title">
-          <h3 class="topic-name">{{ topic.name }}</h3>
-          <span class="label">
+          <h3 class="topic-name m-text-cut">{{ topic.name }}</h3>
+          <div class="label">
             <span>{{ topic.follows_count }}</span>&nbsp;关注
             ·
             <span>{{ topic.questions_count }}</span>&nbsp;问题
-          </span>
+          </div>
         </div>
         <button
           v-if="topic.has_follow"
@@ -285,38 +285,29 @@ export default {
     border-bottom: solid 1px #d7d8d8;
 
     > img {
+      flex: none;
       width: 120px;
       height: 120px;
       margin-right: 18px;
     }
 
     .title {
-      flex-grow: 1;
-      display: inline-flex;
-      align-items: flex-start;
-      flex-direction: column;
-      height: 120px;
-      justify-content: center;
+      flex: auto;
+      min-width: 0;
 
       .topic-name {
-        margin-top: 17px;
+        display: block;
         font-size: 32px;
         font-weight: normal;
         font-stretch: normal;
-        line-height: 0px;
-        height: 30px;
-        letter-spacing: 0px;
         color: #333;
       }
 
       .label {
         margin-top: 19px;
-        height: 26px;
         font-size: 28px;
         font-weight: normal;
         font-stretch: normal;
-        line-height: 0px;
-        letter-spacing: 0px;
         color: #666;
 
         > span {
@@ -326,6 +317,7 @@ export default {
     }
 
     .follow {
+      flex: none;
       height: 50px;
       background-color: #fff;
       border-radius: 8px;
