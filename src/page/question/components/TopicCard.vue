@@ -9,12 +9,12 @@
       :to="`/question-topics/${topic.id}`"
       tag="a"
       class="title">
-      <span class="topic">{{ topic.name }}</span>
-      <span class="label">
+      <div class="topic m-text-cut">{{ topic.name }}</div>
+      <div class="label">
         <span>{{ topic.follows_count }}</span>&nbsp;关注
         ·
         <span>{{ topic.questions_count }}</span>&nbsp;问题
-      </span>
+      </div>
     </router-link>
     <button
       v-if="topic.has_follow || type === 'follow'"
@@ -56,6 +56,7 @@ export default {
   border-bottom: solid 1px #d7d8d8;
 
   .topic-image {
+    flex: none;
     width: 120px;
     height: 120px;
     margin-right: 28px;
@@ -64,32 +65,23 @@ export default {
   }
 
   .title {
-    flex-grow: 1;
-    display: inline-flex;
-    align-items: flex-start;
-    flex-direction: column;
-    height: 120px;
-    justify-content: center;
+    flex: auto;
+    min-width: 0;
+
     .topic {
-      margin-top: 17px;
       font-size: 32px;
       font-weight: normal;
       font-stretch: normal;
-      line-height: 0px;
-      height: 30px;
-      letter-spacing: 0px;
       color: #333;
     }
 
     .label {
-      margin-top: 19px;
-      height: 26px;
       font-size: 28px;
       font-weight: normal;
       font-stretch: normal;
-      line-height: 0px;
-      letter-spacing: 0px;
       color: #666;
+      margin-top: 16px;
+
       > span {
         color: #59b6d7;
       }
@@ -97,7 +89,7 @@ export default {
   }
 
   .follow {
-    // width: 126px;
+    flex: none;
     height: 50px;
     background-color: #fff;
     border-radius: 8px;
