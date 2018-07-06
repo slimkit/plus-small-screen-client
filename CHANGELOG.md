@@ -1,3 +1,19 @@
+<a name="4.0.0-rc.7"></a>
+# [4.0.0-rc.7](https://github.com/zhiyicx/plus-component-h5/compare/v4.0.0-rc.6...v4.0.0-rc.7) (2018-07-06)
+
+
+### Bug Fixes
+
+* ([#295](https://github.com/zhiyicx/plus-component-h5/issues/295)) 圈子动态列表增加自己文章的删除和置顶功能 ([4525d94](https://github.com/zhiyicx/plus-component-h5/commit/4525d94))
+* api 调用出错 ([3e9a586](https://github.com/zhiyicx/plus-component-h5/commit/3e9a586))
+* 优化发布问题时检索列表的展示体验 ([b9b9e93](https://github.com/zhiyicx/plus-component-h5/commit/b9b9e93))
+* 修复话题列表页文本过长导致的显示问题 ([2bfa575](https://github.com/zhiyicx/plus-component-h5/commit/2bfa575))
+* 解决版本更新后 js 被缓存的问题 ([c4c5039](https://github.com/zhiyicx/plus-component-h5/commit/c4c5039))
+* 话题详情页文本过长导致的排版问题 ([b20427b](https://github.com/zhiyicx/plus-component-h5/commit/b20427b))
+* 问答话题不能收藏的问题 ([2f607ea](https://github.com/zhiyicx/plus-component-h5/commit/2f607ea))
+
+
+
 <a name="4.0.0-rc.6"></a>
 # [4.0.0-rc.6](https://github.com/zhiyicx/plus-component-h5/compare/v4.0.0-rc.5...v4.0.0-rc.6) (2018-07-05)
 
