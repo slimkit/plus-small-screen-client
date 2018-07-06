@@ -118,7 +118,7 @@
 <script>
 import UserAvatar from "./components/UserAvatar.vue";
 import QuestionCard from "./components/QuestionCard.vue";
-import { show, questions, follow, unfollow } from "@/api/question/topics";
+import * as api from "@/api/question/topics";
 
 export default {
   name: "TopicDetail",
@@ -165,7 +165,8 @@ export default {
       return `page-question-topic-${className}`;
     },
     handleRefresh() {
-      show(this.id)
+      api
+        .show(this.id)
         .then(({ data }) => {
           this.loading = false;
           this.topic = data;
@@ -181,7 +182,8 @@ export default {
     handleRefreshQuestions() {
       const offset = 0;
       const limit = 15;
-      questions(this.id, this.type, offset, limit)
+      api
+        .questions(this.id, this.type, offset, limit)
         .then(({ data }) => {
           this.questions = data;
           this.loadContainer.topEnd(false);
@@ -196,7 +198,8 @@ export default {
     handleLoadQuestions() {
       const offset = this.questions.length;
       const limit = 15;
-      questions(this.id, this.type, offset, limit)
+      api
+        .questions(this.id, this.type, offset, limit)
         .then(({ data }) => {
           this.questions = [...this.questions, ...data];
           this.loadContainer.bottomEnd(data.length < limit);
@@ -221,7 +224,8 @@ export default {
       // nav.style.top = "1.16rem";
     },
     handleFollow(topic) {
-      follow(topic.id)
+      api
+        .followTopic(topic.id)
         .then(() => {
           topic.has_follow = true;
           this.follows_count += 1;
@@ -231,7 +235,8 @@ export default {
         });
     },
     handleUnfollow(topic) {
-      unfollow(topic.id)
+      api
+        .unfollowTopic(topic.id)
         .then(() => {
           topic.has_follow = false;
           topic.follows_count -= 1;
