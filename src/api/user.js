@@ -163,7 +163,7 @@ export function getUserFansByType({ uid, type, limit = 15, offset = 0 }) {
  * @returns {Promise<boolean>}
  */
 export function signinByAccount(payload) {
-  return api.post(`/auth/login`, payload, { validateStatus: s => s > 0 }).then(
+  return api.post("/auth/login", payload, { validateStatus: s => s > 0 }).then(
     ({ data: { message, access_token /*token_type = "bearer"*/ }, status }) => {
       switch (status) {
         case 422:

@@ -19,13 +19,8 @@ export default {
   render() {
     return (
       <div id="app" class="wap-wrap">
-        {this.keepAlive ? (
-          <keep-alive>
-            <router-view />
-          </keep-alive>
-        ) : (
-          <router-view />
-        )}
+        <keep-alive>{this.keepAlive && <router-view />}</keep-alive>
+        {!this.keepAlive && <router-view />}
         <div>
           <SvgIcon />
           <PSWP />
