@@ -5,20 +5,20 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, minimal-ui">
     <link rel="shortcut icon" href="<%= webpackConfig.output.publicPath %>favicon.ico">
-    <meta name="keywords" content="<%= process.env.VUE_APP_KEYWORDS %>">
-    <meta name="description" content="<%= process.env.VUE_APP_DESCRIPTION %>">
+    <meta name="keywords" content="<%= VUE_APP_KEYWORDS %>">
+    <meta name="description" content="<%= VUE_APP_DESCRIPTION %>">
     <script src="<%= webpackConfig.output.publicPath %>libs/strophe-1.2.8.min.js"></script>
-    <script src="//webapi.amap.com/maps?v=1.4.5&key=<%= process.env.VUE_APP_LBS_GAODE_KEY %>"></script>
+    <script src="//webapi.amap.com/maps?v=1.4.5&key=<%= VUE_APP_LBS_GAODE_KEY %>"></script>
     <script>
       var WebIM = {
         config: {}
       };
     </script>
-    <title><%= process.env.VUE_APP_NAME %></title>
+    <title><%= VUE_APP_NAME %></title>
   </head>
   <body>
     <noscript>
-      <strong>We're sorry but <%= webpackConfig.output%> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+      <strong>We're sorry but <%= VUE_APP_NAME %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
     </noscript>
     <div id="app"></div>
     <!-- built files will be auto injected -->
