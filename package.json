@@ -6,9 +6,9 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "version": "conventional-changelog -p angular -i CHANGELOG.md -s && git add CHANGELOG.md",
-    "deploy": "gh-pages -d dist -m \"chore: Build SPA & Update assets.\" -t",
-    "predeploy": "npm run build && npm run build:404",
-    "build:404": "node script/build-404.js"
+    "pages:deploy": "npm run pages:predeploy && gh-pages -d dist -m \"chore: Build SPA & Update assets.\" -t",
+    "pages:predeploy": "npm run build && npm run pages:build-404-html",
+    "pages:build-404-html": "node scripts/build-github-pages-404.js"
   },
   "dependencies": {
     "axios": "^0.18.0",
