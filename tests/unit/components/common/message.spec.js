@@ -9,6 +9,7 @@ describe("@/components/common/message.vue", () => {
       { type: "error", className: "Alert--Error" }
     ];
     
+    types.map(({ type, className }) => {
       let wrapper = shallowMount(Message, {
         propsData: { type }
       });
