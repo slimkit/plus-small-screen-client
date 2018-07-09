@@ -1,6 +1,6 @@
 {
-    "name": "zhiyicx/plus-component-h5",
-    "description": "一个使用 Laravel 并健壮的社交系统",
+    "name": "slimkit/plus-small-screen-client",
+    "description": "📱The Plus(ThinkSNS+) client written with modern web technologies, built with Vue.js.",
     "type": "project",
     "license": "Apache-2.0",
     "authors": [
@@ -9,8 +9,6 @@
             "email": "shiweidu@outlook.com"
         }
     ],
-    "minimum-stability": "dev",
-    "require": {},
     "extra": {
         "branch-alias": {
             "dev-master": "4.0-dev"
