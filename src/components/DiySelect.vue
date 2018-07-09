@@ -1,16 +1,16 @@
 <template lang="html">
-  <div 
-    :class="{open}" 
-    class="diy-select" 
+  <div
+    :class="{open}"
+    class="diy-select"
     @click="open = !open">
     <div class="diy-select--label">{{ curSelectValue }}</div>
-    <div 
-      v-show="open" 
+    <div
+      v-show="open"
       class="diy-select--options">
-      <div 
-        v-for="option in options" 
-        :key="option.label" 
-        class="diy-select--option" 
+      <div
+        v-for="option in options"
+        :key="option.label"
+        class="diy-select--option"
         @click="setCurVal(option)">
         <template v-if="option.hasMsg">
           <v-badge :dot="option.hasMsg">{{ option.label }}</v-badge>
@@ -25,14 +25,9 @@
 export default {
   name: "DiySelect",
   props: {
-    value: null,
-    options: {
-      type: Array
-    },
-    placeholder: {
-      type: String,
-      default: "请选择"
-    }
+    value: { type: null, default: "" },
+    options: { type: Array, default: () => [] },
+    placeholder: { type: String, default: "请选择" }
   },
   data() {
     return {

@@ -19,15 +19,8 @@
 export default {
   name: "Avatar",
   props: {
-    size: {
-      type: String,
-      default: "def"
-    },
-    user: {
-      type: Object,
-      default: () => {},
-      required: true
-    }
+    size: { type: String, default: "def" },
+    user: { type: Object, required: true }
   },
   computed: {
     uid() {

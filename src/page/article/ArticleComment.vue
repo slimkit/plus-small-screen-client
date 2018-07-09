@@ -6,8 +6,8 @@
         <header class="m-box m-aln-center m-justify-bet m-art-comment-usr">
           <h4 class="m-flex-grow1 m-flex-shrink1">{{ user.name }}</h4>
           <div class="m-box m-aln-center">
-            <span 
-              v-if="pinned" 
+            <span
+              v-if="pinned"
               class="m-art-comment-icon-top">置顶</span>
             <span>{{ time | time2tips }}</span>
           </div>
@@ -22,15 +22,16 @@
             </span>
           </template>
           {{ body }}
-          <span 
-            v-show="bodyLength > 60 && !isShowAll" 
-            class="m-text-more" 
+          <span
+            v-show="bodyLength > 60 && !isShowAll"
+            class="m-text-more"
             @click.stop="isShowAll = !isShowAll"> >>更多</span>
         </article>
       </section>
     </div>
   </div>
 </template>
+
 <script>
 /**
  * 字符串长度计算(仅获取中文字符字数)
@@ -53,11 +54,12 @@ function strLength(str) {
   }
   return totalLength;
 }
+
 export default {
   name: "CommentItem",
   props: {
-    comment: null,
-    pinned: Boolean
+    comment: { type: Object, required: true },
+    pinned: { type: Boolean, default: false }
   },
   data() {
     return {

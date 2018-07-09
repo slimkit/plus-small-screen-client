@@ -1,11 +1,11 @@
 <template>
-  <div 
-    v-if="show" 
+  <div
+    v-if="show"
     :class="prefixCls">
     <div :class="`${prefixCls}-label`">
       <h6>{{ title }}</h6>
-      <div 
-        :class="`${prefixCls}-more`" 
+      <div
+        :class="`${prefixCls}-more`"
         @click="to(listUrl)">
         <span>全部</span>
         <v-icon type="base-arrow-r"/>
@@ -17,8 +17,8 @@
         :key="user.id"
         :class="`${prefixCls}-user m-aln-st`"
         @click="to(`/users/${user.id}`)">
-        <avatar 
-          :class="`${prefixCls}-user-avatar`" 
+        <avatar
+          :class="`${prefixCls}-user-avatar`"
           :user="user" />
         <p
           class="m-flex-grow1 m-flex-shrink1 m-text-cut">{{ user.name }}</p>
@@ -32,18 +32,10 @@ const prefixCls = "rank-list-item";
 export default {
   name: "RankUsersComponent",
   props: {
-    api: {
-      required: true
-    },
-    listUrl: {
-      required: true
-    },
-    title: {
-      required: true
-    },
-    name: {
-      required: true
-    }
+    api: { type: String, required: true },
+    listUrl: { type: String, required: true },
+    title: { type: String, required: true },
+    name: { type: String, required: true }
   },
 
   data() {

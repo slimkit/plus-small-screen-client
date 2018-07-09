@@ -1,7 +1,7 @@
 <template>
   <div :class="[`${prefixCls}-wrap`]">
-    <span 
-      :class="[`${prefixCls}-text`]" 
+    <span
+      :class="[`${prefixCls}-text`]"
       @click="onClick">
       <slot/>
     </span>
@@ -9,24 +9,24 @@
       <slot name="append"/>
     </div>
     <div :class="[`${prefixCls}`]">
-      <label 
-        ref="label" 
-        :for="id" 
+      <label
+        ref="label"
+        :for="id"
         :class="[`${prefixCls}-label`]">
-        <input 
-          v-if="type===&quot;radio&quot;" 
-          :id="id" 
-          v-model="cur_value" 
-          :value="dataValue" 
-          :class="[`${prefixCls}-input`]" 
-          type="radio" 
+        <input
+          v-if="type===&quot;radio&quot;"
+          :id="id"
+          v-model="cur_value"
+          :value="dataValue"
+          :class="[`${prefixCls}-input`]"
+          type="radio"
           @change="setValue">
-        <input 
-          v-else 
-          :id="id" 
-          v-model="cur_value" 
-          :class="[`${prefixCls}-input`]" 
-          :type="type" 
+        <input
+          v-else
+          :id="id"
+          v-model="cur_value"
+          :class="[`${prefixCls}-input`]"
+          :type="type"
           @change="setValue">
         <div :class="[`${prefixCls}-box`]"/>
       </label>
@@ -35,18 +35,22 @@
 </template>
 <script>
 import { oneOf } from "../../util/";
+
 const prefixCls = "v-switch";
+
 export default {
   name: "VSwitch",
   props: {
     type: {
+      type: String,
+      default: "checkbox",
       requried: true,
       validator(val) {
         return oneOf(val, ["checkbox", "radio"]);
       }
     },
-    value: Boolean,
-    dataValue: {},
+    value: { type: Boolean, default: false },
+    dataValue: { type: Object, default: () => {} },
     id: {
       type: String,
       default: function() {
@@ -75,6 +79,7 @@ export default {
   }
 };
 </script>
+
 <style lang='less'>
 @switch-prefix: v-switch;
 @switch-prefix-radio: v-switch-radio;

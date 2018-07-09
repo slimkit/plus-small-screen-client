@@ -2,18 +2,18 @@
   <div class="wallet-detail p-wallet-detail">
     <header class="m-box m-head-top m-pos-f m-main m-bb1">
       <div class="m-box m-aln-center m-flex-grow1 m-flex-base0">
-        <svg 
-          class="m-style-svg m-svg-def" 
+        <svg
+          class="m-style-svg m-svg-def"
           @click="goBack">
-          <use 
-            xmlns:xlink="http://www.w3.org/1999/xlink" 
+          <use
+            xmlns:xlink="http://www.w3.org/1999/xlink"
             xlink:href="#base-back"/>
         </svg>
       </div>
       <div class="m-box m-aln-center m-flex-grow1 m-flex-base0 m-justify-center">
-        <diy-select 
-          v-model="currAction" 
-          :options="options" 
+        <diy-select
+          v-model="currAction"
+          :options="options"
           placeholder="明细"/>
       </div>
       <div class="m-box m-aln-center m-flex-grow1 m-flex-base0 m-justify-end"/>
@@ -24,8 +24,8 @@
       :on-load-more="onLoadMore"
       class="m-wallet-list"
     >
-      <wallet-detail-item 
-        v-for="item in list" 
+      <wallet-detail-item
+        v-for="item in list"
         v-if="item.id"
         :key="item.id"
         :detail="item"
@@ -33,18 +33,18 @@
     </load-more>
     <div @touchmove.prevent>
       <transition name="toast">
-        <div 
-          v-if="show" 
-          class="m-pop-box" 
+        <div
+          v-if="show"
+          class="m-pop-box"
           @click="show = false"/>
       </transition>
-      <transition 
-        v-if="show" 
+      <transition
+        v-if="show"
         name="fade">
-        <walletInfo 
-          v-if="currInfo && currInfo.id" 
+        <walletInfo
+          v-if="currInfo && currInfo.id"
           :detail="currInfo"/>
-      </transition>      
+      </transition>
     </div>
   </div>
 </template>
@@ -52,6 +52,7 @@
 <script>
 import walletInfo from "./WalletInfo";
 import walletDetailItem from "./WalletDetailItem.vue";
+
 export default {
   name: "WalletDetail",
   components: {
@@ -114,7 +115,6 @@ export default {
           this.$refs.loadmore.topEnd(!(data.length < 15));
         });
     },
-
     onLoadMore() {
       this.$http
         .get("/wallet/charges", {
@@ -134,6 +134,7 @@ export default {
   }
 };
 </script>
+
 <style lang="less">
 .p-wallet-detail {
   .m-head-top {

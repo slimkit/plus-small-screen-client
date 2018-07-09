@@ -3,8 +3,8 @@
     <slot>
       <div class="head-top-goback">
         <slot name="prepend">
-          <section 
-            v-if="goBack" 
+          <section
+            v-if="goBack"
             @click="goBackFn">
             <template v-if="typeof goBack === &quot;string&quot;">
               {{ goBack }}
@@ -15,8 +15,8 @@
           </section>
         </slot>
       </div>
-      <div 
-        v-if="title" 
+      <div
+        v-if="title"
         class="head-top-title">
         <slot name="title">
           <span class="ellipsis">
@@ -25,8 +25,8 @@
         </slot>
       </div>
       <slot name="nav"/>
-      <div 
-        v-if="append" 
+      <div
+        v-if="append"
         class="head-top-append">
         <slot name="append">
           <section @click="to('/signup')">注册</section>
@@ -35,14 +35,15 @@
     </slot>
   </div>
 </template>
+
 <script>
 export default {
   name: "HeadTop",
   props: {
-    title: String,
-    goBack: [Boolean, Function],
-    append: [Boolean, String],
-    transparent: Boolean
+    title: { type: String, default: "" },
+    goBack: { type: [Boolean, Function], default: false },
+    append: { type: [Boolean, String], default: false },
+    transparent: { type: Boolean, default: false }
   },
   computed: {},
   methods: {
@@ -59,6 +60,7 @@ export default {
   }
 };
 </script>
+
 <style lang='less'>
 @head-top-prefix: head-top;
 .@{head-top-prefix} {

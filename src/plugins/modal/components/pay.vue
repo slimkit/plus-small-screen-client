@@ -7,21 +7,21 @@
     </div>
     <div class="pay-panel-body">
       <div class="pay-panel-body-price">{{ price }}</div>
-      <div 
-        class="pay-panel-body-content" 
+      <div
+        class="pay-panel-body-content"
         v-html="content"/>
     </div>
     <div class="pay-panel-foot">
       <slot name="foot">
-        <button 
-          :disabled="loading" 
-          class="primary" 
+        <button
+          :disabled="loading"
+          class="primary"
           @click="ok">
           确定
-          <v-icon 
-            v-if="loading" 
-            width="0.32" 
-            height="0.32" 
+          <v-icon
+            v-if="loading"
+            width="0.32"
+            height="0.32"
             type="base-loading"/>
         </button>
         <button @click="cancel">取消</button>
@@ -29,17 +29,13 @@
     </div>
   </div>
 </template>
+
 <script>
 export default {
   name: "PayModal",
   props: {
-    content: {
-      required: true
-    },
-    price: {
-      type: [Number, String],
-      required: true
-    }
+    content: { type: Object, required: true },
+    price: { type: [Number, String], required: true }
   },
   data() {
     return {

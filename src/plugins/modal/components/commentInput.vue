@@ -12,8 +12,8 @@
       <template v-if="len > 200">
         <p>{{ len }}/{{ maxlength }}</p>
       </template>
-      <button 
-        :disabled="disabled" 
+      <button
+        :disabled="disabled"
         @click="handleDone">
         <svg v-if="loading">
           <use xlink:href="#base-loading"/>
@@ -27,7 +27,7 @@
 export default {
   name: "CommentInput",
   props: {
-    focus: Boolean,
+    focus: { type: Boolean, default: false },
     placeholder: {
       type: String,
       default: "随便说说~",

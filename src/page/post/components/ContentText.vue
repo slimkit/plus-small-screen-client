@@ -6,7 +6,6 @@
         v-model.trim="contentText"
         :placeholder="placeholder"
         :maxlength="maxlength"
-
         :style="{ height: `${scrollHeight}px`}"
         @focus="focusArea"
         @blur="moveCurPos"
@@ -25,18 +24,20 @@
     </div>
   </div>
 </template>
+
 <script>
 /**
  * todo
  * H5_MBLOG_SAVE_CONTENT
  */
 import { mapActions } from "vuex";
+
 export default {
   name: "ContentText",
   props: {
-    type: Number,
+    type: { type: Number, default: 0 },
     warnLength: { type: Number, default: 200 },
-    maxlength: [Number, String],
+    maxlength: { type: [Number, String], default: 255 },
     placeholder: { type: String, default: "输入要说的话" },
     rows: { type: Number, default: 3 }
   },
@@ -70,6 +71,20 @@ export default {
       }
     }
   },
+  created() {
+    const txt = this.$lstore.getData("H5_POST_SAVE_CONTENT");
+    txt &&
+      ((this.contentText = txt.trim()),
+      (this.curpos = this.contentText.length));
+  },
+  mounted() {
+    this.$nextTick(() => {
+      this.scrollHeight = this.$refs.shadow.offsetHeight;
+    });
+  },
+  destroyed() {
+    this.updateCompose("");
+  },
   methods: {
     ...mapActions(["updateCompose"]),
     clean() {
@@ -96,20 +111,6 @@ export default {
           textarea.setSelectionRange(this.curpos, this.curpos);
         });
     }
-  },
-  created() {
-    const txt = this.$lstore.getData("H5_POST_SAVE_CONTENT");
-    txt &&
-      ((this.contentText = txt.trim()),
-      (this.curpos = this.contentText.length));
-  },
-  mounted() {
-    this.$nextTick(() => {
-      this.scrollHeight = this.$refs.shadow.offsetHeight;
-    });
-  },
-  destroyed() {
-    this.updateCompose("");
   }
 };
 </script>

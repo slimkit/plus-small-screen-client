@@ -1,15 +1,17 @@
 <template>
   <div class="v-tabs">
     <slot/>
-    <span 
-      ref="highlight" 
+    <span
+      ref="highlight"
       class="v-tab-link-highlight init"/>
   </div>
 </template>
 <script>
 export default {
   name: "VTabs",
-  props: ["value"],
+  props: {
+    value: { type: Object, default: () => {} }
+  },
   data() {
     return {};
   },

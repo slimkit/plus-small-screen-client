@@ -1,42 +1,42 @@
 <template>
-  <transition 
-    name="router-slid" 
+  <transition
+    name="router-slid"
     mode="out-in">
     <div class="full-page">
-      <head-top 
-        :go-back="true" 
-        :title="$route.meta.title" 
+      <head-top
+        :go-back="true"
+        :title="$route.meta.title"
         append="true">
-        <div 
-          slot="append" 
+        <div
+          slot="append"
           @click="ok">{{ selected.length>0 ? '下一步': '取消' }}</div>
       </head-top>
       <div class="user--tags">
         <label class="user--tags-label">可选5个标签, 已选择{{ selected.length }}个标签</label>
         <div class="user--tags-list">
-          <div 
-            v-for="tag in selected" 
-            v-if="tag.id" 
-            :key="`group--tag-selected-${tag.id}`" 
-            class="user--tags-list-item ellipsis selected" 
+          <div
+            v-for="tag in selected"
+            v-if="tag.id"
+            :key="`group--tag-selected-${tag.id}`"
+            class="user--tags-list-item ellipsis selected"
             @click="selectTag(tag)">
             <v-icon type="base-clean"/>
             {{ tag.name }}
           </div>
         </div>
       </div>
-      <div 
-        v-for="group in tags" 
-        :key="group.name" 
+      <div
+        v-for="group in tags"
+        :key="group.name"
         class="user--tags">
         <label class="user--tags-label">{{ group["name"] }}</label>
         <div class="user--tags-list">
-          <div 
-            v-for="tag in group[&quot;tags&quot;]" 
-            v-if="tag.id" 
-            :class="{active: selected.indexOf(tag) > -1 }" 
-            :key="`group--tag-${tag.id}`" 
-            class="user--tags-list-item ellipsis" 
+          <div
+            v-for="tag in group[&quot;tags&quot;]"
+            v-if="tag.id"
+            :class="{active: selected.indexOf(tag) > -1 }"
+            :key="`group--tag-${tag.id}`"
+            class="user--tags-list-item ellipsis"
             @click="selectTag(tag)">
             {{ tag.name }}
           </div>
@@ -97,8 +97,6 @@ export default {
   padding-right: 20px;
   font-size: 0;
   margin-top: 10px;
-  & + & {
-  }
   line-height: 1;
   &-label {
     display: block;

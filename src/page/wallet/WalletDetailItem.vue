@@ -1,9 +1,9 @@
 <template>
-  <div 
-    class="m-box m-bb1 m-aln-center m-justify-bet m-main m-wallet-detail" 
+  <div
+    class="m-box m-bb1 m-aln-center m-justify-bet m-main m-wallet-detail"
     @click.stop="showDetail">
-    <div 
-      class="m-wallet-detail-time" 
+    <div
+      class="m-wallet-detail-time"
       v-html="created_at"/>
     <div class="m-wallet-detail-title" >{{ detail.subject }}</div>
     <div class="m-wallet-detail-amount">
@@ -11,6 +11,7 @@
     </div>
   </div>
 </template>
+
 <script>
 const week = ["周日", "周一", "周二", "周三", "周四", "周五", "周六"];
 function splitYMD(date) {
@@ -30,12 +31,11 @@ function splitYMD(date) {
     t: h + ":" + m
   };
 }
+
 export default {
   name: "WalletDetailItem",
   props: {
-    detail: {
-      required: true
-    }
+    detail: { type: Object, required: true }
   },
   data() {
     return {};

@@ -1,5 +1,5 @@
 <template>
-  <div 
+  <div
     :class="{ active }"
     class="v-tab"
     @click="tabClick"><slot>{{ title }}</slot></div>
@@ -8,8 +8,8 @@
 export default {
   name: "VTab",
   props: {
-    title: [String],
-    value: {}
+    title: { type: String, default: "" },
+    value: { type: Object, required: true }
   },
   data() {
     return {

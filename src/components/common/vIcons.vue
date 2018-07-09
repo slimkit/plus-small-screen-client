@@ -1,34 +1,26 @@
 <template>
-  <i 
-    :style="wrapStyles" 
+  <i
+    :style="wrapStyles"
     class="v-icon">
-    <svg 
-      :color="color" 
-      width="100%" 
+    <svg
+      :color="color"
+      width="100%"
       height="100%">
-      <use 
-        :xlink:href="`#${type}`" 
+      <use
+        :xlink:href="`#${type}`"
         xmlns:xlink="http://www.w3.org/1999/xlink"/>
     </svg>
   </i>
 </template>
+
 <script>
 export default {
   name: "VIcon",
   props: {
-    type: {
-      type: [String],
-      required: true
-    },
-    height: {
-      type: [String, Number]
-    },
-    width: {
-      type: [String, Number]
-    },
-    color: {
-      type: String
-    }
+    type: { type: [String], required: true },
+    height: { type: [String, Number], default: "" },
+    width: { type: [String, Number], default: "" },
+    color: { type: String, default: "" }
   },
   computed: {
     wrapStyles() {
@@ -40,6 +32,7 @@ export default {
   }
 };
 </script>
+
 <style lang='less'>
 .v-icon {
   display: inline-flex;

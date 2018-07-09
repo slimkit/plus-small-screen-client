@@ -1,6 +1,6 @@
 <template>
-  <div 
-    class="m-box m-aln-center m-main user-item" 
+  <div
+    class="m-box m-aln-center m-main user-item"
     @click="toUserHome">
     <avatar :user="user" />
     <section
@@ -8,12 +8,12 @@
       <h2 class="m-text-box m-text-cut">{{ user.name }}</h2>
       <p class="m-text-box m-text-cut">{{ user.bio || "这家伙很懒，什么也没留下" }}</p>
     </section>
-    <svg 
-      v-if="!isMine" 
-      class="m-style-svg m-svg-def" 
+    <svg
+      v-if="!isMine"
+      class="m-style-svg m-svg-def"
       @click.stop="followUser">
-      <use 
-        :xlink:href="`#base-${isFollow}`" 
+      <use
+        :xlink:href="`#base-${isFollow}`"
         xmlns:xlink="http://www.w3.org/1999/xlink"/>
     </svg>
   </div>
@@ -23,11 +23,8 @@ import { followUserByStatus } from "@/api/user.js";
 export default {
   name: "UserItem",
   props: {
-    user: null,
-    link: {
-      type: Boolean,
-      default: true
-    }
+    user: { type: Object, required: true },
+    link: { type: Boolean, default: true }
   },
   data() {
     return {

@@ -12,15 +12,9 @@ import Cropper from "cropperjs";
 
 export default {
   props: {
-    url: [String],
-    aspectRatio: {
-      type: [Number, String],
-      default: 1 / 1
-    },
-    round: {
-      type: Boolean,
-      default: true
-    }
+    url: { type: String, default: "" },
+    aspectRatio: { type: [Number, String], default: 1 / 1 },
+    round: { type: Boolean, default: true }
   },
   data() {
     return {

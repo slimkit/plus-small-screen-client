@@ -30,7 +30,7 @@
 <script>
 export default {
   props: {
-    topic: { type: Object, require: true, default() {} },
+    topic: { type: Object, required: true },
     type: { type: String, default: "hot" }
   },
   methods: {

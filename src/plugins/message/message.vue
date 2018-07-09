@@ -1,12 +1,12 @@
 <template>
-  <transition 
-    :name="transitionName" 
-    @enter="handleEnter" 
+  <transition
+    :name="transitionName"
+    @enter="handleEnter"
     @leave="handleLeave">
     <div :class="classes">
       <svg :class="[`${prefixCls}-icon`]">
-        <use 
-          :xlink:href="`#${icon}`" 
+        <use
+          :xlink:href="`#${icon}`"
           xmlns:xlink="http://www.w3.org/1999/xlink"/>
       </svg>
       <span class="ellipsis">{{ content | plusMessageAnalyze(defaultMessage) }}</span>
@@ -17,34 +17,14 @@
 const prefixCls = "v-msg";
 export default {
   props: {
-    type: {
-      type: String,
-      default: "message"
-    },
-    duration: {
-      type: Number,
-      default: 3
-    },
-    closable: {
-      type: Boolean,
-      default: false
-    },
-    transitionName: String,
-    icon: {
-      type: String,
-      default: "msg-info"
-    },
-    content: {
-      required: true
-    },
-    onClose: {
-      type: Function,
-      default: () => {}
-    },
-    name: {
-      type: String,
-      required: true
-    }
+    type: { type: String, default: "message" },
+    duration: { type: Number, default: 3 },
+    closable: { type: Boolean, default: false },
+    transitionName: { type: String, default: "" },
+    icon: { type: String, default: "msg-info" },
+    content: { type: Object, required: true },
+    onClose: { type: Function, default: () => {} },
+    name: { type: String, required: true }
   },
   data() {
     return {

@@ -1,13 +1,13 @@
 <template>
   <div :class="`${prefixCls}-list-item`">
-    <span 
-      :class="{ top: index < 3 }" 
+    <span
+      :class="{ top: index < 3 }"
       class="rank">{{ index + 1 }}</span>
-    <div 
-      :class="`${prefixCls}-info`" 
+    <div
+      :class="`${prefixCls}-info`"
       @click="to(`/users/${user.id}`)">
-      <avatar 
-        :class="`${prefixCls}-user-avatar`" 
+      <avatar
+        :class="`${prefixCls}-user-avatar`"
         :user="user"/>
       <div :class="`${prefixCls}-title`">
         <h6>{{ user.name }}</h6>
@@ -16,11 +16,11 @@
       </div>
     </div>
     <template v-if="!isMine(user)">
-      <svg 
-        class="m-style-svg m-svg-big" 
+      <svg
+        class="m-style-svg m-svg-big"
         @click.stop="followUser(user, isFollow(user))">
-        <use 
-          :xlink:href="`#base-${isFollow(user)}`" 
+        <use
+          :xlink:href="`#base-${isFollow(user)}`"
           xmlns:xlink="http://www.w3.org/1999/xlink"/>
       </svg>
     </template>
@@ -33,9 +33,9 @@ import { followUserByStatus } from "@/api/user.js";
 export default {
   name: "RankListItem",
   props: {
-    prefixCls: String,
-    user: Object,
-    index: Number
+    prefixCls: { type: String, required: true },
+    user: { type: Object, required: true },
+    index: { type: Number, required: true }
   },
   methods: {
     isMine(user) {
