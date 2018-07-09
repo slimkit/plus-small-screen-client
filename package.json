@@ -8,7 +8,8 @@
     "version": "conventional-changelog -p angular -i CHANGELOG.md -s && git add CHANGELOG.md",
     "pages:deploy": "npm run pages:predeploy && gh-pages -d dist -m \"chore: Build SPA & Update assets.\" -t",
     "pages:predeploy": "npm run build && npm run pages:build-404-html",
-    "pages:build-404-html": "node scripts/build-github-pages-404.js"
+    "pages:build-404-html": "node scripts/build-github-pages-404.js",
+    "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {
     "axios": "^0.18.0",
@@ -35,12 +36,17 @@
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.0.0-rc.3",
     "@vue/cli-plugin-eslint": "^3.0.0-rc.3",
+    "@vue/cli-plugin-pwa": "^3.0.0-rc.3",
+    "@vue/cli-plugin-unit-jest": "^3.0.0-rc.3",
     "@vue/cli-service": "^3.0.0-rc.3",
     "@vue/eslint-config-prettier": "^3.0.0-rc.3",
+    "@vue/test-utils": "^1.0.0-beta.16",
+    "babel-core": "7.0.0-bridge.0",
+    "babel-jest": "^23.0.1",
     "conventional-changelog-cli": "^2.0.1",
     "gh-pages": "^1.1.0",
-    "less": "^2.7.3",
-    "less-loader": "^4.0.5",
+    "less": "^3.0.4",
+    "less-loader": "^4.1.0",
     "postcss-px2rem": "^0.3.0",
     "strip-css-comments": "^3.0.0",
     "vue-template-compiler": "^2.5.16"
