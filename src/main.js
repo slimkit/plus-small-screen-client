@@ -65,9 +65,8 @@ new Vue({
 // 版本号输出
 // eslint-disable-next-line
 console.info(
-  `%cWelcome to ThinkSNS Plus! Release %c plus-component-h5 %c ${version} %c by zhiyicx.`,
+  `%cWelcome to Plus(ThinkSNS+)!\n\n Release %c ${version} %c \n Development by SlimKit Group 👉 https://github.com/slimkit\nApache-2.0 Licensed | Copyright © ${(new Date).getFullYear()} Chengdu ZhiYiChuangXiang Technology Co., Ltd. All rights reserved.`,
   "color: #00A9E0;",
   "background:#35495e ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff",
-  "background:#41b883 ; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff;",
   "color: #00A9E0;background: transparent;"
 );
