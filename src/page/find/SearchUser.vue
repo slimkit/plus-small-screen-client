@@ -66,7 +66,7 @@
 <script>
 import _ from "lodash";
 import UserItem from "@/components/UserItem.vue";
-import { findUserByType, searchUserByKey } from "@/api/user.js";
+import * as api from "@/api/user.js";
 
 export default {
   name: "SearchUser",
@@ -94,20 +94,25 @@ export default {
       this.isFocus = false;
       this.$router.go(-1);
     },
-    searchUserByKey: _.throttle(function() {
-      searchUserByKey(this.keyword).then(({ data }) => {
+    /**
+     * 使用 lodash.debounce 节流，每输入 600ms 后执行
+     * 不要使用箭头函数，会导致 this 作用域丢失
+     * @author mutoe <mutoe@foxmail.com>
+     */
+    searchUserByKey: _.debounce(function() {
+      api.searchUserByKey(this.keyword).then(({ data }) => {
         this.users = data;
         this.noData = data.length === 0 && this.keyword.length > 0;
       });
-    }, 1e3),
+    }, 600),
     onRefresh(callback) {
-      searchUserByKey(this.keyword).then(({ data }) => {
+      api.searchUserByKey(this.keyword).then(({ data }) => {
         this.users = data;
         callback(data.length < 15);
       });
     },
     onLoadMore(callback) {
-      searchUserByKey(this.keyword, this.users.length).then(({ data }) => {
+      api.searchUserByKey(this.keyword, this.users.length).then(({ data }) => {
         this.users = [...this.users, ...data];
         callback(data.length < 15);
       });
@@ -120,7 +125,7 @@ export default {
       this.isFocus = false;
     },
     fetchRecs(callback) {
-      findUserByType("recommends").then(({ data }) => {
+      api.findUserByType("recommends").then(({ data }) => {
         this.recs = data;
         callback(data.length < 15);
       });

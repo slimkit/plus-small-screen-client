@@ -76,12 +76,7 @@
 
 <script>
 import _ from "lodash";
-import {
-  getGeo,
-  getHotCities,
-  searchCityByName,
-  getCurrentPosition
-} from "@/api/bootstrappers.js";
+import * as api from "@/api/bootstrappers.js";
 
 export default {
   name: "Location",
@@ -148,7 +143,7 @@ export default {
     });
   },
   created() {
-    getHotCities().then(hotCities => {
+    api.getHotCities().then(hotCities => {
       this.hotCities = hotCities;
     });
   },
@@ -178,7 +173,7 @@ export default {
         : [];
     },
     searchCityByName: _.throttle(function() {
-      searchCityByName(this.keyword).then(({ data = [] }) => {
+      api.searchCityByName(this.keyword).then(({ data = [] }) => {
         this.cities = this.formatCities(data);
       });
     }, 1e3),
@@ -187,7 +182,7 @@ export default {
       this.hotPos = null;
       this.autoPos = null;
       this.placeholder = "定位中...";
-      getCurrentPosition().then(
+      api.getCurrentPosition().then(
         data => {
           this.currentPos = data;
           this.loading = false;
@@ -203,7 +198,7 @@ export default {
     selectedHot(city) {
       if (this.loading) return;
       this.loading = true;
-      getGeo(city.replace(/[\s\uFEFF\xA0]+/g, "")).then(data => {
+      api.getGeo(city.replace(/[\s\uFEFF\xA0]+/g, "")).then(data => {
         this.loading = false;
         this.currentPos = data;
         this.$nextTick(this.goBack);
