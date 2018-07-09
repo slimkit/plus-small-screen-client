@@ -5,17 +5,16 @@
         ref="loadmore"
         :on-refresh="onRefresh"
         :on-load-more="onLoadMore"
-        :class="`${prefixCls}-loadmore`"
-      >
-        <div 
-          v-for="audit in audits" 
-          :class="`${prefixCls}-item`" 
+        :class="`${prefixCls}-loadmore`" >
+        <div
+          v-for="audit in audits"
+          :class="`${prefixCls}-item`"
           :key="`feed-comment-${audit.id}`">
           <div :class="`${prefixCls}-item-top`">
             <avatar :user="audit.user" />
             <section class="userInfo">
-              <router-link 
-                :class="`${prefixCls}-item-top-link`" 
+              <router-link
+                :class="`${prefixCls}-item-top-link`"
                 :to="`/users/${audit.user_id}`">{{
                 audit.user.name }}
               </router-link>
@@ -39,6 +38,7 @@ import { limit } from "@/api/api.js";
 import AuditContent from "../../components/auditContent";
 
 const prefixCls = "msgList";
+
 export default {
   name: "FeedCommentAudit",
   components: {
@@ -49,6 +49,14 @@ export default {
     prefixCls,
     currentItem: {}
   }),
+  computed: {
+    ...mapState({
+      audits: state => state.MESSAGE.MY_COMMENT_AUDIT
+    }),
+    lastId() {
+      return this.audits[this.audits.length - 1].id || 0;
+    }
+  },
   methods: {
     onRefresh() {
       getFeedCommentPinneds().then(({ data }) => {
@@ -120,14 +128,6 @@ export default {
       } else {
         return false;
       }
-    }
-  },
-  computed: {
-    ...mapState({
-      audits: state => state.MESSAGE.MY_COMMENT_AUDIT
-    }),
-    lastId() {
-      return this.audits[this.audits.length - 1].id || 0;
     }
   }
 };

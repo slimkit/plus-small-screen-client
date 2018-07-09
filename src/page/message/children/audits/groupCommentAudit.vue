@@ -5,17 +5,16 @@
         ref="loadmore"
         :on-refresh="onRefresh"
         :on-load-more="onLoadMore"
-        :class="`${prefixCls}-loadmore`"
-      >
-        <div 
-          v-for="audit in audits" 
-          :class="`${prefixCls}-item`" 
+        :class="`${prefixCls}-loadmore`" >
+        <div
+          v-for="audit in audits"
+          :class="`${prefixCls}-item`"
           :key="`group-comment-${audit.id}`">
           <div :class="`${prefixCls}-item-top`">
             <avatar :user="audit.user" />
             <section class="userInfo">
-              <router-link 
-                :class="`${prefixCls}-item-top-link`" 
+              <router-link
+                :class="`${prefixCls}-item-top-link`"
                 :to="`/users/${audit.user_id}`">{{ audit.user.name }}</router-link>
               <p>{{ audit.created_at | time2tips }}</p>
             </section>
@@ -30,7 +29,7 @@
         </div>
       </load-more>
     </div>
-  </div>  
+  </div>
 </template>
 
 <script>
@@ -42,6 +41,7 @@ import groupPostCommentAuditStatus from "../../components/groupPostCommentAuditS
 import AuditContent from "../../components/auditContent";
 
 const prefixCls = "msgList";
+
 export default {
   name: "PostCommentAudit",
   components: {
@@ -51,6 +51,11 @@ export default {
   data: () => ({
     prefixCls
   }),
+  computed: {
+    ...mapState({
+      audits: state => state.MESSAGE.MY_POST_COMMENT_AUDIT
+    })
+  },
   methods: {
     getAuditContent(audit) {
       const { post = {}, comment = {} } = audit || {};
@@ -123,13 +128,7 @@ export default {
         }
       });
     }
-  },
-  computed: {
-    ...mapState({
-      audits: state => state.MESSAGE.MY_POST_COMMENT_AUDIT
-    })
-  },
-  created() {}
+  }
 };
 </script>
 <style lang="less" src="../../style.less">

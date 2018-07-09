@@ -2,32 +2,33 @@
   <div :class="`${prefixCls}-status`">
     <section v-if="audit.comment">
       <section v-if="audit.expires_at">
-        <section 
-          v-if="~~audit.status === 1" 
+        <section
+          v-if="~~audit.status === 1"
           class="gray">
           <span class="amount-show">{{ audit.amount }}积分 / {{ audit.day }}天</span>同意置顶
         </section>
-        <section 
-          v-else 
+        <section
+          v-else
           class="gray">
           <span class="amount-show">{{ audit.amount }}积分 / {{ audit.day }}天</span>拒绝置顶
         </section>
       </section>
-      <section 
-        v-else 
-        class="green" 
+      <section
+        v-else
+        class="green"
         @click="showOperations(audit)">
         <span class="audit-show">{{ audit.amount }}积分 / {{ audit.day }}天</span>
         <span class="audit-operation">审核</span>
       </section>
     </section>
-    <section 
-      v-if="!audit.comment " 
+    <section
+      v-if="!audit.comment "
       class="red">
       该评论已被删除
     </section>
   </div>
 </template>
+
 <script>
 /**
  * 提取动态评论置顶申请的状态控制组件
@@ -36,7 +37,9 @@
 const prefixCls = "msgList";
 export default {
   name: "GroupPostCommentAuditStatus",
-  props: ["audit"],
+  props: {
+    audit: { type: Object, default: () => {} }
+  },
   data: () => ({
     prefixCls
   }),

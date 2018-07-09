@@ -1,36 +1,38 @@
 <template>
   <div :class="`${prefixCls}`">
-    <header 
-      class="m-box m-head-top m-pos-f m-main m-bb1" 
+    <header
+      class="m-box m-head-top m-pos-f m-main m-bb1"
       style="overflow: visible;">
       <div class="m-box m-aln-center m-flex-grow1 m-flex-base0">
-        <svg 
-          class="m-style-svg m-svg-def" 
+        <svg
+          class="m-style-svg m-svg-def"
           @click="goBack">
-          <use 
-            xmlns:xlink="http://www.w3.org/1999/xlink" 
+          <use
+            xmlns:xlink="http://www.w3.org/1999/xlink"
             xlink:href="#base-back"/>
         </svg>
       </div>
       <div class="m-box m-aln-center m-flex-grow2 m-flex-base2 m-justify-center">
-        <diy-select 
+        <diy-select
           slot="nav"
           :options="options"
           v-model="currentType"
-          placeholder="动态评论置顶" 
+          placeholder="动态评论置顶"
           style="margin-top: -1px"/>
       </div>
       <div class="m-box m-aln-center m-flex-grow1 m-flex-base0 m-justify-end"/>
     </header>
-    <div 
-      :class="`${prefixCls}-container`" 
+    <div
+      :class="`${prefixCls}-container`"
       style="padding-top: 0.9rem">
       <router-view/>
     </div>
   </div>
 </template>
+
 <script>
 import { mapState } from "vuex";
+
 const prefixCls = "auditList";
 const options = [
   {
@@ -55,6 +57,7 @@ const options = [
   }
 ];
 // const items = {};
+
 export default {
   name: "MyAudits",
   data: () => ({
@@ -63,6 +66,11 @@ export default {
     options,
     currentType: "feedComment"
   }),
+  computed: {
+    ...mapState({
+      // audits: state =>
+    })
+  },
   watch: {
     currentType(type) {
       this.$router.push(`/message/audits/${type}`);
@@ -72,11 +80,6 @@ export default {
     goBack() {
       this.$router.push("/message");
     }
-  },
-  computed: {
-    ...mapState({
-      // audits: state =>
-    })
   }
 };
 </script>

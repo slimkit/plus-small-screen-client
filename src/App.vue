@@ -1,6 +1,6 @@
 <template>
-  <div 
-    id="app" 
+  <div
+    id="app"
     class="wap-wrap">
     <keep-alive>
       <router-view v-if="$route.meta.keepAlive"/>
@@ -22,6 +22,7 @@
     </div>
   </div>
 </template>
+
 <script>
 // 相册展示
 import pswp from "@/components/pswp.vue";
@@ -72,6 +73,12 @@ export default {
       title: "TS+"
     };
   },
+  computed: {
+    ...mapState({
+      UID: state => state.CURRENTUSER.id,
+      status: state => state.EASEMOB.status
+    })
+  },
   watch: {
     $route(val) {
       const {
@@ -83,17 +90,11 @@ export default {
       val && (document.title = val);
     }
   },
-  methods: {
-    ...mapActions(["BOOTSTRAPPERS"])
-  },
-  computed: {
-    ...mapState({
-      UID: state => state.CURRENTUSER.id,
-      status: state => state.EASEMOB.status
-    })
-  },
   created() {
     this.BOOTSTRAPPERS();
+  },
+  methods: {
+    ...mapActions(["BOOTSTRAPPERS"])
   }
 };
 </script>

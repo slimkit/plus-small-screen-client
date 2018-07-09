@@ -80,5 +80,47 @@ export default {
 };
 </script>
 
-<style lang="less" src='./style/diySelect.less'>
+<style lang="less">
+.diy-select {
+  display: inline-block;
+  width: 280px;
+  background: #fff;
+  height: 90px;
+  position: relative;
+  &--label {
+    padding: 20px;
+    height: 100%;
+    line-height: 90-40px;
+    position: relative;
+    &:after {
+      content: "▼";
+      position: absolute;
+      right: 20px;
+      transition: all 0.3s ease;
+      transform-origin: center;
+      transform: scale(0.6);
+    }
+  }
+
+  &--options {
+    background-color: #fff;
+    position: absolute;
+    left: 0;
+    right: 0;
+    box-shadow: -1px 0 3px #ededed;
+  }
+
+  &--option {
+    padding: 0 20px;
+    height: 90px;
+    border-top: 1px solid #ededed; /*no*/
+    line-height: 90px;
+  }
+
+  .open &--label {
+    &::after {
+      transform: scale(0.6) rotate(180deg);
+    }
+  }
+}
 </style>

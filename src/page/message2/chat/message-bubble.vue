@@ -1,13 +1,13 @@
 <template>
   <div class="message-item">
-    <div 
-      v-if="user.id === 0" 
+    <div
+      v-if="user.id === 0"
       class="room-tips">
       <span>{{ body }}</span>
     </div>
-    <div 
-      v-else 
-      :class="{selef: bySelef}" 
+    <div
+      v-else
+      :class="{selef: bySelef}"
       class="m-box m-aln-st msg-bubble">
       <avatar :user="user"/>
       <section class="m-box-model m-aln-st msg-bubble-main">
@@ -22,7 +22,7 @@ import { mapState } from "vuex";
 export default {
   name: "Bubble",
   props: {
-    msg: [Object, String]
+    msg: { type: [Object, String], default: "" }
   },
   data() {
     return {};

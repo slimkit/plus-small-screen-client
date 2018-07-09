@@ -5,9 +5,9 @@
       :show-bottom="false"
       style="height: 100%"
       @onRefresh="onRefresh">
-      <chat-item 
-        v-for="(room, index) in chatRooms" 
-        :item="room" 
+      <chat-item
+        v-for="(room, index) in chatRooms"
+        :item="room"
         :key="`${index}-${room.id}`" />
     </jo-load-more>
 
@@ -30,6 +30,9 @@ export default {
       chatRooms: state => state.EASEMOB.chatRooms
     })
   },
+  mounted() {
+    this.initChatRooms();
+  },
   methods: {
     startSingleChat,
     ...mapActions(["initChatRooms"]),
@@ -40,9 +43,6 @@ export default {
         }, 1e3);
       });
     }
-  },
-  mounted() {
-    this.initChatRooms();
   }
 };
 </script>

@@ -1,14 +1,14 @@
 <template>
   <div :class="`${prefixCls}`">
-    <header 
-      slot="head" 
+    <header
+      slot="head"
       class="m-box m-justify-bet m-aln-center m-head-top m-pos-f m-main m-bb1">
       <div class="m-box m-flex-grow1 m-aln-center m-flex-base0">
-        <svg 
-          class="m-style-svg m-svg-def" 
+        <svg
+          class="m-style-svg m-svg-def"
           @click="goBack">
-          <use 
-            xmlns:xlink="http://www.w3.org/1999/xlink" 
+          <use
+            xmlns:xlink="http://www.w3.org/1999/xlink"
             xlink:href="#base-back"/>
         </svg>
       </div>
@@ -18,28 +18,28 @@
       <div class="m-box m-flex-grow1 m-aln-center m-flex-base0 m-justify-end"/>
     </header>
 
-    <div 
-      :class="`${prefixCls}-container`" 
+    <div
+      :class="`${prefixCls}-container`"
       style="padding-top: 0.9rem">
       <load-more
         ref="loadmore"
         :on-refresh="onRefresh"
         :on-load-more="onLoadMore"
-        :class="`${prefixCls}-loadmore`"
-      >
-        <div 
-          v-for="like in likes" 
-          v-if="like.id" 
-          :class="`${prefixCls}-item`" 
+        :class="`${prefixCls}-loadmore`" >
+        <div
+          v-for="like in likes"
+          v-if="like.id"
+          :class="`${prefixCls}-item`"
           :key="like.id">
-          <component 
-            :is="items[like.likeable_type]" 
+          <component
+            :is="items[like.likeable_type]"
             :like="like"/>
         </div>
       </load-more>
     </div>
   </div>
 </template>
+
 <script>
 import _ from "lodash";
 import { mapState } from "vuex";
@@ -58,6 +58,7 @@ const items = {
   "group-posts": groupPostItem,
   "question-answers": questionAnswerItem
 };
+
 export default {
   name: "MyLikes",
   data: () => ({
@@ -65,15 +66,20 @@ export default {
     refreshData: [],
     items
   }),
+  computed: {
+    ...mapState({
+      likes: state => state.MESSAGE.MY_LIKED || []
+    })
+  },
   watch: {
     refreshData(val) {
       if (val.length > 0) {
-        this.$store.commit("SAVE_MY_LIKED", {
-          type: "new",
-          data: val
-        });
+        this.$store.commit("SAVE_MY_LIKED", { type: "new", data: val });
       }
     }
+  },
+  created() {
+    resetUserCount("liked");
   },
   methods: {
     // 刷新服务
@@ -110,14 +116,6 @@ export default {
           this.$refs.loadmore.bottomEnd(data.length < 15);
         });
     }
-  },
-  computed: {
-    ...mapState({
-      likes: state => state.MESSAGE.MY_LIKED || []
-    })
-  },
-  created() {
-    resetUserCount("liked");
   }
 };
 </script>

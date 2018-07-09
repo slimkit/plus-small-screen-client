@@ -8,8 +8,8 @@
     <div class="wallet-info--detail--content">
       <div class="wallet-info--detail--content-row">
         <span class="wallet-info--detail--content-row--label">{{ detail.action ? '收' : '付' }}款人</span>
-        <div><avatar 
-          :user="user" 
+        <div><avatar
+          :user="user"
           size="small"/> {{ user.name }}</div>
       </div>
       <div class="wallet-info--detail--content-row">
@@ -23,10 +23,13 @@
     </div>
   </div>
 </template>
+
 <script>
 export default {
   name: "WalletInfoDetail",
-  props: ["detail"],
+  props: {
+    detail: { type: Object, default: () => {} }
+  },
   computed: {
     user() {
       return this.$store.state.CURRENTUSER;
@@ -34,6 +37,7 @@ export default {
   }
 };
 </script>
+
 <style lang='less'>
 .wallet-info--detail {
   position: fixed;

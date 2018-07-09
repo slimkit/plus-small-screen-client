@@ -4,9 +4,9 @@
     ref="loadmore"
     @onRefresh="onRefresh"
     @onLoadMore="onLoadMore">
-    <user-item 
-      v-for="user in users" 
-      :user="user" 
+    <user-item
+      v-for="user in users"
+      :user="user"
       :key="user.id"/>
   </jo-load-more>
 </template>
@@ -20,6 +20,13 @@ export default {
   components: {
     UserItem
   },
+  data() {
+    return {
+      users: [],
+      page: 1,
+      isActive: false
+    };
+  },
   computed: {
     ...mapState(["POSITION"]),
     lat() {
@@ -29,13 +36,7 @@ export default {
       return this.POSITION.lng;
     }
   },
-  data() {
-    return {
-      users: [],
-      page: 1,
-      isActive: false
-    };
-  },
+
   activated() {
     this.$refs.loadmore.beforeRefresh();
   },

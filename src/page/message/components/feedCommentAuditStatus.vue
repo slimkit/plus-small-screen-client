@@ -1,26 +1,27 @@
 <template>
   <div :class="`${prefixCls}-status`">
     <section v-if="audit.comment != null">
-      <section 
-        v-if="audit.expires_at != null" 
+      <section
+        v-if="audit.expires_at != null"
         class="gray">
         <span class="amount-show">{{ audit.amount }}积分 / {{ audit.day }}天</span>已审核
       </section>
-      <section 
-        v-else 
-        class="green" 
+      <section
+        v-else
+        class="green"
         @click="showOperations(audit)">
         <span class="audit-show">{{ audit.amount }}积分 / {{ audit.day }}天</span>
         <span class="audit-operation">审核</span>
       </section>
     </section>
-    <section 
-      v-if="audit.comment == null" 
+    <section
+      v-if="audit.comment == null"
       class="red">
       该评论已被删除
     </section>
   </div>
 </template>
+
 <script>
 /**
  * 提取动态评论置顶申请的状态控制组件
@@ -29,7 +30,9 @@
 const prefixCls = "msgList";
 export default {
   name: "FeedCommentAuditStatus",
-  props: ["audit"],
+  props: {
+    audit: { type: Object, default: () => {} }
+  },
   data: () => ({
     prefixCls
   }),

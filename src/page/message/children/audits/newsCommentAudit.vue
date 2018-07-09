@@ -5,17 +5,16 @@
         ref="loadmore"
         :on-refresh="onRefresh"
         :on-load-more="onLoadMore"
-        :class="`${prefixCls}-loadmore`"
-      >
-        <div 
-          v-for="audit in audits" 
-          :class="`${prefixCls}-item`" 
+        :class="`${prefixCls}-loadmore`" >
+        <div
+          v-for="audit in audits"
+          :class="`${prefixCls}-item`"
           :key="`news-comment-${audit.id}`">
           <div :class="`${prefixCls}-item-top`">
             <avatar :user="audit.user"/>
             <section class="userInfo">
-              <router-link 
-                :class="`${prefixCls}-item-top-link`" 
+              <router-link
+                :class="`${prefixCls}-item-top-link`"
                 :to="`/users/${audit.user_id}`">{{
                 audit.user.name }}
               </router-link>
@@ -54,6 +53,7 @@ import newsCommentAuditStatus from "../../components/newsCommentAuditStatus";
 import AuditContent from "../../components/auditContent";
 
 const prefixCls = "msgList";
+
 export default {
   name: "NewsCommentAudit",
   components: {
@@ -63,6 +63,11 @@ export default {
   data: () => ({
     prefixCls
   }),
+  computed: {
+    ...mapState({
+      audits: state => state.MESSAGE.MY_NEWS_COMMENT_AUDIT
+    })
+  },
   methods: {
     goToDetail(id) {
       this.$router.push(`/news/${id}`);
@@ -129,17 +134,11 @@ export default {
           size: image.size
         };
       }
-
       return false;
     }
-  },
-  computed: {
-    ...mapState({
-      audits: state => state.MESSAGE.MY_NEWS_COMMENT_AUDIT
-    })
-  },
-  created() {}
+  }
 };
 </script>
+
 <style lang="less" src="../../style.less">
 </style>

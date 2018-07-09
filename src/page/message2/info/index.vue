@@ -1,14 +1,14 @@
 <template>
   <ul class="m-box-model m-entry-group">
-    <router-link 
-      v-for="item in system" 
-      :key="item.url" 
-      :to="item.url" 
-      tag="li" 
+    <router-link
+      v-for="item in system"
+      :key="item.url"
+      :to="item.url"
+      tag="li"
       class="m-entry">
       <svg class="m-style-svg m-svg-big m-entry-prepend m-flex-grow0 m-flex-shrink0">
-        <use 
-          :xlink:href="`#${item.icon}`" 
+        <use
+          :xlink:href="`#${item.icon}`"
           xmlns:xlink="http://www.w3.org/1999/xlink"/>
       </svg>
       <div class="m-box-model m-justify-bet m-flex-grow1 m-flex-shrink1 m-flex-base0 m-entry-main">
@@ -21,8 +21,8 @@
         </h5>
         <h5 v-else/>
         <div class="m-box m-aln-center m-justify-end">
-          <span 
-            v-if="computedGetter(item.count) !== 0" 
+          <span
+            v-if="computedGetter(item.count) !== 0"
             :class="`${prefixCls}-time-count`">
             <i>{{ computedGetter(item.count) }}</i>
           </span>
@@ -31,8 +31,10 @@
     </router-link>
   </ul>
 </template>
+
 <script>
 import { mapState } from "vuex";
+
 const prefixCls = "msg";
 
 export default {
@@ -79,12 +81,6 @@ export default {
       }
     };
   },
-  methods: {
-    computedGetter(key) {
-      return this[key];
-    }
-  },
-
   computed: {
     ...mapState({
       msg: state => state.MESSAGE.UNREAD_COUNT.msg,
@@ -128,9 +124,15 @@ export default {
         ~~this.newMsg["group-join-pinned"]
       );
     }
+  },
+  methods: {
+    computedGetter(key) {
+      return this[key];
+    }
   }
 };
 </script>
+
 <style lang="less">
 .msg-time-count {
   i {

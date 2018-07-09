@@ -1,19 +1,21 @@
 <template id="alert-template">
-  <div 
-    v-show="show" 
+  <div
+    v-show="show"
     :class="alertClasses">
     <slot>
       <strong>Default!</strong> Hello World~
     </slot>
-    <span 
-      class="Alert__close" 
+    <span
+      class="Alert__close"
       @click="show = false">x</span>
   </div>
 </template>
 <script>
 export default {
   name: "Message",
-  props: ["type"],
+  props: {
+    type: { type: String, default: "" }
+  },
   data() {
     return {
       show: true

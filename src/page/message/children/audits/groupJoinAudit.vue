@@ -5,18 +5,17 @@
         ref="loadmore"
         :on-refresh="onRefresh"
         :on-load-more="onLoadMore"
-        :class="`${prefixCls}-loadmore`"
-      >
-        <div 
-          v-for="audit in audits" 
-          v-if="audit.comment !== null" 
-          :class="`${prefixCls}-item`" 
+        :class="`${prefixCls}-loadmore`" >
+        <div
+          v-for="audit in audits"
+          v-if="audit.comment !== null"
+          :class="`${prefixCls}-item`"
           :key="`group-join-${audit.id}`">
           <div :class="`${prefixCls}-item-top`">
             <avatar :user="audit.user" />
             <section class="userInfo">
-              <router-link 
-                :class="`${prefixCls}-item-top-link`" 
+              <router-link
+                :class="`${prefixCls}-item-top-link`"
                 :to="`/users/${audit.user_id}`">{{ audit.user.name }}</router-link>
               <p>{{ audit.created_at | time2tips }}</p>
             </section>
@@ -26,7 +25,7 @@
         </div>
       </load-more>
     </div>
-  </div>  
+  </div>
 </template>
 
 <script>
@@ -36,6 +35,7 @@ import groupJoinAuditStatus from "../../components/groupJoinAuditStatus";
 import AuditContent from "../../components/auditContent";
 
 const prefixCls = "msgList";
+
 export default {
   name: "GroupJoinAudit",
   components: {
@@ -45,6 +45,11 @@ export default {
   data: () => ({
     prefixCls
   }),
+  computed: {
+    ...mapState({
+      audits: state => state.MESSAGE.MY_GROUP_JOIN_AUDIT
+    })
+  },
   methods: {
     getAuditContent(audit) {
       const { group } = audit || {};
@@ -104,13 +109,7 @@ export default {
           }
         });
     }
-  },
-  computed: {
-    ...mapState({
-      audits: state => state.MESSAGE.MY_GROUP_JOIN_AUDIT
-    })
-  },
-  created() {}
+  }
 };
 </script>
 <style lang="less" src="../../style.less">

@@ -1,25 +1,26 @@
 <template>
   <div :class="`${prefixCls}-status`">
     <section v-if="audit.audit_at">
-      <section 
-        v-if="audit.status === 1" 
+      <section
+        v-if="audit.status === 1"
         class="gray">
         同意加入
       </section>
-      <section 
-        v-else 
+      <section
+        v-else
         class="gray">
         拒绝加入
       </section>
     </section>
-    <section 
-      v-else 
-      class="green" 
+    <section
+      v-else
+      class="green"
       @click="showOperations(audit)">
       <span class="audit-operation">审核</span>
     </section>
   </div>
 </template>
+
 <script>
 /**
  * 提取动态评论置顶申请的状态控制组件
@@ -28,7 +29,9 @@
 const prefixCls = "msgList";
 export default {
   name: "GroupPostCommentAuditStatus",
-  props: ["audit"],
+  props: {
+    audit: { type: Object, default: () => {} }
+  },
   data: () => ({
     prefixCls
   }),
