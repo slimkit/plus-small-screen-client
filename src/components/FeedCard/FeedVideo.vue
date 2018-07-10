@@ -46,12 +46,6 @@ export default {
         ? 5.18
         : parseInt(this.video.height * this.ratio) / 100;
     }
-    // video_file() {
-    //   return `/api/v2/files/${this.video.video_id}`;
-    // },
-    // cover_file() {
-    //   return `/api/v2/files/${this.video.cover_id}`;
-    // }
   },
   created() {
     this.ratio = 518 / this.video.width;

@@ -57,7 +57,9 @@ export default {
       this.author = author;
       this.time = createdAt;
       this.cate = category.name;
-      this.image = image ? `/api/v2/files/${image.id}` : null;
+      this.image = image
+        ? `${this.$http.defaults.baseURL}/files/${image.id}?w=190&h=135`
+        : null;
     }
   }
 };

@@ -82,7 +82,9 @@ export default {
       return this.audit.commentableDel;
     },
     video() {
-      return this.audit.video ? `/api/v2/files/${this.audit.video}` : false;
+      return this.audit.video
+        ? `${this.$http.defaults.baseURL}/files/${this.audit.video}`
+        : false;
     },
     contentId() {
       return this.audit.contentId;

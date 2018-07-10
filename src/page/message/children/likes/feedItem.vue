@@ -81,7 +81,7 @@ export default {
       const { length } = like.likeable.images;
       if (length > 0) {
         const { 0: img = {} } = like.likeable.images;
-        return `/api/v2/files/${img.id}`;
+        return `${this.$http.defaults.baseURL}/files/${img.id}`;
       }
 
       return false;
@@ -91,8 +91,8 @@ export default {
       const video = like.likeable.video;
       if (video !== null) {
         return {
-          video: `/api/v2/files/${video.video_id}`,
-          cover: `/api/v2/files/${video.cover_id}`
+          video: `${this.$http.defaults.baseURL}/files/${video.video_id}`,
+          cover: `${this.$http.defaults.baseURL}/files/${video.cover_id}`
         };
       }
       return false;

@@ -67,7 +67,7 @@ export default {
       const { like } = this;
       const { id = 0 } = like.likeable.image || {};
       if (id > 0) {
-        return `/api/v2/files/${id}`;
+        return `${this.$http.defaults.baseURL}/files/${id}`;
       }
 
       return false;

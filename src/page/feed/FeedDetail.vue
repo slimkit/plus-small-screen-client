@@ -203,13 +203,17 @@ export default {
       return this.feed.video;
     },
     video_file() {
-      return this.video ? `/api/v2/files/${this.video.video_id}` : false;
+      return this.video
+        ? `${this.$http.defaults.baseURL}/files/${this.video.video_id}`
+        : false;
     },
     title() {
       return this.feed.title;
     },
     cover_file() {
-      return this.video ? `/api/v2/files/${this.video.video_id}` : false;
+      return this.video
+        ? `${this.$http.defaults.baseURL}/files/${this.video.video_id}`
+        : false;
     },
     isMine() {
       return this.feed.user_id === this.CURRENTUSER.id;

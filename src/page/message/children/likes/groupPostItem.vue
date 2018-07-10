@@ -64,7 +64,7 @@ export default {
     //   const { length } = like.likeable.images;
     //   if (length > 0) {
     //     const { 0: img = {} } = like.likeable.images;
-    //     return `/api/v2/files/${img.id}`;
+    //     return `${this.$http.defaults.baseURL}/files/${img.id}`;
     //   }
     //   return false;
     // }
