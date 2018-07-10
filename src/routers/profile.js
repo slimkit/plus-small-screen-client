@@ -4,6 +4,7 @@ import ProfileCollectionNews from "@/page/profile/collection/profileCollection.n
 import ProfileCollectionFeeds from "@/page/profile/collection/profileCollection.feeds.vue";
 import ProfileCollectionAnswers from "@/page/profile/collection/profileCollection.answers.vue";
 import ProfileCollectionPosts from "@/page/profile/collection/profileCollection.posts.vue";
+import ProfileCertificate from "@/page/profile/Certificate.vue";
 
 export default [
   {
@@ -38,5 +39,10 @@ export default [
         meta: { title: "收藏的帖子" }
       }
     ]
+  },
+  {
+    path: "/profile/certificate",
+    component: ProfileCertificate,
+    meta: { title: "认证" }
   }
 ];

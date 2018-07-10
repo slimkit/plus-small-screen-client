@@ -18,8 +18,8 @@ export default {
   name: "VIcon",
   props: {
     type: { type: [String], required: true },
-    height: { type: [String, Number], default: "" },
-    width: { type: [String, Number], default: "" },
+    height: { type: [String, Number], default: 0.32 },
+    width: { type: [String, Number], default: 0.32 },
     color: { type: String, default: "" }
   },
   computed: {

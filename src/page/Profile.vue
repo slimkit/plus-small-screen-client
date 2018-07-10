@@ -132,7 +132,9 @@
         </ul>
         <ul class="m-box-model m-entry-group">
           <!-- to="/upgrade" tag="li" -->
-          <li class="m-entry">
+          <li
+            class="m-entry"
+            @click="selectCertType">
             <svg class="m-style-svg m-svg-def m-entry-prepend">
               <use xlink:href="#profile-approve"/>
             </svg>
@@ -161,9 +163,11 @@
   </div>
 </template>
 <script>
+import bus from "@/bus";
 import { mapState } from "vuex";
 import { resetUserCount } from "@/api/message.js";
 import { refreshCurrentUserInfo } from "@/api/user.js";
+
 export default {
   name: "Profile",
   data() {
@@ -211,9 +215,26 @@ export default {
       type === "followers" ? "following" : type === "mutual" ? "mutual" : "";
     resetType && resetUserCount(resetType);
     next();
+  },
+  methods: {
+    selectCertType() {
+      const actions = [
+        { text: "个人认证", method: () => this.certificate("user") },
+        { text: "企业认证", method: () => this.certificate("org") }
+      ];
+      bus.$emit("actionSheet", actions, "取消");
+    },
+    /**
+     * 认证
+     * @param {string} type 认证类型 (user|org)
+     */
+    certificate(type) {
+      this.$router.push({ path: "/profile/certificate", query: { type } });
+    }
   }
 };
 </script>
+
 <style lang="less">
 .m-pr-info {
   padding: 30px;
