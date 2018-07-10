@@ -85,21 +85,21 @@ bus.$emit("applyTop", {
 ## 组件
 
 ### 图片上传组件 ImagePoster
-****
+
 `@/components/ImagePoster.vue`
 
 用于各页面中图片上传相关内容，使用方法详见 `@/pages/profile/Certificate.vue`
 
-#### `slot`
+#### `Slot`
 
 含有一个匿名 slot，支持任何 html 标签，显示在上传组件的 icon 下方
 
-#### 钩子
+#### `Event`
 
 ##### `uploaded`
 
 图片上传成功后的回调方法，接受一个参数，值为已上传的图片信息。
 
-#### `error`
+##### `error`
 
 图片上传失败的回调方法
