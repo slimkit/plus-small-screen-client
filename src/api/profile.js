@@ -19,3 +19,13 @@ export function postCertification(payload) {
   const url = "/user/certification";
   return api.post(url, payload, { validateStatus: s => s === 201 });
 }
+
+/**
+ * 获取用户认证信息
+ * @author mutoe <mutoe@foxmail.com>
+ * @export
+ * @returns
+ */
+export function getUserVerifyInfo() {
+  return api.get("/user/certification", { validateStatus: s => s === 200 });
+}

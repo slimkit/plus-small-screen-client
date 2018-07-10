@@ -139,8 +139,12 @@
               <use xlink:href="#profile-approve"/>
             </svg>
             <span class="m-text-box m-flex-grow1">认证</span>
-            <span class="m-entry-extra">{{ verified ? '已认证' : '未认证' }}</span>
-            <!-- <i class="m-style-svg m-svg-def m-entry-append"></i> -->
+            <span class="m-entry-extra">{{ verifiedText }}</span>
+            <svg class="m-style-svg m-svg-def m-entry-append">
+              <use
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+                xlink:href="#base-arrow-r"/>
+            </svg>
           </li>
           <router-link
             to="/setting"
@@ -162,16 +166,20 @@
     <foot-guide/>
   </div>
 </template>
+
 <script>
 import bus from "@/bus";
 import { mapState } from "vuex";
 import { resetUserCount } from "@/api/message.js";
 import { refreshCurrentUserInfo } from "@/api/user.js";
+import { getUserVerifyInfo } from "@/api/profile.js";
 
 export default {
   name: "Profile",
   data() {
-    return {};
+    return {
+      verifiedText: ""
+    };
   },
   computed: {
     ...mapState({
@@ -199,12 +207,29 @@ export default {
     sum() {
       return this.currency.sum;
     },
+    verified: {
+      get() {
+        return this.user.verified;
+      },
+      set(val) {
+        this.$set(this.user, "verified", val);
+      }
+    }
+  },
+  watch: {
     verified() {
-      return this.user.verified;
+      if (this.verified && this.verified.status === 0) {
+        this.verifiedText = "待审核";
+      } else if (this.verified && this.verified === 1) {
+        this.verifiedText = "通过审核";
+      } else {
+        this.verifiedText = "未认证";
+      }
     }
   },
   mounted() {
     refreshCurrentUserInfo();
+    this.getUserVerifyInfo();
     this.$store.dispatch("GET_NEW_UNREAD_COUNT");
   },
   beforeRouteLeave(to, from, next) {
@@ -225,6 +250,14 @@ export default {
       bus.$emit("actionSheet", actions, "取消");
     },
     /**
+     * 获取用户认证信息
+     */
+    getUserVerifyInfo() {
+      getUserVerifyInfo().then(({ data }) => {
+        this.verified = data;
+      });
+    },
+    /**
      * 认证
      * @param {string} type 认证类型 (user|org)
      */
@@ -235,7 +268,7 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .m-pr-info {
   padding: 30px;
 }
@@ -268,7 +301,6 @@ export default {
     text-overflow: ellipsis;
   }
 }
-
 .m-pr-entrys {
   margin-top: 30px;
   margin-bottom: 30px;
@@ -278,6 +310,10 @@ export default {
 
   .m-entry-extra {
     margin: 0;
+
+    + .m-entry-append {
+      margin-left: 10px;
+    }
   }
 }
 </style>
