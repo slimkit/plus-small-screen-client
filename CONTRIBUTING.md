@@ -90,6 +90,25 @@ bus.$emit("applyTop", {
 
 用于各页面中图片上传相关内容，使用方法详见 `@/pages/profile/Certificate.vue`
 
+``` vue
+<template>
+  <image-poster @uploaded="uploaded">
+    <span>点击上传反面身份证照片</span>
+  </image-poster>
+</template>
+<script>
+import ImagePoster from "@/components/ImagePoster.vue";
+export default {
+  components: { ImagePoster }
+  methods: {
+    uploaded(poster) {
+      console.log(poster);
+    }
+  }
+}
+</script>
+```
+
 #### `Slot`
 
 含有一个匿名 slot，支持任何 html 标签，显示在上传组件的 icon 下方
