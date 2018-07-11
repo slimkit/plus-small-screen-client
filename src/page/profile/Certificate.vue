@@ -148,11 +148,15 @@
           <p
             v-else
             class="poster-tips">上传企业机构营业执照</p>
-          <image-poster @uploaded="uploaded1">
+          <image-poster
+            :poster="poster1"
+            @uploaded="uploaded1">
             <span>点击上传正面身份证照片</span>
           </image-poster>
           <template v-if="type=='user' && fields.files.length > 0">
-            <image-poster @uploaded="uploaded2">
+            <image-poster
+              :poster="poster2"
+              @uploaded="uploaded2">
               <span>点击上传反面身份证照片</span>
             </image-poster>
           </template>
@@ -169,7 +173,7 @@
 
 import ContentText from "@/page/post/components/ContentText.vue";
 import ImagePoster from "@/components/ImagePoster.vue";
-import { postCertification } from "@/api/profile";
+import { postCertification } from "@/api/user.js";
 
 const formInfo = {
   user: {
@@ -189,7 +193,7 @@ const formInfo = {
 };
 
 export default {
-  name: "Certification",
+  name: "Certificate",
   components: {
     ContentText,
     ImagePoster
@@ -228,13 +232,30 @@ export default {
      * 待提交表单
      * @returns {Object}
      */
-    formData() {
-      const ret =
-        this.type === "user"
-          ? this.fields
-          : Object.assign({}, this.fields, this.orgFields);
-      ret.type = this.type;
-      return ret;
+    formData: {
+      get() {
+        const ret =
+          this.type === "user"
+            ? this.fields
+            : Object.assign({}, this.fields, this.orgFields);
+        ret.type = this.type;
+        return ret;
+      },
+      set(val) {
+        // TODO: 优化这里
+        const { name, phone, number, desc, files, org_name, org_address } = val; // ignore camelcase
+        this.fields = Object.assign({}, this.fields, {
+          name,
+          phone,
+          desc,
+          number,
+          files
+        });
+        this.orgFields = Object.assign({}, this.orgFields, {
+          org_name,
+          org_address
+        });
+      }
     },
     /**
      * 下一步可用性
@@ -245,6 +266,14 @@ export default {
           return !Object.values(this.formData).every(v => v);
         }
       }
+    },
+    poster1() {
+      const id = this.fields.files[0];
+      return { id, src: `${this.$http.defaults.baseURL}/files/${id}` };
+    },
+    poster2() {
+      const id = this.fields.files[1];
+      return { id, src: `${this.$http.defaults.baseURL}/files/${id}` };
     }
   },
   watch: {
@@ -262,6 +291,11 @@ export default {
             leave: "animated slideOutRight"
           });
     }
+  },
+  mounted() {
+    this.$store.dispatch("FETCH_USER_VERIFY").then(data => {
+      this.formData = data.data;
+    });
   },
   methods: {
     onSubmit() {

@@ -18,6 +18,16 @@
         认证信息审核中，我们会在7个工作日内给您答复
       </div>
       <div class="info-main">
+        <template v-if="type !== 'user'">
+          <div class="row">
+            <span class="label">{{ formInfo[type].orgName }}</span>
+            <span class="value">{{ verified.data.org_name }}</span>
+          </div>
+          <div class="row">
+            <span class="label">{{ formInfo[type].orgAddress }}</span>
+            <span class="value">{{ verified.data.org_address }}</span>
+          </div>
+        </template>
         <div class="row">
           <span class="label">{{ formInfo[type].name }}</span>
           <span class="value">{{ verified.data.name }}</span>
@@ -132,8 +142,7 @@ export default {
     .row {
       font-size: 30px;
       line-height: 36px;
-      margin-top: 78px;
-      margin-left: 30px;
+      margin: 78px 30px;
 
       .label {
         display: inline-block;
@@ -145,7 +154,7 @@ export default {
 
       img {
         width: ~"calc(50% - 4em)";
-        margin-left: 4px;
+        margin-right: 4px;
       }
     }
   }

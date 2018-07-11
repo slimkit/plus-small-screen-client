@@ -5,6 +5,7 @@ import ProfileCollectionFeeds from "@/page/profile/collection/profileCollection.
 import ProfileCollectionAnswers from "@/page/profile/collection/profileCollection.answers.vue";
 import ProfileCollectionPosts from "@/page/profile/collection/profileCollection.posts.vue";
 import ProfileCertificate from "@/page/profile/Certificate.vue";
+import ProfileCertification from "@/page/profile/Certification.vue";
 
 export default [
   {
@@ -43,6 +44,11 @@ export default [
   {
     path: "/profile/certificate",
     component: ProfileCertificate,
-    meta: { title: "认证" }
+    meta: { title: "申请认证" }
+  },
+  {
+    path: "/profile/certification",
+    component: ProfileCertification,
+    meta: { title: "认证信息" }
   }
 ];

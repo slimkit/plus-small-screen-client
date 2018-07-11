@@ -238,12 +238,15 @@ export default {
   },
   methods: {
     selectCertType() {
-      if (_.isEmpty(this.verified) || this.verified.status === 2) {
+      if (_.isEmpty(this.verified)) {
         const actions = [
           { text: "个人认证", method: () => this.certificate("user") },
           { text: "企业认证", method: () => this.certificate("org") }
         ];
         bus.$emit("actionSheet", actions, "取消");
+      } else if (this.verified.status === 2) {
+        // 被驳回则补充填写表单
+        this.$router.push({ path: "/profile/certificate" });
       } else {
         this.$router.push({ path: "/profile/certification" });
       }

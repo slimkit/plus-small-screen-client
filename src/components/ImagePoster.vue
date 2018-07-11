@@ -62,15 +62,35 @@
 <script>
 /**
  * 图片上传组件
+ * @typedef {Object} Poster
+ * @property {number} id
+ * @property {*} src
+ * @property {*} type
+ * @property {*} file
+ * @property {boolean} [error=false]
+ * @property {boolean} [loading=false]
  */
 
 import sendImage from "@/util/SendImage.js";
 
+/**
+ * @type {Poster}
+ */
+const defaultPoster = {
+  id: "",
+  src: "",
+  type: "",
+  file: [],
+  error: false,
+  loading: false
+};
+
 export default {
-  data() {
-    return {
-      poster: {}
-    };
+  props: {
+    /**
+     * @type {Poster}
+     */
+    poster: { type: Object, default: () => defaultPoster }
   },
   methods: {
     addPoster() {
@@ -86,19 +106,12 @@ export default {
           type: files[0].mimeType,
           src: window.URL.createObjectURL(files[0])
         };
-        this.poster = Object.assign(
-          {
-            id: "",
-            src: "",
-            type: "",
-            file: null,
-            error: false,
-            loading: false
-          },
-          posterObj
-        );
+        this.poster = Object.assign({}, defaultPoster, posterObj);
       }
     },
+    /**
+     * @param {Poster} poster
+     */
     loadedPoster(poster) {
       const file = poster.file;
       if (!file) return;
