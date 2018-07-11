@@ -173,7 +173,7 @@
 
 import ContentText from "@/page/post/components/ContentText.vue";
 import ImagePoster from "@/components/ImagePoster.vue";
-import { postCertification } from "@/api/user.js";
+import * as api from "@/api/user.js";
 
 const formInfo = {
   user: {
@@ -203,6 +203,7 @@ export default {
       loading: false,
       step: 1,
       formInfo,
+      status: 0, // 认证状态
       fields: {
         name: "",
         number: "",
@@ -225,8 +226,15 @@ export default {
      * 认证类型. 必须是 (user|org)
      * @returns {string}
      */
-    type() {
+    type: {
+      get() {
       return this.$route.query.type || "user";
+    },
+      set(val) {
+        const { path, query } = this.$route;
+        query.type = val;
+        this.$router.push({ path, query });
+      }
     },
     /**
      * 待提交表单
@@ -294,15 +302,24 @@ export default {
   },
   mounted() {
     this.$store.dispatch("FETCH_USER_VERIFY").then(data => {
-      this.formData = data.data;
+      this.formData = data.data || {};
+      this.type = data.certification_name;
+      this.status = data.status;
     });
   },
   methods: {
     onSubmit() {
-      postCertification(this.formData).then(({ data: { message } }) => {
-        this.$Message.success(message || "提交成功，请等待审核");
+      if (this.status === 0) {
+        api.postCertification(this.formData).then(() => {
+          this.$Message.success("提交成功，请等待审核");
         this.goBack();
       });
+      } else {
+        api.patchCertification(this.formData).then(() => {
+          this.$Message.success("提交成功，请等待审核");
+          this.goBack();
+        });
+      }
     },
     uploaded1(poster) {
       this.$set(this.fields.files, 0, poster.id);

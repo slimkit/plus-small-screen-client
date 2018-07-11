@@ -256,6 +256,11 @@ export function postCertification(payload) {
   return api.post(url, payload, { validateStatus: s => s === 201 });
 }
 
+export function patchCertification(payload) {
+  const url = "/user/certification";
+  return api.patch(url, payload, { validateStatus: s => s === 201 });
+}
+
 /**
  * 获取用户认证信息
  * @author mutoe <mutoe@foxmail.com>
