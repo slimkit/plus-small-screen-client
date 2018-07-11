@@ -228,8 +228,8 @@ export default {
      */
     type: {
       get() {
-      return this.$route.query.type || "user";
-    },
+        return this.$route.query.type || "user";
+      },
       set(val) {
         const { path, query } = this.$route;
         query.type = val;
@@ -277,11 +277,11 @@ export default {
     },
     poster1() {
       const id = this.fields.files[0];
-      return { id, src: `${this.$http.defaults.baseURL}/files/${id}` };
+      return { id, src: `${this.$http.defaults.baseURL}/files/${id}?w=600` };
     },
     poster2() {
       const id = this.fields.files[1];
-      return { id, src: `${this.$http.defaults.baseURL}/files/${id}` };
+      return { id, src: `${this.$http.defaults.baseURL}/files/${id}?w=600` };
     }
   },
   watch: {
@@ -312,8 +312,8 @@ export default {
       if (this.status === 0) {
         api.postCertification(this.formData).then(() => {
           this.$Message.success("提交成功，请等待审核");
-        this.goBack();
-      });
+          this.goBack();
+        });
       } else {
         api.patchCertification(this.formData).then(() => {
           this.$Message.success("提交成功，请等待审核");
