@@ -169,10 +169,10 @@
 
 <script>
 import bus from "@/bus";
+import _ from "lodash";
 import { mapState } from "vuex";
 import { resetUserCount } from "@/api/message.js";
 import { refreshCurrentUserInfo } from "@/api/user.js";
-import { getUserVerifyInfo } from "@/api/profile.js";
 
 export default {
   name: "Profile",
@@ -187,7 +187,8 @@ export default {
       new_mutual: state => state.MESSAGE.NEW_UNREAD_COUNT.mutual || 0,
       CONFIG: state =>
         state.CONFIG || { site: { currency_name: { name: "积分" } } },
-      user: state => state.CURRENTUSER
+      user: state => state.CURRENTUSER,
+      verified: state => state.USER_VERIFY
     }),
     currency_name() {
       return this.CONFIG.site.currency_name.name;
@@ -206,31 +207,24 @@ export default {
     },
     sum() {
       return this.currency.sum;
-    },
-    verified: {
-      get() {
-        return this.user.verified;
-      },
-      set(val) {
-        this.$set(this.user, "verified", val);
-      }
     }
   },
   watch: {
-    verified() {
-      if (this.verified && this.verified.status === 0) {
+    verified(to) {
+      if (to && to.status === 0) {
         this.verifiedText = "待审核";
-      } else if (this.verified && this.verified === 1) {
+      } else if (to && to.status === 1) {
         this.verifiedText = "通过审核";
+      } else if (to && to.status === 2) {
+        this.verifiedText = "被驳回";
       } else {
         this.verifiedText = "未认证";
       }
     }
   },
   mounted() {
-    refreshCurrentUserInfo(() => {
-      this.getUserVerifyInfo();
-    });
+    refreshCurrentUserInfo();
+    this.$store.dispatch("FETCH_USER_VERIFY");
     this.$store.dispatch("GET_NEW_UNREAD_COUNT");
   },
   beforeRouteLeave(to, from, next) {
@@ -244,19 +238,15 @@ export default {
   },
   methods: {
     selectCertType() {
-      const actions = [
-        { text: "个人认证", method: () => this.certificate("user") },
-        { text: "企业认证", method: () => this.certificate("org") }
-      ];
-      bus.$emit("actionSheet", actions, "取消");
-    },
-    /**
-     * 获取用户认证信息
-     */
-    getUserVerifyInfo() {
-      getUserVerifyInfo().then(({ data }) => {
-        this.verified = data;
-      });
+      if (_.isEmpty(this.verified) || this.verified.status === 2) {
+        const actions = [
+          { text: "个人认证", method: () => this.certificate("user") },
+          { text: "企业认证", method: () => this.certificate("org") }
+        ];
+        bus.$emit("actionSheet", actions, "取消");
+      } else {
+        this.$router.push({ path: "/profile/certification" });
+      }
     },
     /**
      * 认证

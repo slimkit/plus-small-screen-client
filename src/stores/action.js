@@ -1,4 +1,6 @@
 import Api from "@/api/api.js";
+import * as userApi from "@/api/user.js";
+
 export default {
   async BOOTSTRAPPERS({ commit }) {
     const { data = {} } = await Api.get("/bootstrappers");
@@ -8,6 +10,14 @@ export default {
   GET_GROUP_TYPES({ commit }) {
     Api.get("/plus-group/categories").then(({ data = [] }) => {
       commit("SAVE_GROUP_TYPES", data);
+    });
+  },
+
+  // 获取用户验证信息
+  FETCH_USER_VERIFY({ commit }) {
+    return userApi.getUserVerifyInfo().then(({ data = {} }) => {
+      commit("SAVE_USER_VERIFY", data);
+      return data;
     });
   },
 

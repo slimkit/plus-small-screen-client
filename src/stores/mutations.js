@@ -63,6 +63,11 @@ export default {
     lstore.setData("USERTAGS", state.USERTAGS);
   },
 
+  // 保存用户认证数据
+  SAVE_USER_VERIFY(state, verified) {
+    state.USER_VERIFY = verified;
+  },
+
   // 保存创建圈子时选择的位置 临时数据
   SAVE_GROUP_LOCATION(state, location) {
     state.CUR_GROUP_LOCATION = location;

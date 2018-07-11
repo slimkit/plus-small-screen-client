@@ -10,7 +10,6 @@ import lstore from "@/plugins/lstore/lstore.js";
 
 const userState = vuex.state.USERS;
 const resArray = { data: [] };
-const noop = () => {};
 
 /**
  * 关注 || 取关 操作
@@ -191,17 +190,15 @@ export function signinByAccount(payload) {
  * 刷新用户信息
  * @author jsonleex <jsonlseex@163.com>
  * @export
- * @param {Function} [callback = noop]
  * @returns {Promise<UserObject>}
  */
-export function refreshCurrentUserInfo(callback = noop) {
+export function refreshCurrentUserInfo() {
   return api.get(`/user`).then(
     ({ data }) => {
       // 保存本地
       lstore.setData("H5_CUR_USER", data);
       // 保存 vuex
       vuex.commit("SAVE_CURRENTUSER", data);
-      callback();
       return data;
     },
     err => {
@@ -237,4 +234,34 @@ export function uploadUserBanner(file) {
 export function rewardUser(userId, data) {
   const url = `/user/${userId}/new-rewards`;
   return api.post(url, data, { validateStatus: s => s === 201 });
+}
+
+/**
+ * 申请认证
+ * @author mutoe <mutoe@foxmail.com>
+ * @export
+ * @param {Object} payload
+ * @param {string} payload.type 'user' or 'org'
+ * @param {string} payload.name 真实姓名 or 负责人名字
+ * @param {string} payload.phone 用户联系方式 or 负责人联系方式
+ * @param {string} payload.number 身份证号码 or 营业执照注册号
+ * @param {string} payload.desc 认证描述
+ * @param {string} [payload.org_name] 企业或机构名称
+ * @param {string} [payload.org_address] 企业或机构地址
+ * @param {number[]} [payload.files]
+ * @returns
+ */
+export function postCertification(payload) {
+  const url = "/user/certification";
+  return api.post(url, payload, { validateStatus: s => s === 201 });
+}
+
+/**
+ * 获取用户认证信息
+ * @author mutoe <mutoe@foxmail.com>
+ * @export
+ * @returns
+ */
+export function getUserVerifyInfo() {
+  return api.get("/user/certification", { validateStatus: s => s === 200 });
 }

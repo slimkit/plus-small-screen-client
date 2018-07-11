@@ -40,6 +40,13 @@ const state = {
    */
   USERS: lstore.getData("H5_USERS") || {},
 
+  // 用户认证信息
+  USER_VERIFY: {
+    category: {},
+    data: {},
+    files: []
+  },
+
   GROUP_CATES: lstore.getData("H5_GROUP_CATES") || []
 };
 
