@@ -228,8 +228,9 @@ export default {
     }
   },
   mounted() {
-    refreshCurrentUserInfo();
-    this.getUserVerifyInfo();
+    refreshCurrentUserInfo(() => {
+      this.getUserVerifyInfo();
+    });
     this.$store.dispatch("GET_NEW_UNREAD_COUNT");
   },
   beforeRouteLeave(to, from, next) {

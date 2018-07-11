@@ -10,6 +10,7 @@ import lstore from "@/plugins/lstore/lstore.js";
 
 const userState = vuex.state.USERS;
 const resArray = { data: [] };
+const noop = () => {};
 
 /**
  * 关注 || 取关 操作
@@ -190,15 +191,17 @@ export function signinByAccount(payload) {
  * 刷新用户信息
  * @author jsonleex <jsonlseex@163.com>
  * @export
+ * @param {Function} [callback = noop]
  * @returns {Promise<UserObject>}
  */
-export function refreshCurrentUserInfo() {
+export function refreshCurrentUserInfo(callback = noop) {
   return api.get(`/user`).then(
     ({ data }) => {
       // 保存本地
       lstore.setData("H5_CUR_USER", data);
       // 保存 vuex
       vuex.commit("SAVE_CURRENTUSER", data);
+      callback();
       return data;
     },
     err => {
