@@ -277,10 +277,12 @@ export default {
     },
     poster1() {
       const id = this.fields.files[0];
+      if (!id) return;
       return { id, src: `${this.$http.defaults.baseURL}/files/${id}?w=600` };
     },
     poster2() {
       const id = this.fields.files[1];
+      if (!id) return;
       return { id, src: `${this.$http.defaults.baseURL}/files/${id}?w=600` };
     }
   },

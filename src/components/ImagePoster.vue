@@ -1,13 +1,13 @@
 <template>
   <div
-    :class="{ loading: poster.loading, error: poster.error }"
+    :class="{ loading: posterInternal.loading, error: posterInternal.error }"
     class="m-box m-aln-center m-justify-center m-poster-box"
     @click="addPoster">
     <img
-      v-if="poster.src"
-      :src="poster.src"
+      v-if="posterInternal.src"
+      :src="posterInternal.src"
       class="m-poster"
-      @load.stop="loadedPoster(poster)"
+      @load.stop="loadedPoster(posterInternal)"
       @error="posterError">
     <div
       v-else
@@ -20,7 +20,7 @@
       <slot/>
     </div>
     <div
-      v-if="!poster.error && poster.loading"
+      v-if="!posterInternal.error && posterInternal.loading"
       class="fixed-loading">
       <div
         class="u-loading"
@@ -92,9 +92,14 @@ export default {
      */
     poster: { type: Object, default: () => defaultPoster }
   },
+  data() {
+    return {
+      posterInternal: this.poster // for one-way data binding
+    };
+  },
   methods: {
     addPoster() {
-      if (this.poster.loading) return;
+      if (this.posterInternal.loading) return;
       this.$refs.imagefile.click();
     },
     selectPhoto() {
@@ -106,7 +111,7 @@ export default {
           type: files[0].mimeType,
           src: window.URL.createObjectURL(files[0])
         };
-        this.poster = Object.assign({}, defaultPoster, posterObj);
+        this.posterInternal = Object.assign({}, defaultPoster, posterObj);
       }
     },
     /**
