@@ -101,7 +101,6 @@ export default {
   },
   watch: {
     verified(to) {
-      console.log(to);
       // 如果被驳回或没有数据则返回个人页面
       if (to.id && ![0, 1].includes(to.status)) {
         this.$router.replace("/profile");

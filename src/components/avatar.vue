@@ -34,7 +34,6 @@ export default {
     },
     icon() {
       const { verified = {} } = this.user;
-      console.log(verified);
       if (_.isEmpty(verified)) return false;
       // 如果有设置图标 使用设置的图标
       if (verified.icon)
