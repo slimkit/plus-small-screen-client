@@ -23,8 +23,8 @@ export default {
    * @author mutoe <mutoe@foxmail.com>
    */
   ADVERTISEMENT(state, payload) {
-    state.ADVERTISEMENT = Object.assign(state.advertisement || {}, payload);
-    lstore.setData("ADVERTISEMENT", state.advertisement);
+    state.ADVERTISEMENT = payload;
+    lstore.setData("ADVERTISEMENT", state.ADVERTISEMENT);
   },
 
   /**

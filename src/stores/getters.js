@@ -9,6 +9,6 @@ export default {
    * @returns {Object}
    */
   getAdTypeBySpace: ({ ADVERTISEMENT }) => type => {
-    return ADVERTISEMENT.type.filter(ad => ad.space === type).pop() || {};
+    return ADVERTISEMENT.filter(ad => ad.space === type).pop() || {};
   }
 };
