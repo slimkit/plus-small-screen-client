@@ -23,6 +23,13 @@
             xmlns:xlink="http://www.w3.org/1999/xlink"
             xlink:href="#base-search"/>
         </router-link>
+        <svg
+          class="m-style-svg m-svg-def"
+          @click="beforeCreatePost">
+          <use
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            xlink:href="#post-news"/>
+        </svg>
       </div>
     </header>
 
@@ -44,6 +51,8 @@
 </template>
 
 <script>
+import bus from "@/bus";
+import _ from "lodash";
 import NewsItem from "./components/NewsItem.vue";
 import NewsFilter from "./components/NewsFilter.vue";
 
@@ -100,6 +109,42 @@ export default {
           this.list = [...this.list, ...data];
           this.$refs.loadmore.bottomEnd(data.length < 10);
         });
+    },
+    /**
+     * 投稿前进行认证确认
+     */
+    beforeCreatePost() {
+      // 如果后台设置了不需要验证 或 用户已经认证就直接跳转
+      const noNeedVerify =
+        !this.$store.state.CONFIG["news:contribute"].verified ||
+        !_.isEmpty(this.$store.state.CURRENTUSER.verified);
+      if (noNeedVerify) return this.$router.push({ path: "/post/release" });
+      else {
+        const actions = [
+          {
+            text: "个人认证",
+            method: () =>
+              this.$router.push({
+                path: "/profile/certificate",
+                query: { type: "user" }
+              })
+          },
+          {
+            text: "企业认证",
+            method: () =>
+              this.$router.push({
+                path: "/profile/certificate",
+                query: { type: "org" }
+              })
+          }
+        ];
+        bus.$emit(
+          "actionSheet",
+          actions,
+          "取消",
+          "认证用户才能创建投稿，去认证？"
+        );
+      }
     }
   }
 };
