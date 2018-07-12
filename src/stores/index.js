@@ -17,6 +17,8 @@ const state = {
 
   CONFIG: lstore.getData("BOOTSTRAPPERS") || {},
 
+  ADVERTISEMENT: lstore.getData("ADVERTISEMENT") || { type: [], list: [] },
+
   /* 终端信息 */
   BROWSER: detectOS(),
 

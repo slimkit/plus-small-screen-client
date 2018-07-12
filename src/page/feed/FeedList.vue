@@ -54,10 +54,17 @@
   </div>
 </template>
 <script>
+/**
+ * 动态列表
+ * @typedef {{id: number, user, ...others}} FeedDetail
+ */
+
 import FeedCard from "@/components/FeedCard/FeedCard.vue";
 import * as api from "@/api/feeds.js";
+import * as bootApi from "@/api/bootstrappers.js";
 
 const feedTypesMap = ["new", "hot", "follow"];
+const noop = () => {};
 
 export default {
   name: "FeedList",
@@ -66,8 +73,9 @@ export default {
   },
   data() {
     return {
-      ad: [], // 广告
       pinned: [], // 置顶
+      bannerAds: [],
+      feedCardAds: [],
 
       newFeeds: [],
       hotFeeds: [],
@@ -89,6 +97,22 @@ export default {
     maxId() {
       const len = this.feeds.length;
       return len ? this.feeds[len - 1].id : 0;
+    },
+    /**
+     * 顶部 banner 广告列表
+     * @returns {FeedDetail[]}
+     */
+    bannerAdsId() {
+      const adType = this.$store.getters.getAdTypeBySpace("feed:list:top");
+      return adType.id;
+    },
+    /**
+     * 模拟动态卡片广告列表
+     * @returns {FeedDetail[]}
+     */
+    feedCardAdsId() {
+      const adType = this.$store.getters.getAdTypeBySpace("feed:list:analog");
+      return adType.id;
     }
   },
   watch: {
@@ -99,25 +123,33 @@ export default {
     }
   },
   created() {
-    this.onRefresh(() => {});
+    this.onRefresh(noop);
   },
-
   methods: {
     onRefresh(callback) {
+      // TODO: @mutoe [api] refactor there with vuex action
       api.getFeedsByType(this.feedType, 15).then(({ data }) => {
-        const { ad = [], pinned = [], feeds = [] } = data;
-        this.ad = ad;
+        const { pinned = [], feeds = [] } = data;
         this.feeds = feeds;
         this.pinned = pinned;
         callback(feeds.length < 15);
       });
+      this.feedType === "hot" &&
+        // TODO: @mutoe [api] refactor there with vuex action
+        bootApi
+          .getAdsByIds([this.bannerAdsId, this.feedCardAdsId])
+          .then(({ data }) => {
+            this.bannerAds = data.filter(ad => ad.space_id == this.bannerAdsId);
+            this.feedCardAds = data.filter(
+              ad => ad.space_id == this.feedCardAdsId
+            );
+          });
     },
     onLoadMore(callback) {
       // 热门动态 修改为 offset
       const after = this.feedType === "hot" ? this.hotFeeds.length : this.maxId;
       api.getFeedsByType(this.feedType, 15, after).then(({ data }) => {
-        const { ad = [], pinned = [], feeds = [] } = data;
-        this.ad = ad;
+        const { pinned = [], feeds = [] } = data;
         this.pinned = pinned;
         this.feeds = [...this.feeds, ...feeds];
         callback(feeds.length < 15);

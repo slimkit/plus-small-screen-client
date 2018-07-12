@@ -1,4 +1,4 @@
-import { get } from "./api.js";
+import api from "./api.js";
 import lstore from "@/plugins/lstore";
 import location from "@/util/location.js";
 /**
@@ -10,7 +10,7 @@ export function getHotCities() {
   const hasData = lstore.hasData("H5_HOT_CITIES");
   return hasData
     ? Promise.resolve(lstore.getData("H5_HOT_CITIES"))
-    : get("/locations/hots").then(
+    : api.get("/locations/hots").then(
         ({ data }) => {
           const res = data ? data : [];
           lstore.setData("H5_HOT_CITIES", res);
@@ -50,7 +50,7 @@ export function getCurrentPosition() {
 
 export function getGeo(address) {
   const res = {};
-  return get(`around-amap/geo?address=${address}`).then(
+  return api.get(`around-amap/geo?address=${address}`).then(
     ({
       data: {
         geocodes: [
@@ -78,5 +78,50 @@ export function getGeo(address) {
  */
 export function searchCityByName(name) {
   if (!name) return Promise.resolve({ data: [] });
-  return get(`/locations/search?name=${name}`);
+  return api.get(`/locations/search?name=${name}`);
+}
+
+/**
+ * 查询所有广告位
+ * @author mutoe <mutoe@foxmail.com>
+ * @export
+ * @returns
+ */
+export function getAdvertiseType() {
+  return api.get("/advertisingspace", { validateStatus: s => s === 200 });
+}
+
+/**
+ * 获取启动信息
+ * @author mutoe <mutoe@foxmail.com>
+ * @export
+ * @returns
+ */
+export function getBootstrappers() {
+  return api.get("/bootstrappers", { validateStatus: s => s === 200 });
+}
+
+/**
+ * 根据广告位 id 获取一个广告位的广告列表
+ * @author mutoe <mutoe@foxmail.com>
+ * @export
+ * @param {number} adId 从广告类型列表中获取的广告 id
+ * @returns
+ */
+export function getAdsById(adId) {
+  const url = `/advertisingspace/${adId}/advertising`;
+  return api.get(url, { validateStatus: s => s === 200 });
+}
+
+/**
+ * 批量获取广告列表 必须传入数组
+ * @author mutoe <mutoe@foxmail.com>
+ * @export
+ * @param {number[]} adIds
+ * @returns
+ */
+export function getAdsByIds(adIds) {
+  const url = "/advertisingspace/advertising";
+  const params = { space: adIds.join(",") };
+  return api.get(url, { params, validateStatus: s => s === 200 });
 }

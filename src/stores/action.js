@@ -1,11 +1,21 @@
 import Api from "@/api/api.js";
+import * as bootApi from "@/api/bootstrappers.js";
 import * as userApi from "@/api/user.js";
 
 export default {
+  /**
+   * 获取启动信息
+   * @author mutoe <mutoe@foxmail.com>
+   */
   async BOOTSTRAPPERS({ commit }) {
-    const { data = {} } = await Api.get("/bootstrappers");
-    commit("BOOTSTRAPPERS", data);
+    const promises = [bootApi.getBootstrappers(), bootApi.getAdvertiseType()];
+    Promise.all(promises).then(res => {
+      const [{ data: bootstrappers = {} }, { data: advertiseType = {} }] = res;
+      commit("BOOTSTRAPPERS", bootstrappers);
+      commit("ADVERTISEMENT", { type: advertiseType });
+    });
   },
+
   // 获取圈子分类数据
   GET_GROUP_TYPES({ commit }) {
     Api.get("/plus-group/categories").then(({ data = [] }) => {

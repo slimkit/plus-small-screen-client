@@ -19,6 +19,15 @@ export default {
   },
 
   /**
+   * 广告信息
+   * @author mutoe <mutoe@foxmail.com>
+   */
+  ADVERTISEMENT(state, payload) {
+    state.ADVERTISEMENT = Object.assign(state.advertisement || {}, payload);
+    lstore.setData("ADVERTISEMENT", state.advertisement);
+  },
+
+  /**
    * 保存当前定位信息
    * @author jsonleex <jsonlseex@163.com>
    */
