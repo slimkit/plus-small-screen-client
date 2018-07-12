@@ -13,7 +13,7 @@
         <span
           v-show="step === 2"
           :class="['btn-submit', disabled]"
-          @click="onSubmit">提交</span>
+          @click="validate(onSubmit)">提交</span>
       </div>
     </header>
 
@@ -128,7 +128,7 @@
             <button
               :disabled="loading||disabled"
               class="m-long-btn m-signin-btn"
-              @click="step = 2">
+              @click="validate(() => {step = 2})">
               <v-icon
                 v-if="loading"
                 type="base-loading"/>
@@ -153,7 +153,7 @@
             @uploaded="uploaded1">
             <span>点击上传正面身份证照片</span>
           </image-poster>
-          <template v-if="type=='user' && fields.files.length > 0">
+          <template v-if="type=='user' && files.length > 0">
             <image-poster
               :poster="poster2"
               @uploaded="uploaded2">
@@ -175,6 +175,7 @@ import ContentText from "@/page/post/components/ContentText.vue";
 import ImagePoster from "@/components/ImagePoster.vue";
 import * as api from "@/api/user.js";
 
+const noop = () => {};
 const formInfo = {
   user: {
     name: { label: "真实姓名", placeholder: "输入真实姓名" },
@@ -204,12 +205,12 @@ export default {
       step: 1,
       formInfo,
       status: 0, // 认证状态
+      files: [], // 认证图片
       fields: {
         name: "",
         number: "",
         phone: "",
-        desc: "",
-        files: []
+        desc: ""
       },
       orgFields: {
         org_name: "", // ignore camelcase
@@ -251,13 +252,21 @@ export default {
       },
       set(val) {
         // TODO: 优化这里
-        const { name, phone, number, desc, files, org_name, org_address } = val; // ignore camelcase
+        const {
+          name,
+          phone,
+          number,
+          desc,
+          files = [],
+          org_name,
+          org_address
+        } = val; // ignore camelcase
+        this.files = files;
         this.fields = Object.assign({}, this.fields, {
           name,
           phone,
           desc,
-          number,
-          files
+          number
         });
         this.orgFields = Object.assign({}, this.orgFields, {
           org_name,
@@ -269,19 +278,15 @@ export default {
      * 下一步可用性
      */
     disabled() {
-      switch (this.step) {
-        case 1: {
-          return !Object.values(this.formData).every(v => v);
-        }
-      }
+      return !Object.values(this.formData).every(v => v);
     },
     poster1() {
-      const id = this.fields.files[0];
+      const id = this.files[0];
       if (!id) return;
       return { id, src: `${this.$http.defaults.baseURL}/files/${id}?w=600` };
     },
     poster2() {
-      const id = this.fields.files[1];
+      const id = this.files[1];
       if (!id) return;
       return { id, src: `${this.$http.defaults.baseURL}/files/${id}?w=600` };
     }
@@ -306,29 +311,58 @@ export default {
     this.$store.dispatch("FETCH_USER_VERIFY").then(data => {
       this.formData = data.data || {};
       this.type = data.certification_name;
-      this.status = data.status;
+      this.status = data.status || 0;
     });
   },
   methods: {
     onSubmit() {
+      const postData = Object.assign({ files: this.files }, this.formData);
       if (this.status === 0) {
-        api.postCertification(this.formData).then(() => {
+        api.postCertification(postData).then(() => {
           this.$Message.success("提交成功，请等待审核");
           this.goBack();
         });
       } else {
-        api.patchCertification(this.formData).then(() => {
+        api.patchCertification(postData).then(() => {
           this.$Message.success("提交成功，请等待审核");
           this.goBack();
         });
       }
     },
     uploaded1(poster) {
-      this.$set(this.fields.files, 0, poster.id);
+      this.$set(this.files, 0, poster.id);
     },
     uploaded2(poster) {
       if (this.type === "org") return;
-      this.$set(this.fields.files, 1, poster.id);
+      this.$set(this.files, 1, poster.id);
+    },
+    /**
+     * @param {Function} next
+     */
+    validate(next = noop) {
+      let failed = false;
+      const match = {
+        phone: /^1[3456789]\d{9}$/, // 手机号正则
+        number: /^(\d{15}|\d{18})$/ // 身份证号正则
+      };
+      switch (this.step) {
+        case 1: {
+          if (!this.fields.number.match(match.number))
+            failed = "请检查身份证号码是否正确";
+          if (!this.fields.phone.match(match.phone))
+            failed = "请检查手机号码是否正确";
+          break;
+        }
+        case 2:
+          if (
+            (this.type === "user" && this.files.length !== 2) ||
+            (this.type === "org" && this.files.length !== 1)
+          )
+            failed = "请上传证件照片";
+          break;
+      }
+      if (!failed) next();
+      else this.$Message.error(failed);
     }
   }
 };
@@ -353,13 +387,18 @@ export default {
 
     .m-form-row {
       label {
-        width: 5.5em;
+        width: 6em;
         flex: none;
 
         &::before {
           content: "*";
           color: red;
         }
+      }
+
+      .m-input input,
+      .m-input textarea {
+        text-align: right;
       }
 
       &.auto-height {
