@@ -44,12 +44,17 @@
       <!-- 资讯顶部 banner 广告位 -->
       <banner-ad type="news"/>
 
-      <news-card
-        v-for="news in list"
-        v-if="news.id"
-        :key="news.id"
-        :current-cate="currentCate"
-        :news="news" />
+      <template v-for="card in list" >
+        <news-card
+          v-if="card.author"
+          :key="`news${card.id}`"
+          :current-cate="currentCate"
+          :news="card" />
+        <ad-card
+          v-if="card.space_id"
+          :key="`ad${card.id}`"
+          :ad="card"/>
+      </template>
     </jo-load-more>
   </div>
 </template>
@@ -58,8 +63,10 @@
 import bus from "@/bus";
 import _ from "lodash";
 import NewsCard from "./components/NewsCard.vue";
+import AdCard from "./components/AdCard.vue";
 import NewsFilter from "./components/NewsFilter.vue";
 import BannerAd from "@/components/advertisement/BannerAd.vue";
+import * as bootApi from "@/api/bootstrappers.js";
 
 const noop = () => {};
 
@@ -67,24 +74,35 @@ export default {
   name: "NewsList",
   components: {
     NewsCard,
+    AdCard,
     NewsFilter,
     BannerAd
   },
   data() {
     return {
       list: [],
-      currentCate: 0
+      currentCate: 0,
+      newsList: [], // 资讯列表
+      advertiseList: [], // 原始广告列表
+      advertiseLeft: [] // 尚未加载的广告列表
     };
   },
   computed: {
     after() {
       const len = this.list.length;
       return len > 0 ? this.list[len - 1].id : 0;
+    },
+    advertiseTypeId() {
+      const adType = this.$store.getters.getAdTypeBySpace("news:list:analog");
+      return adType.id;
     }
+  },
+  mounted() {
+    this.getAdvertiseList();
   },
   methods: {
     onCateChange({ id = 0 } = {}) {
-      this.list = [];
+      this.newsList = [];
       this.currentCate = id;
       this.onRefresh(noop);
     },
@@ -95,28 +113,28 @@ export default {
           ? { limit: 10, recommend: 1 }
           : { limit: 10, cate_id: this.currentCate };
 
-      this.$http
-        .get("/news", {
-          params
-        })
-        .then(({ data = [] } = {}) => {
-          this.list = data;
-          callback(data.length >= 10);
-        });
+      this.$http.get("/news", { params }).then(({ data = [] }) => {
+        this.newsList = data;
+        callback(data.length >= 10);
+
+        // 从广告栈顶取出一条随机插入列表
+        let rand = ~~(Math.random() * 9) + 1;
+        rand > data.length && (rand = data.length);
+        this.advertiseLeft = _.cloneDeep(this.advertiseList);
+        this.advertiseLeft.length &&
+          data.splice(rand, 0, this.advertiseLeft.shift());
+        this.list = data;
+      });
     },
     onLoadMore(callback) {
       const params =
         this.currentCate === 0
           ? { limit: 10, recommend: 1, after: this.after }
           : { limit: 10, cate_id: this.currentCate, after: this.after };
-      this.$http
-        .get("/news", {
-          params
-        })
-        .then(({ data = [] } = {}) => {
-          this.list = [...this.list, ...data];
-          callback(data.length < 10);
-        });
+      this.$http.get("/news", { params }).then(({ data = [] } = {}) => {
+        this.newsList = [...this.newsList, ...data];
+        callback(data.length < 10);
+      });
     },
     /**
      * 投稿前进行认证确认
@@ -153,6 +171,12 @@ export default {
           "认证用户才能创建投稿，去认证？"
         );
       }
+    },
+    getAdvertiseList() {
+      bootApi.getAdsById(this.advertiseTypeId).then(({ data }) => {
+        this.advertiseList = data;
+        this.advertiseLeft = _.cloneDeep(data);
+      });
     }
   }
 };

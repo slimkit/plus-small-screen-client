@@ -2,7 +2,7 @@
   <router-link
     :to="`/news/${news.id}`"
     tag="div"
-    class="news-item">
+    class="news-card">
     <section class="body">
       <h2>{{ title }}</h2>
       <p>
@@ -66,7 +66,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.news-item {
+.news-card {
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
