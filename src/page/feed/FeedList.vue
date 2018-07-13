@@ -34,6 +34,25 @@
       class="p-feed-main"
       @onRefresh="onRefresh"
       @onLoadMore="onLoadMore" >
+      <div class="banner-advertisement">
+        <swipe
+          v-if="feedType === 'hot' && bannerAds.length"
+          :autoplay-time="bannerLoopTime"
+          class="banner-swipe">
+          <swipe-item
+            v-for="ad in bannerAds"
+            :key="ad.id">
+            <a
+              :href="ad.data.link"
+              class="wrap">
+              <img
+                :src="ad.data.image"
+                class="ad">
+              <h4 class="title">{{ ad.title }}</h4>
+            </a>
+          </swipe-item>
+        </swipe>
+      </div>
       <ul class="p-feed-list">
         <li
           v-for="(feed, index) in pinned"
@@ -54,12 +73,15 @@
     <foot-guide/>
   </div>
 </template>
+
 <script>
 /**
  * 动态列表
  * @typedef {{id: number, user, ...others}} FeedDetail
  */
 
+import "c-swipe/dist/swipe.css";
+import { Swipe, SwipeItem } from "c-swipe";
 import FeedCard from "@/components/FeedCard/FeedCard.vue";
 import * as api from "@/api/feeds.js";
 import * as bootApi from "@/api/bootstrappers.js";
@@ -70,12 +92,15 @@ const noop = () => {};
 export default {
   name: "FeedList",
   components: {
-    FeedCard
+    FeedCard,
+    Swipe,
+    SwipeItem
   },
   data() {
     return {
       pinned: [], // 置顶
       bannerAds: [],
+      bannerLoopTime: 3000, // 轮播图轮询时间
       feedCardAds: [],
 
       newFeeds: [],
@@ -160,7 +185,7 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .p-feed {
   .p-feed-main {
     padding-top: 90px;
@@ -168,6 +193,31 @@ export default {
 
   .p-feed-list > li + li {
     margin-top: 20px;
+  }
+
+  .banner-advertisement {
+    .banner-swipe {
+      .wrap {
+        @radio: 414 / 215; // banner 固定的宽高比
+
+        height: calc(~"100vw / @{radio}"); // 由屏幕宽度计算出相应比例的高度
+        position: relative;
+        display: block;
+
+        .title {
+          position: absolute;
+          bottom: 16px;
+          width: 100%;
+          text-align: center;
+          color: #fff;
+          font-size: 28px;
+        }
+
+        img.ad {
+          width: 100%;
+        }
+      }
+    }
   }
 }
 </style>
