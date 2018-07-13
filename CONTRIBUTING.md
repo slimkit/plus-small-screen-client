@@ -23,6 +23,31 @@
 
 每次执行 `npm version **` 时会自动生成截至上一版发布期间的所有 feature、fix、break change 内容。
 
+## 开发规范
+
+考虑到本项目的后续维护者参与维护，在参与开发前，请尽量阅读 Vue 官方编写的 [风格指南](https://cn.vuejs.org/v2/style-guide/)。  
+为了快速入手项目的二次开发，这里列出一些必要的规范，请**务必阅读以下规范后再进行编码工作**。
+
+### 组件开发规范 (experimental)
+
+#### 组件命名
+
+按照 vue 官方推荐的组件命名方法，文件名命名方式为大驼峰式 (CamelCase)，组件的 `name` 属性值要与文件名一致，便于使用 vue devtools 进行调试和快速定位文件。
+
+#### 组件目录结构
+
+可跨模块使用的组件存放在 `@/components` 目录中，按功能归类存放于子文件夹下。
+
+在模块内使用的组件存放在 `@/page/[模块名]/components` 目录下。
+
+> example
+> 以动态模块为例，动态模块的视图存放在 `@/page/feed` 下，  
+> 其中动态列表视图在 `@/page/feed/FeedList.vue`，动态详情视图在 `@/page/feed/FeedDetail.vue`；  
+> 动态列表视图中含有普通的动态卡片组件和广告卡片组件，  
+> 动态卡片组件在 `@/page/feed/components/FeedCard.vue`，广告卡片组件在 `@/page/feed/components/AdCard.vue`。
+
+# API
+
 ## 钩子
 
 全局钩子挂载于 `./src/bus.js` 下的事件总线上。
