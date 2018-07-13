@@ -32,6 +32,7 @@ export function plusMessageAnalyze(message, defaultMessage) {
  * @return {String}
  */
 export function formatDate(date, fmt = "yyyy/MM/dd hh:mm") {
+  date = new Date(date);
   const o = {
     "M+": date.getMonth() + 1,
     "d+": date.getDate(),
