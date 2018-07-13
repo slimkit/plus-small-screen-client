@@ -121,6 +121,8 @@ export default {
   methods: {
     message() {
       this.$Message.error("请先进行身份认证");
+      this.$router.push({ path: "/profile/certificate" });
+      this.$nextTick(this.cancel);
     },
     to(path) {
       path = this.login ? path : `/signin?redirect=${path}`;
