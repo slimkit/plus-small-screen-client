@@ -58,8 +58,5 @@
     "last 2 versions",
     "not ie <= 8",
     "Safari 6"
-  ],
-  "eslintIgnore": [
-    "dist/*"
   ]
 }
