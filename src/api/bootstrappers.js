@@ -109,6 +109,7 @@ export function getBootstrappers() {
  * @returns
  */
 export function getAdsById(adId) {
+  if (!adId) return Promise.resolve({ data: [] });
   const url = `/advertisingspace/${adId}/advertising`;
   return api.get(url, { validateStatus: s => s === 200 });
 }
