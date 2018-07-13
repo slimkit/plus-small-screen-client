@@ -123,6 +123,42 @@ export default {
 
 图片上传失败的回调方法
 
+### banner 轮播广告位 BannerAd
+
+`@/components/advertisement/BannerAd.vue`
+
+> 该组件使用了轮播图插件, 依赖 `c-swipe` [pspgbhu/vue-swipe-mobile](https://github.com/pspgbhu/vue-swipe-mobile), gzip 10KB
+
+用于各详情页广告位插槽，用法非常简单
+
+``` vue
+<template>
+  <div>
+    <banner-ad type="feed:hot"/>
+  </div>
+</template>
+<script>
+import BannerAd from "@/components/advertisiment/BannerAd.vue";
+export default {
+  components: { BannerAd }
+}
+</script>
+```
+
+#### `Props`
+
+##### `type` {string} required
+
+显示的广告位类型, 支持的值有
+- `feed:hot` 热门动态列表页
+- `news` 资讯列表页
+
+用于获取对应页面广告具体数据
+
+##### `loopTime` {number}
+
+轮播图循环时间，单位 ms
+
 ### 详情页广告位 DetailAd
 
 `@/components/advertisement/DetailAd.vue`
@@ -145,7 +181,7 @@ export default {
 
 #### `Props`
 
-##### `type` required
+##### `type` {string} required
 
 显示的广告位类型, 支持的值有 
 - `feed` 动态详情页 

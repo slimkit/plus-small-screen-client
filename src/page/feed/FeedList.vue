@@ -34,25 +34,12 @@
       class="p-feed-main"
       @onRefresh="onRefresh"
       @onLoadMore="onLoadMore" >
-      <div class="banner-advertisement">
-        <swipe
-          v-if="feedType === 'hot' && bannerAds.length"
-          :autoplay-time="bannerLoopTime"
-          class="banner-swipe">
-          <swipe-item
-            v-for="ad in bannerAds"
-            :key="ad.id">
-            <a
-              :href="ad.data.link"
-              class="wrap">
-              <img
-                :src="ad.data.image"
-                class="ad">
-              <h4 class="title">{{ ad.title }}</h4>
-            </a>
-          </swipe-item>
-        </swipe>
-      </div>
+
+      <!-- 热门动态顶部 banner 广告位 -->
+      <banner-ad
+        v-if="feedType === 'hot'"
+        type="feed:hot"/>
+
       <ul class="p-feed-list">
         <li
           v-for="(feed, index) in pinned"
@@ -80,9 +67,8 @@
  * @typedef {{id: number, user, ...others}} FeedDetail
  */
 
-import "c-swipe/dist/swipe.css";
-import { Swipe, SwipeItem } from "c-swipe";
 import FeedCard from "@/components/FeedCard/FeedCard.vue";
+import BannerAd from "@/components/advertisement/BannerAd.vue";
 import * as api from "@/api/feeds.js";
 import * as bootApi from "@/api/bootstrappers.js";
 
@@ -91,16 +77,10 @@ const noop = () => {};
 
 export default {
   name: "FeedList",
-  components: {
-    FeedCard,
-    Swipe,
-    SwipeItem
-  },
+  components: { FeedCard, BannerAd },
   data() {
     return {
       pinned: [], // 置顶
-      bannerAds: [],
-      bannerLoopTime: 3000, // 轮播图轮询时间
       feedCardAds: [],
 
       newFeeds: [],
@@ -123,14 +103,6 @@ export default {
     maxId() {
       const len = this.feeds.length;
       return len ? this.feeds[len - 1].id : 0;
-    },
-    /**
-     * 顶部 banner 广告列表
-     * @returns {FeedDetail[]}
-     */
-    bannerAdsId() {
-      const adType = this.$store.getters.getAdTypeBySpace("feed:list:top");
-      return adType.id;
     },
     /**
      * 模拟动态卡片广告列表
@@ -162,15 +134,9 @@ export default {
       });
       this.feedType === "hot" &&
         // TODO: @mutoe [api] refactor there with vuex action
-        bootApi
-          .getAdsByIds([this.bannerAdsId, this.feedCardAdsId])
-          .then(({ data }) => {
-            data = data.sort((a, b) => a.sort < b.sort);
-            this.bannerAds = data.filter(ad => ad.space_id == this.bannerAdsId);
-            this.feedCardAds = data.filter(
-              ad => ad.space_id == this.feedCardAdsId
-            );
-          });
+        bootApi.getAdsById(this.feedCardAdsId).then(({ data }) => {
+          this.feedCardAds = data.sort((a, b) => a.sort < b.sort);
+        });
     },
     onLoadMore(callback) {
       // 热门动态 修改为 offset
@@ -194,31 +160,6 @@ export default {
 
   .p-feed-list > li + li {
     margin-top: 20px;
-  }
-
-  .banner-advertisement {
-    .banner-swipe {
-      .wrap {
-        @radio: 414 / 215; // banner 固定的宽高比
-
-        height: calc(~"100vw / @{radio}"); // 由屏幕宽度计算出相应比例的高度
-        position: relative;
-        display: block;
-
-        .title {
-          position: absolute;
-          bottom: 16px;
-          width: 100%;
-          text-align: center;
-          color: #fff;
-          font-size: 28px;
-        }
-
-        img.ad {
-          width: 100%;
-        }
-      }
-    }
   }
 }
 </style>
