@@ -12,7 +12,7 @@ export default {
     Promise.all(promises).then(res => {
       const [{ data: bootstrappers = {} }, { data: advertiseType = {} }] = res;
       commit("BOOTSTRAPPERS", bootstrappers);
-      commit("ADVERTISEMENT", { type: advertiseType });
+      commit("ADVERTISEMENT", advertiseType);
     });
   },
 
