@@ -127,6 +127,10 @@
           </router-link>
         </div>
       </main>
+
+      <!-- 详情页广告位 -->
+      <detail-ad type="feed"/>
+
       <!-- 评论列表 -->
       <div
         id="comment_list"
@@ -166,6 +170,7 @@ import bus from "@/bus.js";
 import { mapState } from "vuex";
 import ArticleCard from "@/page/article/ArticleCard.vue";
 import CommentItem from "@/page/article/ArticleComment.vue";
+import DetailAd from "@/components/advertisement/DetailAd";
 import wechatShare from "@/util/wechatShare.js";
 import { limit } from "@/api/api.js";
 import { followUserByStatus, getUserInfoById } from "@/api/user.js";
@@ -175,7 +180,8 @@ export default {
   name: "FeedDetail",
   components: {
     ArticleCard,
-    CommentItem
+    CommentItem,
+    DetailAd
   },
   data() {
     return {
