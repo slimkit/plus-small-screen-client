@@ -35,18 +35,18 @@
 
     <news-filter @change="onCateChange"/>
 
-    <load-more
+    <jo-load-more
       ref="loadmore"
-      :on-refresh="onRefresh"
-      :on-load-more="onLoadMore"
-      class="p-news--body" >
+      class="p-news--body"
+      @onRefresh="onRefresh"
+      @onLoadMore="onLoadMore">
       <news-item
         v-for="news in list"
         v-if="news.id"
         :key="news.id"
         :current-cate="currentCate"
         :news="news" />
-    </load-more>
+    </jo-load-more>
   </div>
 </template>
 
@@ -55,6 +55,8 @@ import bus from "@/bus";
 import _ from "lodash";
 import NewsItem from "./components/NewsItem.vue";
 import NewsFilter from "./components/NewsFilter.vue";
+
+const noop = () => {};
 
 export default {
   name: "NewsList",
@@ -78,9 +80,9 @@ export default {
     onCateChange({ id = 0 } = {}) {
       this.list = [];
       this.currentCate = id;
-      this.$refs.loadmore.beforeRefresh();
+      this.onRefresh(noop);
     },
-    onRefresh() {
+    onRefresh(callback) {
       // GET /news
       const params =
         this.currentCate === 0
@@ -93,10 +95,10 @@ export default {
         })
         .then(({ data = [] } = {}) => {
           this.list = data;
-          this.$refs.loadmore.topEnd(!(data.length < 10));
+          callback(data.length >= 10);
         });
     },
-    onLoadMore() {
+    onLoadMore(callback) {
       const params =
         this.currentCate === 0
           ? { limit: 10, recommend: 1, after: this.after }
@@ -107,7 +109,7 @@ export default {
         })
         .then(({ data = [] } = {}) => {
           this.list = [...this.list, ...data];
-          this.$refs.loadmore.bottomEnd(data.length < 10);
+          callback(data.length < 10);
         });
     },
     /**
@@ -164,7 +166,7 @@ export default {
   }
 
   &--body {
-    padding-top: 90+85px;
+    padding-top: 90+80px;
   }
 }
 </style>
