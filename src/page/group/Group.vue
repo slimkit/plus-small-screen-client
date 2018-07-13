@@ -24,6 +24,10 @@
     </header>
 
     <main style="padding-top: 0.9rem">
+
+      <!-- 圈子首页顶部广告位 -->
+      <detail-ad type="group:home"/>
+
       <router-link
         :to="{ name: 'groups', query: { type: 'recommend' } }"
         class="m-box m-aln-center m-justify-bet m-main mt10 group-label m-bb1">
@@ -91,12 +95,14 @@
 </template>
 <script>
 import GroupItem from "./GroupItem.vue";
+import DetailAd from "@/components/advertisement/DetailAd.vue";
 import * as api from "@/api/group.js";
 
 export default {
   name: "Group",
   components: {
-    GroupItem
+    GroupItem,
+    DetailAd
   },
   data() {
     const myGroups = new Map();
