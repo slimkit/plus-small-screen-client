@@ -50,10 +50,14 @@
             :pinned="true" />
         </li>
         <li
-          v-for="(feed, index) in feeds"
-          v-if="feed.id"
-          :key="`feed-${feedType}-${feed.id}-${index}`">
-          <feed-card :feed="feed" />
+          v-for="(card, index) in feeds"
+          :key="`feed-${feedType}-${card.id}-${index}`">
+          <feed-card
+            v-if="card.user_id"
+            :feed="card" />
+          <feed-ad-card
+            v-if="card.space_id"
+            :ad="card"/>
         </li>
       </ul>
     </jo-load-more>
@@ -68,6 +72,7 @@
  */
 
 import FeedCard from "@/components/FeedCard/FeedCard.vue";
+import FeedAdCard from "./components/FeedAdCard.vue";
 import BannerAd from "@/components/advertisement/BannerAd.vue";
 import * as api from "@/api/feeds.js";
 import * as bootApi from "@/api/bootstrappers.js";
@@ -77,11 +82,12 @@ const noop = () => {};
 
 export default {
   name: "FeedList",
-  components: { FeedCard, BannerAd },
+  components: { FeedCard, BannerAd, FeedAdCard },
   data() {
     return {
       pinned: [], // 置顶
-      feedCardAds: [],
+      adCardList: [],
+      adIndex: 0,
 
       newFeeds: [],
       hotFeeds: [],
@@ -122,30 +128,50 @@ export default {
   },
   created() {
     this.onRefresh(noop);
+    this.getAdCards();
   },
   methods: {
     onRefresh(callback) {
       // TODO: @mutoe [api] refactor there with vuex action
       api.getFeedsByType(this.feedType, 15).then(({ data }) => {
         const { pinned = [], feeds = [] } = data;
-        this.feeds = feeds;
         this.pinned = pinned;
         callback(feeds.length < 15);
+        if (this.feedType === "hot") {
+          // 从广告栈顶取出一条随机插入列表
+          let rand = ~~(Math.random() * 14) + 1;
+          rand > feeds.length && (rand = feeds.length);
+          this.adIndex = 0;
+          this.adCardList[this.adIndex] &&
+            feeds.splice(rand, 0, this.adCardList[this.adIndex++]);
+        }
+        this.feeds = feeds;
       });
-      this.feedType === "hot" &&
-        // TODO: @mutoe [api] refactor there with vuex action
-        bootApi.getAdsById(this.feedCardAdsId).then(({ data }) => {
-          this.feedCardAds = data.sort((a, b) => a.sort < b.sort);
-        });
     },
     onLoadMore(callback) {
       // 热门动态 修改为 offset
-      const after = this.feedType === "hot" ? this.hotFeeds.length : this.maxId;
+      const after =
+        this.feedType === "hot"
+          ? this.hotFeeds.length - this.adCardList.length
+          : this.maxId;
       api.getFeedsByType(this.feedType, 15, after).then(({ data }) => {
         const { pinned = [], feeds = [] } = data;
         this.pinned = pinned;
-        this.feeds = [...this.feeds, ...feeds];
         callback(feeds.length < 15);
+        if (this.feedType === "hot") {
+          // 从广告栈顶取出一条随机插入列表
+          let rand = ~~(Math.random() * 9) + 1;
+          rand > feeds.length && (rand = feeds.length);
+          this.adCardList[this.adIndex] &&
+            feeds.splice(rand, 0, this.adCardList[this.adIndex++]);
+        }
+        this.feeds = [...this.feeds, ...feeds];
+      });
+    },
+    getAdCards() {
+      // TODO: @mutoe [api] refactor there with vuex action
+      bootApi.getAdsById(this.feedCardAdsId).then(({ data }) => {
+        this.adCardList = data.sort((a, b) => a.sort < b.sort);
       });
     }
   }
