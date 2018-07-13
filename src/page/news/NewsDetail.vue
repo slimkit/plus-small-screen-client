@@ -32,6 +32,7 @@
     <jo-load-more
       ref="loadmore"
       :auto-load="false"
+      :show-bottom="false"
       @onRefresh="onRefresh">
       <div class="m-flex-shrink1 m-flex-grow1 m-art m-main">
         <section class="m-art-head">
