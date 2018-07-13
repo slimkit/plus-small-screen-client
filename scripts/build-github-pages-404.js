@@ -1,16 +1,32 @@
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
+const { resolve } = require("path");
 
-const appDirectory = fs.realpathSync(process.cwd());
-const resolveApp = relativePath => path.resolve(appDirectory, relativePath);
+/**
+ * resolve real path.
+ * @param  {string} relativePath
+ * @return {string}
+ */
+const resolveRealPath = relativePath => resolve(
+  fs.realpathSync(process.cwd()),
+  relativePath
+);
 
-const target = resolveApp('dist/index.html');
-const html404 = resolveApp('dist/404.html');
+//
+//++++++++++++++++++++++++++++++++++++++++++
+//+  Defined target and source filename.   +
+//++++++++++++++++++++++++++++++++++++++++++
+//
+const targetFilename = resolveRealPath('dist/404.html');
+const sourceFilename = resolveRealPath("dist/index.html");
 
-if (! fs.existsSync(target)) {
-  throw new Error('The file "dist/index.html" not found.');
+// If source filename not found,
+// Throw a system error.
+if (!fs.existsSync(sourceFilename)) {
+  throw new Error(`The file "${sourceFilename}" not found.`);
 }
 
-const htmlContent = fs.readFileSync(target);
-
-fs.writeFileSync(html404, htmlContent);
+// Write source to target contents.
+fs.writeFileSync(
+  targetFilename,
+  fs.readFileSync(sourceFilename)
+);
