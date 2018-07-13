@@ -122,3 +122,35 @@ export default {
 ##### `error`
 
 图片上传失败的回调方法
+
+### 详情页广告位 DetailAd
+
+`@/components/advertisement/DetailAd.vue`
+
+用于各详情页广告位插槽，用法非常简单
+
+``` vue
+<template>
+  <div>
+    <detail-ad type="feed"/>
+  </div>
+</template>
+<script>
+import DetailAd from "@/components/advertisiment/DetailAd.vue";
+export default {
+  components: { DetailAd }
+}
+</script>
+```
+
+#### `Props`
+
+##### `type` required
+
+显示的广告位类型, 支持的值有 
+- `feed` 动态详情页 
+- `news` 资讯详情页 
+- `group:home` 圈子首页 
+- `group:post` 圈子帖子详情页
+
+用于获取对应页面广告具体数据
