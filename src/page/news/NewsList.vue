@@ -44,7 +44,7 @@
       <!-- 资讯顶部 banner 广告位 -->
       <banner-ad type="news"/>
 
-      <news-item
+      <news-card
         v-for="news in list"
         v-if="news.id"
         :key="news.id"
@@ -57,7 +57,7 @@
 <script>
 import bus from "@/bus";
 import _ from "lodash";
-import NewsItem from "./components/NewsItem.vue";
+import NewsCard from "./components/NewsCard.vue";
 import NewsFilter from "./components/NewsFilter.vue";
 import BannerAd from "@/components/advertisement/BannerAd.vue";
 
@@ -66,7 +66,7 @@ const noop = () => {};
 export default {
   name: "NewsList",
   components: {
-    NewsItem,
+    NewsCard,
     NewsFilter,
     BannerAd
   },

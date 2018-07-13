@@ -24,7 +24,7 @@
 
 <script>
 export default {
-  name: "NewsItem",
+  name: "NewsCard",
   props: {
     currentCate: { type: Number, default: 0 },
     news: { type: Object, default: () => {} }

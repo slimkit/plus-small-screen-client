@@ -24,7 +24,7 @@
       :show-bottom="list.length > 0"
       style="padding-top: 0.9rem"
       @onLoadMore="onLoadMore">
-      <news-item
+      <news-card
         v-for="news in list"
         v-if="news.id"
         :key="news.id"
@@ -41,14 +41,14 @@
 
 <script>
 import _ from "lodash";
-import NewsItem from "./components/NewsItem.vue";
+import NewsCard from "./components/NewsCard.vue";
 import { searchNewsByKey } from "@/api/news.js";
 import { limit } from "@/api/api";
 
 export default {
   name: "NewsSearch",
   components: {
-    NewsItem
+    NewsCard
   },
   data() {
     return {

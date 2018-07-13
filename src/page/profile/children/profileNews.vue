@@ -51,11 +51,10 @@
         :on-refresh="onRefresh"
         :on-load-more="onLoadMore"
         style="padding-top: .9rem">
-        <news-item
+        <news-card
           v-for="news in newsList"
           :news="news"
-          :key="news.id"
-        />
+          :key="news.id" />
       </load-more>
     </main>
   </div>
@@ -63,11 +62,11 @@
 <script>
 import _ from "lodash";
 import { getMyNews } from "@/api/news.js";
-import NewsItem from "@/page/news/components/NewsItem.vue";
+import NewsCard from "@/page/news/components/NewsCard.vue";
 
 export default {
   components: {
-    NewsItem
+    NewsCard
   },
   data() {
     const released = new Map();
