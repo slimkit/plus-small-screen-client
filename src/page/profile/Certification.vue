@@ -127,6 +127,9 @@ export default {
 
 <style lang="less" scoped>
 .p-profile-certification {
+  height: 100%;
+  background-color: #fff;
+
   main {
     padding-top: 0.9rem;
 
