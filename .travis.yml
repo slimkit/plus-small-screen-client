@@ -8,6 +8,11 @@ node_js:
 cache:
   directories:
     - "node_modules"
+env:
+  global:
+    - VUE_APP_NAME=Plus(ThinkSNS+)
+    - VUE_APP_KEYWORDS=plus,sns
+    - VUE_APP_DESCRIPTION=ThinkSNS+
 install:
   - npm install
 before_script:
