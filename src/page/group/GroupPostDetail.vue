@@ -1,3 +1,167 @@
+<template>
+  <article-card
+    :liked="liked"
+    :loading="loading"
+    @on-like="likeFeed"
+    @on-share="shareFeed"
+    @on-more="moreAction"
+    @on-comment="commentFeed">
+    <header
+      slot="head"
+      class="m-box m-justify-bet m-aln-center m-art-head"
+      style="padding: 0">
+      <div class="m-box m-flex-grow1 m-aln-center m-flex-base0">
+        <svg
+          class="m-style-svg m-svg-def"
+          @click="goBack">
+          <use
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            xlink:href="#base-back"/>
+        </svg>
+      </div>
+      <div class="m-box m-flex-grow1 m-aln-center m-flex-base0 m-head-top-title m-text-cut">
+        <avatar :user="user" />
+        <span class="m-text-cut m-flex-grow1 m-flex-shrink1 username">
+          {{ user.name }}
+        </span>
+      </div>
+      <div class="m-box m-flex-grow1 m-aln-center m-flex-base0 m-justify-end">
+        <template
+          v-if="!isMine"
+          :class="{ c_59b6d7: relation.status !== 'unFollow' }"
+          @click="followUserByStatus(relation.status)">
+          <svg class="m-style-svg m-svg-def">
+            <use
+              :xlink:href="relation.icon"
+              xmlns:xlink="http://www.w3.org/1999/xlink"/>
+          </svg>
+        </template>
+      </div>
+    </header>
+    <!-- 内容 -->
+    <load-more
+      ref="loadmore"
+      :on-refresh="onRefresh">
+      <main class="m-flex-shrink1 m-flex-grow1 m-art m-main">
+        <div class="m-art-body">
+          <h2 v-if="title">{{ title }}</h2>
+          <video
+            v-if="!!video"
+            :poster="cover_file"
+            class="feed-detail-video"
+            controls
+            autoplay>
+            <source
+              :src="video_file"
+              type="video/mp4" >
+          </video>
+          <async-file
+            v-for="img in images"
+            v-if="img.file"
+            :key="img.file"
+            :file="img.file">
+            <img
+              v-if="props.src"
+              slot-scope="props"
+              :src="props.src"
+              @click="onFileClick(img)">
+          </async-file>
+          <p
+            class="m-text-box"
+            v-html="formatBody(feedContent)" />
+        </div>
+        <div class="m-box m-aln-center m-justify-bet m-art-foot">
+          <div class="m-flex-grow1 m-flex-shrink1 m-art-like-list">
+            <router-link
+              v-if="likeCount > 0"
+              tag="div"
+              class="m-box m-aln-center"
+              to="likers"
+              append>
+              <ul class="m-box m-flex-grow0 m-flex-shrink0">
+                <li
+                  v-for="({user = {}, id}, index) in likes.slice(0, 5)"
+                  :key="id"
+                  :style="{ zIndex: 5-index }"
+                  :class="`m-avatar-box-${user.sex}`"
+                  class="m-avatar-box tiny">
+                  <img :src="user.avatar">
+                </li>
+              </ul>
+              <span>{{ likeCount | formatNum }}人点赞</span>
+            </router-link>
+          </div>
+          <div class="m-box-model m-aln-end m-art-info">
+            <span v-if="time">发布于{{ time | time2tips }}</span>
+            <span>{{ feed.views_count || 0 | formatNum }}浏览</span>
+          </div>
+        </div>
+        <div class="m-box-model m-box-center m-box-center-a m-art-reward">
+          <button
+            class="m-art-rew-btn"
+            @click="rewardFeed">打 赏</button>
+          <p class="m-art-rew-label"><a href="javascript:;">{{ reward.count | formatNum }}</a>人打赏，共<a href="javascript:;">{{ ~~reward.amount }}</a>积分</p>
+          <router-link
+            tag="ul"
+            to="rewarders"
+            append
+            class="m-box m-aln-center m-art-rew-list">
+            <li
+              v-for="rew in rewardList"
+              :key="rew.id"
+              :class="`m-avatar-box-${rew.user.sex}`"
+              class="m-flex-grow0 m-flex-shrink0 m-art-rew m-avatar-box tiny">
+              <img :src="rew.user.avatar">
+            </li>
+            <li
+              v-if="rewardList.length > 0"
+              class="m-box m-aln-center">
+              <svg
+                class="m-style-svg m-svg-def"
+                style="fill:#bfbfbf">
+                <use
+                  xmlns:xlink="http://www.w3.org/1999/xlink"
+                  xlink:href="#base-arrow-r"/>
+              </svg>
+            </li>
+          </router-link>
+        </div>
+      </main>
+
+      <!-- 评论列表 -->
+      <div
+        id="comment_list"
+        class="m-box-model m-art-comments">
+        <ul class="m-box m-aln-center m-art-comments-tabs">
+          <li>{{ commentCount | formatNum }}条评论</li>
+        </ul>
+        <comment-item
+          v-for="(comment) in pinnedCom"
+          :pinned="true"
+          :key="`pinned-comment-${comment.id}`"
+          :comment="comment"
+          @click="replyComment"/>
+        <comment-item
+          v-for="(comment) in comments"
+          :key="comment.id"
+          :comment="comment"
+          @click="replyComment"/>
+        <div class="m-box m-aln-center m-justify-center load-more-box">
+          <span
+            v-if="noMoreCom"
+            class="load-more-ph">---没有更多---</span>
+          <span
+            v-else
+            class="load-more-btn"
+            @click.stop="fetchFeedComments(maxComId)">
+            {{ fetchComing ? "加载中..." : "点击加载更多" }}
+          </span>
+        </div>
+      </div>
+    </load-more>
+  </article-card>
+</template>
+
 <script>
 import bus from "@/bus.js";
 import markdownIt from "markdown-it";
