@@ -1,6 +1,7 @@
 # ThinkSNS+ HTML 5 (SPA)😊
 
 这是 ThinkSNS Plus 的一个 SPA 前端应用！
+[![Build Status](https://travis-ci.com/slimkit/plus-small-screen-client.svg?branch=master)](https://travis-ci.com/slimkit/plus-small-screen-client)
 
 > 当前分支为 `4.0.0-rc.*` 版本开发分支，安装**稳定版本**请前往👉[3.x Branch](https://github.com/zhiyicx/plus-component-h5/tree/3.x)
 
