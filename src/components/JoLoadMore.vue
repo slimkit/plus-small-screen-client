@@ -163,7 +163,7 @@ export default {
       this.topTxt = ["下拉刷新", "释放更新", "正在刷新"][val];
     },
     bottomStatus(val) {
-      this.bottomTxt = ["", "加载中...", "--没有更多--", "点击加载更多"][val];
+      this.bottomTxt = ["", "加载中...", "-- 没有更多 --", "点击加载更多"][val];
     }
   },
   mounted() {
@@ -284,6 +284,7 @@ export default {
       justify-content: center;
       color: #7c7c7c;
       font-size: 0.28rem;
+
       > span {
         vertical-align: middle;
         margin-left: 0.2rem;
@@ -299,6 +300,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
+    font-size: 0.28rem;
     &.status-2 {
       color: #ccc;
     }
