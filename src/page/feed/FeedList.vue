@@ -30,6 +30,7 @@
     </nav>
     <jo-load-more
       ref="loadmore"
+      :auto-load="true"
       class="p-feed-main"
       @onRefresh="onRefresh"
       @onLoadMore="onLoadMore" >
@@ -163,10 +164,8 @@ export default {
 .p-feed {
   .p-feed-main {
     padding-top: 90px;
-    .jo-loadmore-head {
-      top: 90px;
-    }
   }
+
   .p-feed-list > li + li {
     margin-top: 20px;
   }

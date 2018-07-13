@@ -98,6 +98,7 @@ function getScrollTarget(el) {
   }
   return document.documentElement;
 }
+
 export default {
   name: "JoLoadMore",
   props: {
@@ -263,17 +264,17 @@ export default {
   }
 };
 </script>
-<style lang="less">
-@prefix: jo-loadmore;
-.@{prefix} {
+
+<style lang="less" scoped>
+.jo-loadmore {
   position: relative;
+
   &-head,
   &-foot {
     width: 100%;
   }
   &-head {
     position: fixed;
-    top: 0;
     z-index: 0;
 
     &-box {
