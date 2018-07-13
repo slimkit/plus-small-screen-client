@@ -165,6 +165,7 @@ export default {
         bootApi
           .getAdsByIds([this.bannerAdsId, this.feedCardAdsId])
           .then(({ data }) => {
+            data = data.sort((a, b) => a.sort < b.sort);
             this.bannerAds = data.filter(ad => ad.space_id == this.bannerAdsId);
             this.feedCardAds = data.filter(
               ad => ad.space_id == this.feedCardAdsId
