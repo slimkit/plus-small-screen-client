@@ -132,8 +132,14 @@ export default {
           ? { limit: 10, recommend: 1, after: this.after }
           : { limit: 10, cate_id: this.currentCate, after: this.after };
       this.$http.get("/news", { params }).then(({ data = [] } = {}) => {
-        this.newsList = [...this.newsList, ...data];
         callback(data.length < 10);
+
+        // 从广告栈顶取出一条随机插入列表
+        let rand = ~~(Math.random() * 9) + 1;
+        rand > data.length && (rand = data.length);
+        this.advertiseLeft.length &&
+          data.splice(rand, 0, this.advertiseLeft.shift());
+        this.list = [...this.list, ...data];
       });
     },
     /**
