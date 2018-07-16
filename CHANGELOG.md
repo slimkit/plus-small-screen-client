@@ -1,3 +1,51 @@
+<a name="4.0.0-rc.8"></a>
+# [4.0.0-rc.8](https://github.com/zhiyicx/plus-component-h5/compare/v4.0.0-rc.7...v4.0.0-rc.8) (2018-07-16)
+
+
+### Bug Fixes
+
+* Fixed app keep alive invalid ([fb53892](https://github.com/zhiyicx/plus-component-h5/commit/fb53892))
+* **components:** 修复下拉刷新字样位置 ([7e5e751](https://github.com/zhiyicx/plus-component-h5/commit/7e5e751))
+* **components:** 修复单向数据绑定问题 ([fb42d42](https://github.com/zhiyicx/plus-component-h5/commit/fb42d42))
+* **filters:** formatDate 方法支持字符串格式的时间了 ([d7aa648](https://github.com/zhiyicx/plus-component-h5/commit/d7aa648))
+* **圈子:** 修复圈子帖子阅读数不正确的问题 ([4db33e2](https://github.com/zhiyicx/plus-component-h5/commit/4db33e2))
+* **广告:** mutation 传参补充 ([27cb12f](https://github.com/zhiyicx/plus-component-h5/commit/27cb12f))
+* ([#453](https://github.com/zhiyicx/plus-component-h5/issues/453)) 修复图片地址多处写死导致编译后无法正确查询的问题 ([a820663](https://github.com/zhiyicx/plus-component-h5/commit/a820663))
+* **广告:** 伪修复 用户在首次进入应用时报错的问题 ([1c01e94](https://github.com/zhiyicx/plus-component-h5/commit/1c01e94))
+* **广告:** 修复资讯列表加载更多时不能加载广告的问题 ([d51245c](https://github.com/zhiyicx/plus-component-h5/commit/d51245c))
+* **广告:** 动态详情页顶部 banner 广告排序问题 ([fc88253](https://github.com/zhiyicx/plus-component-h5/commit/fc88253))
+* **广告:** 简化广告位 store 内容，不缓存广告列表 ([140a927](https://github.com/zhiyicx/plus-component-h5/commit/140a927))
+* **认证:** 优化重填表单的认证体验(图像加载部分) ([78812cf](https://github.com/zhiyicx/plus-component-h5/commit/78812cf))
+* **认证:** 修复新用户认证不能的问题 ([d766767](https://github.com/zhiyicx/plus-component-h5/commit/d766767))
+* **认证:** 修复认证状态偶尔获取不到的问题 ([6957eea](https://github.com/zhiyicx/plus-component-h5/commit/6957eea))
+* **认证:** 创建投稿时如果需要认证则跳转至认证页面 ([e0a13b8](https://github.com/zhiyicx/plus-component-h5/commit/e0a13b8))
+* **资讯:** 详情页底部移除多余的“加载更多”字样 ([597aabb](https://github.com/zhiyicx/plus-component-h5/commit/597aabb))
+
+
+### Features
+
+* Add .editorconfig ([ff9d0d9](https://github.com/zhiyicx/plus-component-h5/commit/ff9d0d9))
+* **components:** 详情页广告位组件 ([44c1f69](https://github.com/zhiyicx/plus-component-h5/commit/44c1f69))
+* **spa:** Support service worker ([7b8d123](https://github.com/zhiyicx/plus-component-h5/commit/7b8d123))
+* **广告:** ([#454](https://github.com/zhiyicx/plus-component-h5/issues/454)) 动态列表随机插入模拟动态卡片广告 ([59be45e](https://github.com/zhiyicx/plus-component-h5/commit/59be45e))
+* **广告:** ([#454](https://github.com/zhiyicx/plus-component-h5/issues/454)) 圈子帖子详情页广告位 ([5802b59](https://github.com/zhiyicx/plus-component-h5/commit/5802b59))
+* **广告:** ([#454](https://github.com/zhiyicx/plus-component-h5/issues/454)) 圈子首页顶部广告位 ([5550515](https://github.com/zhiyicx/plus-component-h5/commit/5550515))
+* **广告:** ([#454](https://github.com/zhiyicx/plus-component-h5/issues/454)) 资讯列表随机插入模拟卡片广告 ([b2a6f7b](https://github.com/zhiyicx/plus-component-h5/commit/b2a6f7b))
+* **广告:** ([#454](https://github.com/zhiyicx/plus-component-h5/issues/454)) 资讯列表顶部 banner 广告 ([dfc93a2](https://github.com/zhiyicx/plus-component-h5/commit/dfc93a2))
+* **广告:** ([#454](https://github.com/zhiyicx/plus-component-h5/issues/454)) 资讯详情页广告位 ([6ead189](https://github.com/zhiyicx/plus-component-h5/commit/6ead189))
+* **广告:** 增加动态详情页广告位 ([a8a9fe0](https://github.com/zhiyicx/plus-component-h5/commit/a8a9fe0))
+* **广告:** 增加热门动态顶部 banner 广告位 ([82a4920](https://github.com/zhiyicx/plus-component-h5/commit/82a4920))
+* **广告:** 获取广告位信息 ([ae86b2e](https://github.com/zhiyicx/plus-component-h5/commit/ae86b2e))
+* **认证:** 个人资料页认证状态更新 ([a2fe46d](https://github.com/zhiyicx/plus-component-h5/commit/a2fe46d))
+* **认证:** 现在头像统一能显示小图标了 ([123596f](https://github.com/zhiyicx/plus-component-h5/commit/123596f))
+* **认证:** 现在投稿前需要进行验证投稿权限才可继续操作 ([21ad733](https://github.com/zhiyicx/plus-component-h5/commit/21ad733))
+* **认证:** 管理用户认证数据 ([886e245](https://github.com/zhiyicx/plus-component-h5/commit/886e245))
+* **认证:** 被驳回的认证可继续填写 ([8e585be](https://github.com/zhiyicx/plus-component-h5/commit/8e585be))
+* **认证:** 认证信息页面 ([dbd6001](https://github.com/zhiyicx/plus-component-h5/commit/dbd6001))
+* **认证:** 认证表单页面 ([285cf1d](https://github.com/zhiyicx/plus-component-h5/commit/285cf1d))
+
+
+
 <a name="4.0.0-rc.7"></a>
 # [4.0.0-rc.7](https://github.com/zhiyicx/plus-component-h5/compare/v4.0.0-rc.6...v4.0.0-rc.7) (2018-07-06)
 
